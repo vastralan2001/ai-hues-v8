@@ -6,10 +6,9 @@ export const metadata: Metadata = {
 };
 
 const shellClass = 'mx-auto w-[min(1120px,calc(100vw-32px))]';
-const panelClass =
-  'border border-white/55 bg-surface shadow-panel backdrop-blur-[18px]';
-const eyebrowClass =
-  'text-[0.82rem] font-bold uppercase tracking-[0.16em] text-accent-strong';
+const panelClass = 'panel-shell';
+const cardClass = 'card-shell';
+const eyebrowClass = 'kicker-line';
 
 const checklist = [
   '官网页、分类页、详情页优先留在 Next.js 内，减少多套前端工程并存。',
@@ -25,7 +24,7 @@ export default function AboutPage() {
         className={`${panelClass} grid gap-7 rounded-panel p-9 max-md:p-7`}
       >
         <p className={eyebrowClass}>Delivery model</p>
-        <h1 className="max-w-[12ch] font-serif text-[clamp(3rem,8vw,5.2rem)] leading-[0.96] max-md:max-w-none">
+        <h1 className="max-w-[12ch] font-serif text-[clamp(3rem,8vw,5.2rem)] leading-[0.92] text-ink max-md:max-w-none">
           Next.js 产品站架构建议
         </h1>
         <p className="max-w-[62ch] leading-[1.7] text-muted">
@@ -35,8 +34,8 @@ export default function AboutPage() {
         </p>
       </section>
 
-      <section className={`${panelClass} mt-[22px] rounded-card p-7`}>
-        <h2 className="font-serif text-[clamp(2rem,4vw,3rem)] leading-[0.96]">
+      <section className={`${cardClass} mt-[22px] rounded-card p-7`}>
+        <h2 className="font-serif text-[clamp(2rem,4vw,3rem)] leading-[0.94] text-ink">
           推荐链路
         </h2>
         <p className="mt-4 leading-[1.7] text-muted">
@@ -46,8 +45,8 @@ export default function AboutPage() {
         </p>
       </section>
 
-      <section className={`${panelClass} mt-[22px] rounded-card p-7`}>
-        <h2 className="font-serif text-[clamp(2rem,4vw,3rem)] leading-[0.96]">
+      <section className={`${cardClass} mt-[22px] rounded-card p-7`}>
+        <h2 className="font-serif text-[clamp(2rem,4vw,3rem)] leading-[0.94] text-ink">
           上线检查项
         </h2>
         <ul className="mt-[18px] list-disc space-y-2.5 pl-5 leading-[1.7] text-muted">

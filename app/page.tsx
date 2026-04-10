@@ -1,14 +1,11 @@
 import Link from 'next/link';
 
 const shellClass = 'mx-auto w-[min(1120px,calc(100vw-32px))]';
-const panelClass =
-  'border border-white/55 bg-surface shadow-panel backdrop-blur-[18px]';
-const eyebrowClass =
-  'text-[0.82rem] font-bold uppercase tracking-[0.16em] text-accent-strong';
-const primaryButtonClass =
-  'inline-flex min-h-12 items-center justify-center rounded-full bg-ink px-[18px] text-[#fff8f0] transition-all duration-200 hover:-translate-y-px hover:bg-[#0f2723] focus-visible:-translate-y-px focus-visible:bg-[#0f2723]';
-const secondaryButtonClass =
-  'inline-flex min-h-12 items-center justify-center rounded-full border border-line bg-white/35 px-[18px] transition-all duration-200 hover:-translate-y-px focus-visible:-translate-y-px';
+const panelClass = 'panel-shell';
+const cardClass = 'card-shell';
+const eyebrowClass = 'kicker-line';
+const primaryButtonClass = 'button-primary';
+const secondaryButtonClass = 'button-secondary';
 
 export default function HomePage() {
   return (
@@ -16,9 +13,9 @@ export default function HomePage() {
       <section
         className={`${shellClass} ${panelClass} mt-6 grid gap-8 rounded-panel p-7 md:grid-cols-[1.35fr_0.85fr] md:p-14`}
       >
-        <div>
+        <div className="relative z-10">
           <p className={eyebrowClass}>React-first delivery</p>
-          <h1 className="max-w-[10ch] font-serif text-[clamp(3rem,8vw,5.9rem)] leading-[0.96] max-md:max-w-none">
+          <h1 className="max-w-[10ch] font-serif text-[clamp(3rem,8vw,5.9rem)] leading-[0.92] text-ink max-md:max-w-none">
             为产品型站点准备的 Next.js 基线
           </h1>
           <p className="mt-6 max-w-[60ch] text-[1.04rem] leading-[1.7] text-muted">
@@ -43,26 +40,28 @@ export default function HomePage() {
           </div>
         </div>
 
-        <aside className="grid gap-3" aria-label="工程特性">
-          <div className="rounded-card border border-line bg-surface-strong px-5 py-[18px]">
-            <span className="block text-[0.84rem] uppercase tracking-[0.12em] text-accent-strong">
+        <aside className="relative z-10 grid gap-3" aria-label="工程特性">
+          <div className={`${cardClass} rounded-card px-5 py-[18px]`}>
+            <span className="block text-[0.84rem] uppercase tracking-[0.12em] text-gold-soft">
               路由模式
             </span>
-            <strong className="mt-2 block text-[1.28rem]">App Router</strong>
+            <strong className="mt-2 block text-[1.28rem] text-ink">
+              App Router
+            </strong>
           </div>
-          <div className="rounded-card border border-line bg-surface-strong px-5 py-[18px]">
-            <span className="block text-[0.84rem] uppercase tracking-[0.12em] text-accent-strong">
+          <div className={`${cardClass} rounded-card px-5 py-[18px]`}>
+            <span className="block text-[0.84rem] uppercase tracking-[0.12em] text-gold-soft">
               运行方式
             </span>
-            <strong className="mt-2 block text-[1.28rem]">
+            <strong className="mt-2 block text-[1.28rem] text-ink">
               Node Standalone
             </strong>
           </div>
-          <div className="rounded-card border border-line bg-surface-strong px-5 py-[18px]">
-            <span className="block text-[0.84rem] uppercase tracking-[0.12em] text-accent-strong">
+          <div className={`${cardClass} rounded-card px-5 py-[18px]`}>
+            <span className="block text-[0.84rem] uppercase tracking-[0.12em] text-gold-soft">
               适用场景
             </span>
-            <strong className="mt-2 block text-[1.28rem]">
+            <strong className="mt-2 block text-[1.28rem] text-ink">
               内容 + 动态产品页
             </strong>
           </div>
@@ -72,11 +71,11 @@ export default function HomePage() {
       <section
         className={`${shellClass} mt-[22px] grid gap-[18px] md:grid-cols-3`}
       >
-        <article className="rounded-card border border-line bg-[#fff9f2c2] p-7">
-          <p className="block text-[0.84rem] uppercase tracking-[0.12em] text-accent-strong">
+        <article className={`${cardClass} rounded-card p-7`}>
+          <p className="block text-[0.84rem] uppercase tracking-[0.12em] text-gold-soft">
             01
           </p>
-          <h2 className="mt-2.5 font-serif text-[1.9rem] leading-[0.96]">
+          <h2 className="mt-2.5 font-serif text-[1.9rem] leading-[0.96] text-ink">
             服务端优先
           </h2>
           <p className="mt-3 leading-[1.7] text-muted">
@@ -84,11 +83,11 @@ export default function HomePage() {
             元数据优先走服务端渲染，首屏内容可以稳定被搜索引擎获取。
           </p>
         </article>
-        <article className="rounded-card border border-line bg-[#fff9f2c2] p-7">
-          <p className="block text-[0.84rem] uppercase tracking-[0.12em] text-accent-strong">
+        <article className={`${cardClass} rounded-card p-7`}>
+          <p className="block text-[0.84rem] uppercase tracking-[0.12em] text-gold-soft">
             02
           </p>
-          <h2 className="mt-2.5 font-serif text-[1.9rem] leading-[0.96]">
+          <h2 className="mt-2.5 font-serif text-[1.9rem] leading-[0.96] text-ink">
             交互分层
           </h2>
           <p className="mt-3 leading-[1.7] text-muted">
@@ -97,11 +96,11 @@ export default function HomePage() {
             Component。
           </p>
         </article>
-        <article className="rounded-card border border-line bg-[#fff9f2c2] p-7">
-          <p className="block text-[0.84rem] uppercase tracking-[0.12em] text-accent-strong">
+        <article className={`${cardClass} rounded-card p-7`}>
+          <p className="block text-[0.84rem] uppercase tracking-[0.12em] text-gold-soft">
             03
           </p>
-          <h2 className="mt-2.5 font-serif text-[1.9rem] leading-[0.96]">
+          <h2 className="mt-2.5 font-serif text-[1.9rem] leading-[0.96] text-ink">
             后端解耦
           </h2>
           <p className="mt-3 leading-[1.7] text-muted">
@@ -114,9 +113,9 @@ export default function HomePage() {
       <section
         className={`${shellClass} ${panelClass} mt-[22px] grid gap-7 rounded-panel p-9 md:grid-cols-[1.1fr_0.9fr] md:p-9`}
       >
-        <div>
+        <div className="relative z-10">
           <p className={eyebrowClass}>推荐拆分</p>
-          <h2 className="font-serif text-[clamp(2rem,4vw,3rem)] leading-[0.96]">
+          <h2 className="font-serif text-[clamp(2rem,4vw,3rem)] leading-[0.94] text-ink">
             适合从官网演进到产品站
           </h2>
           <p className="mt-4 leading-[1.7] text-muted">
@@ -127,30 +126,36 @@ export default function HomePage() {
           </p>
         </div>
 
-        <div className="grid gap-3">
-          <div className="rounded-card border border-line bg-surface-strong px-5 py-[18px]">
-            <span className="block text-[0.84rem] uppercase tracking-[0.12em] text-accent-strong">
+        <div className="relative z-10 grid gap-3">
+          <div className={`${cardClass} rounded-card px-5 py-[18px]`}>
+            <span className="block text-[0.84rem] uppercase tracking-[0.12em] text-gold-soft">
               Framework
             </span>
-            <strong className="mt-2 block text-[1.28rem]">Next.js 16</strong>
+            <strong className="mt-2 block text-[1.28rem] text-ink">
+              Next.js 16
+            </strong>
           </div>
-          <div className="rounded-card border border-line bg-surface-strong px-5 py-[18px]">
-            <span className="block text-[0.84rem] uppercase tracking-[0.12em] text-accent-strong">
+          <div className={`${cardClass} rounded-card px-5 py-[18px]`}>
+            <span className="block text-[0.84rem] uppercase tracking-[0.12em] text-gold-soft">
               Language
             </span>
-            <strong className="mt-2 block text-[1.28rem]">TypeScript</strong>
+            <strong className="mt-2 block text-[1.28rem] text-ink">
+              TypeScript
+            </strong>
           </div>
-          <div className="rounded-card border border-line bg-surface-strong px-5 py-[18px]">
-            <span className="block text-[0.84rem] uppercase tracking-[0.12em] text-accent-strong">
+          <div className={`${cardClass} rounded-card px-5 py-[18px]`}>
+            <span className="block text-[0.84rem] uppercase tracking-[0.12em] text-gold-soft">
               Rendering
             </span>
-            <strong className="mt-2 block text-[1.28rem]">SSR + RSC</strong>
+            <strong className="mt-2 block text-[1.28rem] text-ink">
+              SSR + RSC
+            </strong>
           </div>
-          <div className="rounded-card border border-line bg-surface-strong px-5 py-[18px]">
-            <span className="block text-[0.84rem] uppercase tracking-[0.12em] text-accent-strong">
+          <div className={`${cardClass} rounded-card px-5 py-[18px]`}>
+            <span className="block text-[0.84rem] uppercase tracking-[0.12em] text-gold-soft">
               Deploy
             </span>
-            <strong className="mt-2 block text-[1.28rem]">
+            <strong className="mt-2 block text-[1.28rem] text-ink">
               Node / Container
             </strong>
           </div>
