@@ -1,0 +1,63 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans:
+    'Sora', 'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB',
+    'Microsoft YaHei', sans-serif;
+  --font-serif: 'Fraunces', 'Source Han Serif SC', 'Songti SC', serif;
+  --font-mono: 'IBM Plex Mono', 'SFMono-Regular', ui-monospace, monospace;
+
+  --color-ink: #15312c;
+  --color-muted: #53655f;
+  --color-line: rgba(17, 49, 43, 0.14);
+  --color-accent: #d66f32;
+  --color-accent-strong: #b5561f;
+  --color-paper: #f3ecdf;
+  --color-paper-deep: #efe3d1;
+  --color-surface: rgba(255, 252, 245, 0.72);
+  --color-surface-strong: rgba(255, 252, 245, 0.9);
+
+  --shadow-panel: 0 20px 60px rgba(35, 37, 30, 0.12);
+
+  --radius-panel: 28px;
+  --radius-card: 20px;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    color-scheme: light;
+    scroll-behavior: smooth;
+    background:
+      radial-gradient(
+        circle at top left,
+        rgba(214, 111, 50, 0.14),
+        transparent 28%
+      ),
+      radial-gradient(
+        circle at 85% 15%,
+        rgba(17, 49, 43, 0.14),
+        transparent 26%
+      ),
+      linear-gradient(180deg, #f5efe4 0%, #f0e5d7 100%);
+  }
+
+  body {
+    min-height: 100vh;
+    background: transparent;
+    color: var(--color-ink);
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.95em;
+  }
+}

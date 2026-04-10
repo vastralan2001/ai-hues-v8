@@ -1,0 +1,10 @@
+node_modules
+.next
+.vercel
+dist
+.astro
+.deploy
+package-lock.json
+*.tsbuildinfo
+.env
+.DS_Store

@@ -1,93 +1,119 @@
 # Aiushtha
 
+面向产品型站点的 `Next.js App Router + TypeScript + Tailwind CSS 4` 基线。  
+默认假设是前端不再强制纯静态导出，站点可以直接运行在 Node 环境中，同时保留 SEO、首屏性能、多页面路由和后续动态能力扩展空间。
 
+## 目标
 
-## Getting started
+- 使用 `App Router` 组织多页面站点
+- 生成 `standalone` 产物，便于 Node/容器部署
+- 同时支持静态页面、服务端渲染和客户端交互
+- 为搜索、登录态、个性化推荐、BFF API 预留演进空间
+- 保持官网页和产品页共用一套 React 工程
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## 目录结构
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
-
+```text
+.
+├── app/                     # App Router 页面与元数据路由
+├── components/              # 公共组件
+├── lib/                     # 站点级配置与辅助函数
+├── public/                  # 直接暴露的静态文件
+├── postcss.config.mjs       # Tailwind 4 PostCSS 配置
+├── .env.example             # 环境变量示例
+├── .gitlab-ci.yml           # GitLab CI
+├── next.config.ts           # Next.js 配置
+└── package.json
 ```
-cd existing_repo
-git remote add origin https://dev.msh.team/search-engine/rec/aiushtha.git
-git branch -M master
-git push -uf origin master
+
+## 本地开发
+
+要求：
+
+- Node.js 20+
+- pnpm 10.x
+
+安装依赖并启动：
+
+```bash
+corepack enable
+pnpm install
+pnpm dev
 ```
 
-## Integrate with your tools
+常用命令：
 
-- [ ] [Set up project integrations](https://dev.msh.team/search-engine/rec/aiushtha/-/settings/integrations)
+```bash
+pnpm dev
+pnpm build
+pnpm start
+pnpm check
+pnpm format
+pnpm format:check
+```
 
-## Collaborate with your team
+## 部署模型
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+当前脚手架默认按 Node 服务运行：
 
-## Test and Deploy
+- `next build` 生成 `.next/standalone`
+- 启动命令为 `node .next/standalone/server.js`
+- `.next/static` 和 `public/` 需要与 `standalone` 一起部署
+- 线上通常在 CDN 或网关后面挂一个 Node 服务或容器
 
-Use the built-in continuous integration in GitLab.
+如果后续需要容器化，可以再加 `Dockerfile`；当前仓库先不引入 K8s 或 Helm 约束。
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+## 环境变量
 
-***
+复制 `.env.example` 为 `.env`，填入真实值：
 
-# Editing this README
+```bash
+cp .env.example .env
+```
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+关键变量：
 
-## Suggestions for a good README
+- `NEXT_PUBLIC_SITE_URL`：站点正式域名，用于 canonical、sitemap、robots 等元数据；生产构建缺失时会直接失败
+- `PORT`：本地或生产启动端口，默认 `3000`
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+## 推荐架构
 
-## Name
-Choose a self-explaining name for your project.
+这套基线更适合类似 `papers.cool` 的产品站：
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+- `Next.js` 负责官网页、列表页、详情页和部分 BFF API
+- 搜索索引、抓取任务、推荐、队列等能力拆成独立后端服务
+- 需要交互的地方用 Client Component
+- 强 SEO 和首屏内容优先用 Server Component / 服务端渲染
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+也就是说：
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+- 前端框架统一为 React
+- 页面和业务交互放在同一套工程
+- 重后端能力保持独立，避免把采集、索引、队列硬塞进前端仓库
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+## 发布流程
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+推荐流程：
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+1. `pnpm build`
+2. 部署 `.next/standalone`、`.next/static`、`public/`
+3. 启动 `node .next/standalone/server.js`
+4. 在前面挂 CDN、SLB 或网关
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+## GitLab CI
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+仓库已带一个基础的 [`.gitlab-ci.yml`](/Users/gaozhongfu/workspace_rec/aiushtha/.gitlab-ci.yml)：
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+- `verify`：执行类型检查、格式检查和构建
+- `build_artifact`：产出 `.next/standalone`、`.next/static` 和 `public/`
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+你需要在 GitLab CI Variables 中配置：
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+- `NEXT_PUBLIC_SITE_URL`
 
-## License
-For open source projects, say how it is licensed.
+## 下一步建议
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+- 补一个部署方式：Node 直跑、Docker 或你们现有发布平台三选一
+- 明确后端边界：哪些能力由 Next Route Handlers 承接，哪些拆独立服务
+- 把首页和产品页替换成真实信息架构
+- 如果要做论文搜索类产品，再补搜索 API、任务队列和索引服务
