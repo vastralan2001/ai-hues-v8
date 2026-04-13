@@ -16,10 +16,10 @@ export function SiteHeader() {
         className="inline-flex items-center gap-3 text-sm font-bold tracking-[0.08em] text-ink"
         href="/"
       >
-        <span className="grid size-[38px] place-items-center rounded-[14px] border border-line-strong bg-[linear-gradient(135deg,#140909,var(--color-accent))] text-[15px] text-[#fff1e8] shadow-[0_10px_24px_rgba(93,15,8,0.34)]">
+        <span className="grid size-[38px] place-items-center rounded-[2px] border border-line bg-accent text-[15px] font-bold text-white shadow-[0_10px_24px_rgba(255,96,70,0.25)]">
           A
         </span>
-        <span className="font-serif text-[1.02rem] uppercase tracking-[0.14em]">
+        <span className="font-serif text-[1.02rem] font-semibold uppercase tracking-[3px]">
           Aiushtha
         </span>
       </Link>
@@ -31,7 +31,7 @@ export function SiteHeader() {
         {navItems.map((item) => (
           <Link
             key={item.href}
-            className="transition-colors hover:text-gold-soft focus-visible:text-gold-soft"
+            className="transition-colors hover:text-ink-warm focus-visible:text-ink-warm"
             href={item.href}
           >
             {item.label}

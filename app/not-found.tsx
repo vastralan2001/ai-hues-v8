@@ -2,12 +2,12 @@ import Link from 'next/link';
 
 const shellClass = 'mx-auto w-[min(1120px,calc(100vw-32px))]';
 const primaryButtonClass =
-  'inline-flex min-h-12 items-center justify-center rounded-full bg-ink px-[18px] text-[#fff8f0] transition-all duration-200 hover:-translate-y-px hover:bg-[#0f2723] focus-visible:-translate-y-px focus-visible:bg-[#0f2723]';
+  'inline-flex min-h-12 items-center justify-center rounded-[2px] bg-accent px-[18px] font-semibold uppercase tracking-[2px] text-white transition-all duration-200 hover:-translate-y-px hover:brightness-110 focus-visible:-translate-y-px focus-visible:brightness-110';
 
 export default function NotFound() {
   return (
     <main className={shellClass}>
-      <section className="mx-auto mt-[72px] grid max-w-[720px] gap-7 rounded-panel border border-white/55 bg-surface p-9 text-center shadow-panel backdrop-blur-[18px] max-md:p-7">
+      <section className="mx-auto mt-[72px] grid max-w-[720px] gap-7 rounded-[5px] border border-line bg-surface-strong p-9 text-center shadow-panel max-md:p-7">
         <p className="text-[0.82rem] font-bold uppercase tracking-[0.16em] text-accent-strong">
           404
         </p>

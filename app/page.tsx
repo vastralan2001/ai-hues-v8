@@ -42,7 +42,7 @@ export default function HomePage() {
 
         <aside className="relative z-10 grid gap-3" aria-label="工程特性">
           <div className={`${cardClass} rounded-card px-5 py-[18px]`}>
-            <span className="block text-[0.84rem] uppercase tracking-[0.12em] text-gold-soft">
+            <span className="block text-[0.84rem] uppercase tracking-[3px] text-gold">
               路由模式
             </span>
             <strong className="mt-2 block text-[1.28rem] text-ink">
@@ -50,7 +50,7 @@ export default function HomePage() {
             </strong>
           </div>
           <div className={`${cardClass} rounded-card px-5 py-[18px]`}>
-            <span className="block text-[0.84rem] uppercase tracking-[0.12em] text-gold-soft">
+            <span className="block text-[0.84rem] uppercase tracking-[3px] text-gold">
               运行方式
             </span>
             <strong className="mt-2 block text-[1.28rem] text-ink">
@@ -58,7 +58,7 @@ export default function HomePage() {
             </strong>
           </div>
           <div className={`${cardClass} rounded-card px-5 py-[18px]`}>
-            <span className="block text-[0.84rem] uppercase tracking-[0.12em] text-gold-soft">
+            <span className="block text-[0.84rem] uppercase tracking-[3px] text-gold">
               适用场景
             </span>
             <strong className="mt-2 block text-[1.28rem] text-ink">
@@ -72,7 +72,7 @@ export default function HomePage() {
         className={`${shellClass} mt-[22px] grid gap-[18px] md:grid-cols-3`}
       >
         <article className={`${cardClass} rounded-card p-7`}>
-          <p className="block text-[0.84rem] uppercase tracking-[0.12em] text-gold-soft">
+          <p className="block text-[0.84rem] uppercase tracking-[3px] text-gold">
             01
           </p>
           <h2 className="mt-2.5 font-serif text-[1.9rem] leading-[0.96] text-ink">
@@ -84,7 +84,7 @@ export default function HomePage() {
           </p>
         </article>
         <article className={`${cardClass} rounded-card p-7`}>
-          <p className="block text-[0.84rem] uppercase tracking-[0.12em] text-gold-soft">
+          <p className="block text-[0.84rem] uppercase tracking-[3px] text-gold">
             02
           </p>
           <h2 className="mt-2.5 font-serif text-[1.9rem] leading-[0.96] text-ink">
@@ -97,7 +97,7 @@ export default function HomePage() {
           </p>
         </article>
         <article className={`${cardClass} rounded-card p-7`}>
-          <p className="block text-[0.84rem] uppercase tracking-[0.12em] text-gold-soft">
+          <p className="block text-[0.84rem] uppercase tracking-[3px] text-gold">
             03
           </p>
           <h2 className="mt-2.5 font-serif text-[1.9rem] leading-[0.96] text-ink">
@@ -128,7 +128,7 @@ export default function HomePage() {
 
         <div className="relative z-10 grid gap-3">
           <div className={`${cardClass} rounded-card px-5 py-[18px]`}>
-            <span className="block text-[0.84rem] uppercase tracking-[0.12em] text-gold-soft">
+            <span className="block text-[0.84rem] uppercase tracking-[3px] text-gold">
               Framework
             </span>
             <strong className="mt-2 block text-[1.28rem] text-ink">
@@ -136,7 +136,7 @@ export default function HomePage() {
             </strong>
           </div>
           <div className={`${cardClass} rounded-card px-5 py-[18px]`}>
-            <span className="block text-[0.84rem] uppercase tracking-[0.12em] text-gold-soft">
+            <span className="block text-[0.84rem] uppercase tracking-[3px] text-gold">
               Language
             </span>
             <strong className="mt-2 block text-[1.28rem] text-ink">
@@ -144,7 +144,7 @@ export default function HomePage() {
             </strong>
           </div>
           <div className={`${cardClass} rounded-card px-5 py-[18px]`}>
-            <span className="block text-[0.84rem] uppercase tracking-[0.12em] text-gold-soft">
+            <span className="block text-[0.84rem] uppercase tracking-[3px] text-gold">
               Rendering
             </span>
             <strong className="mt-2 block text-[1.28rem] text-ink">
@@ -152,7 +152,7 @@ export default function HomePage() {
             </strong>
           </div>
           <div className={`${cardClass} rounded-card px-5 py-[18px]`}>
-            <span className="block text-[0.84rem] uppercase tracking-[0.12em] text-gold-soft">
+            <span className="block text-[0.84rem] uppercase tracking-[3px] text-gold">
               Deploy
             </span>
             <strong className="mt-2 block text-[1.28rem] text-ink">

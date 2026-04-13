@@ -1,32 +1,145 @@
 @import 'tailwindcss';
 
+/* ── Dota 2 Fonts ────────────────────────────────────────── */
+
+@font-face {
+  font-family: 'Reaver';
+  src: url('https://cdn.steamstatic.com/apps/dota2/fonts/Reaver-Light.woff')
+    format('woff');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Reaver';
+  src: url('https://cdn.steamstatic.com/apps/dota2/fonts/Reaver-Regular.woff')
+    format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Reaver';
+  src: url('https://cdn.steamstatic.com/apps/dota2/fonts/Reaver-SemiBold.woff')
+    format('woff');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Reaver';
+  src: url('https://cdn.steamstatic.com/apps/dota2/fonts/Reaver-Bold.woff')
+    format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Reaver';
+  src: url('https://cdn.steamstatic.com/apps/dota2/fonts/Reaver-Black.woff')
+    format('woff');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Radiance';
+  src: url('https://cdn.steamstatic.com/apps/dota2/fonts/radiance.woff')
+    format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Radiance';
+  src: url('https://cdn.steamstatic.com/apps/dota2/fonts/radiance-semibold.woff')
+    format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Radiance';
+  src: url('https://cdn.steamstatic.com/apps/dota2/fonts/radiance-bold.woff')
+    format('woff');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Goudy Trajan';
+  src: url('https://cdn.steamstatic.com/apps/dota2/fonts/goudytrajan-regular-pro-webfont.woff')
+    format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Goudy Trajan';
+  src: url('https://cdn.steamstatic.com/apps/dota2/fonts/goudytrajan-medium-pro-webfont.woff')
+    format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Goudy Trajan';
+  src: url('https://cdn.steamstatic.com/apps/dota2/fonts/goudytrajan-bold-pro-webfont.woff')
+    format('woff');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ── Design Tokens (from dota2.com) ──────────────────────── */
+
 @theme {
-  --font-sans:
-    'Radiance', 'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB',
-    'Microsoft YaHei', sans-serif;
-  --font-serif:
-    'Cinzel', 'Source Han Serif SC', 'Songti SC', 'Times New Roman', serif;
+  /* Typography — Dota 2 font stack */
+  --font-sans: 'Radiance', 'Noto Sans', sans-serif;
+  --font-serif: 'Reaver', serif;
+  --font-display: 'Goudy Trajan', serif;
   --font-mono: 'IBM Plex Mono', 'SFMono-Regular', ui-monospace, monospace;
 
-  --color-ink: #f3ede3;
-  --color-muted: #b0a79a;
-  --color-line: rgba(248, 232, 185, 0.12);
-  --color-line-strong: rgba(199, 145, 35, 0.28);
-  --color-accent: #d63b2c;
+  /* Text colors */
+  --color-ink: #ffffff;
+  --color-ink-warm: #e2dace;
+  --color-muted: rgba(255, 255, 255, 0.7);
+  --color-dim: #cacaca;
+
+  /* Border / line */
+  --color-line: rgba(255, 255, 255, 0.314);
+  --color-line-strong: rgba(255, 255, 255, 0.565);
+
+  /* Accent — Dota 2 CTA orange-red */
+  --color-accent: #ff6046;
   --color-accent-strong: #ff6046;
-  --color-gold: #c79123;
-  --color-gold-soft: #ecd393;
-  --color-paper: #171212;
-  --color-paper-deep: #050506;
-  --color-surface: rgba(17, 20, 25, 0.88);
-  --color-surface-strong: rgba(38, 44, 49, 0.96);
-  --color-surface-muted: rgba(28, 24, 22, 0.94);
 
-  --shadow-panel: 0 28px 80px rgba(0, 0, 0, 0.48);
-  --shadow-card: 0 18px 48px rgba(0, 0, 0, 0.32);
+  /* Gold / warm beige from Dota 2 nav highlights */
+  --color-gold: #e2dace;
+  --color-gold-soft: rgba(226, 218, 206, 0.565);
 
-  --radius-panel: 30px;
-  --radius-card: 22px;
+  /* Surfaces — Dota 2 uses pure black with gray layers */
+  --color-paper: #000000;
+  --color-paper-deep: #000000;
+  --color-surface: #0f0f0f;
+  --color-surface-strong: #1b1b1b;
+  --color-surface-muted: #333333;
+
+  /* Shadows */
+  --shadow-panel: 0 28px 80px rgba(0, 0, 0, 0.6);
+  --shadow-card: 0 18px 48px rgba(0, 0, 0, 0.4);
+
+  /* Radius — Dota 2 is angular, very small radii */
+  --radius-panel: 5px;
+  --radius-card: 2px;
+
+  /* Letter spacing scale (from dota2.com) */
+  --tracking-dota-tight: 1px;
+  --tracking-dota: 2px;
+  --tracking-dota-wide: 3px;
+  --tracking-dota-wider: 5px;
 }
 
 @layer base {
@@ -37,14 +150,14 @@
   html {
     color-scheme: dark;
     scroll-behavior: smooth;
-    background: #050506;
+    background: #000000;
   }
 
   body {
     position: relative;
     isolation: isolate;
     min-height: 100vh;
-    background: transparent;
+    background: #000000;
     color: var(--color-ink);
     text-rendering: optimizeLegibility;
   }
@@ -59,54 +172,23 @@
     font-size: 0.95em;
   }
 
+  /* Subtle top-down gradient overlay matching Dota 2's dark mood */
   body::before {
     content: '';
     position: fixed;
     inset: 0;
     z-index: -2;
     pointer-events: none;
-    background:
-      radial-gradient(
-        circle at 18% 0%,
-        rgba(255, 96, 70, 0.2),
-        transparent 28%
-      ),
-      radial-gradient(
-        circle at 82% 16%,
-        rgba(199, 145, 35, 0.14),
-        transparent 22%
-      ),
-      linear-gradient(
-        180deg,
-        #18110f 0%,
-        #090909 24%,
-        #0f1318 58%,
-        #050506 100%
-      );
-  }
-
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    opacity: 0.18;
-    background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 14%),
-      repeating-linear-gradient(
-        90deg,
-        rgba(255, 255, 255, 0.024) 0,
-        rgba(255, 255, 255, 0.024) 1px,
-        transparent 1px,
-        transparent 128px
-      );
-    mask-image: linear-gradient(180deg, black, rgba(0, 0, 0, 0.2));
+    background: linear-gradient(
+      180deg,
+      rgba(19, 23, 28, 0.4) 0%,
+      #000000 40%
+    );
   }
 
   ::selection {
-    background: rgba(255, 96, 70, 0.32);
-    color: #fff6ef;
+    background: rgba(255, 96, 70, 0.36);
+    color: #ffffff;
   }
 }
 
@@ -114,15 +196,13 @@
   .panel-shell {
     position: relative;
     overflow: hidden;
-    border: 1px solid var(--color-line-strong);
+    border: 1px solid var(--color-line);
     background: linear-gradient(
       180deg,
-      rgba(44, 50, 55, 0.84) 0%,
-      rgba(14, 16, 20, 0.96) 100%
+      #1b1b1b 0%,
+      #0f0f0f 100%
     );
-    box-shadow:
-      var(--shadow-panel),
-      inset 0 1px 0 rgba(248, 232, 185, 0.06);
+    box-shadow: var(--shadow-panel);
   }
 
   .panel-shell::before {
@@ -130,27 +210,15 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
-    background: linear-gradient(
-      120deg,
-      rgba(255, 255, 255, 0.06),
-      transparent 26%,
-      transparent 72%,
-      rgba(255, 96, 70, 0.08)
-    );
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
   }
 
   .card-shell {
     position: relative;
     overflow: hidden;
-    border: 1px solid var(--color-line);
-    background: linear-gradient(
-      180deg,
-      rgba(31, 26, 23, 0.9) 0%,
-      rgba(17, 18, 22, 0.94) 100%
-    );
-    box-shadow:
-      var(--shadow-card),
-      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #1b1b1b;
+    box-shadow: var(--shadow-card);
   }
 
   .card-shell::before {
@@ -160,8 +228,8 @@
     pointer-events: none;
     background: linear-gradient(
       180deg,
-      rgba(248, 232, 185, 0.04),
-      transparent 34%
+      rgba(255, 255, 255, 0.03),
+      transparent 40%
     );
   }
 
@@ -169,10 +237,10 @@
     display: inline-flex;
     align-items: center;
     gap: 0.75rem;
-    color: var(--color-gold-soft);
+    color: var(--color-gold);
     font-size: 0.78rem;
     font-weight: 700;
-    letter-spacing: 0.18em;
+    letter-spacing: 3px;
     text-transform: uppercase;
   }
 
@@ -180,11 +248,7 @@
     content: '';
     width: 44px;
     height: 1px;
-    background: linear-gradient(
-      90deg,
-      var(--color-accent-strong),
-      var(--color-gold)
-    );
+    background: var(--color-accent);
   }
 
   .button-primary,
@@ -193,56 +257,41 @@
     min-height: 3rem;
     align-items: center;
     justify-content: center;
-    border-radius: 999px;
     padding-inline: 1.15rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-size: 0.875rem;
     transition:
       transform 180ms ease,
       box-shadow 180ms ease,
-      border-color 180ms ease,
       filter 180ms ease;
   }
 
   .button-primary {
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: linear-gradient(
-      135deg,
-      #7d180f 0%,
-      var(--color-accent) 45%,
-      var(--color-accent-strong) 100%
-    );
-    color: #fff6ef;
-    box-shadow: 0 14px 34px rgba(110, 16, 8, 0.35);
-  }
-
-  .button-primary:hover,
-  .button-primary:focus-visible,
-  .button-secondary:hover,
-  .button-secondary:focus-visible {
-    transform: translateY(-1px);
+    border: none;
+    background: var(--color-accent);
+    color: #ffffff;
+    box-shadow: 0 14px 34px rgba(255, 96, 70, 0.25);
   }
 
   .button-primary:hover,
   .button-primary:focus-visible {
-    filter: brightness(1.06);
-    box-shadow: 0 18px 38px rgba(110, 16, 8, 0.42);
+    transform: translateY(-1px);
+    filter: brightness(1.1);
+    box-shadow: 0 18px 38px rgba(255, 96, 70, 0.35);
   }
 
   .button-secondary {
-    border: 1px solid var(--color-line-strong);
-    background: linear-gradient(
-      180deg,
-      rgba(44, 50, 55, 0.84) 0%,
-      rgba(22, 25, 29, 0.94) 100%
-    );
-    color: var(--color-gold-soft);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--color-line);
+    background: transparent;
+    color: var(--color-ink);
   }
 
   .button-secondary:hover,
   .button-secondary:focus-visible {
-    border-color: rgba(236, 211, 147, 0.42);
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.06),
-      0 10px 26px rgba(0, 0, 0, 0.26);
+    transform: translateY(-1px);
+    border-color: var(--color-line-strong);
+    background: rgba(255, 255, 255, 0.04);
   }
 }

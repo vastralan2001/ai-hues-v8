@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: '面向产品型站点的 Next.js App Router 基线。',
     start_url: '/',
     display: 'standalone',
-    background_color: '#f5efe4',
-    theme_color: '#11312b',
+    background_color: '#000000',
+    theme_color: '#ff6046',
     icons: [
       {
         src: '/favicon.svg',
