@@ -13,7 +13,7 @@ workflow:
     - if: $CI_COMMIT_TAG
 
 default:
-  image: msai-cn-beijing.cr.volces.com/msai/devops/ci-base-node:v0.0.2
+  image: msai-cn-beijing.cr.volces.com/msai/devops/ci-base:latest
   tags:
     - kimi
   before_script:
