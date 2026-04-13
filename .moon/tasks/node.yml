@@ -55,11 +55,12 @@ tasks:
   typecheck:
     command:
       - 'tsc'
-      - '--noEmit'
+      - '--build'
     inputs:
       - '@group(app)'
       - '@globs(sources)'
       - 'tsconfig.json'
+      - 'tsconfig.*.json'
 
   test:
     command:
