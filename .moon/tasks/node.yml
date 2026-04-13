@@ -23,9 +23,12 @@ tasks:
   format-check:
     command:
       - 'prettier'
+      - '--ignore-path'
+      - '@in(0)'
       - '--check'
       - '.'
     inputs:
+      - '/.prettierignore'
       - '.prettierrc'
       - '.prettierrc.json'
       - '@group(app)'
@@ -36,9 +39,12 @@ tasks:
   format:
     command:
       - 'prettier'
+      - '--ignore-path'
+      - '@in(0)'
       - '--write'
       - '.'
     inputs:
+      - '/.prettierignore'
       - '.prettierrc'
       - '.prettierrc.json'
       - '@group(app)'
@@ -56,6 +62,8 @@ tasks:
     command:
       - 'tsc'
       - '--build'
+    deps:
+      - '^:build'
     inputs:
       - '@group(app)'
       - '@globs(sources)'
