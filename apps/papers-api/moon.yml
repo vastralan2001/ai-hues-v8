@@ -3,8 +3,6 @@ $schema: 'https://moonrepo.dev/schemas/project.json'
 type: application
 language: typescript
 platform: node
-tags:
-  - docker
 
 dependsOn:
   - shared-types
@@ -29,3 +27,15 @@ tasks:
     deps:
       - build
     local: true
+
+  container:
+    script: |
+      docker build -f Dockerfile --push -t $CI_REGISTRY/papers-api:${CI_COMMIT_SHORT_SHA:0:7} .
+    deps:
+      - build
+    inputs:
+      - 'Dockerfile'
+      - 'package.json'
+      - 'src/**/*'
+    options:
+      runInCI: true
