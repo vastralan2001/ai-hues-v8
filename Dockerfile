@@ -11,9 +11,6 @@ COPY . .
 RUN --mount=type=cache,target=/pnpm/store \
     pnpm install --frozen-lockfile
 
-ARG NEXT_PUBLIC_SITE_URL
-ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
-
 RUN pnpm build
 
 # Production runtime stage
