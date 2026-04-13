@@ -1,5 +1,8 @@
-import nextCoreWebVitals from 'eslint-config-next/core-web-vitals';
+import tseslint from 'typescript-eslint';
 
-const eslintConfig = [...nextCoreWebVitals];
-
-export default eslintConfig;
+export default tseslint.config(
+  tseslint.configs.recommended,
+  {
+    ignores: ['dist/**', '.next/**', 'node_modules/**']
+  }
+);

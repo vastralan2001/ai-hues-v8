@@ -3,6 +3,34 @@
 面向产品型站点的 `Next.js App Router + TypeScript + Tailwind CSS 4` 基线。  
 默认假设是前端不再强制纯静态导出，站点可以直接运行在 Node 环境中，同时保留 SEO、首屏性能、多页面路由和后续动态能力扩展空间。
 
+## Monorepo 结构
+
+这是一个 pnpm workspace monorepo，包含以下应用和包：
+
+```text
+.
+├── apps/
+│   ├── web/                  # Next.js 前端应用
+│   └── data-api/             # Fastify 数据 API 服务
+├── packages/
+│   └── shared-types/         # 共享 TypeScript 类型定义
+├── pnpm-workspace.yaml       # Workspace 配置
+└── package.json              # 根 package.json
+```
+
+### Apps
+
+| 应用 | 路径 | 说明 | 端口 |
+|------|------|------|------|
+| web | `apps/web/` | Next.js 前端站点 | 3000 |
+| data-api | `apps/data-api/` | Fastify 数据服务 (连接 Hologres) | 3001 |
+
+### Packages
+
+| 包 | 路径 | 说明 |
+|------|------|------|
+| shared-types | `packages/shared-types/` | Web 和 Data API 共享的 TypeScript 类型 |
+
 ## 目标
 
 - 使用 `App Router` 组织多页面站点
@@ -10,21 +38,7 @@
 - 同时支持静态页面、服务端渲染和客户端交互
 - 为搜索、登录态、个性化推荐、BFF API 预留演进空间
 - 保持官网页和产品页共用一套 React 工程
-
-## 目录结构
-
-```text
-.
-├── app/                     # App Router 页面与元数据路由
-├── components/              # 公共组件
-├── lib/                     # 站点级配置与辅助函数
-├── public/                  # 直接暴露的静态文件
-├── postcss.config.mjs       # Tailwind 4 PostCSS 配置
-├── .env.example             # 环境变量示例
-├── .gitlab-ci.yml           # GitLab CI
-├── next.config.ts           # Next.js 配置
-└── package.json
-```
+- 数据服务独立部署，通过 API 与前端通信
 
 ## 本地开发
 
@@ -38,50 +52,79 @@
 ```bash
 corepack enable
 pnpm install
+
+# 只启动前端
+pnpm dev:web
+
+# 只启动数据 API
+pnpm dev:api
+
+# 同时启动所有服务
 pnpm dev
 ```
 
 常用命令：
 
 ```bash
-pnpm dev
-pnpm build
-pnpm start
-pnpm check
-pnpm format
-pnpm format:check
+# 开发
+pnpm dev:web        # 前端开发
+pnpm dev:api        # API 服务开发
+
+# 构建
+pnpm build          # 构建所有包和应用
+
+# 检查
+pnpm check          # 类型检查所有项目
+pnpm lint           # 代码检查
+pnpm format         # 格式化代码
 ```
 
 ## 部署模型
 
-当前脚手架默认按 Node 服务运行：
+### Web 前端
 
-- `next build` 生成 `.next/standalone`
-- 启动命令为 `node .next/standalone/server.js`
-- `.next/static` 和 `public/` 需要与 `standalone` 一起部署
+- `pnpm build` 生成 `apps/web/.next/standalone`
+- 启动命令为 `node server.js`
 - 线上通常在 CDN 或网关后面挂一个 Node 服务或容器
 
-如果后续需要容器化，可以再加 `Dockerfile`；当前仓库先不引入 K8s 或 Helm 约束。
+### Data API 服务
+
+- Fastify + PostgreSQL (Hologres)
+- 支持 K8s 无状态部署，可水平扩展
+- 环境变量配置数据库连接
+
+```bash
+cd apps/data-api
+pnpm build
+pnpm start
+```
 
 ## 环境变量
 
-复制 `.env.example` 为 `.env`，填入真实值：
+### Web 前端 (`apps/web/.env`)
 
 ```bash
-cp .env.example .env
+NEXT_PUBLIC_SITE_URL=https://your-site.com
+PORT=3000
 ```
 
-关键变量：
+### Data API (`apps/data-api/.env`)
 
-- `NEXT_PUBLIC_SITE_URL`：站点正式域名，用于 canonical、sitemap、robots 等元数据；生产构建缺失时会直接失败
-- `PORT`：本地或生产启动端口，默认 `3000`
+```bash
+PORT=3001
+HOLOGRES_HOST=your-host.hologres.aliyuncs.com
+HOLOGRES_PORT=80
+HOLOGRES_DATABASE=your-db
+HOLOGRES_USER=your-user
+HOLOGRES_PASSWORD=your-password
+```
 
 ## 推荐架构
 
 这套基线更适合类似 `papers.cool` 的产品站：
 
-- `Next.js` 负责官网页、列表页、详情页和部分 BFF API
-- 搜索索引、抓取任务、推荐、队列等能力拆成独立后端服务
+- `Next.js` 负责官网页、列表页、详情页
+- `Data API` 服务提供论文数据查询接口
 - 需要交互的地方用 Client Component
 - 强 SEO 和首屏内容优先用 Server Component / 服务端渲染
 
@@ -89,31 +132,37 @@ cp .env.example .env
 
 - 前端框架统一为 React
 - 页面和业务交互放在同一套工程
-- 重后端能力保持独立，避免把采集、索引、队列硬塞进前端仓库
+- 数据服务保持独立，连接 Hologres 提供 API
 
 ## 发布流程
 
-推荐流程：
+### Web 前端
 
 1. `pnpm build`
-2. 部署 `.next/standalone`、`.next/static`、`public/`
-3. 启动 `node .next/standalone/server.js`
-4. 在前面挂 CDN、SLB 或网关
+2. 部署 `apps/web/.next/standalone`
+3. 在前面挂 CDN、SLB 或网关
+
+### Data API
+
+1. `pnpm --filter @aiushtha/data-api build`
+2. Docker 构建并推送到镜像仓库
+3. K8s 部署 (HPA 自动扩缩容)
 
 ## GitLab CI
 
-仓库已带一个基础的 [`.gitlab-ci.yml`](/Users/gaozhongfu/workspace_rec/aiushtha/.gitlab-ci.yml)：
+仓库已带一个基础的 [`.gitlab-ci.yml`](./.gitlab-ci.yml)：
 
-- `verify`：执行类型检查、格式检查和构建
-- `build_artifact`：产出 `.next/standalone`、`.next/static` 和 `public/`
+- `verify`: 执行类型检查、格式检查和构建
+- `build_artifact`: 产出构建产物
 
-你需要在 GitLab CI Variables 中配置：
+需要在 GitLab CI Variables 中配置：
 
 - `NEXT_PUBLIC_SITE_URL`
 
 ## 下一步建议
 
-- 补一个部署方式：Node 直跑、Docker 或你们现有发布平台三选一
-- 明确后端边界：哪些能力由 Next Route Handlers 承接，哪些拆独立服务
-- 把首页和产品页替换成真实信息架构
-- 如果要做论文搜索类产品，再补搜索 API、任务队列和索引服务
+- [ ] 完善 Data API 的论文查询接口
+- [ ] 前端接入 Data API 获取真实数据
+- [ ] 配置 Hologres 表结构
+- [ ] 添加 Docker Compose 本地开发配置
+- [ ] 配置 K8s 部署 YAML

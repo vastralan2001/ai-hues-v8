@@ -1,0 +1,67 @@
+# yaml-language-server: $schema=https://moonrepo.dev/schemas/tasks.json
+$schema: 'https://moonrepo.dev/schemas/tasks.json'
+
+implicitInputs:
+  - package.json
+
+fileGroups:
+  configs:
+    - '*.{js,json,yml,yaml}'
+  sources:
+    - 'src/**/*'
+    - 'types/**/*'
+  tests:
+    - 'tests/**/*.test.*'
+    - '**/__tests__/**/*'
+
+tasks:
+  format-check:
+    command:
+      - 'prettier'
+      - '--check'
+      - '.'
+    inputs:
+      - '@globs(sources)'
+      - '@globs(tests)'
+      - '@globs(configs)'
+    local: true
+
+  format:
+    command:
+      - 'prettier'
+      - '--write'
+      - '.'
+    inputs:
+      - '@globs(sources)'
+      - '@globs(tests)'
+      - '@globs(configs)'
+    local: true
+
+  lint:
+    command:
+      - 'eslint'
+      - '.'
+    inputs:
+      - '@globs(sources)'
+      - '@globs(tests)'
+      - 'eslint.config.*'
+
+  typecheck:
+    command:
+      - 'tsc'
+      - '--noEmit'
+    inputs:
+      - '@globs(sources)'
+      - '@globs(tests)'
+      - 'tsconfig.json'
+
+  test:
+    command:
+      - 'vitest'
+      - 'run'
+      - '--passWithNoTests'
+    inputs:
+      - '@globs(sources)'
+      - '@globs(tests)'
+    options:
+      outputStyle: 'buffer-only-failure'

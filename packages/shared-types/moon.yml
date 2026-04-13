@@ -1,0 +1,20 @@
+# yaml-language-server: $schema=https://moonrepo.dev/schemas/project.json
+$schema: 'https://moonrepo.dev/schemas/project.json'
+type: library
+language: typescript
+platform: node
+
+tasks:
+  build:
+    command: pnpm run build
+    inputs:
+      - 'src/**/*'
+      - 'tsconfig.json'
+    outputs:
+      - 'dist'
+
+  typecheck:
+    command: pnpm run check
+    inputs:
+      - 'src/**/*'
+      - 'tsconfig.json'

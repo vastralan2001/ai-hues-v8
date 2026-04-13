@@ -9,11 +9,15 @@ workflow:
 
 variables:
   CI_REGISTRY: 'msai-cn-beijing.cr.volces.com/msai'
+  GIT_DEPTH: "0"
+  GIT_CLEAN_FLAGS: -ffdx
 
 default:
   image: msai-cn-beijing.cr.volces.com/msai/devops/ci-base-node:v0.0.2
   tags:
     - kimi
+  before_script:
+    - pnpm install --frozen-lockfile
 
 stages:
   - test
@@ -21,16 +25,22 @@ stages:
 
 lint:
   stage: test
-  before_script:
-    - pnpm install --frozen-lockfile
   script:
-    - pnpm check
-    - pnpm format:check
+    - moon run :lint :format-check :typecheck
+    - echo "✅ Check successful"
 
-Build Image:
+Build Web Image:
   stage: build
   script:
-    - IMAGE=$CI_REGISTRY/aiushtha:${CI_COMMIT_SHORT_SHA:0:7}
-    - echo "build $IMAGE"
-    - docker build --push -t $IMAGE .
-    - echo "Build and push $IMAGE successfully"
+    - moon run papers-web:container
+    - echo "✅ Build web image successful"
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+Build API Image:
+  stage: build
+  script:
+    - moon run papers-api:container
+    - echo "✅ Build api image successful"
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH

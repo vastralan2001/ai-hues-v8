@@ -1,0 +1,56 @@
+# yaml-language-server: $schema=https://moonrepo.dev/schemas/project.json
+$schema: 'https://moonrepo.dev/schemas/project.json'
+type: application
+language: typescript
+platform: node
+tags:
+  - docker
+  - nextjs
+
+extends: 'tag-docker'
+
+dependsOn:
+  - shared-types
+
+fileGroups:
+  app:
+    - 'app/**/*'
+    - 'components/**/*'
+    - 'lib/**/*'
+    - 'public/**/*'
+
+tasks:
+  dev:
+    command: pnpm run dev
+    local: true
+
+  build:
+    command: pnpm run build
+    deps:
+      - '^:build'
+    inputs:
+      - '@group(app)'
+      - 'next.config.*'
+      - 'tsconfig.json'
+      - 'postcss.config.*'
+      - 'tailwind.config.*'
+    outputs:
+      - '.next'
+
+  start:
+    command: pnpm run start
+    deps:
+      - build
+    local: true
+
+  lint:
+    command: pnpm run lint
+    inputs:
+      - '@group(app)'
+      - 'eslint.config.*'
+
+  typecheck:
+    command: pnpm run check
+    inputs:
+      - '@group(app)'
+      - 'tsconfig.json'

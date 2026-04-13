@@ -1,0 +1,13 @@
+# yaml-language-server: $schema=https://moonrepo.dev/schemas/workspace.json
+# https://moonrepo.dev/docs/config/workspace
+$schema: 'https://moonrepo.dev/schemas/workspace.json'
+
+# A map of all projects found within the workspace
+projects:
+  - 'apps/*'
+  - 'packages/*'
+
+vcs:
+  manager: git
+  provider: gitlab
+  defaultBranch: master
