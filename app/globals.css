@@ -179,11 +179,7 @@
     inset: 0;
     z-index: -2;
     pointer-events: none;
-    background: linear-gradient(
-      180deg,
-      rgba(19, 23, 28, 0.4) 0%,
-      #000000 40%
-    );
+    background: linear-gradient(180deg, rgba(19, 23, 28, 0.4) 0%, #000000 40%);
   }
 
   ::selection {
@@ -197,11 +193,7 @@
     position: relative;
     overflow: hidden;
     border: 1px solid var(--color-line);
-    background: linear-gradient(
-      180deg,
-      #1b1b1b 0%,
-      #0f0f0f 100%
-    );
+    background: linear-gradient(180deg, #1b1b1b 0%, #0f0f0f 100%);
     box-shadow: var(--shadow-panel);
   }
 
