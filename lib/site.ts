@@ -3,10 +3,7 @@ export const siteDescription =
   '面向产品型站点的 Next.js App Router 基线，兼顾 SEO、动态数据、React 组件化和 Node 部署能力。';
 
 function resolveSiteUrl() {
-  const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(
-    /\/+$/,
-    '',
-  );
+  const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, '');
 
   if (configuredSiteUrl) {
     return configuredSiteUrl;
@@ -25,6 +22,7 @@ function resolveSiteUrl() {
 export const siteUrl = resolveSiteUrl();
 
 export function absoluteUrl(path = '/') {
+  const baseUrl = siteUrl.replace(/\/+$/, '');
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
-  return new URL(normalizedPath, `${siteUrl}/`).toString();
+  return `${baseUrl}${normalizedPath}`;
 }
