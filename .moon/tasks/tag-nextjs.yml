@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=https://moonrepo.dev/schemas/tasks.json
+$schema: 'https://moonrepo.dev/schemas/tasks.json'
+
+fileGroups:
+  app:
+    - 'app/**/*'
+    - 'components/**/*'
+    - 'lib/**/*'
+    - 'public/**/*'
+
+tasks:
+  lint:
+    command: pnpm run lint
+    inputs:
+      - '@group(app)'
+      - 'eslint.config.*'
+
+  dev:
+    command: pnpm run dev
+    local: true
+
+  build:
+    command: pnpm run build
+    deps:
+      - '^:build'
+    inputs:
+      - '@group(app)'
+      - 'next.config.*'
+      - 'tsconfig.json'
+      - 'tailwind.config.*'
+      - 'postcss.config.*'
+    outputs:
+      - '.next'
+
+  start:
+    command: pnpm run start
+    deps:
+      - build
+    local: true
+

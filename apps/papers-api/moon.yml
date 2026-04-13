@@ -6,8 +6,6 @@ platform: node
 tags:
   - docker
 
-extends: 'tag-docker'
-
 dependsOn:
   - shared-types
 
@@ -31,9 +29,3 @@ tasks:
     deps:
       - build
     local: true
-
-  typecheck:
-    command: pnpm run check
-    inputs:
-      - 'src/**/*'
-      - 'tsconfig.json'

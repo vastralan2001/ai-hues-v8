@@ -12,9 +12,3 @@ tasks:
       - 'tsconfig.json'
     outputs:
       - 'dist'
-
-  typecheck:
-    command: pnpm run check
-    inputs:
-      - 'src/**/*'
-      - 'tsconfig.json'

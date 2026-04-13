@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify';
-import type { PaperListResponse, Paper, PaperFilter } from '@aiushtha/shared-types';
+import type { PaperFilter } from '@aiushtha/shared-types';
 
 export async function paperRoutes(fastify: FastifyInstance) {
   // 获取论文列表
@@ -66,7 +66,12 @@ export async function paperRoutes(fastify: FastifyInstance) {
     const pageSize = parseInt(request.query.pageSize || '20', 10);
 
     try {
-      const result = await fastify.db.getDailyPapers(date, page, pageSize, request.query.category);
+      const result = await fastify.db.getDailyPapers(
+        date,
+        page,
+        pageSize,
+        request.query.category,
+      );
       return result;
     } catch (error) {
       fastify.log.error(error);

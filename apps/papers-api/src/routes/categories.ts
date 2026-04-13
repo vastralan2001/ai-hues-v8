@@ -1,5 +1,4 @@
 import type { FastifyInstance } from 'fastify';
-import type { Category } from '@aiushtha/shared-types';
 
 export async function categoryRoutes(fastify: FastifyInstance) {
   // 获取所有分类

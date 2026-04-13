@@ -1,0 +1,10 @@
+node_modules
+dist
+.next
+.moon/cache
+.moon/docker
+.astro
+.vercel
+*.tsbuildinfo
+pnpm-lock.yaml
+package-lock.json

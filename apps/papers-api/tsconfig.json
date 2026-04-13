@@ -5,7 +5,7 @@
     "moduleResolution": "bundler",
     "declaration": true,
     "sourceMap": true,
-    "outDir": "./dist",
+    "outDir": "../../.moon/cache/types/apps/papers-api",
     "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
@@ -14,5 +14,10 @@
     "resolveJsonModule": true
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "exclude": ["node_modules", "dist"],
+  "references": [
+    {
+      "path": "../../packages/shared-types"
+    }
+  ]
 }

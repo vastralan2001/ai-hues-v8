@@ -1,6 +1,11 @@
 import type { FastifyInstance } from 'fastify';
 import pg from 'pg';
-import type { Paper, PaperListResponse, PaperFilter, Category } from '@aiushtha/shared-types';
+import type {
+  Paper,
+  PaperListResponse,
+  PaperFilter,
+  Category,
+} from '@aiushtha/shared-types';
 
 const { Pool } = pg;
 
@@ -26,7 +31,11 @@ export class DatabaseService {
   }
 
   // 获取论文列表
-  async getPapers(page: number, pageSize: number, filter: PaperFilter): Promise<PaperListResponse> {
+  async getPapers(
+    page: number,
+    pageSize: number,
+    filter: PaperFilter,
+  ): Promise<PaperListResponse> {
     const offset = (page - 1) * pageSize;
 
     // 构建查询条件
@@ -45,10 +54,13 @@ export class DatabaseService {
 
     if (filter.search) {
       params.push(`%${filter.search}%`);
-      conditions.push(`(title ILIKE $${params.length} OR abstract ILIKE $${params.length})`);
+      conditions.push(
+        `(title ILIKE $${params.length} OR abstract ILIKE $${params.length})`,
+      );
     }
 
-    const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+    const whereClause =
+      conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
 
     // 排序
     let orderBy = 'published_at DESC';
@@ -126,7 +138,12 @@ export class DatabaseService {
   }
 
   // 获取每日论文
-  async getDailyPapers(date: string, page: number, pageSize: number, category?: string): Promise<PaperListResponse> {
+  async getDailyPapers(
+    date: string,
+    page: number,
+    pageSize: number,
+    category?: string,
+  ): Promise<PaperListResponse> {
     return this.getPapers(page, pageSize, {
       date,
       category,
