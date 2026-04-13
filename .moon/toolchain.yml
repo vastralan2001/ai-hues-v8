@@ -12,6 +12,6 @@ node:
 
 typescript:
   createMissingConfig: true
-  routeOutDirToCache: true
+  routeOutDirToCache: false
   syncProjectReferences: true
   syncProjectReferencesToPaths: false
