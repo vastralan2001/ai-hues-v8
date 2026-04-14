@@ -30,12 +30,13 @@ tasks:
 
   container:
     script: |
-      docker build -f Dockerfile --push -t ${CI_REGISTRY:+$CI_REGISTRY/}papers-api:${CI_COMMIT_SHORT_SHA:0:7} .
+      docker build -f apps/papers-api/Dockerfile --push -t ${CI_REGISTRY:+$CI_REGISTRY/}papers-api:${CI_COMMIT_SHORT_SHA:0:7} .
     deps:
       - build
     inputs:
-      - 'Dockerfile'
-      - 'package.json'
-      - 'src/**/*'
+      - 'apps/papers-api/Dockerfile'
+      - 'apps/papers-api/package.json'
+      - 'apps/papers-api/src/**/*'
     options:
+      runFromWorkspaceRoot: true
       runInCI: true
