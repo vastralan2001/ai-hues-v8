@@ -1,0 +1,201 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==================== 用户 ====================
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  avatar        String?
+  credits       Int       @default(100)
+  role          UserRole  @default(USER)
+  accounts      Account[]
+  sessions      Session[]
+  ratings       Rating[]
+  toolUsages    ToolUsage[]
+  favorites     Favorite[]
+  achievements  UserAchievement[]
+  leaderboard   LeaderboardEntry[]
+  wishlistItems WishlistItem[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  @@map("users")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  MODERATOR
+}
+
+// ==================== NextAuth ====================
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@map("sessions")
+}
+
+// ==================== 工具 ====================
+model Tool {
+  id           String       @id @default(cuid())
+  slug         String       @unique
+  name         String
+  nameEn       String?
+  category     ToolCategory
+  icon         String
+  description  String
+  creditCost   Int          @default(0)
+  tags         String[]
+  url          String
+  order        Int          @default(0)
+  avgRating    Float?       @default(0)
+  totalRatings Int          @default(0)
+  totalUses    Int          @default(0)
+  ratings      Rating[]
+  usages       ToolUsage[]
+  favorites    Favorite[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  @@map("tools")
+}
+
+enum ToolCategory {
+  DEV
+  UTILITY
+  AI_WRITING
+  GAME
+}
+
+// ==================== 评分 ====================
+model Rating {
+  id        String   @id @default(cuid())
+  userId    String
+  toolId    String
+  score     Int
+  review    String?  @db.Text
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tool      Tool     @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([userId, toolId])
+  @@map("ratings")
+}
+
+// ==================== 工具使用记录 ====================
+model ToolUsage {
+  id       String   @id @default(cuid())
+  userId   String
+  toolId   String
+  usedAt   DateTime @default(now())
+  duration Int?
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tool     Tool     @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  @@map("tool_usages")
+}
+
+// ==================== 收藏 ====================
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  toolId    String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tool      Tool     @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  @@unique([userId, toolId])
+  @@map("favorites")
+}
+
+// ==================== 排行榜 ====================
+model LeaderboardEntry {
+  id        String            @id @default(cuid())
+  userId    String
+  score     Int
+  period    LeaderboardPeriod
+  rank      Int?
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  @@unique([userId, period])
+  @@map("leaderboard")
+}
+
+enum LeaderboardPeriod {
+  DAILY
+  WEEKLY
+  MONTHLY
+  ALL_TIME
+}
+
+// ==================== 成就 ====================
+model Achievement {
+  id          String            @id @default(cuid())
+  slug        String            @unique
+  name        String
+  nameEn      String?
+  description String
+  icon        String
+  condition   String
+  points      Int             @default(10)
+  users       UserAchievement[]
+  @@map("achievements")
+}
+
+model UserAchievement {
+  id            String      @id @default(cuid())
+  userId        String
+  achievementId String
+  unlockedAt    DateTime    @default(now())
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+  @@unique([userId, achievementId])
+  @@map("user_achievements")
+}
+
+// ==================== 许愿单 ====================
+model WishlistItem {
+  id          String         @id @default(cuid())
+  userId      String
+  title       String
+  description String?
+  votes       Int            @default(0)
+  status      WishlistStatus @default(PENDING)
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  @@map("wishlist_items")
+}
+
+enum WishlistStatus {
+  PENDING
+  APPROVED
+  IN_PROGRESS
+  DONE
+  REJECTED
+}
