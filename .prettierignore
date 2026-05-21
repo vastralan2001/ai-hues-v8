@@ -1,11 +1,18 @@
-node_modules
-dist
+/pnpm-lock.yaml
 .next
+.svelte-kit
+dist
+*_pb.js
+*_pb.d.ts
+*_connect.js
+*_connect.d.ts
+build/
+deploy/**/templates/
+package.json
+vite.config.ts.timestamp-*
+# Next.js auto-generated types
+next-env.d.ts
+
+# moonrepo cache
 .moon/cache
 .moon/docker
-.astro
-.vercel
-*.tsbuildinfo
-next-env.d.ts
-pnpm-lock.yaml
-package-lock.json

@@ -1,17 +1,38 @@
-# yaml-language-server: $schema=https://moonrepo.dev/schemas/toolchain.json
+# yaml-language-server: $schema=./cache/schemas/toolchain.json
 # https://moonrepo.dev/docs/config/toolchain
-$schema: 'https://moonrepo.dev/schemas/toolchain.json'
-
+$schema: "./cache/schemas/toolchain.json"
 node:
+  # The package manager to use when managing dependencies.
   packageManager: "pnpm"
+
   syncPackageManagerField: false
+
+  # Add `node.version` as a constraint in the root `package.json` `engines`.
   addEnginesConstraint: true
+
+  # Dedupe dependencies after the lockfile has changed.
   dedupeOnLockfileChange: true
+
+  # Infer and automatically create moon tasks from `package.json` scripts, per project.
   inferTasksFromScripts: false
+
+  # Sync a project's `dependsOn` as dependencies within the project's `package.json`.
   syncProjectWorkspaceDependencies: true
 
+# Configures how moon integrates with TypeScript.
 typescript:
+  # When `syncProjectReferences` is enabled and a dependent project reference
+  # *does not* have a `tsconfig.json`, automatically create one.
   createMissingConfig: true
-  routeOutDirToCache: false
+
+  # Update a project's `tsconfig.json` to route the `outDir` compiler option
+  # to moon's `.moon/cache` directory.
+  routeOutDirToCache: true
+
+  # Sync a project's `dependsOn` as project references within the
+  # project's `tsconfig.json` and the workspace root `tsconfig.json`.
   syncProjectReferences: true
+
+  # Sync a project's project references as import aliases to the `paths`
+  # compiler option in each applicable project.
   syncProjectReferencesToPaths: false

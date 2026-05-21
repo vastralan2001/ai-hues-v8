@@ -1,3 +1,6 @@
+# direnv
+.envrc
+
 node_modules
 .next
 .vercel
@@ -6,6 +9,7 @@ dist
 .deploy
 package-lock.json
 *.tsbuildinfo
+.env
 .env.local
 .DS_Store
 .moon/cache

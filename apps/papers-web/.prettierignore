@@ -1,7 +1,0 @@
-node_modules
-.next
-dist
-.astro
-.deploy
-next-env.d.ts
-pnpm-lock.yaml

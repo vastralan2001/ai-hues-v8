@@ -1,3 +1,5 @@
+# steal from https://github.com/moonrepo/examples/blob/master/.moon/tasks/node.yml
+#
 # yaml-language-server: $schema=https://moonrepo.dev/schemas/tasks.json
 $schema: 'https://moonrepo.dev/schemas/tasks.json'
 
@@ -5,19 +7,24 @@ implicitInputs:
   - package.json
 
 fileGroups:
+  # Application specific files
   app: []
   configs:
-    - '*.{js,json,mjs,yml,yaml}'
+    - '*.{js,json,yml,yaml}'
   sources:
     - 'public/**/*'
     - 'src/**/*'
     - 'types/**/*'
-    - 'lib/**/*'
-    - 'app/**/*'
-    - 'components/**/*'
   tests:
     - 'tests/**/*.test.*'
+    - 'tests/**/*.stories.*'
     - '**/__tests__/**/*'
+  assets:
+    - 'assets/**/*'
+    - 'images/**/*'
+    - 'static/**/*'
+    - '**/*.{scss,css}'
+    - '**/*.{md,mdx}'
 
 tasks:
   format-check:
@@ -29,11 +36,13 @@ tasks:
       - '.'
     inputs:
       - '/.prettierignore'
+      - '/prettier.config.js'
       - '.prettierrc'
-      - '.prettierrc.json'
       - '@group(app)'
       - '@globs(sources)'
+      - '@globs(tests)'
       - '@globs(configs)'
+      - '**/*.{md,mdx}'
     local: true
 
   format:
@@ -45,30 +54,51 @@ tasks:
       - '.'
     inputs:
       - '/.prettierignore'
+      - '/prettier.config.js'
       - '.prettierrc'
-      - '.prettierrc.json'
       - '@group(app)'
       - '@globs(sources)'
+      - '@globs(tests)'
       - '@globs(configs)'
+      - '**/*.{md,mdx}'
     local: true
 
   lint:
-    command: pnpm run lint
+    command:
+      - 'eslint'
+      - '--ext'
+      - '.ts,.tsx,.cts,.mts,.js,.jsx,.cjs,.mjs'
+      - '--fix'
+      - '--report-unused-disable-directives'
+      - '--no-error-on-unmatched-pattern'
+      - '--exit-on-fatal-error'
+      - '--ignore-path'
+      - '@in(2)'
+      - '.'
     inputs:
+      - '*.config.*'
+      - '**/.eslintrc.*'
+      - '/.eslintignore'
+      - '/.eslintrc.*'
+      - 'tsconfig.json'
+      - '/tsconfig.eslint.json'
+      - '/tsconfig.options.json'
+      - '@group(app)'
       - '@globs(sources)'
-      - 'eslint.config.*'
+      - '@globs(tests)'
 
+  # https://moonrepo.dev/docs/guides/examples/typescript
   typecheck:
     command:
       - 'tsc'
       - '--build'
-    deps:
-      - '^:build'
     inputs:
       - '@group(app)'
       - '@globs(sources)'
+      - '@globs(tests)'
       - 'tsconfig.json'
       - 'tsconfig.*.json'
+      - '/tsconfig.options.json'
 
   test:
     command:

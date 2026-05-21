@@ -2,33 +2,34 @@
   "name": "aiushtha",
   "version": "0.1.0",
   "private": true,
-  "packageManager": "pnpm@10.24.0",
-  "engines": {
-    "node": ">=20"
-  },
   "scripts": {
     "prepare": "simple-git-hooks",
-    "check": "moon run :lint :format-check :typecheck",
-    "dev:web": "moon run papers-web:dev",
-    "dev:api": "moon run papers-api:dev",
-    "dev:aihues-web": "moon run aihues-web:dev",
-    "dev": "moon run papers-web:dev papers-api:dev aihues-web:dev",
-    "build": "moon run papers-web:build papers-api:build aihues-web:build",
-    "build:aihues-web": "moon run aihues-web:build",
-    "lint": "moon run :lint",
-    "format": "moon run :format",
-    "format:check": "moon run :format-check"
+    "check": "moon run :lint :format :typecheck :test"
   },
   "devDependencies": {
     "@moonrepo/cli": "^1.41.5",
-    "@types/node": "^24.0.0",
-    "eslint": "^9.39.4",
-    "prettier": "^3.0.0",
+    "eslint": "^9.31.0",
+    "eslint-plugin-workspaces": "^0.11.0",
+    "git-conventional-commits": "^2.8.0",
+    "prettier": "^3.5.3",
+    "prettier-plugin-tailwindcss": "^0.6.12",
     "simple-git-hooks": "^2.13.0",
-    "typescript": "^5.0.0",
-    "typescript-eslint": "^8.0.0"
+    "tsconfig-moon": "^1.4.1",
+    "typescript-eslint": "^8.38.0"
   },
   "simple-git-hooks": {
-    "pre-commit": "pnpm moon run :format-check :lint :typecheck --affected --status=staged"
+    "pre-commit": "pnpm moon run :format-check :lint :typecheck --affected --status=staged",
+    "commit-msg": "pnpm git-conventional-commits commit-msg-hook -c .commitlintrc.yaml \"$1\""
+  },
+  "type": "module",
+  "engines": {
+    "node": "^22.0.0 || ^24.0.0 || >=25.0.0",
+    "pnpm": ">=10.18.3"
+  },
+  "packageManager": "pnpm@10.18.3",
+  "pnpm": {
+    "overrides": {
+      "caniuse-lite": "latest"
+    }
   }
 }

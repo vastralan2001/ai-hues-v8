@@ -1,8 +1,17 @@
 variables:
+  # Disable shallow clone to suppress git error in moon command.
+  # Otherwise you may encounter git failue like:
+  # fatal: ambiguous argument 'main': unknown revision or path not in the working tree.
+  # More information:
+  # - https://github.com/moonrepo/moon/issues/1038
+  # - https://docs.gitlab.com/ee/ci/large_repositories/#shallow-cloning
   GIT_DEPTH: "0"
+  # Clean untracked files between jobs to avoid stale node_modules/.pnpm links.
   GIT_CLEAN_FLAGS: -ffdx
+  # Color output
   MOON_COLOR: "2"
 
+# To avoid duplicate pipelines when using job rules
 workflow:
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
@@ -10,19 +19,37 @@ workflow:
     - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
       when: never
     - if: $CI_COMMIT_BRANCH
-    - if: $CI_COMMIT_TAG
 
 default:
   image: msai-cn-beijing.cr.volces.com/msai/devops/ci-base:latest
-  tags:
-    - kimi
   before_script:
     - export PATH=$PWD/node_modules/.bin:$PATH
+    - npm config set registry https://registry.npmmirror.com
     - pnpm install --frozen-lockfile
+    - env
+  tags:
+    - kimi
 
 stages:
   - test
   - build
+  - security-test
+
+sast-scan-js:
+  stage: security-test
+  tags:
+    - docker
+  variables:
+    CORAX_RULE: 'Corax 推荐-JavaScript'
+    PROJECT_NAME: '${CI_PROJECT_NAME}-js'
+  image: msai-cn-beijing.cr.volces.com/security/sast:latest
+  before_script: []
+  allow_failure: true
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "main"'
+  script:
+    - TIMESTAMP=$(date +%Y-%m-%d-%H:%M:%S)
+    - corax run --init -p "${PROJECT_NAME}" -t "${CI_COMMIT_SHORT_SHA}${CI_PIPELINE_ID}${TIMESTAMP}" -r "${CORAX_RULE}" --token "$CORAX_TOKEN" --server-path "$CORAX_HOST"
 
 lint:
   stage: test
@@ -30,18 +57,11 @@ lint:
     - pnpm check
     - echo "✅ Lint successful"
 
-Build Web Image:
+build:
   stage: build
   script:
-    - moon run papers-web:container
-    - echo "✅ Build web image successful"
+    - pnpm moon run :container
+    - echo "✅ Build image successful"
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-
-Build API Image:
-  stage: build
-  script:
-    - moon run papers-api:container
-    - echo "✅ Build api image successful"
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - when: on_success

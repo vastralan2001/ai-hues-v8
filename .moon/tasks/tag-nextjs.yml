@@ -1,12 +1,9 @@
-# yaml-language-server: $schema=https://moonrepo.dev/schemas/tasks.json
-$schema: 'https://moonrepo.dev/schemas/tasks.json'
+# yaml-language-server: $schema=../cache/schemas/tasks.json
+$schema: '../cache/schemas/tasks.json'
 
 fileGroups:
   app:
     - 'app/**/*'
-    - 'components/**/*'
-    - 'lib/**/*'
-    - 'public/**/*'
 
 tasks:
   lint:
@@ -21,8 +18,6 @@ tasks:
 
   build:
     command: pnpm run build
-    deps:
-      - '^:build'
     inputs:
       - '@group(app)'
       - 'next.config.*'
@@ -38,3 +33,17 @@ tasks:
       - build
     local: true
 
+  test:
+    command: pnpm run test
+    inputs:
+      - '@group(app)'
+      - 'vitest.config.*'
+      - 'vitest.setup.*'
+    options:
+      outputStyle: 'buffer-only-failure'
+
+  typecheck:
+    command: tsc --noEmit
+    inputs:
+      - '@group(app)'
+      - 'tsconfig.json'

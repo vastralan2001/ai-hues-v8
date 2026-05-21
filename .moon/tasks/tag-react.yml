@@ -1,0 +1,25 @@
+# yaml-language-server: $schema=../cache/schemas/tasks.json
+$schema: "../cache/schemas/tasks.json"
+
+tasks:
+  lint:
+    command: pnpm run lint
+
+  dev:
+    command: pnpm run dev
+    local: true
+
+  build:
+    command: pnpm run build
+    inputs:
+      - "@group(app)"
+      - "@group(configs)"
+      - "@group(sources)"
+    outputs:
+      - "dist"
+
+  preview:
+    command: pnpm run preview
+    deps:
+      - build
+    local: true
