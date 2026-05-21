@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timestamp Converter - AIHues</title>
+  <style>
+    /* ========== CSS Variables ========== */
+    :root{
+      --bg:#ffffff;
+      --surface:#f8f9fb;
+      --surface-hover:#f1f3f7;
+      --border:#e8ecf1;
+      --border-hover:#d1d8e0;
+      --text:#0f172a;
+      --text-secondary:#475569;
+      --text-muted:#94a3b8;
+      --accent:#6d28d9;
+      --accent-light:#8b5cf6;
+      --accent-gradient:linear-gradient(135deg,#6d28d9,#8b5cf6);
+      --green:#059669;
+      --blue:#2563eb;
+      --orange:#ea580c;
+      --radius:14px;
+      --radius-sm:10px;
+      --shadow:0 1px 3px rgba(0,0,0,0.04),0 4px 16px rgba(0,0,0,0.04);
+    }
+
+    /* ========== Reset & Base ========== */
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+    a{color:inherit;text-decoration:none}
+    button{cursor:pointer;font-family:inherit}
+    input{font-family:inherit}
+
+    /* ========== Navigation ========== */
+    .nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+    .nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between}
+    .logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;color:var(--text)}
+    .logo-mark{width:34px;height:34px;border-radius:var(--radius-sm);background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:700}
+    .nav-links{display:flex;gap:28px;align-items:center}
+    .nav-links a{font-size:14px;color:var(--text-secondary);transition:color .2s}
+    .nav-links a:hover{color:var(--text)}
+    .lang-toggle{padding:4px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);font-size:12px;color:var(--text-secondary);cursor:pointer;transition:all .2s}
+    .lang-toggle:hover{border-color:var(--border-hover);color:var(--text)}
+    @media(max-width:768px){
+      .nav-links{gap:14px}
+      .nav-links a{font-size:13px}
+    }
+
+    /* ========== Tool Page ========== */
+    .tool-page{max-width:900px;margin:0 auto;padding:32px}
+    .tool-header{margin-bottom:32px}
+    .badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:9999px;background:var(--surface);border:1px solid var(--border);font-size:13px;color:var(--text-secondary);margin-bottom:14px}
+    .tool-header h1{font-size:32px;font-weight:700;margin-bottom:8px;letter-spacing:-0.02em}
+    .tool-header p{font-size:16px;color:var(--text-secondary)}
+    .tool-meta{margin-top:16px;display:flex;gap:8px;flex-wrap:wrap}
+    .tag{padding:4px 12px;border-radius:9999px;font-size:12px;font-weight:500}
+    .tag.free{background:#ecfdf5;color:var(--green)}
+
+    /* ========== Live Clock ========== */
+    .live-clock{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
+    .clock-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;transition:border-color .2s}
+    .clock-card:hover{border-color:var(--border-hover)}
+    .clock-card .clock-label{font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:8px}
+    .clock-card .clock-time{font-size:28px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-0.02em}
+    .clock-card .clock-sub{font-size:13px;color:var(--text-secondary);margin-top:4px}
+    @media(max-width:768px){
+      .live-clock{grid-template-columns:1fr}
+      .clock-card .clock-time{font-size:24px}
+    }
+
+    /* ========== Section Cards ========== */
+    .section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:24px;transition:border-color .2s}
+    .section-card:hover{border-color:var(--border-hover)}
+    .section-title{font-size:18px;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+    .section-desc{font-size:14px;color:var(--text-secondary);margin-bottom:24px}
+
+    /* ========== Input / Output Groups ========== */
+    .field-group{display:flex;flex-direction:column;gap:6px;margin-bottom:18px}
+    .field-label{font-size:13px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.04em}
+    .field-input, .field-output{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);font-size:15px;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s}
+    .field-input:focus{border-color:var(--accent-light);box-shadow:0 0 0 3px rgba(109,40,217,0.08)}
+    .field-output{background:var(--surface);font-family:'SF Mono',Menlo,Monaco,Consolas,monospace;font-size:14px;min-height:46px;display:flex;align-items:center}
+    .field-output:empty::before{content:attr(data-placeholder);color:var(--text-muted);font-family:-apple-system,BlinkMacSystemFont,sans-serif}
+
+    /* ========== Buttons ========== */
+    .btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;align-items:center}
+    .btn{padding:10px 18px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;border:none;transition:opacity .2s,transform .1s;white-space:nowrap}
+    .btn:active{transform:translateY(1px)}
+    .btn-primary{background:var(--accent-gradient);color:#fff}
+    .btn-primary:hover{opacity:0.92}
+    .btn-secondary{background:var(--bg);color:var(--text);border:1px solid var(--border)}
+    .btn-secondary:hover{border-color:var(--border-hover);background:var(--surface-hover)}
+    .btn-accent{background:#eff6ff;color:var(--blue);border:1px solid #bfdbfe}
+    .btn-accent:hover{background:#dbeafe}
+    .btn-green{background:#ecfdf5;color:var(--green);border:1px solid #a7f3d0}
+    .btn-green:hover{background:#d1fae5}
+    .btn-orange{background:#fff7ed;color:var(--orange);border:1px solid #fed7aa}
+    .btn-orange:hover{background:#ffedd5}
+
+    /* ========== Result Grid ========== */
+    .result-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:20px}
+    .result-row{display:grid;grid-template-columns:120px 1fr;gap:12px;align-items:center;padding:10px 14px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm)}
+    .result-label{font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;word-break:break-word}
+    .result-value{font-family:'SF Mono',Menlo,Monaco,Consolas,monospace;font-size:14px;color:var(--text);word-break:break-all}
+    .result-value.muted{color:var(--text-muted)}
+    .result-value .tz-name{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:12px;color:var(--text-muted);margin-left:6px}
+    @media(max-width:768px){
+      .result-row{grid-template-columns:90px 1fr}
+      .result-value{font-size:13px}
+    }
+
+    /* ========== Copy Button ========== */
+    .copy-btn{padding:4px 10px;font-size:11px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text-muted);cursor:pointer;transition:all .2s;margin-left:8px;vertical-align:middle}
+    .copy-btn:hover{border-color:var(--accent-light);color:var(--accent)}
+    .copy-btn.copied{border-color:var(--green);color:var(--green)}
+
+    /* ========== Quick Add Buttons ========== */
+    .quick-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+
+    /* ========== Status / Hint ========== */
+    .hint{font-size:13px;color:var(--text-muted);margin-top:6px}
+    .auto-detect-hint{display:inline-block;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;margin-left:8px;vertical-align:middle}
+    .auto-detect-hint.ms{background:#eff6ff;color:var(--blue)}
+    .auto-detect-hint.s{background:#ecfdf5;color:var(--green)}
+    .auto-detect-hint.unknown{background:var(--surface);color:var(--text-muted)}
+
+    /* ========== Divider ========== */
+    .divider{height:1px;background:var(--border);margin:20px 0}
+
+    /* ========== Animations ========== */
+    @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+    .fade-in{animation:fadeIn .35s ease forwards}
+    @keyframes pulse{0%{opacity:1}50%{opacity:.5}100%{opacity:1}}
+    .pulse-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-left:6px;animation:pulse 2s infinite}
+
+    /* ========== Responsive ========== */
+    @media(max-width:768px){
+      .tool-page{padding:20px 16px}
+      .tool-header h1{font-size:24px}
+      .section-card{padding:20px 16px}
+      .btn{padding:8px 14px;font-size:13px}
+    }
+  </style>
+<link rel="manifest" href="/manifest.json">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="logo" href="../index.html">
+        <span class="logo-mark">A</span>
+        <span>AIHues</span>
+      </a>
+      <div class="nav-links">
+        <a href="../index.html" data-zh="首页">Home</a>
+        <a href="../showcase.html" data-zh="工具">Tools</a>
+        <a href="../collection.html" data-zh="收藏">Collection</a>
+        <a href="../pricing.html" data-zh="定价">Pricing</a>
+        <button class="lang-toggle" onclick="toggleLang()">中</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="tool-page">
+
+    <!-- Tool Header -->
+    <div class="tool-header">
+      <span class="badge">
+        <span>&#128295;</span>
+        <span data-zh="开发工具">Developer Tool</span>
+      </span>
+      <h1 data-zh="时间戳转换">Timestamp Converter</h1>
+      <p data-zh="在 Unix 时间戳和人类可读日期之间转换，支持多时区">Convert between Unix timestamps and human-readable dates in any timezone</p>
+      <div class="tool-meta">
+        <span class="tag free">Free Forever / 免费使用</span>
+      </div>
+    </div>
+
+    <!-- Live Clock -->
+    <div class="live-clock fade-in">
+      <div class="clock-card" id="localClockCard">
+        <div class="clock-label" data-zh="本地时间 (实时)">Local Time (Live)</div>
+        <div class="clock-time" id="localClockTime">--:--:--</div>
+        <div class="clock-sub" id="localClockDate">----/--/--</div>
+      </div>
+      <div class="clock-card" id="utcClockCard">
+        <div class="clock-label">UTC Time (Live)<span class="pulse-dot"></span></div>
+        <div class="clock-time" id="utcClockTime">--:--:--</div>
+        <div class="clock-sub" id="utcClockDate">----/--/--</div>
+      </div>
+    </div>
+
+    <!-- Section A: Unix Timestamp to Date -->
+    <div class="section-card fade-in">
+      <div class="section-title">&#128190; <span data-zh="Unix 时间戳 → 日期时间">Unix Timestamp → Date</span></div>
+      <div class="section-desc" data-zh="输入时间戳（秒或毫秒，自动识别），获取人类可读的日期时间">Enter a timestamp (seconds or milliseconds, auto-detected) to get the human-readable date</div>
+
+      <!-- Timestamp Input -->
+      <div class="field-group">
+        <label class="field-label" data-zh="Unix 时间戳">Unix Timestamp</label>
+        <div style="display:flex;align-items:center;">
+          <input type="text" class="field-input" id="timestampInput" placeholder="e.g. 1704067200 or 1704067200000" data-zh-placeholder="例如 1704067200 或 1704067200000" style="flex:1">
+          <span class="auto-detect-hint unknown" id="unitHint" data-zh="等待输入">Waiting...</span>
+        </div>
+        <p class="hint" data-zh="自动检测：13位=毫秒，10位=秒">Auto-detect: 13 digits = milliseconds, 10 digits = seconds</p>
+      </div>
+
+      <!-- Buttons -->
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="convertTimestampToDate()" data-zh="转换">Convert</button>
+        <button class="btn btn-secondary" onclick="useCurrentTimestamp()">
+          &#9200; <span data-zh="使用当前时间">Use Current</span>
+        </button>
+        <button class="btn btn-secondary" onclick="clearSectionA()" data-zh="清空">Clear</button>
+      </div>
+
+      <!-- Results -->
+      <div class="result-grid" id="sectionAResults" style="display:none">
+        <div class="result-row">
+          <span class="result-label" data-zh="本地时间">Local</span>
+          <span class="result-value" id="resLocal"></span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">UTC</span>
+          <span class="result-value" id="resUTC"></span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">ISO 8601</span>
+          <span class="result-value" id="resISO"></span>
+        </div>
+        <div class="result-row">
+          <span class="result-label" data-zh="时区">Timezone</span>
+          <span class="result-value" id="resTimezone"></span>
+        </div>
+        <div class="result-row">
+          <span class="result-label" data-zh="相对时间">Relative</span>
+          <span class="result-value" id="resRelative"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section B: Date to Unix Timestamp -->
+    <div class="section-card fade-in">
+      <div class="section-title">&#128197; <span data-zh="日期时间 → Unix 时间戳">Date → Unix Timestamp</span></div>
+      <div class="section-desc" data-zh="选择日期时间，获取对应的 Unix 时间戳（秒和毫秒）">Pick a date and time to get the corresponding Unix timestamps (seconds &amp; milliseconds)</div>
+
+      <!-- DateTime Input -->
+      <div class="field-group">
+        <label class="field-label" data-zh="选择日期时间">Date &amp; Time</label>
+        <input type="datetime-local" class="field-input" id="dateTimeInput" step="1">
+      </div>
+
+      <!-- Quick Buttons -->
+      <div class="quick-row">
+        <button class="btn btn-primary" onclick="setNow()" data-zh="现在">Now</button>
+        <button class="btn btn-accent" onclick="addTime(3600000)">+1 <span data-zh="小时">hour</span></button>
+        <button class="btn btn-green" onclick="addTime(86400000)">+1 <span data-zh="天">day</span></button>
+        <button class="btn btn-orange" onclick="addTime(604800000)">+7 <span data-zh="天">days</span></button>
+      </div>
+
+      <div class="btn-row" style="margin-top:16px">
+        <button class="btn btn-primary" onclick="convertDateToTimestamp()" data-zh="转换">Convert</button>
+        <button class="btn btn-secondary" onclick="clearSectionB()" data-zh="清空">Clear</button>
+      </div>
+
+      <!-- Results -->
+      <div class="result-grid" id="sectionBResults" style="display:none">
+        <div class="result-row">
+          <span class="result-label" data-zh="秒级 (s)">Seconds (s)</span>
+          <span class="result-value" id="resSeconds"></span>
+        </div>
+        <div class="result-row">
+          <span class="result-label" data-zh="毫秒级 (ms)">Milliseconds (ms)</span>
+          <span class="result-value" id="resMilliseconds"></span>
+        </div>
+        <div class="result-row">
+          <span class="result-label" data-zh="相对时间">Relative</span>
+          <span class="result-value" id="resRelativeB"></span>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="../js/i18n.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      // ========== DOM References ==========
+      const $ = id => document.getElementById(id);
+      const tsInput       = $('timestampInput');
+      const unitHint      = $('unitHint');
+      const dtInput       = $('dateTimeInput');
+      const sectionARes   = $('sectionAResults');
+      const sectionBRes   = $('sectionBResults');
+
+      // ========== Utility: Copy to clipboard ==========
+      function copyText(text, btnEl) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text);
+        } else {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+        }
+        if (btnEl) {
+          const isZh = (document.documentElement.getAttribute('data-lang') === 'zh');
+          btnEl.textContent = isZh ? '已复制!' : 'Copied!';
+          btnEl.classList.add('copied');
+          setTimeout(() => {
+            btnEl.textContent = isZh ? '复制' : 'Copy';
+            btnEl.classList.remove('copied');
+          }, 1500);
+        }
+      }
+
+      // ========== Utility: Create copy button ==========
+      function createCopyBtn(text) {
+        const btn = document.createElement('button');
+        btn.className = 'copy-btn';
+        const isZh = (document.documentElement.getAttribute('data-lang') === 'zh');
+        btn.textContent = isZh ? '复制' : 'Copy';
+        btn.onclick = () => copyText(text, btn);
+        return btn;
+      }
+
+      // ========== Utility: Get local timezone name ==========
+      function getTimezoneName() {
+        try {
+          return Intl.DateTimeFormat().resolvedOptions().timeZone;
+        } catch (e) {
+          return 'Local';
+        }
+      }
+
+      // ========== Utility: Relative time calculation ==========
+      function getRelativeTime(timestampMs) {
+        const now = Date.now();
+        const diff = timestampMs - now;
+        const abs = Math.abs(diff);
+        const seconds = Math.floor(abs / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours   = Math.floor(minutes / 60);
+        const days    = Math.floor(hours / 24);
+
+        let text = '';
+        if (days > 0)       text = days + ' day' + (days > 1 ? 's' : '');
+        else if (hours > 0) text = hours + ' hour' + (hours > 1 ? 's' : '');
+        else if (minutes>0) text = minutes + ' min' + (minutes > 1 ? 's' : '');
+        else                text = seconds + ' sec' + (seconds !== 1 ? 's' : '');
+
+        const isZh = (document.documentElement.getAttribute('data-lang') === 'zh');
+        if (isZh) {
+          if (days > 0)       text = days + ' 天';
+          else if (hours > 0) text = hours + ' 小时';
+          else if (minutes>0) text = minutes + ' 分钟';
+          else                text = seconds + ' 秒';
+          return diff > 0 ? text + '后' : text + '前';
+        }
+        return diff > 0 ? text + ' from now' : text + ' ago';
+      }
+
+      // ========== Utility: Format date nicely ==========
+      function formatLocalDate(date) {
+        return new Intl.DateTimeFormat('default', {
+          year: 'numeric', month: '2-digit', day: '2-digit',
+          hour: '2-digit', minute: '2-digit', second: '2-digit',
+          hour12: false
+        }).format(date);
+      }
+
+      function formatUTCDate(date) {
+        return new Intl.DateTimeFormat('en-GB', {
+          year: 'numeric', month: '2-digit', day: '2-digit',
+          hour: '2-digit', minute: '2-digit', second: '2-digit',
+          hour12: false, timeZone: 'UTC'
+        }).format(date);
+      }
+
+      function formatISOUTC(date) {
+        const y = date.getUTCFullYear();
+        const m = String(date.getUTCMonth() + 1).padStart(2, '0');
+        const d = String(date.getUTCDate()).padStart(2, '0');
+        const h = String(date.getUTCHours()).padStart(2, '0');
+        const min = String(date.getUTCMinutes()).padStart(2, '0');
+        const s = String(date.getUTCSeconds()).padStart(2, '0');
+        return y + '-' + m + '-' + d + 'T' + h + ':' + min + ':' + s + 'Z';
+      }
+
+      // ========== Auto-detect unit hint on input ==========
+      tsInput.addEventListener('input', function () {
+        const val = this.value.trim();
+        const num = parseInt(val, 10);
+        const isZh = (document.documentElement.getAttribute('data-lang') === 'zh');
+
+        if (!val || isNaN(num)) {
+          unitHint.className = 'auto-detect-hint unknown';
+          unitHint.textContent = isZh ? '等待输入...' : 'Waiting...';
+          return;
+        }
+        const digits = val.replace(/^-/, '').length;
+        if (digits === 13) {
+          unitHint.className = 'auto-detect-hint ms';
+          unitHint.textContent = isZh ? '检测到毫秒 (ms)' : 'Detected: ms';
+        } else if (digits === 10) {
+          unitHint.className = 'auto-detect-hint s';
+          unitHint.textContent = isZh ? '检测到秒 (s)' : 'Detected: s';
+        } else {
+          unitHint.className = 'auto-detect-hint unknown';
+          unitHint.textContent = isZh ? '长度非标准' : 'Non-standard length';
+        }
+      });
+
+      // ========== Convert: Timestamp → Date ==========
+      window.convertTimestampToDate = function () {
+        const val = tsInput.value.trim();
+        const isZh = (document.documentElement.getAttribute('data-lang') === 'zh');
+        if (!val) {
+          alert(isZh ? '请输入时间戳' : 'Please enter a timestamp');
+          return;
+        }
+
+        let num = parseInt(val, 10);
+        if (isNaN(num)) {
+          alert(isZh ? '无效的时间戳' : 'Invalid timestamp');
+          return;
+        }
+
+        // Auto-detect: 13 digits = ms, 10 digits = s, otherwise treat as s if small, ms if large
+        const digits = String(num).replace(/^-/, '').length;
+        let ms;
+        if (digits === 13) {
+          ms = num;
+        } else if (digits === 10) {
+          ms = num * 1000;
+        } else {
+          // Heuristic: if the number is around current timestamp in seconds (1.7B range), treat as s
+          // If it's around current timestamp in ms (1.7T range), treat as ms
+          const nowS = Math.floor(Date.now() / 1000);
+          if (Math.abs(num - nowS) < 1000000000) {
+            ms = num * 1000; // likely seconds
+          } else {
+            ms = num; // likely milliseconds
+          }
+        }
+
+        const date = new Date(ms);
+        if (isNaN(date.getTime())) {
+          alert(isZh ? '无效的日期' : 'Invalid date');
+          return;
+        }
+
+        const tzName = getTimezoneName();
+
+        // Render results
+        $('resLocal').innerHTML = '';
+        $('resLocal').appendChild(document.createTextNode(formatLocalDate(date)));
+        $('resLocal').appendChild(document.createTextNode(' '));
+        const tzSpan = document.createElement('span');
+        tzSpan.className = 'tz-name';
+        tzSpan.textContent = '(' + tzName + ')';
+        $('resLocal').appendChild(tzSpan);
+        $('resLocal').appendChild(createCopyBtn(formatLocalDate(date)));
+
+        $('resUTC').textContent = formatUTCDate(date);
+        $('resUTC').appendChild(createCopyBtn(formatUTCDate(date)));
+
+        $('resISO').textContent = formatISOUTC(date);
+        $('resISO').appendChild(createCopyBtn(formatISOUTC(date)));
+
+        $('resTimezone').textContent = tzName + ' (UTC' + getUTCOffsetStr() + ')';
+
+        $('resRelative').textContent = getRelativeTime(ms);
+
+        sectionARes.style.display = '';
+      };
+
+      // ========== Get UTC offset string ==========
+      function getUTCOffsetStr() {
+        const offsetMin = new Date().getTimezoneOffset();
+        const sign = offsetMin <= 0 ? '+' : '-';
+        const absMin = Math.abs(offsetMin);
+        const h = String(Math.floor(absMin / 60)).padStart(2, '0');
+        const m = String(absMin % 60).padStart(2, '0');
+        return sign + h + ':' + m;
+      }
+
+      // ========== Use Current Timestamp ==========
+      window.useCurrentTimestamp = function () {
+        const now = Date.now();
+        tsInput.value = Math.floor(now / 1000); // fill seconds by default
+        unitHint.className = 'auto-detect-hint s';
+        const isZh = (document.documentElement.getAttribute('data-lang') === 'zh');
+        unitHint.textContent = isZh ? '检测到秒 (s)' : 'Detected: s';
+        convertTimestampToDate();
+      };
+
+      // ========== Clear Section A ==========
+      window.clearSectionA = function () {
+        tsInput.value = '';
+        unitHint.className = 'auto-detect-hint unknown';
+        const isZh = (document.documentElement.getAttribute('data-lang') === 'zh');
+        unitHint.textContent = isZh ? '等待输入...' : 'Waiting...';
+        sectionARes.style.display = 'none';
+      };
+
+      // ========== Set Now ==========
+      window.setNow = function () {
+        const now = new Date();
+        // Format for datetime-local: YYYY-MM-DDTHH:mm:ss
+        const y = now.getFullYear();
+        const m = String(now.getMonth() + 1).padStart(2, '0');
+        const d = String(now.getDate()).padStart(2, '0');
+        const h = String(now.getHours()).padStart(2, '0');
+        const min = String(now.getMinutes()).padStart(2, '0');
+        const s = String(now.getSeconds()).padStart(2, '0');
+        dtInput.value = y + '-' + m + '-' + d + 'T' + h + ':' + min + ':' + s;
+      };
+
+      // ========== Add Time ==========
+      window.addTime = function (deltaMs) {
+        let base;
+        if (dtInput.value) {
+          base = new Date(dtInput.value).getTime();
+          if (isNaN(base)) base = Date.now();
+        } else {
+          base = Date.now();
+        }
+        const result = new Date(base + deltaMs);
+        const y = result.getFullYear();
+        const m = String(result.getMonth() + 1).padStart(2, '0');
+        const d = String(result.getDate()).padStart(2, '0');
+        const h = String(result.getHours()).padStart(2, '0');
+        const min = String(result.getMinutes()).padStart(2, '0');
+        const s = String(result.getSeconds()).padStart(2, '0');
+        dtInput.value = y + '-' + m + '-' + d + 'T' + h + ':' + min + ':' + s;
+      };
+
+      // ========== Convert: Date → Timestamp ==========
+      window.convertDateToTimestamp = function () {
+        const isZh = (document.documentElement.getAttribute('data-lang') === 'zh');
+        if (!dtInput.value) {
+          alert(isZh ? '请选择日期时间' : 'Please select a date and time');
+          return;
+        }
+        const ms = new Date(dtInput.value).getTime();
+        if (isNaN(ms)) {
+          alert(isZh ? '无效的日期' : 'Invalid date');
+          return;
+        }
+        const seconds = Math.floor(ms / 1000);
+
+        $('resSeconds').textContent = seconds;
+        $('resSeconds').appendChild(createCopyBtn(String(seconds)));
+
+        $('resMilliseconds').textContent = ms;
+        $('resMilliseconds').appendChild(createCopyBtn(String(ms)));
+
+        $('resRelativeB').textContent = getRelativeTime(ms);
+
+        sectionBRes.style.display = '';
+      };
+
+      // ========== Clear Section B ==========
+      window.clearSectionB = function () {
+        dtInput.value = '';
+        sectionBRes.style.display = 'none';
+      };
+
+      // ========== Live Clock ==========
+      function updateClock() {
+        const now = new Date();
+
+        // Local
+        const localH = String(now.getHours()).padStart(2, '0');
+        const localM = String(now.getMinutes()).padStart(2, '0');
+        const localS = String(now.getSeconds()).padStart(2, '0');
+        $('localClockTime').textContent = localH + ':' + localM + ':' + localS;
+
+        const localY = now.getFullYear();
+        const localMo = String(now.getMonth() + 1).padStart(2, '0');
+        const localD = String(now.getDate()).padStart(2, '0');
+        const isZh = (document.documentElement.getAttribute('data-lang') === 'zh');
+        $('localClockDate').textContent = isZh
+          ? (localY + '年' + localMo + '月' + localD + '日')
+          : (localY + '-' + localMo + '-' + localD);
+
+        // UTC
+        const utcH = String(now.getUTCHours()).padStart(2, '0');
+        const utcM = String(now.getUTCMinutes()).padStart(2, '0');
+        const utcS = String(now.getUTCSeconds()).padStart(2, '0');
+        $('utcClockTime').textContent = utcH + ':' + utcM + ':' + utcS;
+
+        const utcY = now.getUTCFullYear();
+        const utcMo = String(now.getUTCMonth() + 1).padStart(2, '0');
+        const utcD = String(now.getUTCDate()).padStart(2, '0');
+        $('utcClockDate').textContent = utcY + '-' + utcMo + '-' + utcD + ' UTC';
+      }
+
+      // Start live clock
+      updateClock();
+      setInterval(updateClock, 1000);
+
+      // Re-render relative times on language change
+      const origToggle = window.toggleLang;
+      window.toggleLang = function () {
+        origToggle();
+        // Re-render displayed results if visible
+        if (sectionARes.style.display !== 'none') {
+          convertTimestampToDate();
+        }
+        if (sectionBRes.style.display !== 'none') {
+          convertDateToTimestamp();
+        }
+      };
+
+      // Auto-convert on Enter key in timestamp input
+      tsInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') convertTimestampToDate();
+      });
+
+    })();
+  </script>
+
+<script>
+// Register Service Worker for offline support
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/sw.js')
+    .then(reg => console.log('SW registered:', reg.scope))
+    .catch(err => console.log('SW registration failed:', err));
+}
+</script>
+</body>
+</html>

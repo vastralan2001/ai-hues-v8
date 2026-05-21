@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile — AIHues</title>
+<style>
+:root {
+  --bg: #ffffff;
+  --surface: #f8f9fb;
+  --border: #e8ecf1;
+  --text: #0f172a;
+  --text-secondary: #475569;
+  --accent: #6d28d9;
+  --accent-light: #8b5cf6;
+  --accent-bg: #f3e8ff;
+  --success: #10b981;
+  --success-bg: #d1fae5;
+  --warning: #f59e0b;
+  --warning-bg: #fef3c7;
+  --danger: #ef4444;
+  --danger-bg: #fee2e2;
+  --info: #3b82f6;
+  --info-bg: #dbeafe;
+  --radius: 14px;
+  --radius-sm: 10px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.04);
+  --shadow-lg: 0 8px 32px rgba(109,40,217,0.12);
+  --transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ===== NAVIGATION ===== */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-left, .nav-right { display: flex; align-items: center; gap: 8px; }
+.nav-logo {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--accent);
+  text-decoration: none;
+  letter-spacing: -0.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.nav-logo svg { width: 28px; height: 28px; }
+.nav-links { display: flex; gap: 4px; margin-left: 32px; }
+.nav-link {
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+  transition: var(--transition);
+}
+.nav-link:hover, .nav-link.active { color: var(--accent); background: var(--accent-bg); }
+.nav-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-weight: 700; font-size: 14px;
+  cursor: pointer;
+}
+
+/* ===== LAYOUT ===== */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+/* ===== USER HEADER ===== */
+.header-section {
+  background: linear-gradient(135deg, #faf5ff 0%, #f8f9fb 50%, #fff 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 48px 0 40px;
+  position: relative;
+  overflow: hidden;
+}
+.header-section::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(109,40,217,0.08) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.header-section::after {
+  content: '';
+  position: absolute;
+  bottom: -40px; left: 10%;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.user-header {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  position: relative;
+  z-index: 1;
+}
+.user-avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+.user-avatar {
+  width: 96px; height: 96px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-light), #a78bfa);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 36px; font-weight: 800;
+  box-shadow: 0 4px 20px rgba(109,40,217,0.25);
+  position: relative;
+}
+.level-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  border-top-color: var(--accent);
+  border-right-color: var(--accent-light);
+  animation: spin 8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.level-badge {
+  position: absolute;
+  bottom: -2px; right: -2px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 3px solid var(--bg);
+  white-space: nowrap;
+}
+.user-info h1 {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+}
+.user-info p {
+  color: var(--text-secondary);
+  font-size: 15px;
+  margin-bottom: 12px;
+}
+.user-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.tag {
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.tag-purple { background: var(--accent-bg); color: var(--accent); }
+.tag-green { background: var(--success-bg); color: #065f46; }
+.tag-blue { background: var(--info-bg); color: #1e40af; }
+.tag-gold { background: #fef9c3; color: #854d0e; }
+
+.credits-display {
+  margin-left: auto;
+  text-align: right;
+  flex-shrink: 0;
+}
+.credits-amount {
+  font-size: 42px;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+  letter-spacing: -1px;
+}
+.credits-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+  font-weight: 500;
+}
+.credits-flash {
+  animation: creditFlash 0.6s ease;
+}
+@keyframes creditFlash {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); color: var(--success); }
+  100% { transform: scale(1); }
+}
+
+/* ===== STATS BAR ===== */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin: -28px 0 40px;
+  position: relative;
+  z-index: 2;
+}
+.stat-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+}
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(109,40,217,0.2);
+}
+.stat-icon {
+  width: 48px; height: 48px;
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+.stat-icon.purple { background: var(--accent-bg); }
+.stat-icon.green { background: var(--success-bg); }
+.stat-icon.blue { background: var(--info-bg); }
+.stat-icon.orange { background: var(--warning-bg); }
+.stat-value {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+.stat-name {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+/* ===== SECTIONS ===== */
+.section {
+  margin-bottom: 48px;
+}
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-title .icon { font-size: 22px; }
+.section-count {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* ===== PROGRESS BAR ===== */
+.progress-wrap {
+  margin-bottom: 24px;
+}
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+.progress-label span:last-child { color: var(--text-secondary); }
+.progress-bar {
+  height: 10px;
+  background: var(--surface);
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 5px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-light));
+  transition: width 1.5s cubic-bezier(0.4,0,0.2,1);
+  position: relative;
+  width: 0%;
+}
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  width: 30px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4));
+  animation: shimmer 2s infinite;
+}
+@keyframes shimmer {
+  0% { transform: translateX(-30px); }
+  100% { transform: translateX(30px); }
+}
+
+/* ===== FILTER BAR ===== */
+.filter-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.filter-btn {
+  padding: 7px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: inherit;
+}
+.filter-btn:hover { border-color: var(--accent-light); color: var(--accent); }
+.filter-btn.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+/* ===== TOOL COLLECTION GRID ===== */
+.collection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+  gap: 14px;
+}
+.tool-card {
+  background: var(--bg);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 14px 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.tool-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+.tool-card.collected { border-color: var(--accent); }
+.tool-card.collected:hover { border-color: var(--accent-light); }
+.tool-card.locked {
+  opacity: 0.5;
+  filter: grayscale(0.8);
+}
+.tool-card.locked:hover {
+  opacity: 0.7;
+  filter: grayscale(0.5);
+}
+
+/* Rarity glows */
+.tool-card.rarity-common.collected { border-color: #94a3b8; }
+.tool-card.rarity-uncommon.collected { border-color: var(--success); box-shadow: 0 0 12px rgba(16,185,129,0.15); }
+.tool-card.rarity-rare.collected { border-color: var(--info); box-shadow: 0 0 14px rgba(59,130,246,0.18); }
+.tool-card.rarity-epic.collected { border-color: var(--accent); box-shadow: 0 0 16px rgba(109,40,217,0.2); }
+.tool-card.rarity-legendary.collected {
+  border-color: #eab308;
+  box-shadow: 0 0 20px rgba(234,179,8,0.25);
+  animation: legendaryPulse 3s ease-in-out infinite;
+}
+@keyframes legendaryPulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(234,179,8,0.2); }
+  50% { box-shadow: 0 0 30px rgba(234,179,8,0.35); }
+}
+
+.rarity-indicator {
+  position: absolute;
+  top: 8px; right: 8px;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+}
+.rarity-common .rarity-indicator { background: #94a3b8; }
+.rarity-uncommon .rarity-indicator { background: var(--success); }
+.rarity-rare .rarity-indicator { background: var(--info); }
+.rarity-epic .rarity-indicator { background: var(--accent); }
+.rarity-legendary .rarity-indicator {
+  background: #eab308;
+  animation: legendaryGlow 2s ease-in-out infinite;
+}
+@keyframes legendaryGlow {
+  0%, 100% { box-shadow: 0 0 4px #eab308; }
+  50% { box-shadow: 0 0 10px #eab308, 0 0 16px rgba(234,179,8,0.4); }
+}
+
+.tool-icon {
+  width: 52px; height: 52px;
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px;
+  margin: 0 auto 10px;
+  position: relative;
+}
+.tool-card.collected .tool-icon { background: var(--accent-bg); }
+.tool-card.locked .tool-icon { background: var(--surface); }
+
+.lock-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.7);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  border-radius: var(--radius-sm);
+}
+.tool-card.collected .lock-overlay { display: none; }
+
+.tool-name {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: 6px;
+  word-break: break-word;
+}
+.tool-status {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 10px;
+  display: inline-block;
+}
+.tool-card.collected .tool-status { background: var(--accent-bg); color: var(--accent); }
+.tool-card.locked .tool-status { background: var(--surface); color: var(--text-secondary); }
+
+/* Card flip animation for collection */
+@keyframes cardCollect {
+  0% { transform: scale(1) rotateY(0); }
+  30% { transform: scale(1.1) rotateY(90deg); }
+  60% { transform: scale(1.1) rotateY(180deg); }
+  100% { transform: scale(1) rotateY(360deg); }
+}
+.card-collect-anim { animation: cardCollect 0.6s ease; }
+
+/* ===== ACTIVITY TIMELINE ===== */
+.timeline {
+  position: relative;
+  padding-left: 32px;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 10px;
+  top: 8px; bottom: 8px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--accent), var(--accent-light), transparent);
+  border-radius: 1px;
+}
+.timeline-item {
+  position: relative;
+  padding-bottom: 22px;
+  animation: fadeSlide 0.4s ease both;
+}
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateX(-12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.timeline-dot {
+  position: absolute;
+  left: -26px;
+  top: 4px;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 3px solid var(--bg);
+  display: flex; align-items: center; justify-content: center;
+}
+.timeline-dot.use { background: var(--accent); }
+.timeline-dot.credit { background: var(--success); }
+.timeline-dot.achievement { background: var(--warning); }
+.timeline-content {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  font-size: 14px;
+  transition: var(--transition);
+}
+.timeline-content:hover {
+  border-color: rgba(109,40,217,0.2);
+  background: #fff;
+}
+.timeline-text { font-weight: 500; }
+.timeline-text strong { color: var(--accent); }
+.timeline-text .credit-amount { color: var(--success); font-weight: 700; }
+.timeline-text .ach-name { color: var(--warning); font-weight: 700; }
+.timeline-time {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* ===== ACHIEVEMENTS ===== */
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+.achievement-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.achievement-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+.achievement-card.unlocked { border-color: rgba(109,40,217,0.25); }
+.achievement-card.locked {
+  opacity: 0.55;
+  filter: grayscale(0.6);
+}
+.achievement-card.locked:hover { opacity: 0.75; }
+
+.ach-badge {
+  width: 50px; height: 50px;
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+  position: relative;
+}
+.achievement-card.unlocked .ach-badge {
+  background: linear-gradient(135deg, var(--accent-bg), #ede9fe);
+}
+.achievement-card.locked .ach-badge { background: var(--surface); }
+
+.ach-info { flex: 1; min-width: 0; }
+.ach-name-text {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 3px;
+}
+.ach-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+.ach-reward {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--success);
+  margin-top: 4px;
+}
+.ach-status-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+/* Unlock animation */
+@keyframes achUnlock {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.08); }
+  60% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+.ach-unlock-anim { animation: achUnlock 0.5s ease; }
+
+/* ===== TOAST NOTIFICATION ===== */
+.toast-container {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.toast {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius-sm);
+  padding: 14px 20px;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 280px;
+  animation: toastIn 0.4s ease;
+  font-size: 14px;
+}
+.toast.success { border-left-color: var(--success); }
+.toast.achievement { border-left-color: var(--warning); }
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes toastOut {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(40px); }
+}
+.toast-out { animation: toastOut 0.3s ease forwards; }
+
+/* ===== LEVEL UP OVERLAY ===== */
+.levelup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15,23,42,0.6);
+  backdrop-filter: blur(6px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.levelup-card {
+  background: var(--bg);
+  border-radius: var(--radius);
+  padding: 48px 56px;
+  text-align: center;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.2);
+  animation: levelupPop 0.6s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes levelupPop {
+  0% { transform: scale(0.3); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.levelup-card .trophy { font-size: 64px; margin-bottom: 16px; }
+.levelup-card h2 {
+  font-size: 28px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+.levelup-card p { color: var(--text-secondary); font-size: 16px; margin-bottom: 24px; }
+.levelup-btn {
+  padding: 12px 32px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: var(--transition);
+}
+.levelup-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(109,40,217,0.35); }
+
+/* ===== PARTICLES CANVAS ===== */
+#particles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1500;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 28px 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 32px;
+}
+footer a { color: var(--accent); text-decoration: none; font-weight: 500; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .stats-bar { grid-template-columns: repeat(2, 1fr); }
+  .user-header { flex-direction: column; text-align: center; }
+  .credits-display { margin-left: 0; text-align: center; margin-top: 16px; }
+  .nav-links { display: none; }
+  .collection-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+  .achievements-grid { grid-template-columns: 1fr; }
+  .levelup-card { padding: 32px 24px; margin: 0 20px; }
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--surface); }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+/* Entrance animations */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
+<link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="css/themes.css">
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-left">
+      <a href="../index.html" class="nav-logo">
+        <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="14" fill="#f3e8ff"/><path d="M16 6l3 8h8l-6.5 5 2.5 8-7.5-5.5L8.5 27l2.5-8L4.5 14h8z" fill="#6d28d9"/></svg>
+        AIHues
+      </a>
+      <div class="nav-links">
+        <a href="../discover.html" class="nav-link">Discover</a>
+        <a href="index.html#categories" class="nav-link">Categories</a>
+        <a href="../wishlist.html" class="nav-link">Wishlist</a>
+        <a href="login.html" class="nav-link active">Profile</a>
+      </div>
+    </div>
+    <div class="nav-right">
+      <a href="../login.html" class="nav-link" style="margin-right:4px;">Log out</a>
+      <div class="nav-avatar">JD</div>
+    </div>
+  </div>
+</nav>
+
+<!-- USER HEADER -->
+<section class="header-section">
+  <div class="container">
+    <div class="user-header">
+      <div class="user-avatar-wrap">
+        <div class="level-ring"></div>
+        <div class="user-avatar" id="userAvatar">JD</div>
+        <div class="level-badge" id="levelBadge">LV. 12</div>
+      </div>
+      <div class="user-info">
+        <h1 id="userName">Jamie Davidson</h1>
+        <p id="userBio">AI enthusiast & tool collector. Building the future one prompt at a time.</p>
+        <div class="user-tags">
+          <span class="tag tag-purple">Explorer</span>
+          <span class="tag tag-green">Contributor</span>
+          <span class="tag tag-blue">Top 5%</span>
+          <span class="tag tag-gold">Early Adopter</span>
+        </div>
+      </div>
+      <div class="credits-display">
+        <div class="credits-amount" id="creditsAmount">2,450</div>
+        <div class="credits-label">AIHues Credits</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+
+  <!-- STATS BAR -->
+  <div class="stats-bar reveal">
+    <div class="stat-card">
+      <div class="stat-icon purple">&#9881;</div>
+      <div>
+        <div class="stat-value" id="statTools">0</div>
+        <div class="stat-name">Tools Used</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green">&#10003;</div>
+      <div>
+        <div class="stat-value" id="statCollected">0</div>
+        <div class="stat-name">Collected</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon blue">&#9733;</div>
+      <div>
+        <div class="stat-value" id="statContributions">0</div>
+        <div class="stat-name">Contributions</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon orange">&#128293;</div>
+      <div>
+        <div class="stat-value" id="statStreak">0</div>
+        <div class="stat-name">Day Streak</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COLLECTION PROGRESS -->
+  <div class="section reveal">
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span>Collection Progress</span>
+        <span id="progressText">0 / 35 tools collected</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOOL COLLECTION GRID -->
+  <div class="section reveal" id="collectionSection">
+    <div class="section-header">
+      <h2 class="section-title"><span class="icon">&#127912;</span> My Tool Collection</h2>
+      <span class="section-count" id="collectionCount">0 / 35</span>
+    </div>
+    <div class="filter-bar">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="collected">Collected</button>
+      <button class="filter-btn" data-filter="locked">Locked</button>
+      <button class="filter-btn" data-filter="common">Common</button>
+      <button class="filter-btn" data-filter="uncommon">Uncommon</button>
+      <button class="filter-btn" data-filter="rare">Rare</button>
+      <button class="filter-btn" data-filter="epic">Epic</button>
+      <button class="filter-btn" data-filter="legendary">Legendary</button>
+    </div>
+    <div class="collection-grid" id="collectionGrid"></div>
+  </div>
+
+  <!-- RECENT ACTIVITY -->
+  <div class="section reveal" id="activitySection">
+    <div class="section-header">
+      <h2 class="section-title"><span class="icon">&#128220;</span> Recent Activity</h2>
+    </div>
+    <div class="timeline" id="timeline"></div>
+  </div>
+
+  <!-- ACHIEVEMENTS -->
+  <div class="section reveal" id="achievementsSection">
+    <div class="section-header">
+      <h2 class="section-title"><span class="icon">&#127941;</span> Achievements</h2>
+      <span class="section-count" id="achievementsCount">0 / 12</span>
+    </div>
+    <div class="achievements-grid" id="achievementsGrid"></div>
+  </div>
+
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- PARTICLES CANVAS -->
+<canvas id="particles"></canvas>
+
+<!-- FOOTER -->
+<footer>
+  &copy; 2026 <a href="../index.html">AIHues</a> &middot; Find your AI vibe &middot; Built on Kimi
+</footer>
+
+<script>
+// ===================== DATA =====================
+const TOOLS_DATA = [
+  { id: 1,  name: "ChatGPT",           icon: "&#129302;", rarity: "legendary", category: "Chat" },
+  { id: 2,  name: "Midjourney",        icon: "&#127912;", rarity: "legendary", category: "Image" },
+  { id: 3,  name: "Claude",            icon: "&#128220;", rarity: "epic",      category: "Chat" },
+  { id: 4,  name: "DALL-E 3",          icon: "&#127748;", rarity: "epic",      category: "Image" },
+  { id: 5,  name: "GitHub Copilot",    icon: "&#128187;", rarity: "epic",      category: "Code" },
+  { id: 6,  name: "Runway",            icon: "&#127916;", rarity: "epic",      category: "Video" },
+  { id: 7,  name: "Suno",              icon: "&#127925;", rarity: "epic",      category: "Audio" },
+  { id: 8,  name: "Perplexity",        icon: "&#128270;", rarity: "rare",      category: "Search" },
+  { id: 9,  name: "Notion AI",         icon: "&#128211;", rarity: "rare",      category: "Productivity" },
+  { id: 10, name: "Stable Diffusion",  icon: "&#127912;", rarity: "rare",      category: "Image" },
+  { id: 11, name: "ElevenLabs",        icon: "&#127908;", rarity: "rare",      category: "Audio" },
+  { id: 12, name: "LangChain",         icon: "&#128295;", rarity: "rare",      category: "Dev" },
+  { id: 13, name: "Pinecone",          icon: "&#128230;", rarity: "rare",      category: "Dev" },
+  { id: 14, name: "Hugging Face",      icon: "&#129303;", rarity: "rare",      category: "Dev" },
+  { id: 15, name: "Jasper",            icon: "&#9997;",  rarity: "uncommon",  category: "Writing" },
+  { id: 16, name: "Copy.ai",           icon: "&#9997;",  rarity: "uncommon",  category: "Writing" },
+  { id: 17, name: "Synthesia",         icon: "&#127909;", rarity: "uncommon",  category: "Video" },
+  { id: 18, name: "Murf",              icon: "&#127908;", rarity: "uncommon",  category: "Audio" },
+  { id: 19, name: "Otter.ai",          icon: "&#127911;", rarity: "uncommon",  category: "Audio" },
+  { id: 20, name: "Descript",          icon: "&#127912;", rarity: "uncommon",  category: "Video" },
+  { id: 21, name: "Fireflies",         icon: "&#128029;", rarity: "uncommon",  category: "Productivity" },
+  { id: 22, name: "Grammarly",         icon: "&#9989;",  rarity: "common",    category: "Writing" },
+  { id: 23, name: "Canva AI",          icon: "&#128444;", rarity: "common",    category: "Design" },
+  { id: 24, name: "Loom AI",           icon: "&#127909;", rarity: "common",    category: "Video" },
+  { id: 25, name: "Replit Ghostwriter",icon: "&#128187;", rarity: "common",    category: "Code" },
+  { id: 26, name: "Character.ai",      icon: "&#128125;", rarity: "common",    category: "Chat" },
+  { id: 27, name: "Tome",              icon: "&#128208;", rarity: "common",    category: "Productivity" },
+  { id: 28, name: "Beautiful.ai",      icon: "&#127912;", rarity: "common",    category: "Design" },
+  { id: 29, name: "Wordtune",          icon: "&#128221;", rarity: "common",    category: "Writing" },
+  { id: 30, name: "Playground AI",     icon: "&#127912;", rarity: "common",    category: "Image" },
+  { id: 31, name: "Kaiber",            icon: "&#127916;", rarity: "uncommon",  category: "Video" },
+  { id: 32, name: "Lensa",             icon: "&#128248;", rarity: "common",    category: "Image" },
+  { id: 33, name: "DeepL Write",       icon: "&#128220;", rarity: "common",    category: "Writing" },
+  { id: 34, name: "Tabnine",           icon: "&#128187;", rarity: "uncommon",  category: "Code" },
+  { id: 35, name: "Kimi",              icon: "&#129504;", rarity: "rare",      category: "Chat" },
+];
+
+const ACTIVITIES_DATA = [
+  { type: "use",        text: "Used <strong>Midjourney</strong> to generate concept art", time: "2 hours ago" },
+  { type: "credit",     text: "Earned <span class='credit-amount'>+150 credits</span> for tool review", time: "5 hours ago" },
+  { type: "achievement",text: "Unlocked <span class='ach-name'>Art Collector</span> achievement!", time: "5 hours ago" },
+  { type: "use",        text: "Used <strong>Claude</strong> for document analysis", time: "8 hours ago" },
+  { type: "use",        text: "Used <strong>ElevenLabs</strong> for voiceover project", time: "1 day ago" },
+  { type: "credit",     text: "Earned <span class='credit-amount'>+50 credits</span> for daily login", time: "1 day ago" },
+  { type: "use",        text: "Used <strong>Perplexity</strong> for research", time: "1 day ago" },
+  { type: "achievement",text: "Unlocked <span class='ach-name'>Week Warrior</span> achievement!", time: "2 days ago" },
+  { type: "credit",     text: "Earned <span class='credit-amount'>+200 credits</span> for referral", time: "3 days ago" },
+  { type: "use",        text: "Used <strong>Runway</strong> for video editing", time: "3 days ago" },
+];
+
+const ACHIEVEMENTS_DATA = [
+  { id: 1,  name: "First Steps",        desc: "Use your first AI tool",                icon: "&#128095;",  reward: 50,  unlocked: true },
+  { id: 2,  name: "Tool Explorer",      desc: "Try 10 different tools",                icon: "&#127758;",  reward: 100, unlocked: true },
+  { id: 3,  name: "Art Collector",      desc: "Collect 5 image generation tools",      icon: "&#127912;",  reward: 150, unlocked: true },
+  { id: 4,  name: "Code Ninja",         desc: "Collect 3 coding assistant tools",      icon: "&#128126;",  reward: 150, unlocked: true },
+  { id: 5,  name: "Week Warrior",       desc: "Maintain a 7-day streak",               icon: "&#128293;",  reward: 200, unlocked: true },
+  { id: 6,  name: "Social Butterfly",   desc: "Refer 3 friends to AIHues",             icon: "&#128536;",  reward: 300, unlocked: true },
+  { id: 7,  name: "Power User",         desc: "Use tools 50 times total",              icon: "&#9889;",   reward: 250, unlocked: true },
+  { id: 8,  name: "Epic Finder",        desc: "Collect 5 Epic-tier tools",             icon: "&#128142;",  reward: 400, unlocked: false },
+  { id: 9,  name: "Legendary Hunter",   desc: "Collect your first Legendary tool",     icon: "&#127941;",  reward: 500, unlocked: false },
+  { id: 10, name: "Completionist",      desc: "Collect all 35 tools",                  icon: "&#127942;",  reward: 2000,unlocked: false },
+  { id: 11, name: "Contributor",        desc: "Submit 5 tool reviews",                 icon: "&#9997;",   reward: 300, unlocked: true },
+  { id: 12, name: "Month Master",       desc: "Maintain a 30-day streak",              icon: "&#128080;",  reward: 1000,unlocked: false },
+];
+
+// Pre-determined collected tool IDs (23 out of 35)
+const COLLECTED_IDS = [1,2,3,4,5,6,8,9,10,11,14,15,16,17,18,20,22,23,24,25,26,28,33];
+
+// ===================== STATE =====================
+let userData = {
+  name: "Jamie Davidson",
+  level: 12,
+  credits: 2450,
+  toolsUsed: 67,
+  collected: COLLECTED_IDS.length,
+  contributions: 14,
+  streak: 9,
+  collectedIds: [...COLLECTED_IDS],
+};
+
+// Try load from localStorage
+function loadData() {
+  try {
+    const saved = localStorage.getItem('aihues_user');
+    if (saved) userData = JSON.parse(saved);
+  } catch(e) { /* ignore */ }
+}
+function saveData() {
+  try { localStorage.setItem('aihues_user', JSON.stringify(userData)); } catch(e) {}
+}
+
+// ===================== RENDERING =====================
+function renderCollection(filter = 'all') {
+  const grid = document.getElementById('collectionGrid');
+  grid.innerHTML = '';
+
+  TOOLS_DATA.forEach((tool, idx) => {
+    const isCollected = userData.collectedIds.includes(tool.id);
+    if (filter === 'collected' && !isCollected) return;
+    if (filter === 'locked' && isCollected) return;
+    if (filter !== 'all' && filter !== 'collected' && filter !== 'locked' && tool.rarity !== filter) return;
+
+    const card = document.createElement('div');
+    card.className = `tool-card ${isCollected ? 'collected' : 'locked'} rarity-${tool.rarity}`;
+    card.style.animationDelay = `${idx * 0.03}s`;
+    card.innerHTML = `
+      <div class="rarity-indicator"></div>
+      <div class="tool-icon">
+        ${tool.icon}
+        ${!isCollected ? '<div class="lock-overlay">&#128274;</div>' : ''}
+      </div>
+      <div class="tool-name">${tool.name}</div>
+      <div class="tool-status">${isCollected ? '&#10003; Collected' : '&#128274; Locked'}</div>
+    `;
+
+    card.addEventListener('click', () => {
+      if (!isCollected) {
+        // Simulate unlocking
+        userData.collectedIds.push(tool.id);
+        userData.collected = userData.collectedIds.length;
+        userData.credits += 25;
+        saveData();
+        showToast(`Unlocked ${tool.name}! +25 credits`, 'success');
+        renderCollection(filter);
+        updateStats();
+        updateProgress();
+        triggerParticles(card);
+      } else {
+        showToast(`${tool.name} — ${capitalize(tool.rarity)} tier`, 'success');
+      }
+    });
+
+    grid.appendChild(card);
+  });
+}
+
+function renderTimeline() {
+  const tl = document.getElementById('timeline');
+  tl.innerHTML = '';
+  ACTIVITIES_DATA.forEach((act, i) => {
+    const item = document.createElement('div');
+    item.className = 'timeline-item';
+    item.style.animationDelay = `${i * 0.08}s`;
+    const dotIcon = act.type === 'use' ? '&#9881;' : act.type === 'credit' ? '&#43;' : '&#127942;';
+    item.innerHTML = `
+      <div class="timeline-dot ${act.type}">${dotIcon}</div>
+      <div class="timeline-content">
+        <div class="timeline-text">${act.text}</div>
+        <div class="timeline-time">${act.time}</div>
+      </div>
+    `;
+    tl.appendChild(item);
+  });
+}
+
+function renderAchievements() {
+  const grid = document.getElementById('achievementsGrid');
+  const count = document.getElementById('achievementsCount');
+  grid.innerHTML = '';
+  const unlockedCount = ACHIEVEMENTS_DATA.filter(a => a.unlocked).length;
+  count.textContent = `${unlockedCount} / ${ACHIEVEMENTS_DATA.length}`;
+
+  ACHIEVEMENTS_DATA.forEach((ach, i) => {
+    const card = document.createElement('div');
+    card.className = `achievement-card ${ach.unlocked ? 'unlocked' : 'locked'}`;
+    card.style.animationDelay = `${i * 0.05}s`;
+    card.innerHTML = `
+      <div class="ach-badge">${ach.icon}</div>
+      <div class="ach-info">
+        <div class="ach-name-text">${ach.name}</div>
+        <div class="ach-desc">${ach.desc}</div>
+        ${ach.unlocked ? `<div class="ach-reward">+${ach.reward} credits earned</div>` : ''}
+      </div>
+      <div class="ach-status-icon">${ach.unlocked ? '&#10004;' : '&#128274;'}</div>
+    `;
+    card.addEventListener('click', () => {
+      if (!ach.unlocked) {
+        // Simulate unlocking
+        ach.unlocked = true;
+        userData.credits += ach.reward;
+        saveData();
+        card.classList.remove('locked');
+        card.classList.add('unlocked', 'ach-unlock-anim');
+        showToast(`Achievement Unlocked: ${ach.name}! +${ach.reward} credits`, 'achievement');
+        renderAchievements();
+        animateCredits();
+      }
+    });
+    grid.appendChild(card);
+  });
+}
+
+function updateStats() {
+  animateCount('statTools', userData.toolsUsed);
+  animateCount('statCollected', userData.collected);
+  animateCount('statContributions', userData.contributions);
+  animateCount('statStreak', userData.streak);
+  document.getElementById('collectionCount').textContent = `${userData.collected} / ${TOOLS_DATA.length}`;
+}
+
+function updateProgress() {
+  const pct = Math.round((userData.collected / TOOLS_DATA.length) * 100);
+  document.getElementById('progressText').textContent = `${userData.collected} / ${TOOLS_DATA.length} tools collected (${pct}%)`;
+  setTimeout(() => {
+    document.getElementById('progressFill').style.width = pct + '%';
+  }, 300);
+}
+
+// ===================== ANIMATIONS =====================
+function animateCount(id, target) {
+  const el = document.getElementById(id);
+  const start = parseInt(el.textContent.replace(/,/g, '')) || 0;
+  const duration = 1200;
+  const startTime = performance.now();
+
+  function step(now) {
+    const progress = Math.min((now - startTime) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = Math.round(start + (target - start) * eased);
+    el.textContent = current.toLocaleString();
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+function animateCredits() {
+  const el = document.getElementById('creditsAmount');
+  el.textContent = userData.credits.toLocaleString();
+  el.classList.remove('credits-flash');
+  void el.offsetWidth; // reflow
+  el.classList.add('credits-flash');
+}
+
+function showToast(message, type = 'success') {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  const icon = type === 'achievement' ? '&#127942;' : '&#10004;';
+  toast.innerHTML = `<span style="font-size:18px;">${icon}</span> ${message}`;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.classList.add('toast-out');
+    setTimeout(() => toast.remove(), 300);
+  }, 3500);
+}
+
+// ===================== PARTICLES =====================
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+function triggerParticles(sourceEl) {
+  const rect = sourceEl.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  for (let i = 0; i < 24; i++) {
+    particles.push({
+      x: cx, y: cy,
+      vx: (Math.random() - 0.5) * 12,
+      vy: (Math.random() - 0.5) * 12 - 4,
+      life: 1,
+      decay: 0.015 + Math.random() * 0.015,
+      size: 3 + Math.random() * 5,
+      color: ['#6d28d9','#8b5cf6','#10b981','#3b82f6','#f59e0b'][Math.floor(Math.random()*5)]
+    });
+  }
+}
+
+function animateParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles = particles.filter(p => p.life > 0);
+  particles.forEach(p => {
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += 0.25; // gravity
+    p.life -= p.decay;
+    ctx.globalAlpha = p.life;
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+    ctx.fill();
+  });
+  ctx.globalAlpha = 1;
+  requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+// ===================== SCROLL REVEAL =====================
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// ===================== FILTER BUTTONS =====================
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderCollection(btn.dataset.filter);
+  });
+});
+
+// ===================== UTILS =====================
+function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+// ===================== INIT =====================
+function init() {
+  loadData();
+  renderCollection();
+  renderTimeline();
+  renderAchievements();
+  updateStats();
+  updateProgress();
+  document.getElementById('levelBadge').textContent = `LV. ${userData.level}`;
+  document.getElementById('userName').textContent = userData.name;
+
+  // Entrance credit animation
+  setTimeout(() => animateCredits(), 600);
+
+  // Simulate random toast after a few seconds
+  setTimeout(() => {
+    showToast('Welcome back, Jamie! +10 login credits', 'success');
+  }, 2000);
+}
+
+init();
+</script>
+<script src="js/i18n.js"></script>
+<script src="js/theme-system.js"></script>
+<script src="js/achievements.js"></script>
+
+<script>
+// Register Service Worker for offline support
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/sw.js')
+    .then(reg => console.log('SW registered:', reg.scope))
+    .catch(err => console.log('SW registration failed:', err));
+}
+</script>
+</body>
+</html>

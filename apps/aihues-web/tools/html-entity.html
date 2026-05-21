@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-zh="HTML 实体转换 — AIHues">HTML Entity Converter — AIHues</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#ffffff;--surface:#f8f9fb;--surface-hover:#f1f3f7;
+  --border:#e8ecf1;--border-hover:#d1d8e0;
+  --text:#0f172a;--text-secondary:#475569;--text-muted:#94a3b8;
+  --accent:#6d28d9;--accent-light:#8b5cf6;--accent-gradient:linear-gradient(135deg,#6d28d9,#8b5cf6);
+  --green:#059669;--blue:#2563eb;
+  --radius:14px;--radius-sm:10px;
+  --shadow:0 1px 3px rgba(0,0,0,0.04),0 4px 16px rgba(0,0,0,0.04);
+}
+body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1300px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:800;color:var(--text);letter-spacing:-1px;text-decoration:none}
+.logo-mark{width:34px;height:34px;border-radius:10px;background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:700;box-shadow:0 2px 8px rgba(109,40,217,0.3)}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{color:var(--text-secondary);font-size:14px;font-weight:500;transition:color .2s;text-decoration:none}
+.nav-links a:hover{color:var(--text)}
+
+.tool-page{max-width:1100px;margin:0 auto;padding:32px}
+
+.tool-header{padding:32px 0 24px}
+.tool-header .badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;background:var(--surface);font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:16px;border:1px solid var(--border)}
+.tool-header h1{font-size:32px;font-weight:700;margin-bottom:8px;letter-spacing:-0.5px}
+.tool-header p{color:var(--text-secondary);font-size:15px;max-width:560px}
+.tool-meta{display:flex;gap:16px;margin-top:16px}
+.tool-meta .tag{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;font-size:13px;font-weight:600}
+.tool-meta .tag.free{background:#ecfdf5;color:var(--green)}
+
+/* Converter Section */
+.converter-section{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:24px}
+.converter-toolbar{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:var(--surface);border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px}
+.converter-toolbar .label{font-size:13px;font-weight:600;color:var(--text-secondary)}
+.converter-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:var(--bg);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;color:var(--text-secondary)}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn-primary{background:var(--accent-gradient);color:#fff;border:none}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(109,40,217,0.3);color:#fff}
+.btn-copy{background:var(--surface)}
+.btn-copied{background:var(--green);color:#fff;border-color:var(--green)}
+.btn-copied:hover{color:#fff}
+
+.converter-body{padding:20px}
+.converter-row{display:flex;gap:16px;align-items:stretch;margin-bottom:16px}
+.converter-col{flex:1;display:flex;flex-direction:column}
+.converter-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.converter-label .label-title{font-size:13px;font-weight:600;color:var(--text-secondary)}
+.converter-col textarea{width:100%;min-height:160px;padding:16px;border:1px solid var(--border);border-radius:var(--radius-sm);outline:none;font-size:15px;line-height:1.6;resize:vertical;color:var(--text);font-family:'SF Mono','Fira Code',monospace;transition:border-color .2s}
+.converter-col textarea:focus{border-color:var(--accent-light)}
+.converter-col textarea::placeholder{color:var(--text-muted)}
+
+.converter-direction{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-width:48px}
+.direction-arrow{font-size:22px;color:var(--accent);cursor:pointer;transition:all .2s;padding:8px;border-radius:8px;background:var(--surface);border:1px solid var(--border)}
+.direction-arrow:hover{transform:rotate(180deg);background:var(--accent);color:#fff}
+
+/* Mode Tabs */
+.mode-tabs{display:flex;gap:6px;margin-bottom:20px;background:var(--surface);padding:6px;border-radius:var(--radius-sm);border:1px solid var(--border);flex-wrap:wrap}
+.mode-tab{padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;border:none;background:transparent;color:var(--text-secondary);white-space:nowrap}
+.mode-tab.active{background:var(--bg);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,0.1)}
+.mode-tab:hover:not(.active){color:var(--text)}
+
+/* Batch mode */
+.batch-hint{font-size:12px;color:var(--text-muted);margin-top:4px;font-style:italic}
+
+/* Reference Grid */
+.reference-section{margin-top:32px}
+.reference-section h2{font-size:20px;font-weight:700;margin-bottom:16px;color:var(--text)}
+.reference-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.entity-card{background:var(--bg);border:2px solid var(--border);border-radius:var(--radius-sm);padding:14px 8px;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+.entity-card:hover{border-color:var(--accent-light);transform:translateY(-2px);box-shadow:var(--shadow)}
+.entity-card.active{border-color:var(--accent);background:linear-gradient(135deg,rgba(109,40,217,0.06),rgba(139,92,246,0.06))}
+.entity-char{font-size:28px;font-weight:400;margin-bottom:6px;color:var(--text);font-family:serif}
+.entity-name{font-size:11px;font-weight:600;color:var(--accent);margin-bottom:2px;font-family:monospace;word-break:break-all}
+.entity-code{font-size:10px;color:var(--text-muted);font-family:monospace;word-break:break-all}
+.entity-desc{font-size:10px;color:var(--text-secondary);margin-top:4px}
+
+/* Copy buttons on card hover */
+.entity-card .card-actions{position:absolute;top:4px;right:4px;display:none;gap:2px}
+.entity-card:hover .card-actions{display:flex}
+.card-action-btn{padding:3px 6px;border-radius:4px;border:1px solid var(--border);background:var(--bg);font-size:9px;cursor:pointer;transition:all .2s;color:var(--text-muted)}
+.card-action-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* Output info */
+.output-info{display:flex;gap:12px;margin-top:12px;flex-wrap:wrap}
+.output-tag{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;background:var(--surface);font-size:12px;color:var(--text-secondary);border:1px solid var(--border)}
+.output-tag strong{color:var(--text)}
+
+@media(max-width:900px){
+  .reference-grid{grid-template-columns:repeat(4,1fr)}
+  .converter-row{flex-direction:column}
+  .converter-direction{flex-direction:row;justify-content:center;transform:rotate(90deg);margin:8px 0}
+  .converter-direction .direction-arrow{transform:rotate(-90deg)}
+  .converter-direction .direction-arrow:hover{transform:rotate(90deg)}
+}
+@media(max-width:600px){
+  .reference-grid{grid-template-columns:repeat(3,1fr)}
+  .nav-inner{padding:0 20px}
+  .tool-page{padding:20px}
+}
+</style>
+<link rel="manifest" href="/manifest.json">
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../index.html" class="logo">
+      <div class="logo-mark">AI</div>
+      <span>AIHues</span>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html">首页</a>
+      <a href="../showcase.html">工具</a>
+      <a href="../collection.html">收藏</a>
+      <a href="../pricing.html">定价</a>
+    </div>
+  </div>
+</nav>
+
+<main class="tool-page">
+  <div class="tool-header">
+    <span class="badge">&#128295; Developer Tool</span>
+    <h1 data-zh="HTML 实体转换">HTML Entity Converter</h1>
+    <p data-zh="HTML 实体、Unicode 和特殊字符之间的转换">Convert between HTML entities, Unicode, and special characters.</p>
+    <div class="tool-meta">
+      <span class="tag free">&#128994; Free Forever</span>
+    </div>
+  </div>
+
+  <!-- Mode Tabs -->
+  <div class="mode-tabs">
+    <button class="mode-tab active" onclick="setMode('text-entity')" title="Text to HTML Entities">Text &#8594; Entities</button>
+    <button class="mode-tab" onclick="setMode('entity-text')" title="HTML Entities to Text">Entities &#8594; Text</button>
+    <button class="mode-tab" onclick="setMode('text-unicode')" title="Text to Unicode">Text &#8594; Unicode</button>
+    <button class="mode-tab" onclick="setMode('unicode-text')" title="Unicode to Text">Unicode &#8594; Text</button>
+    <button class="mode-tab" onclick="setMode('text-decimal')" title="Text to Decimal">Text &#8594; Decimal</button>
+    <button class="mode-tab" onclick="setMode('text-hex')" title="Text to Hex">Text &#8594; Hex</button>
+  </div>
+
+  <!-- Converter -->
+  <div class="converter-section">
+    <div class="converter-toolbar">
+      <span class="label" id="inputLabel">Input Text</span>
+      <div class="converter-actions">
+        <button class="btn" onclick="pasteInput()">&#128203; Paste</button>
+        <button class="btn" onclick="clearInput()">Clear</button>
+        <button class="btn" onclick="loadSample()">Sample</button>
+        <button class="btn btn-primary" onclick="convert()">&#9889; Convert</button>
+      </div>
+    </div>
+    <div class="converter-body">
+      <div class="converter-row">
+        <div class="converter-col">
+          <div class="converter-label">
+            <span class="label-title" id="inputTitle">Input</span>
+          </div>
+          <textarea id="input" placeholder="Enter text to convert..."></textarea>
+          <span class="batch-hint" id="batchHint">Each line will be converted independently</span>
+        </div>
+        <div class="converter-direction">
+          <span class="direction-arrow" onclick="swapDirection()" title="Swap direction">&#8645;</span>
+        </div>
+        <div class="converter-col">
+          <div class="converter-label">
+            <span class="label-title" id="outputTitle">Output</span>
+            <div class="converter-actions">
+              <button class="btn btn-copy" id="copyOutputBtn" onclick="copyOutput()">Copy</button>
+            </div>
+          </div>
+          <textarea id="output" placeholder="Result will appear here..." readonly></textarea>
+        </div>
+      </div>
+      <div class="output-info" id="outputInfo"></div>
+    </div>
+  </div>
+
+  <!-- Quick Reference -->
+  <div class="reference-section">
+    <h2>Common Entities Quick Reference</h2>
+    <div class="reference-grid" id="referenceGrid"></div>
+  </div>
+</main>
+
+<script>
+// ===== Common Entities Data =====
+const commonEntities = [
+  {char:'&', name:'&amp;', code:'&#38;', hex:'&#x26;', desc:'Ampersand'},
+  {char:'<', name:'&lt;', code:'&#60;', hex:'&#x3C;', desc:'Less than'},
+  {char:'>', name:'&gt;', code:'&#62;', hex:'&#x3E;', desc:'Greater than'},
+  {char:'"', name:'&quot;', code:'&#34;', hex:'&#x22;', desc:'Quotation mark'},
+  {char:"'", name:'&apos;', code:'&#39;', hex:'&#x27;', desc:'Apostrophe'},
+  {char:' ', name:'&nbsp;', code:'&#160;', hex:'&#xA0;', desc:'Non-breaking space'},
+  {char:'&#169;', name:'&copy;', code:'&#169;', hex:'&#xA9;', desc:'Copyright'},
+  {char:'&#174;', name:'&reg;', code:'&#174;', hex:'&#xAE;', desc:'Registered'},
+  {char:'&#8482;', name:'&trade;', code:'&#8482;', hex:'&#x2122;', desc:'Trademark'},
+  {char:'&#8364;', name:'&euro;', code:'&#8364;', hex:'&#x20AC;', desc:'Euro'},
+  {char:'&#163;', name:'&pound;', code:'&#163;', hex:'&#xA3;', desc:'Pound'},
+  {char:'&#165;', name:'&yen;', code:'&#165;', hex:'&#xA5;', desc:'Yen'},
+  {char:'&#176;', name:'&deg;', code:'&#176;', hex:'&#xB0;', desc:'Degree'},
+  {char:'&#8226;', name:'&bull;', code:'&#8226;', hex:'&#x2022;', desc:'Bullet'},
+  {char:'&#8212;', name:'&mdash;', code:'&#8212;', hex:'&#x2014;', desc:'Em dash'},
+  {char:'&#8211;', name:'&ndash;', code:'&#8211;', hex:'&#x2013;', desc:'En dash'},
+  {char:'&#8230;', name:'&hellip;', code:'&#8230;', hex:'&#x2026;', desc:'Horizontal ellipsis'},
+  {char:'&#8592;', name:'&larr;', code:'&#8592;', hex:'&#x2190;', desc:'Left arrow'},
+  {char:'&#8593;', name:'&uarr;', code:'&#8593;', hex:'&#x2191;', desc:'Up arrow'},
+  {char:'&#8594;', name:'&rarr;', code:'&#8594;', hex:'&#x2192;', desc:'Right arrow'},
+  {char:'&#8595;', name:'&darr;', code:'&#8595;', hex:'&#x2193;', desc:'Down arrow'},
+  {char:'&#10003;', name:'&#10003;', code:'&#10003;', hex:'&#x2713;', desc:'Check mark'},
+  {char:'&#215;', name:'&times;', code:'&#215;', hex:'&#xD7;', desc:'Multiplication'},
+  {char:'&#247;', name:'&divide;', code:'&#247;', hex:'&#xF7;', desc:'Division'},
+  {char:'&#8734;', name:'&infin;', code:'&#8734;', hex:'&#x221E;', desc:'Infinity'},
+];
+
+// ===== Entity Maps for Bidirectional Conversion =====
+const namedEntities = {
+  '&amp;':'&','&lt;':'<','&gt;':'>','&quot;':'"','&apos;':"'",
+  '&nbsp;':' ','&copy;':'\u00A9','&reg;':'\u00AE','&trade;':'\u2122',
+  '&euro;':'\u20AC','&pound;':'\u00A3','&yen;':'\u00A5','&deg;':'\u00B0',
+  '&bull;':'\u2022','&mdash;':'\u2014','&ndash;':'\u2013','&hellip;':'\u2026',
+  '&larr;':'\u2190','&uarr;':'\u2191','&rarr;':'\u2192','&darr;':'\u2193',
+  '&times;':'\u00D7','&divide;':'\u00F7','&infin;':'\u221E',
+};
+const charToNamed = {};
+for (const [name, ch] of Object.entries(namedEntities)) {
+  charToNamed[ch] = name;
+}
+
+// ===== Mode Configuration =====
+const modeConfig = {
+  'text-entity':  { label:'Text &#8594; HTML Entities', inputTitle:'Plain Text', outputTitle:'HTML Entities', inputPlaceholder:'Enter text like: Hello <World> & "Test"...', isBatch:true },
+  'entity-text':  { label:'HTML Entities &#8594; Text', inputTitle:'HTML Entities', outputTitle:'Plain Text', inputPlaceholder:'Enter entities like: &lt;div&gt; &amp; &quot;hello&quot;', isBatch:true },
+  'text-unicode': { label:'Text &#8594; Unicode', inputTitle:'Plain Text', outputTitle:'Unicode Escape', inputPlaceholder:'Enter text to convert to Unicode escapes...', isBatch:true },
+  'unicode-text': { label:'Unicode &#8594; Text', inputTitle:'Unicode Escape', outputTitle:'Plain Text', inputPlaceholder:'Enter like: \\u00A9 or U+00A9', isBatch:true },
+  'text-decimal': { label:'Text &#8594; Decimal', inputTitle:'Plain Text', outputTitle:'Decimal Entities', inputPlaceholder:'Enter text to convert to decimal entities...', isBatch:true },
+  'text-hex':     { label:'Text &#8594; Hex', inputTitle:'Plain Text', outputTitle:'Hex Entities', inputPlaceholder:'Enter text to convert to hex entities...', isBatch:true },
+};
+
+let currentMode = 'text-entity';
+
+// ===== Initialize =====
+function init(){
+  renderReferenceGrid();
+  updateUI();
+}
+
+// ===== Render Reference Grid =====
+function renderReferenceGrid(){
+  const grid = document.getElementById('referenceGrid');
+  grid.innerHTML = commonEntities.map((ent, idx) => `
+    <div class="entity-card" data-idx="${idx}" onclick="useEntity(${idx})" title="Click to use">
+      <div class="card-actions">
+        <button class="card-action-btn" onclick="event.stopPropagation();copyEntityName(${idx})" title="Copy entity name">N</button>
+        <button class="card-action-btn" onclick="event.stopPropagation();copyEntityCode(${idx})" title="Copy decimal">D</button>
+        <button class="card-action-btn" onclick="event.stopPropagation();copyEntityHex(${idx})" title="Copy hex">H</button>
+      </div>
+      <div class="entity-char">${ent.char}</div>
+      <div class="entity-name">${ent.name}</div>
+      <div class="entity-code">${ent.code}</div>
+      <div class="entity-desc">${ent.desc}</div>
+    </div>
+  `).join('');
+}
+
+// ===== Use Entity (click card) =====
+function useEntity(idx){
+  const ent = commonEntities[idx];
+  const input = document.getElementById('input');
+
+  // Highlight card
+  document.querySelectorAll('.entity-card').forEach(c => c.classList.remove('active'));
+  document.querySelector(`.entity-card[data-idx="${idx}"]`).classList.add('active');
+
+  // Append to input based on mode
+  let valueToInsert = ent.char;
+  if (currentMode === 'text-entity' || currentMode === 'text-decimal' || currentMode === 'text-hex' || currentMode === 'text-unicode') {
+    valueToInsert = ent.char;
+  } else if (currentMode === 'entity-text') {
+    valueToInsert = ent.name;
+  } else if (currentMode === 'unicode-text') {
+    valueToInsert = ent.hex;
+  }
+
+  if (input.value && !input.value.endsWith('\n') && !input.value.endsWith(' ')) {
+    input.value += ' ';
+  }
+  input.value += valueToInsert;
+  convert();
+}
+
+// ===== Copy Individual Entity Formats =====
+function copyEntityName(idx){ copyToClipboard(commonEntities[idx].name); }
+function copyEntityCode(idx){ copyToClipboard(commonEntities[idx].code); }
+function copyEntityHex(idx){ copyToClipboard(commonEntities[idx].hex); }
+
+function copyToClipboard(text){
+  navigator.clipboard.writeText(text).then(()=>{
+    // visual feedback could be added here
+  });
+}
+
+// ===== Mode Switching =====
+function setMode(mode){
+  currentMode = mode;
+  document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('output').value = '';
+  document.getElementById('outputInfo').innerHTML = '';
+  updateUI();
+}
+
+function updateUI(){
+  const cfg = modeConfig[currentMode];
+  document.getElementById('inputTitle').textContent = cfg.inputTitle;
+  document.getElementById('outputTitle').textContent = cfg.outputTitle;
+  document.getElementById('input').placeholder = cfg.inputPlaceholder;
+  document.getElementById('batchHint').style.display = cfg.isBatch ? 'block' : 'none';
+}
+
+// ===== Core Conversion Logic =====
+function convert(){
+  const input = document.getElementById('input').value;
+  if (!input) { document.getElementById('output').value = ''; document.getElementById('outputInfo').innerHTML=''; return; }
+
+  const lines = input.split('\n');
+  const results = lines.map(line => convertLine(line.trim()));
+  document.getElementById('output').value = results.join('\n');
+  updateOutputInfo(results);
+}
+
+function convertLine(line){
+  if (!line) return '';
+  try {
+    switch(currentMode){
+      case 'text-entity':  return textToEntities(line);
+      case 'entity-text':  return entitiesToText(line);
+      case 'text-unicode': return textToUnicode(line);
+      case 'unicode-text': return unicodeToText(line);
+      case 'text-decimal': return textToDecimal(line);
+      case 'text-hex':     return textToHex(line);
+      default: return line;
+    }
+  } catch(e) { return 'Error: ' + e.message; }
+}
+
+// Text -> HTML Entities (named when possible, decimal fallback)
+function textToEntities(text){
+  let result = '';
+  for (const ch of text) {
+    if (charToNamed[ch]) {
+      result += charToNamed[ch];
+    } else if (ch.charCodeAt(0) > 127) {
+      result += `&#${ch.charCodeAt(0)};`;
+    } else {
+      result += ch;
+    }
+  }
+  return result;
+}
+
+// HTML Entities -> Text
+function entitiesToText(text){
+  // Handle numeric entities first
+  let result = text.replace(/&#x([0-9a-fA-F]+);/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+  result = result.replace(/&#(\d+);/g, (_, dec) => String.fromCharCode(parseInt(dec, 10)));
+  // Then named entities
+  for (const [name, ch] of Object.entries(namedEntities)) {
+    result = result.split(name).join(ch);
+  }
+  return result;
+}
+
+// Text -> Unicode escape (\uXXXX or \u{XXXX} for > BMP)
+function textToUnicode(text){
+  let result = '';
+  for (const ch of text) {
+    const code = ch.codePointAt(0);
+    if (code > 0xFFFF) {
+      result += `\\u{${code.toString(16).toUpperCase().padStart(6,'0')}}`;
+    } else {
+      result += `\\u${code.toString(16).toUpperCase().padStart(4,'0')}`;
+    }
+  }
+  return result;
+}
+
+// Unicode -> Text
+function unicodeToText(text){
+  let result = text;
+  // \u{XXXXXX} format
+  result = result.replace(/\\u\{([0-9a-fA-F]+)\}/g, (_, hex) => String.fromCodePoint(parseInt(hex, 16)));
+  // \uXXXX format
+  result = result.replace(/\\u([0-9a-fA-F]{4})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+  // U+XXXX or U+XXXXXX format
+  result = result.replace(/U\+([0-9a-fA-F]+)/g, (_, hex) => String.fromCodePoint(parseInt(hex, 16)));
+  return result;
+}
+
+// Text -> Decimal entities
+function textToDecimal(text){
+  let result = '';
+  for (const ch of text) {
+    const code = ch.codePointAt(0);
+    if (code > 127 || ch === '<' || ch === '>' || ch === '&' || ch === '"' || ch === "'") {
+      result += `&#${code};`;
+    } else {
+      result += ch;
+    }
+  }
+  return result;
+}
+
+// Text -> Hex entities
+function textToHex(text){
+  let result = '';
+  for (const ch of text) {
+    const code = ch.codePointAt(0);
+    if (code > 127 || ch === '<' || ch === '>' || ch === '&' || ch === '"' || ch === "'") {
+      result += `&#x${code.toString(16).toUpperCase()};`;
+    } else {
+      result += ch;
+    }
+  }
+  return result;
+}
+
+// ===== Swap Direction =====
+function swapDirection(){
+  const modeMap = {
+    'text-entity':'entity-text',
+    'entity-text':'text-entity',
+    'text-unicode':'unicode-text',
+    'unicode-text':'text-unicode',
+    'text-decimal':'entity-text',
+    'text-hex':'entity-text',
+  };
+  const newMode = modeMap[currentMode] || 'text-entity';
+  // Update tab UI
+  document.querySelectorAll('.mode-tab').forEach(t => {
+    t.classList.toggle('active', t.getAttribute('onclick').includes(`'${newMode}'`));
+  });
+  // Swap content
+  const input = document.getElementById('input');
+  const output = document.getElementById('output');
+  const temp = input.value;
+  input.value = output.value;
+  output.value = temp;
+  currentMode = newMode;
+  updateUI();
+  convert();
+}
+
+// ===== Utility Functions =====
+function pasteInput(){
+  navigator.clipboard.readText().then(text => {
+    document.getElementById('input').value = text;
+    convert();
+  });
+}
+
+function clearInput(){
+  document.getElementById('input').value = '';
+  document.getElementById('output').value = '';
+  document.getElementById('outputInfo').innerHTML = '';
+}
+
+function copyOutput(){
+  const output = document.getElementById('output');
+  if (!output.value) return;
+  navigator.clipboard.writeText(output.value).then(()=>{
+    const btn = document.getElementById('copyOutputBtn');
+    btn.textContent = 'Copied!';
+    btn.classList.add('btn-copied');
+    setTimeout(()=>{ btn.textContent='Copy'; btn.classList.remove('btn-copied'); }, 1500);
+  });
+}
+
+function loadSample(){
+  const samples = {
+    'text-entity':  '<div class="example">Hello & "Welcome" &#169;</div>',
+    'entity-text':  '&lt;div class=&quot;example&quot;&gt;Hello &amp; &quot;Welcome&quot; &copy;&lt;/div&gt;',
+    'text-unicode': 'Hello World! Copyright \u00A9 2024',
+    'unicode-text': '\\u0048\\u0065\\u006C\\u006C\\u006F \\u00A9',
+    'text-decimal': '<div>Hello & "Welcome"</div>',
+    'text-hex':     '<div>Hello & "Welcome"</div>',
+  };
+  document.getElementById('input').value = samples[currentMode] || '';
+  convert();
+}
+
+function updateOutputInfo(results){
+  const info = document.getElementById('outputInfo');
+  const totalChars = results.join('').length;
+  const totalLines = results.length;
+  info.innerHTML = `
+    <span class="output-tag"><strong>${totalLines}</strong> line${totalLines!==1?'s':''}</span>
+    <span class="output-tag"><strong>${totalChars}</strong> char${totalChars!==1?'s':''}</span>
+  `;
+}
+
+// Auto-convert on input (debounced)
+let debounceTimer;
+document.getElementById('input').addEventListener('input', ()=>{
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(convert, 300);
+});
+
+// ===== Init =====
+init();
+</script>
+<script src="../js/i18n.js"></script>
+
+<script>
+// Register Service Worker for offline support
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/sw.js')
+    .then(reg => console.log('SW registered:', reg.scope))
+    .catch(err => console.log('SW registration failed:', err));
+}
+</script>
+</body>
+</html>

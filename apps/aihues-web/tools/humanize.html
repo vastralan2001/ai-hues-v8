@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-zh="去 AI 味 / 文本人性化 — AIHues">Humanize AI Text — AIHues</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#ffffff;--surface:#f8f9fb;--surface-hover:#f1f3f7;
+  --border:#e8ecf1;--border-hover:#d1d8e0;
+  --text:#0f172a;--text-secondary:#475569;--text-muted:#94a3b8;
+  --accent:#6d28d9;--accent-light:#8b5cf6;--accent-gradient:linear-gradient(135deg,#6d28d9,#8b5cf6);
+  --green:#059669;--green-bg:#ecfdf5;
+  --radius:14px;--radius-sm:10px;
+  --shadow:0 1px 3px rgba(0,0,0,0.04),0 4px 16px rgba(0,0,0,0.04);
+  --shadow-hover:0 4px 12px rgba(109,40,217,0.12),0 8px 32px rgba(0,0,0,0.08);
+}
+body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1300px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:800;color:var(--text);letter-spacing:-1px;text-decoration:none}
+.logo-mark{width:34px;height:34px;border-radius:10px;background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:700;box-shadow:0 2px 8px rgba(109,40,217,0.3)}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{color:var(--text-secondary);font-size:14px;font-weight:500;transition:color .2s;text-decoration:none}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{padding:9px 20px;border-radius:10px;background:var(--accent-gradient);color:#fff;font-size:14px;font-weight:600;box-shadow:0 2px 8px rgba(109,40,217,0.25);transition:all .2s;display:flex;align-items:center;gap:6px;text-decoration:none}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(109,40,217,0.35)}
+
+.tool-page{max-width:900px;margin:0 auto;padding:32px}
+
+.tool-header{padding:32px 0 24px}
+.tool-header .badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;background:var(--surface);font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:16px;border:1px solid var(--border)}
+.tool-header h1{font-size:32px;font-weight:700;margin-bottom:8px;letter-spacing:-0.5px}
+.tool-header p{color:var(--text-secondary);font-size:15px;max-width:560px}
+.tool-meta{display:flex;gap:16px;margin-top:16px}
+.tool-meta .tag{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;font-size:13px;font-weight:600}
+.tool-meta .tag.credit{background:var(--green-bg);color:var(--green)}
+.tool-meta .tag.free{background:var(--surface);color:var(--text-muted);border:1px solid var(--border)}
+
+/* Editor */
+.editor{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px}
+.editor-toolbar{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:var(--surface);border-bottom:1px solid var(--border)}
+.editor-toolbar .label{font-size:13px;font-weight:600;color:var(--text-secondary)}
+.editor-toolbar .count{font-size:12px;color:var(--text-muted)}
+.editor textarea{width:100%;min-height:200px;padding:20px;border:none;outline:none;font-size:15px;line-height:1.7;resize:vertical;color:var(--text);font-family:inherit}
+
+/* Options */
+.options{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px}
+.options h3{font-size:14px;font-weight:600;margin-bottom:14px;color:var(--text-secondary)}
+.options-row{display:flex;gap:12px;flex-wrap:wrap}
+.option-btn{padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg);font-size:13px;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:all .2s}
+.option-btn:hover{border-color:var(--accent-light);color:var(--accent)}
+.option-btn.active{background:rgba(109,40,217,0.08);border-color:var(--accent-light);color:var(--accent);font-weight:600}
+
+/* Action */
+.action-bar{display:flex;gap:12px;align-items:center;margin-bottom:20px}
+.run-btn{padding:14px 36px;border-radius:10px;background:var(--accent-gradient);color:#fff;font-size:16px;font-weight:600;border:none;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px;box-shadow:0 2px 8px rgba(109,40,217,0.25)}
+.run-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(109,40,217,0.35)}
+.run-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none}
+.action-hint{font-size:13px;color:var(--text-muted)}
+
+/* Output */
+.output-area{display:none}
+.output-area.show{display:block}
+.output{background:var(--bg);border:2px solid var(--green);border-radius:var(--radius);overflow:hidden;margin-bottom:20px}
+.output-header{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:var(--green-bg);border-bottom:1px solid rgba(5,150,105,0.2)}
+.output-header .label{font-size:13px;font-weight:700;color:var(--green);display:flex;align-items:center;gap:6px}
+.output-actions{display:flex;gap:8px}
+.output-actions button{padding:6px 14px;border-radius:6px;font-size:12px;font-weight:600;border:1px solid var(--green);background:transparent;color:var(--green);cursor:pointer;transition:all .2s}
+.output-actions button:hover{background:var(--green);color:#fff}
+.output-body{padding:20px;font-size:15px;line-height:1.7;min-height:100px;white-space:pre-wrap;word-break:break-word}
+
+/* Presets */
+.presets{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px}
+.presets h3{font-size:14px;font-weight:600;margin-bottom:14px;color:var(--text-secondary)}
+.preset-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.preset-btn{padding:12px;border-radius:8px;border:1px solid var(--border);background:var(--bg);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;text-align:left;color:var(--text)}
+.preset-btn:hover{border-color:var(--accent-light);box-shadow:var(--shadow)}
+.preset-btn .title{display:block;font-weight:600;margin-bottom:2px}
+.preset-btn .desc{font-size:11px;color:var(--text-muted);font-weight:400}
+
+.footer{border-top:1px solid var(--border);padding:48px 32px;text-align:center;color:var(--text-muted);font-size:14px;margin-top:60px}
+
+@media(max-width:768px){
+  .preset-grid{grid-template-columns:1fr}
+  .tool-page{padding:20px}
+}
+/* Review Card */
+.review-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-top:24px}
+.review-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px}
+.review-header h3{font-size:18px;font-weight:700}
+.review-score-badge{padding:6px 16px;border-radius:20px;font-size:14px;font-weight:700;color:#fff}
+.review-score-badge.mythical{background:#8b5cf6}
+.review-score-badge.legendary{background:#f59e0b}
+.review-score-badge.epic{background:#3b82f6}
+.review-score-badge.rare{background:#10b981}
+.review-score-badge.common{background:#6b7280}
+.review-score-badge.basic{background:#9ca3af}
+.review-dim{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.review-dim-label{width:80px;font-size:13px;font-weight:600;color:var(--text-secondary)}
+.review-dim-bar{flex:1;height:8px;background:var(--surface);border-radius:4px;overflow:hidden}
+.review-dim-fill{height:100%;background:var(--accent-gradient);border-radius:4px}
+.review-dim-score{width:32px;font-size:13px;font-weight:700;text-align:right}
+.review-summary{font-size:14px;color:var(--text-secondary);margin-top:16px;padding:14px;background:var(--surface);border-radius:10px;border-left:4px solid var(--accent);line-height:1.6}
+.review-summary a{color:var(--accent);font-weight:600;text-decoration:none}
+.review-summary a:hover{text-decoration:underline}
+.review-toggle{width:100%;padding:12px 20px;border-radius:10px;border:1px solid var(--border);background:var(--surface);font-size:14px;font-weight:600;color:var(--text-secondary);cursor:pointer;transition:all .2s;margin-top:24px;display:flex;align-items:center;justify-content:center;gap:8px}
+.review-toggle:hover{border-color:var(--accent-light);color:var(--accent);background:rgba(109,40,217,0.04)}
+.review-content{display:none}
+.review-content.show{display:block}
+@media(max-width:768px){.review-dim-label{width:60px;font-size:12px}.review-dim-score{font-size:12px}}
+</style>
+<link rel="manifest" href="/manifest.json">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../index.html" class="logo"><div class="logo-mark">H</div><span>AIHues</span></a>
+    <div class="nav-links">
+      <a href="../index.html#categories" data-zh="分类">Categories</a>
+      <a href="../index.html#tools" data-zh="工具">Tools</a>
+      <a href="../index.html#categories" data-zh="收藏"> Collection</a>
+      <a href="../discover.html" data-zh="发现">Discover</a>
+      <a href="../wishlist.html" data-zh="愿望单">Wishlist</a>
+    </div>
+    <a href="../login.html" class="nav-cta"><span data-zh="个人中心">Profile</span></a>
+  </div>
+</nav>
+
+<div class="tool-page">
+  <div class="tool-header">
+    <div class="badge" data-zh="️ 写作工具">️ Writing Tool</div>
+    <h1 data-zh="去 AI 味 / 文本人性化">Humanize AI Text</h1>
+    <p data-zh="把生硬的 AI 生成文本转成自然、有人味的内容。选择语气和风格。">Transform robotic AI-generated text into natural, human-sounding content. Choose your tone and style.</p>
+    <div class="tool-meta">
+      <span class="tag credit" data-zh="🪙 每次 1 积分">🪙 1 credit per use</span>
+      <span class="tag free" data-zh="包含免费额度"> Free tier included</span>
+    </div>
+  </div>
+  
+  <div class="presets">
+    <h3 data-zh="快速预设">Quick Presets</h3>
+    <div class="preset-grid">
+      <button class="preset-btn" onclick="humanize()">
+        <span class="title" data-zh="正式邮件"> Formal Email</span>
+        <span class="desc" data-zh="商务专业风格">Professional business tone</span>
+      </button>
+      <button class="preset-btn" onclick="loadPreset('casual')">
+        <span class="title" data-zh="休闲博客"> Casual Blog</span>
+        <span class="desc" data-zh="友好对话风格">Friendly, conversational</span>
+      </button>
+      <button class="preset-btn" onclick="loadPreset('twitter')">
+        <span class="title" data-zh="X/Twitter"> X/Twitter</span>
+        <span class="desc" data-zh="简短有力、病毒式">Short, punchy, viral</span>
+      </button>
+    </div>
+  </div>
+  
+  <div class="options">
+    <h3 data-zh="语气">Tone</h3>
+    <div class="options-row">
+      <button class="option-btn active" data-tone="natural" onclick="setTone(this)" data-zh="自然">Natural</button>
+      <button class="option-btn" data-tone="professional" onclick="setTone(this)" data-zh="专业">Professional</button>
+      <button class="option-btn" data-tone="casual" onclick="setTone(this)" data-zh="随意">Casual</button>
+      <button class="option-btn" data-tone="witty" onclick="setTone(this)" data-zh="俏皮">Witty</button>
+      <button class="option-btn" data-tone="academic" onclick="setTone(this)" data-zh="学术">Academic</button>
+    </div>
+    <h3 style="margin-top:14px" data-zh="程度">Level</h3>
+    <div class="options-row">
+      <button class="option-btn active" data-level="light" onclick="setLevel(this)" data-zh="轻度">Light</button>
+      <button class="option-btn" data-level="medium" onclick="setLevel(this)" data-zh="中度">Medium</button>
+      <button class="option-btn" data-level="heavy" onclick="setLevel(this)" data-zh="重度">Heavy</button>
+    </div>
+  </div>
+  
+  <div class="editor">
+    <div class="editor-toolbar">
+      <span class="label" data-zh="输入">Input</span>
+      <span class="count" id="inputCount" data-zh="0 字符">0 chars</span>
+    </div>
+    <textarea id="input" data-zh="粘贴 AI 生成的文本... 我们帮你让它更像人写的。&#10;&#10;示例：利用我们尖端的 AI 解决方案来优化您的工作流程并最大化生产力。" placeholder="Paste your AI-generated text here... We'll humanize it for you.&#10;&#10;Example: 'Leverage our cutting-edge AI solutions to optimize your workflow and maximize productivity.'"></textarea>
+  </div>
+  
+  <div class="action-bar">
+    <button class="run-btn" id="runBtn" onclick="humanize()" data-zh="去 AI 味">
+      Humanize
+    </button>
+    <span class="action-hint" data-zh="消耗 1 积分 • 约 2 秒出结果">Consumes 1 credit • Results in ~2s</span>
+  </div>
+  
+  <div class="output-area" id="outputArea">
+    <div class="output">
+      <div class="output-header">
+        <span class="label" data-zh="已人性化"> Humanized</span>
+        <div class="output-actions">
+          <button onclick="copyOutput()" data-zh="复制"> Copy</button>
+          <button onclick="downloadOutput()" data-zh="⬇ 下载">⬇ Download</button>
+        </div>
+      </div>
+      <div class="output-body" id="output"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 六维度评分卡 -->
+<button class="review-toggle" onclick="toggleReview()">
+  <span data-zh="查看评测">查看评测</span> <span id="reviewArrow">▼</span>
+</button>
+<div class="review-content" id="reviewContent">
+  <div class="review-card">
+    <div class="review-header">
+      <h3 data-zh="六维度评测"> 六维度评测</h3>
+      <span class="review-score-badge epic" data-zh="总分: 86 — 史诗">Score: 86 — Epic</span>
+    </div>
+    <div class="review-dimensions">
+      <div class="review-dim">
+        <span class="review-dim-label" data-zh="易用性">Ease</span>
+        <div class="review-dim-bar"><div class="review-dim-fill" style="width:95%"></div></div>
+        <span class="review-dim-score">95</span>
+      </div>
+      <div class="review-dim">
+        <span class="review-dim-label" data-zh="性价比">Value</span>
+        <div class="review-dim-bar"><div class="review-dim-fill" style="width:90%"></div></div>
+        <span class="review-dim-score">90</span>
+      </div>
+      <div class="review-dim">
+        <span class="review-dim-label" data-zh="模型质量">Quality</span>
+        <div class="review-dim-bar"><div class="review-dim-fill" style="width:88%"></div></div>
+        <span class="review-dim-score">88</span>
+      </div>
+      <div class="review-dim">
+        <span class="review-dim-label" data-zh="生态集成">Ecosystem</span>
+        <div class="review-dim-bar"><div class="review-dim-fill" style="width:70%"></div></div>
+        <span class="review-dim-score">70</span>
+      </div>
+      <div class="review-dim">
+        <span class="review-dim-label" data-zh="创新性">Innovation</span>
+        <div class="review-dim-bar"><div class="review-dim-fill" style="width:75%"></div></div>
+        <span class="review-dim-score">75</span>
+      </div>
+      <div class="review-dim">
+        <span class="review-dim-label" data-zh="人味">Human</span>
+        <div class="review-dim-bar"><div class="review-dim-fill" style="width:92%"></div></div>
+        <span class="review-dim-score">92</span>
+      </div>
+    </div>
+    <div class="review-summary">
+      <p data-zh="去AI味效果出色，输出自然度高。易用性极佳，性价比优秀，但在生态集成方面还有提升空间。">去AI味效果出色，输出自然度高。易用性极佳，性价比优秀，但在生态集成方面还有提升空间。</p>
+      <a href="../discover.html" data-zh="查看完整评测 →">查看完整评测 →</a>
+    </div>
+  </div>
+</div>
+<script>
+function toggleReview(){
+  var c=document.getElementById('reviewContent');
+  var a=document.getElementById('reviewArrow');
+  c.classList.toggle('show');
+  a.textContent=c.classList.contains('show')?'▲':'▼';
+}
+</script>
+
+<footer class="footer">
+  <p data-zh="© 2026 AIHues · 找到你的 AI vibe · 基于 Kimi 构建">© 2026 AIHues · Find your AI vibe · Built on Kimi</p>
+</footer>
+
+<script>
+const presets = {
+  formal: `Dear Team,\n\nI hope this email finds you well. I wanted to touch base regarding the upcoming Q2 roadmap review. Our AI-powered analytics platform has demonstrated a 34% improvement in conversion prediction accuracy.\n\nPlease let me know your availability for a sync meeting next Tuesday.`,
+  casual: `Hey everyone! \n\nSo I've been playing around with this new AI tool and honestly? It's pretty wild. It figured out what my users want before I even did.\n\nGonna write a full breakdown this week — stay tuned!`,
+  twitter: `Just shipped our AI feature.\n\nResult: 3x faster. 40% fewer bugs. Users actually *like* it.\n\nThe lesson? Stop overthinking. Ship, learn, iterate.\n\nThread `
+};
+
+let currentTone = 'natural', currentLevel = 'light';
+
+function loadPreset(key){
+  document.getElementById('input').value = presets[key];
+  updateCount();
+}
+
+function setTone(btn){
+  document.querySelectorAll('[data-tone]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentTone = btn.dataset.tone;
+}
+
+function setLevel(btn){
+  document.querySelectorAll('[data-level]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentLevel = btn.dataset.level;
+}
+
+function updateCount(){
+  document.getElementById('inputCount').textContent = document.getElementById('input').value.length + ' chars';
+}
+
+document.getElementById('input').addEventListener('input', updateCount);
+
+function runTool(){
+  const input = document.getElementById('input').value.trim();
+  if(!input){ alert('Please enter AI-generated text'); return; }
+  const btn = document.getElementById('runBtn'); if(!btn) { humanize(); return; }
+  btn.disabled = true; btn.innerHTML = '<span>⏳</span> Processing...';
+  setTimeout(() => {
+    const replacements = [
+      {from:/utilize/g,to:'use'},{from:/leverage/g,to:'use'},{from:/facilitate/g,to:'help'},
+      {from:/implementation/g,to:'using'},{from:/optimization/g,to:'improving'},{from:/synergy/g,to:'working together'},
+      {from:/holistic/g,to:'complete'},{from:/robust/g,to:'strong'},{from:/scalable/g,to:'grows well'},
+      {from:/seamless/g,to:'smooth'},{from:/cutting-edge/g,to:'new'},{from:/innovative/g,to:'new'},
+      {from:/is designed to/g,to:''},{from:/in order to/g,to:'to'},{from:/at this point in time/g,to:'now'}
+    ];
+    let humanized = input; let changed = 0;
+    replacements.forEach(r => { const before = humanized; humanized = humanized.replace(r.from, r.to); if(humanized !== before) changed++; });
+    let out = "## Humanized Text\n\n**Replacements**: " + changed + "\n\n" + humanized + "\n\n";
+    if(changed === 0) out += "✅ Text already looks natural!\n"; else out += "⚡ Removed " + changed + " buzzword(s).\n";
+    out += "\n[Full AI humanization requires API]";
+    document.getElementById('output').textContent = out;
+    document.getElementById('outputArea').classList.add('show');
+    btn.disabled = false; btn.innerHTML = 'Regenerate';
+  }, 800);
+}
+
+function copyOutput(){
+  navigator.clipboard.writeText(document.getElementById('output').textContent);
+  alert('Copied to clipboard!');
+}
+
+function downloadOutput(){
+  const text = document.getElementById('output').textContent;
+  const blob = new Blob([text], {type:'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'humanized-text.txt';
+  a.click();
+}
+</script>
+<script src="../js/i18n.js"></script>
+<script src="../js/achievements.js"></script>
+
+<script>
+// Register Service Worker for offline support
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/sw.js')
+    .then(reg => console.log('SW registered:', reg.scope))
+    .catch(err => console.log('SW registration failed:', err));
+}
+</script>
+</body>
+</html>

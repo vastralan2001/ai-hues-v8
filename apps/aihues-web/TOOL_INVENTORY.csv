@@ -1,0 +1,53 @@
+﻿中文名,英文名,状态,文件路径
+字数统计,Word Count,✅ 完成,tools/word-count.html
+JSON格式化,JSON Formatter,✅ 完成,tools/json.html
+Base64编解码,Base64 Encode/Decode,✅ 完成,tools/base64.html
+二维码生成,QR Code,✅ 完成,tools/qrcode.html
+Markdown预览,Markdown,✅ 完成,tools/markdown.html
+颜色转换,Color Convert,✅ 完成,tools/color-convert.html
+CSS渐变,CSS Gradient,✅ 完成,tools/css-gradient.html
+正则表达式测试,Regex Tester,✅ 完成,tools/regex.html
+Diffchecker,Diff Checker,✅ 完成,tools/diff.html
+JWT解析,JWT Parser,✅ 完成,tools/jwt.html
+URL编码解码,URL Encode/Decode,✅ 完成,tools/url-encode.html
+HTML实体转换,HTML Entity,✅ 完成,tools/html-entity.html
+Cron表达式,Cron Parser,✅ 完成,tools/cron-parser.html
+时间戳转换,Timestamp,✅ 完成,tools/timestamp.html
+进制转换,Base Converter,✅ 完成,tools/base-convert.html
+密码生成,Password Gen,✅ 完成,tools/password-gen.html
+图片转Base64,Image to Base64,✅ 完成,tools/image-to-base64.html
+SEO标题生成,SEO Title,✅ 已重写,tools/seo-title.html
+全角半角转换,Fullwidth,✅ 完成,tools/fullwidth.html
+CSV转JSON/表格,CSV JSON,✅ 完成,tools/csv-json.html
+UUID生成,UUID Gen,✅ 完成,tools/uuid.html
+HTTP状态码,HTTP Status,✅ 完成,tools/http-status.html
+SHA256计算,SHA256 Hash,✅ 完成,tools/sha256.html
+X Post生成,X Post,✅ 已重写,tools/x-post.html
+番茄钟,Pomodoro,✅ 完成,tools/pomodoro.html
+标题大小写转换,Title Case,✅ 完成,tools/title-case.html
+代码解释,Code Explain,⚠️ 页面存在但需修复,tools/code-explain.html
+代码审查,Code Review,⚠️ 页面存在但需修复,tools/code-review.html
+Shell命令生成,Shell Gen,⚠️ 页面存在但需修复,tools/shell.html
+SQL格式化,SQL Formatter,⚠️ 页面存在但需修复,tools/sql.html
+Git Commit生成,Git Commit,⚠️ 页面存在但需修复,tools/git-commit.html
+Readability分析,Readability,⚠️ 页面存在但需修复,tools/readability.html
+Tagline,Tagline,⚠️ 页面存在但需修复,tools/tagline.html
+Humanize去AI味,Humanize,⚠️ 页面存在但需修复,tools/humanize.html
+Ad Copy,Ad Copy,⚠️ 页面存在但需修复,tools/ad-copy.html
+Alt Text,Alt Text,⚠️ 页面存在但需修复,tools/alt-text.html
+Blog Outline,Blog Outline,⚠️ 页面存在但需修复,tools/blog-outline.html
+Changelog,Changelog,⚠️ 页面存在但需修复,tools/changelog.html
+Cold Email,Cold Email,⚠️ 页面存在但需修复,tools/cold-email.html
+Docs,Docs,⚠️ 页面存在但需修复,tools/docs.html
+FAQ,FAQ,⚠️ 页面存在但需修复,tools/faq.html
+LinkedIn,LinkedIn,⚠️ 页面存在但需修复,tools/linkedin.html
+LP Hero,LP Hero,⚠️ 页面存在但需修复,tools/lp-hero.html
+Meta,Meta,⚠️ 页面存在但需修复,tools/meta.html
+Newsletter,Newsletter,⚠️ 页面存在但需修复,tools/newsletter.html
+PR Desc,PR Desc,⚠️ 页面存在但需修复,tools/pr-desc.html
+Pseudo,Pseudo,⚠️ 页面存在但需修复,tools/pseudo.html
+Push,Push,⚠️ 页面存在但需修复,tools/push.html
+Video Title,Video Title,⚠️ 页面存在但需修复,tools/video-title.html
+TLDR,TLDR,⚠️ 页面存在但需修复,tools/tldr.html
+YT Script,YT Script,⚠️ 页面存在但需修复,tools/yt-script.html
+图片压缩,Image Compress,❌ 外链,外链-Squoosh

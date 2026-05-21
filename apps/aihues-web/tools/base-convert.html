@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-zh="进制转换器 — AIHues">Base Converter - AIHues</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{
+  --bg:#ffffff;--surface:#f8f9fb;--surface-hover:#f1f3f7;
+  --border:#e8ecf1;--border-hover:#d1d8e0;
+  --text:#0f172a;--text-secondary:#475569;--text-muted:#94a3b8;
+  --accent:#6d28d9;--accent-light:#8b5cf6;--accent-gradient:linear-gradient(135deg,#6d28d9,#8b5cf6);
+  --green:#059669;--blue:#2563eb;--orange:#ea580c;--purple:#9333ea;
+  --radius:14px;--radius-sm:10px;
+  --shadow:0 1px 3px rgba(0,0,0,0.04),0 4px 16px rgba(0,0,0,0.04);
+  --bin-color:#2563eb;--oct-color:#059669;--dec-color:#9333ea;--hex-color:#ea580c;
+}
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;min-height:100vh}
+
+/* ===== Navigation ===== */
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);font-weight:700;font-size:18px}
+.logo-mark{width:34px;height:34px;border-radius:8px;background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px}
+.nav-links{display:flex;gap:28px;list-style:none}
+.nav-links a{text-decoration:none;color:var(--text-secondary);font-size:14px;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--accent)}
+.nav-links a.active{color:var(--accent)}
+
+/* ===== Tool Page ===== */
+.tool-page{max-width:960px;margin:0 auto;padding:32px 24px}
+.tool-header{margin-bottom:28px}
+.badge{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);padding:4px 12px;border-radius:100px;font-size:12px;color:var(--text-secondary);margin-bottom:12px}
+.tool-header h1{font-size:28px;font-weight:700;margin-bottom:8px}
+.tool-header p{color:var(--text-secondary);font-size:15px;line-height:1.6}
+.tool-meta{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:3px 10px;border-radius:6px;font-weight:500}
+.tag.free{background:#ecfdf5;color:var(--green)}
+
+/* ===== Mode Tabs ===== */
+.mode-tabs{display:flex;gap:8px;margin-bottom:24px;background:var(--surface);padding:6px;border-radius:var(--radius-sm);border:1px solid var(--border);width:fit-content}
+.mode-tab{padding:10px 24px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;border:none;background:transparent;color:var(--text-secondary)}
+.mode-tab.active{background:var(--bg);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,0.1)}
+
+/* ===== Base Input Cards ===== */
+.base-cards{display:flex;flex-direction:column;gap:16px;margin-bottom:24px}
+.base-card{border:2px solid var(--border);border-radius:var(--radius);overflow:hidden;background:#fff;transition:border-color .2s,box-shadow .2s}
+.base-card:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(109,40,217,0.08)}
+.base-card.bin:focus-within{border-color:var(--bin-color);box-shadow:0 0 0 3px rgba(37,99,235,0.08)}
+.base-card.oct:focus-within{border-color:var(--oct-color);box-shadow:0 0 0 3px rgba(5,150,105,0.08)}
+.base-card.dec:focus-within{border-color:var(--dec-color);box-shadow:0 0 0 3px rgba(147,51,234,0.08)}
+.base-card.hex:focus-within{border-color:var(--hex-color);box-shadow:0 0 0 3px rgba(234,88,12,0.08)}
+
+.card-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--surface);border-bottom:1px solid var(--border)}
+.card-label{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700}
+.card-label .dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.card-label.bin-label{color:var(--bin-color)}.card-label.bin-label .dot{background:var(--bin-color)}
+.card-label.oct-label{color:var(--oct-color)}.card-label.oct-label .dot{background:var(--oct-color)}
+.card-label.dec-label{color:var(--dec-color)}.card-label.dec-label .dot{background:var(--dec-color)}
+.card-label.hex-label{color:var(--hex-color)}.card-label.hex-label .dot{background:var(--hex-color)}
+
+.card-actions{display:flex;gap:6px}
+.card-copy{padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:#fff;font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;color:var(--text-secondary)}
+.card-copy:hover{border-color:var(--accent);color:var(--accent)}
+
+.card-body{padding:16px 20px}
+.card-body textarea{width:100%;min-height:52px;padding:0;border:none;outline:none;font-size:16px;line-height:1.5;resize:vertical;color:var(--text);font-family:'Consolas','Monaco','Courier New',monospace;background:transparent}
+.card-body textarea::placeholder{color:var(--text-muted)}
+.card-error{color:#dc2626;font-size:12px;padding:4px 20px 12px;display:none;align-items:center;gap:6px}
+.card-error.show{display:flex}
+.card-error i{font-size:12px}
+
+/* ===== Action Buttons ===== */
+.action-bar{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;border:1px solid transparent;transition:all .15s;font-family:inherit}
+.btn-primary{background:var(--accent-gradient);color:#fff;border:none}
+.btn-primary:hover{opacity:0.92;transform:translateY(-1px);box-shadow:0 4px 12px rgba(109,40,217,0.25)}
+.btn-secondary{background:#fff;border:1px solid var(--border);color:var(--text-secondary)}
+.btn-secondary:hover{border-color:var(--border-hover);background:var(--surface-hover)}
+
+/* ===== Bitwise Panel ===== */
+.panel{margin-bottom:20px;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:#fff;box-shadow:var(--shadow)}
+.panel-header{padding:14px 20px;background:var(--surface);border-bottom:1px solid var(--border);font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
+.panel-body{padding:20px}
+
+.bitwise-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.bitwise-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px}
+.bitwise-title{font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between}
+.bitwise-val{font-family:'Consolas','Monaco','Courier New',monospace;font-size:15px;font-weight:700;color:var(--text);word-break:break-all;line-height:1.4}
+.bitwise-val .bin-str{color:var(--bin-color);font-size:12px;font-weight:500;margin-top:4px}
+
+/* Operator input for AND/OR/XOR */
+.op-input{display:flex;align-items:center;gap:8px;margin-top:6px}
+.op-input input{flex:1;padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-family:'Consolas','Monaco','Courier New',monospace;font-size:13px;background:#fff;outline:none;color:var(--text)}
+.op-input input:focus{border-color:var(--accent)}
+.op-input span{font-size:11px;color:var(--text-muted);white-space:nowrap}
+
+/* Shift controls */
+.shift-controls{display:flex;align-items:center;gap:8px;margin-top:6px}
+.shift-controls button{width:28px;height:28px;border:1px solid var(--border);border-radius:6px;background:#fff;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.shift-controls button:hover{border-color:var(--accent);color:var(--accent)}
+.shift-controls span{font-family:'Consolas','Monaco','Courier New',monospace;font-size:13px;font-weight:600;color:var(--text);min-width:24px;text-align:center}
+
+/* ===== ASCII Display ===== */
+.ascii-display{display:flex;align-items:center;gap:20px;padding:20px;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border)}
+.ascii-char{font-size:64px;font-weight:700;color:var(--accent);display:flex;align-items:center;justify-content:center;min-width:100px;min-height:100px;background:#fff;border-radius:var(--radius-sm);border:2px solid var(--border);font-family:'Consolas','Monaco','Courier New',monospace}
+.ascii-info{flex:1}
+.ascii-info-title{font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:6px}
+.ascii-info-detail{font-size:14px;color:var(--text-secondary);line-height:1.6}
+
+/* ===== Batch Mode ===== */
+.batch-area{display:none}
+.batch-area.active{display:block}
+.batch-inputs{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+@media(max-width:768px){.batch-inputs{grid-template-columns:1fr}}
+
+.batch-panel{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:#fff;box-shadow:var(--shadow)}
+.batch-panel-header{padding:12px 16px;background:var(--surface);border-bottom:1px solid var(--border);font-size:13px;font-weight:600;color:var(--text-secondary)}
+.batch-panel-body{padding:16px}
+.batch-panel-body textarea{width:100%;min-height:280px;border:none;outline:none;font-family:'Consolas','Monaco','Courier New',monospace;font-size:13px;line-height:1.6;resize:vertical;color:var(--text)}
+.batch-panel-body textarea::placeholder{color:var(--text-muted)}
+
+.batch-select{padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;font-weight:500;background:#fff;color:var(--text);outline:none;cursor:pointer}
+.batch-select:focus{border-color:var(--accent)}
+
+/* ===== Toast ===== */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--text);color:#fff;padding:10px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;z-index:200;opacity:0;transform:translateY(10px);transition:all .25s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+
+/* ===== Error ===== */
+.error-banner{background:#fef2f2;border:1px solid #fecaca;color:#991b1b;padding:10px 14px;border-radius:var(--radius-sm);font-size:13px;margin-bottom:16px;display:none;align-items:center;gap:8px}
+.error-banner.show{display:flex}
+
+/* ===== Responsive ===== */
+@media(max-width:768px){
+  .nav-inner{padding:0 16px}
+  .tool-page{padding:20px 16px}
+  .tool-header h1{font-size:22px}
+  .nav-links{gap:16px}
+  .bitwise-grid{grid-template-columns:1fr}
+  .ascii-char{font-size:48px;min-width:70px;min-height:70px}
+  .mode-tabs{width:100%}
+  .mode-tab{flex:1;text-align:center;padding:10px 12px}
+}
+</style>
+<link rel="manifest" href="/manifest.json">
+</head>
+<body>
+
+<!-- ===== Navigation ===== -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../index.html" class="logo">
+      <div class="logo-mark"><i class="fas fa-bolt"></i></div>
+      <span>AIHues</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="../showcase.html" class="active">Tools</a></li>
+      <li><a href="../collection.html">Collection</a></li>
+      <li><a href="../pricing.html">Pricing</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ===== Main Content ===== -->
+<main class="tool-page">
+
+  <!-- Tool Header -->
+  <div class="tool-header">
+    <span class="badge"><i class="fas fa-wrench"></i> <span data-zh="开发工具">Developer Tool</span></span>
+    <h1 data-zh="进制转换器">Base Converter</h1>
+    <p data-zh="二进制、八进制、十进制、十六进制一键转换，支持位运算和批量转换">Convert between binary, octal, decimal, and hexadecimal with one click. Includes bitwise operations and batch conversion.</p>
+    <div class="tool-meta">
+      <span class="tag free"><i class="fas fa-check-circle"></i> <span data-zh="免费使用">Free Forever</span></span>
+    </div>
+  </div>
+
+  <!-- Mode Tabs -->
+  <div class="mode-tabs">
+    <button class="mode-tab active" onclick="setMode('single')" data-zh="单值转换">Single Convert</button>
+    <button class="mode-tab" onclick="setMode('batch')" data-zh="批量转换">Batch Convert</button>
+  </div>
+
+  <!-- ===== Single Mode ===== -->
+  <div id="singleMode">
+    <!-- Error Banner -->
+    <div class="error-banner" id="errorBanner"><i class="fas fa-circle-exclamation"></i><span id="errorText"></span></div>
+
+    <!-- Action Bar -->
+    <div class="action-bar">
+      <button class="btn btn-primary" onclick="loadExample()"><i class="fas fa-lightbulb"></i> <span data-zh="示例：255">Example: 255</span></button>
+      <button class="btn btn-secondary" onclick="copyAll()"><i class="fas fa-copy"></i> <span data-zh="复制全部">Copy All</span></button>
+      <button class="btn btn-secondary" onclick="clearAll()"><i class="fas fa-trash"></i> <span data-zh="清空">Clear</span></button>
+    </div>
+
+    <!-- Binary -->
+    <div class="base-cards">
+      <div class="base-card bin" data-base="2">
+        <div class="card-header">
+          <span class="card-label bin-label"><span class="dot"></span>Binary / <span data-zh="二进制">二进制</span> (Base 2)</span>
+          <button class="card-copy" onclick="copyField('bin')"><i class="fas fa-copy"></i></button>
+        </div>
+        <div class="card-body"><textarea id="bin" rows="1" placeholder="e.g. 11111111" oninput="onInput('bin')"></textarea></div>
+        <div class="card-error" id="bin-error"><i class="fas fa-triangle-exclamation"></i><span data-zh="只能输入 0 和 1">Only 0 and 1 are allowed</span></div>
+      </div>
+
+      <!-- Octal -->
+      <div class="base-card oct" data-base="8">
+        <div class="card-header">
+          <span class="card-label oct-label"><span class="dot"></span>Octal / <span data-zh="八进制">八进制</span> (Base 8)</span>
+          <button class="card-copy" onclick="copyField('oct')"><i class="fas fa-copy"></i></button>
+        </div>
+        <div class="card-body"><textarea id="oct" rows="1" placeholder="e.g. 377" oninput="onInput('oct')"></textarea></div>
+        <div class="card-error" id="oct-error"><i class="fas fa-triangle-exclamation"></i><span data-zh="只能输入 0-7">Only 0-7 are allowed</span></div>
+      </div>
+
+      <!-- Decimal -->
+      <div class="base-card dec" data-base="10">
+        <div class="card-header">
+          <span class="card-label dec-label"><span class="dot"></span>Decimal / <span data-zh="十进制">十进制</span> (Base 10)</span>
+          <button class="card-copy" onclick="copyField('dec')"><i class="fas fa-copy"></i></button>
+        </div>
+        <div class="card-body"><textarea id="dec" rows="1" placeholder="e.g. 255" oninput="onInput('dec')"></textarea></div>
+        <div class="card-error" id="dec-error"><i class="fas fa-triangle-exclamation"></i><span data-zh="只能输入 0-9">Only 0-9 are allowed</span></div>
+      </div>
+
+      <!-- Hexadecimal -->
+      <div class="base-card hex" data-base="16">
+        <div class="card-header">
+          <span class="card-label hex-label"><span class="dot"></span>Hexadecimal / <span data-zh="十六进制">十六进制</span> (Base 16)</span>
+          <button class="card-copy" onclick="copyField('hex')"><i class="fas fa-copy"></i></button>
+        </div>
+        <div class="card-body"><textarea id="hex" rows="1" placeholder="e.g. FF" oninput="onInput('hex')"></textarea></div>
+        <div class="card-error" id="hex-error"><i class="fas fa-triangle-exclamation"></i><span data-zh="只能输入 0-9, A-F, a-f">Only 0-9, A-F, a-f are allowed</span></div>
+      </div>
+    </div>
+
+    <!-- ASCII Display -->
+    <div class="panel" id="asciiPanel" style="display:none">
+      <div class="panel-header"><i class="fas fa-font"></i> ASCII</div>
+      <div class="panel-body">
+        <div class="ascii-display">
+          <div class="ascii-char" id="asciiChar">A</div>
+          <div class="ascii-info">
+            <div class="ascii-info-title" data-zh="字符对应">Character</div>
+            <div class="ascii-info-detail" id="asciiDetail">Dec: 65 | Hex: 0x41 | Binary: 01000001</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bitwise Operations -->
+    <div class="panel" id="bitwisePanel" style="display:none">
+      <div class="panel-header"><i class="fas fa-microchip"></i> <span data-zh="位运算结果">Bitwise Operations</span></div>
+      <div class="panel-body">
+        <div class="bitwise-grid" id="bitwiseGrid">
+          <!-- NOT -->
+          <div class="bitwise-item">
+            <div class="bitwise-title">NOT <span style="font-family:monospace">~x</span></div>
+            <div class="bitwise-val" id="notVal">-</div>
+          </div>
+          <!-- AND -->
+          <div class="bitwise-item">
+            <div class="bitwise-title">AND <span style="font-family:monospace">x &amp; y</span></div>
+            <div class="bitwise-val" id="andVal">-</div>
+            <div class="op-input"><span data-zh="运算值">Operand:</span><input type="text" id="andInput" placeholder="Decimal" value="15" oninput="updateBitwise()"></div>
+          </div>
+          <!-- OR -->
+          <div class="bitwise-item">
+            <div class="bitwise-title">OR <span style="font-family:monospace">x | y</span></div>
+            <div class="bitwise-val" id="orVal">-</div>
+            <div class="op-input"><span data-zh="运算值">Operand:</span><input type="text" id="orInput" placeholder="Decimal" value="240" oninput="updateBitwise()"></div>
+          </div>
+          <!-- XOR -->
+          <div class="bitwise-item">
+            <div class="bitwise-title">XOR <span style="font-family:monospace">x ^ y</span></div>
+            <div class="bitwise-val" id="xorVal">-</div>
+            <div class="op-input"><span data-zh="运算值">Operand:</span><input type="text" id="xorInput" placeholder="Decimal" value="170" oninput="updateBitwise()"></div>
+          </div>
+          <!-- Left Shift -->
+          <div class="bitwise-item">
+            <div class="bitwise-title">Left Shift <span style="font-family:monospace">&lt;&lt;</span></div>
+            <div class="bitwise-val" id="lshVal">-</div>
+            <div class="shift-controls">
+              <button onclick="changeShift(-1)"><i class="fas fa-minus"></i></button>
+              <span id="shiftAmt">1</span>
+              <button onclick="changeShift(1)"><i class="fas fa-plus"></i></button>
+              <span style="font-size:11px;color:var(--text-muted)">bits</span>
+            </div>
+          </div>
+          <!-- Right Shift -->
+          <div class="bitwise-item">
+            <div class="bitwise-title">Right Shift <span style="font-family:monospace">&gt;&gt;</span></div>
+            <div class="bitwise-val" id="rshVal">-</div>
+            <div style="height:28px"></div>
+          </div>
+          <!-- Byte Swap -->
+          <div class="bitwise-item" style="grid-column:1/-1">
+            <div class="bitwise-title">Byte Swap / Endian Flip</div>
+            <div class="bitwise-val" id="endianVal">-</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Batch Mode ===== -->
+  <div class="batch-area" id="batchMode">
+    <div class="batch-inputs">
+      <!-- Input -->
+      <div class="batch-panel">
+        <div class="batch-panel-header" style="display:flex;justify-content:space-between;align-items:center">
+          <span><i class="fas fa-file-import"></i> <span data-zh="输入">Input</span></span>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:12px;color:var(--text-muted)" data-zh="输入进制">From:</span>
+            <select class="batch-select" id="batchFrom" onchange="doBatchConvert()">
+              <option value="2">Binary (2)</option>
+              <option value="8">Octal (8)</option>
+              <option value="10" selected>Decimal (10)</option>
+              <option value="16">Hexadecimal (16)</option>
+            </select>
+          </div>
+        </div>
+        <div class="batch-panel-body">
+          <textarea id="batchInput" placeholder="Enter one number per line...&#10;10&#10;20&#10;255" oninput="doBatchConvert()"></textarea>
+        </div>
+      </div>
+      <!-- Output -->
+      <div class="batch-panel">
+        <div class="batch-panel-header" style="display:flex;justify-content:space-between;align-items:center">
+          <span><i class="fas fa-file-export"></i> <span data-zh="转换结果">Result</span></span>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:12px;color:var(--text-muted)" data-zh="输出进制">To:</span>
+            <select class="batch-select" id="batchTo" onchange="doBatchConvert()">
+              <option value="2">Binary (2)</option>
+              <option value="8">Octal (8)</option>
+              <option value="10">Decimal (10)</option>
+              <option value="16" selected>Hexadecimal (16)</option>
+            </select>
+          </div>
+        </div>
+        <div class="batch-panel-body">
+          <textarea id="batchOutput" placeholder="Converted results will appear here..." readonly></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="action-bar">
+      <button class="btn btn-primary" onclick="doBatchConvert()"><i class="fas fa-play"></i> <span data-zh="转换">Convert</span></button>
+      <button class="btn btn-secondary" onclick="copyBatch()"><i class="fas fa-copy"></i> <span data-zh="复制结果">Copy Result</span></button>
+      <button class="btn btn-secondary" onclick="clearBatch()"><i class="fas fa-trash"></i> <span data-zh="清空">Clear</span></button>
+    </div>
+    <div class="error-banner" id="batchError"><i class="fas fa-circle-exclamation"></i><span id="batchErrorText"></span></div>
+  </div>
+
+</main>
+
+<!-- Toast -->
+<div class="toast" id="toast">Copied!</div>
+
+<script>
+// ===== State =====
+let currentMode = 'single';
+let shiftBits = 1;
+let lastSource = 'dec';
+const bases = { bin: 2, oct: 8, dec: 10, hex: 16 };
+const fields = ['bin', 'oct', 'dec', 'hex'];
+const MAX_SAFE = Number.MAX_SAFE_INTEGER; // 9007199254740991
+
+// ===== Mode Switching =====
+function setMode(mode){
+  currentMode = mode;
+  document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('singleMode').style.display = mode === 'single' ? 'block' : 'none';
+  document.getElementById('batchMode').classList.toggle('active', mode === 'batch');
+}
+
+// ===== Input Handler =====
+function onInput(source){
+  lastSource = source;
+  const el = document.getElementById(source);
+  let val = el.value;
+  const base = bases[source];
+
+  // Clear errors
+  hideError(source);
+
+  if (!val.trim()){
+    clearAll(false);
+    return;
+  }
+
+  // Validate characters for this base
+  const valid = isValidForBase(val, base);
+  if (!valid){
+    showError(source);
+    return;
+  }
+
+  // Parse to decimal
+  const dec = parseInt(val.replace(/\s/g, ''), base);
+  if (isNaN(dec)){
+    showError(source);
+    return;
+  }
+  if (dec > MAX_SAFE){
+    showError(source, 'Number too large');
+    return;
+  }
+
+  // Convert to all other bases
+  fields.forEach(f => {
+    if (f === source) return;
+    const targetBase = bases[f];
+    let result;
+    if (targetBase === 10){
+      result = dec.toString(10);
+    } else if (targetBase === 2){
+      result = dec.toString(2);
+    } else if (targetBase === 8){
+      result = dec.toString(8);
+    } else {
+      result = dec.toString(16).toUpperCase();
+    }
+    document.getElementById(f).value = result;
+    hideError(f);
+  });
+
+  updateBitwise(dec);
+  updateAscii(dec);
+}
+
+function isValidForBase(str, base){
+  const s = str.replace(/\s/g, '');
+  if (!s) return true;
+  let regex;
+  switch (base){
+    case 2:  regex = /^[01]+$/; break;
+    case 8:  regex = /^[0-7]+$/; break;
+    case 10: regex = /^[0-9]+$/; break;
+    case 16: regex = /^[0-9a-fA-F]+$/; break;
+    default: return false;
+  }
+  return regex.test(s);
+}
+
+function showError(field, msg){
+  const errEl = document.getElementById(field + '-error');
+  if (errEl) errEl.classList.add('show');
+  if (msg) document.getElementById('errorBanner').textContent = msg;
+  document.getElementById('bitwisePanel').style.display = 'none';
+  document.getElementById('asciiPanel').style.display = 'none';
+}
+
+function hideError(field){
+  const errEl = document.getElementById(field + '-error');
+  if (errEl) errEl.classList.remove('show');
+}
+
+// ===== Bitwise Operations =====
+function updateBitwise(dec){
+  if (dec === undefined){
+    const decVal = document.getElementById('dec').value.trim();
+    if (!decVal) return;
+    dec = parseInt(decVal, 10);
+  }
+  if (isNaN(dec)) return;
+
+  // Clamp to 32-bit signed for display
+  const x32 = dec | 0;
+
+  // NOT
+  const notResult = ~x32;
+  document.getElementById('notVal').innerHTML = fmtBitwise(notResult);
+
+  // AND
+  const andOp = parseInt(document.getElementById('andInput').value || '0', 10) || 0;
+  const andResult = x32 & (andOp | 0);
+  document.getElementById('andVal').innerHTML = fmtBitwise(andResult);
+
+  // OR
+  const orOp = parseInt(document.getElementById('orInput').value || '0', 10) || 0;
+  const orResult = x32 | (orOp | 0);
+  document.getElementById('orVal').innerHTML = fmtBitwise(orResult);
+
+  // XOR
+  const xorOp = parseInt(document.getElementById('xorInput').value || '0', 10) || 0;
+  const xorResult = x32 ^ (xorOp | 0);
+  document.getElementById('xorVal').innerHTML = fmtBitwise(xorResult);
+
+  // Left Shift
+  const lshResult = x32 << shiftBits;
+  document.getElementById('lshVal').innerHTML = fmtBitwise(lshResult);
+
+  // Right Shift (arithmetic)
+  const rshResult = x32 >> shiftBits;
+  document.getElementById('rshVal').innerHTML = fmtBitwise(rshResult);
+
+  // Byte Swap / Endian flip (treat as 32-bit)
+  document.getElementById('endianVal').innerHTML = fmtEndianSwap(x32 >>> 0);
+
+  document.getElementById('bitwisePanel').style.display = 'block';
+}
+
+function fmtBitwise(v){
+  const dec = v | 0;
+  const hex = (dec >>> 0).toString(16).toUpperCase().padStart(8, '0');
+  const bin = (dec >>> 0).toString(2).padStart(32, '0').replace(/(.{8})/g, '$1 ').trim();
+  return `<div>${dec} <span style="color:var(--hex-color)">0x${hex}</span></div><div class="bin-str">${bin}</div>`;
+}
+
+function fmtEndianSwap(u32){
+  // Swap bytes: ABCD -> DCBA
+  const b0 = (u32 >>> 0) & 0xFF;
+  const b1 = (u32 >>> 8) & 0xFF;
+  const b2 = (u32 >>> 16) & 0xFF;
+  const b3 = (u32 >>> 24) & 0xFF;
+  const swapped = (b0 << 24) | (b1 << 16) | (b2 << 8) | b3;
+  const hex = (swapped >>> 0).toString(16).toUpperCase().padStart(8, '0');
+  return `<div>${swapped | 0} <span style="color:var(--hex-color)">0x${hex}</span></div>`;
+}
+
+function changeShift(delta){
+  shiftBits = Math.max(0, Math.min(31, shiftBits + delta));
+  document.getElementById('shiftAmt').textContent = shiftBits;
+  const decVal = document.getElementById('dec').value.trim();
+  if (decVal) updateBitwise(parseInt(decVal, 10));
+}
+
+// ===== ASCII Display =====
+function updateAscii(dec){
+  if (dec === undefined){
+    const decVal = document.getElementById('dec').value.trim();
+    if (!decVal) return;
+    dec = parseInt(decVal, 10);
+  }
+  if (isNaN(dec) || dec < 0 || dec > 127){
+    document.getElementById('asciiPanel').style.display = 'none';
+    return;
+  }
+  const char = dec === 0 ? 'NUL' : dec < 32 ? '^' + String.fromCharCode(64 + dec) : String.fromCharCode(dec);
+  const name = dec === 0 ? 'NUL (Null)' : dec === 9 ? 'HT (Horizontal Tab)' : dec === 10 ? 'LF (Line Feed)' : dec === 13 ? 'CR (Carriage Return)' : dec === 27 ? 'ESC (Escape)' : dec === 32 ? 'SP (Space)' : dec === 127 ? 'DEL (Delete)' : dec < 32 ? 'Control Character' : 'Printable';
+  document.getElementById('asciiChar').textContent = char;
+  document.getElementById('asciiDetail').innerHTML = `Dec: ${dec} | Hex: 0x${dec.toString(16).toUpperCase().padStart(2,'0')} | Binary: ${dec.toString(2).padStart(8,'0')}<br><span style="color:var(--text-muted)">${name}</span>`;
+  document.getElementById('asciiPanel').style.display = 'block';
+}
+
+// ===== Copy & Clear =====
+function copyField(field){
+  const el = document.getElementById(field);
+  if (!el.value) return;
+  navigator.clipboard.writeText(el.value).then(() => showToast('Copied!'));
+}
+
+function copyAll(){
+  const parts = [];
+  const labels = { bin: 'Binary', oct: 'Octal', dec: 'Decimal', hex: 'Hexadecimal' };
+  fields.forEach(f => {
+    const val = document.getElementById(f).value;
+    if (val) parts.push(`${labels[f]}: ${val}`);
+  });
+  if (!parts.length) return;
+  navigator.clipboard.writeText(parts.join('\n')).then(() => showToast('All copied!'));
+}
+
+function clearAll(hidePanels){
+  fields.forEach(f => {
+    document.getElementById(f).value = '';
+    hideError(f);
+  });
+  if (hidePanels !== false){
+    document.getElementById('bitwisePanel').style.display = 'none';
+    document.getElementById('asciiPanel').style.display = 'none';
+    document.getElementById('errorBanner').classList.remove('show');
+  }
+}
+
+function loadExample(){
+  document.getElementById('dec').value = '255';
+  document.getElementById('bin').value = '11111111';
+  document.getElementById('oct').value = '377';
+  document.getElementById('hex').value = 'FF';
+  fields.forEach(f => hideError(f));
+  updateBitwise(255);
+  updateAscii(255);
+}
+
+// ===== Batch Conversion =====
+function doBatchConvert(){
+  const input = document.getElementById('batchInput').value.trim();
+  const fromBase = parseInt(document.getElementById('batchFrom').value, 10);
+  const toBase = parseInt(document.getElementById('batchTo').value, 10);
+  const outputEl = document.getElementById('batchOutput');
+  const errorEl = document.getElementById('batchError');
+  const errorText = document.getElementById('batchErrorText');
+
+  if (!input){
+    outputEl.value = '';
+    errorEl.classList.remove('show');
+    return;
+  }
+
+  const lines = input.split('\n');
+  const results = [];
+  const errors = [];
+
+  lines.forEach((line, idx) => {
+    const trimmed = line.trim();
+    if (!trimmed){
+      results.push('');
+      return;
+    }
+    const dec = parseInt(trimmed, fromBase);
+    if (isNaN(dec)){
+      results.push('ERROR: invalid');
+      errors.push(`Line ${idx + 1}: "${trimmed}"`);
+      return;
+    }
+    if (toBase === 10) results.push(dec.toString(10));
+    else if (toBase === 2) results.push(dec.toString(2));
+    else if (toBase === 8) results.push(dec.toString(8));
+    else results.push(dec.toString(16).toUpperCase());
+  });
+
+  outputEl.value = results.join('\n');
+  if (errors.length > 0){
+    errorText.textContent = errors.length + ' invalid line(s): ' + errors.slice(0, 3).join(', ');
+    errorEl.classList.add('show');
+  } else {
+    errorEl.classList.remove('show');
+  }
+}
+
+function copyBatch(){
+  const val = document.getElementById('batchOutput').value;
+  if (!val) return;
+  navigator.clipboard.writeText(val).then(() => showToast('Result copied!'));
+}
+
+function clearBatch(){
+  document.getElementById('batchInput').value = '';
+  document.getElementById('batchOutput').value = '';
+  document.getElementById('batchError').classList.remove('show');
+}
+
+// ===== Toast =====
+function showToast(msg){
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2000);
+}
+</script>
+<script src="../js/i18n.js"></script>
+
+<script>
+// Register Service Worker for offline support
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/sw.js')
+    .then(reg => console.log('SW registered:', reg.scope))
+    .catch(err => console.log('SW registration failed:', err));
+}
+</script>
+</body>
+</html>

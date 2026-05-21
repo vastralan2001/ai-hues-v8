@@ -11,8 +11,10 @@
     "check": "moon run :lint :format-check :typecheck",
     "dev:web": "moon run papers-web:dev",
     "dev:api": "moon run papers-api:dev",
-    "dev": "moon run papers-web:dev papers-api:dev",
-    "build": "moon run papers-web:build papers-api:build",
+    "dev:aihues-web": "moon run aihues-web:dev",
+    "dev": "moon run papers-web:dev papers-api:dev aihues-web:dev",
+    "build": "moon run papers-web:build papers-api:build aihues-web:build",
+    "build:aihues-web": "moon run aihues-web:build",
     "lint": "moon run :lint",
     "format": "moon run :format",
     "format:check": "moon run :format-check"

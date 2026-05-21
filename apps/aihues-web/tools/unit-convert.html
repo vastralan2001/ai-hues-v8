@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-zh="单位转换器 — AIHues">Unit Converter — AIHues</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#ffffff;--surface:#f8f9fb;--surface-hover:#f1f3f7;
+  --border:#e8ecf1;--border-hover:#d1d8e0;
+  --text:#0f172a;--text-secondary:#475569;--text-muted:#94a3b8;
+  --accent:#6d28d9;--accent-light:#8b5cf6;--accent-gradient:linear-gradient(135deg,#6d28d9,#8b5cf6);
+  --green:#059669;--blue:#2563eb;--orange:#ea580c;
+  --radius:14px;--radius-sm:10px;
+  --shadow:0 1px 3px rgba(0,0,0,0.04),0 4px 16px rgba(0,0,0,0.04);
+}
+body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+
+/* ===== Navigation ===== */
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);font-weight:700;font-size:18px}
+.logo-mark{width:34px;height:34px;border-radius:8px;background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px}
+.nav-links{display:flex;gap:28px;list-style:none}
+.nav-links a{text-decoration:none;color:var(--text-secondary);font-size:14px;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--accent)}
+
+/* ===== Tool Page ===== */
+.tool-page{max-width:720px;margin:0 auto;padding:32px 24px}
+.tool-header{margin-bottom:28px}
+.badge{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);padding:4px 12px;border-radius:100px;font-size:12px;color:var(--text-secondary);margin-bottom:12px}
+.tool-header h1{font-size:28px;font-weight:700;margin-bottom:8px}
+.tool-header p{color:var(--text-secondary);font-size:15px;line-height:1.6}
+.tool-meta{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:3px 10px;border-radius:6px;font-weight:500}
+.tag.free{background:#ecfdf5;color:var(--green)}
+
+/* ===== Tabs ===== */
+.tabs{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
+.tab{padding:8px 16px;border-radius:var(--radius-sm);border:1px solid var(--border);background:#fff;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;color:var(--text-secondary);font-family:inherit}
+.tab:hover{border-color:var(--border-hover);background:var(--surface-hover);color:var(--text)}
+.tab.active{background:var(--accent-gradient);color:#fff;border-color:transparent}
+
+/* ===== Converter Panel ===== */
+.panel{margin-bottom:20px;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:#fff;box-shadow:var(--shadow)}
+.panel-header{padding:14px 20px;background:var(--surface);border-bottom:1px solid var(--border);font-size:15px;font-weight:700}
+.panel-body{padding:20px}
+
+/* ===== Converter Row ===== */
+.convert-row{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+@media(max-width:768px){.convert-row{flex-direction:column;align-items:stretch}}
+
+.convert-group{flex:1;display:flex;flex-direction:column;gap:8px}
+.convert-label{font-size:12px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.5px}
+.convert-input{display:flex;gap:8px}
+.convert-input input{flex:1;padding:12px 16px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:18px;font-weight:600;color:var(--text);background:#fff;outline:none;transition:border-color .2s;font-family:'Consolas','Monaco','Courier New',monospace}
+.convert-input input:focus{border-color:var(--accent)}
+.convert-input select{padding:12px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;font-weight:600;color:var(--text);background:#fff;outline:none;cursor:pointer;min-width:100px;font-family:inherit}
+.convert-input select:focus{border-color:var(--accent)}
+
+.swap-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-size:16px;cursor:pointer;transition:all .2s;color:var(--text-secondary);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:18px}
+.swap-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--surface-hover);transform:rotate(180deg)}
+@media(max-width:768px){.swap-btn{align-self:center;margin-top:0}}
+
+/* ===== Formula Display ===== */
+.formula-bar{padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;color:var(--text-secondary);font-family:'Consolas','Monaco','Courier New',monospace;text-align:center;margin-top:8px}
+.formula-bar strong{color:var(--accent)}
+
+/* ===== All Units Grid ===== */
+.units-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:16px}
+@media(max-width:768px){.units-grid{grid-template-columns:1fr}}
+
+.unit-item{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;transition:background .15s}
+.unit-item:hover{background:var(--surface-hover)}
+.unit-name{color:var(--text-secondary);font-weight:500}
+.unit-value{font-weight:600;color:var(--text);font-family:'Consolas','Monaco','Courier New',monospace}
+
+/* ===== Toast ===== */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--text);color:#fff;padding:10px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;z-index:200;opacity:0;transform:translateY(10px);transition:all .25s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+
+/* ===== Responsive ===== */
+@media(max-width:768px){
+  .nav-inner{padding:0 16px}
+  .tool-page{padding:20px 16px}
+  .tool-header h1{font-size:22px}
+}
+</style>
+<link rel="manifest" href="/manifest.json">
+</head>
+<body>
+
+<!-- ===== Navigation ===== -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../index.html" class="logo">
+      <div class="logo-mark">AI</div>
+      <span>AIHues</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="../showcase.html">Tools</a></li>
+      <li><a href="../collection.html">Collection</a></li>
+      <li><a href="../pricing.html">Pricing</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ===== Main Content ===== -->
+<main class="tool-page">
+
+  <!-- Tool Header -->
+  <div class="tool-header">
+    <span class="badge">&#128295; <span data-zh="开发工具">Developer Tool</span></span>
+    <h1 data-zh="单位转换器">Unit Converter</h1>
+    <p data-zh="支持长度、重量、温度、面积、数据存储和时间六大类单位的实时双向转换">Convert between 6 categories: Length, Weight, Temperature, Area, Data Storage, and Time.</p>
+    <div class="tool-meta">
+      <span class="tag free">&#128994; <span data-zh="免费使用">Free Forever</span></span>
+    </div>
+  </div>
+
+  <!-- Category Tabs -->
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-category="length" onclick="switchTab('length')">📏 <span data-zh="长度">Length</span></button>
+    <button class="tab" data-category="weight" onclick="switchTab('weight')">⚖️ <span data-zh="重量">Weight</span></button>
+    <button class="tab" data-category="temperature" onclick="switchTab('temperature')">🌡️ <span data-zh="温度">Temperature</span></button>
+    <button class="tab" data-category="area" onclick="switchTab('area')">📐 <span data-zh="面积">Area</span></button>
+    <button class="tab" data-category="data" onclick="switchTab('data')">💾 <span data-zh="数据">Data</span></button>
+    <button class="tab" data-category="time" onclick="switchTab('time')">⏰ <span data-zh="时间">Time</span></button>
+  </div>
+
+  <!-- Converter Panel -->
+  <div class="panel">
+    <div class="panel-header" id="panelTitle" data-zh="📏 长度转换">📏 Length Converter</div>
+    <div class="panel-body">
+
+      <!-- Convert Row -->
+      <div class="convert-row">
+        <div class="convert-group">
+          <label class="convert-label" data-zh="输入值">Input</label>
+          <div class="convert-input">
+            <input type="number" id="inputValue" value="1" step="any" oninput="convert()">
+            <select id="fromUnit" onchange="convert()"></select>
+          </div>
+        </div>
+        <button class="swap-btn" onclick="swapUnits()">&#8644;</button>
+        <div class="convert-group">
+          <label class="convert-label" data-zh="结果">Result</label>
+          <div class="convert-input">
+            <input type="number" id="outputValue" step="any" readonly>
+            <select id="toUnit" onchange="convert()"></select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formula -->
+      <div class="formula-bar" id="formula">1 m = 1000 mm</div>
+
+      <!-- All Units Grid -->
+      <div class="units-grid" id="unitsGrid"></div>
+
+    </div>
+  </div>
+
+</main>
+
+<!-- Toast -->
+<div class="toast" id="toast">Copied!</div>
+
+<script>
+// ===== Unit Definitions =====
+const categories = {
+  length: {
+    title: 'Length Converter',
+    titleZh: '长度转换',
+    icon: '📏',
+    base: 'm',
+    units: {
+      mm: {name: 'Millimeter', nameZh: '毫米', factor: 0.001},
+      cm: {name: 'Centimeter', nameZh: '厘米', factor: 0.01},
+      m:  {name: 'Meter', nameZh: '米', factor: 1},
+      km: {name: 'Kilometer', nameZh: '千米', factor: 1000},
+      inch: {name: 'Inch', nameZh: '英寸', factor: 0.0254},
+      ft: {name: 'Foot', nameZh: '英尺', factor: 0.3048},
+      mile: {name: 'Mile', nameZh: '英里', factor: 1609.344}
+    }
+  },
+  weight: {
+    title: 'Weight Converter',
+    titleZh: '重量转换',
+    icon: '⚖️',
+    base: 'g',
+    units: {
+      mg: {name: 'Milligram', nameZh: '毫克', factor: 0.001},
+      g:  {name: 'Gram', nameZh: '克', factor: 1},
+      kg: {name: 'Kilogram', nameZh: '千克', factor: 1000},
+      ton: {name: 'Metric Ton', nameZh: '吨', factor: 1000000},
+      lb: {name: 'Pound', nameZh: '磅', factor: 453.59237},
+      oz: {name: 'Ounce', nameZh: '盎司', factor: 28.34952}
+    }
+  },
+  temperature: {
+    title: 'Temperature Converter',
+    titleZh: '温度转换',
+    icon: '🌡️',
+    units: {
+      C: {name: 'Celsius', nameZh: '摄氏度'},
+      F: {name: 'Fahrenheit', nameZh: '华氏度'},
+      K: {name: 'Kelvin', nameZh: '开尔文'}
+    }
+  },
+  area: {
+    title: 'Area Converter',
+    titleZh: '面积转换',
+    icon: '📐',
+    base: 'm2',
+    units: {
+      m2: {name: 'Square Meter', nameZh: '平方米', factor: 1},
+      km2: {name: 'Square Kilometer', nameZh: '平方千米', factor: 1000000},
+      ft2: {name: 'Square Foot', nameZh: '平方英尺', factor: 0.092903},
+      acre: {name: 'Acre', nameZh: '英亩', factor: 4046.8564224},
+      ha: {name: 'Hectare', nameZh: '公顷', factor: 10000}
+    }
+  },
+  data: {
+    title: 'Data Storage Converter',
+    titleZh: '数据存储转换',
+    icon: '💾',
+    base: 'B',
+    units: {
+      B:  {name: 'Byte', nameZh: '字节', factor: 1},
+      KB: {name: 'Kilobyte', nameZh: 'KB', factor: 1024},
+      MB: {name: 'Megabyte', nameZh: 'MB', factor: 1048576},
+      GB: {name: 'Gigabyte', nameZh: 'GB', factor: 1073741824},
+      TB: {name: 'Terabyte', nameZh: 'TB', factor: 1099511627776},
+      PB: {name: 'Petabyte', nameZh: 'PB', factor: 1125899906842624}
+    }
+  },
+  time: {
+    title: 'Time Converter',
+    titleZh: '时间转换',
+    icon: '⏰',
+    base: 's',
+    units: {
+      ms: {name: 'Millisecond', nameZh: '毫秒', factor: 0.001},
+      s:  {name: 'Second', nameZh: '秒', factor: 1},
+      min: {name: 'Minute', nameZh: '分钟', factor: 60},
+      h:  {name: 'Hour', nameZh: '小时', factor: 3600},
+      day: {name: 'Day', nameZh: '天', factor: 86400},
+      week: {name: 'Week', nameZh: '周', factor: 604800},
+      month: {name: 'Month (avg)', nameZh: '月(平均)', factor: 2592000},
+      year: {name: 'Year (avg)', nameZh: '年(平均)', factor: 31536000}
+    }
+  }
+};
+
+let currentCategory = 'length';
+
+// ===== Tab Switching =====
+function switchTab(category) {
+  currentCategory = category;
+
+  // Update tab styles
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.classList.toggle('active', tab.dataset.category === category);
+  });
+
+  const cat = categories[category];
+
+  // Update panel title
+  const titleEl = document.getElementById('panelTitle');
+  const titleHtml = cat.icon + ' ' + (window.i18n && i18n.lang === 'zh' ? cat.titleZh : cat.title);
+  titleEl.innerHTML = titleHtml;
+  titleEl.dataset.en = cat.icon + ' ' + cat.title;
+  titleEl.dataset.zh = cat.icon + ' ' + cat.titleZh;
+
+  // Populate unit selects
+  populateSelects(cat);
+
+  // Reset values
+  document.getElementById('inputValue').value = 1;
+
+  // Convert
+  convert();
+}
+
+function populateSelects(cat) {
+  const fromSelect = document.getElementById('fromUnit');
+  const toSelect = document.getElementById('toUnit');
+
+  fromSelect.innerHTML = '';
+  toSelect.innerHTML = '';
+
+  const unitKeys = Object.keys(cat.units);
+  unitKeys.forEach((key, idx) => {
+    const unit = cat.units[key];
+    const label = unit.name + ' (' + key + ')';
+    const option1 = document.createElement('option');
+    option1.value = key;
+    option1.textContent = label;
+    fromSelect.appendChild(option1);
+
+    const option2 = document.createElement('option');
+    option2.value = key;
+    option2.textContent = label;
+    toSelect.appendChild(option2);
+  });
+
+  // Set defaults
+  fromSelect.selectedIndex = 2; // m, kg, C, m2, MB, min
+  toSelect.selectedIndex = 0;
+
+  // Adjust defaults per category
+  if (currentCategory === 'temperature') {
+    fromSelect.selectedIndex = 0; // C
+    toSelect.selectedIndex = 1; // F
+  } else if (currentCategory === 'data') {
+    fromSelect.selectedIndex = 3; // GB
+    toSelect.selectedIndex = 2; // MB
+  } else if (currentCategory === 'time') {
+    fromSelect.selectedIndex = 2; // min
+    toSelect.selectedIndex = 3; // h
+  }
+}
+
+// ===== Conversion Logic =====
+function convert() {
+  const cat = categories[currentCategory];
+  const value = parseFloat(document.getElementById('inputValue').value);
+  const from = document.getElementById('fromUnit').value;
+  const to = document.getElementById('toUnit').value;
+
+  if (isNaN(value)) {
+    document.getElementById('outputValue').value = '';
+    return;
+  }
+
+  let result;
+  if (currentCategory === 'temperature') {
+    result = convertTemperature(value, from, to);
+  } else {
+    result = convertLinear(value, from, to, cat);
+  }
+
+  // Format result
+  document.getElementById('outputValue').value = formatNumber(result);
+
+  // Update formula text
+  updateFormula(value, from, result, to, cat);
+
+  // Update all units grid
+  updateAllUnits(value, from, cat);
+}
+
+function convertLinear(value, from, to, cat) {
+  const fromFactor = cat.units[from].factor;
+  const toFactor = cat.units[to].factor;
+  return value * fromFactor / toFactor;
+}
+
+function convertTemperature(value, from, to) {
+  if (from === to) return value;
+
+  // Convert to Celsius first
+  let celsius;
+  if (from === 'C') celsius = value;
+  else if (from === 'F') celsius = (value - 32) * 5 / 9;
+  else if (from === 'K') celsius = value - 273.15;
+
+  // Convert from Celsius to target
+  if (to === 'C') return celsius;
+  else if (to === 'F') return celsius * 9 / 5 + 32;
+  else if (to === 'K') return celsius + 273.15;
+}
+
+function formatNumber(num) {
+  if (Math.abs(num) < 0.000001 || Math.abs(num) > 1e12) {
+    return num.toExponential(6);
+  }
+  // Remove trailing zeros
+  return parseFloat(num.toPrecision(10)).toString();
+}
+
+function updateFormula(value, from, result, to, cat) {
+  const formulaEl = document.getElementById('formula');
+  const fromLabel = from;
+  const toLabel = to;
+  formulaEl.innerHTML = `<strong>${formatNumber(value)}</strong> ${fromLabel} = <strong>${formatNumber(result)}</strong> ${toLabel}`;
+}
+
+function updateAllUnits(value, from, cat) {
+  const grid = document.getElementById('unitsGrid');
+  const unitKeys = Object.keys(cat.units);
+
+  let baseValue;
+  if (currentCategory === 'temperature') {
+    // Convert to C as base for display
+    if (from === 'C') baseValue = value;
+    else if (from === 'F') baseValue = (value - 32) * 5 / 9;
+    else if (from === 'K') baseValue = value - 273.15;
+  } else {
+    baseValue = value * cat.units[from].factor;
+  }
+
+  grid.innerHTML = unitKeys.map(key => {
+    let converted;
+    if (currentCategory === 'temperature') {
+      if (key === 'C') converted = baseValue;
+      else if (key === 'F') converted = baseValue * 9 / 5 + 32;
+      else if (key === 'K') converted = baseValue + 273.15;
+    } else {
+      converted = baseValue / cat.units[key].factor;
+    }
+
+    const isFrom = key === from;
+    return `<div class="unit-item" style="${isFrom ? 'border-color:var(--accent);background:var(--surface-hover)' : ''}">
+      <span class="unit-name">${cat.units[key].name} <small style="color:var(--text-muted)">(${key})</small></span>
+      <span class="unit-value">${formatNumber(converted)}</span>
+    </div>`;
+  }).join('');
+}
+
+// ===== Swap =====
+function swapUnits() {
+  const fromSelect = document.getElementById('fromUnit');
+  const toSelect = document.getElementById('toUnit');
+  const temp = fromSelect.selectedIndex;
+  fromSelect.selectedIndex = toSelect.selectedIndex;
+  toSelect.selectedIndex = temp;
+
+  // Also swap values if output has value
+  const outputVal = document.getElementById('outputValue').value;
+  if (outputVal) {
+    document.getElementById('inputValue').value = outputVal;
+  }
+
+  convert();
+}
+
+// ===== Toast =====
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+// ===== Init =====
+document.addEventListener('DOMContentLoaded', () => {
+  switchTab('length');
+});
+</script>
+<script src="../js/i18n.js"></script>
+
+<script>
+// Register Service Worker for offline support
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/sw.js')
+    .then(reg => console.log('SW registered:', reg.scope))
+    .catch(err => console.log('SW registration failed:', err));
+}
+</script>
+</body>
+</html>

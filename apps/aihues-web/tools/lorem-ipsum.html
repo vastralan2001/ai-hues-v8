@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-zh="Lorem Ipsum 生成器 — AIHues">Lorem Ipsum Generator — AIHues</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#ffffff;--surface:#f8f9fb;--surface-hover:#f1f3f7;
+  --border:#e8ecf1;--border-hover:#d1d8e0;
+  --text:#0f172a;--text-secondary:#475569;--text-muted:#94a3b8;
+  --accent:#6d28d9;--accent-light:#8b5cf6;--accent-gradient:linear-gradient(135deg,#6d28d9,#8b5cf6);
+  --green:#059669;--green-bg:#ecfdf5;--green-light:#d1fae5;
+  --blue:#2563eb;--orange:#ea580c;
+  --radius:14px;--radius-sm:10px;
+  --shadow:0 1px 3px rgba(0,0,0,0.04),0 4px 16px rgba(0,0,0,0.04);
+}
+body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+
+/* ===== Navigation ===== */
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);font-weight:700;font-size:18px}
+.logo-mark{width:34px;height:34px;border-radius:8px;background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px}
+.nav-links{display:flex;gap:28px;list-style:none}
+.nav-links a{text-decoration:none;color:var(--text-secondary);font-size:14px;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--accent)}
+
+/* ===== Tool Page ===== */
+.tool-page{max-width:960px;margin:0 auto;padding:32px 24px}
+.tool-header{margin-bottom:28px}
+.badge{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);padding:4px 12px;border-radius:100px;font-size:12px;color:var(--text-secondary);margin-bottom:12px}
+.tool-header h1{font-size:28px;font-weight:700;margin-bottom:8px}
+.tool-header p{color:var(--text-secondary);font-size:15px;line-height:1.6}
+.tool-meta{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:3px 10px;border-radius:6px;font-weight:500}
+.tag.free{background:#ecfdf5;color:var(--green)}
+
+/* ===== Controls Panel ===== */
+.panel{margin-bottom:20px;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:#fff;box-shadow:var(--shadow)}
+.panel-header{padding:14px 20px;background:var(--surface);border-bottom:1px solid var(--border);font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
+.panel-body{padding:20px}
+
+.controls-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:16px}
+@media(max-width:768px){.controls-grid{grid-template-columns:1fr}}
+
+.control-group{display:flex;flex-direction:column;gap:8px}
+.control-label{font-size:13px;font-weight:600;color:var(--text-secondary)}
+.control-input{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;color:var(--text);background:#fff;outline:none;transition:border-color .2s;font-family:inherit}
+.control-input:focus{border-color:var(--accent)}
+select.control-input{cursor:pointer}
+input[type="range"].control-input{padding:6px 0}
+
+.range-display{display:flex;justify-content:space-between;align-items:center}
+.range-value{font-size:13px;font-weight:600;color:var(--accent);background:var(--surface);padding:2px 10px;border-radius:6px;border:1px solid var(--border)}
+
+/* ===== Action Bar ===== */
+.action-bar{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;border:1px solid transparent;transition:all .15s;font-family:inherit}
+.btn-primary{background:var(--accent-gradient);color:#fff;border:none}
+.btn-primary:hover{opacity:0.92;transform:translateY(-1px);box-shadow:0 4px 12px rgba(109,40,217,0.25)}
+.btn-secondary{background:#fff;border:1px solid var(--border);color:var(--text-secondary)}
+.btn-secondary:hover{border-color:var(--border-hover);background:var(--surface-hover)}
+
+/* ===== Output Area ===== */
+.output-wrap{position:relative}
+.output-area{width:100%;min-height:280px;padding:20px;border:1px solid var(--border);border-radius:var(--radius);font-size:14px;line-height:1.8;background:#fff;color:var(--text);resize:vertical;font-family:'Mono',monospace;outline:none;transition:border-color .2s}
+.output-area:focus{border-color:var(--accent)}
+
+.output-toolbar{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:var(--surface);border:1px solid var(--border);border-bottom:none;border-radius:var(--radius) var(--radius) 0 0}
+.output-toolbar .title{font-size:13px;font-weight:600;color:var(--text-secondary)}
+.output-actions{display:flex;gap:8px}
+
+/* ===== Stats Bar ===== */
+.stats-bar{display:flex;gap:20px;padding:12px 20px;background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius);flex-wrap:wrap}
+.stat-item{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-secondary)}
+.stat-item strong{color:var(--text);font-weight:600}
+
+/* ===== Toast ===== */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--text);color:#fff;padding:10px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;z-index:200;opacity:0;transform:translateY(10px);transition:all .25s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+
+/* ===== Responsive ===== */
+@media(max-width:768px){
+  .nav-inner{padding:0 16px}
+  .tool-page{padding:20px 16px}
+  .tool-header h1{font-size:22px}
+}
+</style>
+<link rel="manifest" href="/manifest.json">
+</head>
+<body>
+
+<!-- ===== Navigation ===== -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../index.html" class="logo">
+      <div class="logo-mark">AI</div>
+      <span>AIHues</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="../showcase.html">Tools</a></li>
+      <li><a href="../collection.html">Collection</a></li>
+      <li><a href="../pricing.html">Pricing</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ===== Main Content ===== -->
+<main class="tool-page">
+
+  <!-- Tool Header -->
+  <div class="tool-header">
+    <span class="badge">&#9997; <span data-zh="写作工具">Writer Tool</span></span>
+    <h1 data-zh="Lorem Ipsum 生成器">Lorem Ipsum Generator</h1>
+    <p data-zh="生成可控长度的随机文本，支持中文、英文和 Latin 模式，用于设计和开发中的占位文本">Generate random placeholder text with controllable length in Chinese, English, or Latin modes.</p>
+    <div class="tool-meta">
+      <span class="tag free">&#128994; <span data-zh="免费使用">Free Forever</span></span>
+    </div>
+  </div>
+
+  <!-- Controls Panel -->
+  <div class="panel">
+    <div class="panel-header" data-zh="&#9881;&#65039; 生成设置">&#9881;&#65039; Settings</div>
+    <div class="panel-body">
+      <div class="controls-grid">
+        <!-- Paragraphs -->
+        <div class="control-group">
+          <label class="control-label" data-zh="段落数 (1-20)">Paragraphs (1-20)</label>
+          <div class="range-display">
+            <input type="range" class="control-input" id="paraRange" min="1" max="20" value="3" oninput="updateRange('para')">
+            <span class="range-value" id="paraVal">3</span>
+          </div>
+        </div>
+        <!-- Sentences per paragraph -->
+        <div class="control-group">
+          <label class="control-label" data-zh="每段句子数 (3-10)">Sentences per Paragraph (3-10)</label>
+          <div class="range-display">
+            <input type="range" class="control-input" id="sentRange" min="3" max="10" value="5" oninput="updateRange('sent')">
+            <span class="range-value" id="sentVal">5</span>
+          </div>
+        </div>
+        <!-- Mode -->
+        <div class="control-group">
+          <label class="control-label" data-zh="文本模式">Text Mode</label>
+          <select class="control-input" id="modeSelect" onchange="generate()">
+            <option value="latin">Latin (Lorem Ipsum)</option>
+            <option value="english">English</option>
+            <option value="chinese" data-zh="中文">Chinese</option>
+            <option value="html">HTML (with &lt;p&gt; tags)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="action-bar">
+        <button class="btn btn-primary" onclick="generate()">&#128260; <span data-zh="生成文本">Generate</span></button>
+        <button class="btn btn-secondary" onclick="copyText()">&#128203; <span data-zh="复制">Copy</span></button>
+        <button class="btn btn-secondary" onclick="clearOutput()">&#128465;&#65039; <span data-zh="清空">Clear</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Output Area -->
+  <div class="output-wrap">
+    <div class="output-toolbar">
+      <span class="title" data-zh="生成结果">Generated Text</span>
+      <div class="output-actions">
+        <button class="btn btn-secondary" style="padding:6px 12px;font-size:12px" onclick="copyText()">&#128203; <span data-zh="复制">Copy</span></button>
+      </div>
+    </div>
+    <textarea class="output-area" id="output" placeholder="Click 'Generate' to create placeholder text..." data-zh-placeholder="点击「生成文本」创建占位文本..."></textarea>
+    <div class="stats-bar">
+      <div class="stat-item">
+        <span data-zh="总字符数:">Characters:</span>
+        <strong id="charCount">0</strong>
+      </div>
+      <div class="stat-item">
+        <span data-zh="字数:" data-en="Words:" id="wordLabel">Words:</span>
+        <strong id="wordCount">0</strong>
+      </div>
+      <div class="stat-item">
+        <span data-zh="段落数:">Paragraphs:</span>
+        <strong id="paraCount">0</strong>
+      </div>
+      <div class="stat-item">
+        <span data-zh="模式:">Mode:</span>
+        <strong id="modeDisplay">Latin</strong>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- Toast -->
+<div class="toast" id="toast">Copied!</div>
+
+<script>
+// ===== Chinese Word Bank =====
+const cnWords = [
+  '我们','可以','通过','不同','方式','实现','目标','开发','团队','需要',
+  '关注','用户体验','产品设计','技术架构','数据安全','性能优化','功能模块',
+  '项目管理','敏捷开发','持续集成','自动化测试','代码审查','版本控制',
+  '业务流程','用户需求','系统分析','数据库','前端开发','后端服务',
+  '接口设计','负载均衡','缓存策略','监控告警','日志分析','故障排查',
+  '团队协作','沟通效率','文档编写','知识分享','技术沉淀','创新思维'
+];
+
+const latinWords = [
+  'lorem','ipsum','dolor','sit','amet','consectetur','adipiscing','elit','sed','do',
+  'eiusmod','tempor','incididunt','ut','labore','et','dolore','magna','aliqua','ut',
+  'enim','ad','minim','veniam','quis','nostrud','exercitation','ullamco','laboris',
+  'nisi','aliquip','ex','ea','commodo','consequat','duis','aute','irure','dolor',
+  'in','reprehenderit','voluptate','velit','esse','cillum','fugiat','nulla','pariatur'
+];
+
+const englishWords = [
+  'the','quick','brown','fox','jumps','over','lazy','dog','while','sun',
+  'shines','brightly','across','green','meadow','birds','sing','melodious',
+  'tunes','gentle','breeze','rustles','through','tall','trees','flowers',
+  'bloom','vibrant','colors','river','flows','peacefully','valley','mountains',
+  'rise','majestically','against','clear','blue','sky','clouds','drift',
+  'slowly','casting','soft','shadows','upon','winding','path','below'
+];
+
+// ===== Range Update =====
+function updateRange(type) {
+  const val = document.getElementById(type + 'Range').value;
+  document.getElementById(type + 'Val').textContent = val;
+  generate();
+}
+
+// ===== Generate Text =====
+function generate() {
+  const paragraphs = parseInt(document.getElementById('paraRange').value);
+  const sentencesPerPara = parseInt(document.getElementById('sentRange').value);
+  const mode = document.getElementById('modeSelect').value;
+  const output = document.getElementById('output');
+
+  let result = [];
+
+  for (let p = 0; p < paragraphs; p++) {
+    let paragraph = [];
+    for (let s = 0; s < sentencesPerPara; s++) {
+      paragraph.push(generateSentence(mode));
+    }
+    result.push(paragraph.join(' '));
+  }
+
+  if (mode === 'html') {
+    output.value = result.map(p => '<p>' + p + '</p>').join('\n\n');
+  } else if (mode === 'chinese') {
+    output.value = result.map(p => p + '。').join('\n\n');
+  } else {
+    output.value = result.map(p => p.charAt(0).toUpperCase() + p.slice(1) + '.').join('\n\n');
+  }
+
+  updateStats(mode);
+  document.getElementById('modeDisplay').textContent = mode.charAt(0).toUpperCase() + mode.slice(1);
+}
+
+// ===== Generate Single Sentence =====
+function generateSentence(mode) {
+  if (mode === 'chinese') {
+    const len = randInt(12, 24);
+    const words = [];
+    for (let i = 0; i < len; i++) {
+      words.push(cnWords[randInt(0, cnWords.length - 1)]);
+    }
+    return words.join('');
+  }
+
+  if (mode === 'html') {
+    // HTML mode uses Latin text inside
+    const len = randInt(8, 16);
+    const words = [];
+    for (let i = 0; i < len; i++) {
+      words.push(latinWords[randInt(0, latinWords.length - 1)]);
+    }
+    return words.join(' ');
+  }
+
+  const wordBank = mode === 'english' ? englishWords : latinWords;
+  const len = randInt(8, 16);
+  const words = [];
+  for (let i = 0; i < len; i++) {
+    let w = wordBank[randInt(0, wordBank.length - 1)];
+    if (i === 0) w = w.charAt(0).toUpperCase() + w.slice(1);
+    words.push(w);
+  }
+  return words.join(' ');
+}
+
+// ===== Update Stats =====
+function updateStats(mode) {
+  const text = document.getElementById('output').value;
+  document.getElementById('charCount').textContent = text.length;
+
+  if (mode === 'chinese') {
+    // Count Chinese characters (excluding punctuation and whitespace)
+    const cnChars = text.replace(/\s|[。\.\n]/g, '').length;
+    document.getElementById('wordCount').textContent = cnChars;
+  } else {
+    const words = text.trim().split(/\s+/).filter(w => w.length > 0);
+    document.getElementById('wordCount').textContent = words.length;
+  }
+
+  const paras = text.split('\n\n').filter(p => p.trim().length > 0);
+  document.getElementById('paraCount').textContent = paras.length;
+}
+
+// ===== Utility =====
+function randInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// ===== Copy =====
+function copyText() {
+  const text = document.getElementById('output').value;
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard!'));
+}
+
+function clearOutput() {
+  document.getElementById('output').value = '';
+  document.getElementById('charCount').textContent = '0';
+  document.getElementById('wordCount').textContent = '0';
+  document.getElementById('paraCount').textContent = '0';
+}
+
+// ===== Toast =====
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+// ===== Init =====
+document.addEventListener('DOMContentLoaded', () => {
+  generate();
+});
+</script>
+<script src="../js/i18n.js"></script>
+
+<script>
+// Register Service Worker for offline support
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/sw.js')
+    .then(reg => console.log('SW registered:', reg.scope))
+    .catch(err => console.log('SW registration failed:', err));
+}
+</script>
+</body>
+</html>

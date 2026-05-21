@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>URL Encode/Decode / URL 编解码 — AIHues</title>
+<style>
+/* ========== CSS Variables ========== */
+:root{
+  --bg:#ffffff;
+  --surface:#f8f9fb;
+  --surface-hover:#f1f3f7;
+  --border:#e8ecf1;
+  --border-hover:#d1d8e0;
+  --text:#0f172a;
+  --text-secondary:#475569;
+  --text-muted:#94a3b8;
+  --accent:#6d28d9;
+  --accent-light:#8b5cf6;
+  --accent-gradient:linear-gradient(135deg,#6d28d9,#8b5cf6);
+  --green:#059669;
+  --blue:#2563eb;
+  --orange:#ea580c;
+  --red:#dc2626;
+  --radius:14px;
+  --radius-sm:10px;
+  --shadow:0 1px 3px rgba(0,0,0,0.04),0 4px 16px rgba(0,0,0,0.04);
+}
+
+/* ========== Reset & Base ========== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+button{cursor:pointer;font-family:inherit}
+textarea{font-family:inherit}
+
+/* ========== Navigation ========== */
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;color:var(--text);text-decoration:none}
+.logo-mark{width:34px;height:34px;border-radius:var(--radius-sm);background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:700}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{text-decoration:none;font-size:14px;color:var(--text-secondary);transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+.lang-toggle{padding:4px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);font-size:12px;color:var(--text-secondary);cursor:pointer;transition:all .2s}
+.lang-toggle:hover{border-color:var(--border-hover);color:var(--text)}
+@media(max-width:768px){
+  .nav-links{gap:14px}
+  .nav-links a{font-size:13px}
+}
+
+/* ========== Tool Page ========== */
+.tool-page{max-width:960px;margin:0 auto;padding:32px}
+.tool-header{margin-bottom:28px}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:9999px;background:var(--surface);border:1px solid var(--border);font-size:13px;color:var(--text-secondary);margin-bottom:14px}
+.tool-header h1{font-size:32px;font-weight:700;margin-bottom:8px;letter-spacing:-0.02em}
+.tool-header p{font-size:16px;color:var(--text-secondary)}
+.tool-meta{margin-top:16px;display:flex;gap:8px;flex-wrap:wrap}
+.tag{padding:4px 12px;border-radius:9999px;font-size:12px;font-weight:500}
+.tag.free{background:#ecfdf5;color:var(--green)}
+
+/* ========== Mode Tabs ========== */
+.mode-tabs{display:flex;gap:6px;margin-bottom:20px;background:var(--surface);padding:5px;border-radius:var(--radius-sm);border:1px solid var(--border);flex-wrap:wrap}
+.mode-tab{flex:1;min-width:100px;padding:10px 14px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;border:none;background:transparent;color:var(--text-secondary);text-align:center;white-space:nowrap}
+.mode-tab.active{background:var(--bg);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,0.1)}
+.mode-tab:hover:not(.active){color:var(--text)}
+
+/* ========== Detect Hint ========== */
+.detect-hint-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;min-height:28px}
+.detect-hint-row.hidden{opacity:0;pointer-events:none}
+.detect-hint{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600}
+.detect-hint.encoded{background:#eff6ff;color:var(--blue)}
+.detect-hint.decoded{background:#ecfdf5;color:var(--green)}
+.detect-hint.unknown{background:var(--surface);color:var(--text-muted)}
+.detect-dir{font-size:12px;color:var(--text-muted)}
+
+/* ========== Editor Panels ========== */
+.editor{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:#fff;box-shadow:var(--shadow)}
+.editor-toolbar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface);border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px}
+.editor-label{font-size:13px;font-weight:600;color:var(--text-secondary);display:flex;align-items:center;gap:6px}
+.editor-actions{display:flex;gap:6px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;border:1px solid transparent;transition:all .15s;font-family:inherit}
+.btn-primary{background:var(--accent-gradient);color:#fff;border:none}
+.btn-primary:hover{opacity:0.92;transform:translateY(-1px)}
+.btn-secondary{background:#fff;border:1px solid var(--border);color:var(--text-secondary)}
+.btn-secondary:hover{border-color:var(--border-hover);background:var(--surface-hover)}
+.btn-danger{background:#fef2f2;border:1px solid #fecaca;color:var(--red)}
+.btn-danger:hover{background:#fee2e2}
+.btn-green{background:#ecfdf5;border:1px solid #a7f3d0;color:var(--green)}
+.btn-green:hover{background:#d1fae5}
+.editor textarea{width:100%;min-height:200px;padding:14px;border:none;outline:none;font-size:14px;line-height:1.6;resize:vertical;color:var(--text);font-family:'SF Mono',Menlo,Monaco,Consolas,monospace;tab-size:2}
+
+/* ========== Action Bar ========== */
+.action-bar{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0;align-items:center;justify-content:center}
+.swap-btn{width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:var(--bg);cursor:pointer;transition:all .2s;font-size:20px;display:flex;align-items:center;justify-content:center}
+.swap-btn:hover{border-color:var(--accent);transform:rotate(180deg);background:var(--surface)}
+
+/* ========== Query Params Table ========== */
+.params-section{margin-top:16px}
+.params-table{width:100%;border-collapse:collapse;font-size:14px}
+.params-table th{padding:10px 12px;text-align:left;font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;border-bottom:2px solid var(--border);background:var(--surface)}
+.params-table td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
+.params-table tr:hover td{background:var(--surface)}
+.params-table input{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-size:14px;font-family:'SF Mono',Menlo,Monaco,Consolas,monospace;outline:none;transition:border-color .2s;background:var(--bg)}
+.params-table input:focus{border-color:var(--accent-light);box-shadow:0 0 0 3px rgba(109,40,217,0.08)}
+.param-key{color:var(--text);font-weight:600}
+.param-value{color:var(--text-secondary)}
+.btn-icon{padding:6px 8px;border-radius:6px;font-size:13px;background:transparent;border:1px solid transparent;cursor:pointer;transition:all .15s;color:var(--text-muted)}
+.btn-icon:hover{background:#fef2f2;color:var(--red);border-color:#fecaca}
+.btn-add{padding:8px 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;border:none;background:var(--accent-gradient);color:#fff;transition:opacity .2s;margin-top:10px}
+.btn-add:hover{opacity:0.92}
+
+/* ========== History ========== */
+.history-section{margin-top:28px}
+.history-title{font-size:16px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.history-list{display:flex;flex-direction:column;gap:6px}
+.history-item{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all .15s;font-size:13px}
+.history-item:hover{border-color:var(--border-hover);background:var(--surface-hover)}
+.history-item .h-mode{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:var(--bg);color:var(--accent);border:1px solid var(--border);white-space:nowrap}
+.history-item .h-text{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:'SF Mono',Menlo,Monaco,Consolas,monospace;color:var(--text-secondary)}
+.history-item .h-time{font-size:11px;color:var(--text-muted);white-space:nowrap}
+.history-item .h-del{padding:4px 8px;border-radius:4px;font-size:11px;background:transparent;border:none;cursor:pointer;color:var(--text-muted);transition:all .15s}
+.history-item .h-del:hover{background:#fef2f2;color:var(--red)}
+.history-empty{text-align:center;padding:20px;color:var(--text-muted);font-size:13px}
+
+/* ========== Toast ========== */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--text);color:#fff;padding:10px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;z-index:200;opacity:0;transform:translateY(10px);transition:all .25s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+
+/* ========== Animations ========== */
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn .35s ease forwards}
+
+/* ========== Responsive ========== */
+@media(max-width:768px){
+  .tool-page{padding:20px 16px}
+  .tool-header h1{font-size:24px}
+  .mode-tabs{flex-wrap:wrap}
+  .mode-tab{min-width:70px;padding:8px 10px;font-size:13px}
+  .editor textarea{min-height:160px}
+}
+</style>
+<link rel="manifest" href="/manifest.json">
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="logo" href="../index.html">
+      <span class="logo-mark">A</span>
+      <span>AIHues</span>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html" data-zh="首页">Home</a>
+      <a href="../showcase.html" data-zh="工具">Tools</a>
+      <a href="../collection.html" data-zh="收藏">Collection</a>
+      <a href="../pricing.html" data-zh="定价">Pricing</a>
+      <button class="lang-toggle" onclick="toggleLang()">中</button>
+    </div>
+  </div>
+</nav>
+
+<main class="tool-page">
+
+  <!-- Tool Header -->
+  <div class="tool-header fade-in">
+    <span class="badge">
+      <span>&#128295;</span>
+      <span data-zh="开发工具">Developer Tool</span>
+    </span>
+    <h1 data-zh="URL 编解码">URL Encode/Decode</h1>
+    <p data-zh="URL编码和解码，支持查询参数和表单数据，纯前端处理">Encode and decode URLs, query parameters, and form data. Pure client-side.</p>
+    <div class="tool-meta">
+      <span class="tag free">Free Forever / 免费使用</span>
+    </div>
+  </div>
+
+  <!-- Mode Tabs -->
+  <div class="mode-tabs fade-in">
+    <button class="mode-tab active" data-mode="standard" onclick="setMode('standard')" data-zh="标准URL">Standard URL</button>
+    <button class="mode-tab" data-mode="full" onclick="setMode('full')" data-zh="完整URL">Full URL</button>
+    <button class="mode-tab" data-mode="query" onclick="setMode('query')" data-zh="查询参数">Query Params</button>
+    <button class="mode-tab" data-mode="base64url" onclick="setMode('base64url')">Base64URL</button>
+  </div>
+
+  <!-- Detect Hint -->
+  <div class="detect-hint-row" id="detectHintRow">
+    <span class="detect-hint unknown" id="detectHint">Waiting...</span>
+    <span class="detect-dir" id="detectDir"></span>
+  </div>
+
+  <!-- Input Panel -->
+  <div class="editor fade-in" id="inputPanel">
+    <div class="editor-toolbar">
+      <span class="editor-label" id="inputLabel">
+        <span>&#9998;</span>
+        <span data-zh="输入">Input</span>
+      </span>
+      <div class="editor-actions">
+        <button class="btn btn-secondary" onclick="pasteInput()">&#128203; <span data-zh="粘贴">Paste</span></button>
+        <button class="btn btn-secondary" onclick="clearInput()" data-zh="清空">Clear</button>
+      </div>
+    </div>
+    <textarea id="inputArea" placeholder="Enter text to encode or decode..." spellcheck="false" data-zh-placeholder="输入要编码或解码的文本..."></textarea>
+  </div>
+
+  <!-- Action Bar -->
+  <div class="action-bar fade-in">
+    <button class="btn btn-primary" onclick="doEncode()" id="encodeBtn">
+      &#9660; <span data-zh="编码">Encode</span>
+    </button>
+    <button class="btn btn-primary" onclick="doDecode()" id="decodeBtn" style="background:linear-gradient(135deg,#2563eb,#3b82f6)">
+      &#9650; <span data-zh="解码">Decode</span>
+    </button>
+    <button class="swap-btn" onclick="swapIO()" title="Swap input &amp; output">&#8645;</button>
+  </div>
+
+  <!-- Output Panel -->
+  <div class="editor fade-in" id="outputPanel">
+    <div class="editor-toolbar">
+      <span class="editor-label" id="outputLabel">
+        <span>&#128221;</span>
+        <span data-zh="输出">Output</span>
+      </span>
+      <div class="editor-actions">
+        <button class="btn btn-secondary" onclick="copyOutput()">&#128203; <span data-zh="复制">Copy</span></button>
+        <button class="btn btn-secondary" onclick="clearOutput()" data-zh="清空">Clear</button>
+      </div>
+    </div>
+    <textarea id="outputArea" placeholder="Result will appear here..." spellcheck="false" data-zh-placeholder="结果将显示在这里..." readonly></textarea>
+  </div>
+
+  <!-- Query Params Section (mode=query only) -->
+  <div class="params-section" id="paramsSection" style="display:none">
+    <div class="editor" style="margin-top:16px">
+      <div class="editor-toolbar">
+        <span class="editor-label">
+          <span>&#128451;</span>
+          <span data-zh="键值对表格">Key-Value Pairs</span>
+        </span>
+        <div class="editor-actions">
+          <button class="btn btn-secondary" onclick="paramsToQuery()" data-zh="生成查询字符串">Build Query</button>
+          <button class="btn btn-secondary" onclick="clearParams()" data-zh="清空">Clear</button>
+        </div>
+      </div>
+      <div style="padding:0;overflow-x:auto">
+        <table class="params-table" id="paramsTable">
+          <thead>
+            <tr>
+              <th style="width:40%" data-zh="键 (Key)">Key</th>
+              <th style="width:50%" data-zh="值 (Value)">Value</th>
+              <th style="width:10%"></th>
+            </tr>
+          </thead>
+          <tbody id="paramsBody"></tbody>
+        </table>
+      </div>
+      <div style="padding:12px 14px;border-top:1px solid var(--border)">
+        <button class="btn-add" onclick="addParamRow()">+ <span data-zh="添加参数">Add Parameter</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- History Section -->
+  <div class="history-section fade-in" id="historySection">
+    <div class="history-title">
+      <span>&#128338;</span>
+      <span data-zh="最近10次转换">Recent 10 Conversions</span>
+    </div>
+    <div class="history-list" id="historyList">
+      <div class="history-empty" data-zh="暂无历史记录">No history yet</div>
+    </div>
+  </div>
+
+</main>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="../js/i18n.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  // ===== State =====
+  let currentMode = 'standard';
+  let debounceTimer = null;
+  const HISTORY_KEY = 'url-encode-history';
+  const MAX_HISTORY = 10;
+
+  // ===== DOM refs =====
+  const $ = id => document.getElementById(id);
+  const inputArea   = $('inputArea');
+  const outputArea  = $('outputArea');
+  const detectHint  = $('detectHint');
+  const detectDir   = $('detectDir');
+  const encodeBtn   = $('encodeBtn');
+  const decodeBtn   = $('decodeBtn');
+  const paramsSection = $('paramsSection');
+  const paramsBody    = $('paramsBody');
+  const inputLabel    = $('inputLabel');
+  const outputLabel   = $('outputLabel');
+  const toast         = $('toast');
+
+  // ===== i18n helpers =====
+  function t(en, zh) {
+    return (document.documentElement.getAttribute('data-lang') === 'zh') ? zh : en;
+  }
+
+  // ===== Toast =====
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2200);
+  }
+
+  // ===== Mode Labels =====
+  const MODE_LABELS = {
+    standard: { encode: 'encodeURIComponent', decode: 'decodeURIComponent', encLabel: 'URL Encoded', decLabel: 'Decoded Text' },
+    full:     { encode: 'encodeURI',          decode: 'decodeURI',          encLabel: 'URL Encoded (Full)', decLabel: 'Decoded URL' },
+    query:    { encode: 'URLSearchParams',    decode: 'URLSearchParams',    encLabel: 'Query String', decLabel: 'Query String' },
+    base64url:{ encode: 'Base64Url Encode',   decode: 'Base64Url Decode',   encLabel: 'Base64URL', decLabel: 'Original Text' },
+  };
+
+  // ===== Mode Switching =====
+  window.setMode = function(mode) {
+    currentMode = mode;
+    document.querySelectorAll('.mode-tab').forEach(t => t.classList.toggle('active', t.dataset.mode === mode));
+    paramsSection.style.display = (mode === 'query') ? '' : 'none';
+    updateLabels();
+    // Re-process on mode switch
+    processInput();
+  };
+
+  function updateLabels() {
+    const cfg = MODE_LABELS[currentMode];
+    inputLabel.querySelector('span:last-child').textContent  = t('Input', '输入');
+    outputLabel.querySelector('span:last-child').textContent = t('Output', '输出');
+    encodeBtn.innerHTML = '&#9660; ' + t('Encode / 编码', '编码');
+    decodeBtn.innerHTML = '&#9650; ' + t('Decode / 解码', '解码');
+    updatePlaceholder();
+  }
+
+  function updatePlaceholder() {
+    const placeholders = {
+      standard: { input: t('Enter text to encode or decode...', '输入要编码或解码的文本...'), output: t('Result will appear here...', '结果将显示在这里...') },
+      full:     { input: t('Enter full URL to encode or decode...', '输入完整URL进行编码或解码...'), output: t('Result will appear here...', '结果将显示在这里...') },
+      query:    { input: t('Enter query string like key1=val1&key2=val2...', '输入查询字符串，如 key1=val1&key2=val2...'), output: t('Query string result will appear here...', '查询字符串结果将显示在这里...') },
+      base64url:{ input: t('Enter text for Base64Url encoding/decoding...', '输入要Base64Url编码或解码的文本...'), output: t('Result will appear here...', '结果将显示在这里...') },
+    };
+    const p = placeholders[currentMode];
+    inputArea.placeholder  = p.input;
+    outputArea.placeholder = p.output;
+  }
+
+  // ===== Encoding Functions =====
+  function stdEncode(text) {
+    try { return encodeURIComponent(text); } catch(e) { throw e; }
+  }
+  function stdDecode(text) {
+    try { return decodeURIComponent(text); } catch(e) { throw e; }
+  }
+  function fullEncode(text) {
+    try { return encodeURI(text); } catch(e) { throw e; }
+  }
+  function fullDecode(text) {
+    try { return decodeURI(text); } catch(e) { throw e; }
+  }
+  function b64UrlEncode(str) {
+    try {
+      return btoa(unescape(encodeURIComponent(str)))
+        .replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+    } catch(e) { throw e; }
+  }
+  function b64UrlDecode(str) {
+    try {
+      let padding = '';
+      let s = str.replace(/-/g, '+').replace(/_/g, '/');
+      while ((s.length + padding.length) % 4) padding += '=';
+      return decodeURIComponent(escape(atob(s + padding)));
+    } catch(e) { throw new Error(t('Invalid Base64URL input', '无效的Base64URL输入')); }
+  }
+  function queryEncode(text) {
+    // text is key=value pairs - parse and re-encode
+    const params = new URLSearchParams(text);
+    return params.toString();
+  }
+  function queryDecode(text) {
+    try {
+      const params = new URLSearchParams(text);
+      const lines = [];
+      for (const [k, v] of params) {
+        lines.push(decodeURIComponent(k) + '=' + decodeURIComponent(v));
+      }
+      return lines.join('&');
+    } catch(e) { throw e; }
+  }
+
+  // ===== Batch: process each line independently =====
+  function batchProcess(text, encodeFn, decodeFn, isEncode) {
+    if (!text.includes('\n')) {
+      return isEncode ? encodeFn(text) : decodeFn(text);
+    }
+    const lines = text.split('\n');
+    const results = lines.map(line => {
+      if (!line.trim()) return '';
+      try {
+        return isEncode ? encodeFn(line) : decodeFn(line);
+      } catch(e) {
+        return t('[Error: ', '[错误：') + e.message + ']';
+      }
+    });
+    return results.join('\n');
+  }
+
+  // ===== Auto-detect direction =====
+  function detectDirection(text) {
+    if (!text || !text.trim()) return 'unknown';
+    const trimmed = text.trim();
+
+    if (currentMode === 'base64url') {
+      // Base64URL: check if looks like base64url (alphanumeric, -, _)
+      const isB64Url = /^[A-Za-z0-9_-]+$/.test(trimmed) && trimmed.length > 0;
+      return isB64Url ? 'encoded' : 'decoded';
+    }
+
+    if (currentMode === 'query') {
+      // Query: check if contains = and & (encoded) or just plain text
+      const isQuery = /[=&]/.test(trimmed) && trimmed.includes('=');
+      return isQuery ? 'encoded' : 'decoded';
+    }
+
+    // Standard & Full URL: check for %xx patterns
+    const hasEncoded = /%[0-9A-Fa-f]{2}/.test(trimmed);
+    return hasEncoded ? 'encoded' : 'decoded';
+  }
+
+  function updateDetectHint(text) {
+    const dir = detectDirection(text);
+    const isZh = document.documentElement.getAttribute('data-lang') === 'zh';
+    if (dir === 'encoded') {
+      detectHint.className = 'detect-hint encoded';
+      detectHint.textContent = isZh ? '检测到：已编码' : 'Detected: encoded';
+      detectDir.textContent = isZh ? '（将解码）' : '(will decode)';
+    } else if (dir === 'decoded') {
+      detectHint.className = 'detect-hint decoded';
+      detectHint.textContent = isZh ? '检测到：纯文本' : 'Detected: plain text';
+      detectDir.textContent = isZh ? '（将编码）' : '(will encode)';
+    } else {
+      detectHint.className = 'detect-hint unknown';
+      detectHint.textContent = isZh ? '等待输入...' : 'Waiting...';
+      detectDir.textContent = '';
+    }
+  }
+
+  // ===== Smart Convert (auto-detect direction) =====
+  function smartConvert() {
+    const text = inputArea.value;
+    if (!text.trim()) { outputArea.value = ''; return; }
+    const dir = detectDirection(text);
+    if (dir === 'encoded') {
+      doDecode();
+    } else {
+      doEncode();
+    }
+  }
+
+  // ===== Core Process =====
+  function processInput() {
+    // Real-time conversion with debounce
+    const text = inputArea.value;
+    updateDetectHint(text);
+    if (!text.trim()) { outputArea.value = ''; return; }
+    smartConvert();
+  }
+
+  // ===== Encode =====
+  window.doEncode = function() {
+    const text = inputArea.value;
+    if (!text.trim()) { showToast(t('Please enter text', '请输入文本')); return; }
+    let result = '';
+    try {
+      switch(currentMode) {
+        case 'standard': result = batchProcess(text, stdEncode, stdDecode, true); break;
+        case 'full':     result = batchProcess(text, fullEncode, fullDecode, true); break;
+        case 'query':
+          result = queryEncode(text);
+          populateParams(text);
+          break;
+        case 'base64url':result = batchProcess(text, b64UrlEncode, b64UrlDecode, true); break;
+      }
+      outputArea.value = result;
+      addToHistory('encode', currentMode, text.substring(0, 120));
+    } catch(e) {
+      outputArea.value = t('[Error: ', '[错误：') + e.message + ']';
+      showToast(t('Encoding failed', '编码失败'));
+    }
+  };
+
+  // ===== Decode =====
+  window.doDecode = function() {
+    const text = inputArea.value;
+    if (!text.trim()) { showToast(t('Please enter text', '请输入文本')); return; }
+    let result = '';
+    try {
+      switch(currentMode) {
+        case 'standard': result = batchProcess(text, stdEncode, stdDecode, false); break;
+        case 'full':     result = batchProcess(text, fullEncode, fullDecode, false); break;
+        case 'query':
+          result = queryDecode(text);
+          populateParams(text);
+          break;
+        case 'base64url':result = batchProcess(text, b64UrlEncode, b64UrlDecode, false); break;
+      }
+      outputArea.value = result;
+      addToHistory('decode', currentMode, text.substring(0, 120));
+    } catch(e) {
+      outputArea.value = t('[Error: ', '[错误：') + e.message + ']';
+      showToast(t('Decoding failed', '解码失败'));
+    }
+  };
+
+  // ===== Swap =====
+  window.swapIO = function() {
+    const tmp = inputArea.value;
+    inputArea.value = outputArea.value;
+    outputArea.value = tmp;
+    updateDetectHint(inputArea.value);
+    processInput();
+  };
+
+  // ===== Clear / Paste / Copy =====
+  window.clearInput  = function() { inputArea.value = ''; outputArea.value = ''; updateDetectHint(''); };
+  window.clearOutput = function() { outputArea.value = ''; };
+  window.pasteInput  = function() {
+    navigator.clipboard.readText().then(text => {
+      inputArea.value = text;
+      updateDetectHint(text);
+      processInput();
+    }).catch(() => showToast(t('Paste failed', '粘贴失败')));
+  };
+  window.copyOutput  = function() {
+    const text = outputArea.value;
+    if (!text) { showToast(t('Nothing to copy', '没有可复制的内容')); return; }
+    navigator.clipboard.writeText(text).then(() => {
+      showToast(t('Copied!', '已复制！'));
+    }).catch(() => {
+      // fallback
+      outputArea.select();
+      document.execCommand('copy');
+      showToast(t('Copied!', '已复制！'));
+    });
+  };
+
+  // ===== Debounced Input Handler =====
+  inputArea.addEventListener('input', function() {
+    updateDetectHint(this.value);
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      if (currentMode === 'query') {
+        // For query mode, populate params table
+        populateParams(this.value);
+        smartConvert();
+      } else {
+        smartConvert();
+      }
+    }, 300);
+  });
+
+  // ===== Query Params Table =====
+  function populateParams(queryStr) {
+    if (currentMode !== 'query') return;
+    paramsBody.innerHTML = '';
+    if (!queryStr.trim()) return;
+    try {
+      const params = new URLSearchParams(queryStr);
+      let hasRows = false;
+      for (const [k, v] of params) {
+        hasRows = true;
+        addParamRow(decodeURIComponent(k), decodeURIComponent(v));
+      }
+      if (!hasRows) addParamRow('', '');
+    } catch(e) {
+      // If can't parse, just leave empty
+    }
+  }
+
+  window.addParamRow = function(key, value) {
+    key = key || '';
+    value = value || '';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input type="text" class="param-key" value="${escapeHtml(key)}" placeholder="key" data-zh-placeholder="键"></td>
+      <td><input type="text" class="param-value" value="${escapeHtml(value)}" placeholder="value" data-zh-placeholder="值"></td>
+      <td><button class="btn-icon" onclick="removeParamRow(this)" title="Remove">&#10005;</button></td>
+    `;
+    paramsBody.appendChild(tr);
+  };
+
+  window.removeParamRow = function(btn) {
+    const row = btn.closest('tr');
+    row.remove();
+    // Ensure at least one empty row
+    if (paramsBody.children.length === 0) {
+      addParamRow('', '');
+    }
+  };
+
+  window.clearParams = function() {
+    paramsBody.innerHTML = '';
+    addParamRow('', '');
+  };
+
+  window.paramsToQuery = function() {
+    const rows = paramsBody.querySelectorAll('tr');
+    const params = new URLSearchParams();
+    rows.forEach(row => {
+      const keyInput = row.querySelector('.param-key');
+      const valInput = row.querySelector('.param-value');
+      if (keyInput && keyInput.value.trim()) {
+        params.append(keyInput.value.trim(), valInput ? valInput.value.trim() : '');
+      }
+    });
+    const result = params.toString();
+    outputArea.value = result;
+    inputArea.value = result;
+    showToast(t('Query string built!', '查询字符串已生成！'));
+    addToHistory('encode', 'query', result.substring(0, 120));
+  };
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ===== History (localStorage) =====
+  function loadHistory() {
+    try {
+      const data = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+      renderHistory(data);
+    } catch(e) { renderHistory([]); }
+  }
+
+  function addToHistory(action, mode, preview) {
+    const item = {
+      action, mode,
+      preview: preview || '',
+      time: Date.now()
+    };
+    let data = [];
+    try { data = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch(e) {}
+    data.unshift(item);
+    if (data.length > MAX_HISTORY) data = data.slice(0, MAX_HISTORY);
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(data));
+    renderHistory(data);
+  }
+
+  function renderHistory(data) {
+    const list = $('historyList');
+    if (!data || data.length === 0) {
+      list.innerHTML = '<div class="history-empty">' + t('No history yet', '暂无历史记录') + '</div>';
+      return;
+    }
+    const isZh = document.documentElement.getAttribute('data-lang') === 'zh';
+    const modeNames = {
+      standard: isZh ? '标准' : 'Std',
+      full: isZh ? '完整' : 'Full',
+      query: isZh ? '参数' : 'Query',
+      base64url: 'B64URL'
+    };
+    list.innerHTML = data.map((item, idx) => {
+      const date = new Date(item.time);
+      const timeStr = date.getHours().toString().padStart(2,'0') + ':' + date.getMinutes().toString().padStart(2,'0');
+      const dir = item.action === 'encode' ? (isZh ? '编码' : 'Enc') : (isZh ? '解码' : 'Dec');
+      return `<div class="history-item" onclick="loadHistoryItem(${idx})">
+        <span class="h-mode">${modeNames[item.mode] || item.mode} · ${dir}</span>
+        <span class="h-text">${escapeHtml(item.preview)}</span>
+        <span class="h-time">${timeStr}</span>
+        <button class="h-del" onclick="event.stopPropagation();deleteHistoryItem(${idx})" title="Delete">&#10005;</button>
+      </div>`;
+    }).join('');
+  }
+
+  window.loadHistoryItem = function(idx) {
+    let data = [];
+    try { data = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch(e) { return; }
+    if (!data[idx]) return;
+    // Set mode
+    if (data[idx].mode) {
+      setMode(data[idx].mode);
+    }
+    inputArea.value = data[idx].preview;
+    updateDetectHint(data[idx].preview);
+    processInput();
+  };
+
+  window.deleteHistoryItem = function(idx) {
+    let data = [];
+    try { data = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch(e) { return; }
+    data.splice(idx, 1);
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(data));
+    renderHistory(data);
+  };
+
+  // ===== Keyboard Shortcuts =====
+  document.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      e.preventDefault();
+      smartConvert();
+    }
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'e') {
+      e.preventDefault();
+      doEncode();
+    }
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'd') {
+      e.preventDefault();
+      doDecode();
+    }
+  });
+
+  // ===== Re-render on language toggle =====
+  const origToggleLang = window.toggleLang;
+  window.toggleLang = function() {
+    if (origToggleLang) origToggleLang();
+    updateLabels();
+    updateDetectHint(inputArea.value);
+    loadHistory();
+    // Refresh param row placeholders
+    document.querySelectorAll('.params-table input').forEach(inp => {
+      if (inp.classList.contains('param-key')) {
+        inp.placeholder = t('key', '键');
+      } else {
+        inp.placeholder = t('value', '值');
+      }
+    });
+  };
+
+  // ===== Init =====
+  updateLabels();
+  loadHistory();
+})();
+</script>
+
+<script>
+// Register Service Worker for offline support
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/sw.js')
+    .then(reg => console.log('SW registered:', reg.scope))
+    .catch(err => console.log('SW registration failed:', err));
+}
+</script>
+</body>
+</html>

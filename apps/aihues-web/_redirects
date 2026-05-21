@@ -1,0 +1,4 @@
+/login.html /login.html 200
+/tools/* /tools/:splat 200
+/games/* /games/:splat 200
+/js/* /js/:splat 200

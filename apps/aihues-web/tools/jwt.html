@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JWT Parser — AIHues</title>
+<style>
+/* ===== CSS Variables ===== */
+:root{
+  --bg:#ffffff;--surface:#f8f9fb;--surface-hover:#f1f3f7;
+  --border:#e8ecf1;--border-hover:#d1d8e0;
+  --text:#0f172a;--text-secondary:#475569;--text-muted:#94a3b8;
+  --accent:#6d28d9;--accent-light:#8b5cf6;--accent-gradient:linear-gradient(135deg,#6d28d9,#8b5cf6);
+  --green:#059669;--blue:#2563eb;--orange:#ea580c;
+  --radius:14px;--radius-sm:10px;
+  --shadow:0 1px 3px rgba(0,0,0,0.04),0 4px 16px rgba(0,0,0,0.04);
+  /* JWT-specific colors */
+  --jwt-header:#ef4444;
+  --jwt-payload:#10b981;
+  --jwt-signature:#3b82f6;
+  --code-bg:#1e293b;
+  --code-text:#e2e8f0;
+}
+
+/* ===== Reset & Base ===== */
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+
+/* ===== Navigation ===== */
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);font-weight:700;font-size:18px}
+.logo-mark{width:34px;height:34px;border-radius:var(--radius-sm);background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:700}
+.nav-links{display:flex;gap:28px;list-style:none}
+.nav-links a{text-decoration:none;color:var(--text-secondary);font-size:14px;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--accent)}
+
+/* ===== Tool Page ===== */
+.tool-page{max-width:900px;margin:0 auto;padding:32px}
+
+/* ===== Tool Header ===== */
+.tool-header{margin-bottom:28px}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;background:var(--surface);border:1px solid var(--border);border-radius:100px;font-size:13px;color:var(--text-secondary);margin-bottom:14px}
+.tool-header h1{font-size:32px;font-weight:800;margin-bottom:8px;letter-spacing:-0.02em}
+.tool-header p{color:var(--text-secondary);font-size:16px;margin-bottom:12px}
+.tool-meta{display:flex;gap:10px;flex-wrap:wrap}
+.tag{display:inline-flex;align-items:center;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600}
+.tag.free{background:rgba(109,40,217,0.08);color:var(--accent)}
+
+/* ===== Editor / Input Area ===== */
+.editor{background:var(--code-bg);border:1px solid var(--code-bg);border-radius:var(--radius);overflow:hidden;margin-bottom:24px}
+.editor-toolbar{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.06)}
+.editor-toolbar span{font-size:12px;color:var(--text-muted);font-weight:500}
+.editor textarea{width:100%;min-height:120px;padding:16px;background:transparent;color:var(--code-text);font-family:'SF Mono',Monaco,Inconsolata,'Fira Code','Cascadia Code',monospace;font-size:13px;line-height:1.7;border:none;resize:vertical;outline:none}
+.editor textarea::placeholder{color:#64748b}
+
+/* ===== Buttons ===== */
+.btn-group{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .2s}
+.btn-primary{background:var(--accent-gradient);color:#fff}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(109,40,217,0.25)}
+.btn-secondary{background:var(--bg);color:var(--text-secondary);border:1px solid var(--border)}
+.btn-secondary:hover{background:var(--surface-hover)}
+
+/* ===== JWT Output Panels ===== */
+.jwt-output{display:flex;flex-direction:column;gap:16px}
+.jwt-section{background:var(--code-bg);border-radius:var(--radius);overflow:hidden}
+.jwt-section-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.jwt-section-header .label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;padding:3px 10px;border-radius:6px}
+.label-header{background:rgba(239,68,68,0.15);color:#f87171}
+.label-payload{background:rgba(16,185,129,0.15);color:#34d399}
+.label-signature{background:rgba(59,130,246,0.15);color:#60a5fa}
+.jwt-section-header .hint{font-size:11px;color:#64748b;margin-left:auto}
+.jwt-section-body{padding:16px;font-family:'SF Mono',Monaco,Inconsolata,'Fira Code','Cascadia Code',monospace;font-size:13px;line-height:1.7;color:var(--code-text);white-space:pre-wrap;word-break:break-all;min-height:40px}
+
+/* ===== JSON Syntax Highlighting ===== */
+.json-key{color:#e2e8f0}
+.json-string{color:#4ade80}
+.json-number{color:#fb923c}
+.json-boolean{color:#c084fc}
+.json-null{color:#c084fc}
+
+/* ===== Info Panel (iat/exp) ===== */
+.info-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;margin-top:16px}
+.info-panel h3{font-size:14px;font-weight:700;margin-bottom:12px;color:var(--text)}
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.info-item{display:flex;flex-direction:column;gap:3px}
+.info-item .info-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;font-weight:600}
+.info-item .info-value{font-size:14px;font-weight:600;color:var(--text)}
+.info-item .info-value.expired{color:#ef4444}
+.info-item .info-value.active{color:var(--green)}
+
+/* ===== Error Banner ===== */
+.error-banner{display:none;align-items:center;gap:10px;padding:12px 16px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius-sm);margin-bottom:20px;color:#dc2626;font-size:13px;font-weight:500}
+.error-banner.visible{display:flex}
+
+/* ===== Empty State ===== */
+.empty-state{color:#475569;font-size:13px;font-style:italic}
+
+/* ===== Responsive ===== */
+@media(max-width:768px){
+  .nav-links{display:none}
+  .tool-page{padding:20px}
+  .tool-header h1{font-size:24px}
+  .info-grid{grid-template-columns:1fr}
+}
+</style>
+<link rel="manifest" href="/manifest.json">
+</head>
+<body>
+
+<!-- ===== Navigation ===== -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="logo" href="../index.html">
+      <span class="logo-mark">AI</span>
+      <span>AIHues</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="../showcase.html">工具</a></li>
+      <li><a href="../collection.html">收藏</a></li>
+      <li><a href="../pricing.html">定价</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ===== Main Content ===== -->
+<main class="tool-page">
+
+  <!-- Tool Header -->
+  <div class="tool-header">
+    <span class="badge">🔐 <span data-zh="开发工具">Developer Tool</span></span>
+    <h1 data-zh="JWT 解析器">JWT Parser</h1>
+    <p data-zh="解析JWT令牌，查看头部、载荷和签名">Decode and inspect JWT tokens — header, payload, and signature</p>
+    <div class="tool-meta">
+      <span class="tag free">Free Forever / 免费使用</span>
+    </div>
+  </div>
+
+  <!-- Error Banner -->
+  <div class="error-banner" id="errorBanner">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <span id="errorText">Invalid JWT token</span>
+  </div>
+
+  <!-- Buttons -->
+  <div class="btn-group">
+    <button class="btn btn-primary" id="btnExample" onclick="loadExample()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Load Example / 加载示例
+    </button>
+    <button class="btn btn-secondary" id="btnClear" onclick="clearAll()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      Clear / 清空
+    </button>
+    <button class="btn btn-secondary" id="btnCopy" onclick="copyPayload()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copy Payload / 复制载荷
+    </button>
+  </div>
+
+  <!-- Input Area -->
+  <div class="editor">
+    <div class="editor-toolbar">
+      <span>JWT Token Input</span>
+      <span style="font-size:11px;color:#475569">Paste your JWT here</span>
+    </div>
+    <textarea id="jwtInput" placeholder="Paste your JWT token here... &#10;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMe..." oninput="parseJWT()"></textarea>
+  </div>
+
+  <!-- Output Panels -->
+  <div class="jwt-output" id="jwtOutput">
+
+    <!-- Header Section -->
+    <div class="jwt-section">
+      <div class="jwt-section-header">
+        <span class="label label-header">HEADER</span>
+        <span style="font-size:11px;color:#64748b">Algorithm &amp; Token Type</span>
+        <span class="hint" id="headerHint">ALGORITHM</span>
+      </div>
+      <div class="jwt-section-body" id="headerOutput">
+        <span class="empty-state">Waiting for input...</span>
+      </div>
+    </div>
+
+    <!-- Payload Section -->
+    <div class="jwt-section">
+      <div class="jwt-section-header">
+        <span class="label label-payload">PAYLOAD</span>
+        <span style="font-size:11px;color:#64748b">Claims &amp; Data</span>
+        <span class="hint" id="payloadHint">CLAIMS</span>
+      </div>
+      <div class="jwt-section-body" id="payloadOutput">
+        <span class="empty-state">Waiting for input...</span>
+      </div>
+    </div>
+
+    <!-- Signature Section -->
+    <div class="jwt-section">
+      <div class="jwt-section-header">
+        <span class="label label-signature">SIGNATURE</span>
+        <span style="font-size:11px;color:#64748b">Base64-URL Encoded</span>
+        <span class="hint" id="sigHint">SIGNATURE</span>
+      </div>
+      <div class="jwt-section-body" id="signatureOutput">
+        <span class="empty-state">Waiting for input...</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Info Panel (iat, exp) -->
+  <div class="info-panel" id="infoPanel" style="display:none">
+    <h3>Token Timing Info / 令牌时间信息</h3>
+    <div class="info-grid">
+      <div class="info-item">
+        <span class="info-label">Issued At (iat)</span>
+        <span class="info-value" id="iatValue">—</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Expires At (exp)</span>
+        <span class="info-value" id="expValue">—</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Status</span>
+        <span class="info-value" id="statusValue">—</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Time Remaining</span>
+        <span class="info-value" id="remainingValue">—</span>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// ===== Base64Url Decode Helper =====
+function base64UrlDecode(str) {
+  // Replace Base64Url characters with standard Base64
+  let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
+  // Add padding if needed
+  while (base64.length % 4) base64 += '=';
+  try {
+    return decodeURIComponent(escape(atob(base64)));
+  } catch(e) {
+    throw new Error('Invalid Base64');
+  }
+}
+
+// ===== JSON Syntax Highlighting =====
+function highlightJSON(json) {
+  // Escape HTML first
+  let safe = json
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+
+  // Highlight strings (including keys)
+  safe = safe.replace(/"([^"]*)":/g, '<span class="json-key">"$1"</span>:');
+  safe = safe.replace(/: "([^"]*)"/g, ': <span class="json-string">"$1"</span>');
+
+  // Highlight numbers
+  safe = safe.replace(/: (\d+(\.\d+)?)/g, ': <span class="json-number">$1</span>');
+
+  // Highlight booleans and null
+  safe = safe.replace(/: (true|false)/g, ': <span class="json-boolean">$1</span>');
+  safe = safe.replace(/: (null)/g, ': <span class="json-null">$1</span>');
+
+  return safe;
+}
+
+// ===== Format JSON with indentation =====
+function formatJSON(obj) {
+  return JSON.stringify(obj, null, 2);
+}
+
+// ===== Parse and Display JWT =====
+function parseJWT() {
+  const input = document.getElementById('jwtInput').value.trim();
+  const errorBanner = document.getElementById('errorBanner');
+  const errorText = document.getElementById('errorText');
+  const headerOut = document.getElementById('headerOutput');
+  const payloadOut = document.getElementById('payloadOutput');
+  const sigOut = document.getElementById('signatureOutput');
+  const infoPanel = document.getElementById('infoPanel');
+
+  // Hide error initially
+  errorBanner.classList.remove('visible');
+
+  // Empty input -> reset
+  if (!input) {
+    headerOut.innerHTML = '<span class="empty-state">Waiting for input...</span>';
+    payloadOut.innerHTML = '<span class="empty-state">Waiting for input...</span>';
+    sigOut.innerHTML = '<span class="empty-state">Waiting for input...</span>';
+    infoPanel.style.display = 'none';
+    document.getElementById('headerHint').textContent = 'ALGORITHM';
+    document.getElementById('payloadHint').textContent = 'CLAIMS';
+    document.getElementById('sigHint').textContent = 'SIGNATURE';
+    return;
+  }
+
+  // Split into parts
+  const parts = input.split('.');
+  if (parts.length !== 3) {
+    errorText.textContent = 'Invalid JWT: expected 3 parts separated by dots (header.payload.signature)';
+    errorBanner.classList.add('visible');
+    return;
+  }
+
+  try {
+    // Decode header
+    const headerStr = base64UrlDecode(parts[0]);
+    const headerObj = JSON.parse(headerStr);
+    headerOut.innerHTML = highlightJSON(formatJSON(headerObj));
+    document.getElementById('headerHint').textContent = (headerObj.alg || 'UNKNOWN') + ' / ' + (headerObj.typ || 'JWT');
+
+    // Decode payload
+    const payloadStr = base64UrlDecode(parts[1]);
+    const payloadObj = JSON.parse(payloadStr);
+    payloadOut.innerHTML = highlightJSON(formatJSON(payloadObj));
+    document.getElementById('payloadHint').textContent = Object.keys(payloadObj).length + ' claims';
+
+    // Show signature (raw base64url)
+    sigOut.textContent = parts[2];
+    document.getElementById('sigHint').textContent = parts[2].length + ' chars';
+
+    // Show timing info
+    showTimingInfo(payloadObj);
+
+  } catch (err) {
+    errorText.textContent = 'Error: ' + err.message;
+    errorBanner.classList.add('visible');
+  }
+}
+
+// ===== Show timing info (iat, exp) =====
+function showTimingInfo(payload) {
+  const infoPanel = document.getElementById('infoPanel');
+  const iatValue = document.getElementById('iatValue');
+  const expValue = document.getElementById('expValue');
+  const statusValue = document.getElementById('statusValue');
+  const remainingValue = document.getElementById('remainingValue');
+
+  const now = Math.floor(Date.now() / 1000);
+
+  // Issued At
+  if (payload.iat) {
+    const iatDate = new Date(payload.iat * 1000);
+    iatValue.textContent = iatDate.toLocaleString();
+  } else {
+    iatValue.textContent = 'Not specified';
+  }
+
+  // Expiration
+  if (payload.exp) {
+    const expDate = new Date(payload.exp * 1000);
+    expValue.textContent = expDate.toLocaleString();
+
+    const isExpired = now > payload.exp;
+    if (isExpired) {
+      statusValue.textContent = 'EXPIRED / 已过期';
+      statusValue.className = 'info-value expired';
+      const diff = now - payload.exp;
+      remainingValue.textContent = formatDuration(diff) + ' ago';
+      remainingValue.className = 'info-value expired';
+    } else {
+      statusValue.textContent = 'ACTIVE / 有效';
+      statusValue.className = 'info-value active';
+      const diff = payload.exp - now;
+      remainingValue.textContent = formatDuration(diff) + ' remaining';
+      remainingValue.className = 'info-value active';
+    }
+  } else {
+    expValue.textContent = 'Not specified';
+    statusValue.textContent = 'No expiration';
+    statusValue.className = 'info-value';
+    remainingValue.textContent = 'N/A';
+    remainingValue.className = 'info-value';
+  }
+
+  infoPanel.style.display = 'block';
+}
+
+// ===== Format duration in human-readable format =====
+function formatDuration(seconds) {
+  if (seconds < 60) return seconds + 's';
+  if (seconds < 3600) return Math.floor(seconds / 60) + 'm ' + (seconds % 60) + 's';
+  if (seconds < 86400) return Math.floor(seconds / 3600) + 'h ' + Math.floor((seconds % 3600) / 60) + 'm';
+  const days = Math.floor(seconds / 86400);
+  const hours = Math.floor((seconds % 86400) / 3600);
+  return days + 'd ' + hours + 'h';
+}
+
+// ===== Load Example JWT =====
+function loadExample() {
+  // Example JWT: HS256, payload with sub, name, iat, exp (expired example)
+  const exampleJWT = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTcxNjIzOTAyMiwiZXhwIjoxNzE2MjQyNjIyLCJpc3MiOiJhaWh1ZXMuZGVtbyIsImF1ZCI6ImFpaHVlcy1jbGllbnQifQ.dQw4w9WgXcQ5v3tL8mK2pQ7jY4rN1bA6sF0eH3iU9o';
+  document.getElementById('jwtInput').value = exampleJWT;
+  parseJWT();
+}
+
+// ===== Clear All =====
+function clearAll() {
+  document.getElementById('jwtInput').value = '';
+  parseJWT();
+}
+
+// ===== Copy Payload =====
+function copyPayload() {
+  const payloadText = document.getElementById('payloadOutput').textContent;
+  if (!payloadText || payloadText.includes('Waiting for input')) return;
+  navigator.clipboard.writeText(payloadText).then(() => {
+    const btn = document.getElementById('btnCopy');
+    const originalHTML = btn.innerHTML;
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+    btn.style.color = 'var(--green)';
+    setTimeout(() => {
+      btn.innerHTML = originalHTML;
+      btn.style.color = '';
+    }, 1500);
+  });
+}
+</script>
+<script src="../js/i18n.js"></script>
+
+<script>
+// Register Service Worker for offline support
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/sw.js')
+    .then(reg => console.log('SW registered:', reg.scope))
+    .catch(err => console.log('SW registration failed:', err));
+}
+</script>
+</body>
+</html>

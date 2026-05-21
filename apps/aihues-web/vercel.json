@@ -1,0 +1,10 @@
+{
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/tools/(.*)", "dest": "/tools/$1" },
+    { "src": "/games/(.*)", "dest": "/games/$1" },
+    { "src": "/js/(.*)", "dest": "/js/$1" },
+    { "src": "/login.html", "dest": "/login.html" },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
+}

@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-zh="Curl 命令生成器 — AIHues">Curl Command Generator — AIHues</title>
+<style>
+/* ========== CSS Variables ========== */
+:root{
+  --bg:#ffffff;
+  --surface:#f8f9fb;
+  --surface-hover:#f1f3f7;
+  --border:#e8ecf1;
+  --border-hover:#d1d8e0;
+  --text:#0f172a;
+  --text-secondary:#475569;
+  --text-muted:#94a3b8;
+  --accent:#6d28d9;
+  --accent-light:#8b5cf6;
+  --accent-gradient:linear-gradient(135deg,#6d28d9,#8b5cf6);
+  --green:#059669;
+  --blue:#2563eb;
+  --orange:#ea580c;
+  --red:#dc2626;
+  --radius:14px;
+  --radius-sm:10px;
+  --shadow:0 1px 3px rgba(0,0,0,0.04),0 4px 16px rgba(0,0,0,0.04);
+}
+
+/* ========== Reset & Base ========== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+button{cursor:pointer;font-family:inherit}
+input,textarea,select{font-family:inherit}
+
+/* ========== Navigation ========== */
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;color:var(--text);text-decoration:none}
+.logo-mark{width:34px;height:34px;border-radius:var(--radius-sm);background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:700}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{text-decoration:none;font-size:14px;color:var(--text-secondary);transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+.lang-toggle{padding:4px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);font-size:12px;color:var(--text-secondary);cursor:pointer;transition:all .2s}
+.lang-toggle:hover{border-color:var(--border-hover);color:var(--text)}
+@media(max-width:768px){
+  .nav-links{gap:14px}
+  .nav-links a{font-size:13px}
+}
+
+/* ========== Tool Page ========== */
+.tool-page{max-width:960px;margin:0 auto;padding:32px}
+.tool-header{margin-bottom:28px}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:9999px;background:var(--surface);border:1px solid var(--border);font-size:13px;color:var(--text-secondary);margin-bottom:14px}
+.tool-header h1{font-size:32px;font-weight:700;margin-bottom:8px;letter-spacing:-0.02em}
+.tool-header p{font-size:16px;color:var(--text-secondary)}
+.tool-meta{margin-top:16px;display:flex;gap:8px;flex-wrap:wrap}
+.tag{padding:4px 12px;border-radius:9999px;font-size:12px;font-weight:500}
+.tag.free{background:#ecfdf5;color:var(--green)}
+
+/* ========== Presets ========== */
+.presets-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.preset-btn{padding:8px 14px;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--border);font-size:13px;font-weight:600;color:var(--text-secondary);cursor:pointer;transition:all .2s}
+.preset-btn:hover{border-color:var(--accent-light);color:var(--accent);background:var(--bg)}
+
+/* ========== Form Section ========== */
+.section{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px}
+.section-toolbar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--surface);border-bottom:1px solid var(--border)}
+.section-toolbar .label{font-size:14px;font-weight:600;color:var(--text-secondary)}
+.section-toolbar .actions{display:flex;gap:6px}
+.section-body{padding:16px}
+
+/* ========== Input Styles ========== */
+.form-row{display:flex;gap:12px;margin-bottom:12px;align-items:center;flex-wrap:wrap}
+.form-row:last-child{margin-bottom:0}
+.form-label{min-width:100px;font-size:13px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em}
+.form-input{flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;outline:none;transition:border-color .2s,box-shadow .2s;min-width:0}
+.form-input:focus{border-color:var(--accent-light);box-shadow:0 0 0 3px rgba(109,40,217,0.08)}
+select.form-input{appearance:none;background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");background-position:right 10px center;background-repeat:no-repeat;background-size:20px;padding-right:36px}
+textarea.form-input{min-height:120px;resize:vertical;font-family:'SF Mono',Menlo,Monaco,Consolas,monospace;line-height:1.5}
+
+/* ========== Headers Table ========== */
+.hdr-table{width:100%;border-collapse:collapse;font-size:14px}
+.hdr-table th{padding:8px 10px;text-align:left;font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;border-bottom:1px solid var(--border);background:var(--surface-hover)}
+.hdr-table td{padding:6px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
+.hdr-table input{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;outline:none;transition:border-color .2s;font-family:'SF Mono',Menlo,Monaco,Consolas,monospace}
+.hdr-table input:focus{border-color:var(--accent-light);box-shadow:0 0 0 3px rgba(109,40,217,0.08)}
+.btn-icon{padding:5px 8px;border-radius:6px;font-size:12px;background:transparent;border:1px solid transparent;cursor:pointer;transition:all .15s;color:var(--text-muted)}
+.btn-icon:hover{background:#fef2f2;color:var(--red);border-color:#fecaca}
+.btn-add-row{padding:6px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:none;background:var(--surface);color:var(--text-secondary);border:1px solid var(--border);transition:all .2s}
+.btn-add-row:hover{border-color:var(--accent-light);color:var(--accent)}
+
+/* ========== Auth Section ========== */
+.auth-select{width:100%;max-width:200px}
+.auth-input{width:100%;margin-top:8px}
+
+/* ========== Generate Button ========== */
+.gen-btn{display:block;width:100%;padding:16px;border-radius:var(--radius-sm);background:var(--accent-gradient);color:#fff;font-size:16px;font-weight:600;border:none;cursor:pointer;transition:all .2s;margin:20px 0;text-align:center}
+.gen-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(109,40,217,0.3)}
+
+/* ========== Output ========== */
+.output-wrap{position:relative}
+.output-area{width:100%;min-height:160px;padding:16px;border:1px solid var(--border);border-radius:var(--radius);background:#0f172a;color:#e2e8f0;font-family:'SF Mono',Menlo,Monaco,Consolas,monospace;font-size:13px;line-height:1.7;resize:vertical;outline:none;overflow:auto}
+.copy-btn{position:absolute;top:12px;right:12px;padding:8px 16px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.08);color:#e2e8f0;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s}
+.copy-btn:hover{background:rgba(255,255,255,0.15)}
+
+/* ========== Toast ========== */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--text);color:#fff;padding:10px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;z-index:200;opacity:0;transform:translateY(10px);transition:all .25s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+
+/* ========== Animations ========== */
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn .35s ease forwards}
+
+/* ========== Responsive ========== */
+@media(max-width:768px){
+  .tool-page{padding:20px 16px}
+  .tool-header h1{font-size:24px}
+  .form-row{flex-direction:column;align-items:flex-start}
+  .form-label{min-width:auto}
+  .form-input{width:100%}
+  .presets-row{gap:6px}
+  .preset-btn{font-size:12px;padding:6px 10px}
+}
+</style>
+<link rel="manifest" href="/manifest.json">
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="logo" href="../index.html">
+      <span class="logo-mark">A</span>
+      <span>AIHues</span>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html" data-zh="首页">Home</a>
+      <a href="../showcase.html" data-zh="工具">Tools</a>
+      <a href="../collection.html" data-zh="收藏">Collection</a>
+      <a href="../pricing.html" data-zh="定价">Pricing</a>
+      <button class="lang-toggle" onclick="toggleLang()">中</button>
+    </div>
+  </div>
+</nav>
+
+<main class="tool-page">
+
+  <!-- Tool Header -->
+  <div class="tool-header fade-in">
+    <span class="badge">
+      <span>&#128187;</span>
+      <span data-zh="开发工具">Developer Tool</span>
+    </span>
+    <h1 data-zh="Curl 命令生成器">Curl Command Generator</h1>
+    <p data-zh="可视化构建 curl 命令，支持 Headers、Body、认证等选项">Build curl commands visually with headers, body, authentication, and more.</p>
+    <div class="tool-meta">
+      <span class="tag free">Free Forever / &#20813;&#36153;&#20351;&#29992;</span>
+    </div>
+  </div>
+
+  <!-- Presets -->
+  <div class="presets-row fade-in">
+    <button class="preset-btn" onclick="presetGet()" data-zh="GET 请求">GET Request</button>
+    <button class="preset-btn" onclick="presetPostJson()" data-zh="POST JSON">POST JSON</button>
+    <button class="preset-btn" onclick="presetUpload()" data-zh="上传文件">Upload File</button>
+    <button class="preset-btn" onclick="presetAuth()" data-zh="Bearer 认证">Bearer Auth</button>
+  </div>
+
+  <!-- URL & Method -->
+  <div class="section fade-in">
+    <div class="section-toolbar">
+      <span class="label" data-zh="&#127760; 请求配置">&#127760; Request</span>
+    </div>
+    <div class="section-body">
+      <div class="form-row">
+        <span class="form-label" data-zh="方法">Method</span>
+        <select class="form-input" id="methodSelect" style="flex:0 0 140px">
+          <option value="GET" selected>GET</option>
+          <option value="POST">POST</option>
+          <option value="PUT">PUT</option>
+          <option value="DELETE">DELETE</option>
+          <option value="PATCH">PATCH</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <span class="form-label">URL</span>
+        <input type="text" class="form-input" id="urlInput" value="https://api.example.com/data" placeholder="https://api.example.com/data">
+      </div>
+    </div>
+  </div>
+
+  <!-- Headers -->
+  <div class="section fade-in">
+    <div class="section-toolbar">
+      <span class="label" data-zh="&#128220; Headers">&#128220; Headers</span>
+      <div class="actions">
+        <button class="btn-add-row" onclick="addHeaderRow()">+ <span data-zh="添加">Add</span></button>
+        <button class="btn-add-row" onclick="clearHeaders()" data-zh="清空">Clear</button>
+      </div>
+    </div>
+    <div style="padding:0;overflow-x:auto">
+      <table class="hdr-table">
+        <thead>
+          <tr>
+            <th style="width:40%" data-zh="Key">Key</th>
+            <th style="width:50%" data-zh="Value">Value</th>
+            <th style="width:10%"></th>
+          </tr>
+        </thead>
+        <tbody id="headerBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="section fade-in">
+    <div class="section-toolbar">
+      <span class="label" data-zh="&#128221; Body">&#128221; Body</span>
+      <div class="actions">
+        <button class="btn-add-row" onclick="formatBody()" data-zh="格式化 JSON">Format JSON</button>
+        <button class="btn-add-row" onclick="clearBody()" data-zh="清空">Clear</button>
+      </div>
+    </div>
+    <div class="section-body" style="padding:0">
+      <textarea class="form-input" id="bodyInput" style="min-height:140px;border:none;border-radius:0;" placeholder="Request body (JSON, form data, etc...)" data-zh-placeholder="请求体内容（JSON、表单数据等）..."></textarea>
+    </div>
+  </div>
+
+  <!-- Authentication -->
+  <div class="section fade-in">
+    <div class="section-toolbar">
+      <span class="label" data-zh="&#128272; 认证">&#128272; Authentication</span>
+    </div>
+    <div class="section-body">
+      <div class="form-row">
+        <span class="form-label" data-zh="类型">Type</span>
+        <select class="form-input auth-select" id="authType" onchange="toggleAuthInput()">
+          <option value="none" data-zh="无认证">None</option>
+          <option value="bearer" data-zh="Bearer Token">Bearer Token</option>
+          <option value="basic" data-zh="Basic Auth">Basic Auth</option>
+        </select>
+      </div>
+      <div class="form-row" id="bearerRow" style="display:none">
+        <span class="form-label">Token</span>
+        <input type="text" class="form-input" id="bearerToken" placeholder="eyJhbGciOiJIUzI1NiIs...">
+      </div>
+      <div class="form-row" id="basicRow" style="display:none">
+        <span class="form-label" data-zh="用户名">Username</span>
+        <input type="text" class="form-input" id="basicUser" placeholder="username">
+      </div>
+      <div class="form-row" id="basicPassRow" style="display:none">
+        <span class="form-label" data-zh="密码">Password</span>
+        <input type="password" class="form-input" id="basicPass" placeholder="password">
+      </div>
+    </div>
+  </div>
+
+  <!-- Generate Button -->
+  <button class="gen-btn fade-in" onclick="generateCurl()" data-zh="&#9881; 生成 Curl 命令">&#9881; Generate Curl Command</button>
+
+  <!-- Output -->
+  <div class="section fade-in" id="outputSection" style="display:none">
+    <div class="section-toolbar">
+      <span class="label" data-zh="&#128203; 生成的命令">&#128203; Generated Command</span>
+      <div class="actions">
+        <button class="btn-add-row" onclick="copyCurl()" data-zh="复制">Copy</button>
+        <button class="btn-add-row" onclick="clearOutput()" data-zh="清空">Clear</button>
+      </div>
+    </div>
+    <div class="section-body output-wrap" style="padding:0">
+      <pre class="output-area" id="outputArea"></pre>
+    </div>
+  </div>
+
+</main>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ── Header rows ── */
+function addHeaderRow(key, value) {
+  const tbody = document.getElementById('headerBody');
+  const tr = document.createElement('tr');
+  tr.innerHTML =
+    '<td><input type="text" class="hdr-key" placeholder="Content-Type" value="' + (key || '') + '"></td>' +
+    '<td><input type="text" class="hdr-value" placeholder="application/json" value="' + (value || '') + '"></td>' +
+    '<td><button class="btn-icon" onclick="removeHeaderRow(this)">&times;</button></td>';
+  tbody.appendChild(tr);
+}
+function removeHeaderRow(btn) {
+  btn.closest('tr').remove();
+}
+function clearHeaders() {
+  document.getElementById('headerBody').innerHTML = '';
+}
+function getHeaders() {
+  const headers = [];
+  document.querySelectorAll('#headerBody tr').forEach(tr => {
+    const key = tr.querySelector('.hdr-key').value.trim();
+    const value = tr.querySelector('.hdr-value').value.trim();
+    if (key) headers.push({ key, value });
+  });
+  return headers;
+}
+
+/* ── Auth toggle ── */
+function toggleAuthInput() {
+  const type = document.getElementById('authType').value;
+  document.getElementById('bearerRow').style.display = type === 'bearer' ? 'flex' : 'none';
+  document.getElementById('basicRow').style.display = type === 'basic' ? 'flex' : 'none';
+  document.getElementById('basicPassRow').style.display = type === 'basic' ? 'flex' : 'none';
+}
+
+/* ── Body helpers ── */
+function clearBody() {
+  document.getElementById('bodyInput').value = '';
+}
+function formatBody() {
+  const ta = document.getElementById('bodyInput');
+  const text = ta.value.trim();
+  if (!text) return;
+  try {
+    const obj = JSON.parse(text);
+    ta.value = JSON.stringify(obj, null, 2);
+    showToast('JSON formatted!');
+  } catch (e) {
+    showToast('Invalid JSON: ' + e.message);
+  }
+}
+
+/* ── Presets ── */
+function presetGet() {
+  document.getElementById('methodSelect').value = 'GET';
+  document.getElementById('urlInput').value = 'https://api.example.com/users';
+  clearHeaders();
+  clearBody();
+  document.getElementById('authType').value = 'none';
+  toggleAuthInput();
+  generateCurl();
+}
+function presetPostJson() {
+  document.getElementById('methodSelect').value = 'POST';
+  document.getElementById('urlInput').value = 'https://api.example.com/users';
+  clearHeaders();
+  addHeaderRow('Content-Type', 'application/json');
+  document.getElementById('bodyInput').value = JSON.stringify({
+    name: "John Doe",
+    email: "john@example.com",
+    role: "admin"
+  }, null, 2);
+  document.getElementById('authType').value = 'none';
+  toggleAuthInput();
+  generateCurl();
+}
+function presetUpload() {
+  document.getElementById('methodSelect').value = 'POST';
+  document.getElementById('urlInput').value = 'https://api.example.com/upload';
+  clearHeaders();
+  document.getElementById('bodyInput').value = '';
+  document.getElementById('bodyInput').placeholder = '@file.pdf  or  -F "file=@image.png"';
+  document.getElementById('authType').value = 'none';
+  toggleAuthInput();
+  generateCurl();
+  showToast('Enter file path in Body, e.g. @file.pdf');
+}
+function presetAuth() {
+  document.getElementById('methodSelect').value = 'GET';
+  document.getElementById('urlInput').value = 'https://api.example.com/protected';
+  clearHeaders();
+  document.getElementById('bodyInput').value = '';
+  document.getElementById('authType').value = 'bearer';
+  document.getElementById('bearerToken').value = 'your_token_here';
+  toggleAuthInput();
+  generateCurl();
+}
+
+/* ── Generate curl ── */
+function generateCurl() {
+  const method = document.getElementById('methodSelect').value;
+  const url = document.getElementById('urlInput').value.trim();
+  if (!url) {
+    showToast('Please enter a URL');
+    return;
+  }
+
+  const headers = getHeaders();
+  const body = document.getElementById('bodyInput').value;
+  const authType = document.getElementById('authType').value;
+
+  let parts = ['curl'];
+
+  // Method
+  if (method !== 'GET') {
+    parts.push("-X " + method);
+  }
+
+  // URL
+  parts.push("'" + url + "'");
+
+  // Headers
+  headers.forEach(h => {
+    parts.push("-H '" + h.key + ": " + h.value + "'");
+  });
+
+  // Auth
+  if (authType === 'bearer') {
+    const token = document.getElementById('bearerToken').value.trim();
+    if (token) {
+      parts.push("-H 'Authorization: Bearer " + token + "'");
+    }
+  } else if (authType === 'basic') {
+    const user = document.getElementById('basicUser').value.trim();
+    const pass = document.getElementById('basicPass').value.trim();
+    if (user) {
+      parts.push("-u '" + user + (pass ? ":" + pass : "") + "'");
+    }
+  }
+
+  // Body
+  if (body.trim()) {
+    const hasContentType = headers.some(h => h.key.toLowerCase() === 'content-type');
+    const isFileUpload = body.trim().startsWith('@') || body.trim().startsWith('-F');
+    if (isFileUpload) {
+      if (body.trim().startsWith('-F')) {
+        body.trim().split('\n').forEach(line => {
+          const trimmed = line.trim();
+          if (trimmed) parts.push(trimmed);
+        });
+      } else {
+        parts.push("--data-binary '" + body.trim().substring(1) + "'");
+      }
+    } else {
+      parts.push("-d '" + body + "'");
+    }
+  }
+
+  const cmd = parts.join(' \\  \n');
+  document.getElementById('outputArea').textContent = cmd;
+  document.getElementById('outputSection').style.display = 'block';
+}
+
+/* ── Copy / Clear ── */
+function copyCurl() {
+  const text = document.getElementById('outputArea').textContent;
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('Copied to clipboard!');
+  }).catch(() => {
+    const range = document.createRange();
+    range.selectNode(document.getElementById('outputArea'));
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    document.execCommand('copy');
+    window.getSelection().removeAllRanges();
+    showToast('Copied to clipboard!');
+  });
+}
+function clearOutput() {
+  document.getElementById('outputArea').textContent = '';
+  document.getElementById('outputSection').style.display = 'none';
+}
+
+/* ── Toast ── */
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2200);
+}
+
+/* ── Init ── */
+addHeaderRow('Accept', 'application/json');
+</script>
+<script src="../js/i18n.js"></script>
+
+<script>
+// Register Service Worker for offline support
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/sw.js')
+    .then(reg => console.log('SW registered:', reg.scope))
+    .catch(err => console.log('SW registration failed:', err));
+}
+</script>
+</body>
+</html>

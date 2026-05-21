@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-zh="文本对比增强版 — AIHues">Text Diff Pro — AIHues</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#ffffff;--surface:#f8f9fb;--surface-hover:#f1f3f7;
+  --border:#e8ecf1;--border-hover:#d1d8e0;
+  --text:#0f172a;--text-secondary:#475569;--text-muted:#94a3b8;
+  --accent:#6d28d9;--accent-light:#8b5cf6;--accent-gradient:linear-gradient(135deg,#6d28d9,#8b5cf6);
+  --green:#059669;--green-bg:#ecfdf5;--green-light:#d1fae5;
+  --red:#dc2626;--red-bg:#fef2f2;--red-light:#fee2e2;
+  --yellow:#b45309;--yellow-bg:#fffbeb;--yellow-light:#fef3c7;
+  --radius:14px;--radius-sm:10px;
+  --shadow:0 1px 3px rgba(0,0,0,0.04),0 4px 16px rgba(0,0,0,0.04);
+}
+body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+
+/* ===== Navigation ===== */
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);font-weight:700;font-size:18px}
+.logo-mark{width:34px;height:34px;border-radius:8px;background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px}
+.nav-links{display:flex;gap:28px;list-style:none}
+.nav-links a{text-decoration:none;color:var(--text-secondary);font-size:14px;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--accent)}
+
+/* ===== Tool Page ===== */
+.tool-page{max-width:1200px;margin:0 auto;padding:32px 24px}
+.tool-header{margin-bottom:28px}
+.badge{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);padding:4px 12px;border-radius:100px;font-size:12px;color:var(--text-secondary);margin-bottom:12px}
+.tool-header h1{font-size:28px;font-weight:700;margin-bottom:8px}
+.tool-header p{color:var(--text-secondary);font-size:15px;line-height:1.6}
+.tool-meta{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:3px 10px;border-radius:6px;font-weight:500}
+.tag.free{background:#ecfdf5;color:var(--green)}
+
+/* ===== Options Bar ===== */
+.options-bar{display:flex;gap:12px;margin-bottom:16px;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);align-items:center;flex-wrap:wrap}
+.option-group{display:flex;align-items:center;gap:8px}
+.option-label{font-size:13px;font-weight:600;color:var(--text-secondary);white-space:nowrap}
+.option-select{padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;font-family:inherit;color:var(--text);background:#fff;outline:none;cursor:pointer}
+.option-select:focus{border-color:var(--accent)}
+
+.switch-label{display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;color:var(--text-secondary);font-weight:500}
+.switch-label input[type="checkbox"]{width:16px;height:16px;accent-color:var(--accent);cursor:pointer}
+
+.swap-btn{padding:6px 12px;border:1px solid var(--border);border-radius:6px;background:#fff;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;color:var(--text-secondary);margin-left:auto}
+.swap-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--surface-hover)}
+
+/* ===== Diff Container ===== */
+.diff-container{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+@media(max-width:768px){.diff-container{grid-template-columns:1fr}}
+
+.editor{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.editor-toolbar{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:var(--surface);border-bottom:1px solid var(--border)}
+.editor-toolbar .label{font-size:13px;font-weight:600;color:var(--text-secondary)}
+.editor-toolbar .tag{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;background:var(--bg);border:1px solid var(--border)}
+.editor-actions{display:flex;gap:8px}
+.editor-btn{padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:var(--bg);font-size:12px;cursor:pointer;transition:all .2s;color:var(--text-secondary);font-weight:500}
+.editor-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--surface-hover)}
+.editor textarea{width:100%;min-height:200px;padding:20px;border:none;outline:none;font-size:14px;line-height:1.6;resize:vertical;color:var(--text);font-family:'Mono',monospace;background:var(--bg)}
+
+/* ===== Compare Button ===== */
+.compare-btn{display:block;width:100%;padding:14px;border-radius:var(--radius-sm);background:var(--accent-gradient);color:#fff;font-size:15px;font-weight:600;border:none;cursor:pointer;transition:all .2s;margin-bottom:20px}
+.compare-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(109,40,217,0.3)}
+
+/* ===== Stats Bar ===== */
+.stats-bar{display:flex;gap:16px;margin-bottom:16px;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);flex-wrap:wrap}
+.stat{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500}
+.stat.add{color:var(--green)}
+.stat.del{color:var(--red)}
+.stat.mod{color:var(--yellow)}
+.stat.eq{color:var(--text-muted)}
+
+/* ===== Diff Result ===== */
+.result-area{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;display:none}
+.result-header{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:var(--surface);border-bottom:1px solid var(--border)}
+.result-title{font-size:14px;font-weight:600;color:var(--text-secondary)}
+
+.diff-view{max-height:600px;overflow:auto;font-family:'Consolas','Monaco','Courier New',monospace;font-size:13px;line-height:1.7}
+
+.diff-row{display:flex;align-items:stretch}
+.diff-gutter{width:32px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;border-right:1px solid var(--border);padding:4px 0}
+.diff-content{flex:1;padding:4px 12px;word-break:break-all;white-space:pre-wrap}
+
+/* Row types */
+.diff-row.add{background:var(--green-bg)}
+.diff-row.add .diff-gutter{background:var(--green-light);color:var(--green)}
+.diff-row.add .diff-content{background:var(--green-bg);color:var(--green)}
+
+.diff-row.del{background:var(--red-bg)}
+.diff-row.del .diff-gutter{background:var(--red-light);color:var(--red)}
+.diff-row.del .diff-content{background:var(--red-bg);color:var(--red)}
+
+.diff-row.mod{background:var(--yellow-bg)}
+.diff-row.mod .diff-gutter{background:var(--yellow-light);color:var(--yellow)}
+.diff-row.mod .diff-content{background:var(--yellow-bg);color:var(--yellow)}
+
+.diff-row.eq{background:transparent}
+.diff-row.eq .diff-gutter{background:var(--surface);color:var(--text-muted)}
+.diff-row.eq .diff-content{color:var(--text)}
+
+/* Inline diff highlighting */
+.diff-char-add{background:var(--green);color:#fff;font-weight:700;padding:0 1px;border-radius:2px}
+.diff-char-del{background:var(--red);color:#fff;font-weight:700;padding:0 1px;border-radius:2px;text-decoration:line-through}
+
+/* ===== Actions ===== */
+.actions{display:flex;gap:12px;justify-content:center;margin-top:20px;flex-wrap:wrap}
+.btn-clear{padding:10px 20px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text-secondary);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-clear:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ===== Toast ===== */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--text);color:#fff;padding:10px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;z-index:200;opacity:0;transform:translateY(10px);transition:all .25s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+
+/* ===== Responsive ===== */
+@media(max-width:768px){
+  .nav-inner{padding:0 16px}
+  .tool-page{padding:20px 16px}
+  .tool-header h1{font-size:22px}
+  .options-bar{flex-direction:column;align-items:stretch}
+  .swap-btn{margin-left:0}
+}
+</style>
+<link rel="manifest" href="/manifest.json">
+</head>
+<body>
+
+<!-- ===== Navigation ===== -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../index.html" class="logo">
+      <div class="logo-mark">AI</div>
+      <span>AIHues</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="../showcase.html">Tools</a></li>
+      <li><a href="../collection.html">Collection</a></li>
+      <li><a href="../pricing.html">Pricing</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ===== Main Content ===== -->
+<main class="tool-page">
+
+  <!-- Tool Header -->
+  <div class="tool-header">
+    <span class="badge">&#128295; <span data-zh="开发工具">Developer Tool</span></span>
+    <h1 data-zh="文本对比增强版">Text Diff Pro</h1>
+    <p data-zh="增强型文本差异对比工具，支持行级/单词/字符对比模式，高亮显示增删改">Enhanced text diff tool with line/word/char-level comparison and syntax highlighting.</p>
+    <div class="tool-meta">
+      <span class="tag free">&#128994; <span data-zh="免费使用">Free Forever</span></span>
+    </div>
+  </div>
+
+  <!-- Options Bar -->
+  <div class="options-bar">
+    <div class="option-group">
+      <label class="option-label" data-zh="对比模式:">Mode:</label>
+      <select class="option-select" id="diffMode">
+        <option value="line" data-zh="行级对比">Line Level</option>
+        <option value="word" data-zh="单词对比">Word Level</option>
+        <option value="char" data-zh="字符对比">Character Level</option>
+      </select>
+    </div>
+    <label class="switch-label">
+      <input type="checkbox" id="ignoreWhitespace">
+      <span data-zh="忽略空白">Ignore Whitespace</span>
+    </label>
+    <button class="swap-btn" onclick="swapTexts()">&#8644; <span data-zh="交换">Swap</span></button>
+  </div>
+
+  <!-- Diff Container -->
+  <div class="diff-container">
+    <div class="editor">
+      <div class="editor-toolbar">
+        <span class="label" data-zh="原文 (Original)">Original</span>
+        <div class="editor-actions">
+          <button class="editor-btn" onclick="pasteLeft()">&#128203; <span data-zh="粘贴">Paste</span></button>
+          <button class="editor-btn" onclick="clearLeft()">Clear</button>
+        </div>
+      </div>
+      <textarea id="left" placeholder="Paste original text here..." data-zh-placeholder="在此粘贴原始文本..."></textarea>
+    </div>
+    <div class="editor">
+      <div class="editor-toolbar">
+        <span class="label" data-zh="修改后 (Modified)">Modified</span>
+        <div class="editor-actions">
+          <button class="editor-btn" onclick="pasteRight()">&#128203; <span data-zh="粘贴">Paste</span></button>
+          <button class="editor-btn" onclick="clearRight()">Clear</button>
+        </div>
+      </div>
+      <textarea id="right" placeholder="Paste modified text here..." data-zh-placeholder="在此粘贴修改后的文本..."></textarea>
+    </div>
+  </div>
+
+  <button class="compare-btn" onclick="compare()">&#128269; <span data-zh="对比文本">Compare Texts</span></button>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar" id="statsBar" style="display:none">
+    <span class="stat add">&#128994; <span data-zh="新增">Added</span>: <strong id="addCount">0</strong></span>
+    <span class="stat del">&#128308; <span data-zh="删除">Deleted</span>: <strong id="delCount">0</strong></span>
+    <span class="stat mod">&#128993; <span data-zh="修改">Modified</span>: <strong id="modCount">0</strong></span>
+    <span class="stat eq"><span data-zh="相同">Unchanged</span>: <strong id="eqCount">0</strong></span>
+  </div>
+
+  <!-- Result Area -->
+  <div class="result-area" id="resultArea">
+    <div class="result-header">
+      <span class="result-title" data-zh="对比结果">Diff Result</span>
+      <div class="output-actions">
+        <button class="editor-btn" onclick="copyResult()">&#128203; <span data-zh="复制结果">Copy Result</span></button>
+      </div>
+    </div>
+    <div class="diff-view" id="result"></div>
+  </div>
+
+  <div class="actions">
+    <button class="btn-clear" onclick="clearAll()">&#128465;&#65039; <span data-zh="清空全部">Clear All</span></button>
+  </div>
+
+</main>
+
+<!-- Toast -->
+<div class="toast" id="toast">Copied!</div>
+
+<script>
+// ===== Diff Engine (Myers' Diff Algorithm - simplified) =====
+
+/**
+ * Compute diff between two arrays using a simple LCS-based approach.
+ * Returns array of {type, oldIndex, newIndex, value} objects.
+ */
+function diffArrays(oldArr, newArr) {
+  // Use LCS to find matching sequences
+  const m = oldArr.length, n = newArr.length;
+  const dp = Array.from({length: m + 1}, () => new Array(n + 1).fill(0));
+
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      if (oldArr[i - 1] === newArr[j - 1]) {
+        dp[i][j] = dp[i - 1][j - 1] + 1;
+      } else {
+        dp[i][j] = Math.max(dp[i][j - 1], dp[i - 1][j]);
+      }
+    }
+  }
+
+  const result = [];
+  let i = m, j = n;
+  while (i > 0 && j > 0) {
+    if (oldArr[i - 1] === newArr[j - 1]) {
+      result.unshift({type: 'eq', oldIndex: i - 1, newIndex: j - 1, value: oldArr[i - 1]});
+      i--; j--;
+    } else if (dp[i][j - 1] >= dp[i - 1][j]) {
+      result.unshift({type: 'add', oldIndex: -1, newIndex: j - 1, value: newArr[j - 1]});
+      j--;
+    } else {
+      result.unshift({type: 'del', oldIndex: i - 1, newIndex: -1, value: oldArr[i - 1]});
+      i--;
+    }
+  }
+  while (i > 0) {
+    result.unshift({type: 'del', oldIndex: i - 1, newIndex: -1, value: oldArr[i - 1]});
+    i--;
+  }
+  while (j > 0) {
+    result.unshift({type: 'add', oldIndex: -1, newIndex: j - 1, value: newArr[j - 1]});
+    j--;
+  }
+
+  return result;
+}
+
+/**
+ * Group consecutive adds and dels to pair them as modifications.
+ * This gives us a cleaner output where del+add pairs become "mod".
+ */
+function groupDiffItems(items) {
+  const groups = [];
+  let i = 0;
+  while (i < items.length) {
+    const item = items[i];
+    if (item.type === 'eq') {
+      // Collect consecutive eqs
+      const eqs = [];
+      while (i < items.length && items[i].type === 'eq') {
+        eqs.push(items[i]);
+        i++;
+      }
+      groups.push({type: 'eq', items: eqs});
+    } else if (item.type === 'del') {
+      // Collect consecutive dels
+      const dels = [];
+      while (i < items.length && items[i].type === 'del') {
+        dels.push(items[i]);
+        i++;
+      }
+      // Check if followed by adds
+      const adds = [];
+      while (i < items.length && items[i].type === 'add') {
+        adds.push(items[i]);
+        i++;
+      }
+      if (adds.length > 0) {
+        // Pair them up as modifications
+        const count = Math.max(dels.length, adds.length);
+        for (let k = 0; k < count; k++) {
+          groups.push({
+            type: 'mod',
+            del: dels[k] || null,
+            add: adds[k] || null
+          });
+        }
+      } else {
+        dels.forEach(d => groups.push({type: 'del', items: [d]}));
+      }
+    } else if (item.type === 'add') {
+      // Standalone adds (not preceded by dels)
+      const adds = [];
+      while (i < items.length && items[i].type === 'add') {
+        adds.push(items[i]);
+        i++;
+      }
+      adds.forEach(a => groups.push({type: 'add', items: [a]}));
+    }
+  }
+  return groups;
+}
+
+/**
+ * Compute inline (char-level) diff between two strings.
+ */
+function inlineDiffChars(oldStr, newStr) {
+  const a = oldStr.split('');
+  const b = newStr.split('');
+  const result = diffArrays(a, b);
+
+  let oldHtml = '';
+  let newHtml = '';
+
+  for (const item of result) {
+    if (item.type === 'eq') {
+      const ch = escapeHtml(item.value);
+      oldHtml += ch;
+      newHtml += ch;
+    } else if (item.type === 'del') {
+      oldHtml += '<span class="diff-char-del">' + escapeHtml(item.value) + '</span>';
+    } else if (item.type === 'add') {
+      newHtml += '<span class="diff-char-add">' + escapeHtml(item.value) + '</span>';
+    }
+  }
+
+  return {oldHtml, newHtml};
+}
+
+/**
+ * Compute inline (word-level) diff between two strings.
+ */
+function inlineDiffWords(oldStr, newStr) {
+  // Split preserving whitespace
+  const a = oldStr.split(/(\s+)/);
+  const b = newStr.split(/(\s+)/);
+  const result = diffArrays(a, b);
+
+  let oldHtml = '';
+  let newHtml = '';
+
+  for (const item of result) {
+    if (item.type === 'eq') {
+      const w = escapeHtml(item.value);
+      oldHtml += w;
+      newHtml += w;
+    } else if (item.type === 'del') {
+      oldHtml += '<span class="diff-char-del">' + escapeHtml(item.value) + '</span>';
+    } else if (item.type === 'add') {
+      newHtml += '<span class="diff-char-add">' + escapeHtml(item.value) + '</span>';
+    }
+  }
+
+  return {oldHtml, newHtml};
+}
+
+// ===== Main Compare Function =====
+function compare() {
+  const leftText = document.getElementById('left').value;
+  const rightText = document.getElementById('right').value;
+  const mode = document.getElementById('diffMode').value;
+  const ignoreWS = document.getElementById('ignoreWhitespace').checked;
+
+  if (!leftText && !rightText) {
+    document.getElementById('resultArea').style.display = 'none';
+    document.getElementById('statsBar').style.display = 'none';
+    return;
+  }
+
+  const leftLines = leftText.split('\n');
+  const rightLines = rightText.split('\n');
+
+  const normalize = ignoreWS ? s => s.replace(/\s+/g, ' ').trim() : s => s;
+  const normLeft = leftLines.map(normalize);
+  const normRight = rightLines.map(normalize);
+
+  const items = diffArrays(normLeft, normRight);
+  const groups = groupDiffItems(items);
+
+  let addCount = 0, delCount = 0, modCount = 0, eqCount = 0;
+  const htmlParts = [];
+
+  for (const group of groups) {
+    if (group.type === 'eq') {
+      eqCount += group.items.length;
+      for (const item of group.items) {
+        htmlParts.push(renderRow('eq', ' ', escapeHtml(item.value)));
+      }
+    } else if (group.type === 'del') {
+      delCount += group.items.length;
+      for (const item of group.items) {
+        htmlParts.push(renderRow('del', '-', escapeHtml(item.value)));
+      }
+    } else if (group.type === 'add') {
+      addCount += group.items.length;
+      for (const item of group.items) {
+        htmlParts.push(renderRow('add', '+', escapeHtml(item.value)));
+      }
+    } else if (group.type === 'mod') {
+      modCount++;
+      if (mode === 'line' || !group.del || !group.add) {
+        // Line-level mode: just show del and add side-by-side
+        if (group.del) {
+          htmlParts.push(renderRow('mod', '-', escapeHtml(group.del.value)));
+        }
+        if (group.add) {
+          htmlParts.push(renderRow('mod', '+', escapeHtml(group.add.value)));
+        }
+      } else {
+        // Word/char mode: compute inline diff
+        const diffFn = mode === 'char' ? inlineDiffChars : inlineDiffWords;
+        const diffed = diffFn(group.del.value, group.add.value);
+        if (group.del) {
+          htmlParts.push(renderRow('mod', '-', diffed.oldHtml));
+        }
+        if (group.add) {
+          htmlParts.push(renderRow('mod', '+', diffed.newHtml));
+        }
+      }
+    }
+  }
+
+  document.getElementById('result').innerHTML = htmlParts.join('');
+  document.getElementById('addCount').textContent = addCount;
+  document.getElementById('delCount').textContent = delCount;
+  document.getElementById('modCount').textContent = modCount;
+  document.getElementById('eqCount').textContent = eqCount;
+  document.getElementById('resultArea').style.display = 'block';
+  document.getElementById('statsBar').style.display = 'flex';
+}
+
+function renderRow(type, gutter, content) {
+  return '<div class="diff-row ' + type + '"><div class="diff-gutter">' + gutter + '</div><div class="diff-content">' + content + '</div></div>';
+}
+
+// ===== Utilities =====
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function swapTexts() {
+  const left = document.getElementById('left');
+  const right = document.getElementById('right');
+  const temp = left.value;
+  left.value = right.value;
+  right.value = temp;
+}
+
+function pasteLeft() {
+  navigator.clipboard.readText().then(t => document.getElementById('left').value = t);
+}
+function pasteRight() {
+  navigator.clipboard.readText().then(t => document.getElementById('right').value = t);
+}
+function clearLeft() { document.getElementById('left').value = ''; }
+function clearRight() { document.getElementById('right').value = ''; }
+function clearAll() {
+  document.getElementById('left').value = '';
+  document.getElementById('right').value = '';
+  document.getElementById('resultArea').style.display = 'none';
+  document.getElementById('statsBar').style.display = 'none';
+}
+
+function copyResult() {
+  const result = document.getElementById('result');
+  const text = result.innerText;
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(() => showToast('Copied!'));
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2000);
+}
+</script>
+<script src="../js/i18n.js"></script>
+
+<script>
+// Register Service Worker for offline support
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/sw.js')
+    .then(reg => console.log('SW registered:', reg.scope))
+    .catch(err => console.log('SW registration failed:', err));
+}
+</script>
+</body>
+</html>

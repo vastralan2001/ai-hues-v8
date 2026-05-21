@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-zh="色值转换器 — AIHues">Color Converter - AIHues</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{
+  --bg:#ffffff;--surface:#f8f9fb;--surface-hover:#f1f3f7;
+  --border:#e8ecf1;--border-hover:#d1d8e0;
+  --text:#0f172a;--text-secondary:#475569;--text-muted:#94a3b8;
+  --accent:#6d28d9;--accent-light:#8b5cf6;--accent-gradient:linear-gradient(135deg,#6d28d9,#8b5cf6);
+  --green:#059669;--blue:#2563eb;--orange:#ea580c;
+  --radius:14px;--radius-sm:10px;
+  --shadow:0 1px 3px rgba(0,0,0,0.04),0 4px 16px rgba(0,0,0,0.04);
+}
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;min-height:100vh}
+
+/* ===== Navigation ===== */
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);font-weight:700;font-size:18px}
+.logo-mark{width:34px;height:34px;border-radius:8px;background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px}
+.nav-links{display:flex;gap:28px;list-style:none}
+.nav-links a{text-decoration:none;color:var(--text-secondary);font-size:14px;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--accent)}
+.nav-links a.active{color:var(--accent)}
+
+/* ===== Tool Page ===== */
+.tool-page{max-width:960px;margin:0 auto;padding:32px 24px}
+.tool-header{margin-bottom:28px}
+.badge{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);padding:4px 12px;border-radius:100px;font-size:12px;color:var(--text-secondary);margin-bottom:12px}
+.tool-header h1{font-size:28px;font-weight:700;margin-bottom:8px}
+.tool-header p{color:var(--text-secondary);font-size:15px;line-height:1.6}
+.tool-meta{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:3px 10px;border-radius:6px;font-weight:500}
+.tag.free{background:#ecfdf5;color:var(--green)}
+
+/* ===== Color Preview ===== */
+.preview-section{margin-bottom:24px}
+.preview-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+@media(max-width:768px){.preview-row{grid-template-columns:1fr}}
+
+.preview-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:#fff;box-shadow:var(--shadow)}
+.preview-main{min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:background .3s;position:relative;cursor:pointer;gap:8px}
+.preview-main .preview-label{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;opacity:0.7}
+.preview-main .preview-hex{font-size:28px;font-weight:800;font-family:'Consolas','Monaco','Courier New',monospace;letter-spacing:1px}
+.preview-contrast{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:20px;border-radius:var(--radius-sm);transition:background .3s}
+.preview-contrast .contrast-label{font-size:11px;font-weight:600;opacity:0.6;letter-spacing:0.5px}
+.preview-contrast .contrast-hex{font-size:18px;font-weight:700;font-family:'Consolas','Monaco','Courier New',monospace;letter-spacing:0.5px}
+.contrast-row{display:flex;gap:12px}
+.contrast-row .preview-card{flex:1}
+.contrast-row .preview-contrast{min-height:100px}
+
+/* Color Picker Row */
+.picker-row{display:flex;align-items:center;gap:12px;margin-bottom:24px;padding:14px 18px;background:var(--surface);border-radius:var(--radius);border:1px solid var(--border)}
+.picker-row label{font-size:14px;font-weight:600;color:var(--text-secondary);white-space:nowrap}
+input[type="color"]{width:48px;height:40px;border:2px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;padding:2px;background:#fff}
+input[type="color"]::-webkit-color-swatch-wrapper{padding:2px}
+input[type="color"]::-webkit-color-swatch{border:none;border-radius:6px}
+.picker-value{font-family:'Consolas','Monaco','Courier New',monospace;font-size:15px;font-weight:600;color:var(--text);flex:1}
+.picker-random{padding:8px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);background:#fff;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;color:var(--text-secondary)}
+.picker-random:hover{border-color:var(--accent);color:var(--accent);background:var(--surface-hover)}
+
+/* ===== Format Cards ===== */
+.format-cards{display:flex;flex-direction:column;gap:16px;margin-bottom:24px}
+.format-card{border:2px solid var(--border);border-radius:var(--radius);overflow:hidden;background:#fff;transition:border-color .2s,box-shadow .2s}
+.format-card:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(109,40,217,0.08)}
+
+.card-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--surface);border-bottom:1px solid var(--border)}
+.card-label{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700;color:var(--text-secondary)}
+.card-label i{color:var(--accent);font-size:14px}
+.card-actions{display:flex;gap:6px}
+.card-copy{padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:#fff;font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;color:var(--text-secondary)}
+.card-copy:hover{border-color:var(--accent);color:var(--accent)}
+
+.card-body{padding:14px 20px;display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}
+.card-body input{flex:1;min-width:200px;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:16px;font-family:'Consolas','Monaco','Courier New',monospace;color:var(--text);background:#fff;outline:none;transition:border-color .2s}
+.card-body input:focus{border-color:var(--accent)}
+.card-body input::placeholder{color:var(--text-muted)}
+
+.rgb-group, .hsl-group, .cmyk-group{display:flex;gap:8px;align-items:center;flex:1;flex-wrap:wrap}
+.rgb-group input, .hsl-group input, .cmyk-group input{min-width:60px;flex:1;text-align:center}
+.group-sep{color:var(--text-muted);font-weight:600}
+.group-unit{font-size:12px;color:var(--text-muted);font-weight:500}
+
+/* ===== Harmony Section ===== */
+.panel{margin-bottom:20px;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:#fff;box-shadow:var(--shadow)}
+.panel-header{padding:14px 20px;background:var(--surface);border-bottom:1px solid var(--border);font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
+.panel-header i{color:var(--accent);font-size:14px}
+.panel-body{padding:20px}
+
+.harmony-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media(max-width:768px){.harmony-grid{grid-template-columns:repeat(2,1fr)}}
+
+.harmony-item{border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.harmony-item:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.12)}
+.harmony-color{height:72px;transition:background .3s}
+.harmony-info{padding:10px;text-align:center}
+.harmony-name{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
+.harmony-hex{font-size:13px;font-weight:600;font-family:'Consolas','Monaco','Courier New',monospace;color:var(--text)}
+
+.harmony-row{display:flex;gap:8px;flex-wrap:wrap}
+.harmony-chip{width:40px;height:40px;border-radius:8px;border:1px solid var(--border);cursor:pointer;transition:transform .2s,box-shadow .2s}
+.harmony-chip:hover{transform:scale(1.12);box-shadow:0 4px 12px rgba(0,0,0,0.15)}
+
+/* ===== History ===== */
+.history-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.history-chip{display:flex;align-items:center;gap:8px;padding:6px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all .2s;background:#fff}
+.history-chip:hover{border-color:var(--accent);background:var(--surface-hover)}
+.history-dot{width:22px;height:22px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);flex-shrink:0}
+.history-hex{font-size:13px;font-weight:600;font-family:'Consolas','Monaco','Courier New',monospace;color:var(--text)}
+.history-empty{font-size:13px;color:var(--text-muted);font-style:italic}
+.clear-history{padding:6px 12px;border:1px solid var(--border);border-radius:6px;background:#fff;font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;color:var(--text-muted);margin-left:auto}
+.clear-history:hover{border-color:#dc2626;color:#dc2626}
+
+/* ===== Toast ===== */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--text);color:#fff;padding:10px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;z-index:200;opacity:0;transform:translateY(10px);transition:all .25s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+
+/* ===== Action Buttons ===== */
+.action-bar{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;border:1px solid transparent;transition:all .15s;font-family:inherit}
+.btn-primary{background:var(--accent-gradient);color:#fff;border:none}
+.btn-primary:hover{opacity:0.92;transform:translateY(-1px);box-shadow:0 4px 12px rgba(109,40,217,0.25)}
+.btn-secondary{background:#fff;border:1px solid var(--border);color:var(--text-secondary)}
+.btn-secondary:hover{border-color:var(--border-hover);background:var(--surface-hover)}
+
+/* ===== Responsive ===== */
+@media(max-width:768px){
+  .nav-inner{padding:0 16px}
+  .tool-page{padding:20px 16px}
+  .tool-header h1{font-size:22px}
+  .nav-links{gap:16px}
+  .harmony-grid{grid-template-columns:1fr 1fr}
+  .card-body{flex-direction:column;align-items:stretch}
+  .card-body input{min-width:unset;width:100%}
+}
+</style>
+<link rel="manifest" href="/manifest.json">
+</head>
+<body>
+
+<!-- ===== Navigation ===== -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../index.html" class="logo">
+      <div class="logo-mark"><i class="fas fa-bolt"></i></div>
+      <span>AIHues</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="../showcase.html" class="active">Tools</a></li>
+      <li><a href="../collection.html">Collection</a></li>
+      <li><a href="../pricing.html">Pricing</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ===== Main Content ===== -->
+<main class="tool-page">
+
+  <!-- Tool Header -->
+  <div class="tool-header">
+    <span class="badge"><i class="fas fa-wrench"></i> <span data-zh="开发工具">Developer Tool</span></span>
+    <h1 data-zh="色值转换器">Color Converter</h1>
+    <p data-zh="在 HEX、RGB、HSL、CMYK 色值格式之间转换，支持实时预览">Convert between HEX, RGB, HSL, and CMYK color formats with live preview</p>
+    <div class="tool-meta">
+      <span class="tag free"><i class="fas fa-check-circle"></i> <span data-zh="免费使用">Free Forever</span></span>
+    </div>
+  </div>
+
+  <!-- Color Picker -->
+  <div class="picker-row">
+    <label for="colorPicker" data-zh="选择颜色：">Pick a color:</label>
+    <input type="color" id="colorPicker" value="#FF5733" oninput="onPickerChange(this.value)">
+    <span class="picker-value" id="pickerLabel">#FF5733</span>
+    <button class="picker-random" onclick="randomColor()"><i class="fas fa-shuffle"></i> <span data-zh="随机颜色">Random</span></button>
+  </div>
+
+  <!-- Color Preview -->
+  <div class="preview-section">
+    <div class="preview-row">
+      <!-- Main Preview -->
+      <div class="preview-card">
+        <div class="preview-main" id="mainPreview" onclick="copyHex()">
+          <span class="preview-label" data-zh="当前颜色">Current Color</span>
+          <span class="preview-hex" id="mainHex">#FF5733</span>
+        </div>
+      </div>
+      <!-- Contrast Preview -->
+      <div class="contrast-row">
+        <div class="preview-card">
+          <div class="preview-contrast" id="onWhite" onclick="copyHex()">
+            <span class="contrast-label" data-zh="白色背景">On White</span>
+            <span class="contrast-hex" id="onWhiteHex">#FF5733</span>
+          </div>
+        </div>
+        <div class="preview-card">
+          <div class="preview-contrast" id="onBlack" onclick="copyHex()">
+            <span class="contrast-label" data-zh="黑色背景">On Black</span>
+            <span class="contrast-hex" id="onBlackHex">#FF5733</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Format Cards -->
+  <div class="format-cards">
+
+    <!-- HEX -->
+    <div class="format-card" id="hexCard">
+      <div class="card-header">
+        <span class="card-label"><i class="fas fa-hashtag"></i> HEX</span>
+        <button class="card-copy" onclick="copyFormat('hex')"><i class="fas fa-copy"></i> <span data-zh="复制">Copy</span></button>
+      </div>
+      <div class="card-body">
+        <input type="text" id="hexInput" value="#FF5733" placeholder="#FF5733" oninput="onHexInput(this.value)">
+      </div>
+    </div>
+
+    <!-- RGB -->
+    <div class="format-card" id="rgbCard">
+      <div class="card-header">
+        <span class="card-label"><i class="fas fa-palette"></i> RGB</span>
+        <button class="card-copy" onclick="copyFormat('rgb')"><i class="fas fa-copy"></i> <span data-zh="复制">Copy</span></button>
+      </div>
+      <div class="card-body">
+        <div class="rgb-group">
+          <input type="number" id="rInput" value="255" min="0" max="255" placeholder="R" oninput="onRgbInput()">
+          <span class="group-sep">,</span>
+          <input type="number" id="gInput" value="87" min="0" max="255" placeholder="G" oninput="onRgbInput()">
+          <span class="group-sep">,</span>
+          <input type="number" id="bInput" value="51" min="0" max="255" placeholder="B" oninput="onRgbInput()">
+        </div>
+        <span class="group-unit">0-255</span>
+      </div>
+    </div>
+
+    <!-- HSL -->
+    <div class="format-card" id="hslCard">
+      <div class="card-header">
+        <span class="card-label"><i class="fas fa-sun"></i> HSL</span>
+        <button class="card-copy" onclick="copyFormat('hsl')"><i class="fas fa-copy"></i> <span data-zh="复制">Copy</span></button>
+      </div>
+      <div class="card-body">
+        <div class="hsl-group">
+          <input type="number" id="hInput" value="9" min="0" max="360" placeholder="H" oninput="onHslInput()">
+          <span class="group-sep">,</span>
+          <input type="number" id="sInput" value="100" min="0" max="100" placeholder="S" oninput="onHslInput()">
+          <span class="group-sep">%</span>
+          <span class="group-sep">,</span>
+          <input type="number" id="lInput" value="60" min="0" max="100" placeholder="L" oninput="onHslInput()">
+          <span class="group-sep">%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CMYK -->
+    <div class="format-card" id="cmykCard">
+      <div class="card-header">
+        <span class="card-label"><i class="fas fa-print"></i> CMYK</span>
+        <button class="card-copy" onclick="copyFormat('cmyk')"><i class="fas fa-copy"></i> <span data-zh="复制">Copy</span></button>
+      </div>
+      <div class="card-body">
+        <div class="cmyk-group">
+          <input type="number" id="cInput" value="0" min="0" max="100" placeholder="C" oninput="onCmykInput()">
+          <span class="group-sep">%</span>
+          <span class="group-sep">,</span>
+          <input type="number" id="mInput" value="66" min="0" max="100" placeholder="M" oninput="onCmykInput()">
+          <span class="group-sep">%</span>
+          <span class="group-sep">,</span>
+          <input type="number" id="yInput" value="80" min="0" max="100" placeholder="Y" oninput="onCmykInput()">
+          <span class="group-sep">%</span>
+          <span class="group-sep">,</span>
+          <input type="number" id="kInput" value="0" min="0" max="100" placeholder="K" oninput="onCmykInput()">
+          <span class="group-sep">%</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Color Harmony -->
+  <div class="panel">
+    <div class="panel-header"><i class="fas fa-swatchbook"></i> <span data-zh="颜色调和">Color Harmony</span></div>
+    <div class="panel-body">
+      <div class="harmony-grid">
+        <!-- Complementary -->
+        <div class="harmony-item" onclick="applyHarmony('comp')">
+          <div class="harmony-color" id="harmCompColor"></div>
+          <div class="harmony-info">
+            <div class="harmony-name" data-zh="互补色">Complementary</div>
+            <div class="harmony-hex" id="harmCompHex">-</div>
+          </div>
+        </div>
+        <!-- Triadic -->
+        <div class="harmony-item" onclick="applyHarmony('tria1')">
+          <div class="harmony-color" id="harmTriaColor"></div>
+          <div class="harmony-info">
+            <div class="harmony-name" data-zh="三色组">Triadic</div>
+            <div class="harmony-hex" id="harmTriaHex">-</div>
+          </div>
+        </div>
+        <!-- Analogous -->
+        <div class="harmony-item" onclick="applyHarmony('ana1')">
+          <div class="harmony-color" id="harmAnaColor"></div>
+          <div class="harmony-info">
+            <div class="harmony-name" data-zh="类似色">Analogous</div>
+            <div class="harmony-hex" id="harmAnaHex">-</div>
+          </div>
+        </div>
+        <!-- Split Complementary -->
+        <div class="harmony-item" onclick="applyHarmony('split1')">
+          <div class="harmony-color" id="harmSplitColor"></div>
+          <div class="harmony-info">
+            <div class="harmony-name" data-zh="分裂互补">Split-Comp</div>
+            <div class="harmony-hex" id="harmSplitHex">-</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- History -->
+  <div class="panel">
+    <div class="panel-header">
+      <i class="fas fa-clock-rotate-left"></i>
+      <span data-zh="最近使用">Recent Colors</span>
+      <button class="clear-history" onclick="clearHistory()"><i class="fas fa-trash"></i> <span data-zh="清空">Clear</span></button>
+    </div>
+    <div class="panel-body">
+      <div class="history-row" id="historyRow">
+        <span class="history-empty" data-zh="暂无历史记录">No history yet</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Bar -->
+  <div class="action-bar">
+    <button class="btn btn-primary" onclick="copyAllFormats()"><i class="fas fa-copy"></i> <span data-zh="复制全部格式">Copy All Formats</span></button>
+    <button class="btn btn-secondary" onclick="resetColor()"><i class="fas fa-rotate-left"></i> <span data-zh="重置">Reset</span></button>
+  </div>
+
+</main>
+
+<!-- Toast -->
+<div class="toast" id="toast">Copied!</div>
+
+<script>
+// ===== Color Conversion Functions =====
+function hexToRgb(hex) {
+  hex = hex.replace('#', '');
+  if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+  const r = parseInt(hex.slice(0, 2), 16);
+  const g = parseInt(hex.slice(2, 4), 16);
+  const b = parseInt(hex.slice(4, 6), 16);
+  return { r: isNaN(r) ? 0 : r, g: isNaN(g) ? 0 : g, b: isNaN(b) ? 0 : b };
+}
+
+function rgbToHex(r, g, b) {
+  return '#' + [r, g, b].map(x => {
+    const hex = Math.max(0, Math.min(255, Math.round(x))).toString(16);
+    return hex.length === 1 ? '0' + hex : hex;
+  }).join('').toUpperCase();
+}
+
+function rgbToHsl(r, g, b) {
+  r /= 255; g /= 255; b /= 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  let h, s, l = (max + min) / 2;
+  if (max === min) { h = s = 0; }
+  else {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+      case g: h = ((b - r) / d + 2) / 6; break;
+      case b: h = ((r - g) / d + 4) / 6; break;
+    }
+  }
+  return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
+}
+
+function hslToRgb(h, s, l) {
+  h /= 360; s /= 100; l /= 100;
+  let r, g, b;
+  if (s === 0) { r = g = b = l; }
+  else {
+    const hue2rgb = (p, q, t) => {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1 / 6) return p + (q - p) * 6 * t;
+      if (t < 1 / 2) return q;
+      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+      return p;
+    };
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
+    r = hue2rgb(p, q, h + 1 / 3);
+    g = hue2rgb(p, q, h);
+    b = hue2rgb(p, q, h - 1 / 3);
+  }
+  return { r: Math.round(r * 255), g: Math.round(g * 255), b: Math.round(b * 255) };
+}
+
+function rgbToCmyk(r, g, b) {
+  let c = 1 - r / 255, m = 1 - g / 255, y = 1 - b / 255;
+  const k = Math.min(c, m, y);
+  if (k >= 0.9999) return { c: 0, m: 0, y: 0, k: 100 };
+  c = (c - k) / (1 - k); m = (m - k) / (1 - k); y = (y - k) / (1 - k);
+  return {
+    c: Math.round(c * 100),
+    m: Math.round(m * 100),
+    y: Math.round(y * 100),
+    k: Math.round(k * 100)
+  };
+}
+
+function cmykToRgb(c, m, y, k) {
+  c /= 100; m /= 100; y /= 100; k /= 100;
+  const r = Math.round(255 * (1 - c) * (1 - k));
+  const g = Math.round(255 * (1 - m) * (1 - k));
+  const b = Math.round(255 * (1 - y) * (1 - k));
+  return { r, g, b };
+}
+
+// ===== State =====
+let currentHex = '#FF5733';
+const HISTORY_KEY = 'color-convert-history';
+const MAX_HISTORY = 10;
+let harmonyColors = {};
+
+// ===== Initialize =====
+document.addEventListener('DOMContentLoaded', () => {
+  loadHistory();
+  updateAll(currentHex, 'init');
+});
+
+// ===== Input Handlers =====
+function onPickerChange(hex) {
+  updateAll(hex, 'picker');
+}
+
+function onHexInput(val) {
+  val = val.trim();
+  if (!val) return;
+  if (!val.startsWith('#')) val = '#' + val;
+  if (/^#[0-9A-Fa-f]{3,6}$/.test(val)) {
+    if (val.length === 4 || val.length === 7) {
+      updateAll(val, 'hex');
+    }
+  }
+}
+
+function onRgbInput() {
+  const r = parseInt(document.getElementById('rInput').value) || 0;
+  const g = parseInt(document.getElementById('gInput').value) || 0;
+  const b = parseInt(document.getElementById('bInput').value) || 0;
+  const hex = rgbToHex(
+    Math.max(0, Math.min(255, r)),
+    Math.max(0, Math.min(255, g)),
+    Math.max(0, Math.min(255, b))
+  );
+  updateAll(hex, 'rgb');
+}
+
+function onHslInput() {
+  const h = parseInt(document.getElementById('hInput').value) || 0;
+  const s = parseInt(document.getElementById('sInput').value) || 0;
+  const l = parseInt(document.getElementById('lInput').value) || 0;
+  const rgb = hslToRgb(
+    ((h % 360) + 360) % 360,
+    Math.max(0, Math.min(100, s)),
+    Math.max(0, Math.min(100, l))
+  );
+  const hex = rgbToHex(rgb.r, rgb.g, rgb.b);
+  updateAll(hex, 'hsl');
+}
+
+function onCmykInput() {
+  const c = parseInt(document.getElementById('cInput').value) || 0;
+  const m = parseInt(document.getElementById('mInput').value) || 0;
+  const y = parseInt(document.getElementById('yInput').value) || 0;
+  const k = parseInt(document.getElementById('kInput').value) || 0;
+  const rgb = cmykToRgb(
+    Math.max(0, Math.min(100, c)),
+    Math.max(0, Math.min(100, m)),
+    Math.max(0, Math.min(100, y)),
+    Math.max(0, Math.min(100, k))
+  );
+  const hex = rgbToHex(rgb.r, rgb.g, rgb.b);
+  updateAll(hex, 'cmyk');
+}
+
+// ===== Core Update =====
+function updateAll(hex, source) {
+  hex = hex.toUpperCase();
+  if (hex.length === 4) {
+    hex = '#' + hex[1] + hex[1] + hex[2] + hex[2] + hex[3] + hex[3];
+  }
+  currentHex = hex;
+  const rgb = hexToRgb(hex);
+  const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+  const cmyk = rgbToCmyk(rgb.r, rgb.g, rgb.b);
+
+  // Update HEX input (unless source is hex)
+  if (source !== 'hex') {
+    document.getElementById('hexInput').value = hex;
+  }
+
+  // Update RGB inputs (unless source is rgb)
+  if (source !== 'rgb') {
+    document.getElementById('rInput').value = rgb.r;
+    document.getElementById('gInput').value = rgb.g;
+    document.getElementById('bInput').value = rgb.b;
+  }
+
+  // Update HSL inputs (unless source is hsl)
+  if (source !== 'hsl') {
+    document.getElementById('hInput').value = hsl.h;
+    document.getElementById('sInput').value = hsl.s;
+    document.getElementById('lInput').value = hsl.l;
+  }
+
+  // Update CMYK inputs (unless source is cmyk)
+  if (source !== 'cmyk') {
+    document.getElementById('cInput').value = cmyk.c;
+    document.getElementById('mInput').value = cmyk.m;
+    document.getElementById('yInput').value = cmyk.y;
+    document.getElementById('kInput').value = cmyk.k;
+  }
+
+  // Update color picker
+  if (source !== 'picker') {
+    document.getElementById('colorPicker').value = hex;
+  }
+
+  // Update picker label
+  document.getElementById('pickerLabel').textContent = hex;
+
+  // Update previews
+  updatePreviews(hex, rgb);
+
+  // Update harmony
+  updateHarmony(hsl);
+
+  // Save to history
+  if (source !== 'init' && source !== 'history') {
+    addToHistory(hex);
+  }
+}
+
+function updatePreviews(hex, rgb) {
+  const main = document.getElementById('mainPreview');
+  const onWhite = document.getElementById('onWhite');
+  const onBlack = document.getElementById('onBlack');
+
+  main.style.background = hex;
+  document.getElementById('mainHex').textContent = hex;
+
+  onWhite.style.background = '#ffffff';
+  onWhite.style.color = hex;
+  document.getElementById('onWhiteHex').textContent = hex;
+  document.getElementById('onWhiteHex').style.color = hex;
+
+  onBlack.style.background = '#0f172a';
+  onBlack.style.color = hex;
+  document.getElementById('onBlackHex').textContent = hex;
+  document.getElementById('onBlackHex').style.color = hex;
+
+  // Auto-contrast text color for main preview
+  const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
+  main.style.color = brightness > 128 ? '#0f172a' : '#ffffff';
+  document.getElementById('mainHex').style.color = brightness > 128 ? '#0f172a' : '#ffffff';
+  document.querySelector('.preview-main .preview-label').style.color = brightness > 128 ? '#0f172a' : '#ffffff';
+  document.querySelector('.preview-main .preview-label').style.opacity = '0.7';
+}
+
+// ===== Color Harmony =====
+function updateHarmony(hsl) {
+  const h = hsl.h, s = hsl.s, l = hsl.l;
+
+  // Complementary: h + 180
+  const compH = (h + 180) % 360;
+  const compRgb = hslToRgb(compH, s, l);
+  const compHex = rgbToHex(compRgb.r, compRgb.g, compRgb.b);
+  harmonyColors.comp = compHex;
+  document.getElementById('harmCompColor').style.background = compHex;
+  document.getElementById('harmCompHex').textContent = compHex;
+  document.getElementById('harmCompHex').style.color = compHex;
+
+  // Triadic: h + 120, h + 240
+  const tria1H = (h + 120) % 360;
+  const tria2H = (h + 240) % 360;
+  const tria1Rgb = hslToRgb(tria1H, s, l);
+  const tria1Hex = rgbToHex(tria1Rgb.r, tria1Rgb.g, tria1Rgb.b);
+  const tria2Rgb = hslToRgb(tria2H, s, l);
+  const tria2Hex = rgbToHex(tria2Rgb.r, tria2Rgb.g, tria2Rgb.b);
+  harmonyColors.tria1 = tria1Hex;
+  harmonyColors.tria2 = tria2Hex;
+  document.getElementById('harmTriaColor').style.background = tria1Hex;
+  document.getElementById('harmTriaHex').textContent = tria1Hex;
+  document.getElementById('harmTriaHex').style.color = tria1Hex;
+
+  // Analogous: h - 30, h + 30
+  const ana1H = ((h - 30) % 360 + 360) % 360;
+  const ana2H = (h + 30) % 360;
+  const ana1Rgb = hslToRgb(ana1H, s, l);
+  const ana1Hex = rgbToHex(ana1Rgb.r, ana1Rgb.g, ana1Rgb.b);
+  const ana2Rgb = hslToRgb(ana2H, s, l);
+  const ana2Hex = rgbToHex(ana2Rgb.r, ana2Rgb.g, ana2Rgb.b);
+  harmonyColors.ana1 = ana1Hex;
+  harmonyColors.ana2 = ana2Hex;
+  document.getElementById('harmAnaColor').style.background = ana1Hex;
+  document.getElementById('harmAnaHex').textContent = ana1Hex;
+  document.getElementById('harmAnaHex').style.color = ana1Hex;
+
+  // Split-complementary: h + 150, h + 210
+  const split1H = (h + 150) % 360;
+  const split2H = (h + 210) % 360;
+  const split1Rgb = hslToRgb(split1H, s, l);
+  const split1Hex = rgbToHex(split1Rgb.r, split1Rgb.g, split1Rgb.b);
+  const split2Rgb = hslToRgb(split2H, s, l);
+  const split2Hex = rgbToHex(split2Rgb.r, split2Rgb.g, split2Rgb.b);
+  harmonyColors.split1 = split1Hex;
+  harmonyColors.split2 = split2Hex;
+  document.getElementById('harmSplitColor').style.background = split1Hex;
+  document.getElementById('harmSplitHex').textContent = split1Hex;
+  document.getElementById('harmSplitHex').style.color = split1Hex;
+}
+
+function applyHarmony(type) {
+  const hex = harmonyColors[type];
+  if (hex) {
+    updateAll(hex, 'harmony');
+  }
+}
+
+// ===== History =====
+function getHistory() {
+  try {
+    const data = localStorage.getItem(HISTORY_KEY);
+    return data ? JSON.parse(data) : [];
+  } catch { return []; }
+}
+
+function saveHistory(history) {
+  try {
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(history.slice(0, MAX_HISTORY)));
+  } catch { /* ignore */ }
+}
+
+function addToHistory(hex) {
+  let history = getHistory();
+  // Remove if already exists
+  history = history.filter(h => h !== hex);
+  // Add to front
+  history.unshift(hex);
+  saveHistory(history);
+  renderHistory();
+}
+
+function loadHistory() {
+  renderHistory();
+}
+
+function renderHistory() {
+  const history = getHistory();
+  const row = document.getElementById('historyRow');
+  if (history.length === 0) {
+    row.innerHTML = '<span class="history-empty" data-zh="暂无历史记录">No history yet</span>';
+    return;
+  }
+  row.innerHTML = history.map(hex =>
+    `<div class="history-chip" onclick="applyHistory('${hex}')">
+      <span class="history-dot" style="background:${hex}"></span>
+      <span class="history-hex">${hex}</span>
+    </div>`
+  ).join('');
+}
+
+function applyHistory(hex) {
+  updateAll(hex, 'history');
+}
+
+function clearHistory() {
+  localStorage.removeItem(HISTORY_KEY);
+  renderHistory();
+}
+
+// ===== Copy Functions =====
+function copyFormat(type) {
+  let text = '';
+  const r = document.getElementById('rInput').value;
+  const g = document.getElementById('gInput').value;
+  const b = document.getElementById('bInput').value;
+  const h = document.getElementById('hInput').value;
+  const s = document.getElementById('sInput').value;
+  const l = document.getElementById('lInput').value;
+  const c = document.getElementById('cInput').value;
+  const m = document.getElementById('mInput').value;
+  const y = document.getElementById('yInput').value;
+  const k = document.getElementById('kInput').value;
+
+  switch (type) {
+    case 'hex': text = document.getElementById('hexInput').value; break;
+    case 'rgb': text = `rgb(${r}, ${g}, ${b})`; break;
+    case 'hsl': text = `hsl(${h}, ${s}%, ${l}%)`; break;
+    case 'cmyk': text = `cmyk(${c}%, ${m}%, ${y}%, ${k}%)`; break;
+  }
+  if (text) {
+    navigator.clipboard.writeText(text).then(() => showToast(type.toUpperCase() + ' copied!'));
+  }
+}
+
+function copyHex() {
+  navigator.clipboard.writeText(currentHex).then(() => showToast('HEX copied!'));
+}
+
+function copyAllFormats() {
+  const r = document.getElementById('rInput').value;
+  const g = document.getElementById('gInput').value;
+  const b = document.getElementById('bInput').value;
+  const h = document.getElementById('hInput').value;
+  const s = document.getElementById('sInput').value;
+  const l = document.getElementById('lInput').value;
+  const c = document.getElementById('cInput').value;
+  const m = document.getElementById('mInput').value;
+  const y = document.getElementById('yInput').value;
+  const k = document.getElementById('kInput').value;
+
+  const text = [
+    `HEX:  ${document.getElementById('hexInput').value}`,
+    `RGB:  rgb(${r}, ${g}, ${b})`,
+    `HSL:  hsl(${h}, ${s}%, ${l}%)`,
+    `CMYK: cmyk(${c}%, ${m}%, ${y}%, ${k}%)`
+  ].join('\n');
+
+  navigator.clipboard.writeText(text).then(() => showToast('All formats copied!'));
+}
+
+function randomColor() {
+  const r = Math.floor(Math.random() * 256);
+  const g = Math.floor(Math.random() * 256);
+  const b = Math.floor(Math.random() * 256);
+  const hex = rgbToHex(r, g, b);
+  updateAll(hex, 'picker');
+}
+
+function resetColor() {
+  updateAll('#FF5733', 'picker');
+}
+
+// ===== Toast =====
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2000);
+}
+</script>
+<script src="../js/i18n.js"></script>
+
+<script>
+// Register Service Worker for offline support
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/sw.js')
+    .then(reg => console.log('SW registered:', reg.scope))
+    .catch(err => console.log('SW registration failed:', err));
+}
+</script>
+</body>
+</html>

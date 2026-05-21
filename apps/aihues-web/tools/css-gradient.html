@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-zh="CSS 渐变生成器 — AIHues">CSS Gradient Generator — AIHues</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#ffffff;--surface:#f8f9fb;--surface-hover:#f1f3f7;
+  --border:#e8ecf1;--border-hover:#d1d8e0;
+  --text:#0f172a;--text-secondary:#475569;--text-muted:#94a3b8;
+  --accent:#6d28d9;--accent-light:#8b5cf6;--accent-gradient:linear-gradient(135deg,#6d28d9,#8b5cf6);
+  --green:#059669;--blue:#2563eb;--orange:#ea580c;
+  --radius:14px;--radius-sm:10px;
+  --shadow:0 1px 3px rgba(0,0,0,0.04),0 4px 16px rgba(0,0,0,0.04);
+}
+body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1300px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:800;color:var(--text);letter-spacing:-1px;text-decoration:none}
+.logo-mark{width:34px;height:34px;border-radius:10px;background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:700;box-shadow:0 2px 8px rgba(109,40,217,0.3)}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{color:var(--text-secondary);font-size:14px;font-weight:500;transition:color .2s;text-decoration:none}
+.nav-links a:hover{color:var(--text)}
+.lang-btn{padding:8px 18px;border-radius:8px;border:1px solid var(--border);background:var(--bg);font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;color:var(--text)}
+.lang-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+.tool-page{max-width:1200px;margin:0 auto;padding:32px}
+
+.tool-header{padding:24px 0 20px}
+.tool-header .badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;background:var(--surface);font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:16px;border:1px solid var(--border)}
+.tool-header h1{font-size:32px;font-weight:700;margin-bottom:8px;letter-spacing:-0.5px}
+.tool-header p{color:var(--text-secondary);font-size:15px;max-width:560px}
+.tool-meta{display:flex;gap:16px;margin-top:16px}
+.tool-meta .tag{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;font-size:13px;font-weight:600}
+.tool-meta .tag.free{background:#ecfdf5;color:var(--green)}
+
+/* Layout */
+.gradient-workspace{display:grid;grid-template-columns:1fr 380px;gap:24px}
+@media(max-width:900px){.gradient-workspace{grid-template-columns:1fr}}
+
+/* Preview Area */
+.preview-section{display:flex;flex-direction:column;gap:16px}
+.preview-area{position:relative;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--border)}
+.preview-canvas{height:360px;width:100%;transition:background .15s ease;position:relative}
+.preview-info{position:absolute;bottom:12px;left:12px;right:12px;display:flex;justify-content:center;gap:8px;opacity:0;transition:opacity .2s}
+.preview-area:hover .preview-info{opacity:1}
+.preview-dimensions{padding:4px 12px;border-radius:6px;background:rgba(0,0,0,0.6);color:#fff;font-size:12px;font-weight:500}
+
+/* Presets */
+.presets-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+.presets-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.presets-title{font-size:14px;font-weight:600;color:var(--text-secondary)}
+.presets-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+@media(max-width:600px){.presets-grid{grid-template-columns:repeat(4,1fr)}}
+.preset-item{height:44px;border-radius:var(--radius-sm);cursor:pointer;transition:transform .2s,box-shadow .2s;border:2px solid transparent;position:relative}
+.preset-item:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,0.15);border-color:var(--text)}
+.preset-item.active{border-color:var(--accent)}
+
+/* Control Panel */
+.control-panel{display:flex;flex-direction:column;gap:16px}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+.panel-title{font-size:14px;font-weight:600;color:var(--text-secondary);margin-bottom:14px;text-transform:uppercase;letter-spacing:0.5px}
+
+/* Gradient Type Tabs */
+.type-tabs{display:flex;gap:6px;margin-bottom:16px;background:var(--bg);padding:5px;border-radius:var(--radius-sm);border:1px solid var(--border)}
+.type-tab{flex:1;padding:10px 12px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;border:none;background:transparent;color:var(--text-secondary);text-align:center}
+.type-tab.active{background:var(--bg);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,0.1)}
+.type-tab:hover:not(.active){color:var(--text)}
+
+/* Angle Control */
+.angle-control{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.angle-wheel{position:relative;width:80px;height:80px;flex-shrink:0}
+.angle-wheel-inner{width:80px;height:80px;border-radius:50%;border:2px solid var(--border);cursor:pointer;position:relative;background:conic-gradient(from 0deg, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000)}
+.angle-wheel-inner::after{content:'';position:absolute;inset:6px;border-radius:50%;background:var(--bg)}
+.angle-indicator{position:absolute;width:2px;height:50%;top:0;left:50%;transform-origin:bottom center;pointer-events:none;z-index:2}
+.angle-indicator::after{content:'';position:absolute;top:2px;left:50%;transform:translateX(-50%);width:8px;height:8px;border-radius:50%;background:var(--accent);border:2px solid var(--bg);box-shadow:0 1px 3px rgba(0,0,0,0.2)}
+.angle-input-group{display:flex;align-items:center;gap:8px;flex:1}
+.angle-input-group input[type="number"]{width:70px;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-weight:600;text-align:center;background:var(--bg);color:var(--text)}
+.angle-input-group input[type="range"]{flex:1;cursor:pointer}
+.angle-label{font-size:12px;color:var(--text-muted);font-weight:500}
+
+/* Radial Controls */
+.radial-controls{display:none;gap:12px;margin-bottom:16px}
+.radial-controls.active{display:flex;flex-direction:column}
+.radial-shape{display:flex;gap:8px}
+.radial-shape-btn{flex:1;padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;color:var(--text-secondary)}
+.radial-shape-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(109,40,217,0.05)}
+.radial-pos{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pos-input{display:flex;flex-direction:column;gap:4px}
+.pos-input label{font-size:12px;color:var(--text-muted);font-weight:500}
+.pos-input input{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:var(--bg);color:var(--text)}
+
+/* Conic Controls */
+.conic-controls{display:none;gap:12px;margin-bottom:16px}
+.conic-controls.active{display:flex;flex-direction:column}
+
+/* Color Stops */
+.color-stops-section{}
+.color-stops-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.stop-count{font-size:12px;color:var(--text-muted);font-weight:500}
+.stop-actions{display:flex;gap:8px}
+.stop-btn{padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:var(--bg);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;color:var(--text-secondary)}
+.stop-btn:hover{border-color:var(--accent);color:var(--accent)}
+.stop-btn:disabled{opacity:0.4;cursor:not-allowed}
+.stop-btn.primary{background:var(--accent-gradient);color:#fff;border:none}
+.stop-btn.primary:hover{transform:translateY(-1px);box-shadow:0 2px 8px rgba(109,40,217,0.3)}
+
+/* Gradient Bar */
+.gradient-bar-wrap{position:relative;margin-bottom:16px}
+.gradient-bar{height:36px;border-radius:var(--radius-sm);border:1px solid var(--border);cursor:crosshair;position:relative;overflow:visible;background-image:linear-gradient(45deg,#ccc 25%,transparent 25%),linear-gradient(-45deg,#ccc 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#ccc 75%),linear-gradient(-45deg,transparent 75%,#ccc 75%);background-size:12px 12px;background-position:0 0,0 6px,6px -6px,-6px 0}
+.gradient-bar-fill{position:absolute;inset:0;border-radius:var(--radius-sm)}
+.gradient-stop{position:absolute;top:50%;transform:translate(-50%,-50%);width:18px;height:18px;border-radius:50%;border:3px solid #fff;cursor:grab;box-shadow:0 1px 4px rgba(0,0,0,0.3);z-index:5;transition:transform .1s}
+.gradient-stop:hover{transform:translate(-50%,-50%) scale(1.15)}
+.gradient-stop.dragging{cursor:grabbing;transform:translate(-50%,-50%) scale(1.25);z-index:10}
+.gradient-stop.active{box-shadow:0 0 0 2px var(--accent),0 1px 4px rgba(0,0,0,0.3)}
+
+/* Stop Editor */
+.stop-editor{display:flex;gap:12px;align-items:center;padding:12px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border)}
+.stop-editor .color-input-wrap{position:relative;width:44px;height:44px;flex-shrink:0}
+.stop-editor .color-input-wrap input[type="color"]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.stop-editor .color-preview{width:44px;height:44px;border-radius:10px;border:2px solid var(--border);display:block;cursor:pointer;transition:border-color .2s}
+.stop-editor .color-preview:hover{border-color:var(--accent)}
+.stop-editor-fields{flex:1;display:flex;flex-direction:column;gap:8px}
+.stop-field-row{display:flex;gap:10px;align-items:center}
+.stop-field-row label{font-size:12px;color:var(--text-muted);font-weight:500;min-width:40px}
+.stop-field-row input[type="range"]{flex:1;cursor:pointer}
+.stop-field-row input[type="text"]{flex:1;padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;font-family:monospace;background:var(--bg);color:var(--text)}
+.stop-field-row .pos-value{font-size:13px;font-weight:600;color:var(--text);min-width:42px;text-align:right;font-variant-numeric:tabular-nums}
+.stop-delete{padding:8px;border-radius:8px;border:1px solid var(--border);background:var(--bg);cursor:pointer;transition:all .2s;color:var(--text-muted);flex-shrink:0}
+.stop-delete:hover{border-color:#dc2626;color:#dc2626;background:#fef2f2}
+.stop-delete:disabled{opacity:0.3;cursor:not-allowed}
+
+/* Stops List */
+.stops-list{display:flex;flex-direction:column;gap:8px}
+.stop-item{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border);cursor:pointer;transition:all .15s}
+.stop-item:hover{border-color:var(--border-hover)}
+.stop-item.active{border-color:var(--accent);background:rgba(109,40,217,0.04)}
+.stop-color-dot{width:22px;height:22px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,0.2);flex-shrink:0}
+.stop-info{flex:1;display:flex;flex-direction:column}
+.stop-color-val{font-size:12px;font-family:monospace;color:var(--text);font-weight:600}
+.stop-pos-val{font-size:11px;color:var(--text-muted)}
+
+/* CSS Output */
+.css-output{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);position:relative;overflow:hidden}
+.css-output-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#0f172a;border-bottom:1px solid #1e293b}
+.css-output-title{font-size:11px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px}
+.css-copy-btn{padding:5px 12px;border-radius:6px;border:none;background:rgba(255,255,255,0.1);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;color:#e2e8f0}
+.css-copy-btn:hover{background:rgba(255,255,255,0.2)}
+.css-copy-btn.copied{background:var(--green);color:#fff}
+.css-output pre{padding:16px;font-size:13px;line-height:1.7;font-family:'JetBrains Mono','Fira Code','Cascadia Code',monospace;color:#e2e8f0;background:#0f172a;overflow-x:auto;white-space:pre-wrap;word-break:break-all;max-height:140px;overflow-y:auto}
+.css-output code{color:#a5b4fc}
+
+/* Random Button */
+.random-btn{width:100%;padding:14px;border-radius:var(--radius-sm);background:var(--accent-gradient);color:#fff;font-size:15px;font-weight:600;border:none;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.random-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(109,40,217,0.3)}
+.random-btn:active{transform:translateY(0)}
+
+/* Footer */
+.footer{border-top:1px solid var(--border);padding:32px;text-align:center;color:var(--text-muted);font-size:13px;margin-top:40px}
+
+/* Utility */
+.hidden{display:none!important}
+</style>
+<link rel="manifest" href="/manifest.json">
+</head>
+<body>
+
+<nav class="nav">
+ <div class="nav-inner">
+ <a href="../index.html" class="logo"><div class="logo-mark">H</div><span>AIHues</span></a>
+ <div class="nav-links">
+ <a href="../index.html">首页</a>
+ <a href="../tools.html">工具</a>
+ <a href="../index.html#games">游戏</a>
+ </div>
+ <div style="display:flex;gap:10px;align-items:center">
+ <button class="lang-btn" onclick="toggleLang()">中文</button>
+ <a href="../login.html" style="padding:8px 18px;border-radius:8px;background:linear-gradient(135deg,#6d28d9,#8b5cf6);color:#fff;font-size:14px;font-weight:600;text-decoration:none">登录</a>
+ </div>
+ </div>
+</nav>
+
+<div class="tool-page">
+
+ <header class="tool-header">
+ <span class="badge" data-zh="🔧 开发工具">🔧 Developer Tool</span>
+ <h1 data-zh="CSS 渐变生成器">CSS Gradient Generator</h1>
+ <p data-zh="可视化创建漂亮的 CSS 渐变 — 线性、径向、圆锥渐变，一键导出代码">Create beautiful CSS gradients visually — linear, radial, conic with one-click export</p>
+ <div class="tool-meta">
+ <span class="tag free" data-zh="🟢 免费使用">🟢 Free</span>
+ </div>
+ </header>
+
+ <div class="gradient-workspace">
+
+ <!-- Left: Preview + Presets -->
+ <div class="preview-section">
+
+   <!-- Preview Area -->
+   <div class="preview-area">
+     <div class="preview-canvas" id="previewCanvas"></div>
+     <div class="preview-info">
+       <span class="preview-dimensions">1200 x 360</span>
+     </div>
+   </div>
+
+   <!-- Presets -->
+   <div class="presets-section">
+     <div class="presets-header">
+       <span class="presets-title" data-zh="预设渐变">Presets</span>
+     </div>
+     <div class="presets-grid" id="presetsGrid"></div>
+   </div>
+
+ </div>
+
+ <!-- Right: Control Panel -->
+ <div class="control-panel">
+
+   <!-- Type Selector -->
+   <div class="panel">
+     <div class="panel-title" data-zh="渐变类型">Gradient Type</div>
+     <div class="type-tabs">
+       <button class="type-tab active" data-type="linear" data-zh="线性" onclick="setGradientType('linear')">Linear</button>
+       <button class="type-tab" data-type="radial" data-zh="径向" onclick="setGradientType('radial')">Radial</button>
+       <button class="type-tab" data-type="conic" data-zh="圆锥" onclick="setGradientType('conic')">Conic</button>
+     </div>
+
+     <!-- Linear Controls -->
+     <div class="angle-control" id="linearControls">
+       <div class="angle-wheel" id="angleWheel">
+         <div class="angle-wheel-inner" id="angleWheelInner">
+           <div class="angle-indicator" id="angleIndicator" style="transform:rotate(135deg)"></div>
+         </div>
+       </div>
+       <div style="flex:1">
+         <div class="angle-input-group">
+           <label class="angle-label" data-zh="角度">Angle</label>
+           <input type="range" id="angleSlider" min="0" max="360" value="135" oninput="updateAngle(this.value)">
+           <input type="number" id="angleInput" min="0" max="360" value="135" oninput="updateAngle(this.value)">
+           <span style="font-size:13px;color:var(--text-muted)">°</span>
+         </div>
+       </div>
+     </div>
+
+     <!-- Radial Controls -->
+     <div class="radial-controls" id="radialControls">
+       <div class="radial-shape">
+         <button class="radial-shape-btn active" data-shape="circle" data-zh="圆形" onclick="setRadialShape('circle')">Circle</button>
+         <button class="radial-shape-btn" data-shape="ellipse" data-zh="椭圆" onclick="setRadialShape('ellipse')">Ellipse</button>
+       </div>
+       <div class="radial-pos">
+         <div class="pos-input">
+           <label data-zh="中心 X">Center X</label>
+           <input type="range" id="radialX" min="0" max="100" value="50" oninput="updateRadialPos()">
+         </div>
+         <div class="pos-input">
+           <label data-zh="中心 Y">Center Y</label>
+           <input type="range" id="radialY" min="0" max="100" value="50" oninput="updateRadialPos()">
+         </div>
+       </div>
+     </div>
+
+     <!-- Conic Controls -->
+     <div class="conic-controls" id="conicControls">
+       <div class="angle-input-group">
+         <label class="angle-label" data-zh="起始角度">Start Angle</label>
+         <input type="range" id="conicAngleSlider" min="0" max="360" value="0" oninput="updateConicAngle(this.value)">
+         <input type="number" id="conicAngleInput" min="0" max="360" value="0" oninput="updateConicAngle(this.value)">
+         <span style="font-size:13px;color:var(--text-muted)">°</span>
+       </div>
+       <div class="radial-pos" style="margin-top:8px">
+         <div class="pos-input">
+           <label data-zh="中心 X">Center X</label>
+           <input type="range" id="conicX" min="0" max="100" value="50" oninput="updateConicCenter()">
+         </div>
+         <div class="pos-input">
+           <label data-zh="中心 Y">Center Y</label>
+           <input type="range" id="conicY" min="0" max="100" value="50" oninput="updateConicCenter()">
+         </div>
+       </div>
+     </div>
+   </div>
+
+   <!-- Color Stops -->
+   <div class="panel">
+     <div class="color-stops-header">
+       <span class="panel-title" style="margin:0" data-zh="色标">Color Stops</span>
+       <div class="stop-actions">
+         <span class="stop-count" id="stopCount">2 / 6</span>
+         <button class="stop-btn" id="addStopBtn" onclick="addStop()" data-zh="+ 添加">+ Add</button>
+       </div>
+     </div>
+
+     <!-- Gradient Bar -->
+     <div class="gradient-bar-wrap">
+       <div class="gradient-bar" id="gradientBar">
+         <div class="gradient-bar-fill" id="gradientBarFill"></div>
+       </div>
+     </div>
+
+     <!-- Active Stop Editor -->
+     <div class="stop-editor" id="stopEditor">
+       <div class="color-input-wrap">
+         <span class="color-preview" id="colorPreview"></span>
+         <input type="color" id="colorInput" oninput="updateActiveColor(this.value)">
+       </div>
+       <div class="stop-editor-fields">
+         <div class="stop-field-row">
+           <label data-zh="位置">Pos</label>
+           <input type="range" id="positionSlider" min="0" max="100" step="0.1" oninput="updateActivePosition(this.value)">
+           <span class="pos-value" id="positionValue">0%</span>
+         </div>
+         <div class="stop-field-row">
+           <label>HEX</label>
+           <input type="text" id="hexInput" maxlength="7" oninput="updateActiveHex(this.value)">
+         </div>
+       </div>
+       <button class="stop-delete" id="deleteStopBtn" onclick="deleteActiveStop()" title="Delete stop">✕</button>
+     </div>
+
+     <!-- Stops List -->
+     <div class="stops-list" id="stopsList"></div>
+   </div>
+
+   <!-- CSS Output -->
+   <div class="panel">
+     <div class="panel-title" data-zh="CSS 代码">CSS Code</div>
+     <div class="css-output">
+       <div class="css-output-header">
+         <span class="css-output-title">CSS</span>
+         <button class="css-copy-btn" id="cssCopyBtn" onclick="copyCSS()" data-zh="复制">Copy</button>
+       </div>
+       <pre><code id="cssOutputCode"></code></pre>
+     </div>
+   </div>
+
+   <!-- Random Button -->
+   <button class="random-btn" onclick="randomize()">
+     <span>🎲</span>
+     <span data-zh="随机生成">Randomize</span>
+   </button>
+
+ </div>
+ </div>
+
+</div>
+
+<footer class="footer">
+ <p>© 2025 AIHues. <span data-zh="免费工具，永久开放">Free tools, always open.</span></p>
+</footer>
+
+<script src="../js/i18n.js"></script>
+<script>
+// ═══════════════════════════════════════════
+// CSS Gradient Generator — State
+// ═══════════════════════════════════════════
+let state = {
+  type: 'linear',
+  angle: 135,
+  radialShape: 'circle',
+  radialX: 50,
+  radialY: 50,
+  conicAngle: 0,
+  conicX: 50,
+  conicY: 50,
+  stops: [
+    { id: 1, color: '#6d28d9', pos: 0 },
+    { id: 2, color: '#8b5cf6', pos: 100 }
+  ],
+  activeStopId: 1
+};
+
+let nextId = 3;
+let isDragging = false;
+let dragStopId = null;
+
+// ═══════════════════════════════════════════
+// 12 Preset Gradients
+// ═══════════════════════════════════════════
+const presets = [
+  { name: 'Purple Dream', stops: [{color:'#6d28d9',pos:0},{color:'#8b5cf6',pos:100}], type:'linear', angle:135 },
+  { name: 'Sunset', stops: [{color:'#ff6b6b',pos:0},{color:'#feca57',pos:100}], type:'linear', angle:135 },
+  { name: 'Ocean', stops: [{color:'#2193b0',pos:0},{color:'#6dd5ed',pos:100}], type:'linear', angle:135 },
+  { name: 'Forest', stops: [{color:'#11998e',pos:0},{color:'#38ef7d',pos:100}], type:'linear', angle:135 },
+  { name: 'Berry', stops: [{color:'#8e2de2',pos:0},{color:'#4a00e0',pos:100}], type:'linear', angle:135 },
+  { name: 'Citrus', stops: [{color:'#f12711',pos:0},{color:'#f5af19',pos:100}], type:'linear', angle:135 },
+  { name: 'Midnight', stops: [{color:'#232526',pos:0},{color:'#414345',pos:100}], type:'linear', angle:135 },
+  { name: 'Cotton Candy', stops: [{color:'#ffc3a0',pos:0},{color:'#ffafbd',pos:100}], type:'linear', angle:135 },
+  { name: 'Northern Lights', stops: [{color:'#00b09b',pos:0},{color:'#96c93d',pos:50},{color:'#00b09b',pos:100}], type:'linear', angle:90 },
+  { name: 'Mojave', stops: [{color:'#f4a261',pos:0},{color:'#e76f51',pos:50},{color:'#264653',pos:100}], type:'linear', angle:135 },
+  { name: 'Neon', stops: [{color:'#ff00cc',pos:0},{color:'#333399',pos:100}], type:'linear', angle:135 },
+  { name: 'Golden Hour', stops: [{color:'#fa709a',pos:0},{color:'#fee140',pos:100}], type:'linear', angle:135 }
+];
+
+// ═══════════════════════════════════════════
+// Init
+// ═══════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  renderPresets();
+  initGradientBarDrag();
+  initAngleWheel();
+  updateAll();
+});
+
+// ═══════════════════════════════════════════
+// Core: Build Gradient String
+// ═══════════════════════════════════════════
+function buildGradientString(stops, forCSS) {
+  const sorted = [...stops].sort((a,b) => a.pos - b.pos);
+  const stopsStr = sorted.map(s => `${s.color} ${s.pos}%`).join(', ');
+  
+  if (state.type === 'linear') {
+    return `linear-gradient(${state.angle}deg, ${stopsStr})`;
+  } else if (state.type === 'radial') {
+    const pos = `${state.radialX}% ${state.radialY}%`;
+    return `radial-gradient(${state.radialShape} at ${pos}, ${stopsStr})`;
+  } else {
+    const pos = `${state.conicX}% ${state.conicY}%`;
+    return `conic-gradient(from ${state.conicAngle}deg at ${pos}, ${stopsStr})`;
+  }
+}
+
+// ═══════════════════════════════════════════
+// Update Everything
+// ═══════════════════════════════════════════
+function updateAll() {
+  const sorted = [...state.stops].sort((a,b) => a.pos - b.pos);
+  const grad = buildGradientString(state.stops);
+  const gradBar = buildGradientString(sorted);
+
+  // Preview
+  document.getElementById('previewCanvas').style.background = grad;
+
+  // Gradient bar fill + stops
+  document.getElementById('gradientBarFill').style.background = gradBar;
+  renderGradientStops();
+
+  // CSS Output
+  const css = `background: ${grad};\nbackground: -webkit-${grad};`;
+  document.getElementById('cssOutputCode').textContent = css;
+
+  // Active stop editor
+  updateStopEditor();
+
+  // Stops list
+  renderStopsList();
+
+  // Button states
+  document.getElementById('addStopBtn').disabled = state.stops.length >= 6;
+  document.getElementById('deleteStopBtn').disabled = state.stops.length <= 2;
+  document.getElementById('stopCount').textContent = `${state.stops.length} / 6`;
+
+  // Angle wheel
+  document.getElementById('angleIndicator').style.transform = `rotate(${state.angle}deg)`;
+  document.getElementById('angleSlider').value = state.angle;
+  document.getElementById('angleInput').value = state.angle;
+}
+
+// ═══════════════════════════════════════════
+// Gradient Type
+// ═══════════════════════════════════════════
+function setGradientType(type) {
+  state.type = type;
+  document.querySelectorAll('.type-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.type === type);
+  });
+  
+  document.getElementById('linearControls').style.display = type === 'linear' ? 'flex' : 'none';
+  document.getElementById('radialControls').classList.toggle('active', type === 'radial');
+  document.getElementById('conicControls').classList.toggle('active', type === 'conic');
+  
+  // Hide angle control for non-linear
+  if (type !== 'linear') {
+    document.getElementById('linearControls').classList.add('hidden');
+  } else {
+    document.getElementById('linearControls').classList.remove('hidden');
+    document.getElementById('linearControls').style.display = 'flex';
+  }
+  
+  updateAll();
+}
+
+// ═══════════════════════════════════════════
+// Angle Controls
+// ═══════════════════════════════════════════
+function updateAngle(val) {
+  let v = parseInt(val) || 0;
+  v = Math.max(0, Math.min(360, v));
+  state.angle = v;
+  updateAll();
+}
+
+function initAngleWheel() {
+  const wheel = document.getElementById('angleWheelInner');
+  let dragging = false;
+
+  const getAngle = (e) => {
+    const rect = wheel.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const x = (e.touches ? e.touches[0].clientX : e.clientX) - cx;
+    const y = (e.touches ? e.touches[0].clientY : e.clientY) - cy;
+    let deg = Math.atan2(y, x) * (180 / Math.PI) + 90;
+    if (deg < 0) deg += 360;
+    return Math.round(deg);
+  };
+
+  wheel.addEventListener('mousedown', (e) => { dragging = true; updateAngle(getAngle(e)); });
+  wheel.addEventListener('touchstart', (e) => { dragging = true; updateAngle(getAngle(e)); }, {passive:true});
+  
+  document.addEventListener('mousemove', (e) => { if (dragging) { e.preventDefault(); updateAngle(getAngle(e)); } });
+  document.addEventListener('touchmove', (e) => { if (dragging) { updateAngle(getAngle(e)); } }, {passive:true});
+  
+  document.addEventListener('mouseup', () => { dragging = false; });
+  document.addEventListener('touchend', () => { dragging = false; });
+}
+
+// ═══════════════════════════════════════════
+// Radial Controls
+// ═══════════════════════════════════════════
+function setRadialShape(shape) {
+  state.radialShape = shape;
+  document.querySelectorAll('.radial-shape-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.shape === shape);
+  });
+  updateAll();
+}
+
+function updateRadialPos() {
+  state.radialX = parseInt(document.getElementById('radialX').value) || 50;
+  state.radialY = parseInt(document.getElementById('radialY').value) || 50;
+  updateAll();
+}
+
+// ═══════════════════════════════════════════
+// Conic Controls
+// ═══════════════════════════════════════════
+function updateConicAngle(val) {
+  let v = parseInt(val) || 0;
+  v = Math.max(0, Math.min(360, v));
+  state.conicAngle = v;
+  document.getElementById('conicAngleSlider').value = v;
+  document.getElementById('conicAngleInput').value = v;
+  updateAll();
+}
+
+function updateConicCenter() {
+  state.conicX = parseInt(document.getElementById('conicX').value) || 50;
+  state.conicY = parseInt(document.getElementById('conicY').value) || 50;
+  updateAll();
+}
+
+// ═══════════════════════════════════════════
+// Color Stops Management
+// ═══════════════════════════════════════════
+function addStop() {
+  if (state.stops.length >= 6) return;
+  const sorted = [...state.stops].sort((a,b) => a.pos - b.pos);
+  // Find largest gap
+  let maxGap = 0, gapPos = 50;
+  for (let i = 0; i < sorted.length - 1; i++) {
+    const gap = sorted[i+1].pos - sorted[i].pos;
+    if (gap > maxGap) {
+      maxGap = gap;
+      gapPos = sorted[i].pos + gap / 2;
+    }
+  }
+  // Interpolate color
+  const prev = sorted.find((s,i) => s.pos <= gapPos && sorted[i+1] && sorted[i+1].pos >= gapPos) || sorted[0];
+  const next = sorted.find(s => s.pos >= gapPos) || sorted[sorted.length-1];
+  const newStop = {
+    id: nextId++,
+    color: interpolateColor(prev.color, next.color, 0.5),
+    pos: Math.round(gapPos * 10) / 10
+  };
+  state.stops.push(newStop);
+  state.activeStopId = newStop.id;
+  updateAll();
+}
+
+function deleteActiveStop() {
+  if (state.stops.length <= 2) return;
+  const idx = state.stops.findIndex(s => s.id === state.activeStopId);
+  if (idx === -1) return;
+  state.stops.splice(idx, 1);
+  state.activeStopId = state.stops[0].id;
+  updateAll();
+}
+
+function interpolateColor(c1, c2, t) {
+  const hex = (x) => {
+    const h = Math.round(x).toString(16);
+    return h.length === 1 ? '0' + h : h;
+  };
+  const r1 = parseInt(c1.slice(1,3), 16), g1 = parseInt(c1.slice(3,5), 16), b1 = parseInt(c1.slice(5,7), 16);
+  const r2 = parseInt(c2.slice(1,3), 16), g2 = parseInt(c2.slice(3,5), 16), b2 = parseInt(c2.slice(5,7), 16);
+  const r = Math.round(r1 + (r2 - r1) * t);
+  const g = Math.round(g1 + (g2 - g1) * t);
+  const b = Math.round(b1 + (b2 - b1) * t);
+  return `#${hex(r)}${hex(g)}${hex(b)}`;
+}
+
+// ═══════════════════════════════════════════
+// Active Stop Updates
+// ═══════════════════════════════════════════
+function updateActiveColor(val) {
+  const stop = state.stops.find(s => s.id === state.activeStopId);
+  if (stop) { stop.color = val; updateAll(); }
+}
+
+function updateActivePosition(val) {
+  const stop = state.stops.find(s => s.id === state.activeStopId);
+  if (stop) { stop.pos = parseFloat(val); updateAll(); }
+}
+
+function updateActiveHex(val) {
+  if (/^#[0-9A-Fa-f]{6}$/.test(val)) {
+    const stop = state.stops.find(s => s.id === state.activeStopId);
+    if (stop) { stop.color = val; updateAll(); }
+  }
+}
+
+function setActiveStop(id) {
+  state.activeStopId = id;
+  updateAll();
+}
+
+function updateStopEditor() {
+  const stop = state.stops.find(s => s.id === state.activeStopId);
+  if (!stop) {
+    state.activeStopId = state.stops[0]?.id;
+    return;
+  }
+  document.getElementById('colorPreview').style.background = stop.color;
+  document.getElementById('colorInput').value = stop.color;
+  document.getElementById('positionSlider').value = stop.pos;
+  document.getElementById('positionValue').textContent = stop.pos + '%';
+  document.getElementById('hexInput').value = stop.color;
+}
+
+// ═══════════════════════════════════════════
+// Gradient Bar Drag
+// ═══════════════════════════════════════════
+function initGradientBarDrag() {
+  const bar = document.getElementById('gradientBar');
+
+  const getPos = (e) => {
+    const rect = bar.getBoundingClientRect();
+    const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+    return Math.max(0, Math.min(100, (x / rect.width) * 100));
+  };
+
+  const onDown = (e) => {
+    if (e.target.classList.contains('gradient-stop')) {
+      isDragging = true;
+      dragStopId = parseInt(e.target.dataset.id);
+      state.activeStopId = dragStopId;
+      e.target.classList.add('dragging');
+      updateAll();
+      return;
+    }
+  };
+
+  const onMove = (e) => {
+    if (!isDragging || dragStopId === null) return;
+    const pos = getPos(e);
+    const stop = state.stops.find(s => s.id === dragStopId);
+    if (stop) {
+      stop.pos = Math.round(pos * 10) / 10;
+      updateAll();
+    }
+  };
+
+  const onUp = () => {
+    if (dragStopId !== null) {
+      const el = document.querySelector(`.gradient-stop[data-id="${dragStopId}"]`);
+      if (el) el.classList.remove('dragging');
+    }
+    isDragging = false;
+    dragStopId = null;
+  };
+
+  bar.addEventListener('mousedown', onDown);
+  bar.addEventListener('touchstart', onDown, {passive:true});
+  document.addEventListener('mousemove', onMove);
+  document.addEventListener('touchmove', onMove, {passive:true});
+  document.addEventListener('mouseup', onUp);
+  document.addEventListener('touchend', onUp);
+}
+
+function renderGradientStops() {
+  const bar = document.getElementById('gradientBar');
+  // Remove old stops (keep fill)
+  bar.querySelectorAll('.gradient-stop').forEach(el => el.remove());
+  
+  state.stops.forEach(stop => {
+    const el = document.createElement('div');
+    el.className = 'gradient-stop' + (stop.id === state.activeStopId ? ' active' : '');
+    el.dataset.id = stop.id;
+    el.style.left = stop.pos + '%';
+    el.style.background = stop.color;
+    el.title = `${stop.color} at ${stop.pos}%`;
+    bar.appendChild(el);
+  });
+}
+
+function renderStopsList() {
+  const list = document.getElementById('stopsList');
+  list.innerHTML = '';
+  const sorted = [...state.stops].sort((a,b) => a.pos - b.pos);
+  
+  sorted.forEach(stop => {
+    const item = document.createElement('div');
+    item.className = 'stop-item' + (stop.id === state.activeStopId ? ' active' : '');
+    item.onclick = () => setActiveStop(stop.id);
+    item.innerHTML = `
+      <div class="stop-color-dot" style="background:${stop.color}"></div>
+      <div class="stop-info">
+        <span class="stop-color-val">${stop.color}</span>
+        <span class="stop-pos-val">${stop.pos}%</span>
+      </div>
+    `;
+    list.appendChild(item);
+  });
+}
+
+// ═══════════════════════════════════════════
+// Presets
+// ═══════════════════════════════════════════
+function renderPresets() {
+  const grid = document.getElementById('presetsGrid');
+  grid.innerHTML = '';
+  
+  presets.forEach((preset, idx) => {
+    const item = document.createElement('div');
+    item.className = 'preset-item';
+    const grad = preset.stops.map(s => `${s.color} ${s.pos}%`).join(', ');
+    item.style.background = `linear-gradient(135deg, ${grad})`;
+    item.title = preset.name;
+    item.onclick = () => applyPreset(idx);
+    grid.appendChild(item);
+  });
+}
+
+function applyPreset(idx) {
+  const p = presets[idx];
+  if (!p) return;
+  
+  state.type = p.type || 'linear';
+  state.angle = p.angle || 135;
+  state.stops = p.stops.map((s, i) => ({ id: i + 1, color: s.color, pos: s.pos }));
+  state.activeStopId = state.stops[0].id;
+  nextId = state.stops.length + 1;
+
+  // Update type tabs
+  document.querySelectorAll('.type-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.type === state.type);
+  });
+  
+  // Update controls visibility
+  document.getElementById('linearControls').style.display = state.type === 'linear' ? 'flex' : 'none';
+  if (state.type !== 'linear') document.getElementById('linearControls').classList.add('hidden');
+  else document.getElementById('linearControls').classList.remove('hidden');
+  document.getElementById('radialControls').classList.toggle('active', state.type === 'radial');
+  document.getElementById('conicControls').classList.toggle('active', state.type === 'conic');
+
+  document.querySelectorAll('.preset-item').forEach((el, i) => {
+    el.classList.toggle('active', i === idx);
+  });
+  
+  updateAll();
+}
+
+// ═══════════════════════════════════════════
+// Randomize
+// ═══════════════════════════════════════════
+function randomize() {
+  const types = ['linear', 'radial', 'conic'];
+  const rInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+  const rColor = () => '#' + Array.from({length:6}, () => '0123456789ABCDEF'[rInt(0,15)]).join('');
+  
+  state.type = types[rInt(0, 2)];
+  state.angle = rInt(0, 360);
+  state.conicAngle = rInt(0, 360);
+  
+  const numStops = rInt(2, 4);
+  state.stops = [];
+  for (let i = 0; i < numStops; i++) {
+    state.stops.push({
+      id: i + 1,
+      color: rColor(),
+      pos: i === 0 ? 0 : i === numStops - 1 ? 100 : rInt(20, 80)
+    });
+  }
+  state.stops.sort((a,b) => a.pos - b.pos);
+  // Ensure first is 0 and last is 100
+  state.stops[0].pos = 0;
+  state.stops[state.stops.length-1].pos = 100;
+  
+  state.activeStopId = state.stops[0].id;
+  nextId = numStops + 1;
+
+  // Update UI type tabs
+  document.querySelectorAll('.type-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.type === state.type);
+  });
+  document.getElementById('linearControls').style.display = state.type === 'linear' ? 'flex' : 'none';
+  if (state.type !== 'linear') document.getElementById('linearControls').classList.add('hidden');
+  else document.getElementById('linearControls').classList.remove('hidden');
+  document.getElementById('radialControls').classList.toggle('active', state.type === 'radial');
+  document.getElementById('conicControls').classList.toggle('active', state.type === 'conic');
+
+  document.querySelectorAll('.preset-item').forEach(el => el.classList.remove('active'));
+  
+  updateAll();
+}
+
+// ═══════════════════════════════════════════
+// Copy CSS
+// ═══════════════════════════════════════════
+function copyCSS() {
+  const code = document.getElementById('cssOutputCode').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    const btn = document.getElementById('cssCopyBtn');
+    const orig = btn.textContent;
+    btn.textContent = '✓ ' + (btn.dataset.zh && i18n.lang === 'zh' ? '已复制' : 'Copied');
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = orig;
+      btn.classList.remove('copied');
+      if (i18n) i18n.apply();
+    }, 1500);
+  });
+}
+
+// ═══════════════════════════════════════════
+// Language Toggle Bridge
+// ═══════════════════════════════════════════
+function toggleLang() {
+  if (typeof i18n !== 'undefined') i18n.toggle();
+}
+</script>
+
+<script>
+// Register Service Worker for offline support
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/sw.js')
+    .then(reg => console.log('SW registered:', reg.scope))
+    .catch(err => console.log('SW registration failed:', err));
+}
+</script>
+</body>
+</html>

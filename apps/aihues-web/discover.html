@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-zh="发现 — AIHues">Discover — AIHues</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#ffffff;--surface:#f8f9fb;--surface-hover:#f1f3f7;
+  --border:#e8ecf1;--border-hover:#d1d8e0;
+  --text:#0f172a;--text-secondary:#475569;--text-muted:#94a3b8;
+  --accent:#6d28d9;--accent-light:#8b5cf6;--accent-gradient:linear-gradient(135deg,#6d28d9,#8b5cf6);
+  --green:#059669;--green-bg:#ecfdf5;--blue:#2563eb;--blue-bg:#eff6ff;--orange:#ea580c;--orange-bg:#fff7ed;
+  --radius:14px;--radius-sm:10px;
+  --shadow:0 1px 3px rgba(0,0,0,0.04),0 4px 16px rgba(0,0,0,0.04);
+  --shadow-hover:0 4px 12px rgba(109,40,217,0.12),0 8px 32px rgba(0,0,0,0.08);
+}
+[data-theme="dark"] {
+  --bg:#0a0a12;--surface:#12121f;--surface-hover:#1a1a2e;
+  --border:#2a2a40;--border-hover:#3a3a55;
+  --text:#e8eaf0;--text-secondary:#9ca3af;--text-muted:#6b7280;
+  --accent:#8b5cf6;--accent-light:#a78bfa;
+  --accent-gradient:linear-gradient(135deg,#6d28d9,#8b5cf6);
+  --shadow:0 1px 3px rgba(0,0,0,0.2),0 4px 16px rgba(0,0,0,0.3);
+  --shadow-hover:0 4px 12px rgba(139,92,246,0.15),0 8px 32px rgba(0,0,0,0.4);
+}
+body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+::selection{background:var(--accent-light);color:#fff}
+
+/* ===== NAV ===== */
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1300px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:800;color:var(--text);letter-spacing:-1px;text-decoration:none}
+.logo-mark{width:34px;height:34px;border-radius:10px;background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:700;box-shadow:0 2px 8px rgba(109,40,217,0.3)}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{color:var(--text-secondary);font-size:14px;font-weight:500;transition:color .2s;text-decoration:none}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{padding:9px 20px;border-radius:10px;background:var(--accent-gradient);color:#fff;font-size:14px;font-weight:600;box-shadow:0 2px 8px rgba(109,40,217,0.25);transition:all .2s;display:flex;align-items:center;gap:6px;text-decoration:none}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(109,40,217,0.35)}
+.lang-btn{padding:8px 16px;border-radius:8px;background:var(--surface);border:1px solid var(--border);color:var(--text-secondary);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
+.lang-btn:hover{border-color:var(--accent-light);color:var(--accent)}
+.theme-btn{width:34px;height:34px;border-radius:8px;background:var(--surface);border:1px solid var(--border);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.theme-btn:hover{border-color:var(--accent-light)}
+[data-theme="dark"] .nav{background:rgba(10,10,18,0.92);border-bottom-color:var(--border)}
+
+/* ===== HERO ===== */
+.hero{text-align:center;padding:56px 32px 40px;background:var(--surface);border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(109,40,217,0.06) 0%,transparent 70%);border-radius:50%;pointer-events:none}
+.hero-inner{max-width:640px;margin:0 auto;position:relative}
+.hero h1{font-size:42px;font-weight:800;letter-spacing:-1.5px;margin-bottom:10px}
+.hero h1 .gradient{background:var(--accent-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:var(--text-secondary);font-size:16px;line-height:1.5}
+
+/* ===== SECTIONS ===== */
+.container{max-width:1300px;margin:0 auto;padding:48px 32px}
+.section-header{display:flex;align-items:center;gap:10px;margin-bottom:24px}
+.section-header h2{font-size:22px;font-weight:700}
+.section-header .section-icon{font-size:22px}
+.section-header .section-desc{font-size:14px;color:var(--text-muted);margin-left:auto}
+
+/* ===== TRENDING TOOLS ===== */
+.trending-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.trend-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:22px;transition:all .25s;cursor:pointer;text-decoration:none;color:inherit;display:block;position:relative}
+.trend-card:hover{transform:translateY(-3px);border-color:var(--accent-light);box-shadow:var(--shadow-hover)}
+.trend-card .icon{width:44px;height:44px;border-radius:11px;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:14px;border:1px solid var(--border);transition:all .25s}
+.trend-card:hover .icon{background:var(--accent-gradient);color:#fff;border-color:transparent}
+.trend-card h3{font-size:15px;font-weight:600;margin-bottom:5px}
+.trend-card p{font-size:13px;color:var(--text-secondary);line-height:1.45;margin-bottom:12px}
+.trend-card .tag{font-size:11px;font-weight:600;padding:3px 10px;border-radius:6px;background:var(--surface);color:var(--text-muted);display:inline-block}
+.trend-card .tag.dev{background:var(--blue-bg);color:var(--blue)}
+.trend-card .tag.writing{background:var(--green-bg);color:var(--green)}
+
+/* ===== NEW ARRIVALS ===== */
+.new-section{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.new-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.new-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:22px;transition:all .25s;cursor:pointer;text-decoration:none;color:inherit;display:block;position:relative}
+.new-card:hover{transform:translateY(-3px);border-color:var(--accent-light);box-shadow:var(--shadow-hover)}
+.badge-new{position:absolute;top:12px;right:12px;background:var(--accent-gradient);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;z-index:2}
+.new-card .icon{width:44px;height:44px;border-radius:11px;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:14px;border:1px solid var(--border);transition:all .25s}
+.new-card:hover .icon{background:var(--accent-gradient);color:#fff;border-color:transparent}
+.new-card h3{font-size:15px;font-weight:600;margin-bottom:5px}
+.new-card p{font-size:13px;color:var(--text-secondary);line-height:1.45;margin-bottom:12px}
+.new-card .tag{font-size:11px;font-weight:600;padding:3px 10px;border-radius:6px;background:var(--orange-bg);color:var(--orange);display:inline-block}
+
+/* ===== CATEGORIES ===== */
+.cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.cat-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:24px;cursor:pointer;transition:all .25s;text-decoration:none;color:inherit;display:block;text-align:center}
+.cat-card:hover{border-color:var(--accent-light);box-shadow:var(--shadow-hover);transform:translateY(-3px)}
+.cat-card .cat-icon{font-size:36px;margin-bottom:12px;display:block}
+.cat-card .cat-name{font-size:16px;font-weight:700;margin-bottom:4px}
+.cat-card .cat-count{font-size:13px;color:var(--text-muted);font-weight:500}
+.cat-card .cat-desc{font-size:12px;color:var(--text-secondary);margin-top:8px;line-height:1.4}
+
+/* ===== RANDOM PICK ===== */
+.random-section{text-align:center;padding:60px 32px}
+.random-section h2{font-size:24px;font-weight:700;margin-bottom:8px}
+.random-section p{color:var(--text-secondary);font-size:15px;margin-bottom:24px}
+.surprise-btn{display:inline-flex;align-items:center;gap:10px;padding:16px 36px;border-radius:var(--radius);background:var(--accent-gradient);color:#fff;font-size:17px;font-weight:700;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(109,40,217,0.3);transition:all .25s;letter-spacing:-0.3px}
+.surprise-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(109,40,217,0.4)}
+.surprise-btn:active{transform:translateY(0)}
+
+/* ===== FOOTER ===== */
+.footer{border-top:1px solid var(--border);padding:40px 32px;text-align:center;color:var(--text-muted);font-size:13px}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+  .hero h1{font-size:32px}
+  .nav-inner{padding:0 20px}
+  .container{padding:32px 20px}
+  .trending-grid{grid-template-columns:repeat(2,1fr);gap:12px}
+  .new-grid{grid-template-columns:repeat(2,1fr);gap:12px}
+  .cat-grid{grid-template-columns:repeat(2,1fr);gap:12px}
+  .section-header{flex-wrap:wrap}
+  .section-header .section-desc{margin-left:0;width:100%;margin-top:4px}
+  .trend-card,.new-card{padding:16px}
+  .trend-card .icon,.new-card .icon{width:38px;height:38px;font-size:18px}
+}
+@media(max-width:480px){
+  .trending-grid{grid-template-columns:1fr}
+  .new-grid{grid-template-columns:1fr}
+}
+</style>
+<link rel="stylesheet" href="css/themes.css">
+<link rel="manifest" href="/manifest.json">
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><div class="logo-mark">H</div><span data-zh="AIHues">AIHues</span></a>
+    <div class="nav-links">
+      <a href="index.html" data-zh="首页">Home</a>
+      <a href="tools.html" data-zh="工具">Tools</a>
+      <a href="index.html#games" data-zh="游戏">Games</a>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <div id="theme-selector" style="display:flex;gap:4px;align-items:center"></div>
+      <button class="lang-btn" onclick="toggleLang()" data-zh="En">中文</button>
+      <a href="javascript:void(0)" class="nav-cta" onclick="openLogin()"><span data-zh="登录">Login</span></a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <h1><span data-zh="发现">Discover</span> <span class="gradient" data-zh="工具">Tools</span></h1>
+    <p data-zh="探索热门工具和隐藏宝藏">Explore trending tools and hidden gems</p>
+  </div>
+</section>
+
+<!-- TRENDING TOOLS -->
+<section class="container">
+  <div class="section-header">
+    <span class="section-icon">🔥</span>
+    <h2 data-zh="热门工具">Trending Tools</h2>
+    <span class="section-desc" data-zh="社区中最受欢迎的工具">Most popular in the community</span>
+  </div>
+  <div class="trending-grid">
+    <a href="tools/json.html" class="trend-card">
+      <div class="icon">📋</div>
+      <h3>JSON Formatter</h3>
+      <p data-zh="格式化、校验和压缩 JSON">Format, validate &amp; compress JSON</p>
+      <span class="tag dev" data-zh="开发">Dev</span>
+    </a>
+    <a href="tools/regex.html" class="trend-card">
+      <div class="icon">🔍</div>
+      <h3>Regex Tester</h3>
+      <p data-zh="测试和调试正则表达式">Test and debug regular expressions</p>
+      <span class="tag dev" data-zh="开发">Dev</span>
+    </a>
+    <a href="tools/word-count.html" class="trend-card">
+      <div class="icon">📝</div>
+      <h3>Word Count</h3>
+      <p data-zh="实时字数统计和可读性分析">Real-time word count &amp; readability</p>
+      <span class="tag writing" data-zh="写作">Writing</span>
+    </a>
+    <a href="tools/qrcode.html" class="trend-card">
+      <div class="icon">📱</div>
+      <h3>QR Code</h3>
+      <p data-zh="为任意数据生成二维码">Generate QR codes for any data</p>
+      <span class="tag dev" data-zh="开发">Dev</span>
+    </a>
+    <a href="tools/password-gen.html" class="trend-card">
+      <div class="icon">🔑</div>
+      <h3>Password Gen</h3>
+      <p data-zh="强密码生成与熵值检查">Strong passwords with entropy check</p>
+      <span class="tag dev" data-zh="开发">Dev</span>
+    </a>
+    <a href="tools/markdown.html" class="trend-card">
+      <div class="icon">📄</div>
+      <h3>Markdown</h3>
+      <p data-zh="实时 Markdown 预览，支持 GFM">Live Markdown preview with GFM</p>
+      <span class="tag writing" data-zh="写作">Writing</span>
+    </a>
+    <a href="tools/jwt.html" class="trend-card">
+      <div class="icon">🔐</div>
+      <h3>JWT Parser</h3>
+      <p data-zh="解码和检查 JWT 令牌">Decode and inspect JWT tokens</p>
+      <span class="tag dev" data-zh="开发">Dev</span>
+    </a>
+    <a href="tools/x-post.html" class="trend-card">
+      <div class="icon">𝕏</div>
+      <h3>X Post</h3>
+      <p data-zh="多种风格的病毒式 X 推文">Viral X posts in multiple styles</p>
+      <span class="tag writing" data-zh="写作">Writing</span>
+    </a>
+  </div>
+</section>
+
+<!-- NEW ARRIVALS -->
+<section class="new-section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-icon">✨</span>
+      <h2 data-zh="新上架">New Arrivals</h2>
+      <span class="section-desc" data-zh="最近添加的工具">Recently added tools</span>
+    </div>
+    <div class="new-grid">
+      <a href="tools/chi-squared.html" class="new-card">
+        <span class="badge-new">NEW</span>
+        <div class="icon">📊</div>
+        <h3>Chi-Squared</h3>
+        <p data-zh="A/B 测试统计计算器">A/B test statistical calculator</p>
+        <span class="tag" data-zh="增长">Growth</span>
+      </a>
+      <a href="tools/css-gradient.html" class="new-card">
+        <span class="badge-new">NEW</span>
+        <div class="icon">🎨</div>
+        <h3>CSS Gradient</h3>
+        <p data-zh="可视化渐变构建器">Visual gradient builder</p>
+        <span class="tag" data-zh="开发">Dev</span>
+      </a>
+      <a href="tools/color-convert.html" class="new-card">
+        <span class="badge-new">NEW</span>
+        <div class="icon">🌈</div>
+        <h3>Color Convert</h3>
+        <p data-zh="HEX/RGB/HSL/CMYK 转换器">HEX/RGB/HSL/CMYK converter</p>
+        <span class="tag" data-zh="开发">Dev</span>
+      </a>
+      <a href="tools/ip-lookup.html" class="new-card">
+        <span class="badge-new">NEW</span>
+        <div class="icon">🌍</div>
+        <h3>IP Lookup</h3>
+        <p data-zh="IP 地理位置查询">IP geolocation lookup</p>
+        <span class="tag" data-zh="开发">Dev</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- BROWSE BY CATEGORY -->
+<section class="container">
+  <div class="section-header">
+    <span class="section-icon">📂</span>
+    <h2 data-zh="按分类浏览">Browse by Category</h2>
+    <span class="section-desc" data-zh="点击分类筛选工具">Click a category to filter</span>
+  </div>
+  <div class="cat-grid">
+    <a href="tools.html#developer" class="cat-card">
+      <span class="cat-icon">💻</span>
+      <div class="cat-name" data-zh="开发">Development</div>
+      <div class="cat-count">29 tools</div>
+      <div class="cat-desc" data-zh="JSON、JWT、正则、二维码、密码等">JSON, JWT, Regex, QR Code, Password...</div>
+    </a>
+    <a href="tools.html#writing" class="cat-card">
+      <span class="cat-icon">✍️</span>
+      <div class="cat-name" data-zh="写作">Writing</div>
+      <div class="cat-count">26 tools</div>
+      <div class="cat-desc" data-zh="字数统计、Markdown、营销文案等">Word Count, Markdown, Copywriting...</div>
+    </a>
+    <a href="tools.html#growth" class="cat-card">
+      <span class="cat-icon">📈</span>
+      <div class="cat-name" data-zh="增长">Growth</div>
+      <div class="cat-count">1 tool</div>
+      <div class="cat-desc" data-zh="A/B 测试、SEO、数据分析">A/B Test, SEO, Analytics</div>
+    </a>
+    <a href="tools.html#productivity" class="cat-card">
+      <span class="cat-icon">⚡</span>
+      <div class="cat-name" data-zh="效率">Productivity</div>
+      <div class="cat-count">1 tool</div>
+      <div class="cat-desc" data-zh="番茄钟、时间戳、单位转换">Pomodoro, Timestamp, Converter</div>
+    </a>
+  </div>
+</section>
+
+<!-- RANDOM PICK -->
+<section class="random-section">
+  <h2 data-zh="不知道用哪个？">Not sure what to use?</h2>
+  <p data-zh="让我们为你随机推荐一个工具">Let us pick a random tool for you</p>
+  <button class="surprise-btn" onclick="surpriseMe()">
+    <span>🎲</span>
+    <span data-zh="惊喜推荐">Surprise Me</span>
+  </button>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer" data-zh="© 2026 AIHues · 找到你的 AI vibe">
+  &copy; 2026 AIHues &middot; Find your AI vibe
+</footer>
+
+<!-- SCRIPTS -->
+<script src="js/i18n.js"></script>
+<script src="js/theme-system.js"></script>
+<script src="js/achievements.js"></script>
+
+<script>
+// ===== RANDOM TOOL REDIRECT =====
+const toolUrls = [
+  'tools/json.html',
+  'tools/regex.html',
+  'tools/word-count.html',
+  'tools/qrcode.html',
+  'tools/password-gen.html',
+  'tools/markdown.html',
+  'tools/jwt.html',
+  'tools/x-post.html',
+  'tools/chi-squared.html',
+  'tools/css-gradient.html',
+  'tools/color-convert.html',
+  'tools/ip-lookup.html',
+  'tools/uuid.html',
+  'tools/timestamp.html',
+  'tools/base64.html',
+  'tools/url-encode.html',
+  'tools/sha256.html',
+  'tools/html-entity.html',
+  'tools/diff.html',
+  'tools/csv-json.html',
+  'tools/lorem-ipsum.html',
+  'tools/cron-parser.html',
+  'tools/http-status.html',
+  'tools/unit-convert.html',
+  'tools/git-commit.html',
+  'tools/code-review.html',
+  'tools/blog-outline.html',
+  'tools/linkedin.html',
+  'tools/seo-title.html',
+  'tools/meta.html',
+  'tools/faq.html',
+  'tools/newsletter.html',
+  'tools/cold-email.html',
+  'tools/tagline.html',
+  'tools/ad-copy.html',
+  'tools/yt-script.html',
+  'tools/video-title.html',
+  'tools/readability.html',
+  'tools/title-case.html',
+  'tools/fullwidth.html',
+  'tools/pseudo.html',
+  'tools/sql.html',
+  'tools/shell.html',
+  'tools/curl-gen.html',
+  'tools/code-explain.html',
+  'tools/docs.html',
+  'tools/pr-desc.html',
+  'tools/changelog.html',
+  'tools/push.html',
+  'tools/tldr.html',
+  'tools/humanize.html',
+  'tools/alt-text.html',
+  'tools/lp-hero.html',
+  'tools/image-to-base64.html',
+  'tools/diff-pro.html',
+  'tools/base-convert.html',
+  'tools/pomodoro.html',
+  'tools/base64.html'
+];
+
+function surpriseMe() {
+  const btn = document.querySelector('.surprise-btn');
+  btn.style.transform = 'scale(0.95)';
+  setTimeout(() => {
+    btn.style.transform = '';
+    const random = toolUrls[Math.floor(Math.random() * toolUrls.length)];
+    window.location.href = random;
+  }, 150);
+}
+
+// ===== LOGIN MODAL (from index.html pattern) =====
+function openLogin() {
+  if (typeof showLoginModal === 'function') {
+    showLoginModal();
+  } else {
+    // fallback: redirect to login page
+    window.location.href = 'login.html';
+  }
+}
+
+// ===== ACHIEVEMENT: DISCOVER PAGE VISIT =====
+if (typeof checkAchievement === 'function') {
+  checkAchievement('visit_discover');
+}
+
+// ===== REGISTER SERVICE WORKER =====
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js')
+    .then(reg => console.log('SW registered:', reg.scope))
+    .catch(err => console.log('SW registration failed:', err));
+}
+</script>
+
+</body>
+</html>

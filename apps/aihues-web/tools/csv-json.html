@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-zh="CSV ↔ JSON / CSV 转 JSON">CSV ↔ JSON / CSV to JSON</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#ffffff;--surface:#f8f9fb;--surface-hover:#f1f3f7;
+      --border:#e8ecf1;--border-hover:#d1d8e0;
+      --text:#0f172a;--text-secondary:#475569;--text-muted:#94a3b8;
+      --accent:#6d28d9;--accent-light:#8b5cf6;--accent-gradient:linear-gradient(135deg,#6d28d9,#8b5cf6);
+      --green:#059669;--blue:#2563eb;--orange:#ea580c;
+      --radius:14px;--radius-sm:10px;
+      --shadow:0 1px 3px rgba(0,0,0,0.04),0 4px 16px rgba(0,0,0,0.04);
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+    /* ===== Navigation ===== */
+    .nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+    .nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between}
+    .logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);font-weight:700;font-size:18px}
+    .logo-mark{width:34px;height:34px;border-radius:8px;background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px}
+    .nav-links{display:flex;gap:28px;list-style:none;align-items:center}
+    .nav-links a{text-decoration:none;color:var(--text-secondary);font-size:14px;font-weight:500;transition:color .2s}
+    .nav-links a:hover{color:var(--accent)}
+    .nav-links a.active{color:var(--accent)}
+    .lang-btn{background:var(--surface);border:1px solid var(--border);padding:4px 12px;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;color:var(--text-secondary);transition:all .15s}
+    .lang-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+    /* ===== Tool Page ===== */
+    .tool-page{max-width:1200px;margin:0 auto;padding:32px 24px}
+    .tool-header{margin-bottom:28px}
+    .badge{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);padding:4px 12px;border-radius:100px;font-size:12px;color:var(--text-secondary);margin-bottom:12px}
+    .tool-header h1{font-size:28px;font-weight:700;margin-bottom:8px}
+    .tool-header p{color:var(--text-secondary);font-size:15px;line-height:1.6}
+    .tool-meta{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+    .tag{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:3px 10px;border-radius:6px;font-weight:500}
+    .tag.free{background:#ecfdf5;color:var(--green)}
+
+    /* ===== Tabs ===== */
+    .tabs{display:flex;gap:4px;padding:4px;background:var(--surface);border-radius:var(--radius-sm);margin-bottom:20px;width:fit-content;border:1px solid var(--border)}
+    .tab-btn{padding:8px 20px;border-radius:8px;font-size:13px;font-weight:600;border:none;background:transparent;color:var(--text-secondary);cursor:pointer;transition:all .15s;font-family:inherit}
+    .tab-btn.active{background:var(--accent-gradient);color:#fff;box-shadow:0 2px 8px rgba(109,40,217,0.25)}
+    .tab-btn:hover:not(.active){background:var(--surface-hover);color:var(--text)}
+
+    /* ===== Panels ===== */
+    .panels{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+    @media(max-width:900px){.panels{grid-template-columns:1fr}}
+
+    .panel{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:#fff;box-shadow:var(--shadow);display:flex;flex-direction:column}
+    .panel-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface);border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px}
+    .panel-title{font-size:13px;font-weight:600;color:var(--text-secondary);display:flex;align-items:center;gap:6px}
+    .panel-body{flex:1;position:relative;min-height:320px}
+    .panel-body textarea{width:100%;height:100%;min-height:320px;border:none;outline:none;padding:14px;font-family:'Consolas','Monaco','Courier New',monospace;font-size:13px;line-height:1.6;resize:vertical;color:var(--text);background:#fff;tab-size:2}
+
+    /* ===== Toolbar ===== */
+    .editor-toolbar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface);border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px}
+    .toolbar-title{font-size:13px;font-weight:600;color:var(--text-secondary);display:flex;align-items:center;gap:6px}
+    .toolbar-actions{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+
+    .btn{display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;border:1px solid transparent;transition:all .15s;font-family:inherit}
+    .btn-primary{background:var(--accent-gradient);color:#fff;border:none}
+    .btn-primary:hover{opacity:0.92;transform:translateY(-1px)}
+    .btn-secondary{background:#fff;border:1px solid var(--border);color:var(--text-secondary)}
+    .btn-secondary:hover{border-color:var(--border-hover);background:var(--surface-hover)}
+    .btn-danger{background:#fef2f2;border:1px solid #fecaca;color:#dc2626}
+    .btn-danger:hover{background:#fee2e2}
+    .btn-success{background:#ecfdf5;border:1px solid #a7f3d0;color:var(--green)}
+    .btn-success:hover{background:#d1fae5}
+
+    /* ===== Options Panel ===== */
+    .options-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 18px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:20px;align-items:center}
+    .option-group{display:flex;align-items:center;gap:8px}
+    .option-label{font-size:12px;font-weight:600;color:var(--text-secondary);white-space:nowrap}
+    .option-select,.option-input{padding:5px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:inherit;color:var(--text);background:#fff;outline:none}
+    .option-select:focus,.option-input:focus{border-color:var(--accent)}
+    .option-check{display:flex;align-items:center;gap:5px;cursor:pointer;font-size:12px;color:var(--text-secondary);font-weight:500}
+    .option-check input[type="checkbox"]{accent-color:var(--accent);cursor:pointer}
+
+    /* ===== Code Display ===== */
+    .code-display{width:100%;height:100%;min-height:320px;background:#1e1e1e;overflow:auto;padding:14px;font-family:'Consolas','Monaco','Courier New',monospace;font-size:13px;line-height:1.6;tab-size:2}
+    .code-content{white-space:pre;color:#d4d4d4}
+    .json-key{color:#9cdcfe}
+    .json-string{color:#ce9178}
+    .json-number{color:#b5cea8}
+    .json-boolean{color:#569cd6}
+    .json-null{color:#569cd6}
+
+    /* ===== Table Preview ===== */
+    .table-section{margin-top:24px}
+    .section-title{font-size:16px;font-weight:600;margin-bottom:12px;color:var(--text);display:flex;align-items:center;gap:8px}
+    .table-container{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:#fff;box-shadow:var(--shadow);max-height:480px;overflow:auto}
+    .preview-table{width:100%;border-collapse:collapse;font-size:13px}
+    .preview-table thead th{position:sticky;top:0;background:var(--surface);padding:10px 14px;text-align:left;font-weight:600;color:var(--text-secondary);border-bottom:1px solid var(--border);white-space:nowrap;user-select:none;cursor:pointer;z-index:10;font-size:12px}
+    .preview-table thead th:hover{background:var(--surface-hover)}
+    .preview-table thead th .sort-icon{margin-left:4px;font-size:10px;color:var(--text-muted);opacity:0.5}
+    .preview-table thead th.sorted .sort-icon{opacity:1;color:var(--accent)}
+    .preview-table tbody td{padding:8px 14px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:top;max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .preview-table tbody tr:hover td{background:var(--surface)}
+    .preview-table tbody tr:last-child td{border-bottom:none}
+    .preview-table tbody td.editing{padding:0}
+    .preview-table tbody td.editing input{width:100%;padding:8px 14px;border:none;outline:none;font-family:inherit;font-size:13px;background:#fff;box-shadow:inset 0 0 0 2px var(--accent)}
+
+    /* ===== File Upload ===== */
+    .upload-zone{border:2px dashed var(--border);border-radius:var(--radius);padding:28px;text-align:center;cursor:pointer;transition:all .15s;background:var(--surface);margin-top:20px}
+    .upload-zone:hover{border-color:var(--accent);background:rgba(109,40,217,0.02)}
+    .upload-zone.dragover{border-color:var(--accent);background:rgba(109,40,217,0.05)}
+    .upload-zone i{font-size:28px;color:var(--text-muted);margin-bottom:8px}
+    .upload-zone p{font-size:13px;color:var(--text-secondary);margin-bottom:4px}
+    .upload-zone .upload-hint{font-size:11px;color:var(--text-muted)}
+    #fileInput{display:none}
+
+    /* ===== Action Bar ===== */
+    .action-bar{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;align-items:center}
+
+    /* ===== Stats ===== */
+    .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
+    @media(max-width:600px){.stats-bar{grid-template-columns:repeat(2,1fr)}}
+    .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;text-align:center}
+    .stat-value{font-size:22px;font-weight:700;color:var(--accent);line-height:1.2}
+    .stat-label{font-size:12px;color:var(--text-muted);margin-top:4px}
+
+    /* ===== Error / Toast ===== */
+    .error-msg{background:#fef2f2;border:1px solid #fecaca;color:#991b1b;padding:10px 14px;border-radius:var(--radius-sm);font-size:13px;margin:12px 0;display:none;align-items:flex-start;gap:8px}
+    .error-msg.show{display:flex}
+    .error-msg i{margin-top:2px;flex-shrink:0}
+    .toast{position:fixed;bottom:24px;right:24px;background:var(--text);color:#fff;padding:10px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;z-index:200;opacity:0;transform:translateY(10px);transition:all .25s;pointer-events:none}
+    .toast.show{opacity:1;transform:translateY(0)}
+
+    .sample-btn{font-size:12px;color:var(--text-muted);background:none;border:none;cursor:pointer;text-decoration:underline;padding:0}
+    .sample-btn:hover{color:var(--accent)}
+
+    .empty-state{text-align:center;padding:40px 20px;color:var(--text-muted);font-size:13px}
+    .empty-state i{font-size:32px;margin-bottom:8px;display:block;color:var(--border)}
+
+    .tab-content{display:none}
+    .tab-content.active{display:block}
+
+    @media(max-width:768px){
+      .tool-page{padding:20px 16px}
+      .tool-header h1{font-size:22px}
+      .nav-links{gap:16px}
+      .nav-links a{font-size:13px}
+      .btn{padding:5px 10px;font-size:12px}
+      .stats-bar{grid-template-columns:repeat(2,1fr)}
+      .options-panel{flex-direction:column;align-items:flex-start;gap:12px}
+    }
+  </style>
+<link rel="manifest" href="/manifest.json">
+</head>
+<body>
+
+  <!-- ===== Navigation ===== -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="../index.html" class="logo">
+        <div class="logo-mark"><i class="fas fa-bolt"></i></div>
+        <span>AIHues</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../showcase.html" class="active">Tools</a></li>
+        <li><a href="../collection.html">Collection</a></li>
+        <li><a href="../pricing.html">Pricing</a></li>
+        <li><button class="lang-btn" onclick="toggleLang()">中文</button></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ===== Main Content ===== -->
+  <main class="tool-page">
+
+    <!-- Tool Header -->
+    <div class="tool-header">
+      <span class="badge"><i class="fas fa-wrench"></i> <span data-zh="开发工具">Developer Tool</span></span>
+      <h1 data-zh="CSV ↔ JSON / CSV 转 JSON">CSV ↔ JSON / CSV to JSON</h1>
+      <p data-zh="在 CSV 和 JSON 格式之间转换 — 粘贴、转换、复制，支持表格预览和编辑">Convert between CSV and JSON formats — paste, convert, copy with table preview and editing</p>
+      <div class="tool-meta">
+        <span class="tag free"><i class="fas fa-check-circle"></i> <span data-zh="免费使用">Free Forever</span></span>
+        <span class="tag" style="background:#ede9fe;color:var(--accent)"><i class="fas fa-signal"></i> L1</span>
+      </div>
+    </div>
+
+    <!-- Error Message -->
+    <div class="error-msg" id="errorMsg">
+      <i class="fas fa-circle-exclamation"></i>
+      <span id="errorText"></span>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('csv2json')" data-zh="CSV → JSON">CSV → JSON</button>
+      <button class="tab-btn" onclick="switchTab('json2csv')" data-zh="JSON → CSV">JSON → CSV</button>
+    </div>
+
+    <!-- ========== CSV → JSON Tab ========== -->
+    <div class="tab-content active" id="tab-csv2json">
+
+      <!-- Options -->
+      <div class="options-panel">
+        <div class="option-group">
+          <span class="option-label" data-zh="分隔符">Delimiter</span>
+          <select class="option-select" id="csvDelim">
+            <option value="auto" data-zh="自动检测">Auto Detect</option>
+            <option value=",">Comma (,)</option>
+            <option value="\t">Tab</option>
+            <option value=";">Semicolon (;)</option>
+            <option value="|">Pipe (|)</option>
+          </select>
+        </div>
+        <label class="option-check">
+          <input type="checkbox" id="firstRowHeader" checked>
+          <span data-zh="首行作为表头">First row as headers</span>
+        </label>
+        <div class="option-group">
+          <span class="option-label" data-zh="输出格式">Output</span>
+          <select class="option-select" id="jsonOutputMode">
+            <option value="objects" data-zh="对象数组">Array of Objects</option>
+            <option value="arrays" data-zh="二维数组">Array of Arrays</option>
+          </select>
+        </div>
+        <label class="option-check">
+          <input type="checkbox" id="prettyPrint" checked>
+          <span data-zh="格式化缩进">Pretty Print</span>
+        </label>
+      </div>
+
+      <!-- Panels -->
+      <div class="panels">
+        <!-- CSV Input -->
+        <div class="panel">
+          <div class="editor-toolbar">
+            <span class="panel-title"><i class="fas fa-file-csv"></i> <span data-zh="输入 CSV">Input CSV</span></span>
+            <div class="toolbar-actions">
+              <button class="sample-btn" onclick="loadSampleCSV()" data-zh="加载示例">Load Sample</button>
+            </div>
+          </div>
+          <div class="panel-body">
+            <textarea id="csvInput" placeholder="name,age,city&#10;Alice,30,New York&#10;Bob,25,Los Angeles&#10;Carol,28,Chicago" spellcheck="false"></textarea>
+          </div>
+        </div>
+        <!-- JSON Output -->
+        <div class="panel">
+          <div class="editor-toolbar">
+            <span class="panel-title"><i class="fas fa-file-code"></i> <span data-zh="输出 JSON">Output JSON</span></span>
+            <div class="toolbar-actions">
+              <button class="btn btn-secondary" style="padding:3px 10px;font-size:12px" onclick="copyOutput('json')">
+                <i class="fas fa-copy"></i> <span data-zh="复制">Copy</span>
+              </button>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="code-display" id="jsonCodeDisplay"><div class="code-content" id="jsonOutputDisplay" data-empty="true">// JSON output will appear here</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="action-bar">
+        <button class="btn btn-primary" onclick="convertCSVtoJSON()"><i class="fas fa-arrow-right"></i> <span data-zh="转换为 JSON">Convert to JSON</span></button>
+        <button class="btn btn-success" onclick="downloadFile('json')"><i class="fas fa-download"></i> <span data-zh="下载 JSON">Download JSON</span></button>
+        <button class="btn btn-danger" onclick="clearInput('csv')"><i class="fas fa-trash"></i> <span data-zh="清空">Clear</span></button>
+      </div>
+    </div>
+
+    <!-- ========== JSON → CSV Tab ========== -->
+    <div class="tab-content" id="tab-json2csv">
+
+      <!-- Options -->
+      <div class="options-panel">
+        <div class="option-group">
+          <span class="option-label" data-zh="分隔符">Delimiter</span>
+          <select class="option-select" id="csvOutDelim">
+            <option value=",">Comma (,)</option>
+            <option value="\t">Tab</option>
+            <option value=";">Semicolon (;)</option>
+            <option value="|">Pipe (|)</option>
+          </select>
+        </div>
+        <label class="option-check">
+          <input type="checkbox" id="includeHeader" checked>
+          <span data-zh="包含表头">Include Header</span>
+        </label>
+      </div>
+
+      <!-- Panels -->
+      <div class="panels">
+        <!-- JSON Input -->
+        <div class="panel">
+          <div class="editor-toolbar">
+            <span class="panel-title"><i class="fas fa-file-code"></i> <span data-zh="输入 JSON">Input JSON</span></span>
+            <div class="toolbar-actions">
+              <button class="sample-btn" onclick="loadSampleJSON()" data-zh="加载示例">Load Sample</button>
+            </div>
+          </div>
+          <div class="panel-body">
+            <textarea id="jsonInput" placeholder='[&#10;  {"name":"Alice","age":30,"city":"New York"},&#10;  {"name":"Bob","age":25,"city":"Los Angeles"}&#10;]' spellcheck="false"></textarea>
+          </div>
+        </div>
+        <!-- CSV Output -->
+        <div class="panel">
+          <div class="editor-toolbar">
+            <span class="panel-title"><i class="fas fa-file-csv"></i> <span data-zh="输出 CSV">Output CSV</span></span>
+            <div class="toolbar-actions">
+              <button class="btn btn-secondary" style="padding:3px 10px;font-size:12px" onclick="copyOutput('csv')">
+                <i class="fas fa-copy"></i> <span data-zh="复制">Copy</span>
+              </button>
+            </div>
+          </div>
+          <div class="panel-body">
+            <textarea id="csvOutput" placeholder="// CSV output will appear here" style="background:#1e1e1e;color:#d4d4d4"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="action-bar">
+        <button class="btn btn-primary" onclick="convertJSONtoCSV()"><i class="fas fa-arrow-right"></i> <span data-zh="转换为 CSV">Convert to CSV</span></button>
+        <button class="btn btn-success" onclick="downloadFile('csv')"><i class="fas fa-download"></i> <span data-zh="下载 CSV">Download CSV</span></button>
+        <button class="btn btn-danger" onclick="clearInput('jsoninput')"><i class="fas fa-trash"></i> <span data-zh="清空">Clear</span></button>
+      </div>
+    </div>
+
+    <!-- ===== File Upload ===== -->
+    <div class="section-title"><i class="fas fa-cloud-upload-alt" style="color:var(--accent)"></i> <span data-zh="文件上传">File Upload</span></div>
+    <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+      <i class="fas fa-cloud-upload-alt"></i>
+      <p data-zh="点击或拖拽上传 .csv 或 .json 文件">Click or drag & drop a .csv or .json file</p>
+      <p class="upload-hint" data-zh="支持 .csv 和 .json 格式">Supports .csv and .json formats</p>
+    </div>
+    <input type="file" id="fileInput" accept=".csv,.json" onchange="handleFileUpload(event)">
+
+    <!-- ===== Table Preview ===== -->
+    <div class="table-section" id="tableSection" style="display:none">
+      <div class="section-title" style="display:flex;justify-content:space-between;align-items:center">
+        <span><i class="fas fa-table" style="color:var(--accent)"></i> <span data-zh="表格预览">Table Preview</span></span>
+        <span style="font-size:12px;color:var(--text-muted)" data-zh="点击表头排序，点击单元格编辑">Click headers to sort, click cells to edit</span>
+      </div>
+      <div class="table-container" id="tableContainer">
+        <table class="preview-table" id="previewTable">
+          <thead id="tableHead"></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+      <div class="action-bar">
+        <button class="btn btn-secondary" onclick="regenerateFromTable()">
+          <i class="fas fa-sync"></i> <span data-zh="从表格重新生成">Regenerate from Table</span>
+        </button>
+        <button class="btn btn-success" onclick="downloadFile(currentTab==='csv2json'?'json':'csv')">
+          <i class="fas fa-download"></i> <span data-zh="下载当前结果">Download Result</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== Stats ===== -->
+    <div class="stats-bar" id="statsBar" style="display:none">
+      <div class="stat-card">
+        <div class="stat-value" id="statRows">0</div>
+        <div class="stat-label" data-zh="行数">Rows</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statCols">0</div>
+        <div class="stat-label" data-zh="列数">Columns</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statCells">0</div>
+        <div class="stat-label" data-zh="单元格">Cells</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statSize">0</div>
+        <div class="stat-label">Bytes</div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script src="../js/i18n.js"></script>
+  <script>
+    /* ===== DOM References ===== */
+    const $ = id => document.getElementById(id);
+    const csvInput = $('csvInput');
+    const jsonInput = $('jsonInput');
+    const csvOutput = $('csvOutput');
+    const jsonOutputDisplay = $('jsonOutputDisplay');
+    const errorMsg = $('errorMsg');
+    const errorText = $('errorText');
+    const toast = $('toast');
+    const tableSection = $('tableSection');
+    const tableHead = $('tableHead');
+    const tableBody = $('tableBody');
+    const statsBar = $('statsBar');
+
+    let currentTab = 'csv2json';
+    let currentTableData = [];
+    let currentHeaders = [];
+    let sortCol = -1;
+    let sortAsc = true;
+
+    /* ===== Tab Switching ===== */
+    function switchTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      event.target.classList.add('active');
+      $(tab === 'csv2json' ? 'tab-csv2json' : 'tab-json2csv').classList.add('active');
+      hideError();
+    }
+
+    /* ===== Toast ===== */
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+
+    /* ===== Error ===== */
+    function showError(msg) {
+      errorMsg.classList.add('show');
+      errorText.textContent = msg;
+      statsBar.style.display = 'none';
+    }
+    function hideError() {
+      errorMsg.classList.remove('show');
+    }
+
+    /* ===== Detect Delimiter ===== */
+    function detectDelimiter(text) {
+      const firstLine = text.split('\n')[0] || '';
+      const delims = [',', '\t', ';', '|'];
+      let best = ',';
+      let maxCount = 0;
+      for (const d of delims) {
+        const count = firstLine.split(d).length - 1;
+        if (count > maxCount) { maxCount = count; best = d; }
+      }
+      return best;
+    }
+
+    /* ===== Parse CSV ===== */
+    function parseCSV(text, delimiter) {
+      if (!text.trim()) return { headers: [], rows: [] };
+      if (delimiter === 'auto') delimiter = detectDelimiter(text);
+      const lines = text.trim().split('\n').filter(l => l.trim() !== '');
+      if (lines.length === 0) return { headers: [], rows: [] };
+
+      const parseLine = (line) => {
+        const result = [];
+        let current = '';
+        let inQuotes = false;
+        for (let i = 0; i < line.length; i++) {
+          const c = line[i];
+          if (inQuotes) {
+            if (c === '"') {
+              if (i + 1 < line.length && line[i + 1] === '"') {
+                current += '"'; i++;
+              } else { inQuotes = false; }
+            } else { current += c; }
+          } else {
+            if (c === '"') { inQuotes = true; }
+            else if (c === delimiter) { result.push(current); current = ''; }
+            else { current += c; }
+          }
+        }
+        result.push(current);
+        return result;
+      };
+
+      const allRows = lines.map(parseLine);
+      const headers = allRows[0] || [];
+      const rows = allRows.slice(1);
+      return { headers: headers.map(h => h.trim()), rows };
+    }
+
+    /* ===== JSON to CSV ===== */
+    function jsonToCSV(data, delimiter, includeHeader) {
+      if (!Array.isArray(data) || data.length === 0) return '';
+      const headers = [];
+      data.forEach(obj => {
+        Object.keys(obj).forEach(k => { if (!headers.includes(k)) headers.push(k); });
+      });
+      const escapeField = (val) => {
+        if (val === null || val === undefined) return '';
+        const str = String(val);
+        if (str.includes(delimiter) || str.includes('"') || str.includes('\n')) {
+          return '"' + str.replace(/"/g, '""') + '"';
+        }
+        return str;
+      };
+      const rows = data.map(obj => headers.map(h => escapeField(obj[h])).join(delimiter));
+      if (includeHeader) {
+        return [headers.map(h => escapeField(h)).join(delimiter), ...rows].join('\n');
+      }
+      return rows.join('\n');
+    }
+
+    /* ===== Highlight JSON ===== */
+    function syntaxHighlightJSON(json) {
+      if (!json) return '';
+      return json
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/("(?:[^"\\]|\\.)*")(\s*:\s*)/g, '<span class="json-key">$1</span>$2')
+        .replace(/("(?:[^"\\]|\\.)*")/g, '<span class="json-string">$1</span>')
+        .replace(/\b(true|false)\b/g, '<span class="json-boolean">$1</span>')
+        .replace(/\b(null)\b/g, '<span class="json-null">null</span>')
+        .replace(/\b(\d+(?:\.\d+)?)\b/g, '<span class="json-number">$1</span>');
+    }
+
+    /* ===== Convert CSV → JSON ===== */
+    function convertCSVtoJSON() {
+      hideError();
+      const text = csvInput.value.trim();
+      if (!text) { showError('Please enter CSV data'); return; }
+
+      try {
+        let delimiter = $('csvDelim').value;
+        if (delimiter === 'auto') delimiter = detectDelimiter(text);
+        const { headers, rows } = parseCSV(text, delimiter);
+        const useHeader = $('firstRowHeader').checked;
+        const mode = $('jsonOutputMode').value;
+        const pretty = $('prettyPrint').checked;
+
+        let result;
+        if (mode === 'objects') {
+          const fieldNames = useHeader ? headers : headers.map((_, i) => 'col' + (i + 1));
+          result = rows.map(row => {
+            const obj = {};
+            fieldNames.forEach((h, i) => { obj[h] = row[i] !== undefined ? row[i] : ''; });
+            return obj;
+          });
+        } else {
+          result = useHeader ? [headers, ...rows] : rows;
+        }
+
+        const jsonStr = pretty ? JSON.stringify(result, null, 2) : JSON.stringify(result);
+        jsonOutputDisplay.innerHTML = syntaxHighlightJSON(jsonStr);
+        jsonOutputDisplay.dataset.empty = 'false';
+
+        // Update table
+        const tableHeaders = useHeader ? headers : headers.map((_, i) => 'col' + (i + 1));
+        const tableRows = rows.map(r => {
+          const obj = {};
+          tableHeaders.forEach((h, i) => { obj[h] = r[i] !== undefined ? r[i] : ''; });
+          return obj;
+        });
+        renderTable(tableHeaders, tableRows);
+        updateStats(rows.length, tableHeaders.length, rows.length * tableHeaders.length, new Blob([jsonStr]).size);
+
+        showToast(i18n.t('Converted to JSON!', '已转换为 JSON！'));
+      } catch (e) {
+        showError('CSV parse error: ' + e.message);
+      }
+    }
+
+    /* ===== Convert JSON → CSV ===== */
+    function convertJSONtoCSV() {
+      hideError();
+      const text = jsonInput.value.trim();
+      if (!text) { showError('Please enter JSON data'); return; }
+
+      try {
+        let data = JSON.parse(text);
+        if (!Array.isArray(data)) {
+          if (typeof data === 'object' && data !== null) data = [data];
+          else { showError('JSON must be an array of objects'); return; }
+        }
+        if (data.length === 0) { showError('Empty array'); return; }
+
+        let delimiter = $('csvOutDelim').value;
+        if (delimiter === '\\t') delimiter = '\t';
+        const includeHeader = $('includeHeader').checked;
+
+        const csvStr = jsonToCSV(data, delimiter, includeHeader);
+        csvOutput.value = csvStr;
+
+        // Update table
+        const headers = [];
+        data.forEach(obj => Object.keys(obj).forEach(k => { if (!headers.includes(k)) headers.push(k); }));
+        renderTable(headers, data);
+        const lines = csvStr.split('\n').filter(l => l.trim());
+        updateStats(lines.length - (includeHeader ? 1 : 0), headers.length, data.length * headers.length, new Blob([csvStr]).size);
+
+        showToast(i18n.t('Converted to CSV!', '已转换为 CSV！'));
+      } catch (e) {
+        showError('JSON parse error: ' + e.message);
+      }
+    }
+
+    /* ===== Render Table ===== */
+    function renderTable(headers, rows) {
+      currentHeaders = headers;
+      currentTableData = rows.map(r => ({...r}));
+      sortCol = -1;
+
+      if (!headers.length || !rows.length) {
+        tableSection.style.display = 'none';
+        return;
+      }
+
+      // Build header
+      let thHTML = '<tr>' + headers.map((h, i) =>
+        `<th onclick="sortTable(${i})" class="${sortCol === i ? 'sorted' : ''}">${escapeHTML(h)}<i class="fas fa-sort${sortCol === i ? (sortAsc ? '-up' : '-down') : ''} sort-icon"></i></th>`
+      ).join('') + '</tr>';
+      tableHead.innerHTML = thHTML;
+
+      buildTableBody();
+      tableSection.style.display = 'block';
+    }
+
+    function buildTableBody() {
+      const rows = currentTableData;
+      if (!rows.length) { tableBody.innerHTML = ''; return; }
+
+      let tbHTML = '';
+      rows.forEach((row, ri) => {
+        tbHTML += '<tr>';
+        currentHeaders.forEach(h => {
+          const val = row[h] !== undefined && row[h] !== null ? String(row[h]) : '';
+          tbHTML += `<td onclick="editCell(${ri},'${h}',this)">${escapeHTML(val)}</td>`;
+        });
+        tbHTML += '</tr>';
+      });
+      tableBody.innerHTML = tbHTML;
+    }
+
+    function escapeHTML(str) {
+      const d = document.createElement('div');
+      d.textContent = str;
+      return d.innerHTML;
+    }
+
+    /* ===== Sort Table ===== */
+    function sortTable(colIndex) {
+      const key = currentHeaders[colIndex];
+      if (sortCol === colIndex) sortAsc = !sortAsc;
+      else { sortCol = colIndex; sortAsc = true; }
+
+      currentTableData.sort((a, b) => {
+        let av = a[key] || '';
+        let bv = b[key] || '';
+        const an = parseFloat(av);
+        const bn = parseFloat(bv);
+        if (!isNaN(an) && !isNaN(bn) && String(av).match(/^-?\d+(\.\d+)?$/) && String(bv).match(/^-?\d+(\.\d+)?$/)) {
+          return sortAsc ? an - bn : bn - an;
+        }
+        return sortAsc ? String(av).localeCompare(String(bv)) : String(bv).localeCompare(String(av));
+      });
+
+      // Update header
+      const ths = tableHead.querySelectorAll('th');
+      ths.forEach((th, i) => {
+        th.classList.toggle('sorted', i === sortCol);
+        const icon = th.querySelector('.sort-icon');
+        icon.className = `fas fa-sort${i === sortCol ? (sortAsc ? '-up' : '-down') : ''} sort-icon`;
+      });
+
+      buildTableBody();
+    }
+
+    /* ===== Edit Cell ===== */
+    function editCell(rowIdx, colKey, td) {
+      if (td.classList.contains('editing')) return;
+      const currentVal = currentTableData[rowIdx][colKey] !== undefined ? String(currentTableData[rowIdx][colKey]) : '';
+      td.classList.add('editing');
+      td.innerHTML = `<input type="text" value="${escapeHTML(currentVal)}" onblur="saveCell(${rowIdx},'${colKey}',this)" onkeydown="if(event.key==='Enter')this.blur();if(event.key==='Escape'){this.value='${escapeHTML(currentVal)}';this.blur()}">`;
+      const input = td.querySelector('input');
+      input.focus();
+      input.select();
+    }
+
+    function saveCell(rowIdx, colKey, input) {
+      const td = input.parentElement;
+      currentTableData[rowIdx][colKey] = input.value;
+      td.classList.remove('editing');
+      td.textContent = input.value;
+      td.onclick = function() { editCell(rowIdx, colKey, td); };
+    }
+
+    /* ===== Regenerate from Table ===== */
+    function regenerateFromTable() {
+      if (!currentHeaders.length) return;
+
+      if (currentTab === 'csv2json') {
+        const mode = $('jsonOutputMode').value;
+        const pretty = $('prettyPrint').checked;
+        let result;
+        if (mode === 'objects') {
+          result = currentTableData.map(row => {
+            const obj = {};
+            currentHeaders.forEach(h => { obj[h] = row[h] !== undefined ? row[h] : ''; });
+            return obj;
+          });
+        } else {
+          result = [currentHeaders, ...currentTableData.map(r => currentHeaders.map(h => r[h] || ''))];
+        }
+        const jsonStr = pretty ? JSON.stringify(result, null, 2) : JSON.stringify(result);
+        jsonOutputDisplay.innerHTML = syntaxHighlightJSON(jsonStr);
+        showToast(i18n.t('Regenerated JSON from table', '已从表格重新生成 JSON'));
+      } else {
+        let delimiter = $('csvOutDelim').value;
+        if (delimiter === '\\t') delimiter = '\t';
+        const includeHeader = $('includeHeader').checked;
+        const csvStr = jsonToCSV(currentTableData, delimiter, includeHeader);
+        csvOutput.value = csvStr;
+        showToast(i18n.t('Regenerated CSV from table', '已从表格重新生成 CSV'));
+      }
+    }
+
+    /* ===== Update Stats ===== */
+    function updateStats(rows, cols, cells, bytes) {
+      $('statRows').textContent = rows;
+      $('statCols').textContent = cols;
+      $('statCells').textContent = cells;
+      $('statSize').textContent = bytes < 1024 ? bytes : (bytes / 1024).toFixed(1) + 'K';
+      statsBar.style.display = 'grid';
+    }
+
+    /* ===== Copy Output ===== */
+    function copyOutput(type) {
+      let text;
+      if (type === 'json') {
+        if (jsonOutputDisplay.dataset.empty === 'true') { showToast('Nothing to copy'); return; }
+        const el = document.createElement('div');
+        el.innerHTML = jsonOutputDisplay.innerHTML;
+        text = el.textContent;
+      } else {
+        text = csvOutput.value;
+        if (!text) { showToast('Nothing to copy'); return; }
+      }
+      navigator.clipboard.writeText(text).then(() => showToast(i18n.t('Copied!', '已复制！')));
+    }
+
+    /* ===== Clear ===== */
+    function clearInput(which) {
+      if (which === 'csv') csvInput.value = '';
+      else if (which === 'jsoninput') jsonInput.value = '';
+      jsonOutputDisplay.innerHTML = '// JSON output will appear here';
+      jsonOutputDisplay.dataset.empty = 'true';
+      csvOutput.value = '';
+      tableSection.style.display = 'none';
+      statsBar.style.display = 'none';
+      hideError();
+    }
+
+    /* ===== Download ===== */
+    function downloadFile(type) {
+      let content, filename, mime;
+      if (type === 'json') {
+        if (jsonOutputDisplay.dataset.empty === 'true') { showToast('Nothing to download'); return; }
+        const el = document.createElement('div');
+        el.innerHTML = jsonOutputDisplay.innerHTML;
+        content = el.textContent;
+        filename = 'data.json';
+        mime = 'application/json';
+      } else {
+        content = csvOutput.value;
+        if (!content) { showToast('Nothing to download'); return; }
+        filename = 'data.csv';
+        mime = 'text/csv';
+      }
+      const blob = new Blob([content], { type: mime });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast(i18n.t('Downloaded!', '已下载！'));
+    }
+
+    /* ===== File Upload ===== */
+    function handleFileUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const content = e.target.result;
+        if (file.name.endsWith('.csv')) {
+          switchTab('csv2json');
+          csvInput.value = content;
+          // Update tab UI
+          document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('.tab-btn')[0].classList.add('active');
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+          $('tab-csv2json').classList.add('active');
+          convertCSVtoJSON();
+          showToast(i18n.t('CSV file loaded', 'CSV 文件已加载'));
+        } else if (file.name.endsWith('.json')) {
+          switchTab('json2csv');
+          jsonInput.value = content;
+          // Update tab UI
+          document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('.tab-btn')[1].classList.add('active');
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+          $('tab-json2csv').classList.add('active');
+          convertJSONtoCSV();
+          showToast(i18n.t('JSON file loaded', 'JSON 文件已加载'));
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = '';
+    }
+
+    /* ===== Drag & Drop ===== */
+    const uploadZone = $('uploadZone');
+    uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+    uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+    uploadZone.addEventListener('drop', e => {
+      e.preventDefault();
+      uploadZone.classList.remove('dragover');
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        const fakeEvent = { target: { files: files } };
+        handleFileUpload(fakeEvent);
+      }
+    });
+
+    /* ===== Sample Data ===== */
+    function loadSampleCSV() {
+      csvInput.value = `Name,Age,Department,City,Salary
+Alice Johnson,32,Engineering,New York,95000
+Bob Smith,28,Marketing,Los Angeles,72000
+Carol White,35,Engineering,Chicago,105000
+David Brown,29,Sales,Houston,68000
+Eva Green,41,Marketing,New York,88000
+Frank Lee,26,Engineering,San Francisco,98000`;
+      convertCSVtoJSON();
+    }
+
+    function loadSampleJSON() {
+      jsonInput.value = JSON.stringify([
+        { name: "Alice Johnson", age: 32, department: "Engineering", city: "New York", salary: 95000 },
+        { name: "Bob Smith", age: 28, department: "Marketing", city: "Los Angeles", salary: 72000 },
+        { name: "Carol White", age: 35, department: "Engineering", city: "Chicago", salary: 105000 },
+        { name: "David Brown", age: 29, department: "Sales", city: "Houston", salary: 68000 },
+        { name: "Eva Green", age: 41, department: "Marketing", city: "New York", salary: 88000 }
+      ], null, 2);
+      convertJSONtoCSV();
+    }
+
+    /* ===== Auto-convert on paste ===== */
+    csvInput.addEventListener('paste', () => {
+      setTimeout(() => { if (csvInput.value.trim()) convertCSVtoJSON(); }, 50);
+    });
+    jsonInput.addEventListener('paste', () => {
+      setTimeout(() => { if (jsonInput.value.trim()) convertJSONtoCSV(); }, 50);
+    });
+
+    /* ===== Init ===== */
+    hideError();
+  </script>
+
+
+<script>
+// Register Service Worker for offline support
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/sw.js')
+    .then(reg => console.log('SW registered:', reg.scope))
+    .catch(err => console.log('SW registration failed:', err));
+}
+</script>
+</body>
+</html>

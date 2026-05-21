@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-zh="IP地址查询 — AIHues">IP Address Lookup — AIHues</title>
+<style>
+/* ========== CSS Variables ========== */
+:root{
+  --bg:#ffffff;
+  --surface:#f8f9fb;
+  --surface-hover:#f1f3f7;
+  --border:#e8ecf1;
+  --border-hover:#d1d8e0;
+  --text:#0f172a;
+  --text-secondary:#475569;
+  --text-muted:#94a3b8;
+  --accent:#6d28d9;
+  --accent-light:#8b5cf6;
+  --accent-gradient:linear-gradient(135deg,#6d28d9,#8b5cf6);
+  --green:#059669;
+  --blue:#2563eb;
+  --orange:#ea580c;
+  --red:#dc2626;
+  --radius:14px;
+  --radius-sm:10px;
+  --shadow:0 1px 3px rgba(0,0,0,0.04),0 4px 16px rgba(0,0,0,0.04);
+}
+
+/* ========== Reset & Base ========== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+button{cursor:pointer;font-family:inherit}
+input,textarea{font-family:inherit}
+
+/* ========== Navigation ========== */
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;color:var(--text);text-decoration:none}
+.logo-mark{width:34px;height:34px;border-radius:var(--radius-sm);background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:700}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{text-decoration:none;font-size:14px;color:var(--text-secondary);transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+.lang-toggle{padding:4px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);font-size:12px;color:var(--text-secondary);cursor:pointer;transition:all .2s}
+.lang-toggle:hover{border-color:var(--border-hover);color:var(--text)}
+@media(max-width:768px){
+  .nav-links{gap:14px}
+  .nav-links a{font-size:13px}
+}
+
+/* ========== Tool Page ========== */
+.tool-page{max-width:960px;margin:0 auto;padding:32px}
+.tool-header{margin-bottom:28px}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:9999px;background:var(--surface);border:1px solid var(--border);font-size:13px;color:var(--text-secondary);margin-bottom:14px}
+.tool-header h1{font-size:32px;font-weight:700;margin-bottom:8px;letter-spacing:-0.02em}
+.tool-header p{font-size:16px;color:var(--text-secondary)}
+.tool-meta{margin-top:16px;display:flex;gap:8px;flex-wrap:wrap}
+.tag{padding:4px 12px;border-radius:9999px;font-size:12px;font-weight:500}
+.tag.free{background:#ecfdf5;color:var(--green)}
+
+/* ========== Search Box ========== */
+.search-box{display:flex;gap:10px;margin-bottom:24px}
+.search-box input{flex:1;padding:12px 16px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:15px;outline:none;transition:border-color .2s,box-shadow .2s;background:var(--bg)}
+.search-box input:focus{border-color:var(--accent-light);box-shadow:0 0 0 3px rgba(109,40,217,0.08)}
+.search-box button{padding:12px 24px;border-radius:var(--radius-sm);background:var(--accent-gradient);color:#fff;font-size:15px;font-weight:600;border:none;cursor:pointer;transition:opacity .2s}
+.search-box button:hover{opacity:0.92;transform:translateY(-1px)}
+
+/* ========== Info Cards ========== */
+.info-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-bottom:24px}
+.info-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);transition:border-color .2s}
+.info-card:hover{border-color:var(--border-hover)}
+.info-card .label{font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px}
+.info-card .value{font-size:18px;font-weight:700;color:var(--text);word-break:break-all}
+.info-card .value.small{font-size:14px;font-weight:500}
+.info-card .value.code{font-family:'SF Mono',Menlo,Monaco,Consolas,monospace;font-size:14px}
+.info-card .icon{font-size:22px;margin-bottom:6px}
+
+/* ========== Map Container ========== */
+.map-container{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-bottom:24px;background:var(--bg)}
+.map-toolbar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--surface);border-bottom:1px solid var(--border)}
+.map-toolbar .label{font-size:14px;font-weight:600;color:var(--text-secondary)}
+.map-frame{width:100%;height:360px;border:none;display:block}
+
+/* ========== Status ========== */
+.status-box{padding:16px 20px;border-radius:var(--radius);font-size:14px;font-weight:500;margin-bottom:20px;display:none}
+.status-box.show{display:block}
+.status-box.loading{background:#eff6ff;border:1px solid #bfdbfe;color:var(--blue)}
+.status-box.error{background:#fef2f2;border:1px solid #fecaca;color:var(--red)}
+.status-box.success{background:#ecfdf5;border:1px solid #a7f3d0;color:var(--green)}
+
+/* ========== Error Detail ========== */
+.error-detail{padding:20px;border-radius:var(--radius);background:#fef2f2;border:1px solid #fecaca;color:var(--red);text-align:center;margin-bottom:24px;display:none}
+.error-detail.show{display:block}
+.error-detail .icon{font-size:40px;margin-bottom:10px}
+.error-detail .title{font-size:18px;font-weight:700;margin-bottom:6px}
+.error-detail .msg{font-size:14px;opacity:0.9}
+
+/* ========== Loading Skeleton ========== */
+.skeleton{animation:skeleton-pulse 1.5s ease-in-out infinite;background:linear-gradient(90deg,var(--surface) 25%,var(--surface-hover) 50%,var(--surface) 75%);background-size:200% 100%;border-radius:8px}
+@keyframes skeleton-pulse{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* ========== Animations ========== */
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn .35s ease forwards}
+
+/* ========== Responsive ========== */
+@media(max-width:768px){
+  .tool-page{padding:20px 16px}
+  .tool-header h1{font-size:24px}
+  .info-grid{grid-template-columns:1fr}
+  .map-frame{height:260px}
+  .search-box{flex-direction:column}
+}
+</style>
+<link rel="manifest" href="/manifest.json">
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="logo" href="../index.html">
+      <span class="logo-mark">A</span>
+      <span>AIHues</span>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html" data-zh="首页">Home</a>
+      <a href="../showcase.html" data-zh="工具">Tools</a>
+      <a href="../collection.html" data-zh="收藏">Collection</a>
+      <a href="../pricing.html" data-zh="定价">Pricing</a>
+      <button class="lang-toggle" onclick="toggleLang()">中</button>
+    </div>
+  </div>
+</nav>
+
+<main class="tool-page">
+
+  <!-- Tool Header -->
+  <div class="tool-header fade-in">
+    <span class="badge">
+      <span>&#127758;</span>
+      <span data-zh="网络工具">Network Tool</span>
+    </span>
+    <h1 data-zh="IP 地址查询">IP Address Lookup</h1>
+    <p data-zh="查询 IP 地址的地理位置、ISP、时区等信息，支持地图可视化">Look up geolocation, ISP, timezone, and display on an interactive map.</p>
+    <div class="tool-meta">
+      <span class="tag free">Free Forever / &#20813;&#36153;&#20351;&#29992;</span>
+    </div>
+  </div>
+
+  <!-- Status Box -->
+  <div class="status-box loading" id="statusBox" data-zh="正在获取您的 IP 信息...">Getting your IP info...</div>
+
+  <!-- Error Detail -->
+  <div class="error-detail" id="errorDetail">
+    <div class="icon">&#9888;</div>
+    <div class="title" id="errorTitle" data-zh="查询失败">Lookup Failed</div>
+    <div class="msg" id="errorMsg"></div>
+  </div>
+
+  <!-- Search Box -->
+  <div class="search-box fade-in">
+    <input type="text" id="ipInput" placeholder="Enter an IP address to lookup..." data-zh-placeholder="输入要查询的 IP 地址...">
+    <button onclick="lookupIP()" data-zh="查询">Lookup</button>
+  </div>
+
+  <!-- Info Cards -->
+  <div class="info-grid fade-in" id="infoGrid" style="display:none">
+    <div class="info-card">
+      <div class="icon">&#127760;</div>
+      <div class="label" data-zh="IP 地址">IP Address</div>
+      <div class="value code" id="valIp">-</div>
+    </div>
+    <div class="info-card">
+      <div class="icon">&#127968;</div>
+      <div class="label" data-zh="城市">City</div>
+      <div class="value" id="valCity">-</div>
+    </div>
+    <div class="info-card">
+      <div class="icon">&#128506;</div>
+      <div class="label" data-zh="地区">Region</div>
+      <div class="value" id="valRegion">-</div>
+    </div>
+    <div class="info-card">
+      <div class="icon">&#127758;</div>
+      <div class="label" data-zh="国家">Country</div>
+      <div class="value" id="valCountry">-</div>
+    </div>
+    <div class="info-card">
+      <div class="icon">&#128338;</div>
+      <div class="label" data-zh="时区">Timezone</div>
+      <div class="value small" id="valTimezone">-</div>
+    </div>
+    <div class="info-card">
+      <div class="icon">&#128205;</div>
+      <div class="label" data-zh="经纬度">Coordinates</div>
+      <div class="value code small" id="valCoords">-</div>
+    </div>
+    <div class="info-card">
+      <div class="icon">&#128187;</div>
+      <div class="label" data-zh="ISP / 组织">ISP / Org</div>
+      <div class="value small" id="valIsp">-</div>
+    </div>
+    <div class="info-card">
+      <div class="icon">&#127745;</div>
+      <div class="label" data-zh="国家代码">Country Code</div>
+      <div class="value" id="valCountryCode">-</div>
+    </div>
+  </div>
+
+  <!-- Map -->
+  <div class="map-container fade-in" id="mapContainer" style="display:none">
+    <div class="map-toolbar">
+      <span class="label" id="mapLabel" data-zh="&#127758; 地理位置地图">&#127758; Location Map</span>
+    </div>
+    <iframe class="map-frame" id="mapFrame" src="" allowfullscreen></iframe>
+  </div>
+
+</main>
+
+<script>
+const statusBox = document.getElementById('statusBox');
+const errorDetail = document.getElementById('errorDetail');
+const infoGrid = document.getElementById('infoGrid');
+const mapContainer = document.getElementById('mapContainer');
+const mapFrame = document.getElementById('mapFrame');
+
+function showStatus(type, msg) {
+  statusBox.className = 'status-box ' + type + ' show';
+  statusBox.textContent = msg;
+}
+function hideStatus() {
+  statusBox.className = 'status-box';
+}
+function showError(title, msg) {
+  errorDetail.className = 'error-detail show';
+  document.getElementById('errorTitle').textContent = title;
+  document.getElementById('errorMsg').textContent = msg;
+  infoGrid.style.display = 'none';
+  mapContainer.style.display = 'none';
+  hideStatus();
+}
+function hideError() {
+  errorDetail.className = 'error-detail';
+}
+
+function renderData(data) {
+  hideError();
+  hideStatus();
+
+  document.getElementById('valIp').textContent = data.ip || '-';
+  document.getElementById('valCity').textContent = data.city || '-';
+  document.getElementById('valRegion').textContent = data.region || '-';
+  document.getElementById('valCountry').textContent = data.country_name || data.country || '-';
+  document.getElementById('valTimezone').textContent = data.timezone || '-';
+
+  if (data.latitude && data.longitude) {
+    document.getElementById('valCoords').textContent = data.latitude + ', ' + data.longitude;
+  } else {
+    document.getElementById('valCoords').textContent = '-';
+  }
+
+  document.getElementById('valIsp').textContent = data.org || data.isp || data.asn || '-';
+  document.getElementById('valCountryCode').textContent = data.country_code || data.country || '-';
+
+  infoGrid.style.display = 'grid';
+
+  // Update map
+  if (data.latitude && data.longitude) {
+    const lat = data.latitude;
+    const lon = data.longitude;
+    const zoom = 13;
+    // OpenStreetMap embed via iframe
+    const mapUrl = 'https://www.openstreetmap.org/export/embed.html?bbox=' +
+      (lon - 0.05) + '%2C' + (lat - 0.05) + '%2C' + (lon + 0.05) + '%2C' + (lat + 0.05) +
+      '&layer=mapnik&marker=' + lat + '%2C' + lon;
+    mapFrame.src = mapUrl;
+    mapContainer.style.display = 'block';
+  } else {
+    mapContainer.style.display = 'none';
+    mapFrame.src = '';
+  }
+}
+
+async function fetchIPInfo(ip) {
+  showStatus('loading', window.i18n && i18n.lang === 'zh' ? '正在查询...' : 'Looking up...');
+  hideError();
+  infoGrid.style.display = 'none';
+  mapContainer.style.display = 'none';
+
+  const url = ip ? 'https://ipapi.co/' + encodeURIComponent(ip) + '/json/' : 'https://ipapi.co/json/';
+
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+    const response = await fetch(url, { signal: controller.signal });
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      throw new Error('HTTP ' + response.status);
+    }
+
+    const data = await response.json();
+
+    if (data.error) {
+      throw new Error(data.reason || data.message || 'Unknown API error');
+    }
+
+    renderData(data);
+  } catch (err) {
+    let title, msg;
+    if (err.name === 'AbortError') {
+      title = window.i18n && i18n.lang === 'zh' ? '请求超时' : 'Request Timeout';
+      msg = window.i18n && i18n.lang === 'zh' ? '查询请求超时，请稍后重试。' : 'The lookup request timed out. Please try again later.';
+    } else if (err.message && err.message.includes('Failed to fetch')) {
+      title = window.i18n && i18n.lang === 'zh' ? '网络错误' : 'Network Error';
+      msg = window.i18n && i18n.lang === 'zh' ? '无法连接到 IP 查询服务，请检查网络连接。' : 'Cannot connect to the IP lookup service. Please check your network.';
+    } else {
+      title = window.i18n && i18n.lang === 'zh' ? '查询失败' : 'Lookup Failed';
+      msg = (err.message || 'Unknown error');
+    }
+    showError(title, msg);
+  }
+}
+
+function lookupIP() {
+  const ip = document.getElementById('ipInput').value.trim();
+  if (ip) {
+    fetchIPInfo(ip);
+  }
+}
+
+// Enter key triggers lookup
+document.getElementById('ipInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') lookupIP();
+});
+
+// Auto-load current IP on page load
+fetchIPInfo('');
+</script>
+<script src="../js/i18n.js"></script>
+
+<script>
+// Register Service Worker for offline support
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/sw.js')
+    .then(reg => console.log('SW registered:', reg.scope))
+    .catch(err => console.log('SW registration failed:', err));
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-zh="使用 Kimi 登录 — AIHues">Login with Kimi — AIHues</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#ffffff;--surface:#f8f9fb;--surface-hover:#f1f3f7;
+      --border:#e8ecf1;--border-hover:#d1d8e0;
+      --text:#0f172a;--text-secondary:#475569;--text-muted:#94a3b8;
+      --accent:#6d28d9;--accent-light:#8b5cf6;--accent-gradient:linear-gradient(135deg,#6d28d9,#8b5cf6);
+      --green:#059669;--green-bg:#ecfdf5;--blue:#2563eb;--orange:#ea580c;--red:#dc2626;
+      --radius:14px;--radius-sm:10px;
+      --shadow:0 1px 3px rgba(0,0,0,0.04),0 4px 16px rgba(0,0,0,0.04);
+      --shadow-hover:0 4px 12px rgba(109,40,217,0.12),0 8px 32px rgba(0,0,0,0.08);
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{height:100%;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;color:var(--text)}
+    body{display:flex;overflow:hidden}
+
+    /* ========== LEFT BRAND PANEL ========== */
+    .brand-panel{
+      width:50%;min-height:100vh;
+      background:linear-gradient(160deg,#0f0a1e 0%,#1a1040 50%,#0f0a1e 100%);
+      display:flex;flex-direction:column;justify-content:center;align-items:center;
+      padding:48px;position:relative;overflow:hidden;
+    }
+    .brand-panel::before{
+      content:'';position:absolute;top:-30%;right:-30%;width:80%;height:80%;
+      background:radial-gradient(circle,rgba(109,40,217,0.35) 0%,transparent 70%);
+      pointer-events:none;
+    }
+    .brand-panel::after{
+      content:'';position:absolute;bottom:-20%;left:-20%;width:60%;height:60%;
+      background:radial-gradient(circle,rgba(139,92,246,0.2) 0%,transparent 70%);
+      pointer-events:none;
+    }
+    .brand-content{position:relative;z-index:2;text-align:center;max-width:420px}
+    .brand-logo{
+      display:inline-flex;align-items:center;gap:12px;margin-bottom:32px;
+    }
+    .brand-logo-mark{
+      width:52px;height:52px;border-radius:var(--radius-sm);
+      background:var(--accent-gradient);
+      display:flex;align-items:center;justify-content:center;
+      font-size:26px;font-weight:800;color:#fff;
+      box-shadow:0 4px 16px rgba(109,40,217,0.4);
+    }
+    .brand-logo-text{
+      font-size:32px;font-weight:800;color:#fff;letter-spacing:-0.5px;
+    }
+    .brand-slogan{
+      font-size:20px;font-weight:500;color:rgba(255,255,255,0.85);
+      margin-bottom:12px;line-height:1.5;
+    }
+    .brand-slogan-zh{
+      font-size:15px;color:rgba(255,255,255,0.5);margin-bottom:40px;
+    }
+    .brand-stats{
+      display:flex;gap:32px;justify-content:center;
+      padding-top:32px;border-top:1px solid rgba(255,255,255,0.1);
+    }
+    .stat-item{text-align:center}
+    .stat-number{
+      font-size:28px;font-weight:700;
+      background:linear-gradient(135deg,#a78bfa,#8b5cf6);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .stat-label{
+      font-size:13px;color:rgba(255,255,255,0.45);margin-top:4px;
+    }
+    .brand-dots{
+      position:absolute;inset:0;pointer-events:none;z-index:1;
+    }
+    .brand-dots span{
+      position:absolute;width:3px;height:3px;border-radius:50%;
+      background:rgba(139,92,246,0.25);
+    }
+
+    /* ========== RIGHT FORM PANEL ========== */
+    .form-panel{
+      width:50%;min-height:100vh;
+      background:var(--bg);
+      display:flex;flex-direction:column;
+      overflow-y:auto;
+    }
+
+    /* ========== NAV ========== */
+    .top-nav{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:16px 40px;border-bottom:1px solid var(--border);
+      background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);
+      position:sticky;top:0;z-index:10;
+    }
+    .nav-logo{
+      display:flex;align-items:center;gap:8px;text-decoration:none;
+    }
+    .nav-logo-mark{
+      width:34px;height:34px;border-radius:8px;
+      background:var(--accent-gradient);
+      display:flex;align-items:center;justify-content:center;
+      font-size:16px;font-weight:700;color:#fff;
+    }
+    .nav-logo-text{
+      font-size:18px;font-weight:700;color:var(--text);
+    }
+    .nav-links{display:flex;gap:28px;align-items:center}
+    .nav-links a{
+      text-decoration:none;color:var(--text-secondary);font-size:14px;font-weight:500;
+      transition:color .2s;
+    }
+    .nav-links a:hover{color:var(--accent)}
+
+    /* ========== FORM AREA ========== */
+    .form-area{
+      flex:1;display:flex;flex-direction:column;justify-content:center;
+      padding:40px 64px;max-width:560px;margin:0 auto;width:100%;
+    }
+    .form-header{margin-bottom:32px;text-align:center}
+    .form-header h1{
+      font-size:26px;font-weight:700;color:var(--text);margin-bottom:6px;
+    }
+    .form-header p{
+      font-size:14px;color:var(--text-secondary);
+    }
+    .form-zh{
+      font-size:13px;color:var(--text-muted);margin-top:2px;
+    }
+
+    /* ========== KIMI LOGIN BUTTON ========== */
+    .kimi-btn{
+      width:100%;padding:16px 24px;border-radius:var(--radius);
+      font-size:16px;font-weight:600;font-family:inherit;
+      border:none;cursor:pointer;transition:all .25s ease;
+      display:flex;align-items:center;justify-content:center;gap:10px;
+      background:linear-gradient(135deg,#6d28d9,#8b5cf6,#a78bfa);
+      background-size:200% 200%;
+      color:#fff;
+      box-shadow:0 4px 16px rgba(109,40,217,0.35),0 8px 32px rgba(109,40,217,0.2);
+      margin-bottom:10px;
+      animation:gradientShift 4s ease infinite;
+    }
+    .kimi-btn:hover{
+      transform:translateY(-2px);
+      box-shadow:0 8px 24px rgba(109,40,217,0.45),0 12px 40px rgba(109,40,217,0.25);
+    }
+    .kimi-btn:active{transform:translateY(0)}
+    .kimi-section{width:100%}
+    .kimi-input-wrap{
+      animation:kimiSlideDown .3s ease;
+      overflow:hidden;
+    }
+    @keyframes kimiSlideDown{
+      from{opacity:0;max-height:0}
+      to{opacity:1;max-height:200px}
+    }
+    .kimi-btn .kimi-icon{
+      width:22px;height:22px;
+    }
+    @keyframes gradientShift{
+      0%{background-position:0% 50%}
+      50%{background-position:100% 50%}
+      100%{background-position:0% 50%}
+    }
+    .kimi-hint{
+      text-align:center;
+      font-size:12px;color:var(--text-muted);
+      margin-bottom:6px;
+    }
+
+    /* ========== DIVIDER ========== */
+    .divider{
+      display:flex;align-items:center;gap:16px;margin:24px 0;
+      color:var(--text-muted);font-size:13px;
+    }
+    .divider::before,.divider::after{
+      content:'';flex:1;height:1px;background:var(--border);
+    }
+
+    /* ========== LOCAL LOGIN ========== */
+    .local-section{
+      background:var(--surface);
+      border:1.5px solid var(--border);
+      border-radius:var(--radius);
+      padding:24px;
+      transition:border-color .2s;
+    }
+    .local-section:hover{border-color:var(--border-hover)}
+    .local-section .section-title{
+      font-size:14px;font-weight:600;color:var(--text);
+      margin-bottom:14px;text-align:center;
+    }
+    .form-group{margin-bottom:14px;position:relative}
+    .form-label{
+      display:block;font-size:13px;font-weight:500;color:var(--text-secondary);margin-bottom:6px;
+    }
+    .form-input{
+      width:100%;padding:12px 16px;font-size:14px;font-family:inherit;
+      border:1.5px solid var(--border);border-radius:var(--radius-sm);
+      background:var(--bg);color:var(--text);
+      transition:border-color .2s,box-shadow .2s,background .2s;
+      outline:none;
+    }
+    .form-input:focus{
+      border-color:var(--accent);
+      box-shadow:0 0 0 3px rgba(109,40,217,0.08);
+      background:var(--bg);
+    }
+    .form-input::placeholder{color:var(--text-muted)}
+
+    .btn{
+      width:100%;padding:12px 20px;border-radius:var(--radius-sm);
+      font-size:14px;font-weight:600;font-family:inherit;
+      border:none;cursor:pointer;transition:all .25s ease;
+      display:flex;align-items:center;justify-content:center;gap:8px;
+    }
+    .btn-primary{
+      background:var(--accent-gradient);color:#fff;
+      box-shadow:0 2px 8px rgba(109,40,217,0.25);
+    }
+    .btn-primary:hover{
+      transform:translateY(-2px);
+      box-shadow:0 6px 20px rgba(109,40,217,0.35);
+    }
+    .btn-primary:active{transform:translateY(0)}
+
+    .local-hint{
+      text-align:center;
+      font-size:12px;color:var(--text-muted);
+      margin-top:10px;
+    }
+
+    /* ========== GUEST LINK ========== */
+    .guest-link{
+      text-align:center;margin-top:24px;
+      font-size:13px;
+    }
+    .guest-link a{
+      color:var(--accent);font-weight:600;text-decoration:none;
+      cursor:pointer;display:inline-flex;align-items:center;gap:4px;
+      transition:all .2s;
+    }
+    .guest-link a:hover{
+      text-decoration:underline;
+      gap:8px;
+    }
+    .guest-link .guest-desc{
+      color:var(--text-muted);font-size:12px;margin-top:4px;
+    }
+
+    /* ========== TOAST ========== */
+    .toast{
+      position:fixed;top:24px;right:24px;z-index:1000;
+      padding:14px 22px;border-radius:var(--radius-sm);font-size:14px;font-weight:500;
+      display:flex;align-items:center;gap:10px;
+      transform:translateX(140%);opacity:0;
+      transition:transform .4s cubic-bezier(.34,1.56,.64,1),opacity .3s;
+      box-shadow:var(--shadow-hover);
+      max-width:360px;
+    }
+    .toast.show{transform:translateX(0);opacity:1}
+    .toast-success{background:var(--green-bg);color:var(--green);border:1px solid rgba(5,150,105,.2)}
+    .toast-error{background:#fef2f2;color:var(--red);border:1px solid rgba(220,38,38,.2)}
+    .toast svg{flex-shrink:0;width:18px;height:18px}
+
+    /* ========== SECURITY BADGE ========== */
+    .security-badge{
+      display:flex;align-items:center;justify-content:center;
+      gap:16px;margin-top:20px;
+      font-size:12px;color:var(--text-muted);
+    }
+    .security-badge span{
+      display:flex;align-items:center;gap:4px;
+    }
+
+    /* ========== RESPONSIVE ========== */
+    @media(max-width:768px){
+      body{flex-direction:column;overflow:auto;height:auto}
+      .brand-panel{
+        width:100%;min-height:auto;padding:40px 24px 36px;
+      }
+      .brand-logo{margin-bottom:20px}
+      .brand-logo-text{font-size:24px}
+      .brand-slogan{font-size:16px}
+      .brand-slogan-zh{margin-bottom:24px}
+      .brand-stats{padding-top:20px;gap:24px}
+      .stat-number{font-size:22px}
+      .form-panel{width:100%;min-height:auto}
+      .top-nav{padding:12px 20px}
+      .nav-links{display:none}
+      .form-area{padding:32px 24px}
+      .kimi-btn{padding:14px 20px;font-size:15px}
+    }
+  </style>
+<link rel="stylesheet" href="css/themes.css">
+<link rel="manifest" href="/manifest.json">
+</head>
+<body>
+
+  <!-- ===== LEFT BRAND PANEL ===== -->
+  <div class="brand-panel">
+    <div class="brand-dots" id="brandDots"></div>
+    <div class="brand-content">
+      <div class="brand-logo">
+        <div class="brand-logo-mark">H</div>
+        <div class="brand-logo-text">AIHues</div>
+      </div>
+      <div class="brand-slogan" data-zh="找到你的 AI vibe">Find your AI vibe</div>
+      <div class="brand-slogan-zh">找到你的 AI vibe</div>
+      <div class="brand-stats">
+        <div class="stat-item">
+          <div class="stat-number">17+</div>
+          <div class="stat-label">Tools</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">3</div>
+          <div class="stat-label">Games</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">100%</div>
+          <div class="stat-label">Free</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== RIGHT FORM PANEL ===== -->
+  <div class="form-panel">
+    <!-- Nav -->
+    <nav class="top-nav">
+      <a href="./index.html" class="nav-logo">
+        <div class="nav-logo-mark">H</div>
+        <span class="nav-logo-text">AIHues</span>
+      </a>
+      <div class="nav-links">
+        <a href="./index.html" data-zh="首页">Home</a>
+        <a href="./tools.html" data-zh="工具">Tools</a>
+        <a href="./games.html" data-zh="游戏">Games</a>
+      </div>
+    </nav>
+
+    <!-- Form Area -->
+    <div class="form-area">
+
+      <div class="form-header">
+        <h1 data-zh="欢迎回来">Welcome back</h1>
+        <p data-zh="选择你的登录方式">Choose how you want to log in</p>
+        <div class="form-zh" data-zh="登录以继续使用 AIHues">登录以继续使用 AIHues</div>
+      </div>
+
+      <!-- ===== KIMI ID LOGIN (Primary) ===== -->
+      <div class="kimi-section">
+        <button class="kimi-btn" onclick="toggleKimiInput()">
+          <svg class="kimi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+          <span data-zh="使用 Kimi ID 登录">Login with Kimi ID</span>
+        </button>
+
+        <!-- Kimi ID input (hidden by default) -->
+        <div class="kimi-input-wrap" id="kimiInputWrap" style="display:none">
+          <div class="form-group" style="margin-top:12px">
+            <input type="text" id="kimiId" class="form-input" placeholder="Enter your Kimi ID" data-zh-placeholder="输入你的 Kimi ID" onkeydown="if(event.key==='Enter')kimiLogin()">
+          </div>
+          <button class="btn btn-primary" onclick="kimiLogin()" style="margin-top:10px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+              <polyline points="10 17 15 12 10 7"/>
+              <line x1="15" y1="12" x2="3" y2="12"/>
+            </svg>
+            <span data-zh="确认登录">Confirm Login</span>
+          </button>
+        </div>
+      </div>
+      <div class="kimi-hint" data-zh="输入你的 Kimi ID 即可登录，无需密码">Enter your Kimi ID to login, no password needed</div>
+
+      <!-- ===== DIVIDER ===== -->
+      <div class="divider">
+        <span data-zh="或者">OR</span>
+      </div>
+
+      <!-- ===== LOCAL QUICK LOGIN ===== -->
+      <div class="local-section">
+        <div class="section-title" data-zh="本地快速登录">Local Quick Login</div>
+
+        <div class="form-group">
+          <label class="form-label" data-zh="昵称 / Username">Nickname / Username</label>
+          <input type="text" id="username" class="form-input" placeholder="Enter a nickname" data-zh-placeholder="输入你的昵称">
+        </div>
+
+        <button class="btn btn-primary" onclick="quickLogin()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+            <polyline points="10 17 15 12 10 7"/>
+            <line x1="15" y1="12" x2="3" y2="12"/>
+          </svg>
+          <span data-zh="快速进入">Quick Enter</span>
+        </button>
+
+        <div class="local-hint" data-zh="无需注册，输入昵称即可使用">No registration needed, just enter a nickname</div>
+      </div>
+
+      <!-- ===== GUEST LINK ===== -->
+      <div class="guest-link">
+        <a onclick="guestLogin()">
+          <span data-zh="先逛逛">Take a look around</span>
+          <span>→</span>
+        </a>
+        <div class="guest-desc" data-zh="以游客身份进入，部分功能受限">Enter as guest, some features may be limited</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+  // ========== DOTS DECORATION ==========
+  (function(){
+    const container=document.getElementById('brandDots');
+    for(let i=0;i<30;i++){
+      const s=document.createElement('span');
+      s.style.left=Math.random()*100+'%';
+      s.style.top=Math.random()*100+'%';
+      s.style.opacity=0.1+Math.random()*0.3;
+      s.style.width=s.style.height=(2+Math.random()*3)+'px';
+      container.appendChild(s);
+    }
+  })();
+
+  // ========== TOAST ==========
+  function showToast(msg,type){
+    const t=document.getElementById('toast');
+    t.className='toast toast-'+type;
+    const icon=type==='success'?
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>':
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+    t.innerHTML=icon+'<span>'+msg+'</span>';
+    requestAnimationFrame(()=>t.classList.add('show'));
+    setTimeout(()=>t.classList.remove('show'),3000);
+  }
+
+  // ========== KIMI ID LOGIN ==========
+  function toggleKimiInput(){
+    const wrap=document.getElementById('kimiInputWrap');
+    if(wrap.style.display==='none'){
+      wrap.style.display='block';
+      setTimeout(()=>document.getElementById('kimiId').focus(),100);
+    } else {
+      wrap.style.display='none';
+    }
+  }
+
+  function kimiLogin(){
+    const kimiId=document.getElementById('kimiId').value.trim();
+    if(!kimiId){
+      showToast('Please enter your Kimi ID / 请输入 Kimi ID','error');
+      document.getElementById('kimiId').focus();
+      return;
+    }
+    // Save user with Kimi ID
+    const user={username:kimiId,loginType:'kimi',loginTime:Date.now()};
+    localStorage.setItem('aihues_current_user',JSON.stringify(user));
+    if(!localStorage.getItem('aihues_credit')){
+      localStorage.setItem('aihues_credit','100');
+    }
+    showToast('Welcome, '+kimiId+'! / 欢迎，'+kimiId+'!','success');
+    setTimeout(()=>{window.location.href='./index.html';},800);
+  }
+
+  // ========== LOCAL QUICK LOGIN ==========
+  function quickLogin(){
+    const username=document.getElementById('username').value.trim();
+    if(!username){
+      showToast('Please enter a nickname / 请输入昵称','error');
+      document.getElementById('username').focus();
+      return;
+    }
+    const user={username:username,loginType:'local',loginTime:Date.now()};
+    localStorage.setItem('aihues_current_user',JSON.stringify(user));
+    if(!localStorage.getItem('aihues_credit')){
+      localStorage.setItem('aihues_credit','100');
+    }
+    showToast('Welcome, '+username+'! / 欢迎，'+username+'!','success');
+    setTimeout(()=>{window.location.href='./index.html';},800);
+  }
+
+  // ========== GUEST LOGIN ==========
+  function guestLogin(){
+    const user={username:'Guest',loginType:'guest',loginTime:Date.now()};
+    localStorage.setItem('aihues_current_user',JSON.stringify(user));
+    localStorage.setItem('aihues_credit','100');
+    showToast('Entering as guest / 以游客身份进入','success');
+    setTimeout(()=>{window.location.href='./index.html';},500);
+  }
+
+  // ========== KEYBOARD ==========
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Enter'){
+      const active=document.activeElement;
+      if(active&&active.id==='username'){
+        quickLogin();
+      }
+    }
+  });
+
+  // ========== CHECK ALREADY LOGGED IN ==========
+  (function(){
+    const cur=localStorage.getItem('aihues_current_user');
+    if(cur){
+      try{
+        const u=JSON.parse(cur);
+        if(u.loginType&&u.loginType!=='guest'){
+          showToast('Already logged in as '+u.username+'. Redirecting... / 已登录为 '+u.username+'，正在跳转...','success');
+          setTimeout(()=>window.location.href='./index.html',1200);
+        }
+      }catch(e){/* ignore */}
+    }
+  })();
+  </script>
+  <script src="js/i18n.js"></script>
+<script src="js/theme-system.js"></script>
+<script src="js/achievements.js"></script>
+
+<script>
+// Register Service Worker for offline support
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/sw.js')
+    .then(reg => console.log('SW registered:', reg.scope))
+    .catch(err => console.log('SW registration failed:', err));
+}
+</script>
+</body>
+</html>
