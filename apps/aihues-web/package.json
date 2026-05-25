@@ -4,8 +4,8 @@
   "private": true,
   "description": "AIHues 静态站点（AI 工具目录 / 落地页）",
   "scripts": {
-    "dev": "serve -s -l 3002 --no-clipboard .",
-    "start": "serve -s -l 3002 --no-clipboard .",
+    "dev": "serve -s --no-clipboard .",
+    "start": "serve -s --no-clipboard .",
     "build": "node -e \"console.log('aihues-web: 纯静态站点，无需 build')\""
   },
   "devDependencies": {

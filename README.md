@@ -23,7 +23,7 @@ pnpm + moonrepo 单体仓库。构建脚手架对齐 [`workspace_rec/mars`](../m
 ```bash
 pnpm install                       # 安装依赖（自动安装 git hooks）
 pnpm check                         # moon run :lint :format :typecheck :test（mars 同款）
-pnpm moon run aihues-web:dev       # 启动 aihues-web（端口 3002）
+pnpm moon run aihues-web:dev       # 启动 aihues-web（serve 默认端口 3000）
 pnpm moon run :format-check        # 检查格式
 pnpm moon run :format              # 写入格式化
 ```

@@ -11,7 +11,7 @@ Aiushtha 是 **pnpm + moonrepo** 单体仓库，构建/CI/lint/format 脚手架�
 ```text
 .
 ├── apps/
-│   └── aihues-web/          # AIHues 静态站点（HTML/CSS/JS，端口 3002）
+│   └── aihues-web/          # AIHues 静态站点（HTML/CSS/JS，serve 默认端口 3000）
 ├── packages/                # 空目录，未来共享包占位
 ├── .moon/
 │   ├── workspace.yml        # 工作区配置
@@ -48,7 +48,7 @@ Aiushtha 是 **pnpm + moonrepo** 单体仓库，构建/CI/lint/format 脚手架�
 ```bash
 pnpm install                       # 安装依赖（自动安装 git hooks）
 pnpm check                         # moon run :lint :format :typecheck :test
-pnpm moon run aihues-web:dev       # 启动 aihues-web（端口 3002）
+pnpm moon run aihues-web:dev       # 启动 aihues-web（serve 默认端口 3000）
 pnpm moon run aihues-web:build     # aihues-web 是占位 build
 pnpm moon run :format              # prettier --write 全仓
 pnpm moon run :format-check        # prettier --check 全仓

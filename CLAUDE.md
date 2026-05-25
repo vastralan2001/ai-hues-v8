@@ -11,7 +11,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 这是一个 **pnpm + moonrepo** 单体仓库，构建/CI/lint/format 脚手架**全部对齐 [`workspace_rec/mars`](../mars)**。当前只有一个应用：
 
 ```
-apps/aihues-web    → AIHues 静态站点（HTML/CSS/JS，端口 3002）
+apps/aihues-web    → AIHues 静态站点（HTML/CSS/JS，默认端口 3000）
 ```
 
 `packages/`、`apps/papers-*`、`shared-types` 等历史 TS 项目**已删除**。`.moon/tasks/tag-nextjs.yml`、`tag-react.yml`、根 `.eslintrc.js`、`tsconfig-moon` 等 mars 风格脚手架作为预留位保留，目前**无消费者**——添加 TS 应用时即可对接。
@@ -21,7 +21,7 @@ apps/aihues-web    → AIHues 静态站点（HTML/CSS/JS，端口 3002）
 ```bash
 pnpm install                         # 安装依赖（自动装 git hooks）
 pnpm check                           # moon run :lint :format :typecheck :test
-pnpm moon run aihues-web:dev         # 启动 aihues-web（端口 3002）
+pnpm moon run aihues-web:dev         # 启动 aihues-web（默认端口 3000）
 ```
 
 根 `package.json` 只暴露 `prepare` / `check`（对齐 mars）；其他任务统一走 `pnpm moon run ...`。
@@ -58,5 +58,5 @@ commit-msg 由 `git-conventional-commits` 校验。允许类型：build / chore 
 
 ## 部署要点
 
-- **aihues-web**：纯静态 HTML/CSS/JS。`pnpm -C apps/aihues-web start` 用 `serve` 起 3002 端口。生产部署到 CDN/Vercel/任何静态服务即可。
+- **aihues-web**：纯静态 HTML/CSS/JS。`pnpm -C apps/aihues-web start` 用 `serve` 启动（默认 3000 端口，被占用时 `serve` 会自动顺延到下一个可用端口）。生产部署到 CDN/Vercel/任何静态服务即可。
 - **CI 构建镜像**：`.gitlab-ci.yml` 的 `build` 阶段调用 `pnpm moon run :container`，目前没有项目定义 container task，所以空跑——添加需要镜像的应用时在其 `moon.yml` 加 `container` task 即可。
