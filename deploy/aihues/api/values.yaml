@@ -1,0 +1,58 @@
+api:
+  image:
+    repository: msai-cn-beijing.cr.volces.com/msai/aihues-api
+    imagePullSecrets:
+      - name: image-pull-secret
+    tag: 0.0.1
+
+  # env
+  env:
+    - name: TZ
+      value: Asia/Shanghai
+
+  replicaCount: 1
+
+  shutdownTimeoutSeconds: 30
+
+  livenessProbe:
+    httpGet:
+      path: /healthz
+      port: 80
+    initialDelaySeconds: 15
+    periodSeconds: 20
+  readinessProbe:
+    httpGet:
+      path: /healthz
+      port: 80
+    initialDelaySeconds: 5
+    periodSeconds: 10
+
+  # metrics
+  metricsEnabled: true
+  metricsPort: 80
+  metricsPath: '/metrics'
+
+  # service
+  serviceEnabled: true
+  serviceName: aihues-api
+  servicePort: 80
+  serviceType: ClusterIP
+
+  # ingress
+  ingressEnabled: true
+  ingressName: aihues-api
+  ingressHost: aihues-test.mse.msh.work
+  ingressClassName: mse
+  ingressPath: '/api/aihues.catalog.v1.CatalogService/(.*)'
+  ingressAutoTLS: true
+  ingressTlsHost: '*.mse.msh.work'
+  ingressTlsSecretName: tls-mse-msh-work
+  ingressAnnotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /aihues.catalog.v1.CatalogService/$1
+    nginx.ingress.kubernetes.io/proxy-buffering: 'off'
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '300'
+    nginx.ingress.kubernetes.io/proxy-body-size: 100m
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+
+  configMountPath: /etc/aihues-api
+  configFileName: aihues-api.yaml

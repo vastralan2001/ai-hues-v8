@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Word Counter — AIHues</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#ffffff;--surface:#f8f9fb;--surface-hover:#f1f3f7;
+  --border:#e8ecf1;--border-hover:#d1d8e0;
+  --text:#0f172a;--text-secondary:#475569;--text-muted:#94a3b8;
+  --accent:#6d28d9;--accent-light:#8b5cf6;--accent-gradient:linear-gradient(135deg,#6d28d9,#8b5cf6);
+  --green:#059669;--blue:#2563eb;--orange:#ea580c;
+  --radius:14px;--radius-sm:10px;
+  --shadow:0 1px 3px rgba(0,0,0,0.04),0 4px 16px rgba(0,0,0,0.04);
+}
+body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1300px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:800;color:var(--text);letter-spacing:-1px;text-decoration:none}
+.logo-mark{width:34px;height:34px;border-radius:10px;background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:700;box-shadow:0 2px 8px rgba(109,40,217,0.3)}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{color:var(--text-secondary);font-size:14px;font-weight:500;transition:color .2s;text-decoration:none}
+.nav-links a:hover{color:var(--text)}
+
+.tool-page{max-width:900px;margin:0 auto;padding:32px}
+
+.tool-header{padding:32px 0 24px}
+.tool-header .badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;background:var(--surface);font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:16px;border:1px solid var(--border)}
+.tool-header h1{font-size:32px;font-weight:700;margin-bottom:8px;letter-spacing:-0.5px}
+.tool-header p{color:var(--text-secondary);font-size:15px;max-width:560px}
+.tool-meta{display:flex;gap:16px;margin-top:16px}
+.tool-meta .tag{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;font-size:13px;font-weight:600}
+.tool-meta .tag.free{background:#ecfdf5;color:var(--green)}
+
+.editor{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:24px}
+.editor-toolbar{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:var(--surface);border-bottom:1px solid var(--border)}
+.editor-toolbar .label{font-size:13px;font-weight:600;color:var(--text-secondary)}
+.editor textarea{width:100%;min-height:280px;padding:20px;border:none;outline:none;font-size:15px;line-height:1.7;resize:vertical;color:var(--text);font-family:inherit}
+
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;transition:transform .2s,border-color .2s}
+.stat-card:hover{transform:translateY(-2px);border-color:var(--accent-light)}
+.stat-card .number{font-size:36px;font-weight:700;color:var(--accent);margin-bottom:4px}
+.stat-card .label{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+.actions{display:flex;gap:12px;justify-content:center}
+.btn-clear{padding:12px 24px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text-secondary);font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-clear:hover{border-color:var(--accent);color:var(--accent)}
+
+@media(max-width:768px){
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .nav-inner{padding:0 20px}
+  .tool-page{padding:20px}
+}
+</style>
+<link rel="manifest" href="/manifest.json">
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../index.html" class="logo">
+      <div class="logo-mark">AI</div>
+      <span>AIHues</span>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html"></a>
+      <a href="../showcase.html"></a>
+      <a href="../collection.html"></a>
+      <a href="../pricing.html"></a>
+    </div>
+  </div>
+</nav>
+
+<main class="tool-page">
+  <div class="tool-header">
+    <span class="badge">&#128221; Writing Tool</span>
+    <h1>Word Counter</h1>
+    <p>Real-time word count, character count &amp; reading time. No internet required.</p>
+    <div class="tool-meta">
+      <span class="tag free">&#128994; Free Forever</span>
+    </div>
+  </div>
+
+  <div class="editor">
+    <div class="editor-toolbar">
+      <span class="label">Input Text</span>
+    </div>
+    <textarea id="input" placeholder="Paste or type your text here to see instant statistics..." oninput="updateStats()"></textarea>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="number" id="wordCount">0</div>
+      <div class="label">Words</div>
+    </div>
+    <div class="stat-card">
+      <div class="number" id="charCount">0</div>
+      <div class="label">Characters</div>
+    </div>
+    <div class="stat-card">
+      <div class="number" id="charNoSpace">0</div>
+      <div class="label">No Spaces</div>
+    </div>
+    <div class="stat-card">
+      <div class="number" id="readTime">0s</div>
+      <div class="label">Read Time</div>
+    </div>
+  </div>
+
+  <div class="stats-grid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="stat-card">
+      <div class="number" id="sentenceCount">0</div>
+      <div class="label">Sentences</div>
+    </div>
+    <div class="stat-card">
+      <div class="number" id="paragraphCount">0</div>
+      <div class="label">Paragraphs</div>
+    </div>
+    <div class="stat-card">
+      <div class="number" id="lineCount">0</div>
+      <div class="label">Lines</div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn-clear" onclick="clearText()">&#128465;&#65039; Clear Text</button>
+  </div>
+</main>
+
+<script>
+function updateStats(){
+  const text = document.getElementById('input').value;
+  const words = text.trim().split(/\s+/).filter(w => w.length > 0);
+  const wordCount = text.trim() ? words.length : 0;
+  const charCount = text.length;
+  const charNoSpace = text.replace(/\s/g, '').length;
+  const sentences = text.split(/[.!?&#12290;&#65281;&#65311;]+/).filter(s => s.trim().length > 0);
+  const sentenceCount = text.trim() ? sentences.length : 0;
+  const paragraphs = text.split(/\n\n+/).filter(p => p.trim().length > 0);
+  const paragraphCount = text.trim() ? paragraphs.length : 0;
+  const lines = text.split('\n');
+  const lineCount = text.length > 0 ? lines.length : 0;
+  const readTimeMinutes = Math.ceil(wordCount / 200);
+  let readTimeText;
+  if (wordCount === 0) readTimeText = '0s';
+  else if (readTimeMinutes < 1) readTimeText = '<1m';
+  else readTimeText = readTimeMinutes + 'm';
+  document.getElementById('wordCount').textContent = wordCount;
+  document.getElementById('charCount').textContent = charCount;
+  document.getElementById('charNoSpace').textContent = charNoSpace;
+  document.getElementById('readTime').textContent = readTimeText;
+  document.getElementById('sentenceCount').textContent = sentenceCount;
+  document.getElementById('paragraphCount').textContent = paragraphCount;
+  document.getElementById('lineCount').textContent = lineCount;
+}
+function clearText(){
+  document.getElementById('input').value = '';
+  updateStats();
+}
+</script>
+<script src="../js/i18n.js"></script>
+
+<script>// Register Service Worker for offline support
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/sw.js')
+    .then(reg => console.log('SW registered:', reg.scope))
+    .catch(err => console.log('SW registration failed:', err));
+}
+</script>
+</body>
+</html>

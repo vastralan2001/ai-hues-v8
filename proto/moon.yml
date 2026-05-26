@@ -1,0 +1,17 @@
+# yaml-language-server: $schema=https://moonrepo.dev/schemas/project.json
+$schema: 'https://moonrepo.dev/schemas/project.json'
+id: protos
+language: unknown
+type: tool
+tasks:
+  generate:
+    command: buf generate
+    options:
+      cache: false
+      runFromWorkspaceRoot: true
+    inputs:
+      - '**/*.proto'
+      - '/buf.yaml'
+      - '/buf.gen.yaml'
+    outputs:
+      - '/gen/go/**/*'

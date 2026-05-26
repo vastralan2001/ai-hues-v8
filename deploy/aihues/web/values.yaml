@@ -1,0 +1,68 @@
+web:
+  image:
+    repository: msai-cn-beijing.cr.volces.com/msai/aihues-web
+    imagePullSecrets:
+      - name: image-pull-secret
+    tag: 0.0.1
+
+  # env
+  env:
+    - name: TZ
+      value: Asia/Shanghai
+    - name: NODE_ENV
+      value: production
+    - name: HOSTNAME
+      value: '0.0.0.0'
+    - name: PORT
+      value: '3000'
+    - name: NEXT_TELEMETRY_DISABLED
+      value: '1'
+    - name: AIHUES_API_BASE_URL
+      value: http://aihues-api.marci-dev.svc.cluster.local:80
+
+  replicaCount: 1
+
+  shutdownTimeoutSeconds: 30
+
+  livenessProbe:
+    httpGet:
+      path: /
+      port: 3000
+    initialDelaySeconds: 15
+    periodSeconds: 20
+  readinessProbe:
+    httpGet:
+      path: /
+      port: 3000
+    initialDelaySeconds: 5
+    periodSeconds: 10
+
+  metricsEnabled: false
+
+  # service
+  serviceEnabled: true
+  serviceName: aihues-web
+  servicePort: 3000
+  serviceType: ClusterIP
+
+  # ingress
+  ingressEnabled: true
+  ingressName: aihues-web
+  ingressAutoTLS: true
+  ingressHost: aihues-test.mse.msh.work
+  ingressPath: /
+  ingressClassName: mse
+  ingressTlsHost: '*.mse.msh.work'
+  ingressTlsSecretName: tls-mse-msh-work
+  ingressAnnotations:
+    nginx.ingress.kubernetes.io/proxy-buffering: 'off'
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '300'
+    nginx.ingress.kubernetes.io/proxy-body-size: 100m
+
+  resources:
+    requests:
+      cpu: 500m
+      memory: 512Mi
+    limits:
+      cpu: '1'
+      memory: 1024Mi

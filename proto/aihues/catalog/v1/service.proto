@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package aihues.catalog.v1;
+
+import "aihues/catalog/v1/types.proto";
+
+option go_package = "github.com/aihues/aiushtha/gen/go/aihues/catalog/v1;catalogv1";
+
+// 公开读服务
+service CatalogService {
+  rpc ListTools(ListToolsRequest) returns (ListToolsResponse);
+  rpc ListGames(ListGamesRequest) returns (ListGamesResponse);
+}
+
+message ListToolsRequest {
+  string q = 1; // optional keyword（匹配 name/description）
+  // 每页数据量；默认 10，最大 20
+  int32 page_size = 2;
+  // 分页 token；第一页不传，后续传上一页返回的 next_page_token
+  string page_token = 3;
+  // 不传或 ITEM_CATEGORY_UNSPECIFIED 表示不过滤
+  ItemCategory category = 4;
+}
+
+message ListToolsResponse {
+  repeated Tool tools       = 1;
+  string next_page_token    = 2;
+}
+
+message ListGamesRequest {
+  // 每页数据量；默认 10，最大 20
+  int32 page_size = 1;
+  // 分页 token；第一页不传，后续传上一页返回的 next_page_token
+  string page_token = 2;
+}
+
+message ListGamesResponse {
+  repeated Game games       = 1;
+  string next_page_token    = 2;
+}

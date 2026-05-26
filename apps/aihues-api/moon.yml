@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=https://moonrepo.dev/schemas/project.json
+$schema: 'https://moonrepo.dev/schemas/project.json'
+language: go
+type: application
+tags:
+  - docker
+dependsOn:
+  - cfg
+  - database
+  - protos
+tasks:
+  dev:
+    command: 'go run . api'
+    local: true
+    options:
+      cache: false
+  seed:
+    command: 'go run . seed --file seeds/catalog.yaml'
+    local: true
+    options:
+      cache: false
+  build:
+    command: 'go build -o dist/aihues-api .'
+    inputs:
+      - '**/*.go'
+      - '/go.mod'
+      - '/go.sum'
+      - '/gen/go/**/*'
+      - '/packages/database/**/*'
+    outputs:
+      - 'dist/aihues-api'
+  run:
+    command: 'go run . api'
+    local: true

@@ -1,0 +1,57 @@
+# yaml-language-server: $schema=https://moonrepo.dev/schemas/tasks.json
+$schema: 'https://moonrepo.dev/schemas/tasks.json'
+
+tasks:
+  format-check:
+    script: |
+      files="$(gofmt -l .)"
+      if [ -n "$files" ]; then
+        printf '%s\n' "$files"
+        exit 1
+      fi
+    inputs:
+      - '**/*.go'
+
+  format:
+    command: gofmt
+    args:
+      - -w
+      - .
+    inputs:
+      - '**/*.go'
+    local: true
+
+  lint:
+    command: go
+    args:
+      - vet
+      - ./...
+    inputs:
+      - '**/*.go'
+      - '/go.mod'
+      - '/go.sum'
+
+  typecheck:
+    command: go
+    args:
+      - test
+      - -run=^$
+      - ./...
+    inputs:
+      - '**/*.go'
+      - '/go.mod'
+      - '/go.sum'
+    options:
+      outputStyle: 'buffer-only-failure'
+
+  test:
+    command: go
+    args:
+      - test
+      - ./...
+    inputs:
+      - '**/*.go'
+      - '/go.mod'
+      - '/go.sum'
+    options:
+      outputStyle: 'buffer-only-failure'

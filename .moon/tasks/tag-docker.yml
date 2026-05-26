@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=https://moonrepo.dev/schemas/tasks.json
+$schema: 'https://moonrepo.dev/schemas/tasks.json'
+
+tasks:
+  container:
+    command:
+      - ./packages/builder/dist/builder
+    inputs:
+      - Dockerfile
+    platform: system
+    deps:
+      - 'builder:build'
+    options:
+      runFromWorkspaceRoot: true
+    local: true

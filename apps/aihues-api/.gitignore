@@ -1,0 +1,3 @@
+# Local config overrides (not the committed default)
+config.local.yaml
+config.*.local.yaml

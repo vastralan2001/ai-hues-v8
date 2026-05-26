@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: aihues-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: aihues
+      POSTGRES_PASSWORD: aihues_dev
+      POSTGRES_DB: aihues
+    ports:
+      - '5432:5432'
+    volumes:
+      - aihues-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U aihues -d aihues']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  aihues-pgdata:
