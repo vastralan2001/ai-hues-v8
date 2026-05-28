@@ -11,6 +11,8 @@ package-lock.json
 *.tsbuildinfo
 .env
 .env.local
+local.yaml
 .DS_Store
 .moon/cache
 .moon/docker
+.idea

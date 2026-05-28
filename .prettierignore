@@ -13,6 +13,10 @@ vite.config.ts.timestamp-*
 # Next.js auto-generated types
 next-env.d.ts
 
+# Demo static tool/game pages should stay byte-for-byte with the supplied demo.
+apps/aihues-web/public/tools/*.html
+apps/aihues-web/public/games/*.html
+
 # moonrepo cache
 .moon/cache
 .moon/docker

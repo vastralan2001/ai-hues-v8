@@ -1,25 +1,25 @@
 # yaml-language-server: $schema=https://moonrepo.dev/schemas/project.json
 $schema: 'https://moonrepo.dev/schemas/project.json'
 type: application
-language: html
-
-# 纯静态站点，不复用 .moon/tasks/node.yml 里的 ts/lint/typecheck 任务
+language: typescript
+platform: node
+tags:
+  - docker
+  - nextjs
 
 tasks:
-  dev:
-    command: 'pnpm dev'
-    local: true
-    options:
-      persistent: true
-      runFromWorkspaceRoot: false
-
-  start:
-    command: 'pnpm start'
-    options:
-      persistent: true
-      runFromWorkspaceRoot: false
-
   build:
-    command: 'pnpm build'
+    command:
+      - pnpm
+      - run
+      - build
+    inputs:
+      - 'app/**/*'
+      - 'next.config.*'
+      - 'tsconfig.json'
+      - 'tailwind.config.*'
+      - 'postcss.config.*'
+    outputs:
+      - '.next'
     options:
-      runFromWorkspaceRoot: false
+      mergeArgs: replace

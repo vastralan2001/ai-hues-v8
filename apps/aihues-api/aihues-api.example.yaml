@@ -1,0 +1,7 @@
+env: local
+listen_addr: ':80'
+log_level: debug
+storage:
+  postgresql:
+    dsn: postgres://aihues:aihues_dev@localhost:5432/aihues?sslmode=disable
+    trace_sql: true

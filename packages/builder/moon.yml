@@ -1,0 +1,17 @@
+$schema: 'https://moonrepo.dev/schemas/project.json'
+language: go
+type: 'tool'
+
+tasks:
+  build:
+    command:
+      - go
+      - build
+      - '-buildvcs=false'
+      - '-o'
+      - '@out(0)'
+      - '.'
+    inputs:
+      - '**/*.go'
+    outputs:
+      - 'dist/builder'

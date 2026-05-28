@@ -1,0 +1,411 @@
+/**
+ * ============================================================
+ * AIHues v6 - Multi-Theme Skin System
+ * 6 Theme Presets: light | dark | forest | sunset | ocean | minimal
+ * ============================================================
+ */
+
+/* ========================
+ *  Global Transition Setup
+ *  All color/shadow changes animate smoothly
+ * ======================== */
+*,
+*::before,
+*::after {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    fill 0.3s ease,
+    stroke 0.3s ease;
+}
+
+/* ========================
+ *  Theme 1: light (Default Light)
+ *  Clean, bright, purple accent
+ * ======================== */
+[data-theme='light'],
+:root:not([data-theme]) {
+  --bg: #f5f5f7;
+  --surface: #ffffff;
+  --text: #1d1d1f;
+  --text-secondary: #424245;
+  --text-muted: #86868b;
+  --accent: #6d28d9;
+  --accent-light: #8b5cf6;
+  --accent-gradient: linear-gradient(135deg, #6d28d9, #7c3aed);
+  --border: rgba(0, 0, 0, 0.08);
+  --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --radius: 12px;
+  --success: #34c759;
+  --warning: #ff9500;
+  --error: #ff3b30;
+  --tag: #f0eefb;
+  --tag-color: #6d28d9;
+  --input-bg: #f5f5f7;
+}
+
+/* ========================
+ *  Theme 2: dark (Night Purple)
+ *  Deep dark, purple glow
+ * ======================== */
+[data-theme='dark'] {
+  --bg: #0a0a0f;
+  --surface: #14141f;
+  --text: #f0f0f5;
+  --text-secondary: #b0b0c0;
+  --text-muted: #6e6e80;
+  --accent: #8b5cf6;
+  --accent-light: #a78bfa;
+  --accent-gradient: linear-gradient(135deg, #7c3aed, #8b5cf6);
+  --border: rgba(255, 255, 255, 0.08);
+  --shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+  --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --radius: 12px;
+  --success: #30d158;
+  --warning: #ff9f0a;
+  --error: #ff453a;
+  --tag: #1f1a30;
+  --tag-color: #a78bfa;
+  --input-bg: #1c1c2e;
+}
+
+/* ========================
+ *  Theme 3: forest (Forest Green)
+ *  Natural green, fresh and calm
+ * ======================== */
+[data-theme='forest'] {
+  --bg: #f0f7f0;
+  --surface: #ffffff;
+  --text: #1a2e1a;
+  --text-secondary: #3d5a3d;
+  --text-muted: #7a9a7a;
+  --accent: #2d7a2d;
+  --accent-light: #4caf50;
+  --accent-gradient: linear-gradient(135deg, #2d7a2d, #4caf50);
+  --border: rgba(45, 122, 45, 0.15);
+  --shadow: 0 2px 12px rgba(45, 122, 45, 0.1);
+  --shadow-hover: 0 8px 24px rgba(45, 122, 45, 0.18);
+  --radius: 12px;
+  --success: #43a047;
+  --warning: #f5a623;
+  --error: #e53935;
+  --tag: #e8f5e9;
+  --tag-color: #2d7a2d;
+  --input-bg: #f0f7f0;
+}
+
+[data-theme='forest'] .hero-bg,
+[data-theme='forest'] .bg-gradient {
+  --accent-gradient: linear-gradient(135deg, #2d7a2d, #4caf50);
+}
+
+[data-theme='forest'] .tool-card:hover {
+  box-shadow: 0 8px 24px rgba(45, 122, 45, 0.18);
+}
+
+[data-theme='forest'] .category-tag {
+  background: #e8f5e9;
+  color: #2d7a2d;
+}
+
+/* ========================
+ *  Theme 4: sunset (Sunset Orange)
+ *  Warm orange, cozy and energetic
+ * ======================== */
+[data-theme='sunset'] {
+  --bg: #fff8f0;
+  --surface: #ffffff;
+  --text: #2d1a0f;
+  --text-secondary: #5a3d2a;
+  --text-muted: #a08070;
+  --accent: #e66c20;
+  --accent-light: #ff8c42;
+  --accent-gradient: linear-gradient(135deg, #e66c20, #ff8c42);
+  --border: rgba(230, 108, 32, 0.15);
+  --shadow: 0 2px 12px rgba(230, 108, 32, 0.1);
+  --shadow-hover: 0 8px 24px rgba(230, 108, 32, 0.18);
+  --radius: 12px;
+  --success: #66bb6a;
+  --warning: #ffa726;
+  --error: #ef5350;
+  --tag: #fff3e0;
+  --tag-color: #e66c20;
+  --input-bg: #fff8f0;
+}
+
+[data-theme='sunset'] .hero-bg,
+[data-theme='sunset'] .bg-gradient {
+  --accent-gradient: linear-gradient(135deg, #e66c20, #ff8c42);
+}
+
+[data-theme='sunset'] .tool-card:hover {
+  box-shadow: 0 8px 24px rgba(230, 108, 32, 0.18);
+}
+
+[data-theme='sunset'] .category-tag {
+  background: #fff3e0;
+  color: #e66c20;
+}
+
+/* ========================
+ *  Theme 5: ocean (Deep Ocean Blue)
+ *  Cool blue, professional and serene
+ * ======================== */
+[data-theme='ocean'] {
+  --bg: #f0f5ff;
+  --surface: #ffffff;
+  --text: #0f1a2d;
+  --text-secondary: #2a3d5a;
+  --text-muted: #7080a0;
+  --accent: #1a6fc4;
+  --accent-light: #42a5f5;
+  --accent-gradient: linear-gradient(135deg, #1a6fc4, #42a5f5);
+  --border: rgba(26, 111, 196, 0.15);
+  --shadow: 0 2px 12px rgba(26, 111, 196, 0.1);
+  --shadow-hover: 0 8px 24px rgba(26, 111, 196, 0.18);
+  --radius: 12px;
+  --success: #4caf50;
+  --warning: #ff9800;
+  --error: #f44336;
+  --tag: #e3f2fd;
+  --tag-color: #1a6fc4;
+  --input-bg: #f0f5ff;
+}
+
+[data-theme='ocean'] .hero-bg,
+[data-theme='ocean'] .bg-gradient {
+  --accent-gradient: linear-gradient(135deg, #1a6fc4, #42a5f5);
+}
+
+[data-theme='ocean'] .tool-card:hover {
+  box-shadow: 0 8px 24px rgba(26, 111, 196, 0.18);
+}
+
+[data-theme='ocean'] .category-tag {
+  background: #e3f2fd;
+  color: #1a6fc4;
+}
+
+/* ========================
+ *  Theme 6: minimal (Minimalist White/Grey)
+ *  Ultra-clean, no color distraction
+ * ======================== */
+[data-theme='minimal'] {
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --text: #222222;
+  --text-secondary: #555555;
+  --text-muted: #999999;
+  --accent: #444444;
+  --accent-light: #666666;
+  --accent-gradient: linear-gradient(135deg, #333333, #666666);
+  --border: rgba(0, 0, 0, 0.1);
+  --shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+  --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --radius: 4px;
+  --success: #4caf50;
+  --warning: #ff9800;
+  --error: #f44336;
+  --tag: #f0f0f0;
+  --tag-color: #444444;
+  --input-bg: #f5f5f5;
+}
+
+[data-theme='minimal'] .hero-bg,
+[data-theme='minimal'] .bg-gradient {
+  --accent-gradient: linear-gradient(135deg, #333333, #666666);
+}
+
+[data-theme='minimal'] .tool-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme='minimal'] .category-tag {
+  background: #f0f0f0;
+  color: #444444;
+}
+
+/* Minimal theme uses more squared corners for a sharper look */
+[data-theme='minimal'] .card,
+[data-theme='minimal'] .btn,
+[data-theme='minimal'] .input,
+[data-theme='minimal'] .modal,
+[data-theme='minimal'] .toast {
+  border-radius: 4px;
+}
+
+/* ========================
+ *  Base Styles Using Variables
+ *  These automatically adapt to active theme
+ * ======================== */
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+.card,
+.tool-card,
+.modal,
+.panel,
+.sidebar {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.tool-card:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.btn-primary,
+.btn-accent {
+  background: var(--accent-gradient);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+}
+
+.btn-primary:hover,
+.btn-accent:hover {
+  filter: brightness(1.08);
+}
+
+.btn-secondary {
+  background-color: var(--surface);
+  color: var(--accent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent);
+}
+
+.input,
+.search-input,
+textarea,
+select {
+  background-color: var(--input-bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.input:focus,
+.search-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--tag);
+}
+
+::placeholder {
+  color: var(--text-muted);
+}
+
+.category-tag,
+.tag {
+  background-color: var(--tag);
+  color: var(--tag-color);
+  border-radius: calc(var(--radius) / 2);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+.text-muted {
+  color: var(--text-muted);
+}
+.text-accent {
+  color: var(--accent);
+}
+
+.border-theme {
+  border-color: var(--border);
+}
+.bg-surface {
+  background-color: var(--surface);
+}
+.bg-page {
+  background-color: var(--bg);
+}
+
+/* ========================
+ *  Scrollbar Theming
+ * ======================== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--text-muted);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* ========================
+ *  Selection Highlight
+ * ======================== */
+::selection {
+  background: var(--accent-light);
+  color: #fff;
+}
+
+[data-theme='light'] ::selection,
+[data-theme='forest'] ::selection,
+[data-theme='sunset'] ::selection,
+[data-theme='ocean'] ::selection,
+[data-theme='minimal'] ::selection {
+  color: #fff;
+}
+
+/* ========================
+ *  Skeleton / Loading State
+ * ======================== */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--input-bg) 25%,
+    var(--surface) 50%,
+    var(--input-bg) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s ease infinite;
+  border-radius: var(--radius);
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ========================
+ *  Accessibility: Reduced Motion
+ * ======================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+  }
+
+  .skeleton {
+    animation: none;
+    background: var(--input-bg);
+  }
+}

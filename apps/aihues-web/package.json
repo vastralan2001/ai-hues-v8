@@ -2,13 +2,28 @@
   "name": "@aiushtha/aihues-web",
   "version": "0.1.0",
   "private": true,
-  "description": "AIHues 静态站点（AI 工具目录 / 落地页）",
+  "description": "AIHues Next.js catalog web app",
   "scripts": {
-    "dev": "serve -s --no-clipboard .",
-    "start": "serve -s --no-clipboard .",
-    "build": "node -e \"console.log('aihues-web: 纯静态站点，无需 build')\""
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "next": "16.1.1",
+    "react": "catalog:",
+    "react-dom": "catalog:"
   },
   "devDependencies": {
-    "serve": "^14.2.4"
+    "@tailwindcss/postcss": "^4.1.8",
+    "@types/node": "^22",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.1",
+    "tailwindcss": "^4.1.8",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.3"
   }
 }
