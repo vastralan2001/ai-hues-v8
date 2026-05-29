@@ -183,6 +183,20 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.timestamp.unixMs': 'Unix Milliseconds',
     'tool.timestamp.relative': 'Relative',
 
+    'tool.htmlEntity.title': 'HTML Entity Encoder / Decoder',
+    'tool.htmlEntity.desc': 'Encode and decode HTML entities',
+    'tool.htmlEntity.placeholder': 'Enter text or HTML entities...',
+    'tool.htmlEntity.encode': 'Encode',
+    'tool.htmlEntity.decode': 'Decode',
+    'tool.htmlEntity.result': 'Result',
+
+    'tool.fullwidth.title': 'Fullwidth Converter',
+    'tool.fullwidth.desc': 'Convert between halfwidth and fullwidth characters',
+    'tool.fullwidth.placeholder': 'Enter text to convert...',
+    'tool.fullwidth.toFull': 'To Fullwidth',
+    'tool.fullwidth.toHalf': 'To Halfwidth',
+    'tool.fullwidth.result': 'Result',
+
     // footer
     'footer.product': 'Product',
     'footer.games': 'Games',
@@ -375,6 +389,20 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.timestamp.unixSeconds': 'Unix 秒',
     'tool.timestamp.unixMs': 'Unix 毫秒',
     'tool.timestamp.relative': '相对时间',
+
+    'tool.htmlEntity.title': 'HTML 实体编码 / 解码',
+    'tool.htmlEntity.desc': '编码和解码 HTML 实体',
+    'tool.htmlEntity.placeholder': '输入文本或 HTML 实体...',
+    'tool.htmlEntity.encode': '编码',
+    'tool.htmlEntity.decode': '解码',
+    'tool.htmlEntity.result': '结果',
+
+    'tool.fullwidth.title': '全角转换器',
+    'tool.fullwidth.desc': '在半角和全角字符之间转换',
+    'tool.fullwidth.placeholder': '输入要转换的文本...',
+    'tool.fullwidth.toFull': '转全角',
+    'tool.fullwidth.toHalf': '转半角',
+    'tool.fullwidth.result': '结果',
 
     // footer
     'footer.product': '产品',
