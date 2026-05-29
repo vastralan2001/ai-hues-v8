@@ -304,6 +304,20 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.pomodoro.minutes': 'minutes',
     'tool.pomodoro.done': 'Time is up!',
 
+    'tool.curl.title': 'cURL Command Generator',
+    'tool.curl.desc': 'Build cURL commands visually',
+    'tool.curl.method': 'Method',
+    'tool.curl.url': 'URL',
+    'tool.curl.urlPlaceholder': 'https://api.example.com/users',
+    'tool.curl.headers': 'Headers',
+    'tool.curl.headerKey': 'Key',
+    'tool.curl.headerValue': 'Value',
+    'tool.curl.addHeader': 'Add Header',
+    'tool.curl.body': 'Body',
+    'tool.curl.bodyPlaceholder': 'JSON payload or form data...',
+    'tool.curl.generate': 'Generate',
+    'tool.curl.result': 'cURL Command',
+
     // footer
     'footer.product': 'Product',
     'footer.games': 'Games',
@@ -617,6 +631,20 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.pomodoro.reset': '重置',
     'tool.pomodoro.minutes': '分钟',
     'tool.pomodoro.done': '时间到！',
+
+    'tool.curl.title': 'cURL 命令生成器',
+    'tool.curl.desc': '可视化构建 cURL 命令',
+    'tool.curl.method': '方法',
+    'tool.curl.url': 'URL',
+    'tool.curl.urlPlaceholder': 'https://api.example.com/users',
+    'tool.curl.headers': '请求头',
+    'tool.curl.headerKey': '键',
+    'tool.curl.headerValue': '值',
+    'tool.curl.addHeader': '添加请求头',
+    'tool.curl.body': '请求体',
+    'tool.curl.bodyPlaceholder': 'JSON 负载或表单数据...',
+    'tool.curl.generate': '生成',
+    'tool.curl.result': 'cURL 命令',
 
     // footer
     'footer.product': '产品',

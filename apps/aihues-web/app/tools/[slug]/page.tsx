@@ -24,6 +24,7 @@ import TitleCaseTool from '@/components/tools/TitleCaseTool';
 import GitCommitTool from '@/components/tools/GitCommitTool';
 import ReadabilityTool from '@/components/tools/ReadabilityTool';
 import PomodoroTool from '@/components/tools/PomodoroTool';
+import CurlGenTool from '@/components/tools/CurlGenTool';
 
 const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'word-count': WordCountTool,
@@ -46,6 +47,7 @@ const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'git-commit': GitCommitTool,
   'readability': ReadabilityTool,
   'pomodoro': PomodoroTool,
+  'curl-gen': CurlGenTool,
 };
 
 export default async function ToolPage({
