@@ -48,6 +48,10 @@ func gameToProto(it *model.Item) *catalogv1.Game {
 		Description: derefString(it.Description),
 		Status:      it.Status,
 		SortOrder:   it.SortOrder,
+		PriceTag:    it.PriceTag,
+		ExternalUrl: it.ExternalURL,
+		Tags:        splitTags(it.Tags),
+		CreditCost:  it.CreditCost,
 	}
 	out.CreateTime, out.UpdateTime = itemTimestamps(it)
 	return out

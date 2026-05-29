@@ -2,6 +2,7 @@ package catalogsvc
 
 import (
 	"context"
+	"strings"
 
 	"connectrpc.com/connect"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -55,6 +56,10 @@ func toolToProto(it *model.Item) *catalogv1.Tool {
 		Category:    it.Category,
 		Status:      it.Status,
 		SortOrder:   it.SortOrder,
+		PriceTag:    it.PriceTag,
+		ExternalUrl: it.ExternalURL,
+		Tags:        splitTags(it.Tags),
+		CreditCost:  it.CreditCost,
 	}
 	out.CreateTime, out.UpdateTime = itemTimestamps(it)
 	return out
@@ -76,4 +81,20 @@ func derefString(s *string) string {
 		return ""
 	}
 	return *s
+}
+
+// splitTags converts a comma-separated tag string into a slice.
+func splitTags(s string) []string {
+	if s == "" {
+		return nil
+	}
+	parts := strings.Split(s, ",")
+	out := make([]string, 0, len(parts))
+	for _, p := range parts {
+		p = strings.TrimSpace(p)
+		if p != "" {
+			out = append(out, p)
+		}
+	}
+	return out
 }

@@ -172,7 +172,11 @@ export function ToolCardV2({
   showNew?: boolean;
   locale?: Locale;
 }) {
-  const pricing = getToolPricing(tool.slug);
+  // Prefer API fields; fallback to front-end map while backend migrates
+  const fallback = getToolPricing(tool.slug);
+  const price = tool.priceTag !== 'unspecified' ? tool.priceTag : fallback.price;
+  const credit =
+    tool.creditCost > 0 ? tool.creditCost : fallback.credit ?? 0;
 
   return (
     <Link
@@ -199,10 +203,10 @@ export function ToolCardV2({
 
       {/* Price + Credit row */}
       <div className='mt-3 flex items-center gap-2'>
-        <PriceBadge price={pricing.price} locale={locale} />
-        {pricing.credit != null && (
+        <PriceBadge price={price} locale={locale} />
+        {credit > 0 && (
           <span className='text-[11px] font-semibold text-accent'>
-            🪙 {pricing.credit}
+            🪙 {credit}
           </span>
         )}
       </div>

@@ -31,6 +31,8 @@ export const toolCategories = [
 
 export type ToolCategoryKey = (typeof toolCategories)[number]['key'];
 
+export type PriceTagKey = 'unspecified' | 'free' | 'freemium' | 'paid';
+
 type ProtoCategory =
   | 'ITEM_CATEGORY_UNSPECIFIED'
   | 'ITEM_CATEGORY_DEVELOPER'
@@ -43,6 +45,12 @@ type ProtoStatus =
   | 'ITEM_STATUS_PUBLISHED'
   | 'ITEM_STATUS_ARCHIVED';
 
+type ProtoPriceTag =
+  | 'PRICE_TAG_UNSPECIFIED'
+  | 'PRICE_TAG_FREE'
+  | 'PRICE_TAG_FREEMIUM'
+  | 'PRICE_TAG_PAID';
+
 export interface CatalogTool {
   id: string;
   slug: string;
@@ -52,6 +60,10 @@ export interface CatalogTool {
   category: ToolCategoryKey;
   status: ProtoStatus | number | string;
   sortOrder: number;
+  priceTag: PriceTagKey;
+  externalUrl: string;
+  tags: string[];
+  creditCost: number;
 }
 
 export interface CatalogGame {
@@ -62,6 +74,10 @@ export interface CatalogGame {
   description: string;
   status: ProtoStatus | number | string;
   sortOrder: number;
+  priceTag: PriceTagKey;
+  externalUrl: string;
+  tags: string[];
+  creditCost: number;
 }
 
 export interface ListToolsOptions {
@@ -96,6 +112,13 @@ interface RawCatalogItem {
   status?: ProtoStatus | number | string;
   sortOrder?: number;
   sort_order?: number;
+  priceTag?: ProtoPriceTag | number | string;
+  price_tag?: ProtoPriceTag | number | string;
+  externalUrl?: string;
+  external_url?: string;
+  tags?: string[];
+  creditCost?: number;
+  credit_cost?: number;
 }
 
 interface RawListToolsResponse {
@@ -158,6 +181,21 @@ export function protoToCategory(
   return 'all';
 }
 
+export function protoToPriceTag(
+  pt: RawCatalogItem['priceTag']
+): PriceTagKey {
+  if (pt === 'PRICE_TAG_FREE' || pt === 1) {
+    return 'free';
+  }
+  if (pt === 'PRICE_TAG_FREEMIUM' || pt === 2) {
+    return 'freemium';
+  }
+  if (pt === 'PRICE_TAG_PAID' || pt === 3) {
+    return 'paid';
+  }
+  return 'unspecified';
+}
+
 export function normalizeCategory(value?: string): ToolCategoryKey {
   if (value === 'developer' || value === 'utility' || value === 'ai-writing') {
     return value;
@@ -208,6 +246,10 @@ function normalizeTool(item: RawCatalogItem): CatalogTool {
     category: protoToCategory(item.category),
     status: item.status ?? 'ITEM_STATUS_UNSPECIFIED',
     sortOrder: item.sortOrder ?? item.sort_order ?? 0,
+    priceTag: protoToPriceTag(item.priceTag ?? item.price_tag),
+    externalUrl: item.externalUrl ?? item.external_url ?? '',
+    tags: Array.isArray(item.tags) ? item.tags : [],
+    creditCost: item.creditCost ?? item.credit_cost ?? 0,
   };
 }
 
@@ -220,6 +262,10 @@ function normalizeGame(item: RawCatalogItem): CatalogGame {
     description: item.description ?? '',
     status: item.status ?? 'ITEM_STATUS_UNSPECIFIED',
     sortOrder: item.sortOrder ?? item.sort_order ?? 0,
+    priceTag: protoToPriceTag(item.priceTag ?? item.price_tag),
+    externalUrl: item.externalUrl ?? item.external_url ?? '',
+    tags: Array.isArray(item.tags) ? item.tags : [],
+    creditCost: item.creditCost ?? item.credit_cost ?? 0,
   };
 }
 

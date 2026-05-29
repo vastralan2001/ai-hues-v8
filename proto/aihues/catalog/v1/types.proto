@@ -29,6 +29,14 @@ enum ItemCategory {
   ITEM_CATEGORY_AI_WRITING = 3;
 }
 
+// 价格标签
+enum PriceTag {
+  PRICE_TAG_UNSPECIFIED = 0;
+  PRICE_TAG_FREE        = 1;
+  PRICE_TAG_FREEMIUM    = 2;
+  PRICE_TAG_PAID        = 3;
+}
+
 // 工具元数据
 message Tool {
   string id          = 1;
@@ -41,6 +49,11 @@ message Tool {
   int32  sort_order  = 8;
   google.protobuf.Timestamp create_time = 9;
   google.protobuf.Timestamp update_time = 10;
+  // ── 新增字段 ──
+  PriceTag price_tag    = 11;  // 价格标签
+  string external_url   = 12;  // 外链地址
+  repeated string tags  = 13;  // 关键词标签
+  int32 credit_cost     = 14;  // 积分消耗（0 = 免费）
 }
 
 // 游戏元数据
@@ -54,4 +67,9 @@ message Game {
   int32  sort_order  = 7;
   google.protobuf.Timestamp create_time = 8;
   google.protobuf.Timestamp update_time = 9;
+  // ── 新增字段 ──
+  PriceTag price_tag    = 10;  // 价格标签
+  string external_url   = 11;  // 外链地址
+  repeated string tags  = 12;  // 关键词标签
+  int32 credit_cost     = 13;  // 积分消耗
 }
