@@ -1,5 +1,7 @@
 import Link from 'next/link';
 
+import { PageShell } from '@/components/SiteChrome';
+
 const posts = [
   {
     slug: 'growth-tools-2026',
@@ -32,7 +34,8 @@ const posts = [
 
 export default function BlogPage() {
   return (
-    <main className='mx-auto max-w-[800px] px-6 py-20 md:px-7'>
+    <PageShell>
+      <main className='mx-auto max-w-[800px] px-6 py-20 md:px-7'>
       <div className='mb-10 text-center'>
         <p className='mb-2 text-xs font-bold uppercase tracking-widest text-green'>
           Blog
@@ -74,5 +77,6 @@ export default function BlogPage() {
         ))}
       </div>
     </main>
+    </PageShell>
   );
 }
