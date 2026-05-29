@@ -230,6 +230,21 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.diff.added': 'Added',
     'tool.diff.copy': 'Copy',
 
+    'tool.csvJson.title': 'CSV / JSON Converter',
+    'tool.csvJson.desc': 'Convert between CSV and JSON formats',
+    'tool.csvJson.placeholder': 'Paste CSV or JSON here...',
+    'tool.csvJson.convert': 'Convert',
+    'tool.csvJson.result': 'Result',
+
+    'tool.color.title': 'Color Converter',
+    'tool.color.desc': 'Convert between HEX, RGB, and HSL color formats',
+    'tool.color.placeholder': 'Enter HEX (e.g. #b45309) or rgb(...)...',
+    'tool.color.convert': 'Convert',
+    'tool.color.hex': 'HEX',
+    'tool.color.rgb': 'RGB',
+    'tool.color.hsl': 'HSL',
+    'tool.color.preview': 'Preview',
+
     // footer
     'footer.product': 'Product',
     'footer.games': 'Games',
@@ -469,6 +484,21 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.diff.removed': '删除',
     'tool.diff.added': '新增',
     'tool.diff.copy': '复制',
+
+    'tool.csvJson.title': 'CSV / JSON 转换器',
+    'tool.csvJson.desc': '在 CSV 和 JSON 格式之间转换',
+    'tool.csvJson.placeholder': '在此粘贴 CSV 或 JSON...',
+    'tool.csvJson.convert': '转换',
+    'tool.csvJson.result': '结果',
+
+    'tool.color.title': '颜色转换器',
+    'tool.color.desc': '在 HEX、RGB 和 HSL 颜色格式之间转换',
+    'tool.color.placeholder': '输入 HEX (例如 #b45309) 或 rgb(...)...',
+    'tool.color.convert': '转换',
+    'tool.color.hex': 'HEX',
+    'tool.color.rgb': 'RGB',
+    'tool.color.hsl': 'HSL',
+    'tool.color.preview': '预览',
 
     // footer
     'footer.product': '产品',

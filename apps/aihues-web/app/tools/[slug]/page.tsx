@@ -18,6 +18,8 @@ import FullwidthTool from '@/components/tools/FullwidthTool';
 import PasswordTool from '@/components/tools/PasswordTool';
 import RegexTool from '@/components/tools/RegexTool';
 import DiffTool from '@/components/tools/DiffTool';
+import CsvJsonTool from '@/components/tools/CsvJsonTool';
+import ColorTool from '@/components/tools/ColorTool';
 
 const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'word-count': WordCountTool,
@@ -34,6 +36,8 @@ const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'password-gen': PasswordTool,
   'regex': RegexTool,
   'diff': DiffTool,
+  'csv-json': CsvJsonTool,
+  'color-convert': ColorTool,
 };
 
 export default async function ToolPage({
