@@ -6,10 +6,12 @@ import { notFound, redirect } from 'next/navigation';
 import type { Locale } from '@/lib/dict';
 import WordCountTool from '@/components/tools/WordCountTool';
 import Base64Tool from '@/components/tools/Base64Tool';
+import UrlEncodeTool from '@/components/tools/UrlEncodeTool';
 
 const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'word-count': WordCountTool,
   'base64': Base64Tool,
+  'url-encode': UrlEncodeTool,
 };
 
 export default async function ToolPage({

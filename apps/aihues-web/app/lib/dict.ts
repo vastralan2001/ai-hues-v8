@@ -124,6 +124,13 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.base64.result': 'Result',
     'tool.base64.urlSafe': 'URL-safe',
 
+    'tool.urlEncode.title': 'URL Encoder / Decoder',
+    'tool.urlEncode.desc': 'Encode and decode URL strings instantly',
+    'tool.urlEncode.placeholder': 'Enter text to encode or URL-encoded text to decode...',
+    'tool.urlEncode.encode': 'Encode',
+    'tool.urlEncode.decode': 'Decode',
+    'tool.urlEncode.result': 'Result',
+
     // footer
     'footer.product': 'Product',
     'footer.games': 'Games',
@@ -257,6 +264,13 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.base64.decode': '解码',
     'tool.base64.result': '结果',
     'tool.base64.urlSafe': 'URL 安全模式',
+
+    'tool.urlEncode.title': 'URL 编码 / 解码',
+    'tool.urlEncode.desc': '即时编码和解码 URL 字符串',
+    'tool.urlEncode.placeholder': '输入要编码的文本或要解码的 URL 编码文本...',
+    'tool.urlEncode.encode': '编码',
+    'tool.urlEncode.decode': '解码',
+    'tool.urlEncode.result': '结果',
 
     // footer
     'footer.product': '产品',
