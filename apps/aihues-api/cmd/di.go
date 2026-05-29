@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"context"
+	"os"
+	"strings"
 
 	"github.com/samber/do/v2"
 	"gorm.io/gorm"
@@ -16,8 +18,16 @@ import (
 
 func init() {
 	registerGlobalVars()
-	registerStorageServices()
-	registerCatalogServices()
+	if useMemoryStore() {
+		registerMemoryCatalogService()
+	} else {
+		registerStorageServices()
+		registerCatalogServices()
+	}
+}
+
+func useMemoryStore() bool {
+	return strings.EqualFold(os.Getenv("AIHUES_API__USE_MEMORY"), "true")
 }
 
 func registerGlobalVars() {
@@ -47,5 +57,11 @@ func registerStorageServices() {
 func registerCatalogServices() {
 	do.Provide(nil, func(i do.Injector) (catalogv1connect.CatalogServiceHandler, error) {
 		return catalogsvc.New(do.MustInvoke[*itemdal.DAL](i)), nil
+	})
+}
+
+func registerMemoryCatalogService() {
+	do.Provide(nil, func(_ do.Injector) (catalogv1connect.CatalogServiceHandler, error) {
+		return catalogsvc.NewMemory(), nil
 	})
 }
