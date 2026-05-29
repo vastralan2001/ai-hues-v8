@@ -197,6 +197,17 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.fullwidth.toHalf': 'To Halfwidth',
     'tool.fullwidth.result': 'Result',
 
+    'tool.password.title': 'Password Generator',
+    'tool.password.desc': 'Generate strong, secure passwords instantly',
+    'tool.password.length': 'Length',
+    'tool.password.uppercase': 'Uppercase (A-Z)',
+    'tool.password.lowercase': 'Lowercase (a-z)',
+    'tool.password.numbers': 'Numbers (0-9)',
+    'tool.password.symbols': 'Symbols (!@#$...)',
+    'tool.password.generate': 'Generate',
+    'tool.password.copy': 'Copy',
+    'tool.password.strength': 'Strength',
+
     // footer
     'footer.product': 'Product',
     'footer.games': 'Games',
@@ -403,6 +414,17 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.fullwidth.toFull': '转全角',
     'tool.fullwidth.toHalf': '转半角',
     'tool.fullwidth.result': '结果',
+
+    'tool.password.title': '密码生成器',
+    'tool.password.desc': '即时生成强安全密码',
+    'tool.password.length': '长度',
+    'tool.password.uppercase': '大写字母 (A-Z)',
+    'tool.password.lowercase': '小写字母 (a-z)',
+    'tool.password.numbers': '数字 (0-9)',
+    'tool.password.symbols': '符号 (!@#$...)',
+    'tool.password.generate': '生成',
+    'tool.password.copy': '复制',
+    'tool.password.strength': '强度',
 
     // footer
     'footer.product': '产品',
