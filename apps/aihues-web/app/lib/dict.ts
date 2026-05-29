@@ -245,6 +245,18 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.color.hsl': 'HSL',
     'tool.color.preview': 'Preview',
 
+    'tool.titleCase.title': 'Text Case Converter',
+    'tool.titleCase.desc': 'Convert text between uppercase, lowercase, title case, and more',
+    'tool.titleCase.placeholder': 'Enter text to convert...',
+    'tool.titleCase.uppercase': 'UPPERCASE',
+    'tool.titleCase.lowercase': 'lowercase',
+    'tool.titleCase.titleCase': 'Title Case',
+    'tool.titleCase.sentenceCase': 'Sentence case',
+    'tool.titleCase.camelCase': 'camelCase',
+    'tool.titleCase.snakeCase': 'snake_case',
+    'tool.titleCase.kebabCase': 'kebab-case',
+    'tool.titleCase.result': 'Result',
+
     // footer
     'footer.product': 'Product',
     'footer.games': 'Games',
@@ -499,6 +511,18 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.color.rgb': 'RGB',
     'tool.color.hsl': 'HSL',
     'tool.color.preview': '预览',
+
+    'tool.titleCase.title': '文本大小写转换器',
+    'tool.titleCase.desc': '在大写、小写、标题大小写等格式之间转换文本',
+    'tool.titleCase.placeholder': '输入要转换的文本...',
+    'tool.titleCase.uppercase': '全大写',
+    'tool.titleCase.lowercase': '全小写',
+    'tool.titleCase.titleCase': '标题大小写',
+    'tool.titleCase.sentenceCase': '句子大小写',
+    'tool.titleCase.camelCase': '驼峰式',
+    'tool.titleCase.snakeCase': '蛇形',
+    'tool.titleCase.kebabCase': '短横线',
+    'tool.titleCase.result': '结果',
 
     // footer
     'footer.product': '产品',
