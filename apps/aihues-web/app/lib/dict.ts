@@ -367,6 +367,16 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.meta.generate': 'Generate',
     'tool.meta.result': 'Meta Tags',
 
+    'tool.tldr.title': 'TL;DR Generator',
+    'tool.tldr.desc': 'Extract a concise summary from long text',
+    'tool.tldr.placeholder': 'Paste long text here...',
+    'tool.tldr.sentences': 'Sentences',
+    'tool.tldr.summarize': 'Summarize',
+    'tool.tldr.summary': 'Summary',
+    'tool.tldr.originalLength': 'Original',
+    'tool.tldr.summaryLength': 'Summary',
+    'tool.tldr.compression': 'Compression',
+
     // footer
     'footer.product': 'Product',
     'footer.games': 'Games',
@@ -743,6 +753,16 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.meta.image': '图片 URL（用于 Open Graph）',
     'tool.meta.generate': '生成',
     'tool.meta.result': 'Meta 标签',
+
+    'tool.tldr.title': 'TL;DR 生成器',
+    'tool.tldr.desc': '从长文本中提取简洁摘要',
+    'tool.tldr.placeholder': '在此粘贴长文本...',
+    'tool.tldr.sentences': '句子数',
+    'tool.tldr.summarize': '摘要',
+    'tool.tldr.summary': '摘要',
+    'tool.tldr.originalLength': '原文',
+    'tool.tldr.summaryLength': '摘要',
+    'tool.tldr.compression': '压缩率',
 
     // footer
     'footer.product': '产品',

@@ -29,6 +29,7 @@ import HttpStatusTool from '@/components/tools/HttpStatusTool';
 import UnitConvertTool from '@/components/tools/UnitConvertTool';
 import MarkdownTool from '@/components/tools/MarkdownTool';
 import MetaTagTool from '@/components/tools/MetaTagTool';
+import TldrTool from '@/components/tools/TldrTool';
 
 const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'word-count': WordCountTool,
@@ -56,6 +57,7 @@ const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'unit-convert': UnitConvertTool,
   'markdown': MarkdownTool,
   'meta': MetaTagTool,
+  'tldr': TldrTool,
 };
 
 export default async function ToolPage({
