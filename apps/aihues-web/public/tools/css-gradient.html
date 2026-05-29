@@ -10,7 +10,7 @@
   --bg:#ffffff;--surface:#f8f9fb;--surface-hover:#f1f3f7;
   --border:#e8ecf1;--border-hover:#d1d8e0;
   --text:#0f172a;--text-secondary:#475569;--text-muted:#94a3b8;
-  --accent:#6d28d9;--accent-light:#8b5cf6;--accent-gradient:linear-gradient(135deg,#6d28d9,#8b5cf6);
+  --accent:#b45309;--accent-light:#d97706;--accent-gradient:linear-gradient(135deg,#b45309,#d97706);
   --green:#059669;--blue:#2563eb;--orange:#ea580c;
   --radius:14px;--radius-sm:10px;
   --shadow:0 1px 3px rgba(0,0,0,0.04),0 4px 16px rgba(0,0,0,0.04);
@@ -172,6 +172,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,Bl
  <div class="nav-inner">
  <a href="../index.html" class="logo"><div class="logo-mark">H</div><span>AIHues</span></a>
  <div class="nav-links">
+      <a href="../index.html" style="color:var(--accent);font-size:14px;font-weight:600;text-decoration:none">← Home</a>
  <a href="../index.html"></a>
  <a href="../tools.html"></a>
  <a href="../index.html#games"></a>
@@ -366,8 +367,8 @@ let state = {
   conicX: 50,
   conicY: 50,
   stops: [
-    { id: 1, color: '#6d28d9', pos: 0 },
-    { id: 2, color: '#8b5cf6', pos: 100 }
+    { id: 1, color: '#b45309', pos: 0 },
+    { id: 2, color: '#d97706', pos: 100 }
   ],
   activeStopId: 1
 };
@@ -380,7 +381,7 @@ let dragStopId = null;
 // 12 Preset Gradients
 // ═══════════════════════════════════════════
 const presets = [
-  { name: 'Purple Dream', stops: [{color:'#6d28d9',pos:0},{color:'#8b5cf6',pos:100}], type:'linear', angle:135 },
+  { name: 'Purple Dream', stops: [{color:'#b45309',pos:0},{color:'#d97706',pos:100}], type:'linear', angle:135 },
   { name: 'Sunset', stops: [{color:'#ff6b6b',pos:0},{color:'#feca57',pos:100}], type:'linear', angle:135 },
   { name: 'Ocean', stops: [{color:'#2193b0',pos:0},{color:'#6dd5ed',pos:100}], type:'linear', angle:135 },
   { name: 'Forest', stops: [{color:'#11998e',pos:0},{color:'#38ef7d',pos:100}], type:'linear', angle:135 },
