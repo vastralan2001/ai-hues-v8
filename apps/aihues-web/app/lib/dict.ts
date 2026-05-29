@@ -131,6 +131,15 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.urlEncode.decode': 'Decode',
     'tool.urlEncode.result': 'Result',
 
+    'tool.uuid.title': 'UUID Generator',
+    'tool.uuid.desc': 'Generate random UUID v4 identifiers instantly',
+    'tool.uuid.generate': 'Generate',
+    'tool.uuid.generate5': 'Generate 5',
+    'tool.uuid.generate10': 'Generate 10',
+    'tool.uuid.history': 'History',
+    'tool.uuid.copy': 'Copy',
+    'tool.uuid.copyAll': 'Copy All',
+
     // footer
     'footer.product': 'Product',
     'footer.games': 'Games',
@@ -271,6 +280,15 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.urlEncode.encode': '编码',
     'tool.urlEncode.decode': '解码',
     'tool.urlEncode.result': '结果',
+
+    'tool.uuid.title': 'UUID 生成器',
+    'tool.uuid.desc': '即时生成随机 UUID v4 标识符',
+    'tool.uuid.generate': '生成',
+    'tool.uuid.generate5': '生成 5 个',
+    'tool.uuid.generate10': '生成 10 个',
+    'tool.uuid.history': '历史记录',
+    'tool.uuid.copy': '复制',
+    'tool.uuid.copyAll': '复制全部',
 
     // footer
     'footer.product': '产品',
