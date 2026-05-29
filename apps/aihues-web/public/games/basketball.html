@@ -17,7 +17,7 @@
   --radius:14px;--radius-sm:10px;
   --shadow:0 4px 24px rgba(0,0,0,0.3);
   --court-wood:#c8956c;--court-line:#e8dcc8;
-  --sky-top:#2d1f5e;--sky-bottom:#5a3d8a;
+  --sky-top:#0f172a;--sky-bottom:#5a3d8a;
   --hoop-rim:#e63946;--hoop-net:#f8f8f8;
   --ball-orange:#f97316;--ball-stripe:#1a0a00;
 }
@@ -46,7 +46,7 @@ button{cursor:pointer;font-family:inherit}
 
 /* ============ Main Layout ============ */
 main{position:relative;z-index:1}
-.tool-page{max-width:900px;margin:0 auto;padding:24px 20px 40px}
+.tool-page{max-width:900px;margin:0 auto;padding:12px 20px 20px}
 
 /* ============ Tool Header ============ */
 .tool-header{text-align:center;margin-bottom:20px}
@@ -74,7 +74,7 @@ main{position:relative;z-index:1}
 
 /* ============ Game Canvas Area ============ */
 .game-area{position:relative;width:100%;max-width:860px;margin:0 auto;border-radius:var(--radius);overflow:hidden;border:2px solid var(--border);box-shadow:var(--shadow)}
-#gameCanvas{display:block;width:100%;height:420px;background:linear-gradient(180deg,var(--sky-top) 0%,var(--sky-bottom) 60%,var(--court-wood) 60%,#a07850 100%)}
+#gameCanvas{display:block;width:100%;height:640px;background:linear-gradient(180deg,var(--sky-top) 0%,var(--sky-bottom) 60%,var(--court-wood) 60%,#a07850 100%)}
 #gameCanvas.portrait-mode{height:380px}
 
 /* ============ Screen Overlays ============ */
@@ -109,8 +109,8 @@ main{position:relative;z-index:1}
 /* ============ Buttons ============ */
 .actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:16px}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 28px;border-radius:var(--radius-sm);font-size:15px;font-weight:700;border:1.5px solid transparent;transition:all .2s}
-.btn-primary{background:var(--accent-gradient);color:#fff;border:none;box-shadow:0 4px 16px rgba(109,40,217,0.35)}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(109,40,217,0.5)}
+.btn-primary{background:var(--accent-gradient);color:#fff;border:none;box-shadow:0 4px 16px rgba(180,83,9,0.35)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(180,83,9,0.5)}
 .btn-secondary{background:transparent;color:var(--text-secondary);border-color:var(--border-hover)}
 .btn-secondary:hover{border-color:var(--accent-light);color:var(--accent-light)}
 .btn-gold{background:var(--gold-gradient);color:#1a1425;border:none;font-weight:800;box-shadow:0 4px 16px rgba(240,160,48,0.3)}
@@ -176,7 +176,7 @@ main{position:relative;z-index:1}
 .leaderboard-item.rank-1{background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.2)}
 .leaderboard-item.rank-2{background:rgba(192,192,192,0.08);border:1px solid rgba(192,192,192,0.15)}
 .leaderboard-item.rank-3{background:rgba(205,127,50,0.08);border:1px solid rgba(205,127,50,0.15)}
-.leaderboard-item.is-me{background:rgba(109,40,217,0.12);border:1px solid rgba(139,92,246,0.3)}
+.leaderboard-item.is-me{background:rgba(180,83,9,0.12);border:1px solid rgba(217,119,6,0.3)}
 .leaderboard-rank{font-family:'Orbitron',monospace;font-size:16px;font-weight:900;color:var(--text-muted);min-width:28px;text-align:center}
 .leaderboard-item.rank-1 .leaderboard-rank{color:#ffd700}
 .leaderboard-item.rank-2 .leaderboard-rank{color:#c0c0c0}
@@ -220,12 +220,12 @@ main{position:relative;z-index:1}
   .result-stats{grid-template-columns:1fr 1fr}
   .nav-links{gap:16px}
   .nav-links a{font-size:13px}
-  #gameCanvas{height:360px}
+  #gameCanvas{height:480px}
 }
 @media(max-width:480px){
   .result-stats{grid-template-columns:1fr}
   .controls-info{gap:12px}
-  #gameCanvas{height:320px}
+  #gameCanvas{height:420px}
 }
 </style>
 <link rel="stylesheet" href="../css/themes.css">
@@ -280,7 +280,7 @@ main{position:relative;z-index:1}
 
   <!-- Game Area -->
   <div class="game-area" id="gameArea">
-    <canvas id="gameCanvas" width="860" height="420"></canvas>
+    <canvas id="gameCanvas" width="860" height="640"></canvas>
 
     <!-- Floating Score Popups -->
     <div class="popup-container" id="popupContainer"></div>
@@ -414,9 +414,9 @@ main{position:relative;z-index:1}
 </div>
 
 <script>// ===================== CONSTANTS =====================
-const CANVAS_W = 860, CANVAS_H = 420;
-const GROUND_Y = 360;
-const HOOP_X = 680, HOOP_Y = 195, HOOP_WIDTH = 52;
+const CANVAS_W = 860, CANVAS_H = 640;
+const GROUND_Y = 500;
+const HOOP_X = 680, HOOP_Y = 290, HOOP_WIDTH = 52;
 const BALL_RADIUS = 14;
 const GRAVITY = 0.35;
 const SHOOT_POWER = 16.5;
@@ -920,9 +920,9 @@ function render() {
 
 function drawBackground() {
   const skyGrad = ctx.createLinearGradient(0, 0, 0, GROUND_Y);
-  skyGrad.addColorStop(0, '#2d1f5e');
-  skyGrad.addColorStop(0.5, '#4a3080');
-  skyGrad.addColorStop(1, '#6b4fa0');
+  skyGrad.addColorStop(0, '#0f172a');
+  skyGrad.addColorStop(0.5, '#1e293b');
+  skyGrad.addColorStop(1, '#334155');
   ctx.fillStyle = skyGrad;
   ctx.fillRect(0, 0, CANVAS_W, GROUND_Y);
 
@@ -1526,7 +1526,7 @@ function generateShareCard() {
   c.stroke();
 
   // 
-  c.fillStyle = '#8b5cf6';
+  c.fillStyle = '#d97706';
   c.font = 'bold 20px sans-serif';
   c.textAlign = 'center';
   c.fillText('\u{1F3C0} AIHUES \u00B7 HOOPS CHALLENGE', 300, 50);
@@ -1555,7 +1555,7 @@ function generateShareCard() {
   }
 
   // 
-  c.fillStyle = '#8b5cf6';
+  c.fillStyle = '#d97706';
   c.font = '16px sans-serif';
   c.fillText('\u{1F3AF}  \u2192 nptmdmptvfdmm.ok.kimi.link', 300, 340);
 
