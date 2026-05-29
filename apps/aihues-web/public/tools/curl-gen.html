@@ -34,17 +34,13 @@ button{cursor:pointer;font-family:inherit}
 input,textarea,select{font-family:inherit}
 
 /* ========== Navigation ========== */
-.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
-.nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between}
-.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;color:var(--text);text-decoration:none}
-.logo-mark{width:34px;height:34px;border-radius:var(--radius-sm);background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:700}
-.nav-links{display:flex;gap:28px;align-items:center}
+
 .nav-links a{text-decoration:none;font-size:14px;color:var(--text-secondary);transition:color .2s}
 .nav-links a:hover{color:var(--text)}
 .lang-toggle{padding:4px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);font-size:12px;color:var(--text-secondary);cursor:pointer;transition:all .2s}
 .lang-toggle:hover{border-color:var(--border-hover);color:var(--text)}
 @media(max-width:768px){
-  .nav-links{gap:14px}
+  
   .nav-links a{font-size:13px}
 }
 
@@ -122,6 +118,13 @@ textarea.form-input{min-height:120px;resize:vertical;font-family:'SF Mono',Menlo
   .presets-row{gap:6px}
   .preset-btn{font-size:12px;padding:6px 10px}
 }
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:700;color:var(--text);text-decoration:none}
+.logo-mark{width:34px;height:34px;border-radius:8px;background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:700}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{color:var(--text-secondary);font-size:14px;font-weight:500;transition:color .2s;text-decoration:none}
+.nav-links a:hover{color:var(--text)}
 </style>
 <link rel="manifest" href="/manifest.json">
 </head>
@@ -130,17 +133,12 @@ textarea.form-input{min-height:120px;resize:vertical;font-family:'SF Mono',Menlo
 <!-- Navigation -->
 <nav class="nav">
   <div class="nav-inner">
-    <a class="logo" href="../index.html">
-      <span class="logo-mark">A</span>
+    <a href="../index.html" class="logo">
+      <div class="logo-mark">AI</div>
       <span>AIHues</span>
     </a>
     <div class="nav-links">
       <a href="../index.html" style="color:var(--accent);font-size:14px;font-weight:600;text-decoration:none">← Home</a>
-      <a href="../index.html">Home</a>
-      <a href="../showcase.html">Tools</a>
-      <a href="../collection.html">Collection</a>
-      <a href="../pricing.html">Pricing</a>
-      <button>EN</button>
     </div>
   </div>
 </nav>

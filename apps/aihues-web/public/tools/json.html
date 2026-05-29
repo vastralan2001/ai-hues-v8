@@ -20,11 +20,11 @@
     body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 
     /* ===== Navigation ===== */
-    .nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
-    .nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between}
-    .logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);font-weight:700;font-size:18px}
-    .logo-mark{width:34px;height:34px;border-radius:8px;background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px}
-    .nav-links{display:flex;gap:28px;list-style:none}
+    
+    
+    
+    
+    
     .nav-links a{text-decoration:none;color:var(--text-secondary);font-size:14px;font-weight:500;transition:color .2s}
     .nav-links a:hover{color:var(--accent)}
     .nav-links a.active{color:var(--accent)}
@@ -118,31 +118,35 @@
     @media(max-width:768px){
       .tool-page{padding:20px 16px}
       .tool-header h1{font-size:22px}
-      .nav-links{gap:16px}
+      
       .nav-links a{font-size:13px}
       .btn{padding:5px 10px;font-size:12px}
       .stats-bar{grid-template-columns:repeat(2,1fr)}
     }
-  </style>
+  .nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:700;color:var(--text);text-decoration:none}
+.logo-mark{width:34px;height:34px;border-radius:8px;background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:700}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{color:var(--text-secondary);font-size:14px;font-weight:500;transition:color .2s;text-decoration:none}
+.nav-links a:hover{color:var(--text)}
+</style>
 <link rel="manifest" href="/manifest.json">
 </head>
 <body>
 
   <!-- ===== Navigation ===== -->
   <nav class="nav">
-    <div class="nav-inner">
-      <a href="../index.html" class="logo">
-        <div class="logo-mark"><i class="fas fa-bolt"></i></div>
-        <span>AIHues</span>
-      </a>
-      <ul class="nav-links">
-        <li><a href="../index.html">Home</a></li>
-        <li><a href="../showcase.html" class="active">Tools</a></li>
-        <li><a href="../collection.html">Collection</a></li>
-        <li><a href="../pricing.html">Pricing</a></li>
-      </ul>
+  <div class="nav-inner">
+    <a href="../index.html" class="logo">
+      <div class="logo-mark">AI</div>
+      <span>AIHues</span>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html" style="color:var(--accent);font-size:14px;font-weight:600;text-decoration:none">← Home</a>
     </div>
-  </nav>
+  </div>
+</nav>
 
   <!-- ===== Main Content ===== -->
   <main class="tool-page">

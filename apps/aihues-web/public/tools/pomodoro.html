@@ -678,10 +678,29 @@
     .fade-in {
       animation: fadeIn 0.5s ease;
     }
-  </style>
+  /* Unified Nav */
+.unified-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);border-bottom:1px solid #e5e5e5}
+.unified-nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between}
+.unified-logo{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:700;color:#1c1917;text-decoration:none}
+.unified-logo-mark{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#b45309,#d97706);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:700}
+.unified-nav-links{display:flex;gap:28px;align-items:center}
+.unified-nav-links a{color:#78716c;font-size:14px;font-weight:500;transition:color .2s;text-decoration:none}
+.unified-nav-links a:hover{color:#1c1917}
+</style>
 <link rel="manifest" href="/manifest.json">
 </head>
 <body>
+<nav class="unified-nav">
+  <div class="unified-nav-inner">
+    <a href="../index.html" class="unified-logo">
+      <div class="unified-logo-mark">AI</div>
+      <span>AIHues</span>
+    </a>
+    <div class="unified-nav-links">
+      <a href="../index.html" style="color:#b45309;font-size:14px;font-weight:600;text-decoration:none">← Home</a>
+    </div>
+  </div>
+</nav>
 
   <!-- Header -->
   <header class="header fade-in">

@@ -18,11 +18,6 @@
 }
 body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
 
-.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--border)}
-.nav-inner{max-width:1300px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:68px}
-.logo{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:800;color:var(--text);letter-spacing:-1px;text-decoration:none}
-.logo-mark{width:34px;height:34px;border-radius:10px;background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:700;box-shadow:0 2px 8px rgba(180,83,9,0.3)}
-.nav-links{display:flex;gap:28px;align-items:center}
 .nav-links a{color:var(--text-secondary);font-size:14px;font-weight:500;transition:color .2s;text-decoration:none}
 .nav-links a:hover{color:var(--text)}
 .nav-cta{padding:9px 20px;border-radius:10px;background:var(--accent-gradient);color:#fff;font-size:14px;font-weight:600;box-shadow:0 2px 8px rgba(180,83,9,0.25);transition:all .2s;display:flex;align-items:center;gap:6px;text-decoration:none}
@@ -60,6 +55,13 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,Bl
 .output-body{padding:20px;font-size:15px;line-height:1.7;min-height:100px;white-space:pre-wrap;word-break:break-word}
 
 .footer{border-top:1px solid var(--border);padding:48px 32px;text-align:center;color:var(--text-muted);font-size:14px;margin-top:60px}
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:700;color:var(--text);text-decoration:none}
+.logo-mark{width:34px;height:34px;border-radius:8px;background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:700}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{color:var(--text-secondary);font-size:14px;font-weight:500;transition:color .2s;text-decoration:none}
+.nav-links a:hover{color:var(--text)}
 </style>
 <link rel="manifest" href="/manifest.json">
 </head>
@@ -67,14 +69,12 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,Bl
 
 <nav class="nav">
   <div class="nav-inner">
-    <a href="../index.html" class="logo"><div class="logo-mark">H</div><span>AIHues</span></a>
+    <a href="../index.html" class="logo">
+      <div class="logo-mark">AI</div>
+      <span>AIHues</span>
+    </a>
     <div class="nav-links">
       <a href="../index.html" style="color:var(--accent);font-size:14px;font-weight:600;text-decoration:none">← Home</a>
-      <a href="../index.html#categories">Categories</a>
-      <a href="../index.html#tools">Tools</a>
-      <a href="../index.html#categories"> Collection</a>
-      <a href="../discover.html">Discover</a>
-      <a href="../wishlist.html">Wishlist</a>
     </div>
   </div>
 </nav>
@@ -119,7 +119,6 @@ Example: Fixed login bug where OAuth tokens weren't refreshing"></textarea>
     </div>
   </div>
 </div>
-
 
 <!-- Tool Review -->
 <style>
