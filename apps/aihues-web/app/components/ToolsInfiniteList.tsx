@@ -2,8 +2,13 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { CategoryPills, EmptyState, ToolCard } from '@/components/CatalogCards';
-import type { CatalogTool, ToolCategoryKey } from '@/lib/catalog-api';
+import {
+  CategoryPills,
+  EmptyState,
+  getToolPricing,
+  ToolCard,
+} from '@/components/CatalogCards';
+import type { CatalogTool, PriceTagKey, ToolCategoryKey } from '@/lib/catalog-api';
 import { toolCategories } from '@/lib/catalog-api';
 import { toolDetailHref } from '@/lib/routes';
 
@@ -44,6 +49,13 @@ interface ToolsInfiniteListProps {
   q?: string;
 }
 
+const PRICE_OPTIONS: { key: PriceTagKey | 'all'; label: string }[] = [
+  { key: 'all', label: 'All' },
+  { key: 'free', label: 'Free' },
+  { key: 'freemium', label: 'Freemium' },
+  { key: 'paid', label: 'Paid' },
+];
+
 export function ToolsInfiniteList({
   activeCategory,
   initialNextPageToken,
@@ -54,6 +66,7 @@ export function ToolsInfiniteList({
   const [nextPageToken, setNextPageToken] = useState(initialNextPageToken);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [activePrice, setActivePrice] = useState<PriceTagKey | 'all'>('all');
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
   const loadNextPage = useCallback(async () => {
@@ -125,7 +138,16 @@ export function ToolsInfiniteList({
     return () => observer.disconnect();
   }, [loadNextPage, nextPageToken]);
 
-  const isFiltered = !!(q || activeCategory !== 'all');
+  const visibleTools = useMemo(() => {
+    if (activePrice === 'all') return tools;
+    return tools.filter((tool) => {
+      const apiTag = tool.priceTag;
+      const price = apiTag !== 'unspecified' ? apiTag : getToolPricing(tool.slug).price;
+      return price === activePrice;
+    });
+  }, [tools, activePrice]);
+
+  const isFiltered = !!(q || activeCategory !== 'all' || activePrice !== 'all');
   const grouped = useMemo(
     () =>
       toolCategories
@@ -133,21 +155,21 @@ export function ToolsInfiniteList({
         .map((category) => ({
           key: category.key,
           meta: CATEGORY_META[category.key],
-          tools: tools.filter((tool) => tool.category === category.key),
+          tools: visibleTools.filter((tool) => tool.category === category.key),
         }))
         .filter((group) => group.tools.length > 0),
-    [tools]
+    [visibleTools]
   );
 
   const categoryCounts = useMemo(
     () => ({
-      all: tools.length,
-      developer: tools.filter((tool) => tool.category === 'developer').length,
-      utility: tools.filter((tool) => tool.category === 'utility').length,
-      'ai-writing': tools.filter((tool) => tool.category === 'ai-writing')
+      all: visibleTools.length,
+      developer: visibleTools.filter((tool) => tool.category === 'developer').length,
+      utility: visibleTools.filter((tool) => tool.category === 'utility').length,
+      'ai-writing': visibleTools.filter((tool) => tool.category === 'ai-writing')
         .length,
     }),
-    [tools]
+    [visibleTools]
   );
 
   const renderToolCard = (tool: CatalogTool) => (
@@ -162,19 +184,38 @@ export function ToolsInfiniteList({
     <>
       <CategoryPills active={activeCategory} counts={categoryCounts} q={q} />
 
+      {/* Price filter pills */}
+      <div className='flex flex-wrap items-center gap-2 pb-4 pt-2'>
+        {PRICE_OPTIONS.map((opt) => (
+          <button
+            key={opt.key}
+            onClick={() => setActivePrice(opt.key)}
+            className={`rounded-full border px-3 py-1 text-xs font-semibold transition-colors ${
+              activePrice === opt.key
+                ? 'border-accent bg-accent text-white'
+                : 'border-border bg-surface text-secondary hover:border-accent-light hover:text-foreground'
+            }`}
+            type='button'
+          >
+            {opt.label}
+          </button>
+        ))}
+      </div>
+
       {isFiltered ? (
         <>
           <div className='list-meta'>
             <span>
-              {tools.length} tool{tools.length !== 1 ? 's' : ''}
+              {visibleTools.length} tool{visibleTools.length !== 1 ? 's' : ''}
               {q ? ` matching "${q}"` : ''}
+              {activePrice !== 'all' ? ` · ${activePrice}` : ''}
             </span>
           </div>
-          {tools.length > 0 ? (
-            <div className='catalog-grid'>{tools.map(renderToolCard)}</div>
+          {visibleTools.length > 0 ? (
+            <div className='catalog-grid'>{visibleTools.map(renderToolCard)}</div>
           ) : (
             <EmptyState
-              detail='Try another search term or clear the category filter.'
+              detail='Try another search term, category, or price filter.'
               title='No matching tools'
             />
           )}
