@@ -26,6 +26,7 @@ import ReadabilityTool from '@/components/tools/ReadabilityTool';
 import PomodoroTool from '@/components/tools/PomodoroTool';
 import CurlGenTool from '@/components/tools/CurlGenTool';
 import HttpStatusTool from '@/components/tools/HttpStatusTool';
+import UnitConvertTool from '@/components/tools/UnitConvertTool';
 
 const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'word-count': WordCountTool,
@@ -50,6 +51,7 @@ const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'pomodoro': PomodoroTool,
   'curl-gen': CurlGenTool,
   'http-status': HttpStatusTool,
+  'unit-convert': UnitConvertTool,
 };
 
 export default async function ToolPage({
