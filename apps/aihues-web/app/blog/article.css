@@ -1,0 +1,131 @@
+.article-content h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 2.25rem 0 1rem;
+  letter-spacing: -0.3px;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e8e2d9;
+  color: #1c1917;
+}
+.article-content h3 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin: 1.5rem 0 0.625rem;
+  color: #78716c;
+}
+.article-content p {
+  margin-bottom: 1rem;
+  color: #78716c;
+  font-size: 15px;
+  line-height: 1.7;
+}
+.article-content ul,
+.article-content ol {
+  margin: 0 0 1rem 1.5rem;
+  color: #78716c;
+  font-size: 15px;
+}
+.article-content li {
+  margin-bottom: 0.5rem;
+  line-height: 1.7;
+}
+.article-content strong {
+  color: #1c1917;
+}
+.article-content a {
+  color: #b45309;
+  text-decoration: none;
+}
+.article-content a:hover {
+  text-decoration: underline;
+}
+.article-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.25rem 0;
+  font-size: 14px;
+}
+.article-content th {
+  background: #faf9f6;
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 12px;
+  color: #a8a29e;
+  border-bottom: 2px solid #e8e2d9;
+  font-weight: 600;
+}
+.article-content td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #e8e2d9;
+  color: #78716c;
+}
+.article-content tr:hover td {
+  background: #f5f0e8;
+}
+.article-content td:first-child {
+  font-weight: 600;
+  color: #1c1917;
+}
+.article-content .toc {
+  background: #faf9f6;
+  border: 1px solid #e8e2d9;
+  border-radius: 14px;
+  padding: 20px 24px;
+  margin: 1.5rem 0;
+}
+.article-content .toc-title {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #a8a29e;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.article-content .toc a {
+  display: block;
+  padding: 4px 0;
+  color: #78716c;
+  font-size: 14px;
+}
+.article-content .toc a:hover {
+  color: #b45309;
+}
+.article-content .price-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.article-content .price-free {
+  color: #059669;
+  background: #ecfdf5;
+}
+.article-content .price-paid {
+  color: #dc2626;
+  background: #fef2f2;
+}
+.article-content .price-freemium {
+  color: #b45309;
+  background: rgba(180, 83, 9, 0.08);
+}
+.article-content .cta-box {
+  background: linear-gradient(135deg, #b45309, #d97706);
+  color: #fff;
+  padding: 28px;
+  border-radius: 14px;
+  margin: 2.25rem 0;
+  text-align: center;
+}
+.article-content .cta-box h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #fff;
+}
+.article-content .cta-box p {
+  opacity: 0.9;
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: #fff;
+}

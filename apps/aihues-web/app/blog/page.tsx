@@ -57,7 +57,7 @@ export default function BlogPage() {
         {posts.map((post) => (
           <Link
             key={post.slug}
-            href={`/blog/${post.slug}.html`}
+            href={`/blog/${post.slug}`}
             className='group block rounded-[14px] border border-[#e8e2d9] bg-white p-6 transition-all hover:-translate-y-0.5 hover:border-[#d97706] hover:shadow-[0_4px_12px_rgba(180,83,9,0.12),0_8px_32px_rgba(0,0,0,0.08)]'
           >
             <span className='mb-2.5 inline-block rounded-md bg-[rgba(180,83,9,0.08)] px-2.5 py-1 text-[11px] font-bold text-[#b45309]'>
