@@ -357,6 +357,16 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.markdown.placeholder': 'Enter Markdown here...',
     'tool.markdown.preview': 'Preview',
 
+    'tool.meta.title': 'Meta Tag Generator',
+    'tool.meta.desc': 'Generate HTML meta tags for SEO and social sharing',
+    'tool.meta.pageTitle': 'Page Title',
+    'tool.meta.description': 'Description',
+    'tool.meta.keywords': 'Keywords (comma separated)',
+    'tool.meta.author': 'Author',
+    'tool.meta.image': 'Image URL (for Open Graph)',
+    'tool.meta.generate': 'Generate',
+    'tool.meta.result': 'Meta Tags',
+
     // footer
     'footer.product': 'Product',
     'footer.games': 'Games',
@@ -723,6 +733,16 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.markdown.desc': 'Markdown 基础语法实时预览',
     'tool.markdown.placeholder': '在此输入 Markdown...',
     'tool.markdown.preview': '预览',
+
+    'tool.meta.title': 'Meta 标签生成器',
+    'tool.meta.desc': '生成 SEO 和社交分享的 HTML meta 标签',
+    'tool.meta.pageTitle': '页面标题',
+    'tool.meta.description': '描述',
+    'tool.meta.keywords': '关键词（逗号分隔）',
+    'tool.meta.author': '作者',
+    'tool.meta.image': '图片 URL（用于 Open Graph）',
+    'tool.meta.generate': '生成',
+    'tool.meta.result': 'Meta 标签',
 
     // footer
     'footer.product': '产品',

@@ -28,6 +28,7 @@ import CurlGenTool from '@/components/tools/CurlGenTool';
 import HttpStatusTool from '@/components/tools/HttpStatusTool';
 import UnitConvertTool from '@/components/tools/UnitConvertTool';
 import MarkdownTool from '@/components/tools/MarkdownTool';
+import MetaTagTool from '@/components/tools/MetaTagTool';
 
 const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'word-count': WordCountTool,
@@ -54,6 +55,7 @@ const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'http-status': HttpStatusTool,
   'unit-convert': UnitConvertTool,
   'markdown': MarkdownTool,
+  'meta': MetaTagTool,
 };
 
 export default async function ToolPage({
