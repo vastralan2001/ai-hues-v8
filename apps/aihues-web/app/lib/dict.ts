@@ -116,6 +116,14 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.wordCount.clear': 'Clear',
     'tool.wordCount.copy': 'Copy',
 
+    'tool.base64.title': 'Base64 Encoder / Decoder',
+    'tool.base64.desc': 'Encode and decode Base64 strings instantly',
+    'tool.base64.placeholder': 'Enter text to encode or Base64 to decode...',
+    'tool.base64.encode': 'Encode',
+    'tool.base64.decode': 'Decode',
+    'tool.base64.result': 'Result',
+    'tool.base64.urlSafe': 'URL-safe',
+
     // footer
     'footer.product': 'Product',
     'footer.games': 'Games',
@@ -241,6 +249,14 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.wordCount.readTime': '阅读时间',
     'tool.wordCount.clear': '清空',
     'tool.wordCount.copy': '复制',
+
+    'tool.base64.title': 'Base64 编码 / 解码',
+    'tool.base64.desc': '即时编码和解码 Base64 字符串',
+    'tool.base64.placeholder': '输入要编码的文本或要解码的 Base64...',
+    'tool.base64.encode': '编码',
+    'tool.base64.decode': '解码',
+    'tool.base64.result': '结果',
+    'tool.base64.urlSafe': 'URL 安全模式',
 
     // footer
     'footer.product': '产品',
