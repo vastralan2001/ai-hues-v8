@@ -377,6 +377,14 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.tldr.summaryLength': 'Summary',
     'tool.tldr.compression': 'Compression',
 
+    'tool.imageBase64.title': 'Image to Base64',
+    'tool.imageBase64.desc': 'Convert images to Base64 data URLs',
+    'tool.imageBase64.select': 'Select Image',
+    'tool.imageBase64.preview': 'Preview',
+    'tool.imageBase64.fileSize': 'File Size',
+    'tool.imageBase64.base64Size': 'Base64 Size',
+    'tool.imageBase64.result': 'Base64 Result',
+
     // footer
     'footer.product': 'Product',
     'footer.games': 'Games',
@@ -763,6 +771,14 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.tldr.originalLength': '原文',
     'tool.tldr.summaryLength': '摘要',
     'tool.tldr.compression': '压缩率',
+
+    'tool.imageBase64.title': '图片转 Base64',
+    'tool.imageBase64.desc': '将图片转换为 Base64 数据 URL',
+    'tool.imageBase64.select': '选择图片',
+    'tool.imageBase64.preview': '预览',
+    'tool.imageBase64.fileSize': '文件大小',
+    'tool.imageBase64.base64Size': 'Base64 大小',
+    'tool.imageBase64.result': 'Base64 结果',
 
     // footer
     'footer.product': '产品',

@@ -30,6 +30,7 @@ import UnitConvertTool from '@/components/tools/UnitConvertTool';
 import MarkdownTool from '@/components/tools/MarkdownTool';
 import MetaTagTool from '@/components/tools/MetaTagTool';
 import TldrTool from '@/components/tools/TldrTool';
+import ImageToBase64Tool from '@/components/tools/ImageToBase64Tool';
 
 const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'word-count': WordCountTool,
@@ -58,6 +59,7 @@ const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'markdown': MarkdownTool,
   'meta': MetaTagTool,
   'tldr': TldrTool,
+  'image-to-base64': ImageToBase64Tool,
 };
 
 export default async function ToolPage({
