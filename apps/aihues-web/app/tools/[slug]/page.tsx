@@ -16,6 +16,7 @@ import TimestampTool from '@/components/tools/TimestampTool';
 import HtmlEntityTool from '@/components/tools/HtmlEntityTool';
 import FullwidthTool from '@/components/tools/FullwidthTool';
 import PasswordTool from '@/components/tools/PasswordTool';
+import RegexTool from '@/components/tools/RegexTool';
 
 const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'word-count': WordCountTool,
@@ -30,6 +31,7 @@ const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'html-entity': HtmlEntityTool,
   'fullwidth': FullwidthTool,
   'password-gen': PasswordTool,
+  'regex': RegexTool,
 };
 
 export default async function ToolPage({

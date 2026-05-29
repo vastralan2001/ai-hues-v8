@@ -208,6 +208,18 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.password.copy': 'Copy',
     'tool.password.strength': 'Strength',
 
+    'tool.regex.title': 'Regex Tester',
+    'tool.regex.desc': 'Test regular expressions with live results',
+    'tool.regex.pattern': 'Pattern',
+    'tool.regex.patternPlaceholder': 'Enter regex pattern...',
+    'tool.regex.flags': 'Flags',
+    'tool.regex.testText': 'Test Text',
+    'tool.regex.testTextPlaceholder': 'Enter text to test against...',
+    'tool.regex.matches': 'Matches',
+    'tool.regex.noMatches': 'No matches found',
+    'tool.regex.groups': 'Groups',
+    'tool.regex.error': 'Invalid regex',
+
     // footer
     'footer.product': 'Product',
     'footer.games': 'Games',
@@ -425,6 +437,18 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.password.generate': '生成',
     'tool.password.copy': '复制',
     'tool.password.strength': '强度',
+
+    'tool.regex.title': '正则测试器',
+    'tool.regex.desc': '实时测试正则表达式',
+    'tool.regex.pattern': '正则表达式',
+    'tool.regex.patternPlaceholder': '输入正则表达式...',
+    'tool.regex.flags': '标志',
+    'tool.regex.testText': '测试文本',
+    'tool.regex.testTextPlaceholder': '输入要测试的文本...',
+    'tool.regex.matches': '匹配结果',
+    'tool.regex.noMatches': '无匹配结果',
+    'tool.regex.groups': '捕获组',
+    'tool.regex.error': '无效的正则表达式',
 
     // footer
     'footer.product': '产品',
