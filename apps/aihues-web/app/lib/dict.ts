@@ -257,6 +257,26 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.titleCase.kebabCase': 'kebab-case',
     'tool.titleCase.result': 'Result',
 
+    'tool.gitCommit.title': 'Git Commit Message Generator',
+    'tool.gitCommit.desc': 'Generate Conventional Commits formatted messages',
+    'tool.gitCommit.type': 'Type',
+    'tool.gitCommit.scope': 'Scope (optional)',
+    'tool.gitCommit.description': 'Description',
+    'tool.gitCommit.body': 'Body (optional)',
+    'tool.gitCommit.footer': 'Footer (optional)',
+    'tool.gitCommit.generate': 'Generate',
+    'tool.gitCommit.result': 'Commit Message',
+    'tool.gitCommit.copy': 'Copy',
+
+    'gitCommit.feat': 'feat: A new feature',
+    'gitCommit.fix': 'fix: A bug fix',
+    'gitCommit.docs': 'docs: Documentation only changes',
+    'gitCommit.style': 'style: Code style changes',
+    'gitCommit.refactor': 'refactor: Code refactoring',
+    'gitCommit.perf': 'perf: Performance improvements',
+    'gitCommit.test': 'test: Adding or updating tests',
+    'gitCommit.chore': 'chore: Build/process changes',
+
     // footer
     'footer.product': 'Product',
     'footer.games': 'Games',
@@ -523,6 +543,26 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.titleCase.snakeCase': '蛇形',
     'tool.titleCase.kebabCase': '短横线',
     'tool.titleCase.result': '结果',
+
+    'tool.gitCommit.title': 'Git 提交信息生成器',
+    'tool.gitCommit.desc': '生成符合 Conventional Commits 格式的提交信息',
+    'tool.gitCommit.type': '类型',
+    'tool.gitCommit.scope': '范围（可选）',
+    'tool.gitCommit.description': '描述',
+    'tool.gitCommit.body': '正文（可选）',
+    'tool.gitCommit.footer': '页脚（可选）',
+    'tool.gitCommit.generate': '生成',
+    'tool.gitCommit.result': '提交信息',
+    'tool.gitCommit.copy': '复制',
+
+    'gitCommit.feat': 'feat: 新功能',
+    'gitCommit.fix': 'fix: 修复 Bug',
+    'gitCommit.docs': 'docs: 仅文档变更',
+    'gitCommit.style': 'style: 代码风格变更',
+    'gitCommit.refactor': 'refactor: 代码重构',
+    'gitCommit.perf': 'perf: 性能优化',
+    'gitCommit.test': 'test: 添加或更新测试',
+    'gitCommit.chore': 'chore: 构建/流程变更',
 
     // footer
     'footer.product': '产品',

@@ -21,6 +21,7 @@ import DiffTool from '@/components/tools/DiffTool';
 import CsvJsonTool from '@/components/tools/CsvJsonTool';
 import ColorTool from '@/components/tools/ColorTool';
 import TitleCaseTool from '@/components/tools/TitleCaseTool';
+import GitCommitTool from '@/components/tools/GitCommitTool';
 
 const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'word-count': WordCountTool,
@@ -40,6 +41,7 @@ const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'csv-json': CsvJsonTool,
   'color-convert': ColorTool,
   'title-case': TitleCaseTool,
+  'git-commit': GitCommitTool,
 };
 
 export default async function ToolPage({
