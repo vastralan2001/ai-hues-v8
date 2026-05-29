@@ -31,11 +31,29 @@ pnpm moon run :format              # 写入格式化
 Git pre-commit 会跑 `moon run :format-check :lint :typecheck --affected --status=staged`。
 commit-msg 由 `git-conventional-commits` 校验 `<type>(<scope>)?: <subject>` 格式（与 mars 一致）。
 
+### 修改 Proto
+
+`proto/` 下的 `.proto` 文件变更后，需要在本地重新生成并提交 Go/TS 产物：
+
+```bash
+pnpm moon run protos:generate
+git diff -- proto packages/proto-go packages/proto-es
+pnpm check
+```
+
+提交时需要包含：
+
+- `proto/**/*.proto`
+- `packages/proto-go/**/*`
+- `packages/proto-es/**/*_pb.ts`
+
+CI 会在主容器里重新执行 `pnpm moon run protos:generate`，并用 `git diff --exit-code packages/proto-go packages/proto-es` 检查生成产物是否已提交。Web 镜像构建不会生成 proto，只消费仓库里已提交的 `@aiushtha/proto-es`。
+
 ## CI
 
 `.gitlab-ci.yml` 结构对齐 mars：
-- `test`：`pnpm check`
-- `build`（仅默认分支）：`pnpm moon run :container`（当前无 container 任务消费者）
+- `test`：生成 proto 并检查生成产物无 diff，然后执行 `pnpm check`
+- `build`：`pnpm moon run :container`
 - `security-test`：SAST JavaScript 扫描（仅默认分支）
 
 ## 与 mars 的差异

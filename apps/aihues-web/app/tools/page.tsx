@@ -3,7 +3,8 @@ import type { Metadata } from 'next';
 import { ToolSearchForm } from '@/components/SearchForm';
 import { PageShell } from '@/components/SiteChrome';
 import { ToolsInfiniteList } from '@/components/ToolsInfiniteList';
-import { normalizeCategory, safeListTools } from '@/lib/catalog-api';
+import { safeListTools } from '@/lib/catalog-api';
+import { normalizeCategory } from '@/lib/catalog-types';
 
 export const dynamic = 'force-dynamic';
 

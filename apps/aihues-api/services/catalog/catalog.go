@@ -2,7 +2,7 @@
 package catalogsvc
 
 import (
-	"github.com/aihues/aiushtha/gen/go/aihues/catalog/v1/catalogv1connect"
+	"github.com/aihues/aiushtha/packages/proto-go/aihues/catalog/v1/catalogv1connect"
 
 	itemdal "github.com/aihues/aiushtha/apps/aihues-api/dal/item"
 )

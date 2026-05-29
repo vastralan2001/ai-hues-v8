@@ -28,6 +28,8 @@ function staticHtmlSlugs(subdir: string): string[] {
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  transpilePackages: ['@aiushtha/proto-es'],
+
   async rewrites() {
     const toolSlugs = staticHtmlSlugs('tools');
     const gameSlugs = staticHtmlSlugs('games');

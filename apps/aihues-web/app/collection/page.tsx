@@ -2,7 +2,8 @@ import type { Metadata } from 'next';
 
 import { ApiNotice, EmptyState, ToolCard } from '@/components/CatalogCards';
 import { PageShell } from '@/components/SiteChrome';
-import { safeListTools, toolCategories } from '@/lib/catalog-api';
+import { safeListTools } from '@/lib/catalog-api';
+import { toolCategories } from '@/lib/catalog-types';
 
 export const dynamic = 'force-dynamic';
 

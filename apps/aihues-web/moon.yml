@@ -7,6 +7,10 @@ tags:
   - docker
   - nextjs
 
+dependsOn:
+  - id: 'proto-es'
+    scope: 'production'
+
 tasks:
   build:
     command:
@@ -23,3 +27,8 @@ tasks:
       - '.next'
     options:
       mergeArgs: replace
+
+  typecheck:
+    inputs:
+      - 'app/**/*'
+      - 'tsconfig.json'

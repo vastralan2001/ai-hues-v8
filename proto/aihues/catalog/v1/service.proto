@@ -4,7 +4,7 @@ package aihues.catalog.v1;
 
 import "aihues/catalog/v1/types.proto";
 
-option go_package = "github.com/aihues/aiushtha/gen/go/aihues/catalog/v1;catalogv1";
+option go_package = "github.com/aihues/aiushtha/packages/proto-go/aihues/catalog/v1;catalogv1";
 
 // 公开读服务
 service CatalogService {
@@ -23,8 +23,8 @@ message ListToolsRequest {
 }
 
 message ListToolsResponse {
-  repeated Tool tools       = 1;
-  string next_page_token    = 2;
+  repeated Tool tools = 1;
+  string next_page_token = 2;
 }
 
 message ListGamesRequest {
@@ -35,6 +35,6 @@ message ListGamesRequest {
 }
 
 message ListGamesResponse {
-  repeated Game games       = 1;
-  string next_page_token    = 2;
+  repeated Game games = 1;
+  string next_page_token = 2;
 }

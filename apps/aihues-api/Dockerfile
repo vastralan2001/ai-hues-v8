@@ -11,9 +11,9 @@ RUN go env -w \
 
 WORKDIR /src
 
-# 注意：build context 应为仓库根（含 go.mod、gen/go、packages、apps/aihues-api）
+# 注意：build context 应为仓库根（含 go.mod、packages/proto-go、packages、apps/aihues-api）
 COPY go.mod go.sum ./
-COPY gen/go ./gen/go
+COPY packages/proto-go ./packages/proto-go
 COPY packages/cfg ./packages/cfg
 COPY packages/database ./packages/database
 COPY apps/aihues-api ./apps/aihues-api

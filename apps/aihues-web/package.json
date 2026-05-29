@@ -11,9 +11,14 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
+    "@aiushtha/proto-es": "workspace:*",
+    "@bufbuild/protobuf": "^2.5.0",
+    "@connectrpc/connect": "^2.0.0",
+    "@connectrpc/connect-web": "^2.0.0",
     "next": "16.1.1",
     "react": "catalog:",
-    "react-dom": "catalog:"
+    "react-dom": "catalog:",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.8",

@@ -54,6 +54,8 @@ sast-scan-js:
 lint:
   stage: test
   script:
+    - pnpm moon run protos:generate
+    - git diff --exit-code packages/proto-go packages/proto-es
     - pnpm check
     - echo "✅ Lint successful"
 

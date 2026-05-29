@@ -1,124 +1,30 @@
+import 'server-only';
+
+import { create } from '@bufbuild/protobuf';
+import { createClient } from '@connectrpc/connect';
+import { createConnectTransport } from '@connectrpc/connect-web';
+import {
+  CatalogService,
+  ListGamesRequestSchema,
+  ListToolsRequestSchema,
+} from '@aiushtha/proto-es/aihues/catalog/v1/service_pb';
+import {
+  ItemCategory,
+  type Game,
+  type Tool,
+} from '@aiushtha/proto-es/aihues/catalog/v1/types_pb';
+
+import {
+  type CatalogGame,
+  type CatalogTool,
+  type ListGamesOptions,
+  type ListGamesResult,
+  type ListToolsOptions,
+  type ListToolsResult,
+  type ToolCategoryKey,
+} from '@/lib/catalog-types';
+
 export const DEFAULT_API_BASE_URL = 'http://127.0.0.1:9005';
-
-const CATALOG_SERVICE = '/aihues.catalog.v1.CatalogService';
-
-export const toolCategories = [
-  {
-    key: 'all',
-    label: 'All',
-    badge: 'Catalog',
-    description: 'Every published tool from the catalog service.',
-  },
-  {
-    key: 'developer',
-    label: 'Developer',
-    badge: 'Build',
-    description: 'Formatters, encoders, parsers, generators, and code helpers.',
-  },
-  {
-    key: 'utility',
-    label: 'Utility',
-    badge: 'Daily',
-    description: 'Small text and productivity tools for repeated work.',
-  },
-  {
-    key: 'ai-writing',
-    label: 'AI Writing',
-    badge: 'Draft',
-    description: 'Prompts and copy generators for marketing and docs.',
-  },
-] as const;
-
-export type ToolCategoryKey = (typeof toolCategories)[number]['key'];
-
-type ProtoCategory =
-  | 'ITEM_CATEGORY_UNSPECIFIED'
-  | 'ITEM_CATEGORY_DEVELOPER'
-  | 'ITEM_CATEGORY_UTILITY'
-  | 'ITEM_CATEGORY_AI_WRITING';
-
-type ProtoStatus =
-  | 'ITEM_STATUS_UNSPECIFIED'
-  | 'ITEM_STATUS_DRAFT'
-  | 'ITEM_STATUS_PUBLISHED'
-  | 'ITEM_STATUS_ARCHIVED';
-
-export interface CatalogTool {
-  id: string;
-  slug: string;
-  icon: string;
-  name: string;
-  description: string;
-  category: ToolCategoryKey;
-  status: ProtoStatus | number | string;
-  sortOrder: number;
-}
-
-export interface CatalogGame {
-  id: string;
-  slug: string;
-  icon: string;
-  name: string;
-  description: string;
-  status: ProtoStatus | number | string;
-  sortOrder: number;
-}
-
-export interface ListToolsOptions {
-  q?: string;
-  pageSize?: number;
-  pageToken?: string;
-  category?: ToolCategoryKey;
-}
-
-export interface ListGamesOptions {
-  pageSize?: number;
-  pageToken?: string;
-}
-
-export interface ListToolsResult {
-  tools: CatalogTool[];
-  nextPageToken: string;
-}
-
-export interface ListGamesResult {
-  games: CatalogGame[];
-  nextPageToken: string;
-}
-
-interface RawCatalogItem {
-  id?: string;
-  slug?: string;
-  icon?: string;
-  name?: string;
-  description?: string;
-  category?: ProtoCategory | number | string;
-  status?: ProtoStatus | number | string;
-  sortOrder?: number;
-  sort_order?: number;
-}
-
-interface RawListToolsResponse {
-  tools?: RawCatalogItem[];
-  nextPageToken?: string;
-  next_page_token?: string;
-}
-
-interface RawListGamesResponse {
-  games?: RawCatalogItem[];
-  nextPageToken?: string;
-  next_page_token?: string;
-}
-
-export class CatalogApiError extends Error {
-  constructor(
-    message: string,
-    readonly status?: number
-  ) {
-    super(message);
-    this.name = 'CatalogApiError';
-  }
-}
 
 export function getCatalogApiBaseUrl() {
   return (
@@ -128,136 +34,99 @@ export function getCatalogApiBaseUrl() {
   ).replace(/\/+$/, '');
 }
 
-export function categoryToProto(
-  category?: ToolCategoryKey
-): ProtoCategory | undefined {
+function makeCatalogClient() {
+  const transport = createConnectTransport({
+    baseUrl: getCatalogApiBaseUrl(),
+    defaultTimeoutMs: 8000,
+  });
+
+  return createClient(CatalogService, transport);
+}
+
+function categoryToProto(category?: ToolCategoryKey): ItemCategory {
   switch (category) {
     case 'developer':
-      return 'ITEM_CATEGORY_DEVELOPER';
+      return ItemCategory.DEVELOPER;
     case 'utility':
-      return 'ITEM_CATEGORY_UTILITY';
+      return ItemCategory.UTILITY;
     case 'ai-writing':
-      return 'ITEM_CATEGORY_AI_WRITING';
+      return ItemCategory.AI_WRITING;
     default:
-      return undefined;
+      return ItemCategory.UNSPECIFIED;
   }
 }
 
-export function protoToCategory(
-  category: RawCatalogItem['category']
-): ToolCategoryKey {
-  if (category === 'ITEM_CATEGORY_DEVELOPER' || category === 1) {
-    return 'developer';
+function protoToCategory(category: ItemCategory): ToolCategoryKey {
+  switch (category) {
+    case ItemCategory.DEVELOPER:
+      return 'developer';
+    case ItemCategory.UTILITY:
+      return 'utility';
+    case ItemCategory.AI_WRITING:
+      return 'ai-writing';
+    default:
+      return 'all';
   }
-  if (category === 'ITEM_CATEGORY_UTILITY' || category === 2) {
-    return 'utility';
-  }
-  if (category === 'ITEM_CATEGORY_AI_WRITING' || category === 3) {
-    return 'ai-writing';
-  }
-  return 'all';
 }
 
-export function normalizeCategory(value?: string): ToolCategoryKey {
-  if (value === 'developer' || value === 'utility' || value === 'ai-writing') {
-    return value;
-  }
-  return 'all';
-}
-
-async function connectJson<TRequest extends object, TResponse>(
-  method: 'ListTools' | 'ListGames',
-  body: TRequest
-): Promise<TResponse> {
-  const response = await fetch(
-    `${getCatalogApiBaseUrl()}${CATALOG_SERVICE}/${method}`,
-    {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Connect-Protocol-Version': '1',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-      cache: 'no-store',
-      signal: AbortSignal.timeout(8000),
-    }
-  );
-
-  const text = await response.text();
-  const payload = text ? (JSON.parse(text) as unknown) : {};
-
-  if (!response.ok) {
-    const message =
-      payload && typeof payload === 'object' && 'message' in payload
-        ? String(payload.message)
-        : `Catalog API request failed with HTTP ${response.status}`;
-    throw new CatalogApiError(message, response.status);
-  }
-
-  return payload as TResponse;
-}
-
-function normalizeTool(item: RawCatalogItem): CatalogTool {
+function normalizeTool(item: Tool): CatalogTool {
   return {
-    id: item.id ?? item.slug ?? '',
-    slug: item.slug ?? '',
-    icon: item.icon ?? '◇',
-    name: item.name ?? 'Untitled tool',
-    description: item.description ?? '',
+    id: item.id,
+    slug: item.slug,
+    icon: item.icon || '◇',
+    name: item.name || 'Untitled tool',
+    description: item.description,
     category: protoToCategory(item.category),
-    status: item.status ?? 'ITEM_STATUS_UNSPECIFIED',
-    sortOrder: item.sortOrder ?? item.sort_order ?? 0,
+    status: item.status,
+    sortOrder: item.sortOrder,
   };
 }
 
-function normalizeGame(item: RawCatalogItem): CatalogGame {
+function normalizeGame(item: Game): CatalogGame {
   return {
-    id: item.id ?? item.slug ?? '',
-    slug: item.slug ?? '',
-    icon: item.icon ?? '◇',
-    name: item.name ?? 'Untitled game',
-    description: item.description ?? '',
-    status: item.status ?? 'ITEM_STATUS_UNSPECIFIED',
-    sortOrder: item.sortOrder ?? item.sort_order ?? 0,
+    id: item.id,
+    slug: item.slug,
+    icon: item.icon || '◇',
+    name: item.name || 'Untitled game',
+    description: item.description,
+    status: item.status,
+    sortOrder: item.sortOrder,
   };
 }
 
 export async function listTools(
   options: ListToolsOptions = {}
 ): Promise<ListToolsResult> {
-  const request = {
-    q: options.q?.trim() || undefined,
-    pageSize: options.pageSize ?? 20,
-    pageToken: options.pageToken || undefined,
-    category: categoryToProto(options.category),
-  };
-  const response = await connectJson<typeof request, RawListToolsResponse>(
-    'ListTools',
-    request
+  const client = makeCatalogClient();
+  const response = await client.listTools(
+    create(ListToolsRequestSchema, {
+      q: options.q?.trim() || undefined,
+      pageSize: options.pageSize ?? 20,
+      pageToken: options.pageToken || undefined,
+      category: categoryToProto(options.category),
+    })
   );
 
   return {
-    tools: (response.tools ?? []).map(normalizeTool),
-    nextPageToken: response.nextPageToken ?? response.next_page_token ?? '',
+    tools: response.tools.map(normalizeTool),
+    nextPageToken: response.nextPageToken,
   };
 }
 
 export async function listGames(
   options: ListGamesOptions = {}
 ): Promise<ListGamesResult> {
-  const request = {
-    pageSize: options.pageSize ?? 20,
-    pageToken: options.pageToken || undefined,
-  };
-  const response = await connectJson<typeof request, RawListGamesResponse>(
-    'ListGames',
-    request
+  const client = makeCatalogClient();
+  const response = await client.listGames(
+    create(ListGamesRequestSchema, {
+      pageSize: options.pageSize ?? 20,
+      pageToken: options.pageToken || undefined,
+    })
   );
 
   return {
-    games: (response.games ?? []).map(normalizeGame),
-    nextPageToken: response.nextPageToken ?? response.next_page_token ?? '',
+    games: response.games.map(normalizeGame),
+    nextPageToken: response.nextPageToken,
   };
 }
 

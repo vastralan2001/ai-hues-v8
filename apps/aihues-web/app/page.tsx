@@ -2,8 +2,8 @@ import Link from 'next/link';
 
 import { ToolCardV2 } from '@/components/CatalogCards';
 import { PageShell } from '@/components/SiteChrome';
-import type { CatalogGame } from '@/lib/catalog-api';
 import { safeListGames, safeListTools } from '@/lib/catalog-api';
+import type { CatalogGame } from '@/lib/catalog-types';
 import {
   gameDetailHref,
   gamesHref,
