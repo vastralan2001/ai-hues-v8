@@ -23,6 +23,7 @@ import ColorTool from '@/components/tools/ColorTool';
 import TitleCaseTool from '@/components/tools/TitleCaseTool';
 import GitCommitTool from '@/components/tools/GitCommitTool';
 import ReadabilityTool from '@/components/tools/ReadabilityTool';
+import PomodoroTool from '@/components/tools/PomodoroTool';
 
 const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'word-count': WordCountTool,
@@ -44,6 +45,7 @@ const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'title-case': TitleCaseTool,
   'git-commit': GitCommitTool,
   'readability': ReadabilityTool,
+  'pomodoro': PomodoroTool,
 };
 
 export default async function ToolPage({

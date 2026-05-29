@@ -296,6 +296,14 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.readability.difficult': 'Difficult',
     'tool.readability.veryDifficult': 'Very Difficult',
 
+    'tool.pomodoro.title': 'Pomodoro Timer',
+    'tool.pomodoro.desc': 'Stay focused with the 25-minute technique',
+    'tool.pomodoro.start': 'Start',
+    'tool.pomodoro.pause': 'Pause',
+    'tool.pomodoro.reset': 'Reset',
+    'tool.pomodoro.minutes': 'minutes',
+    'tool.pomodoro.done': 'Time is up!',
+
     // footer
     'footer.product': 'Product',
     'footer.games': 'Games',
@@ -601,6 +609,14 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.readability.fairlyDifficult': '较困难',
     'tool.readability.difficult': '困难',
     'tool.readability.veryDifficult': '非常困难',
+
+    'tool.pomodoro.title': '番茄钟',
+    'tool.pomodoro.desc': '用 25 分钟专注技巧保持专注',
+    'tool.pomodoro.start': '开始',
+    'tool.pomodoro.pause': '暂停',
+    'tool.pomodoro.reset': '重置',
+    'tool.pomodoro.minutes': '分钟',
+    'tool.pomodoro.done': '时间到！',
 
     // footer
     'footer.product': '产品',
