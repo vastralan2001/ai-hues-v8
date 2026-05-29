@@ -1,11 +1,11 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 
+import { t, type Locale } from '@/lib/dict';
 import {
   gameDetailHref,
   gamesHref,
   homeHref,
-  discoverHref,
   pricingHref,
   rankingHref,
   showcaseHref,
@@ -13,6 +13,8 @@ import {
   wishlistHref,
   blogHref,
 } from '@/lib/routes';
+import { CreditDisplay } from './CreditDisplay';
+import { LangSwitcher } from './LangSwitcher';
 
 type ChromeVariant =
   | 'home'
@@ -24,62 +26,64 @@ type ChromeVariant =
 
 const headerLinks: Record<
   ChromeVariant,
-  Array<{ href: string; label: string }>
+  Array<{ href: string; labelKey: string }>
 > = {
   home: [
-    { href: homeHref, label: 'Home' },
-    { href: toolsHref, label: 'Tools' },
-    { href: gamesHref, label: 'Games' },
-    { href: blogHref, label: 'Blog' },
-    { href: wishlistHref, label: 'Wishlist' },
-    { href: rankingHref, label: 'Ranking' },
+    { href: homeHref, labelKey: 'nav.home' },
+    { href: toolsHref, labelKey: 'nav.tools' },
+    { href: gamesHref, labelKey: 'nav.games' },
+    { href: blogHref, labelKey: 'nav.blog' },
+    { href: wishlistHref, labelKey: 'nav.wishlist' },
+    { href: rankingHref, labelKey: 'nav.ranking' },
   ],
   tools: [
-    { href: homeHref, label: 'Home' },
-    { href: toolsHref, label: 'Tools' },
-    { href: gamesHref, label: 'Games' },
-    { href: blogHref, label: 'Blog' },
-    { href: wishlistHref, label: 'Wishlist' },
-    { href: rankingHref, label: 'Ranking' },
+    { href: homeHref, labelKey: 'nav.home' },
+    { href: toolsHref, labelKey: 'nav.tools' },
+    { href: gamesHref, labelKey: 'nav.games' },
+    { href: blogHref, labelKey: 'nav.blog' },
+    { href: wishlistHref, labelKey: 'nav.wishlist' },
+    { href: rankingHref, labelKey: 'nav.ranking' },
   ],
   games: [
-    { href: homeHref, label: 'Home' },
-    { href: toolsHref, label: 'Tools' },
-    { href: gamesHref, label: 'Games' },
-    { href: blogHref, label: 'Blog' },
-    { href: wishlistHref, label: 'Wishlist' },
-    { href: rankingHref, label: 'Ranking' },
+    { href: homeHref, labelKey: 'nav.home' },
+    { href: toolsHref, labelKey: 'nav.tools' },
+    { href: gamesHref, labelKey: 'nav.games' },
+    { href: blogHref, labelKey: 'nav.blog' },
+    { href: wishlistHref, labelKey: 'nav.wishlist' },
+    { href: rankingHref, labelKey: 'nav.ranking' },
   ],
   wishlist: [
-    { href: homeHref, label: 'Home' },
-    { href: toolsHref, label: 'Tools' },
-    { href: gamesHref, label: 'Games' },
-    { href: blogHref, label: 'Blog' },
-    { href: wishlistHref, label: 'Wishlist' },
-    { href: rankingHref, label: 'Ranking' },
+    { href: homeHref, labelKey: 'nav.home' },
+    { href: toolsHref, labelKey: 'nav.tools' },
+    { href: gamesHref, labelKey: 'nav.games' },
+    { href: blogHref, labelKey: 'nav.blog' },
+    { href: wishlistHref, labelKey: 'nav.wishlist' },
+    { href: rankingHref, labelKey: 'nav.ranking' },
   ],
   ranking: [
-    { href: homeHref, label: 'Home' },
-    { href: toolsHref, label: 'Tools' },
-    { href: gamesHref, label: 'Games' },
-    { href: blogHref, label: 'Blog' },
-    { href: wishlistHref, label: 'Wishlist' },
-    { href: rankingHref, label: 'Ranking' },
+    { href: homeHref, labelKey: 'nav.home' },
+    { href: toolsHref, labelKey: 'nav.tools' },
+    { href: gamesHref, labelKey: 'nav.games' },
+    { href: blogHref, labelKey: 'nav.blog' },
+    { href: wishlistHref, labelKey: 'nav.wishlist' },
+    { href: rankingHref, labelKey: 'nav.ranking' },
   ],
   default: [
-    { href: homeHref, label: 'Home' },
-    { href: toolsHref, label: 'Tools' },
-    { href: gamesHref, label: 'Games' },
-    { href: blogHref, label: 'Blog' },
-    { href: wishlistHref, label: 'Wishlist' },
-    { href: rankingHref, label: 'Ranking' },
+    { href: homeHref, labelKey: 'nav.home' },
+    { href: toolsHref, labelKey: 'nav.tools' },
+    { href: gamesHref, labelKey: 'nav.games' },
+    { href: blogHref, labelKey: 'nav.blog' },
+    { href: wishlistHref, labelKey: 'nav.wishlist' },
+    { href: rankingHref, labelKey: 'nav.ranking' },
   ],
 };
 
 export function SiteHeader({
   variant = 'default',
+  locale = 'en',
 }: {
   variant?: ChromeVariant;
+  locale?: Locale;
 }) {
   const links = headerLinks[variant];
 
@@ -109,16 +113,22 @@ export function SiteHeader({
           aria-label='Primary navigation'
           className='flex items-center gap-7 justify-self-center'
         >
-          {links.map(({ href, label }) => (
+          {links.map(({ href, labelKey }) => (
             <Link
-              key={label}
+              key={labelKey}
               className='text-[14px] font-medium text-secondary transition-colors duration-150 hover:text-foreground'
               href={href}
             >
-              {label}
+              {t(locale, labelKey)}
             </Link>
           ))}
         </nav>
+
+        {/* Right side: Credit + Lang switcher */}
+        <div className='flex items-center gap-3 justify-self-end'>
+          <CreditDisplay />
+          <LangSwitcher />
+        </div>
       </div>
     </header>
   );
@@ -126,13 +136,15 @@ export function SiteHeader({
 
 export function SiteFooter({
   variant = 'default',
+  locale = 'en',
 }: {
   variant?: ChromeVariant;
+  locale?: Locale;
 }) {
   if (variant === 'tools') {
     return (
       <footer className='border-t border-border px-8 py-8 text-center text-[13px] text-muted'>
-        © 2026 AIHues · <span>Find your AI vibe</span> · 57 Tools
+        {t(locale, 'footer.copyright')} · 57 {t(locale, 'section.tools')}
       </footer>
     );
   }
@@ -150,11 +162,11 @@ export function SiteFooter({
           AIHues
         </div>
         <div className='mb-3 flex justify-center gap-6'>
-          <Link href={homeHref}>Home</Link>
-          <Link href={toolsHref}>Tools</Link>
-          <Link href={rankingHref}>Ranking</Link>
+          <Link href={homeHref}>{t(locale, 'nav.home')}</Link>
+          <Link href={toolsHref}>{t(locale, 'nav.tools')}</Link>
+          <Link href={rankingHref}>{t(locale, 'nav.ranking')}</Link>
         </div>
-        © 2026 AIHues · Find your AI vibe · Built on Kimi
+        {t(locale, 'footer.copyright')}
       </footer>
     );
   }
@@ -177,39 +189,39 @@ export function SiteFooter({
                 AIHues
               </div>
               <p className='max-w-[300px] text-[14px] text-muted'>
-                Find your AI vibe. 57 tools and 3 games with a natural feel.
+                {t(locale, 'footer.tagline')}
               </p>
             </div>
             <div className='flex flex-wrap gap-10'>
               <FooterColumn
-                heading='Product'
+                heading={t(locale, 'footer.product')}
                 links={[
-                  ['All Tools', toolsHref],
-                  ['Categories', `${homeHref}#categories`],
-                  ['Showcase', showcaseHref],
-                  ['Pricing', pricingHref],
+                  [t(locale, 'nav.tools'), toolsHref],
+                  [t(locale, 'categories.title'), `${homeHref}#categories`],
+                  [t(locale, 'nav.discover'), showcaseHref],
+                  [t(locale, 'nav.wishlist'), wishlistHref],
                 ]}
               />
               <FooterColumn
-                heading='Games'
+                heading={t(locale, 'footer.games')}
                 links={[
-                  ['Daily Fortune', gameDetailHref('daily-luck')],
-                  ['Slot Machine', gameDetailHref('slot-machine')],
-                  ['Hoops Challenge', gameDetailHref('basketball')],
+                  [t(locale, 'game.daily'), gameDetailHref('daily-luck')],
+                  [t(locale, 'game.popular'), gameDetailHref('slot-machine')],
+                  [t(locale, 'game.skill'), gameDetailHref('basketball')],
                 ]}
               />
               <FooterColumn
-                heading='Company'
+                heading={t(locale, 'footer.company')}
                 links={[
-                  ['About', '#'],
-                  ['Blog', '#'],
-                  ['Terms', '#'],
+                  [t(locale, 'footer.about'), '#'],
+                  [t(locale, 'nav.blog'), '#'],
+                  [t(locale, 'footer.terms'), '#'],
                 ]}
               />
             </div>
           </div>
           <div className='border-t border-border pt-6 text-center text-[13px] text-muted'>
-            Find your AI vibe · Built on Kimi
+            {t(locale, 'footer.copyright')}
           </div>
         </div>
       </footer>
@@ -235,8 +247,7 @@ export function SiteFooter({
               AIHues
             </div>
             <p className='max-w-[260px] text-[14px] text-muted'>
-              Find your AI vibe. 57 tools&nbsp;+&nbsp;3&nbsp;games that feel
-              human.
+              {t(locale, 'footer.tagline')}
             </p>
           </div>
 
@@ -245,21 +256,21 @@ export function SiteFooter({
             {/* Product */}
             <div>
               <h4 className='mb-3 text-[14px] font-semibold text-foreground'>
-                Product
+                {t(locale, 'footer.product')}
               </h4>
               <div className='grid gap-2'>
                 {[
-                  { href: toolsHref, label: 'Tools' },
-                  { href: '#categories', label: 'Categories' },
-                  { href: wishlistHref, label: 'Wishlist' },
-                  { href: pricingHref, label: 'Pricing' },
-                ].map(({ href, label }) => (
+                  { href: toolsHref, labelKey: 'nav.tools' },
+                  { href: '#categories', labelKey: 'categories.title' },
+                  { href: wishlistHref, labelKey: 'nav.wishlist' },
+                  { href: pricingHref, labelKey: 'nav.discover' },
+                ].map(({ href, labelKey }) => (
                   <Link
-                    key={label}
+                    key={labelKey}
                     className='text-[14px] text-muted transition-colors hover:text-foreground'
                     href={href}
                   >
-                    {label}
+                    {t(locale, labelKey)}
                   </Link>
                 ))}
               </div>
@@ -268,29 +279,29 @@ export function SiteFooter({
             {/* Games */}
             <div>
               <h4 className='mb-3 text-[14px] font-semibold text-foreground'>
-                Games
+                {t(locale, 'footer.games')}
               </h4>
               <div className='grid gap-2'>
                 {[
                   {
                     href: gameDetailHref('daily-luck'),
-                    label: 'Daily Fortune',
+                    labelKey: 'game.daily',
                   },
                   {
                     href: gameDetailHref('slot-machine'),
-                    label: 'Lucky Slots',
+                    labelKey: 'game.popular',
                   },
                   {
                     href: gameDetailHref('basketball'),
-                    label: 'Hoops Challenge',
+                    labelKey: 'game.skill',
                   },
-                ].map(({ href, label }) => (
+                ].map(({ href, labelKey }) => (
                   <Link
-                    key={label}
+                    key={labelKey}
                     className='text-[14px] text-muted transition-colors hover:text-foreground'
                     href={href}
                   >
-                    {label}
+                    {t(locale, labelKey)}
                   </Link>
                 ))}
               </div>
@@ -299,20 +310,20 @@ export function SiteFooter({
             {/* Company */}
             <div>
               <h4 className='mb-3 text-[14px] font-semibold text-foreground'>
-                Company
+                {t(locale, 'footer.company')}
               </h4>
               <div className='grid gap-2'>
                 {[
-                  { href: '#', label: 'About' },
-                  { href: '#', label: 'Blog' },
-                  { href: '#', label: 'Terms' },
-                ].map(({ href, label }) => (
+                  { href: '#', labelKey: 'footer.about' },
+                  { href: '#', labelKey: 'nav.blog' },
+                  { href: '#', labelKey: 'footer.terms' },
+                ].map(({ href, labelKey }) => (
                   <Link
-                    key={label}
+                    key={labelKey}
                     className='text-[14px] text-muted transition-colors hover:text-foreground'
                     href={href}
                   >
-                    {label}
+                    {t(locale, labelKey)}
                   </Link>
                 ))}
               </div>
@@ -322,7 +333,7 @@ export function SiteFooter({
 
         {/* Bottom bar */}
         <div className='border-t border-border pt-6 text-center text-[13px] text-muted'>
-          © 2026 AIHues · Find your AI vibe · Built on Kimi
+          {t(locale, 'footer.copyright')}
         </div>
       </div>
     </footer>
@@ -359,15 +370,17 @@ function FooterColumn({
 export function PageShell({
   children,
   variant = 'default',
+  locale = 'en',
 }: {
   children: ReactNode;
   variant?: ChromeVariant;
+  locale?: Locale;
 }) {
   return (
     <>
-      <SiteHeader variant={variant} />
+      <SiteHeader variant={variant} locale={locale} />
       <main>{children}</main>
-      <SiteFooter variant={variant} />
+      <SiteFooter variant={variant} locale={locale} />
     </>
   );
 }

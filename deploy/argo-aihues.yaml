@@ -27,7 +27,7 @@ spec:
     # 2. 前端仓库地址，helm chart 相对路径，需要跟踪的分支/tag/commit
     - repoURL: 'https://dev.msh.team/search-engine/rec/aiushtha.git'
       path: deploy/aihues/web
-      targetRevision: backend-api
+      targetRevision: feature/design-refresh
       # helm 安装参数
       helm:
         parameters:
@@ -39,7 +39,7 @@ spec:
     # 3. 后端仓库地址，helm chart 相对路径，需要跟踪的分支/tag/commit
     - repoURL: 'https://dev.msh.team/search-engine/rec/aiushtha.git'
       path: deploy/aihues/api
-      targetRevision: backend-api
+      targetRevision: feature/design-refresh
       helm:
         valueFiles:
           - $values/aiushtha/aihues/api/test/values.yaml
