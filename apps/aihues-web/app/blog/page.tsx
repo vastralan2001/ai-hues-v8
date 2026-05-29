@@ -1,12 +1,14 @@
 import Link from 'next/link';
 
 import { PageShell } from '@/components/SiteChrome';
+import NewsletterSubscribe from '@/components/NewsletterSubscribe';
 
 const posts = [
   {
     slug: 'growth-tools-2026',
     tag: 'Growth',
-    title: '2026 Overseas Growth Toolkit: 70+ Tools Covering Social, Reddit, KOL, SEO',
+    title:
+      '2026 Overseas Growth Toolkit: 70+ Tools Covering Social, Reddit, KOL, SEO',
     excerpt:
       'From social listening to Reddit marketing, KOL management to SEO optimization — this curated list covers all the growth tools indie developers and SaaS teams need to go global.',
     date: '2026-05-27',
@@ -15,7 +17,8 @@ const posts = [
   {
     slug: 'reddit-marketing',
     tag: 'Reddit Marketing',
-    title: 'Reddit Marketing Playbook: How to Acquire Users Gracefully in Redditor Territory',
+    title:
+      'Reddit Marketing Playbook: How to Acquire Users Gracefully in Redditor Territory',
     excerpt:
       'Reddit is the largest community platform with 800M+ monthly active users. This guide shares practical strategies for building brand trust, avoiding bans, and acquiring users efficiently.',
     date: '2026-05-20',
@@ -24,7 +27,8 @@ const posts = [
   {
     slug: 'kol-marketing',
     tag: 'KOL Marketing',
-    title: 'KOL Marketing from 0 to 1: How Indie Developers Find Their First Seed Promoters',
+    title:
+      'KOL Marketing from 0 to 1: How Indie Developers Find Their First Seed Promoters',
     excerpt:
       'No budget for big influencers? No problem. Learn how to find micro-influencers on Twitter/X, YouTube, and TikTok who are willing to endorse you for free — and build long-term partnerships.',
     date: '2026-05-15',
@@ -68,12 +72,14 @@ export default function BlogPage() {
                 {post.excerpt}
               </p>
               <div className='flex gap-3 text-xs text-[#a8a29e]'>
-                <span>📅 {post.date}</span>
-                <span>⏱️ {post.readTime}</span>
+                <span>{post.date}</span>
+                <span>{post.readTime} read</span>
               </div>
             </Link>
           ))}
         </div>
+
+        <NewsletterSubscribe />
       </main>
     </PageShell>
   );

@@ -1,197 +1,486 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KOL Marketing from 0 to 1: How Indie Developers Find Their First Seed Promoters | AIHues</title>
-<meta name="description" content="No budget for big influencers? No problem. Learn how to find micro-influencers on Twitter/X, YouTube, and TikTok who are willing to endorse you for free — and build long-term partnerships.">
-<style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{
- --bg:#faf9f6;--surface:#ffffff;--surface-hover:#f5f0e8;
- --border:#e8e2d9;--border-hover:#d4c8b8;
- --text:#1c1917;--text-secondary:#78716c;--text-muted:#a8a29e;
- --accent:#b45309;--accent-light:#d97706;--accent-gradient:linear-gradient(135deg,#b45309,#d97706);
- --green:#059669;--green-bg:#ecfdf5;
- --radius:14px;--radius-sm:10px;
- --shadow:0 1px 3px rgba(0,0,0,0.04),0 4px 16px rgba(0,0,0,0.04);
- --shadow-hover:0 4px 12px rgba(180,83,9,0.12),0 8px 32px rgba(0,0,0,0.08);
-}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
-a{color:var(--accent);text-decoration:none}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      KOL Marketing from 0 to 1: How Indie Developers Find Their First Seed
+      Promoters | AIHues
+    </title>
+    <meta
+      name="description"
+      content="No budget for big influencers? No problem. Learn how to find micro-influencers on Twitter/X, YouTube, and TikTok who are willing to endorse you for free — and build long-term partnerships."
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --bg: #faf9f6;
+        --surface: #ffffff;
+        --surface-hover: #f5f0e8;
+        --border: #e8e2d9;
+        --border-hover: #d4c8b8;
+        --text: #1c1917;
+        --text-secondary: #78716c;
+        --text-muted: #a8a29e;
+        --accent: #b45309;
+        --accent-light: #d97706;
+        --accent-gradient: linear-gradient(135deg, #b45309, #d97706);
+        --green: #059669;
+        --green-bg: #ecfdf5;
+        --radius: 14px;
+        --radius-sm: 10px;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.04);
+        --shadow-hover:
+          0 4px 12px rgba(180, 83, 9, 0.12), 0 8px 32px rgba(0, 0, 0, 0.08);
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
 
-.topbar{position:fixed;top:0;left:0;right:0;z-index:200;height:52px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 20px}
-.topbar-logo{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:800;color:var(--text)}
-.topbar-logo-mark{width:28px;height:28px;border-radius:8px;background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;line-height:1.6}
-.topbar-nav{display:flex;gap:16px}
-.topbar-nav a{font-size:13px;color:#3d3d3d;font-weight:500}
-.topbar-nav a:hover{color:var(--accent)}
+      .topbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 200;
+        height: 52px;
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px;
+      }
+      .topbar-logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 16px;
+        font-weight: 800;
+        color: var(--text);
+      }
+      .topbar-logo-mark {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        background: var(--accent-gradient);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+      .topbar-nav {
+        display: flex;
+        gap: 16px;
+      }
+      .topbar-nav a {
+        font-size: 13px;
+        color: #3d3d3d;
+        font-weight: 500;
+      }
+      .topbar-nav a:hover {
+        color: var(--accent);
+      }
 
-.article{max-width:720px;margin:0 auto;padding:80px 28px 40px}
-.article-header{text-align:center;margin-bottom:40px}
-.article-tag{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;background:rgba(180,83,9,0.08);color:var(--accent);margin-bottom:16px}
-.article h1{font-size:32px;font-weight:800;line-height:1.15;letter-spacing:-1px;margin-bottom:12px}
-.article-header p{color:#3d3d3d;font-size:15px}
-.article-meta{display:flex;justify-content:center;gap:16px;font-size:13px;color:var(--text-muted);margin-top:16px}
+      .article {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 80px 28px 40px;
+      }
+      .article-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+      .article-tag {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+        background: rgba(180, 83, 9, 0.08);
+        color: var(--accent);
+        margin-bottom: 16px;
+      }
+      .article h1 {
+        font-size: 32px;
+        font-weight: 800;
+        line-height: 1.15;
+        letter-spacing: -1px;
+        margin-bottom: 12px;
+      }
+      .article-header p {
+        color: #3d3d3d;
+        font-size: 15px;
+      }
+      .article-meta {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-top: 16px;
+      }
 
-.article h2{font-size:28px;font-weight:700;line-height:1.2;letter-spacing:-0.5px;margin:48px 0 16px;padding-bottom:12px;border-bottom:1px solid #e5e5e5;color:#1c1917}
-.article h3{font-size:20px;font-weight:600;line-height:1.3;letter-spacing:-0.3px;margin:32px 0 12px;color:#1c1917}
-.article p{margin-bottom:16px;color:#3d3d3d;font-size:16px;line-height:1.75}
-.article ul,.article ol{margin:0 0 16px 24px;color:#3d3d3d;font-size:15px}
-.article li{margin-bottom:8px;line-height:1.75}
-.article strong{color:#1c1917;font-weight:600}
+      .article h2 {
+        font-size: 28px;
+        font-weight: 700;
+        line-height: 1.2;
+        letter-spacing: -0.5px;
+        margin: 48px 0 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #e5e5e5;
+        color: #1c1917;
+      }
+      .article h3 {
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 1.3;
+        letter-spacing: -0.3px;
+        margin: 32px 0 12px;
+        color: #1c1917;
+      }
+      .article p {
+        margin-bottom: 16px;
+        color: #3d3d3d;
+        font-size: 16px;
+        line-height: 1.75;
+      }
+      .article ul,
+      .article ol {
+        margin: 0 0 16px 24px;
+        color: #3d3d3d;
+        font-size: 15px;
+      }
+      .article li {
+        margin-bottom: 8px;
+        line-height: 1.75;
+      }
+      .article strong {
+        color: #1c1917;
+        font-weight: 600;
+      }
 
-.tool-card-inline{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:12px 0;display:flex;gap:12px;align-items:flex-start}
-.tool-card-inline .icon{font-size:24px}
-.tool-card-inline .info{flex:1}
-.tool-card-inline h4{font-size:15px;font-weight:700;margin-bottom:4px}
-.tool-card-inline p{font-size:13px;color:#3d3d3d;margin:0}
-.tool-card-inline .price{display:inline-block;padding:2px 8px;border-radius:5px;font-size:11px;font-weight:700;margin-top:6px}
-.price-free{color:var(--green);background:var(--green-bg)}
-.price-freemium{color:var(--accent);background:rgba(180,83,9,0.08)}
-.price-paid{color:#dc2626;background:#fef2f2}
+      .tool-card-inline {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px;
+        margin: 12px 0;
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+      }
+      .tool-card-inline .icon {
+        font-size: 24px;
+      }
+      .tool-card-inline .info {
+        flex: 1;
+      }
+      .tool-card-inline h4 {
+        font-size: 15px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .tool-card-inline p {
+        font-size: 13px;
+        color: #3d3d3d;
+        margin: 0;
+      }
+      .tool-card-inline .price {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 5px;
+        font-size: 11px;
+        font-weight: 700;
+        margin-top: 6px;
+      }
+      .price-free {
+        color: var(--green);
+        background: var(--green-bg);
+      }
+      .price-freemium {
+        color: var(--accent);
+        background: rgba(180, 83, 9, 0.08);
+      }
+      .price-paid {
+        color: #dc2626;
+        background: #fef2f2;
+      }
 
-.tip{background:var(--green-bg);border-left:4px solid var(--green);padding:12px 16px;margin:20px 0;border-radius:0 8px 8px 0;color:#3d3d3d;font-size:14px;line-height:1.6}
+      .tip {
+        background: var(--green-bg);
+        border-left: 4px solid var(--green);
+        padding: 12px 16px;
+        margin: 20px 0;
+        border-radius: 0 8px 8px 0;
+        color: #3d3d3d;
+        font-size: 14px;
+        line-height: 1.6;
+      }
 
-.cta-box{background:var(--accent-gradient);color:#fff;padding:28px;border-radius:var(--radius);margin:36px 0;text-align:center}
-.cta-box h3{font-size:18px;font-weight:700;margin-bottom:8px}
-.cta-box p{opacity:.9;margin-bottom:16px;font-size:14px;line-height:1.6}
-.cta-btn{display:inline-block;padding:10px 24px;border-radius:10px;background:#fff;color:var(--accent);font-size:14px;line-height:1.6;font-weight:600}
+      .cta-box {
+        background: var(--accent-gradient);
+        color: #fff;
+        padding: 28px;
+        border-radius: var(--radius);
+        margin: 36px 0;
+        text-align: center;
+      }
+      .cta-box h3 {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+      .cta-box p {
+        opacity: 0.9;
+        margin-bottom: 16px;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+      .cta-btn {
+        display: inline-block;
+        padding: 10px 24px;
+        border-radius: 10px;
+        background: #fff;
+        color: var(--accent);
+        font-size: 14px;
+        line-height: 1.6;
+        font-weight: 600;
+      }
 
-.footer{text-align:center;padding:40px 28px;border-top:1px solid var(--border);color:var(--text-muted);font-size:12px;margin-top:40px}
+      .footer {
+        text-align: center;
+        padding: 40px 28px;
+        border-top: 1px solid var(--border);
+        color: var(--text-muted);
+        font-size: 12px;
+        margin-top: 40px;
+      }
 
-@media(max-width:768px){
- .article{padding:70px 16px 32px}
- .article h1{font-size:24px}
- .article h2{font-size:18px}
-}
-</style>
-</head>
-<body>
+      @media (max-width: 768px) {
+        .article {
+          padding: 70px 16px 32px;
+        }
+        .article h1 {
+          font-size: 24px;
+        }
+        .article h2 {
+          font-size: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="topbar">
+      <a href="/" class="topbar-logo"
+        ><span class="topbar-logo-mark">🎨</span><span>AIHues</span></a
+      >
+      <nav class="topbar-nav">
+        <a href="../index.html">Home</a>
+        <a href="../blog.html">Blog</a>
+        <a href="../games.html">Games</a>
+      </nav>
+    </div>
 
-<div class="topbar">
- <a href="/" class="topbar-logo"><span class="topbar-logo-mark">🎨</span><span>AIHues</span></a>
- <nav class="topbar-nav">
-   <a href="../index.html">Home</a>
-   <a href="../blog.html">Blog</a>
-   <a href="../games.html">Games</a>
- </nav>
-</div>
+    <article class="article">
+      <div class="article-header">
+        <span class="article-tag">KOL Marketing</span>
+        <h1>KOL Marketing from 0 to 1</h1>
+        <p>
+          5 tools to help you find overseas influencers and achieve low-cost
+          global exposure
+        </p>
+        <div class="article-meta">
+          <span>2026-05-15</span>
+          <span>5 min read</span>
+          <span>AIHues Team</span>
+        </div>
+      </div>
 
-<article class="article">
- <div class="article-header">
-   <span class="article-tag">KOL Marketing</span>
-   <h1>KOL Marketing from 0 to 1</h1>
-   <p>5 tools to help you find overseas influencers and achieve low-cost global exposure</p>
-   <div class="article-meta">
-     <span>2026-05-15</span>
-     <span>5 min read</span>
-     <span>AIHues Team</span>
-   </div>
- </div>
+      <p>
+        For indie developers with limited budgets, hiring million-follower
+        influencers is nearly impossible. But nano-influencers (typically 1K-50K
+        followers) often have higher conversion rates, lower collaboration
+        costs, and are more open to building long-term partnerships. This
+        article shares 5 proven tools that help you automate the entire workflow
+        from KOL matching to collaboration management.
+      </p>
 
- <p>For indie developers with limited budgets, hiring million-follower influencers is nearly impossible. But nano-influencers (typically 1K-50K followers) often have higher conversion rates, lower collaboration costs, and are more open to building long-term partnerships. This article shares 5 proven tools that help you automate the entire workflow from KOL matching to collaboration management.</p>
+      <h2>Why Nano-Influencers Are Better for Indie Developers</h2>
+      <ul>
+        <li>
+          <strong>Higher conversion rates</strong> — Nano-influencers'
+          engagement rates are typically 3-5x higher than big influencers, with
+          stronger fan trust
+        </li>
+        <li>
+          <strong>Lower costs</strong> — A single post may only cost $50-$200,
+          while big influencers charge thousands
+        </li>
+        <li>
+          <strong>More niche</strong> — Nano-influencers often focus on specific
+          domains (e.g., AI coding, data science), reaching a more precise
+          audience
+        </li>
+        <li>
+          <strong>More flexible</strong> — Willing to accept product exchanges,
+          affiliate commissions, and other flexible collaboration models
+        </li>
+      </ul>
 
- <h2>Why Nano-Influencers Are Better for Indie Developers</h2>
- <ul>
-   <li><strong>Higher conversion rates</strong> — Nano-influencers' engagement rates are typically 3-5x higher than big influencers, with stronger fan trust</li>
-   <li><strong>Lower costs</strong> — A single post may only cost $50-$200, while big influencers charge thousands</li>
-   <li><strong>More niche</strong> — Nano-influencers often focus on specific domains (e.g., AI coding, data science), reaching a more precise audience</li>
-   <li><strong>More flexible</strong> — Willing to accept product exchanges, affiliate commissions, and other flexible collaboration models</li>
- </ul>
+      <h2>KOL Matching Tools</h2>
 
- <h2>KOL Matching Tools</h2>
+      <div class="tool-card-inline">
+        <span class="icon">🤝</span>
+        <div class="info">
+          <h4>EEzycollab</h4>
+          <p>
+            KOL matching + email outreach in one platform. Enter your product
+            description, and AI automatically recommends a list of matching
+            influencers and generates personalized outreach emails.
+          </p>
+          <span class="price price-freemium">Freemium</span>
+        </div>
+      </div>
 
- <div class="tool-card-inline">
-   <span class="icon">🤝</span>
-   <div class="info">
-     <h4>EEzycollab</h4>
-     <p>KOL matching + email outreach in one platform. Enter your product description, and AI automatically recommends a list of matching influencers and generates personalized outreach emails.</p>
-     <span class="price price-freemium">Freemium</span>
-   </div>
- </div>
+      <div class="tool-card-inline">
+        <span class="icon">👥</span>
+        <div class="info">
+          <h4>Nanoinfluencer</h4>
+          <p>
+            A platform dedicated to matching nano-influencers. Supports
+            filtering by industry, follower count, and engagement rate. Can also
+            analyze competitor accounts' collaborators to copy their playbook.
+          </p>
+          <span class="price price-freemium">Freemium</span>
+        </div>
+      </div>
 
- <div class="tool-card-inline">
-   <span class="icon">👥</span>
-   <div class="info">
-     <h4>Nanoinfluencer</h4>
-     <p>A platform dedicated to matching nano-influencers. Supports filtering by industry, follower count, and engagement rate. Can also analyze competitor accounts' collaborators to copy their playbook.</p>
-     <span class="price price-freemium">Freemium</span>
-   </div>
- </div>
+      <div class="tool-card-inline">
+        <span class="icon">🔍</span>
+        <div class="info">
+          <h4>NoxInfluencer</h4>
+          <p>
+            Influencer information database covering YouTube, TikTok, Instagram,
+            and more. View historical data, audience demographics, and content
+            style to make data-driven choices.
+          </p>
+          <span class="price price-freemium">Freemium</span>
+        </div>
+      </div>
 
- <div class="tool-card-inline">
-   <span class="icon">🔍</span>
-   <div class="info">
-     <h4>NoxInfluencer</h4>
-     <p>Influencer information database covering YouTube, TikTok, Instagram, and more. View historical data, audience demographics, and content style to make data-driven choices.</p>
-     <span class="price price-freemium">Freemium</span>
-   </div>
- </div>
+      <h2>Collaboration Management Tools</h2>
 
- <h2>Collaboration Management Tools</h2>
+      <div class="tool-card-inline">
+        <span class="icon">📋</span>
+        <div class="info">
+          <h4>EasyKOL</h4>
+          <p>
+            KOL management platform for contract signing, content review, and
+            performance tracking. Ideal for teams managing multiple influencer
+            collaborations.
+          </p>
+          <span class="price price-paid">Paid</span>
+        </div>
+      </div>
 
- <div class="tool-card-inline">
-   <span class="icon">📋</span>
-   <div class="info">
-     <h4>EasyKOL</h4>
-     <p>KOL management platform for contract signing, content review, and performance tracking. Ideal for teams managing multiple influencer collaborations.</p>
-     <span class="price price-paid">Paid</span>
-   </div>
- </div>
+      <h2>Japan Market Resource</h2>
 
- <h2>Japan Market Resource</h2>
+      <div class="tool-card-inline">
+        <span class="icon">🇯🇵</span>
+        <div class="info">
+          <h4>Connpass</h4>
+          <p>
+            Japan's largest tech community event platform. If you want to enter
+            the Japanese market, use Connpass to find local tech communities and
+            KOLs, and build relationships through offline events.
+          </p>
+          <span class="price price-free">Free</span>
+        </div>
+      </div>
 
- <div class="tool-card-inline">
-   <span class="icon">🇯🇵</span>
-   <div class="info">
-     <h4>Connpass</h4>
-     <p>Japan's largest tech community event platform. If you want to enter the Japanese market, use Connpass to find local tech communities and KOLs, and build relationships through offline events.</p>
-     <span class="price price-free">Free</span>
-   </div>
- </div>
+      <h2>Outreach Email Template</h2>
+      <p>Here's a proven KOL collaboration outreach email template:</p>
 
- <h2>Outreach Email Template</h2>
- <p>Here's a proven KOL collaboration outreach email template:</p>
+      <div class="tip">
+        Subject: Collaboration opportunity — [Your Product] x [Influencer
+        Name]<br /><br />
+        Body:<br />
+        Hi [Name],<br /><br />
+        I'm [Your Name], founder of [Product], a [one-sentence product
+        description]. I noticed your content about [relevant topic] and really
+        enjoyed your perspective on [specific point].<br /><br />
+        I'd love to offer you early access to [Product] — no strings attached.
+        If you find it useful, maybe we can explore a collaboration. If not, no
+        worries at all.<br /><br />
+        Best,<br />
+        [Your Name]
+      </div>
 
- <div class="tip">
- Subject: Collaboration opportunity — [Your Product] x [Influencer Name]<br><br>
- Body:<br>
- Hi [Name],<br><br>
- I'm [Your Name], founder of [Product], a [one-sentence product description]. I noticed your content about [relevant topic] and really enjoyed your perspective on [specific point].<br><br>
- I'd love to offer you early access to [Product] — no strings attached. If you find it useful, maybe we can explore a collaboration. If not, no worries at all.<br><br>
- Best,<br>
- [Your Name]
- </div>
+      <h2>Collaboration Models & Pricing</h2>
+      <ul>
+        <li>
+          <strong>Product exchange</strong> — Free Pro account in exchange for
+          one piece of content (ideal for zero budget)
+        </li>
+        <li>
+          <strong>Affiliate commission</strong> — Offer 20%-30% commission,
+          influencer promotes via unique link (long-term partnership)
+        </li>
+        <li>
+          <strong>Flat fee</strong> — Single post $50-$500, priced based on
+          follower count and engagement rate
+        </li>
+        <li>
+          <strong>Long-term partnership</strong> — Monthly/quarterly
+          collaboration, fixed content volume per month, better rates
+        </li>
+      </ul>
 
- <h2>Collaboration Models & Pricing</h2>
- <ul>
-   <li><strong>Product exchange</strong> — Free Pro account in exchange for one piece of content (ideal for zero budget)</li>
-   <li><strong>Affiliate commission</strong> — Offer 20%-30% commission, influencer promotes via unique link (long-term partnership)</li>
-   <li><strong>Flat fee</strong> — Single post $50-$500, priced based on follower count and engagement rate</li>
-   <li><strong>Long-term partnership</strong> — Monthly/quarterly collaboration, fixed content volume per month, better rates</li>
- </ul>
+      <h2>Performance Tracking</h2>
+      <p>Don't forget to track KOL collaboration results:</p>
+      <ul>
+        <li>
+          Use <strong>Juicebox</strong> or <strong>Bitly</strong> to generate
+          UTM-tagged unique links
+        </li>
+        <li>
+          Use <strong>Mixpanel</strong> or <strong>PostHog</strong> to track
+          user conversions from KOL channels
+        </li>
+        <li>
+          Monitor engagement data on influencer content (likes, comments,
+          shares)
+        </li>
+        <li>
+          Regularly review: which influencers bring the highest quality users?
+        </li>
+      </ul>
 
- <h2>Performance Tracking</h2>
- <p>Don't forget to track KOL collaboration results:</p>
- <ul>
-   <li>Use <strong>Juicebox</strong> or <strong>Bitly</strong> to generate UTM-tagged unique links</li>
-   <li>Use <strong>Mixpanel</strong> or <strong>PostHog</strong> to track user conversions from KOL channels</li>
-   <li>Monitor engagement data on influencer content (likes, comments, shares)</li>
-   <li>Regularly review: which influencers bring the highest quality users?</li>
- </ul>
+      <div class="cta-box">
+        <h3>Explore More Growth Tools</h3>
+        <p>The AIHues directory lists 70+ growth tools and 100+ AI tools</p>
+        <a href="../index.html" class="cta-btn">View All Tools →</a>
+      </div>
+    </article>
 
- <div class="cta-box">
-   <h3>Explore More Growth Tools</h3>
-   <p>The AIHues directory lists 70+ growth tools and 100+ AI tools</p>
-   <a href="../index.html" class="cta-btn">View All Tools →</a>
- </div>
-
-</article>
-
-<footer class="footer">
- © 2026 AIHues · Built with Kimi
-</footer>
-
-</body>
+    <footer class="footer">© 2026 AIHues · Built with Kimi</footer>
+  </body>
 </html>

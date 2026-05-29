@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { notFound } from 'next/navigation';
 
 import { PageShell } from '@/components/SiteChrome';
+import NewsletterSubscribe from '@/components/NewsletterSubscribe';
 import '../article.css';
 
 interface ArticleMeta {
@@ -13,19 +14,22 @@ interface ArticleMeta {
 
 const articleMetaMap: Record<string, ArticleMeta> = {
   'growth-tools-2026': {
-    title: '2026 Overseas Growth Toolkit: 70+ Tools Covering Social, Reddit, KOL, SEO',
+    title:
+      '2026 Overseas Growth Toolkit: 70+ Tools Covering Social, Reddit, KOL, SEO',
     tag: 'Growth',
     date: '2026-05-27',
     readTime: '8 min read',
   },
   'reddit-marketing': {
-    title: 'Reddit Marketing Playbook: How to Acquire Users Gracefully in Redditor Territory',
+    title:
+      'Reddit Marketing Playbook: How to Acquire Users Gracefully in Redditor Territory',
     tag: 'Reddit Marketing',
     date: '2026-05-20',
     readTime: '6 min read',
   },
   'kol-marketing': {
-    title: 'KOL Marketing from 0 to 1: How Indie Developers Find Their First Seed Promoters',
+    title:
+      'KOL Marketing from 0 to 1: How Indie Developers Find Their First Seed Promoters',
     tag: 'KOL Marketing',
     date: '2026-05-15',
     readTime: '5 min read',
@@ -85,8 +89,9 @@ export default async function ArticlePage({
           className='article-content max-w-none'
           dangerouslySetInnerHTML={{ __html: htmlContent }}
         />
-      </main>
 
+        <NewsletterSubscribe />
+      </main>
     </PageShell>
   );
 }

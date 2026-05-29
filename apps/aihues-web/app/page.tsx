@@ -183,7 +183,7 @@ export default async function HomePage() {
           className='pointer-events-none absolute left-1/2 top-0 h-[600px] w-[800px] -translate-x-1/2 -translate-y-[60%] rounded-full opacity-60'
           style={{
             background:
-              'radial-gradient(circle, rgba(109,40,217,0.08) 0%, transparent 70%)',
+              'radial-gradient(circle, rgba(180,83,9,0.08) 0%, transparent 70%)',
           }}
         />
 
@@ -470,7 +470,7 @@ export default async function HomePage() {
       <section className='mx-auto max-w-[1300px] px-8 pb-12'>
         <div
           className='flex flex-wrap items-center justify-between gap-4 rounded-[14px] px-8 py-7'
-          style={{ background: 'linear-gradient(135deg, #1e1b4b, #2d1b69)' }}
+          style={{ background: 'linear-gradient(135deg, #7c2d12, #92400e)' }}
         >
           <div>
             <div className='mb-1 flex flex-wrap gap-2'>
