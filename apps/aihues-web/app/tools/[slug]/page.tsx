@@ -33,6 +33,7 @@ import TldrTool from '@/components/tools/TldrTool';
 import ImageToBase64Tool from '@/components/tools/ImageToBase64Tool';
 import PrDescTool from '@/components/tools/PrDescTool';
 import CodeReviewTool from '@/components/tools/CodeReviewTool';
+import ChangelogTool from '@/components/tools/ChangelogTool';
 
 const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'word-count': WordCountTool,
@@ -64,6 +65,7 @@ const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'image-to-base64': ImageToBase64Tool,
   'pr-desc': PrDescTool,
   'code-review': CodeReviewTool,
+  'changelog': ChangelogTool,
 };
 
 export default async function ToolPage({

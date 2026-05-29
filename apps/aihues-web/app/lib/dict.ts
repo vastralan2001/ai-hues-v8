@@ -422,6 +422,20 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.codeReview.itemMaintainability3': 'No dead code',
     'tool.codeReview.itemMaintainability4': 'Dependencies are justified',
 
+    'tool.changelog.title': 'Changelog Generator',
+    'tool.changelog.desc': 'Generate Keep a Changelog formatted entries',
+    'tool.changelog.version': 'Version',
+    'tool.changelog.date': 'Date',
+    'tool.changelog.added': 'Added',
+    'tool.changelog.changed': 'Changed',
+    'tool.changelog.deprecated': 'Deprecated',
+    'tool.changelog.removed': 'Removed',
+    'tool.changelog.fixed': 'Fixed',
+    'tool.changelog.security': 'Security',
+    'tool.changelog.addItem': 'Add Item',
+    'tool.changelog.generate': 'Generate',
+    'tool.changelog.result': 'Changelog',
+
     // footer
     'footer.product': 'Product',
     'footer.games': 'Games',
@@ -853,6 +867,20 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.codeReview.itemMaintainability2': '已添加/更新测试',
     'tool.codeReview.itemMaintainability3': '无死代码',
     'tool.codeReview.itemMaintainability4': '依赖项有合理理由',
+
+    'tool.changelog.title': 'Changelog 生成器',
+    'tool.changelog.desc': '生成 Keep a Changelog 格式的变更日志',
+    'tool.changelog.version': '版本',
+    'tool.changelog.date': '日期',
+    'tool.changelog.added': '新增',
+    'tool.changelog.changed': '变更',
+    'tool.changelog.deprecated': '弃用',
+    'tool.changelog.removed': '移除',
+    'tool.changelog.fixed': '修复',
+    'tool.changelog.security': '安全',
+    'tool.changelog.addItem': '添加条目',
+    'tool.changelog.generate': '生成',
+    'tool.changelog.result': 'Changelog',
 
     // footer
     'footer.product': '产品',
