@@ -352,6 +352,11 @@ export const dict: Record<Locale, Record<string, string>> = {
     'unit.fahrenheit': 'Fahrenheit',
     'unit.kelvin': 'Kelvin',
 
+    'tool.markdown.title': 'Markdown Preview',
+    'tool.markdown.desc': 'Live preview for Markdown with basic syntax support',
+    'tool.markdown.placeholder': 'Enter Markdown here...',
+    'tool.markdown.preview': 'Preview',
+
     // footer
     'footer.product': 'Product',
     'footer.games': 'Games',
@@ -713,6 +718,11 @@ export const dict: Record<Locale, Record<string, string>> = {
     'unit.celsius': '摄氏度',
     'unit.fahrenheit': '华氏度',
     'unit.kelvin': '开尔文',
+
+    'tool.markdown.title': 'Markdown 预览',
+    'tool.markdown.desc': 'Markdown 基础语法实时预览',
+    'tool.markdown.placeholder': '在此输入 Markdown...',
+    'tool.markdown.preview': '预览',
 
     // footer
     'footer.product': '产品',
