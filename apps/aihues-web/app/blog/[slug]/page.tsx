@@ -34,7 +34,10 @@ const articleMetaMap: Record<string, ArticleMeta> = {
 
 function extractBody(html: string): string {
   const match = html.match(/<article[^>]*>([\s\S]*?)<\/article>/);
-  if (match) return match[1];
+  if (match) {
+    // Strip the inner article-header (React already renders its own)
+    return match[1].replace(/<div class="article-header">[\s\S]*?<\/div>/, '');
+  }
   const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/);
   return bodyMatch ? bodyMatch[1] : html;
 }
@@ -71,9 +74,9 @@ export default async function ArticlePage({
             {meta.title}
           </h1>
           <div className='mt-4 flex justify-center gap-4 text-sm text-[#a8a29e]'>
-            <span>📅 {meta.date}</span>
-            <span>⏱️ {meta.readTime}</span>
-            <span>👤 AIHues Team</span>
+            <span>{meta.date}</span>
+            <span>{meta.readTime}</span>
+            <span>AIHues Team</span>
           </div>
         </div>
 
