@@ -74,7 +74,7 @@ main{position:relative;z-index:1}
 
 /* ============ Game Canvas Area ============ */
 .game-area{position:relative;width:100%;max-width:860px;margin:0 auto;border-radius:var(--radius);overflow:hidden;border:2px solid var(--border);box-shadow:var(--shadow)}
-#gameCanvas{display:block;width:100%;height:640px;background:linear-gradient(180deg,var(--sky-top) 0%,var(--sky-bottom) 60%,var(--court-wood) 60%,#a07850 100%)}
+#gameCanvas{display:block;width:100%;height:420px;background:linear-gradient(180deg,var(--sky-top) 0%,var(--sky-bottom) 60%,var(--court-wood) 60%,#a07850 100%)}
 #gameCanvas.portrait-mode{height:380px}
 
 /* ============ Screen Overlays ============ */
@@ -220,12 +220,12 @@ main{position:relative;z-index:1}
   .result-stats{grid-template-columns:1fr 1fr}
   .nav-links{gap:16px}
   .nav-links a{font-size:13px}
-  #gameCanvas{height:480px}
+  #gameCanvas{height:360px}
 }
 @media(max-width:480px){
   .result-stats{grid-template-columns:1fr}
   .controls-info{gap:12px}
-  #gameCanvas{height:420px}
+  #gameCanvas{height:320px}
 }
 </style>
 <link rel="stylesheet" href="../css/themes.css">
@@ -280,7 +280,7 @@ main{position:relative;z-index:1}
 
   <!-- Game Area -->
   <div class="game-area" id="gameArea">
-    <canvas id="gameCanvas" width="860" height="640"></canvas>
+    <canvas id="gameCanvas" width="860" height="420"></canvas>
 
     <!-- Floating Score Popups -->
     <div class="popup-container" id="popupContainer"></div>
@@ -414,9 +414,9 @@ main{position:relative;z-index:1}
 </div>
 
 <script>// ===================== CONSTANTS =====================
-const CANVAS_W = 860, CANVAS_H = 640;
-const GROUND_Y = 500;
-const HOOP_X = 680, HOOP_Y = 290, HOOP_WIDTH = 52;
+const CANVAS_W = 860, CANVAS_H = 420;
+const GROUND_Y = 360;
+const HOOP_X = 680, HOOP_Y = 195, HOOP_WIDTH = 52;
 const BALL_RADIUS = 14;
 const GRAVITY = 0.35;
 const SHOOT_POWER = 16.5;
