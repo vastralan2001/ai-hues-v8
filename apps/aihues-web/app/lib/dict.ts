@@ -103,6 +103,19 @@ export const dict: Record<Locale, Record<string, string>> = {
     'price.freemium': 'Freemium',
     'price.paid': 'Paid',
 
+    // tools
+    'tool.wordCount.title': 'Word Counter',
+    'tool.wordCount.desc': 'Real-time character, word, and line counting',
+    'tool.wordCount.placeholder': 'Paste or type your text here...',
+    'tool.wordCount.chars': 'Characters',
+    'tool.wordCount.charsNoSpace': 'No Space',
+    'tool.wordCount.words': 'Words',
+    'tool.wordCount.lines': 'Lines',
+    'tool.wordCount.paragraphs': 'Paragraphs',
+    'tool.wordCount.readTime': 'Read Time',
+    'tool.wordCount.clear': 'Clear',
+    'tool.wordCount.copy': 'Copy',
+
     // footer
     'footer.product': 'Product',
     'footer.games': 'Games',
@@ -215,6 +228,19 @@ export const dict: Record<Locale, Record<string, string>> = {
     'price.free': '免费',
     'price.freemium': '免费增值',
     'price.paid': '付费',
+
+    // tools
+    'tool.wordCount.title': '字数统计',
+    'tool.wordCount.desc': '实时统计字符数、字数和行数',
+    'tool.wordCount.placeholder': '在此粘贴或输入文本...',
+    'tool.wordCount.chars': '字符数',
+    'tool.wordCount.charsNoSpace': '无空格',
+    'tool.wordCount.words': '字数',
+    'tool.wordCount.lines': '行数',
+    'tool.wordCount.paragraphs': '段落数',
+    'tool.wordCount.readTime': '阅读时间',
+    'tool.wordCount.clear': '清空',
+    'tool.wordCount.copy': '复制',
 
     // footer
     'footer.product': '产品',
