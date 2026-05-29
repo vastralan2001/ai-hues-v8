@@ -11,6 +11,7 @@ import {
   showcaseHref,
   toolsHref,
   wishlistHref,
+  blogHref,
 } from '@/lib/routes';
 
 type ChromeVariant =
@@ -29,6 +30,7 @@ const headerLinks: Record<
     { href: discoverHref, label: 'Discover' },
     { href: toolsHref, label: 'Tools' },
     { href: '#games', label: 'Games' },
+    { href: blogHref, label: 'Blog' },
     { href: wishlistHref, label: 'Wishlist' },
     { href: rankingHref, label: 'Ranking' },
   ],
@@ -36,6 +38,7 @@ const headerLinks: Record<
     { href: homeHref, label: 'Home' },
     { href: `${homeHref}#categories`, label: 'Categories' },
     { href: gamesHref, label: 'Games' },
+    { href: blogHref, label: 'Blog' },
     { href: wishlistHref, label: 'Wishlist' },
     { href: rankingHref, label: 'Ranking' },
   ],
@@ -43,6 +46,7 @@ const headerLinks: Record<
     { href: homeHref, label: 'Home' },
     { href: toolsHref, label: 'Tools' },
     { href: gamesHref, label: 'Games' },
+    { href: blogHref, label: 'Blog' },
     { href: wishlistHref, label: 'Wishlist' },
     { href: rankingHref, label: 'Ranking' },
   ],
@@ -51,18 +55,21 @@ const headerLinks: Record<
     { href: `${homeHref}#categories`, label: 'Categories' },
     { href: `${homeHref}#new-tools`, label: 'Tools' },
     { href: `${homeHref}#games`, label: 'Games' },
+    { href: blogHref, label: 'Blog' },
     { href: wishlistHref, label: 'Wishlist' },
   ],
   ranking: [
     { href: homeHref, label: 'Home' },
     { href: toolsHref, label: 'Tools' },
     { href: gamesHref, label: 'Games' },
+    { href: blogHref, label: 'Blog' },
     { href: rankingHref, label: 'Ranking' },
   ],
   default: [
     { href: homeHref, label: 'Home' },
     { href: toolsHref, label: 'Tools' },
     { href: gamesHref, label: 'Games' },
+    { href: blogHref, label: 'Blog' },
     { href: wishlistHref, label: 'Wishlist' },
     { href: rankingHref, label: 'Ranking' },
   ],
@@ -89,7 +96,7 @@ export function SiteHeader({
         >
           <span
             className='flex h-[34px] w-[34px] items-center justify-center rounded-[10px] text-sm font-bold text-white'
-            style={{ background: 'linear-gradient(135deg, #6d28d9, #8b5cf6)' }}
+            style={{ background: 'linear-gradient(135deg, #b45309, #d97706)' }}
           >
             H
           </span>
@@ -135,7 +142,7 @@ export function SiteFooter({
         <div className='mb-3 flex items-center justify-center gap-2.5 text-xl font-extrabold text-foreground'>
           <span
             className='flex h-8 w-8 items-center justify-center rounded-[8px] text-sm font-bold text-white'
-            style={{ background: 'linear-gradient(135deg, #6d28d9, #8b5cf6)' }}
+            style={{ background: 'linear-gradient(135deg, #b45309, #d97706)' }}
           >
             H
           </span>
@@ -161,7 +168,7 @@ export function SiteFooter({
                 <span
                   className='flex h-8 w-8 items-center justify-center rounded-[8px] text-sm font-bold text-white'
                   style={{
-                    background: 'linear-gradient(135deg, #6d28d9, #8b5cf6)',
+                    background: 'linear-gradient(135deg, #b45309, #d97706)',
                   }}
                 >
                   H
@@ -219,7 +226,7 @@ export function SiteFooter({
               <span
                 className='flex h-8 w-8 items-center justify-center rounded-[8px] text-sm font-bold text-white'
                 style={{
-                  background: 'linear-gradient(135deg, #6d28d9, #8b5cf6)',
+                  background: 'linear-gradient(135deg, #b45309, #d97706)',
                 }}
               >
                 H

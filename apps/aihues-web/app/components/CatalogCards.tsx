@@ -86,7 +86,7 @@ export function ToolCardV2({
       )}
 
       {/* icon-wrap: bg becomes accent gradient on hover */}
-      <div className='mb-3 flex h-[42px] w-[42px] items-center justify-center rounded-[11px] border border-border bg-surface text-xl transition-all duration-200 group-hover:border-transparent group-hover:[background:linear-gradient(135deg,#6d28d9,#8b5cf6)]'>
+      <div className='mb-3 flex h-[42px] w-[42px] items-center justify-center rounded-[11px] border border-border bg-surface text-xl transition-all duration-200 group-hover:border-transparent group-hover:[background:linear-gradient(135deg,#b45309,#d97706)]'>
         {tool.icon}
       </div>
 
@@ -154,7 +154,7 @@ export function GameCard({ game }: { game: CatalogGame }) {
 
       <span
         className='inline-block rounded-[10px] px-7 py-[11px] text-[14px] font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_4px_16px_rgba(109,40,217,0.35)]'
-        style={{ background: 'linear-gradient(135deg, #6d28d9, #8b5cf6)' }}
+        style={{ background: 'linear-gradient(135deg, #b45309, #d97706)' }}
       >
         {playLabel}
       </span>

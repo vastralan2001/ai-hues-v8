@@ -132,7 +132,7 @@ function HomeGameCard({ game }: { game: CatalogGame }) {
       </p>
       <span
         className='inline-block rounded-[10px] px-7 py-[11px] text-[14px] font-semibold text-white'
-        style={{ background: 'linear-gradient(135deg, #6d28d9, #8b5cf6)' }}
+        style={{ background: 'linear-gradient(135deg, #b45309, #d97706)' }}
       >
         {HOME_GAME_ACTIONS[game.slug] ?? 'Play →'}
       </span>
@@ -192,7 +192,7 @@ export default async function HomePage() {
             Find your{' '}
             <span
               style={{
-                background: 'linear-gradient(135deg, #6d28d9, #8b5cf6)',
+                background: 'linear-gradient(135deg, #b45309, #d97706)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
@@ -219,7 +219,7 @@ export default async function HomePage() {
               <button
                 className='rounded-[10px] px-5 py-2 text-[14px] font-semibold text-white transition-all hover:-translate-y-px hover:shadow-[0_4px_12px_rgba(109,40,217,0.3)]'
                 style={{
-                  background: 'linear-gradient(135deg, #6d28d9, #8b5cf6)',
+                  background: 'linear-gradient(135deg, #b45309, #d97706)',
                 }}
                 type='button'
               >
@@ -503,7 +503,7 @@ export default async function HomePage() {
           ══════════════════════════════════════════════ */}
       <section
         className='px-8 py-16 text-center'
-        style={{ background: 'linear-gradient(135deg, #6d28d9, #7c3aed)' }}
+        style={{ background: 'linear-gradient(135deg, #b45309, #d97706)' }}
       >
         <div className='mx-auto max-w-[560px]'>
           <h2 className='mb-3 text-[28px] font-bold text-white'>
