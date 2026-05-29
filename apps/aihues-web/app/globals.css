@@ -191,8 +191,10 @@ input {
   .page-hero h1 {
     margin: 0;
     color: #0b1220;
-    font-size: clamp(42px, 6vw, 72px);
-    line-height: 0.98;
+    font-size: 48px;
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -2px;
   }
 
   .hero p:not(.kicker),
@@ -510,7 +512,10 @@ input {
   }
 
   .page-hero h1 {
-    font-size: clamp(40px, 5vw, 58px);
+    font-size: 48px;
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -2px;
   }
 
   /* ---- Search form ---- */
@@ -2456,7 +2461,8 @@ input {
 
     .hero h1,
     .page-hero h1 {
-      font-size: 42px;
+      font-size: 36px;
+      letter-spacing: -1.5px;
     }
 
     .category-band,

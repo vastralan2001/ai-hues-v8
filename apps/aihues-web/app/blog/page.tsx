@@ -40,7 +40,7 @@ export default function BlogPage() {
           <p className='mb-2 text-xs font-bold uppercase tracking-widest text-[#b45309]'>
             Blog
           </p>
-          <h1 className='text-3xl font-extrabold tracking-tight md:text-4xl'>
+          <h1 className='text-[48px] font-extrabold leading-[1.08] tracking-[-2px]'>
             <span className='text-[#1c1917]'>AIHues </span>
             <span className='bg-gradient-to-r from-[#b45309] to-[#d97706] bg-clip-text text-transparent'>
               Blog

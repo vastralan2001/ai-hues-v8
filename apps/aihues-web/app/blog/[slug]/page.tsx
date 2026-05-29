@@ -13,22 +13,22 @@ interface ArticleMeta {
 
 const articleMetaMap: Record<string, ArticleMeta> = {
   'growth-tools-2026': {
-    title: '2026 年出海增长必备工具大全：70+ 工具覆盖社媒、Reddit、KOL、SEO',
-    tag: '出海增长',
+    title: '2026 Overseas Growth Toolkit: 70+ Tools Covering Social, Reddit, KOL, SEO',
+    tag: 'Growth',
     date: '2026-05-27',
-    readTime: '8 分钟',
+    readTime: '8 min read',
   },
   'reddit-marketing': {
-    title: 'Reddit 营销实战指南：如何在 Redditors 的领地里优雅地获客',
-    tag: 'Reddit 营销',
+    title: 'Reddit Marketing Playbook: How to Acquire Users Gracefully in Redditor Territory',
+    tag: 'Reddit Marketing',
     date: '2026-05-20',
-    readTime: '6 分钟',
+    readTime: '6 min read',
   },
   'kol-marketing': {
-    title: 'KOL 营销从 0 到 1：独立开发者如何找到第一批种子推广者',
-    tag: 'KOL 营销',
+    title: 'KOL Marketing from 0 to 1: How Indie Developers Find Their First Seed Promoters',
+    tag: 'KOL Marketing',
     date: '2026-05-15',
-    readTime: '5 分钟',
+    readTime: '5 min read',
   },
 };
 
@@ -67,7 +67,7 @@ export default async function ArticlePage({
           <span className='mb-4 inline-block rounded-full bg-[rgba(180,83,9,0.08)] px-3 py-1 text-xs font-bold text-[#b45309]'>
             {meta.tag}
           </span>
-          <h1 className='text-3xl font-extrabold tracking-tight text-[#1c1917] md:text-4xl'>
+          <h1 className='text-[48px] font-extrabold leading-[1.08] tracking-[-2px] text-[#1c1917]'>
             {meta.title}
           </h1>
           <div className='mt-4 flex justify-center gap-4 text-sm text-[#a8a29e]'>
