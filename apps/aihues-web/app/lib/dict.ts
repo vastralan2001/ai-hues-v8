@@ -160,6 +160,19 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.json.result': 'Result',
     'tool.json.invalid': 'Invalid JSON',
 
+    'tool.sha256.title': 'SHA-256 Hash',
+    'tool.sha256.desc': 'Compute SHA-256 hash of any text',
+    'tool.sha256.placeholder': 'Enter text to hash...',
+    'tool.sha256.hash': 'Hash',
+    'tool.sha256.result': 'Result',
+
+    'tool.lorem.title': 'Lorem Ipsum Generator',
+    'tool.lorem.desc': 'Generate placeholder text for your designs',
+    'tool.lorem.paragraphs': 'Paragraphs',
+    'tool.lorem.sentences': 'Sentences per paragraph',
+    'tool.lorem.generate': 'Generate',
+    'tool.lorem.copy': 'Copy',
+
     // footer
     'footer.product': 'Product',
     'footer.games': 'Games',
@@ -329,6 +342,19 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.json.validate': '验证',
     'tool.json.result': '结果',
     'tool.json.invalid': '无效的 JSON',
+
+    'tool.sha256.title': 'SHA-256 哈希',
+    'tool.sha256.desc': '计算任意文本的 SHA-256 哈希值',
+    'tool.sha256.placeholder': '输入要哈希的文本...',
+    'tool.sha256.hash': '哈希',
+    'tool.sha256.result': '结果',
+
+    'tool.lorem.title': 'Lorem Ipsum 生成器',
+    'tool.lorem.desc': '为设计生成占位文本',
+    'tool.lorem.paragraphs': '段落数',
+    'tool.lorem.sentences': '每段句子数',
+    'tool.lorem.generate': '生成',
+    'tool.lorem.copy': '复制',
 
     // footer
     'footer.product': '产品',
