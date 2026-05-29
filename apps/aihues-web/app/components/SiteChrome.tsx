@@ -27,16 +27,16 @@ const headerLinks: Record<
   Array<{ href: string; label: string }>
 > = {
   home: [
-    { href: discoverHref, label: 'Discover' },
+    { href: homeHref, label: 'Home' },
     { href: toolsHref, label: 'Tools' },
-    { href: '#games', label: 'Games' },
+    { href: gamesHref, label: 'Games' },
     { href: blogHref, label: 'Blog' },
     { href: wishlistHref, label: 'Wishlist' },
     { href: rankingHref, label: 'Ranking' },
   ],
   tools: [
     { href: homeHref, label: 'Home' },
-    { href: `${homeHref}#categories`, label: 'Categories' },
+    { href: toolsHref, label: 'Tools' },
     { href: gamesHref, label: 'Games' },
     { href: blogHref, label: 'Blog' },
     { href: wishlistHref, label: 'Wishlist' },
@@ -52,17 +52,18 @@ const headerLinks: Record<
   ],
   wishlist: [
     { href: homeHref, label: 'Home' },
-    { href: `${homeHref}#categories`, label: 'Categories' },
-    { href: `${homeHref}#new-tools`, label: 'Tools' },
-    { href: `${homeHref}#games`, label: 'Games' },
+    { href: toolsHref, label: 'Tools' },
+    { href: gamesHref, label: 'Games' },
     { href: blogHref, label: 'Blog' },
     { href: wishlistHref, label: 'Wishlist' },
+    { href: rankingHref, label: 'Ranking' },
   ],
   ranking: [
     { href: homeHref, label: 'Home' },
     { href: toolsHref, label: 'Tools' },
     { href: gamesHref, label: 'Games' },
     { href: blogHref, label: 'Blog' },
+    { href: wishlistHref, label: 'Wishlist' },
     { href: rankingHref, label: 'Ranking' },
   ],
   default: [
