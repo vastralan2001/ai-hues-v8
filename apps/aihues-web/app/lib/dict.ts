@@ -220,6 +220,16 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.regex.groups': 'Groups',
     'tool.regex.error': 'Invalid regex',
 
+    'tool.diff.title': 'Text Diff',
+    'tool.diff.desc': 'Compare two texts line by line',
+    'tool.diff.textA': 'Text A',
+    'tool.diff.textB': 'Text B',
+    'tool.diff.compare': 'Compare',
+    'tool.diff.unchanged': 'Unchanged',
+    'tool.diff.removed': 'Removed',
+    'tool.diff.added': 'Added',
+    'tool.diff.copy': 'Copy',
+
     // footer
     'footer.product': 'Product',
     'footer.games': 'Games',
@@ -449,6 +459,16 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.regex.noMatches': '无匹配结果',
     'tool.regex.groups': '捕获组',
     'tool.regex.error': '无效的正则表达式',
+
+    'tool.diff.title': '文本对比',
+    'tool.diff.desc': '逐行对比两段文本',
+    'tool.diff.textA': '文本 A',
+    'tool.diff.textB': '文本 B',
+    'tool.diff.compare': '对比',
+    'tool.diff.unchanged': '未变更',
+    'tool.diff.removed': '删除',
+    'tool.diff.added': '新增',
+    'tool.diff.copy': '复制',
 
     // footer
     'footer.product': '产品',
