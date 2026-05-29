@@ -8,12 +8,14 @@ import WordCountTool from '@/components/tools/WordCountTool';
 import Base64Tool from '@/components/tools/Base64Tool';
 import UrlEncodeTool from '@/components/tools/UrlEncodeTool';
 import UuidTool from '@/components/tools/UuidTool';
+import JwtTool from '@/components/tools/JwtTool';
 
 const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'word-count': WordCountTool,
   'base64': Base64Tool,
   'url-encode': UrlEncodeTool,
   'uuid': UuidTool,
+  'jwt': JwtTool,
 };
 
 export default async function ToolPage({

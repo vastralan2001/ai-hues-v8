@@ -140,6 +140,17 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.uuid.copy': 'Copy',
     'tool.uuid.copyAll': 'Copy All',
 
+    'tool.jwt.title': 'JWT Parser',
+    'tool.jwt.desc': 'Decode and inspect JSON Web Tokens',
+    'tool.jwt.placeholder': 'Paste JWT token here...',
+    'tool.jwt.parse': 'Parse',
+    'tool.jwt.header': 'Header',
+    'tool.jwt.payload': 'Payload',
+    'tool.jwt.signature': 'Signature',
+    'tool.jwt.expired': 'Expired',
+    'tool.jwt.valid': 'Valid',
+    'tool.jwt.expiresAt': 'Expires at',
+
     // footer
     'footer.product': 'Product',
     'footer.games': 'Games',
@@ -289,6 +300,17 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.uuid.history': '历史记录',
     'tool.uuid.copy': '复制',
     'tool.uuid.copyAll': '复制全部',
+
+    'tool.jwt.title': 'JWT 解析器',
+    'tool.jwt.desc': '解码和检查 JSON Web Token',
+    'tool.jwt.placeholder': '在此粘贴 JWT 令牌...',
+    'tool.jwt.parse': '解析',
+    'tool.jwt.header': 'Header',
+    'tool.jwt.payload': 'Payload',
+    'tool.jwt.signature': '签名',
+    'tool.jwt.expired': '已过期',
+    'tool.jwt.valid': '有效',
+    'tool.jwt.expiresAt': '过期时间',
 
     // footer
     'footer.product': '产品',
