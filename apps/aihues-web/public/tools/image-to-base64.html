@@ -14,7 +14,7 @@
   --green:#059669;--blue:#2563eb;--orange:#ea580c;
   --radius:14px;--radius-sm:10px;
   --shadow:0 1px 3px rgba(0,0,0,0.04),0 4px 16px rgba(0,0,0,0.04);
-  --shadow-lg:0 8px 32px rgba(109,40,217,0.18);
+  --shadow-lg:0 8px 32px rgba(180,83,9,0.18);
 }
 
 /* ============ Reset & Base ============ */
@@ -45,7 +45,7 @@ button{cursor:pointer;font-family:inherit}
 .tool-meta{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
 .tag{display:inline-flex;align-items:center;padding:4px 10px;border-radius:100px;font-size:12px;font-weight:600}
 .tag.free{background:rgba(5,150,105,0.08);color:var(--green)}
-.tag.l1{background:rgba(109,40,217,0.08);color:var(--accent)}
+.tag.l1{background:rgba(180,83,9,0.08);color:var(--accent)}
 
 /* ============ Mode Tabs ============ */
 .mode-tabs{display:flex;gap:6px;margin-bottom:24px;background:var(--surface);padding:5px;border-radius:var(--radius-sm);border:1px solid var(--border);width:fit-content}
@@ -55,8 +55,8 @@ button{cursor:pointer;font-family:inherit}
 
 /* ============ Drop Zone ============ */
 .drop-zone{position:relative;border:2px dashed var(--border);border-radius:var(--radius);background:var(--surface);padding:48px 32px;text-align:center;transition:all .3s cubic-bezier(.4,0,.2,1);cursor:pointer;margin-bottom:24px}
-.drop-zone:hover{border-color:var(--accent-light);background:rgba(109,40,217,0.02)}
-.drop-zone.dragover{border-color:var(--accent);background:rgba(109,40,217,0.06);transform:scale(1.01);box-shadow:var(--shadow-lg)}
+.drop-zone:hover{border-color:var(--accent-light);background:rgba(180,83,9,0.02)}
+.drop-zone.dragover{border-color:var(--accent);background:rgba(180,83,9,0.06);transform:scale(1.01);box-shadow:var(--shadow-lg)}
 .drop-zone .icon{font-size:48px;margin-bottom:16px;opacity:.6;transition:transform .3s}
 .drop-zone:hover .icon,.drop-zone.dragover .icon{transform:translateY(-4px);opacity:1}
 .drop-zone h3{font-size:18px;font-weight:700;margin-bottom:8px;color:var(--text)}
@@ -93,7 +93,7 @@ button{cursor:pointer;font-family:inherit}
 .output-label-text{font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px}
 .output-actions{display:flex;gap:6px;flex-wrap:wrap}
 .output-actions button{padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--bg);font-size:12px;font-weight:600;color:var(--text-secondary);cursor:pointer;transition:all .2s}
-.output-actions button:hover{border-color:var(--accent);color:var(--accent);background:rgba(109,40,217,0.04)}
+.output-actions button:hover{border-color:var(--accent);color:var(--accent);background:rgba(180,83,9,0.04)}
 .output-actions button.copied{border-color:var(--green);color:var(--green);background:rgba(5,150,105,0.06)}
 
 .base64-textarea{width:100%;min-height:80px;max-height:200px;padding:14px 16px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);font-family:'SF Mono',Monaco,Inconsolata,'Fira Code',monospace;font-size:12px;line-height:1.5;color:var(--text);resize:vertical;outline:none;transition:border-color .2s;word-break:break-all}
@@ -114,7 +114,7 @@ button{cursor:pointer;font-family:inherit}
 
 /* ============ Buttons ============ */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 22px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;border:1.5px solid transparent;transition:all .2s}
-.btn-primary{background:var(--accent-gradient);color:#fff;border:none;box-shadow:0 2px 8px rgba(109,40,217,0.25)}
+.btn-primary{background:var(--accent-gradient);color:#fff;border:none;box-shadow:0 2px 8px rgba(180,83,9,0.25)}
 .btn-primary:hover{transform:translateY(-1px);box-shadow:var(--shadow-lg)}
 .btn-secondary{background:var(--bg);color:var(--text);border-color:var(--border)}
 .btn-secondary:hover{border-color:var(--accent-light);color:var(--accent)}
@@ -132,7 +132,7 @@ button{cursor:pointer;font-family:inherit}
 
 /* ============ Format Tags ============ */
 .format-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
-.format-tag{padding:3px 10px;border-radius:6px;background:rgba(109,40,217,0.06);color:var(--accent);font-size:11px;font-weight:600}
+.format-tag{padding:3px 10px;border-radius:6px;background:rgba(180,83,9,0.06);color:var(--accent);font-size:11px;font-weight:600}
 
 /* ============ Responsive ============ */
 @media(max-width:768px){

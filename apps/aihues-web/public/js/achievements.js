@@ -648,7 +648,7 @@
     toast.style.cssText = [
       'background:#fff',
       'border:1px solid #e8ecf1',
-      'border-left:4px solid #6d28d9',
+      'border-left:4px solid #b45309',
       'border-radius:12px',
       'padding:14px 18px',
       'display:flex',
@@ -691,7 +691,7 @@
       '<div style="font-weight:700;color:#0f172a;font-size:13px;margin-bottom:2px;">' +
       t('Achievement Unlocked!') +
       '</div>' +
-      '<div style="font-weight:600;color:#6d28d9;font-size:14px;">' +
+      '<div style="font-weight:600;color:#b45309;font-size:14px;">' +
       escapeHtml(name) +
       '</div>' +
       '<div style="font-size:12px;color:#475569;margin-top:2px;">' +
@@ -839,7 +839,7 @@
             '<div style="height:4px;background:#e8ecf1;border-radius:2px;overflow:hidden;">' +
             '<div style="height:100%;width:' +
             progressPct +
-            '%;background:linear-gradient(90deg,#6d28d9,#8b5cf6);border-radius:2px;transition:width 0.6s ease;"></div>' +
+            '%;background:linear-gradient(90deg,#b45309,#d97706);border-radius:2px;transition:width 0.6s ease;"></div>' +
             '</div>' +
             '<div style="font-size:11px;color:#94a3b8;margin-top:2px;">' +
             ach.progress +
