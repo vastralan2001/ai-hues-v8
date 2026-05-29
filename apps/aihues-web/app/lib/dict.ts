@@ -151,6 +151,15 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.jwt.valid': 'Valid',
     'tool.jwt.expiresAt': 'Expires at',
 
+    'tool.json.title': 'JSON Formatter',
+    'tool.json.desc': 'Format, validate, and minify JSON instantly',
+    'tool.json.placeholder': 'Paste JSON here...',
+    'tool.json.format': 'Format',
+    'tool.json.minify': 'Minify',
+    'tool.json.validate': 'Validate',
+    'tool.json.result': 'Result',
+    'tool.json.invalid': 'Invalid JSON',
+
     // footer
     'footer.product': 'Product',
     'footer.games': 'Games',
@@ -311,6 +320,15 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.jwt.expired': '已过期',
     'tool.jwt.valid': '有效',
     'tool.jwt.expiresAt': '过期时间',
+
+    'tool.json.title': 'JSON 格式化',
+    'tool.json.desc': '即时格式化、验证和压缩 JSON',
+    'tool.json.placeholder': '在此粘贴 JSON...',
+    'tool.json.format': '格式化',
+    'tool.json.minify': '压缩',
+    'tool.json.validate': '验证',
+    'tool.json.result': '结果',
+    'tool.json.invalid': '无效的 JSON',
 
     // footer
     'footer.product': '产品',

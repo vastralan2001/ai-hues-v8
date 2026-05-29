@@ -60,6 +60,19 @@
     0 4px 12px rgba(180, 83, 9, 0.12), 0 8px 32px rgba(0, 0, 0, 0.08);
 }
 
+/* JSON syntax highlight */
+.json-key { color: #2563eb; }
+.json-string { color: #dc2626; }
+.json-number { color: #059669; }
+.json-boolean { color: #b45309; }
+.json-null { color: #78716c; }
+
+[data-theme='dark'] .json-key { color: #60a5fa; }
+[data-theme='dark'] .json-string { color: #f87171; }
+[data-theme='dark'] .json-number { color: #34d399; }
+[data-theme='dark'] .json-boolean { color: #fbbf24; }
+[data-theme='dark'] .json-null { color: #a8a29e; }
+
 /* Dark mode */
 [data-theme='dark'] {
   --color-bg: #1a1410;
