@@ -15,6 +15,8 @@ import {
 } from '@/lib/routes';
 import { CreditDisplay } from './CreditDisplay';
 import { LangSwitcher } from './LangSwitcher';
+import { ThemeSwitcher } from './ThemeSwitcher';
+import { Logo } from './Logo';
 
 type ChromeVariant =
   | 'home'
@@ -99,12 +101,7 @@ export function SiteHeader({
           className='flex items-center gap-2.5 justify-self-start text-xl font-extrabold text-foreground'
           href={homeHref}
         >
-          <span
-            className='flex h-[34px] w-[34px] items-center justify-center rounded-[10px] text-sm font-bold text-white'
-            style={{ background: 'linear-gradient(135deg, #b45309, #d97706)' }}
-          >
-            H
-          </span>
+          <Logo size={32} />
           <span>AIHues</span>
         </Link>
 
@@ -124,9 +121,10 @@ export function SiteHeader({
           ))}
         </nav>
 
-        {/* Right side: Credit + Lang switcher */}
+        {/* Right side: Credit + Theme + Lang */}
         <div className='flex items-center gap-3 justify-self-end'>
           <CreditDisplay />
+          <ThemeSwitcher />
           <LangSwitcher />
         </div>
       </div>

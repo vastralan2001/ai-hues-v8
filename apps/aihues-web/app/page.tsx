@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ToolCardV2 } from '@/components/CatalogCards';
 import { PageShell } from '@/components/SiteChrome';
 import { Sidebar } from '@/components/Sidebar';
+import { Logo } from '@/components/Logo';
 import type { CatalogGame } from '@/lib/catalog-api';
 import { safeListGames, safeListTools } from '@/lib/catalog-api';
 import { t, type Locale } from '@/lib/dict';
@@ -224,8 +225,11 @@ export default async function HomePage() {
           />
 
           <div className='relative mx-auto max-w-[680px]'>
-            <h1 className='mb-2.5 text-[48px] font-extrabold leading-[1.08] tracking-[-2px]'>
-              {t(locale, 'hero.title')}{' '}
+            {/* Logo + Title row */}
+            <h1 className='mb-2.5 flex items-center justify-center gap-2.5 text-[42px] font-extrabold leading-[1.08] tracking-[-1.5px]'>
+              <Logo size={40} />
+              <span className='text-foreground'>AIHues</span>
+              <span className='text-muted'>·</span>
               <span
                 style={{
                   background: 'linear-gradient(135deg, #b45309, #d97706)',
@@ -234,7 +238,7 @@ export default async function HomePage() {
                   backgroundClip: 'text',
                 }}
               >
-                {t(locale, 'hero.aiVibe')}
+                AI Vibe Navigator
               </span>
             </h1>
 

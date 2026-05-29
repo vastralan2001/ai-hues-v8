@@ -3,7 +3,9 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
 import { I18nProvider } from '@/lib/i18n';
+import { ThemeProvider } from '@/lib/theme';
 import type { Locale } from '@/lib/dict';
+import type { Theme } from '@/lib/theme';
 
 import './globals.css';
 
@@ -35,11 +37,15 @@ export default async function RootLayout({
   const cookieStore = await cookies();
   const locale: Locale =
     (cookieStore.get('aihues-locale')?.value as Locale | undefined) || 'en';
+  const theme: Theme =
+    (cookieStore.get('aihues-theme')?.value as Theme | undefined) || 'light';
 
   return (
-    <html lang={locale === 'zh' ? 'zh-CN' : 'en'}>
+    <html data-theme={theme} lang={locale === 'zh' ? 'zh-CN' : 'en'}>
       <body>
-        <I18nProvider initialLocale={locale}>{children}</I18nProvider>
+        <I18nProvider initialLocale={locale}>
+          <ThemeProvider initialTheme={theme}>{children}</ThemeProvider>
+        </I18nProvider>
       </body>
     </html>
   );
