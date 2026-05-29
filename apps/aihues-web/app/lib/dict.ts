@@ -385,6 +385,20 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.imageBase64.base64Size': 'Base64 Size',
     'tool.imageBase64.result': 'Base64 Result',
 
+    'tool.prDesc.title': 'PR Description Generator',
+    'tool.prDesc.desc': 'Generate standardized pull request descriptions',
+    'tool.prDesc.prTitle': 'PR Title',
+    'tool.prDesc.changes': 'Changes',
+    'tool.prDesc.changePlaceholder': 'Describe a change...',
+    'tool.prDesc.addChange': 'Add Change',
+    'tool.prDesc.testing': 'Testing Checklist',
+    'tool.prDesc.unitTests': 'Unit tests pass',
+    'tool.prDesc.integrationTests': 'Integration tests pass',
+    'tool.prDesc.manualTesting': 'Manual testing completed',
+    'tool.prDesc.relatedIssues': 'Related Issues',
+    'tool.prDesc.generate': 'Generate',
+    'tool.prDesc.result': 'PR Description',
+
     // footer
     'footer.product': 'Product',
     'footer.games': 'Games',
@@ -779,6 +793,20 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.imageBase64.fileSize': '文件大小',
     'tool.imageBase64.base64Size': 'Base64 大小',
     'tool.imageBase64.result': 'Base64 结果',
+
+    'tool.prDesc.title': 'PR 描述生成器',
+    'tool.prDesc.desc': '生成标准化的 Pull Request 描述',
+    'tool.prDesc.prTitle': 'PR 标题',
+    'tool.prDesc.changes': '变更',
+    'tool.prDesc.changePlaceholder': '描述一个变更...',
+    'tool.prDesc.addChange': '添加变更',
+    'tool.prDesc.testing': '测试清单',
+    'tool.prDesc.unitTests': '单元测试通过',
+    'tool.prDesc.integrationTests': '集成测试通过',
+    'tool.prDesc.manualTesting': '手动测试完成',
+    'tool.prDesc.relatedIssues': '相关 Issues',
+    'tool.prDesc.generate': '生成',
+    'tool.prDesc.result': 'PR 描述',
 
     // footer
     'footer.product': '产品',
