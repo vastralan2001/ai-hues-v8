@@ -173,6 +173,16 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.lorem.generate': 'Generate',
     'tool.lorem.copy': 'Copy',
 
+    'tool.timestamp.title': 'Timestamp Converter',
+    'tool.timestamp.desc': 'Convert between Unix timestamps and human-readable dates',
+    'tool.timestamp.placeholder': 'Enter Unix timestamp or ISO date...',
+    'tool.timestamp.convert': 'Convert',
+    'tool.timestamp.local': 'Local Time',
+    'tool.timestamp.utc': 'UTC',
+    'tool.timestamp.unixSeconds': 'Unix Seconds',
+    'tool.timestamp.unixMs': 'Unix Milliseconds',
+    'tool.timestamp.relative': 'Relative',
+
     // footer
     'footer.product': 'Product',
     'footer.games': 'Games',
@@ -355,6 +365,16 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.lorem.sentences': '每段句子数',
     'tool.lorem.generate': '生成',
     'tool.lorem.copy': '复制',
+
+    'tool.timestamp.title': '时间戳转换器',
+    'tool.timestamp.desc': '在 Unix 时间戳和人类可读日期之间转换',
+    'tool.timestamp.placeholder': '输入 Unix 时间戳或 ISO 日期...',
+    'tool.timestamp.convert': '转换',
+    'tool.timestamp.local': '本地时间',
+    'tool.timestamp.utc': 'UTC',
+    'tool.timestamp.unixSeconds': 'Unix 秒',
+    'tool.timestamp.unixMs': 'Unix 毫秒',
+    'tool.timestamp.relative': '相对时间',
 
     // footer
     'footer.product': '产品',

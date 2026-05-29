@@ -12,6 +12,7 @@ import JwtTool from '@/components/tools/JwtTool';
 import JsonTool from '@/components/tools/JsonTool';
 import Sha256Tool from '@/components/tools/Sha256Tool';
 import LoremIpsumTool from '@/components/tools/LoremIpsumTool';
+import TimestampTool from '@/components/tools/TimestampTool';
 
 const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'word-count': WordCountTool,
@@ -22,6 +23,7 @@ const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'json': JsonTool,
   'sha256': Sha256Tool,
   'lorem-ipsum': LoremIpsumTool,
+  'timestamp': TimestampTool,
 };
 
 export default async function ToolPage({
