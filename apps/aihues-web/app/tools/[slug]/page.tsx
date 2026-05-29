@@ -25,6 +25,7 @@ import GitCommitTool from '@/components/tools/GitCommitTool';
 import ReadabilityTool from '@/components/tools/ReadabilityTool';
 import PomodoroTool from '@/components/tools/PomodoroTool';
 import CurlGenTool from '@/components/tools/CurlGenTool';
+import HttpStatusTool from '@/components/tools/HttpStatusTool';
 
 const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'word-count': WordCountTool,
@@ -48,6 +49,7 @@ const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'readability': ReadabilityTool,
   'pomodoro': PomodoroTool,
   'curl-gen': CurlGenTool,
+  'http-status': HttpStatusTool,
 };
 
 export default async function ToolPage({

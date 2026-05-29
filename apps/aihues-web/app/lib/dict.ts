@@ -318,6 +318,13 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.curl.generate': 'Generate',
     'tool.curl.result': 'cURL Command',
 
+    'tool.httpStatus.title': 'HTTP Status Codes',
+    'tool.httpStatus.desc': 'Quick reference for all HTTP status codes',
+    'tool.httpStatus.search': 'Search status code or name...',
+    'tool.httpStatus.code': 'Code',
+    'tool.httpStatus.name': 'Name',
+    'tool.httpStatus.description': 'Description',
+
     // footer
     'footer.product': 'Product',
     'footer.games': 'Games',
@@ -645,6 +652,13 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.curl.bodyPlaceholder': 'JSON 负载或表单数据...',
     'tool.curl.generate': '生成',
     'tool.curl.result': 'cURL 命令',
+
+    'tool.httpStatus.title': 'HTTP 状态码',
+    'tool.httpStatus.desc': '所有 HTTP 状态码速查',
+    'tool.httpStatus.search': '搜索状态码或名称...',
+    'tool.httpStatus.code': '代码',
+    'tool.httpStatus.name': '名称',
+    'tool.httpStatus.description': '描述',
 
     // footer
     'footer.product': '产品',
