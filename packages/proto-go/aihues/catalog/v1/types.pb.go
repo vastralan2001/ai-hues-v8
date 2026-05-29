@@ -451,7 +451,7 @@ const file_aihues_catalog_v1_types_proto_rawDesc = "" +
 	"\x19ITEM_CATEGORY_UNSPECIFIED\x10\x00\x12\x1b\n" +
 	"\x17ITEM_CATEGORY_DEVELOPER\x10\x01\x12\x19\n" +
 	"\x15ITEM_CATEGORY_UTILITY\x10\x02\x12\x1c\n" +
-	"\x18ITEM_CATEGORY_AI_WRITING\x10\x03B?Z=github.com/aihues/aiushtha/gen/go/aihues/catalog/v1;catalogv1b\x06proto3"
+	"\x18ITEM_CATEGORY_AI_WRITING\x10\x03BJZHgithub.com/aihues/aiushtha/packages/proto-go/aihues/catalog/v1;catalogv1b\x06proto3"
 
 var (
 	file_aihues_catalog_v1_types_proto_rawDescOnce sync.Once

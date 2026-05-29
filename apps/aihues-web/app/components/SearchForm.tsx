@@ -1,4 +1,4 @@
-import type { ToolCategoryKey } from '@/lib/catalog-api';
+import type { ToolCategoryKey } from '@/lib/catalog-types';
 import { toolsHref } from '@/lib/routes';
 
 export function ToolSearchForm({

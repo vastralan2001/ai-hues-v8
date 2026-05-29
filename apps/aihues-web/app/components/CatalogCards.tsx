@@ -4,8 +4,8 @@ import type {
   CatalogGame,
   CatalogTool,
   ToolCategoryKey,
-} from '@/lib/catalog-api';
-import { toolCategories } from '@/lib/catalog-api';
+} from '@/lib/catalog-types';
+import { toolCategories } from '@/lib/catalog-types';
 import {
   gameDetailHref,
   toolDetailHref,

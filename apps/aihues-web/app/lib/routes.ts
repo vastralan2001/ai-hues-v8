@@ -1,4 +1,4 @@
-import type { ToolCategoryKey } from '@/lib/catalog-api';
+import type { ToolCategoryKey } from '@/lib/catalog-types';
 
 export const homeHref = '/';
 export const toolsHref = '/tools';

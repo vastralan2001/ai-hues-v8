@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
-import { listTools, normalizeCategory } from '@/lib/catalog-api';
+import { listTools } from '@/lib/catalog-api';
+import { normalizeCategory } from '@/lib/catalog-types';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;

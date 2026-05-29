@@ -3,8 +3,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { CategoryPills, EmptyState, ToolCard } from '@/components/CatalogCards';
-import type { CatalogTool, ToolCategoryKey } from '@/lib/catalog-api';
-import { toolCategories } from '@/lib/catalog-api';
+import type { CatalogTool, ToolCategoryKey } from '@/lib/catalog-types';
+import { toolCategories } from '@/lib/catalog-types';
 import { toolDetailHref } from '@/lib/routes';
 
 const PAGE_SIZE = 20;
