@@ -44,6 +44,9 @@ import TaglineTool from '@/components/tools/TaglineTool';
 import ColdEmailTool from '@/components/tools/ColdEmailTool';
 import NewsletterTool from '@/components/tools/NewsletterTool';
 import XPostTool from '@/components/tools/XPostTool';
+import VideoTitleTool from '@/components/tools/VideoTitleTool';
+import YtScriptTool from '@/components/tools/YtScriptTool';
+import AdCopyTool from '@/components/tools/AdCopyTool';
 
 const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'word-count': WordCountTool,
@@ -86,6 +89,9 @@ const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'cold-email': ColdEmailTool,
   'newsletter': NewsletterTool,
   'x-post': XPostTool,
+  'video-title': VideoTitleTool,
+  'yt-script': YtScriptTool,
+  'ad-copy': AdCopyTool,
 };
 
 export default async function ToolPage({
