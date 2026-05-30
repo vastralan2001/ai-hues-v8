@@ -481,6 +481,23 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.cron.nextRuns': 'Next 5 runs',
     'tool.cron.invalid': 'Invalid cron expression',
 
+    'tool.faq.title': 'FAQ Generator',
+    'tool.faq.desc': 'Generate structured FAQ schema from Q&A pairs',
+    'tool.faq.add': 'Add question',
+    'tool.faq.question': 'Question',
+    'tool.faq.answer': 'Answer',
+    'tool.faq.remove': 'Remove',
+    'tool.faq.format': 'Format',
+    'tool.faq.html': 'HTML',
+    'tool.faq.jsonLd': 'JSON-LD',
+    'tool.faq.result': 'Output',
+
+    'tool.sql.title': 'SQL Formatter',
+    'tool.sql.desc': 'Format and beautify SQL queries',
+    'tool.sql.input': 'SQL query',
+    'tool.sql.format': 'Format',
+    'tool.sql.result': 'Formatted SQL',
+
     // footer
     'footer.product': 'Product',
     'footer.games': 'Games',
@@ -984,6 +1001,23 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.cron.result': '含义',
     'tool.cron.nextRuns': '接下来 5 次执行',
     'tool.cron.invalid': '无效的 Cron 表达式',
+
+    'tool.faq.title': 'FAQ 生成器',
+    'tool.faq.desc': '从问答对生成结构化的 FAQ 模式',
+    'tool.faq.add': '添加问题',
+    'tool.faq.question': '问题',
+    'tool.faq.answer': '答案',
+    'tool.faq.remove': '删除',
+    'tool.faq.format': '格式',
+    'tool.faq.html': 'HTML',
+    'tool.faq.jsonLd': 'JSON-LD',
+    'tool.faq.result': '输出',
+
+    'tool.sql.title': 'SQL 格式化器',
+    'tool.sql.desc': '格式化和美化 SQL 查询',
+    'tool.sql.input': 'SQL 查询',
+    'tool.sql.format': '格式化',
+    'tool.sql.result': '格式化后的 SQL',
 
     'playbooks.desc': '100+ 工具覆盖出海增长、AI 产品、开源追踪和设计领域。',
   },

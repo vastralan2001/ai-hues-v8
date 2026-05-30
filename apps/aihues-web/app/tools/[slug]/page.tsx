@@ -38,6 +38,8 @@ import SeoTitleTool from '@/components/tools/SeoTitleTool';
 import PushTool from '@/components/tools/PushTool';
 import BaseConvertTool from '@/components/tools/BaseConvertTool';
 import CronParserTool from '@/components/tools/CronParserTool';
+import FaqTool from '@/components/tools/FaqTool';
+import SqlTool from '@/components/tools/SqlTool';
 
 const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'word-count': WordCountTool,
@@ -74,6 +76,8 @@ const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'push': PushTool,
   'base-convert': BaseConvertTool,
   'cron-parser': CronParserTool,
+  'faq': FaqTool,
+  'sql': SqlTool,
 };
 
 export default async function ToolPage({
