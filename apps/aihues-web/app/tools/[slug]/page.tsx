@@ -42,6 +42,8 @@ import FaqTool from '@/components/tools/FaqTool';
 import SqlTool from '@/components/tools/SqlTool';
 import TaglineTool from '@/components/tools/TaglineTool';
 import ColdEmailTool from '@/components/tools/ColdEmailTool';
+import NewsletterTool from '@/components/tools/NewsletterTool';
+import XPostTool from '@/components/tools/XPostTool';
 
 const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'word-count': WordCountTool,
@@ -82,6 +84,8 @@ const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'sql': SqlTool,
   'tagline': TaglineTool,
   'cold-email': ColdEmailTool,
+  'newsletter': NewsletterTool,
+  'x-post': XPostTool,
 };
 
 export default async function ToolPage({
