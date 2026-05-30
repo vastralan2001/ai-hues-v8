@@ -6,6 +6,7 @@ import type { Metadata } from 'next';
 
 import type { Locale } from '@/lib/dict';
 import { t } from '@/lib/dict';
+import RelatedTools from '@/components/RelatedTools';
 import WordCountTool from '@/components/tools/WordCountTool';
 import Base64Tool from '@/components/tools/Base64Tool';
 import UrlEncodeTool from '@/components/tools/UrlEncodeTool';
@@ -168,7 +169,12 @@ export default async function ToolPage({
   // Render React-native tool if available
   const ReactTool = REACT_TOOLS[slug];
   if (ReactTool) {
-    return <ReactTool locale={locale} />;
+    return (
+      <>
+        <ReactTool locale={locale} />
+        <RelatedTools slug={slug} locale={locale} />
+      </>
+    );
   }
 
   // Fallback to static HTML page if it exists

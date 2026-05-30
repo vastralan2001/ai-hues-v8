@@ -1,9 +1,12 @@
 import { readFileSync } from 'node:fs';
 import { notFound } from 'next/navigation';
+import { cookies } from 'next/headers';
 import type { Metadata } from 'next';
 
 import { PageShell } from '@/components/SiteChrome';
+import type { Locale } from '@/lib/dict';
 import NewsletterSubscribe from '@/components/NewsletterSubscribe';
+import RelatedArticles from '@/components/RelatedArticles';
 import '../article.css';
 
 interface ArticleMeta {
@@ -112,6 +115,8 @@ export default async function ArticlePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+  const cookieStore = await cookies();
+  const locale = (cookieStore.get('aihues-locale')?.value as Locale) || 'en';
   const meta = articleMetaMap[slug];
   if (!meta) notFound();
 
@@ -151,6 +156,7 @@ export default async function ArticlePage({
         />
 
         <NewsletterSubscribe />
+        <RelatedArticles currentSlug={slug} locale={locale} />
       </main>
     </PageShell>
   );
