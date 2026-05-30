@@ -47,6 +47,9 @@ import XPostTool from '@/components/tools/XPostTool';
 import VideoTitleTool from '@/components/tools/VideoTitleTool';
 import YtScriptTool from '@/components/tools/YtScriptTool';
 import AdCopyTool from '@/components/tools/AdCopyTool';
+import ShellTool from '@/components/tools/ShellTool';
+import CodeExplainTool from '@/components/tools/CodeExplainTool';
+import HumanizeTool from '@/components/tools/HumanizeTool';
 
 const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'word-count': WordCountTool,
@@ -92,6 +95,9 @@ const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'video-title': VideoTitleTool,
   'yt-script': YtScriptTool,
   'ad-copy': AdCopyTool,
+  'shell': ShellTool,
+  'code-explain': CodeExplainTool,
+  'humanize': HumanizeTool,
 };
 
 export default async function ToolPage({

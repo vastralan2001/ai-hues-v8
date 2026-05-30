@@ -573,6 +573,25 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.adCopy.generate': 'Generate',
     'tool.adCopy.result': 'Ad Copy',
 
+    'tool.shell.title': 'Shell Command Explainer',
+    'tool.shell.desc': 'Explain what a shell command does in plain English',
+    'tool.shell.input': 'Shell command',
+    'tool.shell.explain': 'Explain',
+    'tool.shell.result': 'Explanation',
+
+    'tool.codeExplain.title': 'Code Explainer',
+    'tool.codeExplain.desc': 'Explain what a code snippet does in plain language',
+    'tool.codeExplain.input': 'Code snippet',
+    'tool.codeExplain.language': 'Language',
+    'tool.codeExplain.explain': 'Explain',
+    'tool.codeExplain.result': 'Explanation',
+
+    'tool.humanize.title': 'AI Text Humanizer',
+    'tool.humanize.desc': 'Make AI-generated text sound more natural and human',
+    'tool.humanize.input': 'AI-generated text',
+    'tool.humanize.humanize': 'Humanize',
+    'tool.humanize.result': 'Humanized text',
+
     // footer
     'footer.product': 'Product',
     'footer.games': 'Games',
@@ -1168,6 +1187,25 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.adCopy.platformLinkedIn': 'LinkedIn',
     'tool.adCopy.generate': '生成',
     'tool.adCopy.result': '广告文案',
+
+    'tool.shell.title': 'Shell 命令解释器',
+    'tool.shell.desc': '用通俗易懂的语言解释 Shell 命令的作用',
+    'tool.shell.input': 'Shell 命令',
+    'tool.shell.explain': '解释',
+    'tool.shell.result': '解释',
+
+    'tool.codeExplain.title': '代码解释器',
+    'tool.codeExplain.desc': '用通俗语言解释代码片段的作用',
+    'tool.codeExplain.input': '代码片段',
+    'tool.codeExplain.language': '语言',
+    'tool.codeExplain.explain': '解释',
+    'tool.codeExplain.result': '解释',
+
+    'tool.humanize.title': 'AI 文本人性化',
+    'tool.humanize.desc': '让 AI 生成的文本听起来更自然、更像人类写作',
+    'tool.humanize.input': 'AI 生成的文本',
+    'tool.humanize.humanize': '人性化',
+    'tool.humanize.result': '人性化后的文本',
 
     'playbooks.desc': '100+ 工具覆盖出海增长、AI 产品、开源追踪和设计领域。',
   },
