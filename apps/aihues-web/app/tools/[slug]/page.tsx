@@ -40,6 +40,8 @@ import BaseConvertTool from '@/components/tools/BaseConvertTool';
 import CronParserTool from '@/components/tools/CronParserTool';
 import FaqTool from '@/components/tools/FaqTool';
 import SqlTool from '@/components/tools/SqlTool';
+import TaglineTool from '@/components/tools/TaglineTool';
+import ColdEmailTool from '@/components/tools/ColdEmailTool';
 
 const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'word-count': WordCountTool,
@@ -78,6 +80,8 @@ const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'cron-parser': CronParserTool,
   'faq': FaqTool,
   'sql': SqlTool,
+  'tagline': TaglineTool,
+  'cold-email': ColdEmailTool,
 };
 
 export default async function ToolPage({
