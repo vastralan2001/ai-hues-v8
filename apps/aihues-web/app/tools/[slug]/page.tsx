@@ -56,6 +56,8 @@ import AltTextTool from '@/components/tools/AltTextTool';
 import BlogOutlineTool from '@/components/tools/BlogOutlineTool';
 import LinkedinTool from '@/components/tools/LinkedinTool';
 import LpHeroTool from '@/components/tools/LpHeroTool';
+import CssGradientTool from '@/components/tools/CssGradientTool';
+import PseudoTool from '@/components/tools/PseudoTool';
 
 const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'word-count': WordCountTool,
@@ -110,6 +112,8 @@ const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'blog-outline': BlogOutlineTool,
   'linkedin': LinkedinTool,
   'lp-hero': LpHeroTool,
+  'css-gradient': CssGradientTool,
+  'pseudo': PseudoTool,
 };
 
 export default async function ToolPage({
