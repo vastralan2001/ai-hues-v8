@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
 
 import { PageShell } from '@/components/SiteChrome';
 import NewsletterSubscribe from '@/components/NewsletterSubscribe';
@@ -71,6 +72,29 @@ const articleMetaMap: Record<string, ArticleMeta> = {
     readTime: '7 min read',
   },
 };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const meta = articleMetaMap[slug];
+  if (!meta) {
+    return { title: 'Not Found | AIHues' };
+  }
+  return {
+    title: `${meta.title} | AIHues Blog`,
+    description: `${meta.tag} · ${meta.date} · ${meta.readTime}`,
+    openGraph: {
+      title: meta.title,
+      description: `${meta.tag} · ${meta.date} · ${meta.readTime}`,
+      type: 'article',
+      publishedTime: meta.date,
+      tags: [meta.tag],
+    },
+  };
+}
 
 function extractBody(html: string): string {
   const match = html.match(/<article[^>]*>([\s\S]*?)<\/article>/);
