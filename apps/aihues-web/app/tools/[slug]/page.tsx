@@ -53,6 +53,9 @@ import HumanizeTool from '@/components/tools/HumanizeTool';
 import IpLookupTool from '@/components/tools/IpLookupTool';
 import DocsTool from '@/components/tools/DocsTool';
 import AltTextTool from '@/components/tools/AltTextTool';
+import BlogOutlineTool from '@/components/tools/BlogOutlineTool';
+import LinkedinTool from '@/components/tools/LinkedinTool';
+import LpHeroTool from '@/components/tools/LpHeroTool';
 
 const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'word-count': WordCountTool,
@@ -104,6 +107,9 @@ const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'ip-lookup': IpLookupTool,
   'docs': DocsTool,
   'alt-text': AltTextTool,
+  'blog-outline': BlogOutlineTool,
+  'linkedin': LinkedinTool,
+  'lp-hero': LpHeroTool,
 };
 
 export default async function ToolPage({
