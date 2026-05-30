@@ -60,6 +60,7 @@ import CssGradientTool from '@/components/tools/CssGradientTool';
 import PseudoTool from '@/components/tools/PseudoTool';
 import DiffProTool from '@/components/tools/DiffProTool';
 import QrcodeTool from '@/components/tools/QrcodeTool';
+import ChiSquaredTool from '@/components/tools/ChiSquaredTool';
 
 const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'word-count': WordCountTool,
@@ -118,6 +119,7 @@ const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'pseudo': PseudoTool,
   'diff-pro': DiffProTool,
   'qrcode': QrcodeTool,
+  'chi-squared': ChiSquaredTool,
 };
 
 export default async function ToolPage({
