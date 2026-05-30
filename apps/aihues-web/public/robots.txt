@@ -2,6 +2,7 @@ User-agent: *
 Allow: /
 Allow: /tools/
 Allow: /games/
+Allow: /blog/
 Disallow: /js/
 
-Sitemap: https://nptmdmptvfdmm.ok.kimi.link/sitemap.xml
+Sitemap: https://aihues.com/sitemap.xml
