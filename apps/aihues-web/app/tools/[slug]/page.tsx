@@ -50,6 +50,9 @@ import AdCopyTool from '@/components/tools/AdCopyTool';
 import ShellTool from '@/components/tools/ShellTool';
 import CodeExplainTool from '@/components/tools/CodeExplainTool';
 import HumanizeTool from '@/components/tools/HumanizeTool';
+import IpLookupTool from '@/components/tools/IpLookupTool';
+import DocsTool from '@/components/tools/DocsTool';
+import AltTextTool from '@/components/tools/AltTextTool';
 
 const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'word-count': WordCountTool,
@@ -98,6 +101,9 @@ const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'shell': ShellTool,
   'code-explain': CodeExplainTool,
   'humanize': HumanizeTool,
+  'ip-lookup': IpLookupTool,
+  'docs': DocsTool,
+  'alt-text': AltTextTool,
 };
 
 export default async function ToolPage({
