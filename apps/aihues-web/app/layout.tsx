@@ -6,6 +6,7 @@ import { I18nProvider } from '@/lib/i18n';
 import { ThemeProvider } from '@/lib/theme';
 import type { Locale } from '@/lib/dict';
 import type { Theme } from '@/lib/theme';
+import CommandPalette from '@/components/CommandPalette';
 
 import './globals.css';
 
@@ -44,7 +45,10 @@ export default async function RootLayout({
     <html data-theme={theme} lang={locale === 'zh' ? 'zh-CN' : 'en'}>
       <body>
         <I18nProvider initialLocale={locale}>
-          <ThemeProvider initialTheme={theme}>{children}</ThemeProvider>
+          <ThemeProvider initialTheme={theme}>
+            {children}
+            <CommandPalette />
+          </ThemeProvider>
         </I18nProvider>
       </body>
     </html>
