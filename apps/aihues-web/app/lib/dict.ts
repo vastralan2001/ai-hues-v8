@@ -664,6 +664,22 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.pseudo.generate': 'Generate',
     'tool.pseudo.result': 'Pseudocode',
 
+    'tool.diffPro.title': 'Advanced Diff',
+    'tool.diffPro.desc': 'Compare two texts line-by-line with detailed change detection',
+    'tool.diffPro.left': 'Original text',
+    'tool.diffPro.right': 'Modified text',
+    'tool.diffPro.compare': 'Compare',
+    'tool.diffPro.added': 'Added',
+    'tool.diffPro.removed': 'Removed',
+    'tool.diffPro.unchanged': 'Unchanged',
+
+    'tool.qrcode.title': 'QR Code Generator',
+    'tool.qrcode.desc': 'Generate QR codes for URLs, text, and contact info',
+    'tool.qrcode.input': 'Text or URL',
+    'tool.qrcode.size': 'Size',
+    'tool.qrcode.generate': 'Generate',
+    'tool.qrcode.download': 'Download',
+
     // footer
     'footer.product': 'Product',
     'footer.games': 'Games',
@@ -1350,6 +1366,22 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.pseudo.input': '描述算法',
     'tool.pseudo.generate': '生成',
     'tool.pseudo.result': '伪代码',
+
+    'tool.diffPro.title': '高级文本对比',
+    'tool.diffPro.desc': '逐行对比两段文本，详细检测变更',
+    'tool.diffPro.left': '原始文本',
+    'tool.diffPro.right': '修改后的文本',
+    'tool.diffPro.compare': '对比',
+    'tool.diffPro.added': '新增',
+    'tool.diffPro.removed': '删除',
+    'tool.diffPro.unchanged': '未变更',
+
+    'tool.qrcode.title': 'QR 码生成器',
+    'tool.qrcode.desc': '为 URL、文本和联系信息生成 QR 码',
+    'tool.qrcode.input': '文本或 URL',
+    'tool.qrcode.size': '尺寸',
+    'tool.qrcode.generate': '生成',
+    'tool.qrcode.download': '下载',
 
     'playbooks.desc': '100+ 工具覆盖出海增长、AI 产品、开源追踪和设计领域。',
   },

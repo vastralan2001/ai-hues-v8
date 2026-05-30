@@ -58,6 +58,8 @@ import LinkedinTool from '@/components/tools/LinkedinTool';
 import LpHeroTool from '@/components/tools/LpHeroTool';
 import CssGradientTool from '@/components/tools/CssGradientTool';
 import PseudoTool from '@/components/tools/PseudoTool';
+import DiffProTool from '@/components/tools/DiffProTool';
+import QrcodeTool from '@/components/tools/QrcodeTool';
 
 const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'word-count': WordCountTool,
@@ -114,6 +116,8 @@ const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'lp-hero': LpHeroTool,
   'css-gradient': CssGradientTool,
   'pseudo': PseudoTool,
+  'diff-pro': DiffProTool,
+  'qrcode': QrcodeTool,
 };
 
 export default async function ToolPage({
