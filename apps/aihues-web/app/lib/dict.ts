@@ -473,6 +473,14 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.baseConvert.convert': 'Convert',
     'tool.baseConvert.result': 'Result',
 
+    'tool.cron.title': 'Cron Expression Parser',
+    'tool.cron.desc': 'Parse and explain cron expressions in human-readable text',
+    'tool.cron.input': 'Cron expression',
+    'tool.cron.parse': 'Parse',
+    'tool.cron.result': 'Meaning',
+    'tool.cron.nextRuns': 'Next 5 runs',
+    'tool.cron.invalid': 'Invalid cron expression',
+
     // footer
     'footer.product': 'Product',
     'footer.games': 'Games',
@@ -968,6 +976,14 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.baseConvert.to': '目标进制',
     'tool.baseConvert.convert': '转换',
     'tool.baseConvert.result': '结果',
+
+    'tool.cron.title': 'Cron 表达式解析器',
+    'tool.cron.desc': '将 Cron 表达式解析为人类可读的文本',
+    'tool.cron.input': 'Cron 表达式',
+    'tool.cron.parse': '解析',
+    'tool.cron.result': '含义',
+    'tool.cron.nextRuns': '接下来 5 次执行',
+    'tool.cron.invalid': '无效的 Cron 表达式',
 
     'playbooks.desc': '100+ 工具覆盖出海增长、AI 产品、开源追踪和设计领域。',
   },

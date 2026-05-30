@@ -37,6 +37,7 @@ import ChangelogTool from '@/components/tools/ChangelogTool';
 import SeoTitleTool from '@/components/tools/SeoTitleTool';
 import PushTool from '@/components/tools/PushTool';
 import BaseConvertTool from '@/components/tools/BaseConvertTool';
+import CronParserTool from '@/components/tools/CronParserTool';
 
 const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'word-count': WordCountTool,
@@ -72,6 +73,7 @@ const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'seo-title': SeoTitleTool,
   'push': PushTool,
   'base-convert': BaseConvertTool,
+  'cron-parser': CronParserTool,
 };
 
 export default async function ToolPage({
