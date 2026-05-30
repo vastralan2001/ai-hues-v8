@@ -64,6 +64,16 @@ import DiffProTool from '@/components/tools/DiffProTool';
 import QrcodeTool from '@/components/tools/QrcodeTool';
 import ChiSquaredTool from '@/components/tools/ChiSquaredTool';
 
+const SLUG_TO_DICT_KEY: Record<string, string> = {
+  'lorem-ipsum': 'lorem',
+  'password-gen': 'password',
+  'color-convert': 'color',
+  'curl-gen': 'curl',
+  'unit-convert': 'unit',
+  'image-to-base64': 'imageBase64',
+  'cron-parser': 'cron',
+};
+
 export async function generateMetadata({
   params,
 }: {
@@ -73,12 +83,16 @@ export async function generateMetadata({
   const cookieStore = await cookies();
   const locale = (cookieStore.get('aihues-locale')?.value as Locale) || 'en';
 
-  const title = t(locale, `tool.${slug.replace(/-([a-z])/g, (_, c) => c.toUpperCase())}.title`);
-  const description = t(locale, `tool.${slug.replace(/-([a-z])/g, (_, c) => c.toUpperCase())}.desc`);
+  const dictKey = SLUG_TO_DICT_KEY[slug] ?? slug.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+  const title = t(locale, `tool.${dictKey}.title`);
+  const description = t(locale, `tool.${dictKey}.desc`);
+
+  const titleKey = `tool.${dictKey}.title`;
+  const descKey = `tool.${dictKey}.desc`;
 
   return {
-    title: title === `tool.${slug.replace(/-([a-z])/g, (_, c) => c.toUpperCase())}.title` ? `${slug} | AIHues` : `${title} | AIHues`,
-    description: description === `tool.${slug.replace(/-([a-z])/g, (_, c) => c.toUpperCase())}.desc` ? undefined : description,
+    title: title === titleKey ? `${slug} | AIHues` : `${title} | AIHues`,
+    description: description === descKey ? undefined : description,
   };
 }
 
