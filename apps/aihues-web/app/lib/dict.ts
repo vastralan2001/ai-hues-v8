@@ -465,6 +465,14 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.push.generate': 'Generate',
     'tool.push.result': 'Payload',
 
+    'tool.baseConvert.title': 'Base Converter',
+    'tool.baseConvert.desc': 'Convert numbers between binary, octal, decimal, and hexadecimal',
+    'tool.baseConvert.input': 'Input number',
+    'tool.baseConvert.from': 'From base',
+    'tool.baseConvert.to': 'To base',
+    'tool.baseConvert.convert': 'Convert',
+    'tool.baseConvert.result': 'Result',
+
     // footer
     'footer.product': 'Product',
     'footer.games': 'Games',
@@ -952,6 +960,14 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.push.sound': '声音',
     'tool.push.generate': '生成',
     'tool.push.result': 'Payload',
+
+    'tool.baseConvert.title': '进制转换器',
+    'tool.baseConvert.desc': '在二进制、八进制、十进制和十六进制之间转换数字',
+    'tool.baseConvert.input': '输入数字',
+    'tool.baseConvert.from': '原进制',
+    'tool.baseConvert.to': '目标进制',
+    'tool.baseConvert.convert': '转换',
+    'tool.baseConvert.result': '结果',
 
     'playbooks.desc': '100+ 工具覆盖出海增长、AI 产品、开源追踪和设计领域。',
   },

@@ -36,6 +36,7 @@ import CodeReviewTool from '@/components/tools/CodeReviewTool';
 import ChangelogTool from '@/components/tools/ChangelogTool';
 import SeoTitleTool from '@/components/tools/SeoTitleTool';
 import PushTool from '@/components/tools/PushTool';
+import BaseConvertTool from '@/components/tools/BaseConvertTool';
 
 const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'word-count': WordCountTool,
@@ -70,6 +71,7 @@ const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'changelog': ChangelogTool,
   'seo-title': SeoTitleTool,
   'push': PushTool,
+  'base-convert': BaseConvertTool,
 };
 
 export default async function ToolPage({
