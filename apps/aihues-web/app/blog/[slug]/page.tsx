@@ -34,6 +34,42 @@ const articleMetaMap: Record<string, ArticleMeta> = {
     date: '2026-05-15',
     readTime: '5 min read',
   },
+  'ai-content-strategy': {
+    title: 'AI Content Strategy: Scale Quality Without Losing the Human Touch',
+    tag: 'Content',
+    date: '2026-05-25',
+    readTime: '7 min read',
+  },
+  'seo-2026-trends': {
+    title: '2026 SEO Trends: From Keywords to Intent',
+    tag: 'SEO',
+    date: '2026-05-22',
+    readTime: '6 min read',
+  },
+  'twitter-growth': {
+    title: 'Twitter/X Growth Playbook: 0 to 10K in 90 Days',
+    tag: 'Social Media',
+    date: '2026-05-18',
+    readTime: '8 min read',
+  },
+  'no-code-mvp': {
+    title: 'The No-Code MVP Guide: Launch in 48 Hours',
+    tag: 'Product',
+    date: '2026-05-12',
+    readTime: '6 min read',
+  },
+  'ai-productivity-stack': {
+    title: 'The 2026 AI Productivity Stack',
+    tag: 'Productivity',
+    date: '2026-05-10',
+    readTime: '5 min read',
+  },
+  'indie-dev-monetization': {
+    title: 'Indie Dev Monetization: From Side Project to $10K MRR',
+    tag: 'Business',
+    date: '2026-05-08',
+    readTime: '7 min read',
+  },
 };
 
 function extractBody(html: string): string {
