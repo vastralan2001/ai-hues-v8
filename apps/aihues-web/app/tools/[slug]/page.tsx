@@ -2,8 +2,10 @@ import { cookies } from 'next/headers';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { notFound, redirect } from 'next/navigation';
+import type { Metadata } from 'next';
 
 import type { Locale } from '@/lib/dict';
+import { t } from '@/lib/dict';
 import WordCountTool from '@/components/tools/WordCountTool';
 import Base64Tool from '@/components/tools/Base64Tool';
 import UrlEncodeTool from '@/components/tools/UrlEncodeTool';
@@ -61,6 +63,24 @@ import PseudoTool from '@/components/tools/PseudoTool';
 import DiffProTool from '@/components/tools/DiffProTool';
 import QrcodeTool from '@/components/tools/QrcodeTool';
 import ChiSquaredTool from '@/components/tools/ChiSquaredTool';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const cookieStore = await cookies();
+  const locale = (cookieStore.get('aihues-locale')?.value as Locale) || 'en';
+
+  const title = t(locale, `tool.${slug.replace(/-([a-z])/g, (_, c) => c.toUpperCase())}.title`);
+  const description = t(locale, `tool.${slug.replace(/-([a-z])/g, (_, c) => c.toUpperCase())}.desc`);
+
+  return {
+    title: title === `tool.${slug.replace(/-([a-z])/g, (_, c) => c.toUpperCase())}.title` ? `${slug} | AIHues` : `${title} | AIHues`,
+    description: description === `tool.${slug.replace(/-([a-z])/g, (_, c) => c.toUpperCase())}.desc` ? undefined : description,
+  };
+}
 
 const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'word-count': WordCountTool,
