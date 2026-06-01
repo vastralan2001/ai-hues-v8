@@ -14,18 +14,33 @@ interface Props {
 
 export default function BlogContent({ initialPosts }: Props) {
   const [query, setQuery] = useState('');
+  const [activeTag, setActiveTag] = useState<string>('All');
   const [currentPage, setCurrentPage] = useState(1);
 
+  const allTags = useMemo(() => {
+    const tags = Array.from(new Set(initialPosts.map((p) => p.tag)));
+    return ['All', ...tags.sort()];
+  }, [initialPosts]);
+
   const filteredPosts = useMemo(() => {
+    let posts = initialPosts;
+
+    if (activeTag !== 'All') {
+      posts = posts.filter((post) => post.tag === activeTag);
+    }
+
     const q = query.trim().toLowerCase();
-    if (!q) return initialPosts;
-    return initialPosts.filter(
-      (post) =>
-        post.title.toLowerCase().includes(q) ||
-        post.excerpt.toLowerCase().includes(q) ||
-        post.tag.toLowerCase().includes(q)
-    );
-  }, [query, initialPosts]);
+    if (q) {
+      posts = posts.filter(
+        (post) =>
+          post.title.toLowerCase().includes(q) ||
+          post.excerpt.toLowerCase().includes(q) ||
+          post.tag.toLowerCase().includes(q)
+      );
+    }
+
+    return posts;
+  }, [query, activeTag, initialPosts]);
 
   const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
   const start = (currentPage - 1) * POSTS_PER_PAGE;
@@ -76,12 +91,34 @@ export default function BlogContent({ initialPosts }: Props) {
             value={query}
           />
         </div>
-        {query && (
+        {(query || activeTag !== 'All') && (
           <p className='mt-2 text-center text-xs text-[#a8a29e]'>
-            {filteredPosts.length} result{filteredPosts.length !== 1 ? 's' : ''}{' '}
-            for &quot;{query}&quot;
+            {filteredPosts.length} result{filteredPosts.length !== 1 ? 's' : ''}
+            {query && ` for "${query}"`}
+            {activeTag !== 'All' && ` in ${activeTag}`}
           </p>
         )}
+
+        {/* Tag filters */}
+        <div className='mt-4 flex flex-wrap justify-center gap-2'>
+          {allTags.map((tag) => (
+            <button
+              key={tag}
+              className={`rounded-full px-3 py-1 text-xs font-medium transition-all ${
+                activeTag === tag
+                  ? 'bg-[#b45309] text-white'
+                  : 'bg-[#f5f0e8] text-[#78716c] hover:bg-[#e8e2d9]'
+              }`}
+              onClick={() => {
+                setActiveTag(tag);
+                setCurrentPage(1);
+              }}
+              type='button'
+            >
+              {tag}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Posts Grid */}

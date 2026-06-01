@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 interface Item {
@@ -12,403 +11,109 @@ interface Item {
   type: 'tool' | 'blog' | 'page';
 }
 
-const ALL_ITEMS: Item[] = [
-  { id: 'home', title: 'Home', href: '/', type: 'page' },
-  { id: 'tools', title: 'Tools', href: '/tools', type: 'page' },
-  { id: 'games', title: 'Games', href: '/games', type: 'page' },
-  { id: 'blog', title: 'Blog', href: '/blog', type: 'page' },
-  { id: 'pricing', title: 'Pricing', href: '/pricing', type: 'page' },
-  { id: 'showcase', title: 'Showcase', href: '/showcase', type: 'page' },
+let globalItems: Item[] | null = null;
+let globalLoading = false;
+const loadCallbacks: Array<(items: Item[]) => void> = [];
 
-  {
-    id: 'word-count',
-    title: 'Word Counter',
-    href: '/tools/word-count',
-    type: 'tool',
-  },
-  {
-    id: 'base64',
-    title: 'Base64 Encoder/Decoder',
-    href: '/tools/base64',
-    type: 'tool',
-  },
-  {
-    id: 'url-encode',
-    title: 'URL Encoder/Decoder',
-    href: '/tools/url-encode',
-    type: 'tool',
-  },
-  { id: 'uuid', title: 'UUID Generator', href: '/tools/uuid', type: 'tool' },
-  { id: 'jwt', title: 'JWT Decoder', href: '/tools/jwt', type: 'tool' },
-  { id: 'json', title: 'JSON Formatter', href: '/tools/json', type: 'tool' },
-  { id: 'sha256', title: 'SHA256 Hash', href: '/tools/sha256', type: 'tool' },
-  {
-    id: 'lorem-ipsum',
-    title: 'Lorem Ipsum Generator',
-    href: '/tools/lorem-ipsum',
-    type: 'tool',
-  },
-  {
-    id: 'timestamp',
-    title: 'Timestamp Converter',
-    href: '/tools/timestamp',
-    type: 'tool',
-  },
-  {
-    id: 'html-entity',
-    title: 'HTML Entity Encoder',
-    href: '/tools/html-entity',
-    type: 'tool',
-  },
-  {
-    id: 'fullwidth',
-    title: 'Fullwidth Converter',
-    href: '/tools/fullwidth',
-    type: 'tool',
-  },
-  {
-    id: 'password-gen',
-    title: 'Password Generator',
-    href: '/tools/password-gen',
-    type: 'tool',
-  },
-  { id: 'regex', title: 'Regex Tester', href: '/tools/regex', type: 'tool' },
-  { id: 'diff', title: 'Text Diff', href: '/tools/diff', type: 'tool' },
-  {
-    id: 'csv-json',
-    title: 'CSV ↔ JSON',
-    href: '/tools/csv-json',
-    type: 'tool',
-  },
-  {
-    id: 'color-convert',
-    title: 'Color Converter',
-    href: '/tools/color-convert',
-    type: 'tool',
-  },
-  {
-    id: 'title-case',
-    title: 'Title Case Converter',
-    href: '/tools/title-case',
-    type: 'tool',
-  },
-  {
-    id: 'git-commit',
-    title: 'Git Commit Message',
-    href: '/tools/git-commit',
-    type: 'tool',
-  },
-  {
-    id: 'readability',
-    title: 'Readability Score',
-    href: '/tools/readability',
-    type: 'tool',
-  },
-  {
-    id: 'pomodoro',
-    title: 'Pomodoro Timer',
-    href: '/tools/pomodoro',
-    type: 'tool',
-  },
-  {
-    id: 'curl-gen',
-    title: 'cURL Generator',
-    href: '/tools/curl-gen',
-    type: 'tool',
-  },
-  {
-    id: 'http-status',
-    title: 'HTTP Status Codes',
-    href: '/tools/http-status',
-    type: 'tool',
-  },
-  {
-    id: 'unit-convert',
-    title: 'Unit Converter',
-    href: '/tools/unit-convert',
-    type: 'tool',
-  },
-  {
-    id: 'markdown',
-    title: 'Markdown Preview',
-    href: '/tools/markdown',
-    type: 'tool',
-  },
-  {
-    id: 'meta',
-    title: 'Meta Tag Generator',
-    href: '/tools/meta',
-    type: 'tool',
-  },
-  { id: 'tldr', title: 'TL;DR Generator', href: '/tools/tldr', type: 'tool' },
-  {
-    id: 'image-to-base64',
-    title: 'Image to Base64',
-    href: '/tools/image-to-base64',
-    type: 'tool',
-  },
-  {
-    id: 'pr-desc',
-    title: 'PR Description',
-    href: '/tools/pr-desc',
-    type: 'tool',
-  },
-  {
-    id: 'code-review',
-    title: 'Code Review',
-    href: '/tools/code-review',
-    type: 'tool',
-  },
-  {
-    id: 'changelog',
-    title: 'Changelog Generator',
-    href: '/tools/changelog',
-    type: 'tool',
-  },
-  {
-    id: 'seo-title',
-    title: 'SEO Title Optimizer',
-    href: '/tools/seo-title',
-    type: 'tool',
-  },
-  {
-    id: 'push',
-    title: 'Push Notification Generator',
-    href: '/tools/push',
-    type: 'tool',
-  },
-  {
-    id: 'base-convert',
-    title: 'Base Converter',
-    href: '/tools/base-convert',
-    type: 'tool',
-  },
-  {
-    id: 'cron-parser',
-    title: 'Cron Parser',
-    href: '/tools/cron-parser',
-    type: 'tool',
-  },
-  { id: 'faq', title: 'FAQ Generator', href: '/tools/faq', type: 'tool' },
-  { id: 'sql', title: 'SQL Formatter', href: '/tools/sql', type: 'tool' },
-  {
-    id: 'tagline',
-    title: 'Tagline Generator',
-    href: '/tools/tagline',
-    type: 'tool',
-  },
-  {
-    id: 'cold-email',
-    title: 'Cold Email Generator',
-    href: '/tools/cold-email',
-    type: 'tool',
-  },
-  {
-    id: 'newsletter',
-    title: 'Newsletter Formatter',
-    href: '/tools/newsletter',
-    type: 'tool',
-  },
-  {
-    id: 'x-post',
-    title: 'X Post Generator',
-    href: '/tools/x-post',
-    type: 'tool',
-  },
-  {
-    id: 'video-title',
-    title: 'Video Title Generator',
-    href: '/tools/video-title',
-    type: 'tool',
-  },
-  {
-    id: 'yt-script',
-    title: 'YouTube Script Generator',
-    href: '/tools/yt-script',
-    type: 'tool',
-  },
-  {
-    id: 'ad-copy',
-    title: 'Ad Copy Generator',
-    href: '/tools/ad-copy',
-    type: 'tool',
-  },
-  { id: 'shell', title: 'Shell Explainer', href: '/tools/shell', type: 'tool' },
-  {
-    id: 'code-explain',
-    title: 'Code Explainer',
-    href: '/tools/code-explain',
-    type: 'tool',
-  },
-  {
-    id: 'humanize',
-    title: 'AI Text Humanizer',
-    href: '/tools/humanize',
-    type: 'tool',
-  },
-  {
-    id: 'ip-lookup',
-    title: 'IP Lookup',
-    href: '/tools/ip-lookup',
-    type: 'tool',
-  },
-  {
-    id: 'docs',
-    title: 'Docstring Generator',
-    href: '/tools/docs',
-    type: 'tool',
-  },
-  {
-    id: 'alt-text',
-    title: 'Alt Text Generator',
-    href: '/tools/alt-text',
-    type: 'tool',
-  },
-  {
-    id: 'blog-outline',
-    title: 'Blog Outline Generator',
-    href: '/tools/blog-outline',
-    type: 'tool',
-  },
-  {
-    id: 'linkedin',
-    title: 'LinkedIn Post Generator',
-    href: '/tools/linkedin',
-    type: 'tool',
-  },
-  {
-    id: 'lp-hero',
-    title: 'Landing Page Hero',
-    href: '/tools/lp-hero',
-    type: 'tool',
-  },
-  {
-    id: 'css-gradient',
-    title: 'CSS Gradient Generator',
-    href: '/tools/css-gradient',
-    type: 'tool',
-  },
-  {
-    id: 'pseudo',
-    title: 'Pseudocode Generator',
-    href: '/tools/pseudo',
-    type: 'tool',
-  },
-  {
-    id: 'diff-pro',
-    title: 'Advanced Diff',
-    href: '/tools/diff-pro',
-    type: 'tool',
-  },
-  {
-    id: 'qrcode',
-    title: 'QR Code Generator',
-    href: '/tools/qrcode',
-    type: 'tool',
-  },
-  {
-    id: 'chi-squared',
-    title: 'Chi-Squared Calculator',
-    href: '/tools/chi-squared',
-    type: 'tool',
-  },
+function notifyAll(items: Item[]) {
+  for (const cb of loadCallbacks) cb(items);
+}
 
-  {
-    id: 'growth-tools-2026',
-    title: '2026 Growth Toolkit',
-    subtitle: 'Blog',
-    href: '/blog/growth-tools-2026',
-    type: 'blog',
-  },
-  {
-    id: 'reddit-marketing',
-    title: 'Reddit Marketing Playbook',
-    subtitle: 'Blog',
-    href: '/blog/reddit-marketing',
-    type: 'blog',
-  },
-  {
-    id: 'kol-marketing',
-    title: 'KOL Marketing Guide',
-    subtitle: 'Blog',
-    href: '/blog/kol-marketing',
-    type: 'blog',
-  },
-  {
-    id: 'ai-content-strategy',
-    title: 'AI Content Strategy',
-    subtitle: 'Blog',
-    href: '/blog/ai-content-strategy',
-    type: 'blog',
-  },
-  {
-    id: 'seo-2026-trends',
-    title: '2026 SEO Trends',
-    subtitle: 'Blog',
-    href: '/blog/seo-2026-trends',
-    type: 'blog',
-  },
-  {
-    id: 'twitter-growth',
-    title: 'Twitter/X Growth Playbook',
-    subtitle: 'Blog',
-    href: '/blog/twitter-growth',
-    type: 'blog',
-  },
-  {
-    id: 'no-code-mvp',
-    title: 'No-Code MVP Guide',
-    subtitle: 'Blog',
-    href: '/blog/no-code-mvp',
-    type: 'blog',
-  },
-  {
-    id: 'ai-productivity-stack',
-    title: 'AI Productivity Stack',
-    subtitle: 'Blog',
-    href: '/blog/ai-productivity-stack',
-    type: 'blog',
-  },
-  {
-    id: 'indie-dev-monetization',
-    title: 'Indie Dev Monetization',
-    subtitle: 'Blog',
-    href: '/blog/indie-dev-monetization',
-    type: 'blog',
-  },
-];
+function loadSearchIndex(): Promise<Item[]> {
+  if (globalItems) return Promise.resolve(globalItems);
+  if (globalLoading) {
+    return new Promise((resolve) => {
+      loadCallbacks.push(resolve);
+    });
+  }
+
+  globalLoading = true;
+
+  // Try sessionStorage first
+  if (typeof window !== 'undefined') {
+    try {
+      const raw = sessionStorage.getItem('aihues-search-index');
+      if (raw) {
+        globalItems = JSON.parse(raw) as Item[];
+        globalLoading = false;
+        return Promise.resolve(globalItems);
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  return fetch('/api/search-index')
+    .then((res) => res.json())
+    .then((data: Item[]) => {
+      globalItems = data;
+      globalLoading = false;
+      if (typeof window !== 'undefined') {
+        try {
+          sessionStorage.setItem('aihues-search-index', JSON.stringify(data));
+        } catch {
+          // ignore
+        }
+      }
+      notifyAll(data);
+      return data;
+    })
+    .catch(() => {
+      globalLoading = false;
+      return [];
+    });
+}
 
 export default function CommandPalette() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [items, setItems] = useState<Item[]>(globalItems ?? []);
+  const [loading, setLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
+  const ensureLoaded = useCallback(() => {
+    if (items.length > 0) return;
+    setLoading(true);
+    loadSearchIndex().then((data) => {
+      setItems(data);
+      setLoading(false);
+    });
+  }, [items.length]);
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return ALL_ITEMS.slice(0, 8);
-    return ALL_ITEMS.filter(
+    if (!q) return items.slice(0, 8);
+    return items.filter(
       (item) =>
         item.title.toLowerCase().includes(q) ||
+        (item.subtitle?.toLowerCase() ?? '').includes(q) ||
         item.type.toLowerCase().includes(q)
     );
-  }, [query]);
+  }, [query, items]);
 
   useEffect(() => {
     const id = requestAnimationFrame(() => setSelectedIndex(0));
     return () => cancelAnimationFrame(id);
   }, [query]);
 
-  const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-      e.preventDefault();
-      setOpen((prev) => !prev);
-    }
-    if (e.key === 'Escape') {
-      setOpen(false);
-    }
-  }, []);
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setOpen((prev) => {
+          const next = !prev;
+          if (next) ensureLoaded();
+          return next;
+        });
+      }
+      if (e.key === 'Escape') {
+        setOpen(false);
+      }
+    },
+    [ensureLoaded]
+  );
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
@@ -477,6 +182,9 @@ export default function CommandPalette() {
             type='text'
             value={query}
           />
+          {loading && (
+            <span className='h-4 w-4 animate-spin rounded-full border-2 border-[#e8e2d9] border-t-[#b45309]' />
+          )}
           <kbd className='hidden rounded-[6px] border border-[#e8e2d9] bg-[#f5f0e8] px-2 py-0.5 text-[11px] font-medium text-[#78716c] sm:block'>
             ESC
           </kbd>
@@ -540,6 +248,7 @@ export default function CommandPalette() {
             </kbd>
             Select
           </span>
+          <span className='ml-auto'>{items.length} items indexed</span>
         </div>
       </div>
     </div>
