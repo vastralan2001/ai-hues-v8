@@ -16,7 +16,9 @@ interface QAPair {
 }
 
 export default function FaqTool({ locale }: FaqToolProps) {
-  const [pairs, setPairs] = useState<QAPair[]>([{ id: 1, question: '', answer: '' }]);
+  const [pairs, setPairs] = useState<QAPair[]>([
+    { id: 1, question: '', answer: '' },
+  ]);
   const [format, setFormat] = useState<'html' | 'jsonld'>('html');
   const [result, setResult] = useState('');
   const [copied, setCopied] = useState(false);
@@ -35,7 +37,9 @@ export default function FaqTool({ locale }: FaqToolProps) {
   }
 
   function generate() {
-    const validPairs = pairs.filter((p) => p.question.trim() && p.answer.trim());
+    const validPairs = pairs.filter(
+      (p) => p.question.trim() && p.answer.trim()
+    );
     if (format === 'html') {
       const items = validPairs
         .map(
@@ -48,7 +52,9 @@ export default function FaqTool({ locale }: FaqToolProps) {
             `  </div>`
         )
         .join('\n');
-      setResult(`<div itemscope itemtype="https://schema.org/FAQPage">\n${items}\n</div>`);
+      setResult(
+        `<div itemscope itemtype="https://schema.org/FAQPage">\n${items}\n</div>`
+      );
     } else {
       const json = {
         '@context': 'https://schema.org',
@@ -93,14 +99,19 @@ export default function FaqTool({ locale }: FaqToolProps) {
 
         <div className='space-y-4'>
           {pairs.map((pair) => (
-            <div key={pair.id} className='rounded-[14px] border border-border bg-surface p-4 space-y-3'>
+            <div
+              key={pair.id}
+              className='rounded-[14px] border border-border bg-surface p-4 space-y-3'
+            >
               <div>
                 <label className='mb-1.5 block text-sm font-semibold text-foreground'>
                   {t(locale, 'tool.faq.question')}
                 </label>
                 <input
                   className='h-11 w-full rounded-[10px] border border-border bg-white dark:bg-gray-900 px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
-                  onChange={(e) => updatePair(pair.id, 'question', e.target.value)}
+                  onChange={(e) =>
+                    updatePair(pair.id, 'question', e.target.value)
+                  }
                   type='text'
                   value={pair.question}
                 />
@@ -111,7 +122,9 @@ export default function FaqTool({ locale }: FaqToolProps) {
                 </label>
                 <textarea
                   className='h-[100px] w-full resize-none rounded-[10px] border border-border bg-white dark:bg-gray-900 px-4 py-3 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
-                  onChange={(e) => updatePair(pair.id, 'answer', e.target.value)}
+                  onChange={(e) =>
+                    updatePair(pair.id, 'answer', e.target.value)
+                  }
                   value={pair.answer}
                 />
               </div>
@@ -147,7 +160,9 @@ export default function FaqTool({ locale }: FaqToolProps) {
                 onClick={() => setFormat(f)}
                 type='button'
               >
-                {f === 'html' ? t(locale, 'tool.faq.html') : t(locale, 'tool.faq.jsonLd')}
+                {f === 'html'
+                  ? t(locale, 'tool.faq.html')
+                  : t(locale, 'tool.faq.jsonLd')}
               </button>
             ))}
           </div>
@@ -171,7 +186,9 @@ export default function FaqTool({ locale }: FaqToolProps) {
                   onClick={copy}
                   type='button'
                 >
-                  {copied ? t(locale, 'tool.copy.copied') : t(locale, 'tool.wordCount.copy')}
+                  {copied
+                    ? t(locale, 'tool.copy.copied')
+                    : t(locale, 'tool.wordCount.copy')}
                 </button>
               </div>
               <div className='min-h-[120px] w-full rounded-[14px] border border-border bg-surface p-5'>

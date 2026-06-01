@@ -36,11 +36,17 @@ function computeDiff(left: string, right: string): DiffLine[] {
       j++;
       leftNum++;
       rightNum++;
-    } else if (j < rightLines.length && (i >= leftLines.length || leftLines.indexOf(r, i) === -1)) {
+    } else if (
+      j < rightLines.length &&
+      (i >= leftLines.length || leftLines.indexOf(r, i) === -1)
+    ) {
       result.push({ type: 'added', text: r, rightNum });
       j++;
       rightNum++;
-    } else if (i < leftLines.length && (j >= rightLines.length || rightLines.indexOf(l, j) === -1)) {
+    } else if (
+      i < leftLines.length &&
+      (j >= rightLines.length || rightLines.indexOf(l, j) === -1)
+    ) {
       result.push({ type: 'removed', text: l, leftNum });
       i++;
       leftNum++;
@@ -141,8 +147,8 @@ export default function DiffProTool({ locale }: DiffProToolProps) {
                     line.type === 'added'
                       ? 'bg-green-50 dark:bg-green-950/20'
                       : line.type === 'removed'
-                      ? 'bg-red-50 dark:bg-red-950/20'
-                      : ''
+                        ? 'bg-red-50 dark:bg-red-950/20'
+                        : ''
                   }`}
                 >
                   <div className='px-2 py-1 text-right text-muted border-r border-border'>
@@ -156,11 +162,15 @@ export default function DiffProTool({ locale }: DiffProToolProps) {
                       line.type === 'added'
                         ? 'text-green-700 dark:text-green-400'
                         : line.type === 'removed'
-                        ? 'text-red-700 dark:text-red-400'
-                        : 'text-foreground'
+                          ? 'text-red-700 dark:text-red-400'
+                          : 'text-foreground'
                     }`}
                   >
-                    {line.type === 'added' ? '+' : line.type === 'removed' ? '-' : ' '}{' '}
+                    {line.type === 'added'
+                      ? '+'
+                      : line.type === 'removed'
+                        ? '-'
+                        : ' '}{' '}
                     {line.text}
                   </div>
                 </div>

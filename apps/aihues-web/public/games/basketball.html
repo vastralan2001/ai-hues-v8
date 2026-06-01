@@ -1282,37 +1282,22 @@ function clearGameHistory() {
 }
 
 // ===================== LEADERBOARD =====================
-const DEFAULT_LEADERBOARD = [
-  {name:'Curry',score:120,date:'2026-05-18'},
-  {name:'Lebron',score:108,date:'2026-05-17'},
-  {name:'Kobe',score:95,date:'2026-05-16'},
-  {name:'Jordan',score:88,date:'2026-05-15'},
-  {name:'Durant',score:82,date:'2026-05-14'},
-  {name:'Harden',score:75,date:'2026-05-13'},
-  {name:'Luka',score:68,date:'2026-05-12'},
-  {name:'Giannis',score:62,date:'2026-05-11'},
-  {name:'Jokic',score:55,date:'2026-05-10'},
-  {name:'Tatum',score:48,date:'2026-05-09'},
-];
+// TODO(上线前): 接入后端排行榜 API 后，移除此空数组
+const DEFAULT_LEADERBOARD = [];
 
+// TODO(上线前): 接入后端排行榜 API 后，恢复 leaderboard 初始化
 function initLeaderboard() {
-  try {
-    const existing = localStorage.getItem(LS_LEADERBOARD);
-    if (!existing) {
-      localStorage.setItem(LS_LEADERBOARD, JSON.stringify(DEFAULT_LEADERBOARD));
-    }
-  } catch (e) { /* ignore */ }
+  // try {
+  //   const existing = localStorage.getItem(LS_LEADERBOARD);
+  //   if (!existing) { /* fetch from API */ }
+  // } catch (e) { /* ignore */ }
 }
 
 function getLeaderboard() {
   try {
     const data = JSON.parse(localStorage.getItem(LS_LEADERBOARD) || '[]');
-    if (data.length === 0) {
-      localStorage.setItem(LS_LEADERBOARD, JSON.stringify(DEFAULT_LEADERBOARD));
-      return DEFAULT_LEADERBOARD.slice();
-    }
     return data;
-  } catch (e) { return DEFAULT_LEADERBOARD.slice(); }
+  } catch (e) { return []; }
 }
 
 function checkLeaderboardRank(score) {

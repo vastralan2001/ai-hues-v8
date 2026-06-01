@@ -11,32 +11,37 @@ interface LinkedinToolProps {
 
 const TEMPLATES: Record<string, string[]> = {
   thoughtful: [
-    'I\'ve been thinking a lot about {topic} lately.\n\nHere\'s what I\'ve learned: the biggest breakthroughs often come from the smallest shifts in perspective.\n\nWhat\'s one thing about {topic} that changed your mind recently?',
-    'Three years ago, I didn\'t understand {topic}.\n\nToday, it\'s central to everything I do.\n\nThe lesson? Don\'t underestimate how much you can learn in a short time if you stay curious.',
+    "I've been thinking a lot about {topic} lately.\n\nHere's what I've learned: the biggest breakthroughs often come from the smallest shifts in perspective.\n\nWhat's one thing about {topic} that changed your mind recently?",
+    "Three years ago, I didn't understand {topic}.\n\nToday, it's central to everything I do.\n\nThe lesson? Don't underestimate how much you can learn in a short time if you stay curious.",
     'The most underrated skill in {topic}?\n\nPatience. Everyone wants results yesterday. The ones who win are those who show up consistently.',
   ],
   success: [
-    'Last year, we set out to solve {topic}.\n\nToday, I\'m proud to share that we\'ve helped 1,000+ teams streamline their workflow.\n\nGrateful for the team, the customers, and the lessons learned along the way. 🙏',
+    "Last year, we set out to solve {topic}.\n\nToday, I'm proud to share that we've helped 1,000+ teams streamline their workflow.\n\nGrateful for the team, the customers, and the lessons learned along the way. 🙏",
     'When we started working on {topic}, everyone said it was too competitive.\n\nWe did it anyway.\n\nSometimes the best opportunities are hiding in plain sight.',
     'A client just told me our work on {topic} saved them 20 hours per week.\n\nMoments like these remind me why I do what I do.',
   ],
   opinion: [
-    'Unpopular opinion: {topic} is overrated.\n\nHere\'s why I think we need to rethink our approach 👇\n\n(Agree or disagree? Let me know in the comments.)',
-    'Hot take: Most people are doing {topic} wrong.\n\nThe real opportunity isn\'t where everyone\'s looking. It\'s in the gaps they\'re ignoring.',
-    'I\'ll say it: {topic} isn\'t the future.\n\nThe future is what comes after {topic}, and the sooner we prepare for it, the better.',
+    "Unpopular opinion: {topic} is overrated.\n\nHere's why I think we need to rethink our approach 👇\n\n(Agree or disagree? Let me know in the comments.)",
+    "Hot take: Most people are doing {topic} wrong.\n\nThe real opportunity isn't where everyone's looking. It's in the gaps they're ignoring.",
+    "I'll say it: {topic} isn't the future.\n\nThe future is what comes after {topic}, and the sooner we prepare for it, the better.",
   ],
 };
 
 export default function LinkedinTool({ locale }: LinkedinToolProps) {
   const [topic, setTopic] = useState('');
-  const [tone, setTone] = useState<'thoughtful' | 'success' | 'opinion'>('thoughtful');
+  const [tone, setTone] = useState<'thoughtful' | 'success' | 'opinion'>(
+    'thoughtful'
+  );
   const [results, setResults] = useState<string[]>([]);
   const [copied, setCopied] = useState(false);
 
   function generate() {
     const templates = TEMPLATES[tone];
     const generated = templates.map((tmpl) =>
-      tmpl.replace(/\{topic\}/g, topic || (locale === 'zh' ? '这个主题' : 'this topic'))
+      tmpl.replace(
+        /\{topic\}/g,
+        topic || (locale === 'zh' ? '这个主题' : 'this topic')
+      )
     );
     setResults(generated);
   }
@@ -116,13 +121,17 @@ export default function LinkedinTool({ locale }: LinkedinToolProps) {
                   key={i}
                   className='rounded-[14px] border border-border bg-surface p-4'
                 >
-                  <p className='whitespace-pre-wrap text-sm text-foreground'>{r}</p>
+                  <p className='whitespace-pre-wrap text-sm text-foreground'>
+                    {r}
+                  </p>
                   <button
                     className='mt-3 rounded-[8px] border border-border bg-white dark:bg-gray-900 px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
                     onClick={() => copy(r)}
                     type='button'
                   >
-                    {copied ? t(locale, 'tool.copy.copied') : t(locale, 'tool.wordCount.copy')}
+                    {copied
+                      ? t(locale, 'tool.copy.copied')
+                      : t(locale, 'tool.wordCount.copy')}
                   </button>
                 </div>
               ))}

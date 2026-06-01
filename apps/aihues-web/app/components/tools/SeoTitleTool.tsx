@@ -17,7 +17,11 @@ interface AnalysisResult {
   specialChars: number;
 }
 
-function analyzeTitle(title: string, keyword: string, brand: string): AnalysisResult {
+function analyzeTitle(
+  title: string,
+  keyword: string,
+  brand: string
+): AnalysisResult {
   const length = title.length;
   let lengthStatus: 'short' | 'optimal' | 'long' = 'optimal';
   if (length < 30) lengthStatus = 'short';
@@ -25,9 +29,9 @@ function analyzeTitle(title: string, keyword: string, brand: string): AnalysisRe
 
   const hasKeyword =
     !keyword || title.toLowerCase().includes(keyword.toLowerCase());
-  const hasBrand =
-    !brand || title.toLowerCase().includes(brand.toLowerCase());
-  const specialChars = (title.match(/[^a-zA-Z0-9\s\u4e00-\u9fa5]/g) || []).length;
+  const hasBrand = !brand || title.toLowerCase().includes(brand.toLowerCase());
+  const specialChars = (title.match(/[^a-zA-Z0-9\s\u4e00-\u9fa5]/g) || [])
+    .length;
 
   return { length, lengthStatus, hasKeyword, hasBrand, specialChars };
 }
@@ -131,7 +135,9 @@ export default function SeoTitleTool({ locale }: SeoTitleToolProps) {
               <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
                 {t(locale, 'tool.seoTitle.length')}
               </p>
-              <p className={`mt-1 text-2xl font-extrabold ${lengthColors[result.lengthStatus]}`}>
+              <p
+                className={`mt-1 text-2xl font-extrabold ${lengthColors[result.lengthStatus]}`}
+              >
                 {result.length}
               </p>
               <p className='mt-0.5 text-xs text-secondary'>

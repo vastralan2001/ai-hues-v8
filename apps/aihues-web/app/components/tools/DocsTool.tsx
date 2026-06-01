@@ -9,7 +9,11 @@ interface DocsToolProps {
   locale: Locale;
 }
 
-function generateDocs(signature: string, language: string, locale: Locale): string {
+function generateDocs(
+  signature: string,
+  language: string,
+  locale: Locale
+): string {
   const isZh = locale === 'zh';
 
   // Extract function name
@@ -129,7 +133,7 @@ export default function DocsTool({ locale }: DocsToolProps) {
             <input
               className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 font-mono text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
               onChange={(e) => setInput(e.target.value)}
-              placeholder="function calculateTotal(price, quantity, tax = 0.1)"
+              placeholder='function calculateTotal(price, quantity, tax = 0.1)'
               type='text'
               value={input}
             />
@@ -154,7 +158,9 @@ export default function DocsTool({ locale }: DocsToolProps) {
                   onClick={copy}
                   type='button'
                 >
-                  {copied ? t(locale, 'tool.copy.copied') : t(locale, 'tool.wordCount.copy')}
+                  {copied
+                    ? t(locale, 'tool.copy.copied')
+                    : t(locale, 'tool.wordCount.copy')}
                 </button>
               </div>
               <div className='min-h-[120px] w-full rounded-[14px] border border-border bg-surface p-5'>

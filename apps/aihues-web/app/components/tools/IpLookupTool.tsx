@@ -16,7 +16,8 @@ function validateIp(ip: string): {
   networkClass: string;
 } {
   const parts = ip.split('.');
-  if (parts.length !== 4) return { valid: false, type: '', typeZh: '', networkClass: '' };
+  if (parts.length !== 4)
+    return { valid: false, type: '', typeZh: '', networkClass: '' };
 
   const nums = parts.map((p) => parseInt(p, 10));
   if (nums.some((n) => isNaN(n) || n < 0 || n > 255)) {
@@ -30,7 +31,11 @@ function validateIp(ip: string): {
   if (a === 127) {
     type = 'loopback';
     typeZh = '回环';
-  } else if (a === 10 || (a === 172 && b >= 16 && b <= 31) || (a === 192 && b === 168)) {
+  } else if (
+    a === 10 ||
+    (a === 172 && b >= 16 && b <= 31) ||
+    (a === 192 && b === 168)
+  ) {
     type = 'private';
     typeZh = '私有';
   } else if (a === 255 && b === 255 && c === 255 && d === 255) {
@@ -49,7 +54,9 @@ function validateIp(ip: string): {
 
 export default function IpLookupTool({ locale }: IpLookupToolProps) {
   const [input, setInput] = useState('');
-  const [result, setResult] = useState<ReturnType<typeof validateIp> | null>(null);
+  const [result, setResult] = useState<ReturnType<typeof validateIp> | null>(
+    null
+  );
 
   function handleValidate() {
     setResult(validateIp(input.trim()));
@@ -98,7 +105,9 @@ export default function IpLookupTool({ locale }: IpLookupToolProps) {
                 }`}
               >
                 <p className='text-sm font-semibold'>
-                  {result.valid ? t(locale, 'tool.ipLookup.valid') : t(locale, 'tool.ipLookup.invalid')}
+                  {result.valid
+                    ? t(locale, 'tool.ipLookup.valid')
+                    : t(locale, 'tool.ipLookup.invalid')}
                 </p>
               </div>
 
@@ -109,7 +118,9 @@ export default function IpLookupTool({ locale }: IpLookupToolProps) {
                       {t(locale, 'tool.ipLookup.type')}
                     </p>
                     <p className='mt-1 text-xl font-extrabold text-accent'>
-                      {locale === 'zh' ? result.typeZh : t(locale, `tool.ipLookup.${result.type}`)}
+                      {locale === 'zh'
+                        ? result.typeZh
+                        : t(locale, `tool.ipLookup.${result.type}`)}
                     </p>
                   </div>
                   <div className='rounded-[14px] border border-border bg-surface p-4 text-center'>

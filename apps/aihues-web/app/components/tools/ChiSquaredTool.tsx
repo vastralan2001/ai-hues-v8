@@ -25,10 +25,7 @@ function approximatePValue(chi2: number, df: number): number {
   const zScore = z / denom;
   // Approximate standard normal tail probability
   const absZ = Math.abs(zScore);
-  const p =
-    absZ > 6
-      ? 0
-      : Math.exp(-0.717 * absZ - 0.416 * absZ * absZ);
+  const p = absZ > 6 ? 0 : Math.exp(-0.717 * absZ - 0.416 * absZ * absZ);
   return Math.min(1, Math.max(0, p));
 }
 
@@ -54,7 +51,11 @@ export default function ChiSquaredTool({ locale }: ChiSquaredToolProps) {
     setRows(rows.filter((r) => r.id !== id));
   }
 
-  function updateRow(id: number, field: 'observed' | 'expected', value: string) {
+  function updateRow(
+    id: number,
+    field: 'observed' | 'expected',
+    value: string
+  ) {
     setRows(rows.map((r) => (r.id === id ? { ...r, [field]: value } : r)));
   }
 
@@ -89,16 +90,25 @@ export default function ChiSquaredTool({ locale }: ChiSquaredToolProps) {
         <div className='space-y-4'>
           <div className='rounded-[14px] border border-border bg-surface overflow-hidden'>
             <div className='grid grid-cols-[1fr_1fr_auto] border-b border-border bg-gray-50 dark:bg-gray-900 text-xs font-semibold text-secondary'>
-              <div className='px-4 py-2'>{t(locale, 'tool.chiSquared.observed')}</div>
-              <div className='px-4 py-2'>{t(locale, 'tool.chiSquared.expected')}</div>
+              <div className='px-4 py-2'>
+                {t(locale, 'tool.chiSquared.observed')}
+              </div>
+              <div className='px-4 py-2'>
+                {t(locale, 'tool.chiSquared.expected')}
+              </div>
               <div className='px-4 py-2'></div>
             </div>
             {rows.map((row) => (
-              <div key={row.id} className='grid grid-cols-[1fr_1fr_auto] border-b border-border last:border-b-0'>
+              <div
+                key={row.id}
+                className='grid grid-cols-[1fr_1fr_auto] border-b border-border last:border-b-0'
+              >
                 <div className='px-2 py-2'>
                   <input
                     className='h-9 w-full rounded-[8px] border border-border bg-white dark:bg-gray-900 px-3 text-sm text-foreground focus:border-accent focus:outline-none'
-                    onChange={(e) => updateRow(row.id, 'observed', e.target.value)}
+                    onChange={(e) =>
+                      updateRow(row.id, 'observed', e.target.value)
+                    }
                     type='number'
                     value={row.observed}
                   />
@@ -106,7 +116,9 @@ export default function ChiSquaredTool({ locale }: ChiSquaredToolProps) {
                 <div className='px-2 py-2'>
                   <input
                     className='h-9 w-full rounded-[8px] border border-border bg-white dark:bg-gray-900 px-3 text-sm text-foreground focus:border-accent focus:outline-none'
-                    onChange={(e) => updateRow(row.id, 'expected', e.target.value)}
+                    onChange={(e) =>
+                      updateRow(row.id, 'expected', e.target.value)
+                    }
                     type='number'
                     value={row.expected}
                   />
@@ -165,7 +177,9 @@ export default function ChiSquaredTool({ locale }: ChiSquaredToolProps) {
                   {t(locale, 'tool.chiSquared.pValue')}
                 </p>
                 <p className='mt-1 text-2xl font-extrabold text-accent'>
-                  {result.pValue < 0.0001 ? '< 0.0001' : result.pValue.toFixed(4)}
+                  {result.pValue < 0.0001
+                    ? '< 0.0001'
+                    : result.pValue.toFixed(4)}
                 </p>
               </div>
               <div
@@ -178,8 +192,7 @@ export default function ChiSquaredTool({ locale }: ChiSquaredToolProps) {
                 <p className='text-sm font-semibold'>
                   {result.pValue < 0.05
                     ? t(locale, 'tool.chiSquared.significant')
-                    : t(locale, 'tool.chiSquared.notSignificant')}
-                  {' '}
+                    : t(locale, 'tool.chiSquared.notSignificant')}{' '}
                   (p {'<'} 0.05)
                 </p>
               </div>

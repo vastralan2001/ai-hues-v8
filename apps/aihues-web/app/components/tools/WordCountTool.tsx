@@ -30,7 +30,9 @@ export default function WordCountTool({ locale }: WordCountToolProps) {
       words,
       lines: text === '' ? 0 : text.split(/\r\n|\r|\n/).length,
       paragraphs:
-        trimmed === '' ? 0 : trimmed.split(/\n\s*\n/).filter((p) => p.trim()).length,
+        trimmed === ''
+          ? 0
+          : trimmed.split(/\n\s*\n/).filter((p) => p.trim()).length,
       readingTime: Math.max(1, Math.ceil(words / 200)),
     };
   }, [text]);

@@ -8,7 +8,11 @@ import {
   getToolPricing,
   ToolCard,
 } from '@/components/CatalogCards';
-import type { CatalogTool, PriceTagKey, ToolCategoryKey } from '@/lib/catalog-api';
+import type {
+  CatalogTool,
+  PriceTagKey,
+  ToolCategoryKey,
+} from '@/lib/catalog-api';
 import { toolCategories } from '@/lib/catalog-api';
 import { toolDetailHref } from '@/lib/routes';
 
@@ -142,7 +146,8 @@ export function ToolsInfiniteList({
     if (activePrice === 'all') return tools;
     return tools.filter((tool) => {
       const apiTag = tool.priceTag;
-      const price = apiTag !== 'unspecified' ? apiTag : getToolPricing(tool.slug).price;
+      const price =
+        apiTag !== 'unspecified' ? apiTag : getToolPricing(tool.slug).price;
       return price === activePrice;
     });
   }, [tools, activePrice]);
@@ -164,10 +169,13 @@ export function ToolsInfiniteList({
   const categoryCounts = useMemo(
     () => ({
       all: visibleTools.length,
-      developer: visibleTools.filter((tool) => tool.category === 'developer').length,
-      utility: visibleTools.filter((tool) => tool.category === 'utility').length,
-      'ai-writing': visibleTools.filter((tool) => tool.category === 'ai-writing')
+      developer: visibleTools.filter((tool) => tool.category === 'developer')
         .length,
+      utility: visibleTools.filter((tool) => tool.category === 'utility')
+        .length,
+      'ai-writing': visibleTools.filter(
+        (tool) => tool.category === 'ai-writing'
+      ).length,
     }),
     [visibleTools]
   );
@@ -212,7 +220,9 @@ export function ToolsInfiniteList({
             </span>
           </div>
           {visibleTools.length > 0 ? (
-            <div className='catalog-grid'>{visibleTools.map(renderToolCard)}</div>
+            <div className='catalog-grid'>
+              {visibleTools.map(renderToolCard)}
+            </div>
           ) : (
             <EmptyState
               detail='Try another search term, category, or price filter.'

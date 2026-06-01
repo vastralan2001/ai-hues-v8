@@ -9,37 +9,140 @@ interface CodeExplainToolProps {
   locale: Locale;
 }
 
-const PATTERNS: Record<string, { pattern: RegExp; desc: string; descZh: string }[]> = {
+const PATTERNS: Record<
+  string,
+  { pattern: RegExp; desc: string; descZh: string }[]
+> = {
   javascript: [
-    { pattern: /map\s*\(/, desc: 'Transforms each element of an array using a callback function.', descZh: '使用回调函数转换数组的每个元素。' },
-    { pattern: /filter\s*\(/, desc: 'Creates a new array with elements that pass a test.', descZh: '创建一个新数组，包含通过测试的元素。' },
-    { pattern: /reduce\s*\(/, desc: 'Reduces an array to a single value by applying a function.', descZh: '通过应用函数将数组缩减为单个值。' },
-    { pattern: /fetch\s*\(/, desc: 'Makes an HTTP request to a server.', descZh: '向服务器发起 HTTP 请求。' },
-    { pattern: /async\s+function/, desc: 'Defines an asynchronous function that returns a Promise.', descZh: '定义一个返回 Promise 的异步函数。' },
-    { pattern: /await\s+/, desc: 'Pauses execution until a Promise resolves.', descZh: '暂停执行，直到 Promise 被解决。' },
-    { pattern: /Promise\s*\(/, desc: 'Represents a value that may be available now, later, or never.', descZh: '表示一个可能现在、将来或永远不会可用的值。' },
-    { pattern: /setTimeout\s*\(/, desc: 'Executes code after a specified delay.', descZh: '在指定延迟后执行代码。' },
-    { pattern: /JSON\.parse\s*\(/, desc: 'Parses a JSON string into a JavaScript object.', descZh: '将 JSON 字符串解析为 JavaScript 对象。' },
-    { pattern: /JSON\.stringify\s*\(/, desc: 'Converts a JavaScript object to a JSON string.', descZh: '将 JavaScript 对象转换为 JSON 字符串。' },
+    {
+      pattern: /map\s*\(/,
+      desc: 'Transforms each element of an array using a callback function.',
+      descZh: '使用回调函数转换数组的每个元素。',
+    },
+    {
+      pattern: /filter\s*\(/,
+      desc: 'Creates a new array with elements that pass a test.',
+      descZh: '创建一个新数组，包含通过测试的元素。',
+    },
+    {
+      pattern: /reduce\s*\(/,
+      desc: 'Reduces an array to a single value by applying a function.',
+      descZh: '通过应用函数将数组缩减为单个值。',
+    },
+    {
+      pattern: /fetch\s*\(/,
+      desc: 'Makes an HTTP request to a server.',
+      descZh: '向服务器发起 HTTP 请求。',
+    },
+    {
+      pattern: /async\s+function/,
+      desc: 'Defines an asynchronous function that returns a Promise.',
+      descZh: '定义一个返回 Promise 的异步函数。',
+    },
+    {
+      pattern: /await\s+/,
+      desc: 'Pauses execution until a Promise resolves.',
+      descZh: '暂停执行，直到 Promise 被解决。',
+    },
+    {
+      pattern: /Promise\s*\(/,
+      desc: 'Represents a value that may be available now, later, or never.',
+      descZh: '表示一个可能现在、将来或永远不会可用的值。',
+    },
+    {
+      pattern: /setTimeout\s*\(/,
+      desc: 'Executes code after a specified delay.',
+      descZh: '在指定延迟后执行代码。',
+    },
+    {
+      pattern: /JSON\.parse\s*\(/,
+      desc: 'Parses a JSON string into a JavaScript object.',
+      descZh: '将 JSON 字符串解析为 JavaScript 对象。',
+    },
+    {
+      pattern: /JSON\.stringify\s*\(/,
+      desc: 'Converts a JavaScript object to a JSON string.',
+      descZh: '将 JavaScript 对象转换为 JSON 字符串。',
+    },
   ],
   python: [
-    { pattern: /list comprehension/, desc: 'Creates a list using a compact for-loop syntax.', descZh: '使用紧凑的 for 循环语法创建列表。' },
-    { pattern: /def\s+\w+\s*\(/, desc: 'Defines a function.', descZh: '定义一个函数。' },
-    { pattern: /import\s+/, desc: 'Imports a module or specific items from a module.', descZh: '导入模块或模块中的特定项。' },
-    { pattern: /with\s+open\s*\(/, desc: 'Opens a file and ensures it is properly closed.', descZh: '打开文件并确保正确关闭。' },
-    { pattern: /try\s*:/, desc: 'Starts a block of code to catch exceptions.', descZh: '开始一个捕获异常的代码块。' },
-    { pattern: /class\s+\w+/, desc: 'Defines a new class.', descZh: '定义一个新类。' },
-    { pattern: /lambda\s+/, desc: 'Creates an anonymous inline function.', descZh: '创建一个匿名内联函数。' },
-    { pattern: /@\w+/, desc: 'Applies a decorator to a function or class.', descZh: '将装饰器应用于函数或类。' },
+    {
+      pattern: /list comprehension/,
+      desc: 'Creates a list using a compact for-loop syntax.',
+      descZh: '使用紧凑的 for 循环语法创建列表。',
+    },
+    {
+      pattern: /def\s+\w+\s*\(/,
+      desc: 'Defines a function.',
+      descZh: '定义一个函数。',
+    },
+    {
+      pattern: /import\s+/,
+      desc: 'Imports a module or specific items from a module.',
+      descZh: '导入模块或模块中的特定项。',
+    },
+    {
+      pattern: /with\s+open\s*\(/,
+      desc: 'Opens a file and ensures it is properly closed.',
+      descZh: '打开文件并确保正确关闭。',
+    },
+    {
+      pattern: /try\s*:/,
+      desc: 'Starts a block of code to catch exceptions.',
+      descZh: '开始一个捕获异常的代码块。',
+    },
+    {
+      pattern: /class\s+\w+/,
+      desc: 'Defines a new class.',
+      descZh: '定义一个新类。',
+    },
+    {
+      pattern: /lambda\s+/,
+      desc: 'Creates an anonymous inline function.',
+      descZh: '创建一个匿名内联函数。',
+    },
+    {
+      pattern: /@\w+/,
+      desc: 'Applies a decorator to a function or class.',
+      descZh: '将装饰器应用于函数或类。',
+    },
   ],
   sql: [
-    { pattern: /SELECT\s+/i, desc: 'Retrieves data from one or more tables.', descZh: '从一个或多个表中检索数据。' },
-    { pattern: /INSERT\s+INTO/i, desc: 'Adds new rows to a table.', descZh: '向表中添加新行。' },
-    { pattern: /UPDATE\s+/i, desc: 'Modifies existing data in a table.', descZh: '修改表中的现有数据。' },
-    { pattern: /DELETE\s+FROM/i, desc: 'Removes rows from a table.', descZh: '从表中删除行。' },
-    { pattern: /JOIN\s+/i, desc: 'Combines rows from two or more tables.', descZh: '合并两个或多个表的行。' },
-    { pattern: /GROUP\s+BY/i, desc: 'Groups rows with the same values into summary rows.', descZh: '将具有相同值的行分组为汇总行。' },
-    { pattern: /ORDER\s+BY/i, desc: 'Sorts the result set by specified columns.', descZh: '按指定列对结果集进行排序。' },
+    {
+      pattern: /SELECT\s+/i,
+      desc: 'Retrieves data from one or more tables.',
+      descZh: '从一个或多个表中检索数据。',
+    },
+    {
+      pattern: /INSERT\s+INTO/i,
+      desc: 'Adds new rows to a table.',
+      descZh: '向表中添加新行。',
+    },
+    {
+      pattern: /UPDATE\s+/i,
+      desc: 'Modifies existing data in a table.',
+      descZh: '修改表中的现有数据。',
+    },
+    {
+      pattern: /DELETE\s+FROM/i,
+      desc: 'Removes rows from a table.',
+      descZh: '从表中删除行。',
+    },
+    {
+      pattern: /JOIN\s+/i,
+      desc: 'Combines rows from two or more tables.',
+      descZh: '合并两个或多个表的行。',
+    },
+    {
+      pattern: /GROUP\s+BY/i,
+      desc: 'Groups rows with the same values into summary rows.',
+      descZh: '将具有相同值的行分组为汇总行。',
+    },
+    {
+      pattern: /ORDER\s+BY/i,
+      desc: 'Sorts the result set by specified columns.',
+      descZh: '按指定列对结果集进行排序。',
+    },
   ],
 };
 
@@ -121,7 +224,10 @@ export default function CodeExplainTool({ locale }: CodeExplainToolProps) {
               </p>
               <div className='mt-2 space-y-3'>
                 {result.split('\n\n').map((line, i) => (
-                  <p key={i} className='text-[15px] leading-relaxed text-foreground'>
+                  <p
+                    key={i}
+                    className='text-[15px] leading-relaxed text-foreground'
+                  >
                     • {line}
                   </p>
                 ))}

@@ -203,7 +203,9 @@ export default function PushTool({ locale }: PushToolProps) {
                 onClick={copy}
                 type='button'
               >
-                {copied ? t(locale, 'tool.copy.copied') : t(locale, 'tool.wordCount.copy')}
+                {copied
+                  ? t(locale, 'tool.copy.copied')
+                  : t(locale, 'tool.wordCount.copy')}
               </button>
             </div>
             <div className='min-h-[120px] w-full rounded-[14px] border border-border bg-surface p-5'>

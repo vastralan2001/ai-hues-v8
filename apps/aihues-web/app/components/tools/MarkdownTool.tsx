@@ -22,20 +22,44 @@ function markdownToHtml(md: string): string {
   );
 
   // Headings
-  html = html.replace(/^###### (.*$)/gim, '<h6 class="text-sm font-bold mt-4 mb-2">$1</h6>');
-  html = html.replace(/^##### (.*$)/gim, '<h5 class="text-base font-bold mt-4 mb-2">$1</h5>');
-  html = html.replace(/^#### (.*$)/gim, '<h4 class="text-lg font-bold mt-4 mb-2">$1</h4>');
-  html = html.replace(/^### (.*$)/gim, '<h3 class="text-xl font-bold mt-4 mb-2">$1</h3>');
-  html = html.replace(/^## (.*$)/gim, '<h2 class="text-2xl font-bold mt-5 mb-3">$1</h2>');
-  html = html.replace(/^# (.*$)/gim, '<h1 class="text-3xl font-extrabold mt-6 mb-4">$1</h1>');
+  html = html.replace(
+    /^###### (.*$)/gim,
+    '<h6 class="text-sm font-bold mt-4 mb-2">$1</h6>'
+  );
+  html = html.replace(
+    /^##### (.*$)/gim,
+    '<h5 class="text-base font-bold mt-4 mb-2">$1</h5>'
+  );
+  html = html.replace(
+    /^#### (.*$)/gim,
+    '<h4 class="text-lg font-bold mt-4 mb-2">$1</h4>'
+  );
+  html = html.replace(
+    /^### (.*$)/gim,
+    '<h3 class="text-xl font-bold mt-4 mb-2">$1</h3>'
+  );
+  html = html.replace(
+    /^## (.*$)/gim,
+    '<h2 class="text-2xl font-bold mt-5 mb-3">$1</h2>'
+  );
+  html = html.replace(
+    /^# (.*$)/gim,
+    '<h1 class="text-3xl font-extrabold mt-6 mb-4">$1</h1>'
+  );
 
   // Bold, italic, code
   html = html.replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>');
   html = html.replace(/\*(.*?)\*/gim, '<em>$1</em>');
-  html = html.replace(/`([^`]+)`/gim, '<code class="bg-bg px-1 py-0.5 rounded text-sm">$1</code>');
+  html = html.replace(
+    /`([^`]+)`/gim,
+    '<code class="bg-bg px-1 py-0.5 rounded text-sm">$1</code>'
+  );
 
   // Links
-  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/gim, '<a href="$2" class="text-accent hover:underline">$1</a>');
+  html = html.replace(
+    /\[([^\]]+)\]\(([^)]+)\)/gim,
+    '<a href="$2" class="text-accent hover:underline">$1</a>'
+  );
 
   // Blockquote
   html = html.replace(
@@ -45,7 +69,10 @@ function markdownToHtml(md: string): string {
 
   // Lists
   html = html.replace(/^- (.*$)/gim, '<li class="ml-4">$1</li>');
-  html = html.replace(/(<li[^>]*>.*<\/li>\n?)+/gim, '<ul class="list-disc my-3">$&</ul>');
+  html = html.replace(
+    /(<li[^>]*>.*<\/li>\n?)+/gim,
+    '<ul class="list-disc my-3">$&</ul>'
+  );
 
   // Horizontal rule
   html = html.replace(/^---$/gim, '<hr class="my-4 border-border" />');

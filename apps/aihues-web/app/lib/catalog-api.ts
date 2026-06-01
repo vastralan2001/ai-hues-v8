@@ -181,9 +181,7 @@ export function protoToCategory(
   return 'all';
 }
 
-export function protoToPriceTag(
-  pt: RawCatalogItem['priceTag']
-): PriceTagKey {
+export function protoToPriceTag(pt: RawCatalogItem['priceTag']): PriceTagKey {
   if (pt === 'PRICE_TAG_FREE' || pt === 1) {
     return 'free';
   }

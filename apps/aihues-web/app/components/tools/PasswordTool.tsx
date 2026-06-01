@@ -166,7 +166,9 @@ export default function PasswordTool({ locale }: PasswordToolProps) {
                 <span className='font-semibold text-secondary'>
                   {t(locale, 'tool.password.strength')}
                 </span>
-                <span className='font-bold text-foreground'>{strength.label}</span>
+                <span className='font-bold text-foreground'>
+                  {strength.label}
+                </span>
               </div>
               <div className='h-2 w-full overflow-hidden rounded-full bg-border'>
                 <div

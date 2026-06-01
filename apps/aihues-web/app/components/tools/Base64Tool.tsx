@@ -20,7 +20,10 @@ export default function Base64Tool({ locale }: Base64ToolProps) {
       setError('');
       let encoded = btoa(unescape(encodeURIComponent(input)));
       if (urlSafe) {
-        encoded = encoded.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+        encoded = encoded
+          .replace(/\+/g, '-')
+          .replace(/\//g, '_')
+          .replace(/=+$/, '');
       }
       setOutput(encoded);
     } catch {

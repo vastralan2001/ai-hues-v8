@@ -760,18 +760,8 @@ const LS_KEY_CREDITS = 'daily-luck-credits';
 const LS_KEY_STATS = 'aihues_daily_stats';
 const LS_KEY_LEADERBOARD = 'aihues_daily_leaderboard';
 
-const defaultDailyLeaderboard = [
-  {name:'FortuneHunter',streak:23,totalCredits:580,date:'2026-05-18'},
-  {name:'LuckMaster',streak:18,totalCredits:450,date:'2026-05-17'},
-  {name:'DailyDraw',streak:15,totalCredits:380,date:'2026-05-16'},
-  {name:'BlessedOne',streak:12,totalCredits:320,date:'2026-05-15'},
-  {name:'WishMaker',streak:10,totalCredits:280,date:'2026-05-14'},
-  {name:'StarGazer',streak:8,totalCredits:220,date:'2026-05-13'},
-  {name:'MoonChild',streak:7,totalCredits:190,date:'2026-05-12'},
-  {name:'SunWalker',streak:5,totalCredits:150,date:'2026-05-11'},
-  {name:'WindDancer',streak:4,totalCredits:120,date:'2026-05-10'},
-  {name:'NewHope',streak:3,totalCredits:80,date:'2026-05-09'},
-];
+// TODO(上线前): 接入后端排行榜 API 后，移除此空数组
+const defaultDailyLeaderboard = [];
 
 const levelColors = {
   'Great Fortune': {css:'var(--gold)',fill:'#d4a843',class:'dg'},
@@ -1049,9 +1039,7 @@ function getLeaderboard() {
     const raw = localStorage.getItem(LS_KEY_LEADERBOARD);
     if (raw) return JSON.parse(raw);
   } catch(e) { /* ignore */ }
-  // Initialize with defaults
-  localStorage.setItem(LS_KEY_LEADERBOARD, JSON.stringify(defaultDailyLeaderboard));
-  return [...defaultDailyLeaderboard];
+  return [];
 }
 
 function saveLeaderboard(data) {
@@ -1729,13 +1717,11 @@ function downloadShareCard() {
 function init() {
   updateStreakDisplay();
 
-  // Initialize leaderboard if empty
-  try {
-    const raw = localStorage.getItem(LS_KEY_LEADERBOARD);
-    if (!raw) {
-      localStorage.setItem(LS_KEY_LEADERBOARD, JSON.stringify(defaultDailyLeaderboard));
-    }
-  } catch(e) { /* ignore */ }
+  // TODO(上线前): 接入后端排行榜 API 后，恢复 leaderboard 初始化
+  // try {
+  //   const raw = localStorage.getItem(LS_KEY_LEADERBOARD);
+  //   if (!raw) { /* fetch from API */ }
+  // } catch(e) { /* ignore */ }
 
   // Check if already drawn today
   if (hasDrawnToday()) {

@@ -9,9 +9,22 @@ interface ChangelogToolProps {
   locale: Locale;
 }
 
-type SectionKey = 'added' | 'changed' | 'deprecated' | 'removed' | 'fixed' | 'security';
+type SectionKey =
+  | 'added'
+  | 'changed'
+  | 'deprecated'
+  | 'removed'
+  | 'fixed'
+  | 'security';
 
-const SECTIONS: SectionKey[] = ['added', 'changed', 'deprecated', 'removed', 'fixed', 'security'];
+const SECTIONS: SectionKey[] = [
+  'added',
+  'changed',
+  'deprecated',
+  'removed',
+  'fixed',
+  'security',
+];
 
 export default function ChangelogTool({ locale }: ChangelogToolProps) {
   const [version, setVersion] = useState('1.0.0');
@@ -37,7 +50,10 @@ export default function ChangelogTool({ locale }: ChangelogToolProps) {
   };
 
   const removeItem = (section: SectionKey, index: number) => {
-    const next = { ...sections, [section]: sections[section].filter((_, i) => i !== index) };
+    const next = {
+      ...sections,
+      [section]: sections[section].filter((_, i) => i !== index),
+    };
     setSections(next);
   };
 
@@ -105,7 +121,10 @@ export default function ChangelogTool({ locale }: ChangelogToolProps) {
         {/* Sections */}
         <div className='flex flex-col gap-4'>
           {SECTIONS.map((key) => (
-            <div className='rounded-[10px] border border-border bg-surface p-4' key={key}>
+            <div
+              className='rounded-[10px] border border-border bg-surface p-4'
+              key={key}
+            >
               <h2 className='mb-2 text-sm font-bold text-foreground'>
                 {t(locale, `tool.changelog.${key}`)}
               </h2>

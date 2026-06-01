@@ -11,14 +11,14 @@ interface XPostToolProps {
 
 const TEMPLATES: Record<string, string[]> = {
   casual: [
-    'Just discovered {topic} and I\'m blown away 🤯 What do you think?',
+    "Just discovered {topic} and I'm blown away 🤯 What do you think?",
     'Hot take: {topic} is the most underrated thing right now.',
-    'Can\'t stop thinking about {topic}. Anyone else?',
+    "Can't stop thinking about {topic}. Anyone else?",
     '{topic} thread incoming 🧵',
     'Unpopular opinion: {topic} deserves more hype.',
   ],
   professional: [
-    'Here\'s what I\'ve learned about {topic} after 5 years in the industry.',
+    "Here's what I've learned about {topic} after 5 years in the industry.",
     'A quick breakdown of {topic} for anyone getting started.',
     'The state of {topic} in 2026: a thread.',
     '3 things you need to know about {topic} this week.',
@@ -35,7 +35,9 @@ const TEMPLATES: Record<string, string[]> = {
 
 export default function XPostTool({ locale }: XPostToolProps) {
   const [topic, setTopic] = useState('');
-  const [tone, setTone] = useState<'casual' | 'professional' | 'witty'>('casual');
+  const [tone, setTone] = useState<'casual' | 'professional' | 'witty'>(
+    'casual'
+  );
   const [results, setResults] = useState<string[]>([]);
   const [copied, setCopied] = useState(false);
 
@@ -133,7 +135,9 @@ export default function XPostTool({ locale }: XPostToolProps) {
                     onClick={() => copy(r)}
                     type='button'
                   >
-                    {copied ? t(locale, 'tool.copy.copied') : t(locale, 'tool.wordCount.copy')}
+                    {copied
+                      ? t(locale, 'tool.copy.copied')
+                      : t(locale, 'tool.wordCount.copy')}
                   </button>
                 </div>
               ))}

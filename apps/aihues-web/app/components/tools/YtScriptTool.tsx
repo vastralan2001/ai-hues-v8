@@ -9,7 +9,11 @@ interface YtScriptToolProps {
   locale: Locale;
 }
 
-function generateScript(topic: string, duration: number, locale: Locale): string {
+function generateScript(
+  topic: string,
+  duration: number,
+  locale: Locale
+): string {
   const isZh = locale === 'zh';
   const t = topic || (isZh ? '这个主题' : 'this topic');
   const segments = Math.max(3, Math.floor(duration / 3));
@@ -111,7 +115,9 @@ export default function YtScriptTool({ locale }: YtScriptToolProps) {
                   onClick={copy}
                   type='button'
                 >
-                  {copied ? t(locale, 'tool.copy.copied') : t(locale, 'tool.wordCount.copy')}
+                  {copied
+                    ? t(locale, 'tool.copy.copied')
+                    : t(locale, 'tool.wordCount.copy')}
                 </button>
               </div>
               <div className='min-h-[200px] w-full rounded-[14px] border border-border bg-surface p-5'>

@@ -13,7 +13,8 @@ import {
   toolsCategoryHref,
 } from '@/lib/routes';
 
-/* ── Front-end pricing map (backend has no price field yet) ── */
+/* ── Front-end pricing map ── */
+// TODO(上线前): backend 已支持 price_tag / credit_cost 字段后，移除此硬编码 fallback
 export type PriceTag = 'free' | 'freemium' | 'paid';
 
 export const TOOL_PRICING: Record<
@@ -174,9 +175,9 @@ export function ToolCardV2({
 }) {
   // Prefer API fields; fallback to front-end map while backend migrates
   const fallback = getToolPricing(tool.slug);
-  const price = tool.priceTag !== 'unspecified' ? tool.priceTag : fallback.price;
-  const credit =
-    tool.creditCost > 0 ? tool.creditCost : fallback.credit ?? 0;
+  const price =
+    tool.priceTag !== 'unspecified' ? tool.priceTag : fallback.price;
+  const credit = tool.creditCost > 0 ? tool.creditCost : (fallback.credit ?? 0);
 
   return (
     <Link

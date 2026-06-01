@@ -5,6 +5,7 @@ import { ToolCardV2 } from '@/components/CatalogCards';
 import { PageShell } from '@/components/SiteChrome';
 import { Sidebar } from '@/components/Sidebar';
 import { Logo } from '@/components/Logo';
+import { GameCreditBadge } from '@/components/GameCreditBadge';
 import type { CatalogGame } from '@/lib/catalog-api';
 import { safeListGames, safeListTools } from '@/lib/catalog-api';
 import { t, type Locale } from '@/lib/dict';
@@ -26,7 +27,7 @@ const HOME_CATEGORIES = (locale: Locale) => [
     key: 'utility',
     icon: '✍️',
     label: t(locale, 'cat.utility'),
-    count: 8,
+    count: 0,
     desc: t(locale, 'cat.utilityDesc'),
     tags: ['Word Count', 'Fullwidth', 'Readability'],
     href: toolsCategoryHref('utility'),
@@ -35,7 +36,7 @@ const HOME_CATEGORIES = (locale: Locale) => [
     key: 'developer',
     icon: '💻',
     label: t(locale, 'cat.developer'),
-    count: 30,
+    count: 0,
     desc: t(locale, 'cat.developerDesc'),
     tags: ['JWT', 'JSON', 'Regex', 'QR Code'],
     href: toolsCategoryHref('developer'),
@@ -44,7 +45,7 @@ const HOME_CATEGORIES = (locale: Locale) => [
     key: 'ai-writing',
     icon: '🤖',
     label: t(locale, 'cat.aiWriting'),
-    count: 19,
+    count: 0,
     desc: t(locale, 'cat.aiWritingDesc'),
     tags: ['X Post', 'Blog', 'SEO', 'TL;DR'],
     href: toolsCategoryHref('ai-writing'),
@@ -53,7 +54,7 @@ const HOME_CATEGORIES = (locale: Locale) => [
     key: 'games',
     icon: '🎮',
     label: t(locale, 'cat.games'),
-    count: 3,
+    count: 0,
     desc: t(locale, 'cat.gamesDesc'),
     tags: ['Fortune', 'Slots', 'Hoops'],
     href: gamesHref,
@@ -63,6 +64,7 @@ const HOME_CATEGORIES = (locale: Locale) => [
 /* ── Quick search tags ── */
 const QUICK_TAGS = ['JWT', 'JSON', 'Regex', 'QR Code', 'Fortune', 'Hoops'];
 
+// TODO(上线前): 以下为硬编码评分数据，需从分析系统 API 获取
 const POPULAR_HIGHLIGHTS = (locale: Locale) => [
   {
     href: toolDetailHref('jwt'),
@@ -70,7 +72,7 @@ const POPULAR_HIGHLIGHTS = (locale: Locale) => [
     title: 'JWT Parser — Dev Essential',
     description:
       'One-click JWT decode with expiry detection & JSON highlighting',
-    metrics: 'Ease 98 · Speed 96 · Utility 95',
+    metrics: 'Ease — · Speed — · Utility —',
   },
   {
     href: toolDetailHref('json'),
@@ -78,14 +80,14 @@ const POPULAR_HIGHLIGHTS = (locale: Locale) => [
     title: 'JSON Formatter — Most Elegant',
     description:
       'Dark theme highlighting, collapsible tree, precise error locating',
-    metrics: 'Ease 95 · Quality 97 · Design 94',
+    metrics: 'Ease — · Quality — · Design —',
   },
   {
     href: gameDetailHref('daily-luck'),
     kicker: `${t(locale, 'cat.games')} · 4.8★`,
     title: 'Daily Fortune — Retention King',
     description: '30 wisdom quotes, 3D card flip, streak rewards & confetti',
-    metrics: 'Fun 96 · Design 95 · Retention 92',
+    metrics: 'Fun — · Design — · Retention —',
   },
 ];
 
@@ -184,14 +186,16 @@ export default async function HomePage() {
   };
 
   const stats = [
-    { num: String(tools.length || 57), label: t(locale, 'stats.aiTools') },
+    { num: String(tools.length || 0), label: t(locale, 'stats.aiTools') },
     {
-      num: String(categoryCounts.developer || 30),
+      num: String(categoryCounts.developer || 0),
       label: t(locale, 'stats.devTools'),
     },
-    { num: String(games.length || 3), label: t(locale, 'stats.games') },
-    { num: '100', label: t(locale, 'stats.freeCredits') },
-    { num: '3', label: t(locale, 'stats.dayStreak') },
+    { num: String(games.length || 0), label: t(locale, 'stats.games') },
+    // TODO(上线前): 从用户 API 读取真实数据
+    { num: '—', label: t(locale, 'stats.freeCredits') },
+    // TODO(上线前): 从用户 API 读取真实数据
+    { num: '—', label: t(locale, 'stats.dayStreak') },
   ];
 
   const homeDevTools = HOME_DEVELOPER_SLUGS.map((slug) =>
@@ -337,19 +341,19 @@ export default async function HomePage() {
                   className='rounded-lg border border-white/10 bg-white/[0.06] px-3.5 py-1.5 text-[12px] font-semibold text-[#fbbf24] transition-all hover:bg-[rgba(180,83,9,0.3)]'
                   href={toolsHref}
                 >
-                  🚀 {t(locale, 'sidebar.growth')} 70
+                  🚀 {t(locale, 'sidebar.growth')}
                 </Link>
                 <Link
                   className='rounded-lg border border-white/10 bg-white/[0.06] px-3.5 py-1.5 text-[12px] font-semibold text-[#fbbf24] transition-all hover:bg-[rgba(180,83,9,0.3)]'
                   href={toolsCategoryHref('ai-writing')}
                 >
-                  ⭐ {t(locale, 'sidebar.aiProducts')} 50
+                  ⭐ {t(locale, 'sidebar.aiProducts')}
                 </Link>
                 <Link
                   className='rounded-lg border border-white/10 bg-white/[0.06] px-3.5 py-1.5 text-[12px] font-semibold text-[#fbbf24] transition-all hover:bg-[rgba(180,83,9,0.3)]'
                   href={toolsHref}
                 >
-                  🔥 {t(locale, 'sidebar.openSource')} 30
+                  🔥 {t(locale, 'sidebar.openSource')}
                 </Link>
               </div>
             </div>
@@ -481,7 +485,7 @@ export default async function HomePage() {
               </div>
               <div className='flex items-center gap-3'>
                 <span className='rounded-full border border-border bg-surface px-3.5 py-1.5 text-[14px] text-muted'>
-                  7 {t(locale, 'section.tools')}
+                  {homeWritingTools.length} {t(locale, 'section.tools')}
                 </span>
                 <Link
                   className='text-[14px] font-semibold text-accent hover:text-accent-light'
@@ -515,14 +519,8 @@ export default async function HomePage() {
                 🎮 {t(locale, 'section.gameCenter')}
               </h2>
               <div className='flex items-center gap-4'>
-                {/* Credit bar */}
-                <div className='flex items-center gap-2 rounded-full border border-border bg-bg px-4 py-2 text-[13px] font-semibold text-foreground shadow-[0_1px_3px_rgba(0,0,0,0.04)]'>
-                  <span className='text-[16px]'>🪙</span>
-                  <span>{t(locale, 'section.creditBalance')}</span>
-                  <span className='rounded-full bg-accent px-2.5 py-0.5 text-white'>
-                    100
-                  </span>
-                </div>
+                {/* TODO(上线前): 替换为真实积分 API */}
+                <GameCreditBadge locale={locale} />
                 <Link
                   className='text-[14px] font-semibold text-accent hover:text-accent-light'
                   href={gamesHref}

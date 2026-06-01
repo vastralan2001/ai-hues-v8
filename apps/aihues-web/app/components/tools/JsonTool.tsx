@@ -10,10 +10,7 @@ interface JsonToolProps {
 }
 
 function escapeHtml(str: string): string {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 function highlightJson(json: string): string {
@@ -29,7 +26,10 @@ function highlightJson(json: string): string {
     )
     .replace(/\b(true|false)\b/g, '<span class="json-boolean">$1</span>')
     .replace(/\b(null)\b/g, '<span class="json-null">$1</span>')
-    .replace(/\b(\d+\.?\d*(?:[eE][+-]?\d+)?)\b/g, '<span class="json-number">$1</span>');
+    .replace(
+      /\b(\d+\.?\d*(?:[eE][+-]?\d+)?)\b/g,
+      '<span class="json-number">$1</span>'
+    );
 }
 
 export default function JsonTool({ locale }: JsonToolProps) {
@@ -44,7 +44,9 @@ export default function JsonTool({ locale }: JsonToolProps) {
       const formatted = JSON.stringify(obj, null, 2);
       setOutput(highlightJson(formatted));
     } catch (e) {
-      setError(`${t(locale, 'tool.json.invalid')}: ${e instanceof Error ? e.message : ''}`);
+      setError(
+        `${t(locale, 'tool.json.invalid')}: ${e instanceof Error ? e.message : ''}`
+      );
       setOutput('');
     }
   };
@@ -56,7 +58,9 @@ export default function JsonTool({ locale }: JsonToolProps) {
       const minified = JSON.stringify(obj);
       setOutput(highlightJson(minified));
     } catch (e) {
-      setError(`${t(locale, 'tool.json.invalid')}: ${e instanceof Error ? e.message : ''}`);
+      setError(
+        `${t(locale, 'tool.json.invalid')}: ${e instanceof Error ? e.message : ''}`
+      );
       setOutput('');
     }
   };
@@ -67,7 +71,9 @@ export default function JsonTool({ locale }: JsonToolProps) {
       JSON.parse(input);
       setOutput('<span class="json-boolean">true</span> /* Valid JSON */');
     } catch (e) {
-      setError(`${t(locale, 'tool.json.invalid')}: ${e instanceof Error ? e.message : ''}`);
+      setError(
+        `${t(locale, 'tool.json.invalid')}: ${e instanceof Error ? e.message : ''}`
+      );
       setOutput('');
     }
   };

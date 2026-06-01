@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   title: 'Collection',
 };
 
+// TODO(上线前): 以下为硬编码里程碑奖励，需从游戏配置 API 读取
 const milestones = [
   { target: 5, reward: '50 credits' },
   { target: 10, reward: '100 credits' },

@@ -39,9 +39,15 @@ export default function PrDescTool({ locale }: PrDescToolProps) {
     }
     lines.push('');
     lines.push('## Testing');
-    lines.push(`- [${unitTests ? 'x' : ' '}] ${t(locale, 'tool.prDesc.unitTests')}`);
-    lines.push(`- [${integrationTests ? 'x' : ' '}] ${t(locale, 'tool.prDesc.integrationTests')}`);
-    lines.push(`- [${manualTesting ? 'x' : ' '}] ${t(locale, 'tool.prDesc.manualTesting')}`);
+    lines.push(
+      `- [${unitTests ? 'x' : ' '}] ${t(locale, 'tool.prDesc.unitTests')}`
+    );
+    lines.push(
+      `- [${integrationTests ? 'x' : ' '}] ${t(locale, 'tool.prDesc.integrationTests')}`
+    );
+    lines.push(
+      `- [${manualTesting ? 'x' : ' '}] ${t(locale, 'tool.prDesc.manualTesting')}`
+    );
     if (issues.trim()) {
       lines.push('');
       lines.push('## Related Issues');

@@ -10,21 +10,83 @@ interface SqlToolProps {
 }
 
 const KEYWORDS = [
-  'SELECT','FROM','WHERE','INSERT','UPDATE','DELETE','CREATE','TABLE','DROP',
-  'ALTER','INDEX','VIEW','JOIN','LEFT','RIGHT','INNER','OUTER','ON','AND','OR',
-  'NOT','NULL','IS','IN','EXISTS','BETWEEN','LIKE','GROUP','BY','ORDER','HAVING',
-  'LIMIT','OFFSET','UNION','ALL','DISTINCT','AS','CASE','WHEN','THEN','ELSE','END',
-  'IF','COUNT','SUM','AVG','MIN','MAX','VALUES','INTO','SET','PRIMARY','KEY',
-  'FOREIGN','REFERENCES','DEFAULT','AUTO_INCREMENT','UNIQUE','CHECK','CONSTRAINT'
+  'SELECT',
+  'FROM',
+  'WHERE',
+  'INSERT',
+  'UPDATE',
+  'DELETE',
+  'CREATE',
+  'TABLE',
+  'DROP',
+  'ALTER',
+  'INDEX',
+  'VIEW',
+  'JOIN',
+  'LEFT',
+  'RIGHT',
+  'INNER',
+  'OUTER',
+  'ON',
+  'AND',
+  'OR',
+  'NOT',
+  'NULL',
+  'IS',
+  'IN',
+  'EXISTS',
+  'BETWEEN',
+  'LIKE',
+  'GROUP',
+  'BY',
+  'ORDER',
+  'HAVING',
+  'LIMIT',
+  'OFFSET',
+  'UNION',
+  'ALL',
+  'DISTINCT',
+  'AS',
+  'CASE',
+  'WHEN',
+  'THEN',
+  'ELSE',
+  'END',
+  'IF',
+  'COUNT',
+  'SUM',
+  'AVG',
+  'MIN',
+  'MAX',
+  'VALUES',
+  'INTO',
+  'SET',
+  'PRIMARY',
+  'KEY',
+  'FOREIGN',
+  'REFERENCES',
+  'DEFAULT',
+  'AUTO_INCREMENT',
+  'UNIQUE',
+  'CHECK',
+  'CONSTRAINT',
 ];
 
 function formatSql(sql: string): string {
-  let formatted = sql
-    .replace(/\s+/g, ' ')
-    .trim();
+  let formatted = sql.replace(/\s+/g, ' ').trim();
 
   // Newline after major keywords
-  const breakAfter = ['SELECT','FROM','WHERE','GROUP BY','ORDER BY','HAVING','LIMIT','VALUES','SET'];
+  const breakAfter = [
+    'SELECT',
+    'FROM',
+    'WHERE',
+    'GROUP BY',
+    'ORDER BY',
+    'HAVING',
+    'LIMIT',
+    'VALUES',
+    'SET',
+  ];
   for (const kw of breakAfter) {
     const re = new RegExp(`\\b${kw}\\b`, 'gi');
     formatted = formatted.replace(re, `\n${kw}`);
@@ -110,7 +172,9 @@ export default function SqlTool({ locale }: SqlToolProps) {
                 onClick={copy}
                 type='button'
               >
-                {copied ? t(locale, 'tool.copy.copied') : t(locale, 'tool.wordCount.copy')}
+                {copied
+                  ? t(locale, 'tool.copy.copied')
+                  : t(locale, 'tool.wordCount.copy')}
               </button>
             </div>
             <div className='min-h-[120px] w-full rounded-[14px] border border-border bg-surface p-5'>

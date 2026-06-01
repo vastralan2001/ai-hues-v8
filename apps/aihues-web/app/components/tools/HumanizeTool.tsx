@@ -18,7 +18,7 @@ function humanize(text: string, locale: Locale): string {
     [/It should be noted that/gi, 'You should know that', '您应该知道'],
     [/In conclusion/gi, 'So, to wrap this up', '所以，总结一下'],
     [/Furthermore/gi, 'Also', '此外'],
-    [/Moreover/gi, 'What\'s more', '更重要的是'],
+    [/Moreover/gi, "What's more", '更重要的是'],
     [/Nevertheless/gi, 'Even so', '即便如此'],
     [/Consequently/gi, 'As a result', '结果是'],
     [/Therefore/gi, 'So', '所以'],
@@ -43,29 +43,29 @@ function humanize(text: string, locale: Locale): string {
   // Add contractions if English
   if (locale !== 'zh') {
     result = result
-      .replace(/do not/gi, 'don\'t')
-      .replace(/does not/gi, 'doesn\'t')
-      .replace(/did not/gi, 'didn\'t')
-      .replace(/will not/gi, 'won\'t')
-      .replace(/cannot/gi, 'can\'t')
-      .replace(/is not/gi, 'isn\'t')
-      .replace(/are not/gi, 'aren\'t')
-      .replace(/was not/gi, 'wasn\'t')
-      .replace(/were not/gi, 'weren\'t')
-      .replace(/has not/gi, 'hasn\'t')
-      .replace(/have not/gi, 'haven\'t')
-      .replace(/had not/gi, 'hadn\'t')
-      .replace(/would not/gi, 'wouldn\'t')
-      .replace(/could not/gi, 'couldn\'t')
-      .replace(/should not/gi, 'shouldn\'t')
-      .replace(/I am/gi, 'I\'m')
-      .replace(/you are/gi, 'you\'re')
-      .replace(/they are/gi, 'they\'re')
-      .replace(/we are/gi, 'we\'re')
-      .replace(/it is/gi, 'it\'s')
-      .replace(/that is/gi, 'that\'s')
-      .replace(/there is/gi, 'there\'s')
-      .replace(/what is/gi, 'what\'s');
+      .replace(/do not/gi, "don't")
+      .replace(/does not/gi, "doesn't")
+      .replace(/did not/gi, "didn't")
+      .replace(/will not/gi, "won't")
+      .replace(/cannot/gi, "can't")
+      .replace(/is not/gi, "isn't")
+      .replace(/are not/gi, "aren't")
+      .replace(/was not/gi, "wasn't")
+      .replace(/were not/gi, "weren't")
+      .replace(/has not/gi, "hasn't")
+      .replace(/have not/gi, "haven't")
+      .replace(/had not/gi, "hadn't")
+      .replace(/would not/gi, "wouldn't")
+      .replace(/could not/gi, "couldn't")
+      .replace(/should not/gi, "shouldn't")
+      .replace(/I am/gi, "I'm")
+      .replace(/you are/gi, "you're")
+      .replace(/they are/gi, "they're")
+      .replace(/we are/gi, "we're")
+      .replace(/it is/gi, "it's")
+      .replace(/that is/gi, "that's")
+      .replace(/there is/gi, "there's")
+      .replace(/what is/gi, "what's");
   }
 
   return result;
@@ -128,7 +128,9 @@ export default function HumanizeTool({ locale }: HumanizeToolProps) {
                   onClick={copy}
                   type='button'
                 >
-                  {copied ? t(locale, 'tool.copy.copied') : t(locale, 'tool.wordCount.copy')}
+                  {copied
+                    ? t(locale, 'tool.copy.copied')
+                    : t(locale, 'tool.wordCount.copy')}
                 </button>
               </div>
               <div className='min-h-[120px] w-full rounded-[14px] border border-border bg-surface p-5'>

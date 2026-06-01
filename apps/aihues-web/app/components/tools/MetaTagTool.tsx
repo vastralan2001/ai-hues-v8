@@ -21,24 +21,38 @@ export default function MetaTagTool({ locale }: MetaTagToolProps) {
     const lines: string[] = [];
     lines.push(`<title>${escapeHtml(title.trim())}</title>`);
     if (description.trim()) {
-      lines.push(`<meta name="description" content="${escapeHtml(description.trim())}" />`);
+      lines.push(
+        `<meta name="description" content="${escapeHtml(description.trim())}" />`
+      );
     }
     if (keywords.trim()) {
-      lines.push(`<meta name="keywords" content="${escapeHtml(keywords.trim())}" />`);
+      lines.push(
+        `<meta name="keywords" content="${escapeHtml(keywords.trim())}" />`
+      );
     }
     if (author.trim()) {
-      lines.push(`<meta name="author" content="${escapeHtml(author.trim())}" />`);
+      lines.push(
+        `<meta name="author" content="${escapeHtml(author.trim())}" />`
+      );
     }
     lines.push('<meta charset="UTF-8" />');
-    lines.push('<meta name="viewport" content="width=device-width, initial-scale=1.0" />');
+    lines.push(
+      '<meta name="viewport" content="width=device-width, initial-scale=1.0" />'
+    );
     if (title.trim()) {
-      lines.push(`<meta property="og:title" content="${escapeHtml(title.trim())}" />`);
+      lines.push(
+        `<meta property="og:title" content="${escapeHtml(title.trim())}" />`
+      );
     }
     if (description.trim()) {
-      lines.push(`<meta property="og:description" content="${escapeHtml(description.trim())}" />`);
+      lines.push(
+        `<meta property="og:description" content="${escapeHtml(description.trim())}" />`
+      );
     }
     if (image.trim()) {
-      lines.push(`<meta property="og:image" content="${escapeHtml(image.trim())}" />`);
+      lines.push(
+        `<meta property="og:image" content="${escapeHtml(image.trim())}" />`
+      );
     }
     lines.push('<meta property="og:type" content="website" />');
     setOutput(lines.join('\n'));

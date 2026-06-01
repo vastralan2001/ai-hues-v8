@@ -24,7 +24,11 @@ const FLAG_OPTIONS = [
   { key: 'y', label: 'y (sticky)' },
 ];
 
-function testRegex(pattern: string, flags: string, text: string): { matches: MatchResult[]; error: string } {
+function testRegex(
+  pattern: string,
+  flags: string,
+  text: string
+): { matches: MatchResult[]; error: string } {
   try {
     const regex = new RegExp(pattern, flags);
     const matches: MatchResult[] = [];
@@ -54,7 +58,10 @@ function testRegex(pattern: string, flags: string, text: string): { matches: Mat
 
     return { matches, error: '' };
   } catch (e) {
-    return { matches: [], error: e instanceof Error ? e.message : 'Invalid regex' };
+    return {
+      matches: [],
+      error: e instanceof Error ? e.message : 'Invalid regex',
+    };
   }
 }
 
@@ -65,7 +72,8 @@ export default function RegexTool({ locale }: RegexToolProps) {
 
   const flagStr = useMemo(() => Array.from(flags).join(''), [flags]);
   const { matches, error } = useMemo(
-    () => (pattern ? testRegex(pattern, flagStr, text) : { matches: [], error: '' }),
+    () =>
+      pattern ? testRegex(pattern, flagStr, text) : { matches: [], error: '' },
     [pattern, flagStr, text]
   );
 

@@ -9,7 +9,14 @@ interface TitleCaseToolProps {
   locale: Locale;
 }
 
-type CaseType = 'upper' | 'lower' | 'title' | 'sentence' | 'camel' | 'snake' | 'kebab';
+type CaseType =
+  | 'upper'
+  | 'lower'
+  | 'title'
+  | 'sentence'
+  | 'camel'
+  | 'snake'
+  | 'kebab';
 
 const CASE_BUTTONS: { key: CaseType; labelKey: string }[] = [
   { key: 'upper', labelKey: 'tool.titleCase.uppercase' },
@@ -22,8 +29,9 @@ const CASE_BUTTONS: { key: CaseType; labelKey: string }[] = [
 ];
 
 function toTitleCase(text: string): string {
-  return text.replace(/\w\S*/g, (word) =>
-    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+  return text.replace(
+    /\w\S*/g,
+    (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
   );
 }
 

@@ -145,7 +145,11 @@ export default function DiffTool({ locale }: DiffToolProps) {
                     key={i}
                   >
                     <span className='w-6 shrink-0 text-center text-xs text-muted select-none'>
-                      {line.type === 'removed' ? '-' : line.type === 'added' ? '+' : ' '}
+                      {line.type === 'removed'
+                        ? '-'
+                        : line.type === 'added'
+                          ? '+'
+                          : ' '}
                     </span>
                     <span className='break-all'>{line.text || ' '}</span>
                   </div>

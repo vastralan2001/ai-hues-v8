@@ -27,7 +27,11 @@ export default function CurlGenTool({ locale }: CurlGenToolProps) {
     setHeaders([...headers, { key: '', value: '' }]);
   };
 
-  const updateHeader = (index: number, field: 'key' | 'value', value: string) => {
+  const updateHeader = (
+    index: number,
+    field: 'key' | 'value',
+    value: string
+  ) => {
     const next = [...headers];
     next[index][field] = value;
     setHeaders(next);

@@ -35,7 +35,11 @@ export default function CssGradientTool({ locale }: CssGradientToolProps) {
     setColors(colors.filter((c) => c.id !== id));
   }
 
-  function updateColor(id: number, field: 'color' | 'position', value: string | number) {
+  function updateColor(
+    id: number,
+    field: 'color' | 'position',
+    value: string | number
+  ) {
     setColors(colors.map((c) => (c.id === id ? { ...c, [field]: value } : c)));
   }
 
@@ -89,7 +93,9 @@ export default function CssGradientTool({ locale }: CssGradientToolProps) {
                   onClick={() => setType(gradType)}
                   type='button'
                 >
-                  {gradType === 'linear' ? t(locale, 'tool.cssGradient.linear') : t(locale, 'tool.cssGradient.radial')}
+                  {gradType === 'linear'
+                    ? t(locale, 'tool.cssGradient.linear')
+                    : t(locale, 'tool.cssGradient.radial')}
                 </button>
               ))}
             </div>
@@ -124,12 +130,16 @@ export default function CssGradientTool({ locale }: CssGradientToolProps) {
                     type='color'
                     value={c.color}
                   />
-                  <span className='font-mono text-sm text-foreground'>{c.color}</span>
+                  <span className='font-mono text-sm text-foreground'>
+                    {c.color}
+                  </span>
                   <input
                     className='w-24 accent-accent'
                     max='100'
                     min='0'
-                    onChange={(e) => updateColor(c.id, 'position', parseInt(e.target.value))}
+                    onChange={(e) =>
+                      updateColor(c.id, 'position', parseInt(e.target.value))
+                    }
                     type='range'
                     value={c.position}
                   />
@@ -184,7 +194,9 @@ export default function CssGradientTool({ locale }: CssGradientToolProps) {
                     onClick={copy}
                     type='button'
                   >
-                    {copied ? t(locale, 'tool.copy.copied') : t(locale, 'tool.wordCount.copy')}
+                    {copied
+                      ? t(locale, 'tool.copy.copied')
+                      : t(locale, 'tool.wordCount.copy')}
                   </button>
                 </div>
                 <div className='min-h-[60px] w-full rounded-[14px] border border-border bg-surface p-5'>

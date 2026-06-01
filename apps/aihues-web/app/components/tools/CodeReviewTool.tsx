@@ -33,10 +33,33 @@ const ITEM_KEYS = [
 ];
 
 const CATEGORIES = [
-  { key: 'quality', items: ['itemQuality1', 'itemQuality2', 'itemQuality3', 'itemQuality4', 'itemQuality5'] },
-  { key: 'security', items: ['itemSecurity1', 'itemSecurity2', 'itemSecurity3'] },
-  { key: 'performance', items: ['itemPerformance1', 'itemPerformance2', 'itemPerformance3'] },
-  { key: 'maintainability', items: ['itemMaintainability1', 'itemMaintainability2', 'itemMaintainability3', 'itemMaintainability4'] },
+  {
+    key: 'quality',
+    items: [
+      'itemQuality1',
+      'itemQuality2',
+      'itemQuality3',
+      'itemQuality4',
+      'itemQuality5',
+    ],
+  },
+  {
+    key: 'security',
+    items: ['itemSecurity1', 'itemSecurity2', 'itemSecurity3'],
+  },
+  {
+    key: 'performance',
+    items: ['itemPerformance1', 'itemPerformance2', 'itemPerformance3'],
+  },
+  {
+    key: 'maintainability',
+    items: [
+      'itemMaintainability1',
+      'itemMaintainability2',
+      'itemMaintainability3',
+      'itemMaintainability4',
+    ],
+  },
 ];
 
 export default function CodeReviewTool({ locale }: CodeReviewToolProps) {
@@ -90,7 +113,10 @@ export default function CodeReviewTool({ locale }: CodeReviewToolProps) {
         {/* Categories */}
         <div className='flex flex-col gap-6'>
           {CATEGORIES.map((cat) => (
-            <div className='rounded-[14px] border border-border bg-surface p-5' key={cat.key}>
+            <div
+              className='rounded-[14px] border border-border bg-surface p-5'
+              key={cat.key}
+            >
               <h2 className='mb-4 text-lg font-bold text-foreground'>
                 {t(locale, `tool.codeReview.${cat.key}`)}
               </h2>

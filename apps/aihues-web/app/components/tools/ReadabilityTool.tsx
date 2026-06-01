@@ -28,9 +28,7 @@ function countSyllables(word: string): number {
 }
 
 function analyzeReadability(text: string): ReadabilityResult {
-  const sentences = text
-    .split(/[.!?]+/)
-    .filter((s) => s.trim().length > 0);
+  const sentences = text.split(/[.!?]+/).filter((s) => s.trim().length > 0);
   const sentenceCount = sentences.length || 1;
 
   const words = text

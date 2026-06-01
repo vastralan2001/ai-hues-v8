@@ -2,6 +2,7 @@ import { cookies } from 'next/headers';
 import type { Metadata } from 'next';
 
 import { GameCard } from '@/components/CatalogCards';
+import { ClientGameCredits } from '@/components/ClientGameCredits';
 import { PageShell } from '@/components/SiteChrome';
 import { safeListGames } from '@/lib/catalog-api';
 import { t, type Locale } from '@/lib/dict';
@@ -24,21 +25,15 @@ export default async function GamesPage() {
     <PageShell variant='games' locale={locale}>
       <section className='page-hero'>
         <h1>🎮 {t(locale, 'section.gameCenter')}</h1>
-        <p>3 mini games. Play and earn free Credits!</p>
+        <p>{games.length} mini games. Play and earn free Credits!</p>
 
-        {/* Credit balance bar */}
-        <div className='mt-4 inline-flex items-center gap-3 rounded-full border border-border bg-bg px-5 py-2.5 text-sm font-semibold text-foreground shadow-[0_1px_3px_rgba(0,0,0,0.04)]'>
-          <span className='text-lg'>🪙</span>
-          <span>{t(locale, 'credit.yourCredits')}</span>
-          <span className='rounded-full bg-accent px-3 py-0.5 text-sm font-bold text-white'>
-            100
-          </span>
-        </div>
+        {/* TODO(上线前): 替换为真实积分 API */}
+        <ClientGameCredits locale={locale} />
 
         {/* Stats badges */}
         <div className='game-stats-row'>
           <div className='game-stat-badge'>
-            <span className='game-stat-badge__num'>3</span>
+            <span className='game-stat-badge__num'>{games.length}</span>
             <span className='game-stat-badge__label'>Games</span>
           </div>
           <div className='game-stat-badge'>

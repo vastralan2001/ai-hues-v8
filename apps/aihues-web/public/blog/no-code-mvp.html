@@ -4,31 +4,173 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>The No-Code MVP Guide: Launch in 48 Hours | AIHues</title>
-    <meta name="description" content="I built and launched a working product in 48 hours without writing code. Here is the exact playbook — including the tool stack and the mistakes I made." />
+    <meta
+      name="description"
+      content="I built and launched a working product in 48 hours without writing code. Here is the exact playbook — including the tool stack and the mistakes I made."
+    />
     <style>
-      *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-      :root{--bg:#faf9f6;--surface:#ffffff;--surface-hover:#f5f0e8;--border:#e8e2d9;--border-hover:#d4c8b8;--text:#1c1917;--text-secondary:#78716c;--text-muted:#a8a29e;--accent:#b45309;--accent-light:#d97706;--accent-gradient:linear-gradient(135deg,#b45309,#d97706);--green:#059669;--blue:#2563eb;--orange:#ea580c;--radius:14px;--radius-sm:10px;--shadow:0 1px 3px rgba(0,0,0,0.04),0 4px 16px rgba(0,0,0,0.04);--shadow-lg:0 8px 32px rgba(180,83,9,0.18);}
-      body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
-      a{color:var(--accent);text-decoration:none}
-      .article{max-width:720px;margin:0 auto;padding:80px 28px 40px}
-      .article-header{text-align:center;margin-bottom:40px}
-      .article-tag{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;background:rgba(180,83,9,0.08);color:var(--accent);margin-bottom:16px}
-      .article h1{font-size:32px;font-weight:800;line-height:1.15;letter-spacing:-1px;margin-bottom:12px}
-      .article-header p{color:#3d3d3d;font-size:15px}
-      .article-meta{display:flex;justify-content:center;gap:16px;font-size:13px;color:var(--text-muted);margin-top:16px}
-      .article h2{font-size:28px;font-weight:700;line-height:1.2;letter-spacing:-0.5px;margin:48px 0 16px;padding-bottom:12px;border-bottom:1px solid #e5e5e5;color:#1c1917}
-      .article h3{font-size:20px;font-weight:600;line-height:1.3;letter-spacing:-0.3px;margin:32px 0 12px;color:#1c1917}
-      .article p{margin-bottom:16px;color:#3d3d3d;font-size:16px;line-height:1.75}
-      .article ul,.article ol{margin:0 0 16px 24px;color:#3d3d3d;font-size:15px}
-      .article li{margin-bottom:8px;line-height:1.75}
-      .article strong{color:#1c1917;font-weight:600}
-      .cta-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin:40px 0;text-align:center}
-      .cta-box h3{font-size:20px;font-weight:700;margin-bottom:8px}
-      .cta-box p{color:var(--text-secondary);margin-bottom:16px}
-      .cta-btn{display:inline-block;padding:12px 24px;border-radius:var(--radius-sm);background:var(--accent-gradient);color:#fff;font-weight:600;font-size:14px;transition:transform .2s,box-shadow .2s}
-      .cta-btn:hover{transform:translateY(-1px);box-shadow:var(--shadow-lg)}
-      .quote-box{border-left:3px solid var(--accent);padding-left:20px;margin:24px 0;font-style:italic;color:var(--text-secondary)}
-      .footer{text-align:center;padding:40px 28px;font-size:13px;color:var(--text-muted);border-top:1px solid var(--border)}
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --bg: #faf9f6;
+        --surface: #ffffff;
+        --surface-hover: #f5f0e8;
+        --border: #e8e2d9;
+        --border-hover: #d4c8b8;
+        --text: #1c1917;
+        --text-secondary: #78716c;
+        --text-muted: #a8a29e;
+        --accent: #b45309;
+        --accent-light: #d97706;
+        --accent-gradient: linear-gradient(135deg, #b45309, #d97706);
+        --green: #059669;
+        --blue: #2563eb;
+        --orange: #ea580c;
+        --radius: 14px;
+        --radius-sm: 10px;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.04);
+        --shadow-lg: 0 8px 32px rgba(180, 83, 9, 0.18);
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      .article {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 80px 28px 40px;
+      }
+      .article-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+      .article-tag {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+        background: rgba(180, 83, 9, 0.08);
+        color: var(--accent);
+        margin-bottom: 16px;
+      }
+      .article h1 {
+        font-size: 32px;
+        font-weight: 800;
+        line-height: 1.15;
+        letter-spacing: -1px;
+        margin-bottom: 12px;
+      }
+      .article-header p {
+        color: #3d3d3d;
+        font-size: 15px;
+      }
+      .article-meta {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-top: 16px;
+      }
+      .article h2 {
+        font-size: 28px;
+        font-weight: 700;
+        line-height: 1.2;
+        letter-spacing: -0.5px;
+        margin: 48px 0 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #e5e5e5;
+        color: #1c1917;
+      }
+      .article h3 {
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 1.3;
+        letter-spacing: -0.3px;
+        margin: 32px 0 12px;
+        color: #1c1917;
+      }
+      .article p {
+        margin-bottom: 16px;
+        color: #3d3d3d;
+        font-size: 16px;
+        line-height: 1.75;
+      }
+      .article ul,
+      .article ol {
+        margin: 0 0 16px 24px;
+        color: #3d3d3d;
+        font-size: 15px;
+      }
+      .article li {
+        margin-bottom: 8px;
+        line-height: 1.75;
+      }
+      .article strong {
+        color: #1c1917;
+        font-weight: 600;
+      }
+      .cta-box {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 28px;
+        margin: 40px 0;
+        text-align: center;
+      }
+      .cta-box h3 {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+      .cta-box p {
+        color: var(--text-secondary);
+        margin-bottom: 16px;
+      }
+      .cta-btn {
+        display: inline-block;
+        padding: 12px 24px;
+        border-radius: var(--radius-sm);
+        background: var(--accent-gradient);
+        color: #fff;
+        font-weight: 600;
+        font-size: 14px;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      .cta-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-lg);
+      }
+      .quote-box {
+        border-left: 3px solid var(--accent);
+        padding-left: 20px;
+        margin: 24px 0;
+        font-style: italic;
+        color: var(--text-secondary);
+      }
+      .footer {
+        text-align: center;
+        padding: 40px 28px;
+        font-size: 13px;
+        color: var(--text-muted);
+        border-top: 1px solid var(--border);
+      }
     </style>
   </head>
   <body>
@@ -36,73 +178,170 @@
       <div class="article-header">
         <span class="article-tag">Product</span>
         <h1>The No-Code MVP Guide: Launch in 48 Hours</h1>
-        <p>I built and launched a working product in 48 hours without writing code. Here is the exact playbook.</p>
-        <div class="article-meta"><span>2026-05-12</span><span>6 min read</span><span>AIHues Team</span></div>
+        <p>
+          I built and launched a working product in 48 hours without writing
+          code. Here is the exact playbook.
+        </p>
+        <div class="article-meta">
+          <span>2026-05-12</span><span>6 min read</span><span>AIHues Team</span>
+        </div>
       </div>
 
-      <p>"I have this great idea, but I cannot code." I have heard that sentence at least 50 times from friends who wanted to start something. And every time, my answer is the same: you do not need to code anymore.</p>
+      <p>
+        "I have this great idea, but I cannot code." I have heard that sentence
+        at least 50 times from friends who wanted to start something. And every
+        time, my answer is the same: you do not need to code anymore.
+      </p>
 
-      <p>In February, I decided to prove it. I gave myself a challenge: build and launch a real, working product in 48 hours. No engineering background. No developer friends helping out. Just me and a stack of no-code tools.</p>
+      <p>
+        In February, I decided to prove it. I gave myself a challenge: build and
+        launch a real, working product in 48 hours. No engineering background.
+        No developer friends helping out. Just me and a stack of no-code tools.
+      </p>
 
-      <p>I built a curated directory of remote job boards. Nothing revolutionary. But it worked. People signed up. 47 users in the first week. Here is exactly how I did it.</p>
+      <p>
+        I built a curated directory of remote job boards. Nothing revolutionary.
+        But it worked. People signed up. 47 users in the first week. Here is
+        exactly how I did it.
+      </p>
 
       <h2>Hour 0: The Idea Filter</h2>
 
-      <p>Before touching any tool, I asked myself three questions. This took 30 minutes and saved me hours later.</p>
+      <p>
+        Before touching any tool, I asked myself three questions. This took 30
+        minutes and saved me hours later.
+      </p>
 
-      <p>What problem am I solving? Be painfully specific. Not "helping people find jobs." That is too broad. Mine was: "helping developers find remote jobs at startups that do not post on LinkedIn."</p>
+      <p>
+        What problem am I solving? Be painfully specific. Not "helping people
+        find jobs." That is too broad. Mine was: "helping developers find remote
+        jobs at startups that do not post on LinkedIn."
+      </p>
 
-      <p>What is the one thing this product does? If you need more than one sentence, your scope is too big. My answer: "shows a curated list of remote-friendly startup job boards."</p>
+      <p>
+        What is the one thing this product does? If you need more than one
+        sentence, your scope is too big. My answer: "shows a curated list of
+        remote-friendly startup job boards."
+      </p>
 
-      <p>Who is my first user? I named a real person. My friend Jake, a React developer who complained about LinkedIn spam last week. If I could not name someone, I did not know the problem well enough.</p>
+      <p>
+        Who is my first user? I named a real person. My friend Jake, a React
+        developer who complained about LinkedIn spam last week. If I could not
+        name someone, I did not know the problem well enough.
+      </p>
 
       <h2>Hour 1-4: The Landing Page</h2>
 
-      <p>I used Carrd. $19/year, dead simple. I spent 2 hours total. The page had exactly four things: a headline that stated the problem, three bullet points explaining why this was different, a signup form, and social proof. Even though I had zero users yet, I wrote "Join 50+ early adopters." It was aspirational. And it worked.</p>
+      <p>
+        I used Carrd. $19/year, dead simple. I spent 2 hours total. The page had
+        exactly four things: a headline that stated the problem, three bullet
+        points explaining why this was different, a signup form, and social
+        proof. Even though I had zero users yet, I wrote "Join 50+ early
+        adopters." It was aspirational. And it worked.
+      </p>
 
-      <p>The headline was the hardest part. I wrote 12 versions. The winner: "Remote dev jobs that never make it to LinkedIn." Simple. Specific. Promising something concrete.</p>
+      <p>
+        The headline was the hardest part. I wrote 12 versions. The winner:
+        "Remote dev jobs that never make it to LinkedIn." Simple. Specific.
+        Promising something concrete.
+      </p>
 
       <h2>Hour 5-12: The Actual Product</h2>
 
-      <p>This is where I cheated. I did not build a custom web app. I built an Airtable base with a nice frontend.</p>
+      <p>
+        This is where I cheated. I did not build a custom web app. I built an
+        Airtable base with a nice frontend.
+      </p>
 
-      <p>The base had three columns: company name, job board URL, and category. I manually added 40 entries. Took 3 hours of browsing and copying links. Boring? Yes. But it made the product real.</p>
+      <p>
+        The base had three columns: company name, job board URL, and category. I
+        manually added 40 entries. Took 3 hours of browsing and copying links.
+        Boring? Yes. But it made the product real.
+      </p>
 
-      <p>Then I used Softr to turn that Airtable base into a searchable directory. Connected the API. Picked a template. Customized colors. Another 2 hours.</p>
+      <p>
+        Then I used Softr to turn that Airtable base into a searchable
+        directory. Connected the API. Picked a template. Customized colors.
+        Another 2 hours.
+      </p>
 
-      <p>By hour 12, I had a working product. You could visit the URL, search by category, and click through to job boards. Was it beautiful? No. Did it work? Yes.</p>
+      <p>
+        By hour 12, I had a working product. You could visit the URL, search by
+        category, and click through to job boards. Was it beautiful? No. Did it
+        work? Yes.
+      </p>
 
       <div class="quote-box">
-        "An ugly product that solves a real problem beats a beautiful product that solves nothing."
+        "An ugly product that solves a real problem beats a beautiful product
+        that solves nothing."
       </div>
 
       <h2>Hour 13-24: Connecting the Dots</h2>
 
-      <p>I used Make (formerly Integromat) to glue everything together. When someone signed up on Carrd, their email went to Mailchimp. A welcome email fired automatically. I got a Slack notification. All without writing a single line of code.</p>
+      <p>
+        I used Make (formerly Integromat) to glue everything together. When
+        someone signed up on Carrd, their email went to Mailchimp. A welcome
+        email fired automatically. I got a Slack notification. All without
+        writing a single line of code.
+      </p>
 
-      <p>The automation took 45 minutes to set up. It would have taken a developer 2 hours to build the same thing in code. And it would have broken more often.</p>
+      <p>
+        The automation took 45 minutes to set up. It would have taken a
+        developer 2 hours to build the same thing in code. And it would have
+        broken more often.
+      </p>
 
       <h2>Hour 25-48: The Launch</h2>
 
-      <p>Day 2 was all about getting eyeballs. I posted on Indie Hackers, relevant subreddits, and three Discord communities I was already active in. Not spam. Just: "I built this thing because I was frustrated. Maybe you are too."</p>
+      <p>
+        Day 2 was all about getting eyeballs. I posted on Indie Hackers,
+        relevant subreddits, and three Discord communities I was already active
+        in. Not spam. Just: "I built this thing because I was frustrated. Maybe
+        you are too."
+      </p>
 
-      <p>Total posts: 5. Total time writing them: 90 minutes. Signups in first 24 hours: 23.</p>
+      <p>
+        Total posts: 5. Total time writing them: 90 minutes. Signups in first 24
+        hours: 23.
+      </p>
 
-      <p>The best channel? A Discord community where I had been helping people for months. Trust first, promotion second. Always.</p>
+      <p>
+        The best channel? A Discord community where I had been helping people
+        for months. Trust first, promotion second. Always.
+      </p>
 
       <h2>What I Screwed Up</h2>
 
-      <p>I spent too long on the landing page design. Three hours on font choices. That was stupid. Nobody cares about your font if your product does not solve their problem.</p>
+      <p>
+        I spent too long on the landing page design. Three hours on font
+        choices. That was stupid. Nobody cares about your font if your product
+        does not solve their problem.
+      </p>
 
-      <p>I also tried to add a "premium tier" on day 2. Do not do this. Focus on free users first. Let them tell you what they would pay for.</p>
+      <p>
+        I also tried to add a "premium tier" on day 2. Do not do this. Focus on
+        free users first. Let them tell you what they would pay for.
+      </p>
 
-      <p>And I almost gave up at hour 8 when Softr did not connect properly. I took a 20-minute walk. Came back. Fixed it in 5 minutes. Walking solves more problems than staring at a screen.</p>
+      <p>
+        And I almost gave up at hour 8 when Softr did not connect properly. I
+        took a 20-minute walk. Came back. Fixed it in 5 minutes. Walking solves
+        more problems than staring at a screen.
+      </p>
 
       <h2>Can You Really Do This?</h2>
 
-      <p>Yes. The tools are there. The hard part is not technical anymore. It is picking a problem that matters to real people and having the guts to ship something imperfect.</p>
+      <p>
+        Yes. The tools are there. The hard part is not technical anymore. It is
+        picking a problem that matters to real people and having the guts to
+        ship something imperfect.
+      </p>
 
-      <p>You do not need to learn React. You do not need a Kubernetes cluster. You need a problem, a weekend, and the willingness to look at your ugly first draft and say "good enough."</p>
+      <p>
+        You do not need to learn React. You do not need a Kubernetes cluster.
+        You need a problem, a weekend, and the willingness to look at your ugly
+        first draft and say "good enough."
+      </p>
 
       <div class="cta-box">
         <h3>Build Your MVP</h3>

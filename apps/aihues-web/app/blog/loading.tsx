@@ -13,7 +13,10 @@ export default function BlogLoading() {
 
       <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className='overflow-hidden rounded-[14px] border border-[#e8e2d9] bg-white'>
+          <div
+            key={i}
+            className='overflow-hidden rounded-[14px] border border-[#e8e2d9] bg-white'
+          >
             <div className='h-[180px] animate-pulse bg-[#e8e2d9]' />
             <div className='p-5'>
               <div className='mb-2 h-4 w-16 animate-pulse rounded-[6px] bg-[#e8e2d9]' />

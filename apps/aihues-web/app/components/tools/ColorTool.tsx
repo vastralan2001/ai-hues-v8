@@ -35,7 +35,11 @@ function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
   return null;
 }
 
-function rgbToHsl(r: number, g: number, b: number): { h: number; s: number; l: number } {
+function rgbToHsl(
+  r: number,
+  g: number,
+  b: number
+): { h: number; s: number; l: number } {
   r /= 255;
   g /= 255;
   b /= 255;
@@ -62,7 +66,11 @@ function rgbToHsl(r: number, g: number, b: number): { h: number; s: number; l: n
     h /= 6;
   }
 
-  return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
+  return {
+    h: Math.round(h * 360),
+    s: Math.round(s * 100),
+    l: Math.round(l * 100),
+  };
 }
 
 function parseColor(input: string): ColorResult | null {
@@ -162,7 +170,9 @@ export default function ColorTool({ locale }: ColorToolProps) {
                 className='h-12 w-12 rounded-[10px] border border-border'
                 style={{ backgroundColor: result.hex }}
               />
-              <span className='font-mono text-sm text-foreground'>{result.hex}</span>
+              <span className='font-mono text-sm text-foreground'>
+                {result.hex}
+              </span>
             </div>
 
             {/* HEX */}

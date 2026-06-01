@@ -9,7 +9,11 @@ interface BlogOutlineToolProps {
   locale: Locale;
 }
 
-function generateOutline(topic: string, sections: number, locale: Locale): string {
+function generateOutline(
+  topic: string,
+  sections: number,
+  locale: Locale
+): string {
   const isZh = locale === 'zh';
   const t = topic || (isZh ? '这个主题' : 'this topic');
   const lines: string[] = [];
@@ -17,12 +21,18 @@ function generateOutline(topic: string, sections: number, locale: Locale): strin
   lines.push(isZh ? `# ${t}` : `# ${t}`);
   lines.push('');
   lines.push(isZh ? '## 引言' : '## Introduction');
-  lines.push(isZh ? `- 引入 ${t} 的背景和重要性` : `- Hook: Why ${t} matters now`);
+  lines.push(
+    isZh ? `- 引入 ${t} 的背景和重要性` : `- Hook: Why ${t} matters now`
+  );
   lines.push(isZh ? `- 说明本文将要涵盖的内容` : `- What this post will cover`);
   lines.push('');
 
   for (let i = 1; i <= sections; i++) {
-    lines.push(isZh ? `## 第 ${i} 部分：${t} 的关键方面 ${i}` : `## Part ${i}: Key Aspect ${i} of ${t}`);
+    lines.push(
+      isZh
+        ? `## 第 ${i} 部分：${t} 的关键方面 ${i}`
+        : `## Part ${i}: Key Aspect ${i} of ${t}`
+    );
     lines.push(isZh ? `- 核心观点` : `- Core concept`);
     lines.push(isZh ? `- 具体例子或数据` : `- Specific example or data`);
     lines.push(isZh ? `- 可操作的建议` : `- Actionable takeaway`);
@@ -110,7 +120,9 @@ export default function BlogOutlineTool({ locale }: BlogOutlineToolProps) {
                   onClick={copy}
                   type='button'
                 >
-                  {copied ? t(locale, 'tool.copy.copied') : t(locale, 'tool.wordCount.copy')}
+                  {copied
+                    ? t(locale, 'tool.copy.copied')
+                    : t(locale, 'tool.wordCount.copy')}
                 </button>
               </div>
               <div className='min-h-[200px] w-full rounded-[14px] border border-border bg-surface p-5'>

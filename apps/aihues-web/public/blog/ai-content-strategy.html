@@ -3,108 +3,349 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI Content Strategy: Scale Quality Without Losing the Human Touch | AIHues</title>
-    <meta name="description" content="I tried scaling content with AI for 6 months. Here is what actually worked — and what made my audience bounce." />
+    <title>
+      AI Content Strategy: Scale Quality Without Losing the Human Touch | AIHues
+    </title>
+    <meta
+      name="description"
+      content="I tried scaling content with AI for 6 months. Here is what actually worked — and what made my audience bounce."
+    />
     <style>
-      *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-      :root{--bg:#faf9f6;--surface:#ffffff;--surface-hover:#f5f0e8;--border:#e8e2d9;--border-hover:#d4c8b8;--text:#1c1917;--text-secondary:#78716c;--text-muted:#a8a29e;--accent:#b45309;--accent-light:#d97706;--accent-gradient:linear-gradient(135deg,#b45309,#d97706);--green:#059669;--blue:#2563eb;--orange:#ea580c;--radius:14px;--radius-sm:10px;--shadow:0 1px 3px rgba(0,0,0,0.04),0 4px 16px rgba(0,0,0,0.04);--shadow-lg:0 8px 32px rgba(180,83,9,0.18);}
-      body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
-      a{color:var(--accent);text-decoration:none}
-      .article{max-width:720px;margin:0 auto;padding:80px 28px 40px}
-      .article-header{text-align:center;margin-bottom:40px}
-      .article-tag{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;background:rgba(180,83,9,0.08);color:var(--accent);margin-bottom:16px}
-      .article h1{font-size:32px;font-weight:800;line-height:1.15;letter-spacing:-1px;margin-bottom:12px}
-      .article-header p{color:#3d3d3d;font-size:15px}
-      .article-meta{display:flex;justify-content:center;gap:16px;font-size:13px;color:var(--text-muted);margin-top:16px}
-      .article h2{font-size:28px;font-weight:700;line-height:1.2;letter-spacing:-0.5px;margin:48px 0 16px;padding-bottom:12px;border-bottom:1px solid #e5e5e5;color:#1c1917}
-      .article h3{font-size:20px;font-weight:600;line-height:1.3;letter-spacing:-0.3px;margin:32px 0 12px;color:#1c1917}
-      .article p{margin-bottom:16px;color:#3d3d3d;font-size:16px;line-height:1.75}
-      .article ul,.article ol{margin:0 0 16px 24px;color:#3d3d3d;font-size:15px}
-      .article li{margin-bottom:8px;line-height:1.75}
-      .article strong{color:#1c1917;font-weight:600}
-      .cta-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin:40px 0;text-align:center}
-      .cta-box h3{font-size:20px;font-weight:700;margin-bottom:8px}
-      .cta-box p{color:var(--text-secondary);margin-bottom:16px}
-      .cta-btn{display:inline-block;padding:12px 24px;border-radius:var(--radius-sm);background:var(--accent-gradient);color:#fff;font-weight:600;font-size:14px;transition:transform .2s,box-shadow .2s}
-      .cta-btn:hover{transform:translateY(-1px);box-shadow:var(--shadow-lg)}
-      .quote-box{border-left:3px solid var(--accent);padding-left:20px;margin:24px 0;font-style:italic;color:var(--text-secondary)}
-      .footer{text-align:center;padding:40px 28px;font-size:13px;color:var(--text-muted);border-top:1px solid var(--border)}
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --bg: #faf9f6;
+        --surface: #ffffff;
+        --surface-hover: #f5f0e8;
+        --border: #e8e2d9;
+        --border-hover: #d4c8b8;
+        --text: #1c1917;
+        --text-secondary: #78716c;
+        --text-muted: #a8a29e;
+        --accent: #b45309;
+        --accent-light: #d97706;
+        --accent-gradient: linear-gradient(135deg, #b45309, #d97706);
+        --green: #059669;
+        --blue: #2563eb;
+        --orange: #ea580c;
+        --radius: 14px;
+        --radius-sm: 10px;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.04);
+        --shadow-lg: 0 8px 32px rgba(180, 83, 9, 0.18);
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      .article {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 80px 28px 40px;
+      }
+      .article-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+      .article-tag {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+        background: rgba(180, 83, 9, 0.08);
+        color: var(--accent);
+        margin-bottom: 16px;
+      }
+      .article h1 {
+        font-size: 32px;
+        font-weight: 800;
+        line-height: 1.15;
+        letter-spacing: -1px;
+        margin-bottom: 12px;
+      }
+      .article-header p {
+        color: #3d3d3d;
+        font-size: 15px;
+      }
+      .article-meta {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-top: 16px;
+      }
+      .article h2 {
+        font-size: 28px;
+        font-weight: 700;
+        line-height: 1.2;
+        letter-spacing: -0.5px;
+        margin: 48px 0 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #e5e5e5;
+        color: #1c1917;
+      }
+      .article h3 {
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 1.3;
+        letter-spacing: -0.3px;
+        margin: 32px 0 12px;
+        color: #1c1917;
+      }
+      .article p {
+        margin-bottom: 16px;
+        color: #3d3d3d;
+        font-size: 16px;
+        line-height: 1.75;
+      }
+      .article ul,
+      .article ol {
+        margin: 0 0 16px 24px;
+        color: #3d3d3d;
+        font-size: 15px;
+      }
+      .article li {
+        margin-bottom: 8px;
+        line-height: 1.75;
+      }
+      .article strong {
+        color: #1c1917;
+        font-weight: 600;
+      }
+      .cta-box {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 28px;
+        margin: 40px 0;
+        text-align: center;
+      }
+      .cta-box h3 {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+      .cta-box p {
+        color: var(--text-secondary);
+        margin-bottom: 16px;
+      }
+      .cta-btn {
+        display: inline-block;
+        padding: 12px 24px;
+        border-radius: var(--radius-sm);
+        background: var(--accent-gradient);
+        color: #fff;
+        font-weight: 600;
+        font-size: 14px;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      .cta-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-lg);
+      }
+      .quote-box {
+        border-left: 3px solid var(--accent);
+        padding-left: 20px;
+        margin: 24px 0;
+        font-style: italic;
+        color: var(--text-secondary);
+      }
+      .footer {
+        text-align: center;
+        padding: 40px 28px;
+        font-size: 13px;
+        color: var(--text-muted);
+        border-top: 1px solid var(--border);
+      }
     </style>
   </head>
   <body>
     <article class="article">
       <div class="article-header">
         <span class="article-tag">Content</span>
-        <h1>AI Content Strategy: Scale Quality Without Losing the Human Touch</h1>
-        <p>I tried scaling content with AI for 6 months. Here is what actually worked — and what made my audience bounce.</p>
-        <div class="article-meta"><span>2026-05-25</span><span>7 min read</span><span>AIHues Team</span></div>
+        <h1>
+          AI Content Strategy: Scale Quality Without Losing the Human Touch
+        </h1>
+        <p>
+          I tried scaling content with AI for 6 months. Here is what actually
+          worked — and what made my audience bounce.
+        </p>
+        <div class="article-meta">
+          <span>2026-05-25</span><span>7 min read</span><span>AIHues Team</span>
+        </div>
       </div>
 
-      <p>Last October, I made a bet. Could I publish 5 blog posts a week using mostly AI? The short answer: yes. The longer answer: it backfired spectacularly.</p>
+      <p>
+        Last October, I made a bet. Could I publish 5 blog posts a week using
+        mostly AI? The short answer: yes. The longer answer: it backfired
+        spectacularly.
+      </p>
 
-      <p>Traffic went up 3x in month one. Engagement dropped 60% by month three. My newsletter unsubscribe rate hit an all-time high. I had created a content treadmill that looked impressive on paper but felt hollow to read.</p>
+      <p>
+        Traffic went up 3x in month one. Engagement dropped 60% by month three.
+        My newsletter unsubscribe rate hit an all-time high. I had created a
+        content treadmill that looked impressive on paper but felt hollow to
+        read.
+      </p>
 
-      <p>So I spent the next 4 months figuring out how to use AI without sounding like AI. This is what I learned.</p>
+      <p>
+        So I spent the next 4 months figuring out how to use AI without sounding
+        like AI. This is what I learned.
+      </p>
 
       <h2>The Trap Everyone Falls Into</h2>
 
-      <p>Here is the thing about AI writing tools — they are incredible at structure. Outline? Done in 30 seconds. First draft? 5 minutes. But structure without soul is just noise.</p>
+      <p>
+        Here is the thing about AI writing tools — they are incredible at
+        structure. Outline? Done in 30 seconds. First draft? 5 minutes. But
+        structure without soul is just noise.
+      </p>
 
-      <p>I noticed a pattern in my AI-assisted posts. They all had the same rhythm. Intro. Three bullet points. Conclusion. It was like reading a textbook written by a very polite robot. No surprises. No opinions. No "I tried this and it failed."</p>
+      <p>
+        I noticed a pattern in my AI-assisted posts. They all had the same
+        rhythm. Intro. Three bullet points. Conclusion. It was like reading a
+        textbook written by a very polite robot. No surprises. No opinions. No
+        "I tried this and it failed."
+      </p>
 
-      <p>And readers noticed. The comments went from "This is exactly what I needed" to "Did a human write this?" Ouch.</p>
+      <p>
+        And readers noticed. The comments went from "This is exactly what I
+        needed" to "Did a human write this?" Ouch.
+      </p>
 
       <h2>What I Changed</h2>
 
-      <p>I did not stop using AI. That would be dumb. Instead, I changed <em>when</em> I used it and <em>what</em> I kept for myself.</p>
+      <p>
+        I did not stop using AI. That would be dumb. Instead, I changed
+        <em>when</em> I used it and <em>what</em> I kept for myself.
+      </p>
 
-      <p><strong>AI does the homework.</strong> Research, fact-checking, outlining, formatting — all the stuff that used to eat 3 hours of my morning. I feed it my messy notes and get back something structured.</p>
+      <p>
+        <strong>AI does the homework.</strong> Research, fact-checking,
+        outlining, formatting — all the stuff that used to eat 3 hours of my
+        morning. I feed it my messy notes and get back something structured.
+      </p>
 
-      <p><strong>I do the stories.</strong> Every post now starts with something real that happened to me. A failure. A weird conversation. A moment of panic. AI cannot fake those because it was not there.</p>
+      <p>
+        <strong>I do the stories.</strong> Every post now starts with something
+        real that happened to me. A failure. A weird conversation. A moment of
+        panic. AI cannot fake those because it was not there.
+      </p>
 
-      <p><strong>We both edit.</strong> I write the hot takes and the conclusions. AI checks my grammar and suggests stronger verbs. It is a partnership, not a replacement.</p>
+      <p>
+        <strong>We both edit.</strong> I write the hot takes and the
+        conclusions. AI checks my grammar and suggests stronger verbs. It is a
+        partnership, not a replacement.
+      </p>
 
       <div class="quote-box">
-        "The posts that perform best now are the ones where AI did 80% of the words, but I wrote the 20% that mattered."
+        "The posts that perform best now are the ones where AI did 80% of the
+        words, but I wrote the 20% that mattered."
       </div>
 
       <h2>The Voice Test</h2>
 
-      <p>Here is my new rule: if I read a paragraph out loud and it does not sound like something I would say at coffee, I rewrite it. No exceptions.</p>
+      <p>
+        Here is my new rule: if I read a paragraph out loud and it does not
+        sound like something I would say at coffee, I rewrite it. No exceptions.
+      </p>
 
-      <p>AI loves phrases like "It is important to note that" and "Furthermore." I do not talk like that. You probably do not either. My fixed version: "Here is the thing" and "Also." Shorter. Simpler. Human.</p>
+      <p>
+        AI loves phrases like "It is important to note that" and "Furthermore."
+        I do not talk like that. You probably do not either. My fixed version:
+        "Here is the thing" and "Also." Shorter. Simpler. Human.
+      </p>
 
-      <p>Another trick: I deliberately leave in one imperfect sentence per post. A run-on. A fragment. Something that breaks the rhythm. Because perfect rhythm is a dead giveaway.</p>
+      <p>
+        Another trick: I deliberately leave in one imperfect sentence per post.
+        A run-on. A fragment. Something that breaks the rhythm. Because perfect
+        rhythm is a dead giveaway.
+      </p>
 
       <h2>My Actual Workflow</h2>
 
-      <p>Monday morning. I open a blank doc and brain-dump everything I learned last week. No structure. Just thoughts. 15 minutes, max.</p>
+      <p>
+        Monday morning. I open a blank doc and brain-dump everything I learned
+        last week. No structure. Just thoughts. 15 minutes, max.
+      </p>
 
-      <p>Then I ask AI to find the thread. "What is the one idea here that someone would pay to learn?" It usually picks something I barely noticed.</p>
+      <p>
+        Then I ask AI to find the thread. "What is the one idea here that
+        someone would pay to learn?" It usually picks something I barely
+        noticed.
+      </p>
 
-      <p>Next, I write the hook and the ending. Those are non-negotiable. If I cannot write a compelling opening, the idea is not ready.</p>
+      <p>
+        Next, I write the hook and the ending. Those are non-negotiable. If I
+        cannot write a compelling opening, the idea is not ready.
+      </p>
 
-      <p>AI fills in the middle. I fact-check everything. Then I do one final pass where I replace every formal phrase with how I actually talk.</p>
+      <p>
+        AI fills in the middle. I fact-check everything. Then I do one final
+        pass where I replace every formal phrase with how I actually talk.
+      </p>
 
-      <p>Total time: 90 minutes instead of 4 hours. Quality: arguably better because I am not burned out.</p>
+      <p>
+        Total time: 90 minutes instead of 4 hours. Quality: arguably better
+        because I am not burned out.
+      </p>
 
       <h2>The Checklist I Use Before Hitting Publish</h2>
 
-      <p>Does this post contain at least one personal story? If not, it is not ready.</p>
+      <p>
+        Does this post contain at least one personal story? If not, it is not
+        ready.
+      </p>
 
-      <p>Would a reader feel like they know me better after reading this? Not my brand. <em>Me.</em></p>
+      <p>
+        Would a reader feel like they know me better after reading this? Not my
+        brand. <em>Me.</em>
+      </p>
 
-      <p>Is there at least one sentence that surprised me while writing it? If everything is predictable, why would anyone share it?</p>
+      <p>
+        Is there at least one sentence that surprised me while writing it? If
+        everything is predictable, why would anyone share it?
+      </p>
 
-      <p>Does it pass the coffee test? Read it aloud. Cringe at anything that sounds like a press release.</p>
+      <p>
+        Does it pass the coffee test? Read it aloud. Cringe at anything that
+        sounds like a press release.
+      </p>
 
       <h2>The Bottom Line</h2>
 
-      <p>AI is not the enemy of authentic content. Laziness is. The creators who will win in 2026 are not the ones generating the most content. They are the ones using AI to remove the boring parts so they can focus on the parts that only they can write.</p>
+      <p>
+        AI is not the enemy of authentic content. Laziness is. The creators who
+        will win in 2026 are not the ones generating the most content. They are
+        the ones using AI to remove the boring parts so they can focus on the
+        parts that only they can write.
+      </p>
 
-      <p>Your stories. Your opinions. Your weird metaphors that make no sense to anyone else.</p>
+      <p>
+        Your stories. Your opinions. Your weird metaphors that make no sense to
+        anyone else.
+      </p>
 
-      <p>That is the stuff AI cannot replicate. And that is exactly what your audience is hungry for.</p>
+      <p>
+        That is the stuff AI cannot replicate. And that is exactly what your
+        audience is hungry for.
+      </p>
 
       <div class="cta-box">
         <h3>Build Your Content Engine</h3>

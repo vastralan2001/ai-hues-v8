@@ -22,7 +22,8 @@ function generateEmail(
   const c = company || (isZh ? '我们公司' : 'our company');
   const r = recipient || (isZh ? '您好' : 'Hi there');
   const rc = recipientCompany || (isZh ? '贵公司' : 'your company');
-  const p = purpose || (isZh ? '探讨合作机会' : 'explore a potential partnership');
+  const p =
+    purpose || (isZh ? '探讨合作机会' : 'explore a potential partnership');
 
   if (isZh) {
     return `主题：关于与${rc}的${p}
@@ -62,7 +63,9 @@ export default function ColdEmailTool({ locale }: ColdEmailToolProps) {
   const [copied, setCopied] = useState(false);
 
   function handleGenerate() {
-    setResult(generateEmail(name, company, recipient, recipientCompany, purpose, locale));
+    setResult(
+      generateEmail(name, company, recipient, recipientCompany, purpose, locale)
+    );
   }
 
   function copy() {
@@ -140,7 +143,9 @@ export default function ColdEmailTool({ locale }: ColdEmailToolProps) {
             <input
               className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
               onChange={(e) => setPurpose(e.target.value)}
-              placeholder={locale === 'zh' ? '探讨合作机会' : 'explore a partnership'}
+              placeholder={
+                locale === 'zh' ? '探讨合作机会' : 'explore a partnership'
+              }
               type='text'
               value={purpose}
             />
@@ -165,7 +170,9 @@ export default function ColdEmailTool({ locale }: ColdEmailToolProps) {
                   onClick={copy}
                   type='button'
                 >
-                  {copied ? t(locale, 'tool.copy.copied') : t(locale, 'tool.wordCount.copy')}
+                  {copied
+                    ? t(locale, 'tool.copy.copied')
+                    : t(locale, 'tool.wordCount.copy')}
                 </button>
               </div>
               <div className='min-h-[120px] w-full rounded-[14px] border border-border bg-surface p-5'>

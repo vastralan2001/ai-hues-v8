@@ -9,7 +9,12 @@ interface LpHeroToolProps {
   locale: Locale;
 }
 
-function generateHero(product: string, benefit: string, audience: string, locale: Locale) {
+function generateHero(
+  product: string,
+  benefit: string,
+  audience: string,
+  locale: Locale
+) {
   const isZh = locale === 'zh';
   const p = product || (isZh ? '您的产品' : 'Your Product');
   const b = benefit || (isZh ? '节省时间' : 'save time');
@@ -34,7 +39,9 @@ export default function LpHeroTool({ locale }: LpHeroToolProps) {
   const [product, setProduct] = useState('');
   const [benefit, setBenefit] = useState('');
   const [audience, setAudience] = useState('');
-  const [result, setResult] = useState<ReturnType<typeof generateHero> | null>(null);
+  const [result, setResult] = useState<ReturnType<typeof generateHero> | null>(
+    null
+  );
   const [copied, setCopied] = useState(false);
 
   function handleGenerate() {
@@ -111,13 +118,17 @@ export default function LpHeroTool({ locale }: LpHeroToolProps) {
                   {t(locale, 'tool.lpHero.headline')}
                 </p>
                 <div className='mt-2 flex items-center justify-between gap-4'>
-                  <p className='text-xl font-extrabold text-foreground'>{result.headline}</p>
+                  <p className='text-xl font-extrabold text-foreground'>
+                    {result.headline}
+                  </p>
                   <button
                     className='shrink-0 rounded-[8px] border border-border bg-white dark:bg-gray-900 px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
                     onClick={() => copy(result.headline)}
                     type='button'
                   >
-                    {copied ? t(locale, 'tool.copy.copied') : t(locale, 'tool.wordCount.copy')}
+                    {copied
+                      ? t(locale, 'tool.copy.copied')
+                      : t(locale, 'tool.wordCount.copy')}
                   </button>
                 </div>
               </div>
@@ -127,13 +138,17 @@ export default function LpHeroTool({ locale }: LpHeroToolProps) {
                   {t(locale, 'tool.lpHero.subheadline')}
                 </p>
                 <div className='mt-2 flex items-center justify-between gap-4'>
-                  <p className='text-[15px] leading-relaxed text-foreground'>{result.subheadline}</p>
+                  <p className='text-[15px] leading-relaxed text-foreground'>
+                    {result.subheadline}
+                  </p>
                   <button
                     className='shrink-0 rounded-[8px] border border-border bg-white dark:bg-gray-900 px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
                     onClick={() => copy(result.subheadline)}
                     type='button'
                   >
-                    {copied ? t(locale, 'tool.copy.copied') : t(locale, 'tool.wordCount.copy')}
+                    {copied
+                      ? t(locale, 'tool.copy.copied')
+                      : t(locale, 'tool.wordCount.copy')}
                   </button>
                 </div>
               </div>
@@ -143,13 +158,17 @@ export default function LpHeroTool({ locale }: LpHeroToolProps) {
                   {t(locale, 'tool.lpHero.cta')}
                 </p>
                 <div className='mt-2 flex items-center justify-between gap-4'>
-                  <p className='text-lg font-semibold text-accent'>{result.cta}</p>
+                  <p className='text-lg font-semibold text-accent'>
+                    {result.cta}
+                  </p>
                   <button
                     className='shrink-0 rounded-[8px] border border-border bg-white dark:bg-gray-900 px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
                     onClick={() => copy(result.cta)}
                     type='button'
                   >
-                    {copied ? t(locale, 'tool.copy.copied') : t(locale, 'tool.wordCount.copy')}
+                    {copied
+                      ? t(locale, 'tool.copy.copied')
+                      : t(locale, 'tool.wordCount.copy')}
                   </button>
                 </div>
               </div>

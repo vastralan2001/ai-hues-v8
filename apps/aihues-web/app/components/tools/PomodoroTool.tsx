@@ -121,7 +121,8 @@ export default function PomodoroTool({ locale }: PomodoroToolProps) {
           </svg>
           <div className='absolute inset-0 flex flex-col items-center justify-center'>
             <span className='text-[56px] font-extrabold tabular-nums text-foreground'>
-              {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
+              {String(minutes).padStart(2, '0')}:
+              {String(seconds).padStart(2, '0')}
             </span>
             {isDone && (
               <span className='mt-2 text-lg font-semibold text-accent'>

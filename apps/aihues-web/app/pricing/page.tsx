@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: 'Pricing',
 };
 
+// TODO(上线前): 以下定价和积分配额为硬编码，需从计费 API 或配置中心获取
 const plans = [
   {
     name: 'Free',

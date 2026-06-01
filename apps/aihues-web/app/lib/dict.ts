@@ -126,7 +126,8 @@ export const dict: Record<Locale, Record<string, string>> = {
 
     'tool.urlEncode.title': 'URL Encoder / Decoder',
     'tool.urlEncode.desc': 'Encode and decode URL strings instantly',
-    'tool.urlEncode.placeholder': 'Enter text to encode or URL-encoded text to decode...',
+    'tool.urlEncode.placeholder':
+      'Enter text to encode or URL-encoded text to decode...',
     'tool.urlEncode.encode': 'Encode',
     'tool.urlEncode.decode': 'Decode',
     'tool.urlEncode.result': 'Result',
@@ -174,7 +175,8 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.lorem.copy': 'Copy',
 
     'tool.timestamp.title': 'Timestamp Converter',
-    'tool.timestamp.desc': 'Convert between Unix timestamps and human-readable dates',
+    'tool.timestamp.desc':
+      'Convert between Unix timestamps and human-readable dates',
     'tool.timestamp.placeholder': 'Enter Unix timestamp or ISO date...',
     'tool.timestamp.convert': 'Convert',
     'tool.timestamp.local': 'Local Time',
@@ -246,7 +248,8 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.color.preview': 'Preview',
 
     'tool.titleCase.title': 'Text Case Converter',
-    'tool.titleCase.desc': 'Convert text between uppercase, lowercase, title case, and more',
+    'tool.titleCase.desc':
+      'Convert text between uppercase, lowercase, title case, and more',
     'tool.titleCase.placeholder': 'Enter text to convert...',
     'tool.titleCase.uppercase': 'UPPERCASE',
     'tool.titleCase.lowercase': 'lowercase',
@@ -278,7 +281,8 @@ export const dict: Record<Locale, Record<string, string>> = {
     'gitCommit.chore': 'chore: Build/process changes',
 
     'tool.readability.title': 'Readability Score',
-    'tool.readability.desc': 'Analyze text readability with Flesch-Kincaid metrics',
+    'tool.readability.desc':
+      'Analyze text readability with Flesch-Kincaid metrics',
     'tool.readability.placeholder': 'Paste text to analyze...',
     'tool.readability.analyze': 'Analyze',
     'tool.readability.words': 'Words',
@@ -407,8 +411,10 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.codeReview.maintainability': 'Maintainability',
     'tool.codeReview.progress': 'Progress',
     'tool.codeReview.itemQuality1': 'Code follows project style guidelines',
-    'tool.codeReview.itemQuality2': 'Variable and function names are descriptive',
-    'tool.codeReview.itemQuality3': 'No hardcoded values (use constants/config)',
+    'tool.codeReview.itemQuality2':
+      'Variable and function names are descriptive',
+    'tool.codeReview.itemQuality3':
+      'No hardcoded values (use constants/config)',
     'tool.codeReview.itemQuality4': 'Error handling is implemented',
     'tool.codeReview.itemQuality5': 'No debug statements left',
     'tool.codeReview.itemSecurity1': 'No sensitive data in code',
@@ -453,7 +459,8 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.seoTitle.specialChars': 'Special characters',
 
     'tool.push.title': 'Push Notification Generator',
-    'tool.push.desc': 'Generate push notification payloads for iOS, Android, and Web',
+    'tool.push.desc':
+      'Generate push notification payloads for iOS, Android, and Web',
     'tool.push.platform': 'Platform',
     'tool.push.ios': 'iOS (APNs)',
     'tool.push.android': 'Android (FCM)',
@@ -466,7 +473,8 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.push.result': 'Payload',
 
     'tool.baseConvert.title': 'Base Converter',
-    'tool.baseConvert.desc': 'Convert numbers between binary, octal, decimal, and hexadecimal',
+    'tool.baseConvert.desc':
+      'Convert numbers between binary, octal, decimal, and hexadecimal',
     'tool.baseConvert.input': 'Input number',
     'tool.baseConvert.from': 'From base',
     'tool.baseConvert.to': 'To base',
@@ -474,7 +482,8 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.baseConvert.result': 'Result',
 
     'tool.cron.title': 'Cron Expression Parser',
-    'tool.cron.desc': 'Parse and explain cron expressions in human-readable text',
+    'tool.cron.desc':
+      'Parse and explain cron expressions in human-readable text',
     'tool.cron.input': 'Cron expression',
     'tool.cron.parse': 'Parse',
     'tool.cron.result': 'Meaning',
@@ -499,7 +508,8 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.sql.result': 'Formatted SQL',
 
     'tool.tagline.title': 'Tagline Generator',
-    'tool.tagline.desc': 'Generate catchy taglines and slogans for your product or brand',
+    'tool.tagline.desc':
+      'Generate catchy taglines and slogans for your product or brand',
     'tool.tagline.product': 'Product or brand name',
     'tool.tagline.category': 'Category',
     'tool.tagline.tone': 'Tone',
@@ -521,7 +531,8 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.coldEmail.result': 'Email',
 
     'tool.newsletter.title': 'Newsletter Formatter',
-    'tool.newsletter.desc': 'Format newsletters with subject, preview, and body sections',
+    'tool.newsletter.desc':
+      'Format newsletters with subject, preview, and body sections',
     'tool.newsletter.subject': 'Subject',
     'tool.newsletter.preview': 'Preview text',
     'tool.newsletter.body': 'Body content',
@@ -530,7 +541,8 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.newsletter.result': 'Formatted Newsletter',
 
     'tool.xPost.title': 'X Post Generator',
-    'tool.xPost.desc': 'Generate engaging posts for X/Twitter with character count',
+    'tool.xPost.desc':
+      'Generate engaging posts for X/Twitter with character count',
     'tool.xPost.topic': 'Topic',
     'tool.xPost.tone': 'Tone',
     'tool.xPost.toneCasual': 'Casual',
@@ -563,7 +575,8 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.ytScript.cta': 'Call to Action',
 
     'tool.adCopy.title': 'Ad Copy Generator',
-    'tool.adCopy.desc': 'Generate compelling ad copy for your product or service',
+    'tool.adCopy.desc':
+      'Generate compelling ad copy for your product or service',
     'tool.adCopy.product': 'Product/Service',
     'tool.adCopy.audience': 'Target audience',
     'tool.adCopy.platform': 'Platform',
@@ -580,7 +593,8 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.shell.result': 'Explanation',
 
     'tool.codeExplain.title': 'Code Explainer',
-    'tool.codeExplain.desc': 'Explain what a code snippet does in plain language',
+    'tool.codeExplain.desc':
+      'Explain what a code snippet does in plain language',
     'tool.codeExplain.input': 'Code snippet',
     'tool.codeExplain.language': 'Language',
     'tool.codeExplain.explain': 'Explain',
@@ -593,7 +607,8 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.humanize.result': 'Humanized text',
 
     'tool.ipLookup.title': 'IP Address Tool',
-    'tool.ipLookup.desc': 'Validate, analyze, and get information about IP addresses',
+    'tool.ipLookup.desc':
+      'Validate, analyze, and get information about IP addresses',
     'tool.ipLookup.input': 'IP address',
     'tool.ipLookup.validate': 'Validate',
     'tool.ipLookup.valid': 'Valid IPv4 address',
@@ -606,20 +621,23 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.ipLookup.networkClass': 'Network class',
 
     'tool.docs.title': 'Docstring Generator',
-    'tool.docs.desc': 'Generate documentation comments for functions and methods',
+    'tool.docs.desc':
+      'Generate documentation comments for functions and methods',
     'tool.docs.input': 'Function signature',
     'tool.docs.language': 'Language',
     'tool.docs.generate': 'Generate',
     'tool.docs.result': 'Documentation',
 
     'tool.altText.title': 'Alt Text Generator',
-    'tool.altText.desc': 'Generate accessible alt text for images from descriptions',
+    'tool.altText.desc':
+      'Generate accessible alt text for images from descriptions',
     'tool.altText.input': 'Image description',
     'tool.altText.generate': 'Generate',
     'tool.altText.result': 'Alt text',
 
     'tool.blogOutline.title': 'Blog Outline Generator',
-    'tool.blogOutline.desc': 'Generate structured blog post outlines from a topic',
+    'tool.blogOutline.desc':
+      'Generate structured blog post outlines from a topic',
     'tool.blogOutline.topic': 'Blog topic',
     'tool.blogOutline.sections': 'Number of sections',
     'tool.blogOutline.generate': 'Generate',
@@ -646,7 +664,8 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.lpHero.cta': 'Call to Action',
 
     'tool.cssGradient.title': 'CSS Gradient Generator',
-    'tool.cssGradient.desc': 'Generate beautiful CSS gradients with live preview',
+    'tool.cssGradient.desc':
+      'Generate beautiful CSS gradients with live preview',
     'tool.cssGradient.type': 'Gradient type',
     'tool.cssGradient.linear': 'Linear',
     'tool.cssGradient.radial': 'Radial',
@@ -659,13 +678,15 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.cssGradient.preview': 'Preview',
 
     'tool.pseudo.title': 'Pseudocode Generator',
-    'tool.pseudo.desc': 'Turn natural language descriptions into structured pseudocode',
+    'tool.pseudo.desc':
+      'Turn natural language descriptions into structured pseudocode',
     'tool.pseudo.input': 'Describe the algorithm',
     'tool.pseudo.generate': 'Generate',
     'tool.pseudo.result': 'Pseudocode',
 
     'tool.diffPro.title': 'Advanced Diff',
-    'tool.diffPro.desc': 'Compare two texts line-by-line with detailed change detection',
+    'tool.diffPro.desc':
+      'Compare two texts line-by-line with detailed change detection',
     'tool.diffPro.left': 'Original text',
     'tool.diffPro.right': 'Modified text',
     'tool.diffPro.compare': 'Compare',
@@ -681,7 +702,8 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.qrcode.download': 'Download',
 
     'tool.chiSquared.title': 'Chi-Squared Calculator',
-    'tool.chiSquared.desc': 'Calculate chi-squared statistics for goodness-of-fit tests',
+    'tool.chiSquared.desc':
+      'Calculate chi-squared statistics for goodness-of-fit tests',
     'tool.chiSquared.observed': 'Observed',
     'tool.chiSquared.expected': 'Expected',
     'tool.chiSquared.addRow': 'Add row',

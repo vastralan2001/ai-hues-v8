@@ -41,7 +41,14 @@ function relativeTime(date: Date, locale: Locale): string {
   const now = Date.now();
   const diff = Math.round((date.getTime() - now) / 1000);
   const abs = Math.abs(diff);
-  const suffix = diff > 0 ? (locale === 'zh' ? '后' : 'from now') : locale === 'zh' ? '前' : 'ago';
+  const suffix =
+    diff > 0
+      ? locale === 'zh'
+        ? '后'
+        : 'from now'
+      : locale === 'zh'
+        ? '前'
+        : 'ago';
 
   if (abs < 60) return `${abs}s ${suffix}`;
   if (abs < 3600) return `${Math.floor(abs / 60)}m ${suffix}`;
@@ -83,8 +90,14 @@ export default function TimestampTool({ locale }: TimestampToolProps) {
     ? [
         { label: t(locale, 'tool.timestamp.local'), value: result.local },
         { label: t(locale, 'tool.timestamp.utc'), value: result.utc },
-        { label: t(locale, 'tool.timestamp.unixSeconds'), value: String(result.unixSeconds) },
-        { label: t(locale, 'tool.timestamp.unixMs'), value: String(result.unixMs) },
+        {
+          label: t(locale, 'tool.timestamp.unixSeconds'),
+          value: String(result.unixSeconds),
+        },
+        {
+          label: t(locale, 'tool.timestamp.unixMs'),
+          value: String(result.unixMs),
+        },
         { label: t(locale, 'tool.timestamp.relative'), value: result.relative },
       ]
     : [];

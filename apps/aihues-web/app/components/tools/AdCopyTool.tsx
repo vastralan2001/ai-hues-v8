@@ -23,7 +23,7 @@ const TEMPLATES: Record<string, string[]> = {
     'CTA: Learn More',
   ],
   linkedin: [
-    'Intro: As a {audience}, you know the challenges of {product}. Here\'s how we solve them.',
+    "Intro: As a {audience}, you know the challenges of {product}. Here's how we solve them.",
     'Body: {product} helps {audience} achieve more with less effort. Trusted by industry leaders.',
     'CTA: Book a Demo',
   ],
@@ -32,7 +32,9 @@ const TEMPLATES: Record<string, string[]> = {
 export default function AdCopyTool({ locale }: AdCopyToolProps) {
   const [product, setProduct] = useState('');
   const [audience, setAudience] = useState('');
-  const [platform, setPlatform] = useState<'google' | 'meta' | 'linkedin'>('google');
+  const [platform, setPlatform] = useState<'google' | 'meta' | 'linkedin'>(
+    'google'
+  );
   const [results, setResults] = useState<string[]>([]);
   const [copied, setCopied] = useState(false);
 
@@ -140,7 +142,9 @@ export default function AdCopyTool({ locale }: AdCopyToolProps) {
                     onClick={() => copy(r)}
                     type='button'
                   >
-                    {copied ? t(locale, 'tool.copy.copied') : t(locale, 'tool.wordCount.copy')}
+                    {copied
+                      ? t(locale, 'tool.copy.copied')
+                      : t(locale, 'tool.wordCount.copy')}
                   </button>
                 </div>
               ))}

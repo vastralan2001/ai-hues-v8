@@ -22,18 +22,18 @@ const TEMPLATES: Record<string, string[]> = {
     '10 {topic} Tips That Actually Work',
     '7 Mistakes Everyone Makes with {topic}',
     'Top 3 {topic} Tools You Need',
-    '15 {topic} Hacks You Can\'t Miss',
+    "15 {topic} Hacks You Can't Miss",
   ],
   question: [
     'Is {topic} Worth It in 2026?',
     'What No One Tells You About {topic}',
     'Why Is {topic} So Hard?',
-    'Can You Really {topic}? Here\'s the Truth',
+    "Can You Really {topic}? Here's the Truth",
     'Does {topic} Actually Work?',
   ],
   bold: [
     '{topic} Changed Everything for Me',
-    'I Tried {topic} for 30 Days — Here\'s What Happened',
+    "I Tried {topic} for 30 Days — Here's What Happened",
     'The Truth About {topic} No One Talks About',
     'Stop Doing {topic} Wrong',
     '{topic} Is Not What You Think',
@@ -42,7 +42,9 @@ const TEMPLATES: Record<string, string[]> = {
 
 export default function VideoTitleTool({ locale }: VideoTitleToolProps) {
   const [topic, setTopic] = useState('');
-  const [style, setStyle] = useState<'howTo' | 'list' | 'question' | 'bold'>('howTo');
+  const [style, setStyle] = useState<'howTo' | 'list' | 'question' | 'bold'>(
+    'howTo'
+  );
   const [results, setResults] = useState<string[]>([]);
   const [copied, setCopied] = useState(false);
 
@@ -136,7 +138,9 @@ export default function VideoTitleTool({ locale }: VideoTitleToolProps) {
                     onClick={() => copy(r)}
                     type='button'
                   >
-                    {copied ? t(locale, 'tool.copy.copied') : t(locale, 'tool.wordCount.copy')}
+                    {copied
+                      ? t(locale, 'tool.copy.copied')
+                      : t(locale, 'tool.wordCount.copy')}
                   </button>
                 </div>
               ))}

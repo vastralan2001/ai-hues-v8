@@ -10,12 +10,25 @@ interface CronParserToolProps {
 }
 
 const MONTHS = [
-  'Jan','Feb','Mar','Apr','May','Jun',
-  'Jul','Aug','Sep','Oct','Nov','Dec'
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
 ];
-const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-function parseCron(expr: string, locale: Locale): { description: string; nextRuns: string[] } | null {
+function parseCron(
+  expr: string,
+  locale: Locale
+): { description: string; nextRuns: string[] } | null {
   const parts = expr.trim().split(/\s+/);
   if (parts.length !== 5 && parts.length !== 6) return null;
 
@@ -45,7 +58,10 @@ function parseCron(expr: string, locale: Locale): { description: string; nextRun
   // Month
   if (mon === '*') desc.push('every month');
   else {
-    const monNames = mon.split(',').map(m => MONTHS[parseInt(m) - 1] || m).join(', ');
+    const monNames = mon
+      .split(',')
+      .map((m) => MONTHS[parseInt(m) - 1] || m)
+      .join(', ');
     desc.push(`in ${monNames}`);
   }
 
@@ -53,7 +69,10 @@ function parseCron(expr: string, locale: Locale): { description: string; nextRun
   if (dow === '*') desc.push('every day of the week');
   else if (dow === '?') desc.push('any day of the week');
   else {
-    const dowNames = dow.split(',').map(d => DAYS[parseInt(d)] || d).join(', ');
+    const dowNames = dow
+      .split(',')
+      .map((d) => DAYS[parseInt(d)] || d)
+      .join(', ');
     desc.push(`on ${dowNames}`);
   }
 
@@ -70,7 +89,10 @@ function parseCron(expr: string, locale: Locale): { description: string; nextRun
 
 export default function CronParserTool({ locale }: CronParserToolProps) {
   const [input, setInput] = useState('');
-  const [result, setResult] = useState<{ description: string; nextRuns: string[] } | null>(null);
+  const [result, setResult] = useState<{
+    description: string;
+    nextRuns: string[];
+  } | null>(null);
   const [error, setError] = useState(false);
 
   function handleParse() {

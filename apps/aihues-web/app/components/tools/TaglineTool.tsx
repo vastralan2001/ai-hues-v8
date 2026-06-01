@@ -21,14 +21,14 @@ const TEMPLATES: Record<string, string[]> = {
     '{product}: Because {category} should be fun!',
     'Make {category} awesome with {product}.',
     '{product} — Your {category} superpower.',
-    'Life\'s too short for boring {category}. Try {product}.',
+    "Life's too short for boring {category}. Try {product}.",
     '{product}: The {category} tool you actually enjoy using.',
   ],
   bold: [
     '{product}. No compromises.',
     'Dominate {category} with {product}.',
     '{product}: Built for those who demand more.',
-    'The future of {category} is here. It\'s called {product}.',
+    "The future of {category} is here. It's called {product}.",
     '{product} — Unapologetically powerful.',
   ],
   minimal: [
@@ -43,14 +43,18 @@ const TEMPLATES: Record<string, string[]> = {
 export default function TaglineTool({ locale }: TaglineToolProps) {
   const [product, setProduct] = useState('');
   const [category, setCategory] = useState('');
-  const [tone, setTone] = useState<'professional' | 'fun' | 'bold' | 'minimal'>('professional');
+  const [tone, setTone] = useState<'professional' | 'fun' | 'bold' | 'minimal'>(
+    'professional'
+  );
   const [results, setResults] = useState<string[]>([]);
   const [copied, setCopied] = useState(false);
 
   function generate() {
     const templates = TEMPLATES[tone];
     const generated = templates.map((tmpl) =>
-      tmpl.replace(/\{product\}/g, product || 'Your Product').replace(/\{category\}/g, category || 'business')
+      tmpl
+        .replace(/\{product\}/g, product || 'Your Product')
+        .replace(/\{category\}/g, category || 'business')
     );
     setResults(generated);
   }
@@ -151,7 +155,9 @@ export default function TaglineTool({ locale }: TaglineToolProps) {
                     onClick={() => copy(r)}
                     type='button'
                   >
-                    {copied ? t(locale, 'tool.copy.copied') : t(locale, 'tool.wordCount.copy')}
+                    {copied
+                      ? t(locale, 'tool.copy.copied')
+                      : t(locale, 'tool.wordCount.copy')}
                   </button>
                 </div>
               ))}

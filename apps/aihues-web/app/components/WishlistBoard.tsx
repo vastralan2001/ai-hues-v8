@@ -8,6 +8,7 @@ import { rankingHref } from '@/lib/routes';
 type WishStatus = 'PLANNED' | 'IN PROGRESS' | 'DONE';
 type WishFilter = 'ALL' | WishStatus;
 
+// TODO(上线前): 以下为假数据，需从后端 API 获取真实投票数据
 const WISHLIST_ITEMS = [
   {
     rank: 1,

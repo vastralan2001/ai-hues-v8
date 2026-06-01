@@ -172,7 +172,9 @@ export default function UnitConvertTool({ locale }: UnitConvertToolProps) {
             {t(locale, 'tool.unit.result')}
           </p>
           <p className='mt-1 text-[28px] font-extrabold text-accent'>
-            {Number.isFinite(result) ? result.toLocaleString(undefined, { maximumFractionDigits: 6 }) : '—'}
+            {Number.isFinite(result)
+              ? result.toLocaleString(undefined, { maximumFractionDigits: 6 })
+              : '—'}
           </p>
         </div>
       </div>

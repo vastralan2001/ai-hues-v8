@@ -80,10 +80,12 @@ export default function ImageToBase64Tool({ locale }: ImageToBase64ToolProps) {
               </div>
               <div className='flex flex-col gap-2 text-sm'>
                 <span className='text-secondary'>
-                  {t(locale, 'tool.imageBase64.fileSize')}: {formatBytes(fileSize)}
+                  {t(locale, 'tool.imageBase64.fileSize')}:{' '}
+                  {formatBytes(fileSize)}
                 </span>
                 <span className='text-secondary'>
-                  {t(locale, 'tool.imageBase64.base64Size')}: {formatBytes(output.length)}
+                  {t(locale, 'tool.imageBase64.base64Size')}:{' '}
+                  {formatBytes(output.length)}
                 </span>
               </div>
             </div>

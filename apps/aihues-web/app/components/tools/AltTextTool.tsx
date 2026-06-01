@@ -19,7 +19,12 @@ function generateAltText(description: string, locale: Locale): string {
     return isZh ? `图片显示了${d}` : `Image showing ${d}`;
   }
 
-  if (d.includes('chart') || d.includes('graph') || d.includes('图') || d.includes('图表')) {
+  if (
+    d.includes('chart') ||
+    d.includes('graph') ||
+    d.includes('图') ||
+    d.includes('图表')
+  ) {
     return isZh
       ? `图表展示了${d.replace(/chart|graph|图|图表/g, '')}的数据趋势`
       : `Chart showing data trends for ${d.replace(/chart|graph/gi, '')}`;
@@ -30,12 +35,12 @@ function generateAltText(description: string, locale: Locale): string {
   }
 
   if (d.includes('screenshot') || d.includes('截图')) {
-    return isZh ? `界面截图：${d.replace(/截图/g, '')}` : `Screenshot of ${d.replace(/screenshot/gi, '')}`;
+    return isZh
+      ? `界面截图：${d.replace(/截图/g, '')}`
+      : `Screenshot of ${d.replace(/screenshot/gi, '')}`;
   }
 
-  return isZh
-    ? `一张展示${d}的图片`
-    : `A photograph showing ${d}`;
+  return isZh ? `一张展示${d}的图片` : `A photograph showing ${d}`;
 }
 
 export default function AltTextTool({ locale }: AltTextToolProps) {
@@ -72,7 +77,11 @@ export default function AltTextTool({ locale }: AltTextToolProps) {
             <textarea
               className='h-[120px] w-full resize-none rounded-[10px] border border-border bg-surface p-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
               onChange={(e) => setInput(e.target.value)}
-              placeholder={locale === 'zh' ? '一只橙色的猫坐在窗台上' : 'An orange cat sitting on a windowsill'}
+              placeholder={
+                locale === 'zh'
+                  ? '一只橙色的猫坐在窗台上'
+                  : 'An orange cat sitting on a windowsill'
+              }
               value={input}
             />
           </div>
@@ -96,7 +105,9 @@ export default function AltTextTool({ locale }: AltTextToolProps) {
                   onClick={copy}
                   type='button'
                 >
-                  {copied ? t(locale, 'tool.copy.copied') : t(locale, 'tool.wordCount.copy')}
+                  {copied
+                    ? t(locale, 'tool.copy.copied')
+                    : t(locale, 'tool.wordCount.copy')}
                 </button>
               </div>
               <div className='min-h-[60px] w-full rounded-[14px] border border-border bg-surface p-5'>

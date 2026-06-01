@@ -569,19 +569,8 @@
     const SLOTS_STATS_KEY = 'aihues_slots_stats';
     const SLOTS_LEADERBOARD_KEY = 'aihues_slots_leaderboard';
 
-    // ===== DEFAULT LEADERBOARD DATA =====
-    const defaultSlotsLeaderboard = [
-      {name:'LuckyStar',won:1250,spins:200,date:'2026-05-18'},
-      {name:'SlotKing',won:980,spins:150,date:'2026-05-17'},
-      {name:'FortuneX',won:850,spins:120,date:'2026-05-16'},
-      {name:'GoldRush',won:720,spins:100,date:'2026-05-15'},
-      {name:'JackpotJ',won:680,spins:180,date:'2026-05-14'},
-      {name:'SpinQueen',won:550,spins:90,date:'2026-05-13'},
-      {name:'Lucky7',won:480,spins:85,date:'2026-05-12'},
-      {name:'DiamondD',won:420,spins:70,date:'2026-05-11'},
-      {name:'BellMaster',won:350,spins:60,date:'2026-05-10'},
-      {name:'CoinFlip',won:280,spins:50,date:'2026-05-09'},
-    ];
+    // TODO(上线前): 接入后端排行榜 API 后，移除此空数组
+    const defaultSlotsLeaderboard = [];
 
     // ===== SESSION STATS =====
     let sessionSpins = 0;
@@ -680,7 +669,7 @@
     }
     function updateLeaderboard(playerName, totalWon, totalSpins) {
       try {
-        let board = JSON.parse(localStorage.getItem(SLOTS_LEADERBOARD_KEY)) || defaultSlotsLeaderboard;
+        let board = JSON.parse(localStorage.getItem(SLOTS_LEADERBOARD_KEY)) || [];
         const today = new Date().toISOString().slice(0,10);
         // Check if player already on board
         const existing = board.findIndex(function(b) { return b.name === playerName; });
@@ -697,15 +686,14 @@
         board = board.slice(0,10);
         localStorage.setItem(SLOTS_LEADERBOARD_KEY, JSON.stringify(board));
         return board;
-      } catch(e) { return defaultSlotsLeaderboard; }
+      } catch(e) { return []; }
     }
     function getLeaderboard() {
       try {
         const board = localStorage.getItem(SLOTS_LEADERBOARD_KEY);
         if (board) return JSON.parse(board);
-        localStorage.setItem(SLOTS_LEADERBOARD_KEY, JSON.stringify(defaultSlotsLeaderboard));
-        return defaultSlotsLeaderboard;
-      } catch(e) { return defaultSlotsLeaderboard; }
+        return [];
+      } catch(e) { return []; }
     }
 
     // ===== PANEL FUNCTIONS =====
@@ -762,6 +750,10 @@
     function renderLeaderboard() {
       const board = getLeaderboard();
       const list = document.getElementById('leaderboardList');
+      if (board.length === 0) {
+        list.innerHTML = '<div style="text-align:center;color:#78716c;padding:24px;font-size:13px;">No data yet. Play to be the first!</div>';
+        return;
+      }
       let html = '';
       for (let i = 0; i < board.length; i++) {
         const rankClass = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : 'normal';

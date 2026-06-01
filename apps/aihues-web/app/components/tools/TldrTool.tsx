@@ -37,7 +37,9 @@ export default function TldrTool({ locale }: TldrToolProps) {
   const originalLength = text.length;
   const summaryLength = summary.length;
   const compression =
-    originalLength > 0 ? Math.round((1 - summaryLength / originalLength) * 100) : 0;
+    originalLength > 0
+      ? Math.round((1 - summaryLength / originalLength) * 100)
+      : 0;
 
   return (
     <PageShell variant='default' locale={locale}>
@@ -97,10 +99,12 @@ export default function TldrTool({ locale }: TldrToolProps) {
 
             <div className='mt-3 flex gap-4 text-xs text-secondary'>
               <span>
-                {t(locale, 'tool.tldr.originalLength')}: {originalLength.toLocaleString()} chars
+                {t(locale, 'tool.tldr.originalLength')}:{' '}
+                {originalLength.toLocaleString()} chars
               </span>
               <span>
-                {t(locale, 'tool.tldr.summaryLength')}: {summaryLength.toLocaleString()} chars
+                {t(locale, 'tool.tldr.summaryLength')}:{' '}
+                {summaryLength.toLocaleString()} chars
               </span>
               <span>
                 {t(locale, 'tool.tldr.compression')}: {compression}%
