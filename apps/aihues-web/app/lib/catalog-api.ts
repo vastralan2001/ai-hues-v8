@@ -307,7 +307,10 @@ export async function listGames(
 
 export async function safeListTools(options: ListToolsOptions = {}) {
   try {
-    return { data: await listTools(options), error: null };
+    const result = await listTools(options);
+    // Filter out external-link tools (not ready for launch)
+    const tools = result.tools.filter((t) => !t.externalUrl);
+    return { data: { ...result, tools }, error: null };
   } catch (error) {
     return { data: { tools: [], nextPageToken: '' }, error: error as Error };
   }
