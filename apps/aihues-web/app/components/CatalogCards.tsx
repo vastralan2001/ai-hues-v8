@@ -13,8 +13,7 @@ import {
   toolsCategoryHref,
 } from '@/lib/routes';
 
-/* ── Front-end pricing map ── */
-// TODO(上线前): backend 已支持 price_tag / credit_cost 字段后，移除此硬编码 fallback
+/* ── Front-end pricing map (fallback when API omits price_tag) ── */
 export type PriceTag = 'free' | 'freemium' | 'paid';
 
 export const TOOL_PRICING: Record<

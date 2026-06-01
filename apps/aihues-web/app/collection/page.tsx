@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: 'Collection',
 };
 
-// TODO(上线前): 以下为硬编码里程碑奖励，需从游戏配置 API 读取
+// Milestone rewards (static config until gamification API is ready)
 const milestones = [
   { target: 5, reward: '50 credits' },
   { target: 10, reward: '100 credits' },
@@ -126,6 +126,14 @@ export default async function CollectionPage() {
             <p className='kicker'>Community</p>
             <h2>Top Collectors</h2>
           </div>
+        </div>
+        <div
+          className='coming-soon'
+          style={{ textAlign: 'center', padding: '40px 20px' }}
+        >
+          <p style={{ fontSize: '14px', color: '#78716c' }}>
+            Leaderboard coming soon. Start collecting to be the first!
+          </p>
         </div>
       </section>
     </PageShell>

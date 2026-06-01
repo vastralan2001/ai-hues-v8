@@ -64,11 +64,11 @@ const HOME_CATEGORIES = (locale: Locale) => [
 /* ── Quick search tags ── */
 const QUICK_TAGS = ['JWT', 'JSON', 'Regex', 'QR Code', 'Fortune', 'Hoops'];
 
-// TODO(上线前): 以下为硬编码评分数据，需从分析系统 API 获取
+// Featured highlights (editor-curated until analytics API provides rankings)
 const POPULAR_HIGHLIGHTS = (locale: Locale) => [
   {
     href: toolDetailHref('jwt'),
-    kicker: `${t(locale, 'cat.developer')} · 5★`,
+    kicker: `${t(locale, 'cat.developer')}`,
     title: 'JWT Parser — Dev Essential',
     description:
       'One-click JWT decode with expiry detection & JSON highlighting',
@@ -76,7 +76,7 @@ const POPULAR_HIGHLIGHTS = (locale: Locale) => [
   },
   {
     href: toolDetailHref('json'),
-    kicker: `${t(locale, 'cat.developer')} · 5★`,
+    kicker: `${t(locale, 'cat.developer')}`,
     title: 'JSON Formatter — Most Elegant',
     description:
       'Dark theme highlighting, collapsible tree, precise error locating',
@@ -84,7 +84,7 @@ const POPULAR_HIGHLIGHTS = (locale: Locale) => [
   },
   {
     href: gameDetailHref('daily-luck'),
-    kicker: `${t(locale, 'cat.games')} · 4.8★`,
+    kicker: `${t(locale, 'cat.games')}`,
     title: 'Daily Fortune — Retention King',
     description: '30 wisdom quotes, 3D card flip, streak rewards & confetti',
     metrics: 'Fun — · Design — · Retention —',
@@ -192,9 +192,7 @@ export default async function HomePage() {
       label: t(locale, 'stats.devTools'),
     },
     { num: String(games.length || 0), label: t(locale, 'stats.games') },
-    // TODO(上线前): 从用户 API 读取真实数据
     { num: '—', label: t(locale, 'stats.freeCredits') },
-    // TODO(上线前): 从用户 API 读取真实数据
     { num: '—', label: t(locale, 'stats.dayStreak') },
   ];
 
@@ -519,7 +517,6 @@ export default async function HomePage() {
                 🎮 {t(locale, 'section.gameCenter')}
               </h2>
               <div className='flex items-center gap-4'>
-                {/* TODO(上线前): 替换为真实积分 API */}
                 <GameCreditBadge locale={locale} />
                 <Link
                   className='text-[14px] font-semibold text-accent hover:text-accent-light'

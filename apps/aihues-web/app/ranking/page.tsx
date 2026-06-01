@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: 'Ranking',
 };
 
-// TODO(上线前): 以下为假数据，需替换为后端 API 返回的真实排行榜
+// Ranking page (placeholder until leaderboard API is ready)
 // 需要后端接口：GET /api/v1/analytics/tool-rankings
 // const TOOL_RANKINGS = [...];
 

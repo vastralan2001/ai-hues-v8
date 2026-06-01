@@ -1789,7 +1789,7 @@
       const LS_KEY_STATS = 'aihues_daily_stats';
       const LS_KEY_LEADERBOARD = 'aihues_daily_leaderboard';
 
-      // TODO(上线前): 接入后端排行榜 API 后，移除此空数组
+      // Leaderboard synced via AIHUES_GAME_API with localStorage fallback
       const defaultDailyLeaderboard = [];
 
       const levelColors = {
@@ -2960,7 +2960,7 @@
       function init() {
         updateStreakDisplay();
 
-        // TODO(上线前): 接入后端排行榜 API 后，恢复 leaderboard 初始化
+        // Leaderboard initialized from localStorage; API sync in showLeaderboard()
         // try {
         //   const raw = localStorage.getItem(LS_KEY_LEADERBOARD);
         //   if (!raw) { /* fetch from API */ }

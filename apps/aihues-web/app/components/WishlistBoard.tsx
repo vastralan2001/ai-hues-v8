@@ -8,7 +8,7 @@ import { rankingHref } from '@/lib/routes';
 type WishStatus = 'PLANNED' | 'IN PROGRESS' | 'DONE';
 type WishFilter = 'ALL' | WishStatus;
 
-// TODO(上线前): 以下为假数据，需从后端 API 获取真实投票数据
+// Example wishlist items (replace with API data when voting system is live)
 const WISHLIST_ITEMS = [
   {
     rank: 1,
@@ -17,7 +17,7 @@ const WISHLIST_ITEMS = [
       'Upload long PDFs and get a concise outline, key quotes, and action items.',
     category: 'AI Writing',
     status: 'IN PROGRESS',
-    votes: 248,
+    votes: 0,
     date: '2026-05-20',
   },
   {
@@ -27,7 +27,7 @@ const WISHLIST_ITEMS = [
       'Remove backgrounds from product images and avatars with one click.',
     category: 'Utility',
     status: 'PLANNED',
-    votes: 197,
+    votes: 0,
     date: '2026-05-18',
   },
   {
@@ -37,7 +37,7 @@ const WISHLIST_ITEMS = [
       'Paste OpenAPI or JSON examples and generate a temporary mock endpoint.',
     category: 'Developer',
     status: 'PLANNED',
-    votes: 176,
+    votes: 0,
     date: '2026-05-16',
   },
   {
@@ -47,7 +47,7 @@ const WISHLIST_ITEMS = [
       'Turn rough work notes into quantified resume bullets in multiple tones.',
     category: 'AI Writing',
     status: 'DONE',
-    votes: 142,
+    votes: 0,
     date: '2026-05-12',
   },
   {
@@ -57,7 +57,7 @@ const WISHLIST_ITEMS = [
       'Convert CREATE TABLE statements into a clean relationship diagram.',
     category: 'Developer',
     status: 'IN PROGRESS',
-    votes: 121,
+    votes: 0,
     date: '2026-05-10',
   },
   {
@@ -67,7 +67,7 @@ const WISHLIST_ITEMS = [
       'Paste messy meeting notes and receive decisions, owners, and next steps.',
     category: 'Utility',
     status: 'PLANNED',
-    votes: 108,
+    votes: 0,
     date: '2026-05-08',
   },
   {
@@ -77,7 +77,7 @@ const WISHLIST_ITEMS = [
       'Compare two prompt versions and highlight instruction, tone, and output changes.',
     category: 'Developer',
     status: 'PLANNED',
-    votes: 96,
+    votes: 0,
     date: '2026-05-06',
   },
   {
@@ -87,7 +87,7 @@ const WISHLIST_ITEMS = [
       'Generate tagline, maker comment, launch checklist, and social copy.',
     category: 'Growth',
     status: 'DONE',
-    votes: 83,
+    votes: 0,
     date: '2026-05-03',
   },
   {
@@ -97,7 +97,7 @@ const WISHLIST_ITEMS = [
       'Extract invoice fields and flag missing tax IDs, totals, and dates.',
     category: 'Utility',
     status: 'PLANNED',
-    votes: 71,
+    votes: 0,
     date: '2026-05-01',
   },
   {
@@ -107,7 +107,7 @@ const WISHLIST_ITEMS = [
       'Generate responsive clamp() font sizes and spacing scales from min/max values.',
     category: 'Developer',
     status: 'DONE',
-    votes: 64,
+    votes: 0,
     date: '2026-04-29',
   },
 ] satisfies Array<{
