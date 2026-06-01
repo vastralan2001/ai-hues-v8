@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import Link from 'next/link';
 
 import NewsletterSubscribe from '@/components/NewsletterSubscribe';
+import CoverImage from '@/components/CoverImage';
 import type { BlogPost } from '@/lib/blog-data';
 
 const POSTS_PER_PAGE = 12;
@@ -132,12 +133,11 @@ export default function BlogContent({ initialPosts }: Props) {
                 className='group flex flex-col overflow-hidden rounded-[14px] border border-[#e8e2d9] bg-white transition-all hover:-translate-y-1 hover:border-[#d97706] hover:shadow-[0_4px_12px_rgba(180,83,9,0.12),0_8px_32px_rgba(0,0,0,0.08)]'
               >
                 {/* Cover Image */}
-                <div className='relative h-[180px] overflow-hidden bg-[#f5f0e8]'>
-                  <img
-                    alt={post.title}
-                    className='h-full w-full object-cover transition-transform duration-500 group-hover:scale-105'
-                    loading='lazy'
+                <div className='relative h-[180px] overflow-hidden'>
+                  <CoverImage
                     src={post.coverImage}
+                    alt={post.title}
+                    className='h-full w-full'
                   />
                   <span className='absolute left-3 top-3 rounded-md bg-white/90 px-2.5 py-1 text-[11px] font-bold text-[#b45309] backdrop-blur-sm'>
                     {post.tag}
