@@ -211,9 +211,9 @@ export function SiteFooter({
               <FooterColumn
                 heading={t(locale, 'footer.company')}
                 links={[
-                  [t(locale, 'footer.about'), '#'],
-                  [t(locale, 'nav.blog'), '#'],
-                  [t(locale, 'footer.terms'), '#'],
+                  [t(locale, 'footer.about'), '/about'],
+                  [t(locale, 'nav.blog'), '/blog'],
+                  [t(locale, 'footer.terms'), '/terms'],
                 ]}
               />
             </div>
@@ -312,9 +312,9 @@ export function SiteFooter({
               </h4>
               <div className='grid gap-2'>
                 {[
-                  { href: '#', labelKey: 'footer.about' },
-                  { href: '#', labelKey: 'nav.blog' },
-                  { href: '#', labelKey: 'footer.terms' },
+                  { href: '/about', labelKey: 'footer.about' },
+                  { href: '/blog', labelKey: 'nav.blog' },
+                  { href: '/terms', labelKey: 'footer.terms' },
                 ].map(({ href, labelKey }) => (
                   <Link
                     key={labelKey}

@@ -246,11 +246,16 @@ export default async function HomePage() {
             </p>
 
             {/* AI search box */}
-            <div className='mx-auto w-full max-w-[600px]'>
+            <form
+              action='/tools'
+              className='mx-auto w-full max-w-[600px]'
+              method='get'
+            >
               <div className='flex items-center rounded-[14px] border border-border bg-bg px-1.5 py-1.5 shadow-[0_4px_16px_rgba(0,0,0,0.06)]'>
                 <span className='px-3 text-[22px]'>🤖</span>
                 <input
                   className='min-w-0 flex-1 border-0 bg-transparent text-[14px] text-foreground outline-none placeholder:text-muted'
+                  name='q'
                   placeholder={t(locale, 'hero.searchPlaceholder')}
                   type='text'
                 />
@@ -259,12 +264,12 @@ export default async function HomePage() {
                   style={{
                     background: 'linear-gradient(135deg, #b45309, #d97706)',
                   }}
-                  type='button'
+                  type='submit'
                 >
                   {t(locale, 'hero.askAI')}
                 </button>
               </div>
-            </div>
+            </form>
 
             {/* Quick-tag chips */}
             <div className='mt-3 flex flex-wrap justify-center gap-2'>

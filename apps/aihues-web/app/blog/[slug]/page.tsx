@@ -8,6 +8,8 @@ import NewsletterSubscribe from '@/components/NewsletterSubscribe';
 import RelatedArticles from '@/components/RelatedArticles';
 import '../article.css';
 
+const BASE_URL = 'https://aihues.com';
+
 export async function generateStaticParams() {
   const posts = getAllPosts();
   return posts.map((post) => ({ slug: post.slug }));
@@ -27,6 +29,9 @@ export async function generateMetadata({
   return {
     title: `${post.title} | AIHues Blog`,
     description: `${post.tag} · ${post.date} · ${post.readTime}`,
+    alternates: {
+      canonical: `${BASE_URL}/blog/${slug}`,
+    },
     openGraph: {
       title: post.title,
       description: `${post.tag} · ${post.date} · ${post.readTime}`,
@@ -68,8 +73,39 @@ export default async function ArticlePage({
     notFound();
   }
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: meta.title,
+    description: meta.excerpt,
+    image: meta.coverImage,
+    datePublished: meta.date,
+    dateModified: meta.date,
+    author: {
+      '@type': 'Organization',
+      name: 'AIHues Team',
+      url: BASE_URL,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'AIHues',
+      logo: {
+        '@type': 'ImageObject',
+        url: `${BASE_URL}/logo.svg`,
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `${BASE_URL}/blog/${slug}`,
+    },
+  };
+
   return (
     <PageShell>
+      <script
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        type='application/ld+json'
+      />
       <main className='mx-auto max-w-[800px] px-6 py-20 md:px-7'>
         {/* Article header */}
         <div className='mb-10 text-center'>

@@ -24,6 +24,7 @@ export async function GET() {
       <guid>${BASE_URL}/blog/${post.slug}</guid>
       <pubDate>${new Date(post.date).toUTCString()}</pubDate>
       <description>${escapeXml(post.excerpt)}</description>
+      <category>${escapeXml(post.tag)}</category>
     </item>`
     )
     .join('');
