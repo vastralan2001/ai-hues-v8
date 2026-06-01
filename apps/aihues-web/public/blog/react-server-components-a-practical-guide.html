@@ -148,6 +148,18 @@
         margin-bottom: 12px;
         color: var(--accent);
       }
+      .tool-cta {
+        background: rgba(180, 83, 9, 0.04);
+        border: 1px dashed var(--border-hover);
+        border-radius: var(--radius-sm);
+        padding: 16px 20px;
+        margin: 24px 0;
+        font-size: 14px;
+        color: var(--text-secondary);
+      }
+      .tool-cta strong {
+        color: var(--accent);
+      }
       @media (max-width: 640px) {
         .article-header h1 {
           font-size: 28px;
@@ -176,58 +188,99 @@
             performance gains that actually matter.</strong
           >
         </p>
+
         <p>
-          If you are trying to get React Server Components right and feel
-          overwhelmed by conflicting advice, start here. I have stripped out
-          everything that sounds good in a tweet but fails in production.
+          I migrated a Next.js 14 app to the App Router last month. The promise
+          was simple: ship less JavaScript to the browser, improve initial page
+          load, and simplify data fetching. The reality was more nuanced. Some
+          pages got dramatically faster. Others broke in subtle ways. Here is
+          what I learned.
         </p>
-        <h2>Step 1: Audit Your Current Setup</h2>
+
+        <h2>What React Server Components Actually Do</h2>
         <p>
-          Before changing anything, document what you are doing now. List your
-          current React Server Components tools, workflows, and the time each
-          step takes. Most people skip this and pay for it later when they
-          cannot measure improvement.
+          RSCs render on the server. They can access databases, file systems,
+          and APIs directly. They never ship JavaScript to the browser. This
+          means faster initial loads and smaller bundles.
         </p>
-        <h2>Step 2: Identify the One Bottleneck</h2>
         <p>
-          Do not try to fix everything. Pick the single step in your React
-          Server Components process that takes the most time or causes the most
-          errors. Fixing one bottleneck typically delivers more value than
-          marginal improvements across the board.
+          Client components render in the browser. They handle interactivity:
+          clicks, forms, animations. They ship JavaScript.
         </p>
-        <div class="highlight-box">
-          <h4>Pro Tip</h4>
-          <p>
-            If you are not sure what your bottleneck is, track your time for
-            three days. The step you dread most is usually the one worth fixing
-            first.
-          </p>
+        <p>
+          The key insight: you do not choose one or the other. You compose them.
+          Server components for data and structure. Client components for
+          interactivity.
+        </p>
+
+        <h2>When to Use Server Components</h2>
+        <p>Use RSCs when:</p>
+        <ul>
+          <li>You are fetching data from a database or API</li>
+          <li>The component does not need browser APIs</li>
+          <li>You want to reduce client-side JavaScript</li>
+          <li>The content is mostly static or slowly changing</li>
+        </ul>
+
+        <h2>When to Use Client Components</h2>
+        <p>Use client components when:</p>
+        <ul>
+          <li>You need useState, useEffect, or other React hooks</li>
+          <li>
+            You are using browser-only APIs (localStorage, window, document)
+          </li>
+          <li>The component handles user input or animations</li>
+          <li>You need third-party libraries that depend on the browser</li>
+        </ul>
+
+        <h2>The Migration Trap</h2>
+        <p>
+          My biggest mistake was converting everything to server components at
+          once. Forms broke. Third-party libraries threw errors. Client-side
+          data fetching stopped working.
+        </p>
+        <p>
+          The fix was gradual. I started with the simplest pages — mostly static
+          content with no interactivity. Then I moved to list pages where data
+          came from the database. Forms and complex UI stayed client-side. After
+          two weeks, 70% of my components were server components. The other 30%
+          stayed client-side. And that is okay.
+        </p>
+
+        <div class="tool-cta">
+          <strong>New to RSC?</strong> Paste your component code into the
+          <a href="/tools/code-explain">Code Explainer</a>. It breaks down
+          whether each part should be server or client, and suggests the right
+          migration strategy.
         </div>
-        <h2>Step 3: Implement and Measure</h2>
+
+        <h2>Performance: What Actually Improved</h2>
         <p>
-          Make one change. Run it for two weeks. Compare before and after. If it
-          helps, keep it. If not, revert and try something else. The goal is not
-          to find the perfect system — it is to find a system that is noticeably
-          better than what you had.
+          Before migration: 340KB of JavaScript on initial load. After: 120KB.
+          Time to interactive dropped from 2.8s to 1.4s on mobile. The biggest
+          gains came from pages that previously fetched data client-side and now
+          get it server-rendered.
         </p>
-        <h2>What I Would Do Differently</h2>
         <p>
-          If I were starting over with React Server Components today, I would
-          spend less time reading and more time doing. The fastest way to learn
-          is to build something small, break it, and fix it. Everything else is
-          just preparation.
+          What did not improve: pages that were already well-optimized. If you
+          are code-splitting, lazy loading, and using SSG, the gains from RSC
+          are marginal. The real win is simplifying your architecture, not raw
+          performance.
         </p>
-        <div class="highlight-box">
-          <h4>Takeaway</h4>
-          <p>
-            Start small. Measure obsessively. Optimize only what matters.
-            Everything else is noise.
-          </p>
-        </div>
+
+        <h2>The Debugging Experience</h2>
+        <p>
+          Debugging RSCs is different. You cannot console.log in the browser
+          because the code runs on the server. You need server-side logging or
+          debugger breakpoints in your Node process. It took a day to adjust my
+          mental model, but now it feels natural.
+        </p>
+
         <p>
           <em
-            >What is your experience with React Server Components? Share your
-            thoughts or questions — we read every response.</em
+            >Do not migrate for the hype. Migrate because your current
+            architecture has a specific problem that RSC solves. Start with one
+            page. Measure. Then decide.</em
           >
         </p>
       </div>

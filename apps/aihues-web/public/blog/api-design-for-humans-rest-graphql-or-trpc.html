@@ -148,6 +148,18 @@
         margin-bottom: 12px;
         color: var(--accent);
       }
+      .tool-cta {
+        background: rgba(180, 83, 9, 0.04);
+        border: 1px dashed var(--border-hover);
+        border-radius: var(--radius-sm);
+        padding: 16px 20px;
+        margin: 24px 0;
+        font-size: 14px;
+        color: var(--text-secondary);
+      }
+      .tool-cta strong {
+        color: var(--accent);
+      }
       @media (max-width: 640px) {
         .article-header h1 {
           font-size: 28px;
@@ -176,56 +188,110 @@
             break the rules.</strong
           >
         </p>
+
         <p>
-          There are two camps in the API design DX debate: the evangelists and
-          the skeptics. After working with both, I have concluded that the truth
-          is more interesting than either side admits.
+          I have built APIs in REST, GraphQL, and tRPC. Each choice felt right
+          at the time. Each choice also created problems I did not anticipate.
+          There is no universal best answer. There is only the right answer for
+          your specific constraints.
         </p>
-        <h2>The Benefits Nobody Disputes</h2>
+
+        <h2>REST: The Safe Default</h2>
         <p>
-          When API design DX works, it works well. Teams report faster iteration
-          cycles, fewer miscommunications, and measurably better outcomes. These
-          benefits are real and well-documented.
+          REST is boring. That is its superpower. Every developer understands
+          GET, POST, PUT, DELETE. Every HTTP client supports it. Every caching
+          layer optimizes for it.
         </p>
-        <h2>The Drawbacks Nobody Talks About</h2>
-        <p>But there is a flip side that rarely makes it into case studies:</p>
+        <p>Use REST when:</p>
         <ul>
-          <li>The setup cost is almost always higher than estimated</li>
+          <li>You have a public API consumed by external developers</li>
+          <li>You need aggressive HTTP caching</li>
+          <li>Your team has mixed experience levels</li>
+          <li>You want minimal tooling and maximum compatibility</li>
+        </ul>
+
+        <h2>GraphQL: The Power User</h2>
+        <p>
+          GraphQL shines when your frontend needs flexible data fetching. One
+          query replaces five REST calls. The frontend controls what it gets. No
+          more over-fetching or under-fetching.
+        </p>
+        <p>But GraphQL has costs:</p>
+        <ul>
+          <li>Steeper learning curve</li>
+          <li>More complex caching</li>
           <li>
-            Edge cases accumulate over time and become a maintenance burden
+            Query complexity attacks (someone requests every relation in one
+            query)
           </li>
+          <li>Tooling that is still maturing</li>
+        </ul>
+        <p>
+          Use GraphQL when your frontend team is strong, your data graph is
+          complex, and you have the resources to handle the operational
+          overhead.
+        </p>
+
+        <h2>tRPC: The TypeScript Sweet Spot</h2>
+        <p>
+          tRPC gives you end-to-end type safety with zero schema duplication.
+          Change a backend type, and your frontend immediately knows. No code
+          generation. No runtime validation libraries. Just TypeScript.
+        </p>
+        <p>
+          This is my default for full-stack TypeScript projects. The developer
+          experience is unmatched. But it only works if you control both
+          frontend and backend. For public APIs, tRPC is not an option.
+        </p>
+
+        <div class="tool-cta">
+          <strong>Testing your API?</strong> The
+          <a href="/tools/curl-gen">cURL Generator</a> turns your API endpoint
+          into a copy-paste ready cURL command. Great for documentation,
+          testing, and sharing with teammates who do not use your client.
+        </div>
+
+        <h2>The Status Code Debate</h2>
+        <p>
+          200 with an error body, or 400/500 with standard semantics? I have
+          flip-flopped on this. My current rule:
+        </p>
+        <ul>
           <li>
-            Team onboarding takes longer than expected, especially for junior
-            members
+            HTTP status codes describe transport (200 = request reached the
+            server)
+          </li>
+          <li>Application errors go in the response body</li>
+          <li>
+            Always include a machine-readable error code and a human-readable
+            message
           </li>
         </ul>
-        <div class="highlight-box">
-          <h4>The Honest Assessment</h4>
-          <p>
-            API design DX is a tool, not a transformation. It will amplify what
-            is already working and expose what is already broken. Go in with
-            realistic expectations, and you will get realistic results.
-          </p>
+
+        <div class="tool-cta">
+          <strong>Not sure which status to return?</strong> The
+          <a href="/tools/http-status">HTTP Status Code reference</a> explains
+          every code with real-world examples. No more guessing between 400,
+          422, and 409.
         </div>
-        <h2>Your Next Step</h2>
+
+        <h2>Versioning: The Approach Nobody Likes</h2>
         <p>
-          Do not try to implement everything in this article at once. Pick one
-          idea that resonated, apply it this week, and see what happens. The
-          best API design DX advice is worthless until you test it in your own
-          context.
+          URL versioning (/v1/, /v2/) is simple but pollutes your routes. Header
+          versioning is cleaner but harder to discover. My compromise: URL
+          versioning for major breaking changes, backward-compatible additions
+          for everything else.
         </p>
-        <div class="highlight-box">
-          <h4>Quick Win</h4>
-          <p>
-            Spend 15 minutes today auditing your current API design DX setup.
-            Write down one thing to change this week. That small act will create
-            more momentum than any amount of reading.
-          </p>
-        </div>
+        <p>
+          The best versioning strategy is the one you never need. Design your
+          API to be extensible. Add fields, do not remove them. Deprecate
+          gently. Break rarely.
+        </p>
+
         <p>
           <em
-            >What is your experience with API design DX? Share your thoughts or
-            questions — we read every response.</em
+            >Pick one approach. Document it. Stick to it. Your future self — and
+            every developer who integrates with your API — will thank you.</em
           >
         </p>
       </div>

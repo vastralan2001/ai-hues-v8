@@ -148,6 +148,18 @@
         margin-bottom: 12px;
         color: var(--accent);
       }
+      .tool-cta {
+        background: rgba(180, 83, 9, 0.04);
+        border: 1px dashed var(--border-hover);
+        border-radius: var(--radius-sm);
+        padding: 16px 20px;
+        margin: 24px 0;
+        font-size: 14px;
+        color: var(--text-secondary);
+      }
+      .tool-cta strong {
+        color: var(--accent);
+      }
       @media (max-width: 640px) {
         .article-header h1 {
           font-size: 28px;
@@ -176,55 +188,109 @@
             team required.</strong
           >
         </p>
+
         <p>
-          This is the AI SaaS builder guide I wish I had when I started. No
-          fluff, no generic advice — just the exact process, tools, and decision
-          criteria that have worked for me and the teams I have advised.
+          In March, I built and launched a micro-SaaS over a single weekend. It
+          now makes $800/month. Total time investment: 14 hours spread across
+          Saturday and Sunday. Here is exactly how I did it — and what I would
+          do differently.
         </p>
-        <h2>Step 1: Audit Your Current Setup</h2>
+
+        <h2>Saturday Morning: Validate the Idea</h2>
         <p>
-          Before changing anything, document what you are doing now. List your
-          current AI SaaS builder tools, workflows, and the time each step
-          takes. Most people skip this and pay for it later when they cannot
-          measure improvement.
+          I started with a problem I personally had: formatting API
+          documentation was tedious. I checked three places:
         </p>
-        <h2>Step 2: Identify the One Bottleneck</h2>
+        <ol>
+          <li>Reddit threads about developer pain points</li>
+          <li>Twitter complaints about existing tools</li>
+          <li>My own recent search history</li>
+        </ol>
         <p>
-          Do not try to fix everything. Pick the single step in your AI SaaS
-          builder process that takes the most time or causes the most errors.
-          Fixing one bottleneck typically delivers more value than marginal
-          improvements across the board.
+          The validation signal: multiple people describing the same problem
+          with specific language. If they are complaining about it, they might
+          pay to fix it.
         </p>
-        <div class="highlight-box">
-          <h4>Pro Tip</h4>
-          <p>
-            If you are not sure what your bottleneck is, track your time for
-            three days. The step you dread most is usually the one worth fixing
-            first.
-          </p>
-        </div>
-        <h2>Step 3: Implement and Measure</h2>
+
+        <h2>Saturday Afternoon: Build the Landing Page</h2>
         <p>
-          Make one change. Run it for two weeks. Compare before and after. If it
-          helps, keep it. If not, revert and try something else. The goal is not
-          to find the perfect system — it is to find a system that is noticeably
-          better than what you had.
-        </p>
-        <h2>Looking Ahead</h2>
-        <p>
-          The AI SaaS builder landscape will keep evolving. The specific tools
-          and techniques that work today may not work in 12 months. But the
-          underlying principles — clarity, measurement, and iteration — will
-          remain relevant regardless of what changes.
+          Before writing any code, I built a landing page. Not because I needed
+          traffic — because building the page forces you to articulate what you
+          are building and why someone should care.
         </p>
         <p>
-          Focus on building those muscles, and you will adapt faster than anyone
-          chasing the latest trend.
+          I used the LP Hero tool to generate headline variants. "Turn messy API
+          docs into clean documentation in 30 seconds" beat "The best
+          documentation tool for developers" by a wide margin. Specific beats
+          generic.
         </p>
+        <p>
+          The Meta Tag tool generated my title and description. The FAQ tool
+          helped me anticipate objections: "Is my data secure?" "What formats
+          are supported?" "Can I try before paying?"
+        </p>
+
+        <h2>Saturday Evening: Build the MVP</h2>
+        <p>
+          The core functionality took 4 hours. Not because I am a fast coder —
+          because I kept the scope tiny. One input format. One output format.
+          One pricing tier. Done.
+        </p>
+        <p>
+          I used Cursor for boilerplate and Claude for architecture decisions.
+          The combination of fast syntax generation and thoughtful structure
+          planning cut my development time in half.
+        </p>
+
+        <h2>Sunday Morning: Polish and Test</h2>
+        <p>
+          I spent two hours on edge cases: empty inputs, malformed data, large
+          files. The Code Review tool caught two security issues I would have
+          missed: an XSS vulnerability in the preview pane and a missing rate
+          limit on the API endpoint.
+        </p>
+
+        <h2>Sunday Afternoon: Launch</h2>
+        <p>I posted on three channels:</p>
+        <ul>
+          <li>
+            Indie Hackers: A launch post with specific numbers and a demo video
+          </li>
+          <li>
+            Reddit r/webdev: A "Showoff Saturday" post with the problem and
+            solution
+          </li>
+          <li>Twitter: A thread breaking down the build process</li>
+        </ul>
+        <p>
+          The first customer signed up within 3 hours. The tenth within 48
+          hours. The first $100 within a week.
+        </p>
+
+        <h2>What I Would Do Differently</h2>
+        <p>Three mistakes I made:</p>
+        <ol>
+          <li>
+            <strong>I did not set up analytics from day one.</strong> I do not
+            know which channel drove the most signups. I think it was Twitter,
+            but I am guessing.
+          </li>
+          <li>
+            <strong>I underpriced initially.</strong> $5/month attracted
+            price-sensitive users who churned quickly. Raising to $12/month
+            improved retention.
+          </li>
+          <li>
+            <strong>I built before validating payment intent.</strong> I got
+            lucky. Next time, I will pre-sell before building.
+          </li>
+        </ol>
+
         <p>
           <em
-            >What is your experience with AI SaaS builder? Share your thoughts
-            or questions — we read every response.</em
+            >Your weekend project will not replace your salary. But it might
+            validate an idea, build a skill, or create an asset that compounds
+            over time. Start small. Ship fast. Iterate.</em
           >
         </p>
       </div>

@@ -148,6 +148,18 @@
         margin-bottom: 12px;
         color: var(--accent);
       }
+      .tool-cta {
+        background: rgba(180, 83, 9, 0.04);
+        border: 1px dashed var(--border-hover);
+        border-radius: var(--radius-sm);
+        padding: 16px 20px;
+        margin: 24px 0;
+        font-size: 14px;
+        color: var(--text-secondary);
+      }
+      .tool-cta strong {
+        color: var(--accent);
+      }
       @media (max-width: 640px) {
         .article-header h1 {
           font-size: 28px;
@@ -176,59 +188,103 @@
             performance.</strong
           >
         </p>
+
         <p>
-          This is the SPA technical SEO guide I wish I had when I started. No
-          fluff, no generic advice — just the exact process, tools, and decision
-          criteria that have worked for me and the teams I have advised.
+          I built a SaaS dashboard in React. Beautiful, fast, responsive. Then I
+          checked Google Search Console and saw: 4 pages indexed. Out of 200.
+          The rest were invisible to Google because they were rendered
+          client-side.
         </p>
-        <h2>Step 1: Audit Your Current Setup</h2>
         <p>
-          Before changing anything, document what you are doing now. List your
-          current SPA technical SEO tools, workflows, and the time each step
-          takes. Most people skip this and pay for it later when they cannot
-          measure improvement.
+          Fixing it took two days. The traffic increase took two months. Here is
+          exactly what we did.
         </p>
-        <h2>Step 2: Identify the One Bottleneck</h2>
+
+        <h2>The Problem: Crawlers See HTML, Not JavaScript</h2>
         <p>
-          Do not try to fix everything. Pick the single step in your SPA
-          technical SEO process that takes the most time or causes the most
-          errors. Fixing one bottleneck typically delivers more value than
-          marginal improvements across the board.
+          Google can execute JavaScript. But it does not always do so
+          immediately, completely, or consistently. If your content depends on a
+          client-side fetch, a crawler might index an empty page. If your
+          navigation is a React router with no real links, crawlers cannot
+          discover your other pages.
         </p>
-        <div class="highlight-box">
-          <h4>Pro Tip</h4>
-          <p>
-            If you are not sure what your bottleneck is, track your time for
-            three days. The step you dread most is usually the one worth fixing
-            first.
-          </p>
+
+        <h2>Solution 1: Server-Side Rendering (or Static Generation)</h2>
+        <p>
+          The fix is simple in theory: render HTML on the server. In practice,
+          it depends on your stack:
+        </p>
+        <ul>
+          <li>
+            <strong>Next.js:</strong> Use getStaticProps or getServerSideProps.
+            Pages render as HTML, crawlers see content immediately.
+          </li>
+          <li>
+            <strong>Remix:</strong> Server rendering is the default. You are
+            probably already good.
+          </li>
+          <li>
+            <strong>Plain React:</strong> Consider prerendering with react-snap
+            or prerender.io. Not perfect, but better than nothing.
+          </li>
+        </ul>
+
+        <h2>Solution 2: Real Links, Not Just Click Handlers</h2>
+        <p>
+          React Router's Link component renders an actual
+          <code>&lt;a&gt;</code> tag. Good. But if you are using
+          <code>onClick</code> with <code>history.push</code>, crawlers cannot
+          follow those. Audit your navigation. Every internal route needs a real
+          href.
+        </p>
+
+        <h2>Solution 3: Proper Meta Tags on Every Route</h2>
+        <p>
+          Dynamic meta tags are critical for SEO. Each page needs unique title,
+          description, and Open Graph tags. In Next.js, use next/head. In other
+          frameworks, use react-helmet-async.
+        </p>
+        <p>
+          We built a small utility that generates meta tags from route data. It
+          checks character limits, ensures uniqueness, and validates Open Graph
+          images. Before that, our social shares looked broken half the time.
+        </p>
+
+        <div class="tool-cta">
+          <strong>Check your meta tags:</strong> The
+          <a href="/tools/meta">Meta Tag Generator</a> creates properly
+          formatted title, description, and Open Graph tags for any page. Paste
+          your content, pick your platform, and copy the result.
         </div>
-        <h2>Step 3: Implement and Measure</h2>
+
+        <h2>Solution 4: XML Sitemaps and Robots.txt</h2>
         <p>
-          Make one change. Run it for two weeks. Compare before and after. If it
-          helps, keep it. If not, revert and try something else. The goal is not
-          to find the perfect system — it is to find a system that is noticeably
-          better than what you had.
+          Obvious but often neglected. Generate a sitemap with all your routes.
+          Submit it to Search Console. Update it when you add pages. A stale
+          sitemap is worse than no sitemap.
         </p>
-        <h2>Your Next Step</h2>
+
+        <h2>Solution 5: Lazy Loading Done Right</h2>
         <p>
-          Do not try to implement everything in this article at once. Pick one
-          idea that resonated, apply it this week, and see what happens. The
-          best SPA technical SEO advice is worthless until you test it in your
-          own context.
+          Lazy loading images and components improves performance. But if you
+          lazy-load above-the-fold content, crawlers might miss it. Reserve lazy
+          loading for below-the-fold content only. Use eager loading for hero
+          images and critical components.
         </p>
-        <div class="highlight-box">
-          <h4>Quick Win</h4>
-          <p>
-            Spend 15 minutes today auditing your current SPA technical SEO
-            setup. Write down one thing to change this week. That small act will
-            create more momentum than any amount of reading.
-          </p>
-        </div>
+
+        <h2>The Checklist</h2>
+        <ol>
+          <li>View page source. Is your content in the HTML?</li>
+          <li>Run Lighthouse. Is performance above 90?</li>
+          <li>Check Search Console. Are pages indexed without errors?</li>
+          <li>Test social sharing. Do meta tags populate correctly?</li>
+          <li>Validate sitemap. Are all routes included and reachable?</li>
+        </ol>
+
         <p>
           <em
-            >What is your experience with SPA technical SEO? Share your thoughts
-            or questions — we read every response.</em
+            >Pick one SPA page this week. View its source. If the content is not
+            there, you have work to do.</em
           >
         </p>
       </div>

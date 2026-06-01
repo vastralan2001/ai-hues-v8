@@ -9,15 +9,6 @@
     "coverImage": "https://picsum.photos/seed/launching-on-product-hunt-what-worked-in-2026/600/400"
   },
   {
-    "slug": "claude-3-7-vs-gpt-4o-which-one-actually-writes-better-code",
-    "tag": "AI Tools",
-    "title": "Claude 3.7 vs GPT-4o: Which One Actually Writes Better Code?",
-    "excerpt": "I ran both models through 50 real-world coding tasks. Here is what the numbers say — and what surprised me.",
-    "date": "2026-05-30",
-    "readTime": "8 min",
-    "coverImage": "https://picsum.photos/seed/claude-3-7-vs-gpt-4o-which-one-actually-writes-better-code/600/400"
-  },
-  {
     "slug": "app-store-optimization-in-2026-beyond-keywords",
     "tag": "Growth",
     "title": "App Store Optimization in 2026: Beyond Keywords",
@@ -25,6 +16,15 @@
     "date": "2026-05-30",
     "readTime": "6 min",
     "coverImage": "https://picsum.photos/seed/app-store-optimization-in-2026-beyond-keywords/600/400"
+  },
+  {
+    "slug": "claude-3-7-vs-gpt-4o-which-one-actually-writes-better-code",
+    "tag": "AI Tools",
+    "title": "Claude 3.7 vs GPT-4o: Which One Actually Writes Better Code?",
+    "excerpt": "I ran both models through 50 real-world coding tasks. Here is what the numbers say — and what surprised me.",
+    "date": "2026-05-30",
+    "readTime": "8 min",
+    "coverImage": "https://picsum.photos/seed/claude-3-7-vs-gpt-4o-which-one-actually-writes-better-code/600/400"
   },
   {
     "slug": "the-hidden-costs-of-ai-writing-tools-nobody-talks-about",
@@ -54,13 +54,13 @@
     "coverImage": "https://picsum.photos/seed/react-server-components-a-practical-guide/600/400"
   },
   {
-    "slug": "cursor-editor-10-features-that-will-change-how-you-code",
-    "tag": "AI Tools",
-    "title": "Cursor Editor: 10 Features That Will Change How You Code",
-    "excerpt": "From inline chat to whole-file generation, here is how to squeeze every drop of productivity out of Cursor.",
+    "slug": "deep-work-in-the-age-of-ai-is-focus-still-possible",
+    "tag": "Productivity",
+    "title": "Deep Work in the Age of AI: Is Focus Still Possible?",
+    "excerpt": "How to protect your attention when every tool is trying to distract you.",
     "date": "2026-05-28",
-    "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/cursor-editor-10-features-that-will-change-how-you-code/600/400"
+    "readTime": "6 min",
+    "coverImage": "https://picsum.photos/seed/deep-work-in-the-age-of-ai-is-focus-still-possible/600/400"
   },
   {
     "slug": "cold-email-that-gets-replies-templates-and-psychology",
@@ -72,13 +72,13 @@
     "coverImage": "https://picsum.photos/seed/cold-email-that-gets-replies-templates-and-psychology/600/400"
   },
   {
-    "slug": "deep-work-in-the-age-of-ai-is-focus-still-possible",
-    "tag": "Productivity",
-    "title": "Deep Work in the Age of AI: Is Focus Still Possible?",
-    "excerpt": "How to protect your attention when every tool is trying to distract you.",
+    "slug": "cursor-editor-10-features-that-will-change-how-you-code",
+    "tag": "AI Tools",
+    "title": "Cursor Editor: 10 Features That Will Change How You Code",
+    "excerpt": "From inline chat to whole-file generation, here is how to squeeze every drop of productivity out of Cursor.",
     "date": "2026-05-28",
-    "readTime": "6 min",
-    "coverImage": "https://picsum.photos/seed/deep-work-in-the-age-of-ai-is-focus-still-possible/600/400"
+    "readTime": "7 min",
+    "coverImage": "https://picsum.photos/seed/cursor-editor-10-features-that-will-change-how-you-code/600/400"
   },
   {
     "slug": "growth-tools-2026",
@@ -135,15 +135,6 @@
     "coverImage": "https://picsum.photos/seed/the-state-of-css-in-2026-tailwind-panda-and-beyond/600/400"
   },
   {
-    "slug": "ai-content-strategy",
-    "tag": "Content",
-    "title": "AI Content Strategy: Scale Quality Without Losing the Human Touch",
-    "excerpt": "I tried scaling content with AI for 6 months. Here is what actually worked — and what made my audience bounce.",
-    "date": "2026-05-25",
-    "readTime": "7 min",
-    "coverImage": "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=600&q=80"
-  },
-  {
     "slug": "the-dark-side-of-growth-hacking-what-not-to-do",
     "tag": "Growth",
     "title": "The Dark Side of Growth Hacking: What Not to Do",
@@ -160,6 +151,15 @@
     "date": "2026-05-25",
     "readTime": "6 min",
     "coverImage": "https://picsum.photos/seed/time-blocking-for-creatives-a-realistic-guide/600/400"
+  },
+  {
+    "slug": "ai-content-strategy",
+    "tag": "Content",
+    "title": "AI Content Strategy: Scale Quality Without Losing the Human Touch",
+    "excerpt": "How we produce 50+ pieces of content per month using AI — without sounding like everyone else.",
+    "date": "2026-05-25",
+    "readTime": "8 min",
+    "coverImage": "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=600&q=80"
   },
   {
     "slug": "midjourney-v7-review-the-good-the-bad-and-the-weird",
@@ -198,15 +198,6 @@
     "coverImage": "https://picsum.photos/seed/edge-computing-when-to-use-it-when-to-skip-it/600/400"
   },
   {
-    "slug": "running-llms-locally-a-complete-setup-guide-for-2026",
-    "tag": "AI Tools",
-    "title": "Running LLMs Locally: A Complete Setup Guide for 2026",
-    "excerpt": "From Ollama to vLLM, here is the hardware and software stack you need to run production-grade AI on your own machine.",
-    "date": "2026-05-23",
-    "readTime": "9 min",
-    "coverImage": "https://picsum.photos/seed/running-llms-locally-a-complete-setup-guide-for-2026/600/400"
-  },
-  {
     "slug": "why-i-stopped-chasing-vc-and-started-building-for-profit",
     "tag": "Indie Dev",
     "title": "Why I Stopped Chasing VC and Started Building for Profit",
@@ -223,6 +214,15 @@
     "date": "2026-05-23",
     "readTime": "7 min",
     "coverImage": "https://picsum.photos/seed/automation-scripts-that-save-me-10-hours-a-week/600/400"
+  },
+  {
+    "slug": "running-llms-locally-a-complete-setup-guide-for-2026",
+    "tag": "AI Tools",
+    "title": "Running LLMs Locally: A Complete Setup Guide for 2026",
+    "excerpt": "From Ollama to vLLM, here is the hardware and software stack you need to run production-grade AI on your own machine.",
+    "date": "2026-05-23",
+    "readTime": "9 min",
+    "coverImage": "https://picsum.photos/seed/running-llms-locally-a-complete-setup-guide-for-2026/600/400"
   },
   {
     "slug": "seo-2026-trends",
@@ -252,15 +252,6 @@
     "coverImage": "https://picsum.photos/seed/technical-seo-for-single-page-applications/600/400"
   },
   {
-    "slug": "the-best-ai-tools-for-indie-developers-in-2026",
-    "tag": "AI Tools",
-    "title": "The Best AI Tools for Indie Developers in 2026",
-    "excerpt": "A curated list of 25 tools that actually save time, not just add another subscription to your credit card.",
-    "date": "2026-05-21",
-    "readTime": "8 min",
-    "coverImage": "https://picsum.photos/seed/the-best-ai-tools-for-indie-developers-in-2026/600/400"
-  },
-  {
     "slug": "from-side-project-to-50k-arr-a-12-month-timeline",
     "tag": "Growth",
     "title": "From Side Project to $50K ARR: A 12-Month Timeline",
@@ -286,6 +277,15 @@
     "date": "2026-05-21",
     "readTime": "9 min",
     "coverImage": "https://picsum.photos/seed/database-design-for-indie-devs-start-simple-scale-later/600/400"
+  },
+  {
+    "slug": "the-best-ai-tools-for-indie-developers-in-2026",
+    "tag": "AI Tools",
+    "title": "The Best AI Tools for Indie Developers in 2026",
+    "excerpt": "A curated list of 25 tools that actually save time, not just add another subscription to your credit card.",
+    "date": "2026-05-21",
+    "readTime": "8 min",
+    "coverImage": "https://picsum.photos/seed/the-best-ai-tools-for-indie-developers-in-2026/600/400"
   },
   {
     "slug": "reddit-marketing",
@@ -315,15 +315,6 @@
     "coverImage": "https://picsum.photos/seed/content-clusters-the-strategy-that-doubled-our-organic-traff/600/400"
   },
   {
-    "slug": "how-to-build-an-ai-saas-in-48-hours-step-by-step",
-    "tag": "AI Tools",
-    "title": "How to Build an AI SaaS in 48 Hours (Step by Step)",
-    "excerpt": "From idea to first paying customer using only AI tools. No coding team required.",
-    "date": "2026-05-19",
-    "readTime": "10 min",
-    "coverImage": "https://picsum.photos/seed/how-to-build-an-ai-saas-in-48-hours-step-by-step/600/400"
-  },
-  {
     "slug": "why-your-landing-page-is-not-converting-and-how-to-fix-it",
     "tag": "Growth",
     "title": "Why Your Landing Page Is Not Converting (And How to Fix It)",
@@ -331,15 +322,6 @@
     "date": "2026-05-19",
     "readTime": "7 min",
     "coverImage": "https://picsum.photos/seed/why-your-landing-page-is-not-converting-and-how-to-fix-it/600/400"
-  },
-  {
-    "slug": "context-switching-is-killing-your-output-here-is-the-fix",
-    "tag": "Productivity",
-    "title": "Context Switching Is Killing Your Output. Here Is the Fix.",
-    "excerpt": "The science of attention residue, and the batching technique that tripled my deep work hours.",
-    "date": "2026-05-19",
-    "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/context-switching-is-killing-your-output-here-is-the-fix/600/400"
   },
   {
     "slug": "web-performance-in-2026-core-web-vitals-and-beyond",
@@ -351,13 +333,22 @@
     "coverImage": "https://picsum.photos/seed/web-performance-in-2026-core-web-vitals-and-beyond/600/400"
   },
   {
-    "slug": "twitter-growth",
-    "tag": "Social Media",
-    "title": "Twitter/X Growth Playbook: 0 to 10K in 90 Days",
-    "excerpt": "A practical roadmap for building an engaged audience on X from scratch to 10,000 followers.",
-    "date": "2026-05-18",
-    "readTime": "8 min",
-    "coverImage": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&q=80"
+    "slug": "context-switching-is-killing-your-output-here-is-the-fix",
+    "tag": "Productivity",
+    "title": "Context Switching Is Killing Your Output. Here Is the Fix.",
+    "excerpt": "The science of attention residue, and the batching technique that tripled my deep work hours.",
+    "date": "2026-05-19",
+    "readTime": "7 min",
+    "coverImage": "https://picsum.photos/seed/context-switching-is-killing-your-output-here-is-the-fix/600/400"
+  },
+  {
+    "slug": "how-to-build-an-ai-saas-in-48-hours-step-by-step",
+    "tag": "AI Tools",
+    "title": "How to Build an AI SaaS in 48 Hours (Step by Step)",
+    "excerpt": "From idea to first paying customer using only AI tools. No coding team required.",
+    "date": "2026-05-19",
+    "readTime": "10 min",
+    "coverImage": "https://picsum.photos/seed/how-to-build-an-ai-saas-in-48-hours-step-by-step/600/400"
   },
   {
     "slug": "the-complete-guide-to-affiliate-marketing-for-saas",
@@ -385,6 +376,15 @@
     "date": "2026-05-18",
     "readTime": "8 min",
     "coverImage": "https://picsum.photos/seed/link-building-for-boring-b2b-products/600/400"
+  },
+  {
+    "slug": "twitter-growth",
+    "tag": "Social Media",
+    "title": "Twitter/X Growth Playbook: 0 to 10K in 90 Days",
+    "excerpt": "The content strategy, posting schedule, and engagement tactics that actually work in 2026.",
+    "date": "2026-05-18",
+    "readTime": "7 min",
+    "coverImage": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&q=80"
   },
   {
     "slug": "prompt-engineering-is-dead-long-live-prompt-engineering",
@@ -520,6 +520,15 @@
     "date": "2026-05-14",
     "readTime": "6 min",
     "coverImage": "https://picsum.photos/seed/schema-markup-that-actually-moves-the-needle/600/400"
+  },
+  {
+    "slug": "why-your-ai-generated-content-sounds-generic-and-how-to-fix-it",
+    "tag": "AI Tools",
+    "title": "Why Your AI-Generated Content Sounds Generic (And How to Fix It)",
+    "excerpt": "The training data problem nobody talks about, and the 5-minute trick that makes AI text sound like you.",
+    "date": "2026-05-14",
+    "readTime": "6 min",
+    "coverImage": "https://picsum.photos/seed/why-your-ai-generated-content-sounds-generic-and-how-to-fix-it/600/400"
   },
   {
     "slug": "autogpt-vs-agentic-workflows-what-actually-works-in-producti",
@@ -720,15 +729,6 @@
     "coverImage": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&q=80"
   },
   {
-    "slug": "seo-for-saas-the-long-tail-strategy-that-works",
-    "tag": "Growth",
-    "title": "SEO for SaaS: The Long-Tail Strategy That Works",
-    "excerpt": "Why targeting \"best X software\" and comparison keywords beats generic SEO for B2B products.",
-    "date": "2026-05-08",
-    "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/seo-for-saas-the-long-tail-strategy-that-works/600/400"
-  },
-  {
     "slug": "how-to-hire-your-first-contractor-without-losing-money",
     "tag": "Indie Dev",
     "title": "How to Hire Your First Contractor Without Losing Money",
@@ -745,6 +745,15 @@
     "date": "2026-05-08",
     "readTime": "7 min",
     "coverImage": "https://picsum.photos/seed/measuring-content-roi-metrics-that-matter-to-your-ceo/600/400"
+  },
+  {
+    "slug": "seo-for-saas-the-long-tail-strategy-that-works",
+    "tag": "SEO",
+    "title": "SEO for SaaS: The Long-Tail Strategy That Works",
+    "excerpt": "Why targeting \"best X software\" and comparison keywords beats generic SEO for B2B products.",
+    "date": "2026-05-08",
+    "readTime": "7 min",
+    "coverImage": "https://picsum.photos/seed/seo-for-saas-the-long-tail-strategy-that-works/600/400"
   },
   {
     "slug": "ai-image-generation-for-marketing-a-cost-breakdown",
@@ -792,15 +801,6 @@
     "coverImage": "https://picsum.photos/seed/how-we-use-ai-to-cut-our-content-production-time-by-70/600/400"
   },
   {
-    "slug": "how-to-write-copy-that-sells-even-if-you-are-not-a-writer",
-    "tag": "Growth",
-    "title": "How to Write Copy That Sells (Even If You Are Not a Writer)",
-    "excerpt": "Frameworks, formulas, and the one question that makes every landing page better.",
-    "date": "2026-05-06",
-    "readTime": "6 min",
-    "coverImage": "https://picsum.photos/seed/how-to-write-copy-that-sells-even-if-you-are-not-a-writer/600/400"
-  },
-  {
     "slug": "why-most-side-projects-never-become-businesses",
     "tag": "Indie Dev",
     "title": "Why Most Side Projects Never Become Businesses",
@@ -817,6 +817,15 @@
     "date": "2026-05-06",
     "readTime": "6 min",
     "coverImage": "https://picsum.photos/seed/the-morning-routine-that-actually-works-for-night-owls/600/400"
+  },
+  {
+    "slug": "how-to-write-copy-that-sells-even-if-you-are-not-a-writer",
+    "tag": "Growth",
+    "title": "How to Write Copy That Sells (Even If You Are Not a Writer)",
+    "excerpt": "Frameworks, formulas, and the one question that makes every landing page better.",
+    "date": "2026-05-06",
+    "readTime": "6 min",
+    "coverImage": "https://picsum.photos/seed/how-to-write-copy-that-sells-even-if-you-are-not-a-writer/600/400"
   },
   {
     "slug": "open-source-ai-models-that-rival-gpt-4-in-2026",

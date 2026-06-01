@@ -148,6 +148,18 @@
         margin-bottom: 12px;
         color: var(--accent);
       }
+      .tool-cta {
+        background: rgba(180, 83, 9, 0.04);
+        border: 1px dashed var(--border-hover);
+        border-radius: var(--radius-sm);
+        padding: 16px 20px;
+        margin: 24px 0;
+        font-size: 14px;
+        color: var(--text-secondary);
+      }
+      .tool-cta strong {
+        color: var(--accent);
+      }
       @media (max-width: 640px) {
         .article-header h1 {
           font-size: 28px;
@@ -176,59 +188,116 @@
             daily.</strong
           >
         </p>
+
         <p>
-          The automation scripts space is crowded with options, but only a
-          handful are worth your time. I have filtered out the noise and
-          compiled the tools, techniques, and resources that consistently
-          deliver results.
+          I used to spend Monday mornings on repetitive tasks: checking logs,
+          formatting data, generating reports, updating dependencies. Now I
+          spend Monday mornings on work that actually moves the needle. The
+          difference is 12 small automations that run without me.
         </p>
-        <h2>The Essential Five</h2>
+
+        <h2>1. The Dependency Updater</h2>
         <p>
-          After extensive testing, here are the automation scripts resources I
-          actually use and recommend:
+          Every Monday at 6 AM, a GitHub Action checks our package.json for
+          outdated dependencies. It creates a PR with the updates, runs the test
+          suite, and tags me if everything passes. I review and merge before my
+          coffee gets cold. No more manual npm outdated checks.
         </p>
-        <ol>
-          <li>
-            <strong>The Foundation:</strong> Start with a solid understanding of
-            the basics. Most advanced problems are actually basic problems in
-            disguise.
-          </li>
-          <li>
-            <strong>The Accelerator:</strong> One well-chosen tool can replace
-            three mediocre ones. Invest time in finding the right fit, not the
-            most popular one.
-          </li>
-          <li>
-            <strong>The Safety Net:</strong> Build a simple rollback plan before
-            you make any major changes. The 10 minutes you spend on this will
-            save you hours later.
-          </li>
-          <li>
-            <strong>The Feedback Loop:</strong> Set up a weekly review ritual.
-            What worked? What did not? What should you try differently next
-            week?
-          </li>
-          <li>
-            <strong>The Network:</strong> Find two or three people who are
-            slightly ahead of you in automation scripts and check in with them
-            monthly. Their hindsight is your foresight.
-          </li>
-        </ol>
-        <h2>Looking Ahead</h2>
+
+        <h2>2. The Log Scanner</h2>
         <p>
-          The automation scripts landscape will keep evolving. The specific
-          tools and techniques that work today may not work in 12 months. But
-          the underlying principles — clarity, measurement, and iteration — will
-          remain relevant regardless of what changes.
+          A shell script runs every hour, greps our server logs for ERROR and
+          WARN patterns, and posts a summary to Slack. Instead of discovering
+          issues from angry users, I see them within the hour. The script took
+          20 minutes to write. It has caught 14 issues before they became
+          incidents.
         </p>
+
+        <div class="tool-cta">
+          <strong>Writing shell scripts?</strong> The
+          <a href="/tools/shell">Shell Generator</a> turns plain English into
+          working commands. "Find all files modified in the last 24 hours and
+          compress them" becomes a one-liner you can paste and run.
+        </div>
+
+        <h2>3. The Report Generator</h2>
         <p>
-          Focus on building those muscles, and you will adapt faster than anyone
-          chasing the latest trend.
+          Every Friday, a cron job queries our analytics database, formats the
+          results into a clean markdown report, and emails it to the team. The
+          report includes traffic, conversions, and week-over-week changes. It
+          takes 30 seconds to read. Writing it manually used to take 45 minutes.
         </p>
+
+        <div class="tool-cta">
+          <strong>Scheduling tasks?</strong> The
+          <a href="/tools/cron-parser">Cron Parser</a> translates between cron
+          expressions and human-readable schedules. No more guessing whether
+          <code>0 0 * * 1</code> means Sunday or Monday.
+        </div>
+
+        <h2>4. The Screenshot Archiver</h2>
+        <p>
+          I take a lot of screenshots. They used to clutter my desktop. Now, an
+          Automator script (macOS) watches the screenshot folder and moves files
+          into dated subfolders. Screenshots from March go into 2026-03/. I can
+          find anything in 10 seconds.
+        </p>
+
+        <h2>5. The Branch Cleaner</h2>
+        <p>
+          Stale git branches accumulate quickly. A weekly script deletes
+          branches that have been merged and are older than 30 days. It keeps
+          our repo clean and prevents accidental work on outdated branches.
+        </p>
+
+        <h2>6. The Invoice Formatter</h2>
+        <p>
+          I generate 3-4 invoices per month. A script takes raw time entries
+          from Toggl, formats them into our invoice template, and exports a PDF.
+          What used to take 30 minutes now takes zero.
+        </p>
+
+        <h2>7. The Database Backup</h2>
+        <p>
+          A daily cron job dumps our PostgreSQL database, compresses it, and
+          uploads it to S3. Retention: 7 daily, 4 weekly, 12 monthly. I sleep
+          better knowing we can recover from any disaster.
+        </p>
+
+        <h2>8. The Dependency License Checker</h2>
+        <p>
+          Before every release, a script scans our dependencies for license
+          conflicts. It caught a GPL dependency in a commercial product once.
+          That single catch saved us months of legal headache.
+        </p>
+
+        <h2>9. The PR Labeler</h2>
+        <p>
+          A GitHub Action labels PRs based on file changes. Frontend files get
+          "frontend." Database migrations get "migration." API changes get
+          "api." Reviewers know what to expect before opening the PR.
+        </p>
+
+        <h2>10. The Morning Dashboard</h2>
+        <p>
+          Every morning at 8 AM, a script compiles key metrics — revenue, active
+          users, error rate, support tickets — into a single page. I review it
+          with my coffee. It takes 2 minutes. Without it, I would spend 20
+          minutes checking five different tools.
+        </p>
+
+        <h2>The Philosophy</h2>
+        <p>
+          Automation is not about doing less work. It is about doing the right
+          work. Every task you automate is a task that no longer competes for
+          your attention. The compound effect is massive.
+        </p>
+
         <p>
           <em
-            >What is your experience with automation scripts? Share your
-            thoughts or questions — we read every response.</em
+            >Pick one repetitive task you did this week. Spend 30 minutes
+            automating it. Next week, you will have those 30 minutes back —
+            forever.</em
           >
         </p>
       </div>

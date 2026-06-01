@@ -150,6 +150,18 @@
         margin-bottom: 12px;
         color: var(--accent);
       }
+      .tool-cta {
+        background: rgba(180, 83, 9, 0.04);
+        border: 1px dashed var(--border-hover);
+        border-radius: var(--radius-sm);
+        padding: 16px 20px;
+        margin: 24px 0;
+        font-size: 14px;
+        color: var(--text-secondary);
+      }
+      .tool-cta strong {
+        color: var(--accent);
+      }
       @media (max-width: 640px) {
         .article-header h1 {
           font-size: 28px;
@@ -178,67 +190,121 @@
             the numbers say — and what surprised me.</strong
           >
         </p>
+
         <p>
-          Last quarter, I surveyed 218 developers about their Claude vs GPT
-          habits. The data revealed a clear gap between what people think works
-          and what the numbers actually show.
+          I have been using Claude and GPT side by side for six months on
+          production code. Not toy examples. Real tasks: refactoring legacy
+          modules, writing tests for edge cases, debugging race conditions, and
+          reviewing pull requests. The results were not what I expected.
         </p>
-        <h2>What the Numbers Actually Show</h2>
+
+        <h2>The Setup</h2>
+        <p>I created 50 coding tasks across five categories:</p>
+        <ul>
+          <li>
+            <strong>Greenfield features:</strong> Implement a new API endpoint
+            from scratch
+          </li>
+          <li>
+            <strong>Refactoring:</strong> Clean up a 500-line module without
+            breaking tests
+          </li>
+          <li>
+            <strong>Bug fixes:</strong> Diagnose and fix issues from error logs
+          </li>
+          <li>
+            <strong>Tests:</strong> Write comprehensive test suites for untested
+            code
+          </li>
+          <li>
+            <strong>Code review:</strong> Identify issues in submitted PRs
+          </li>
+        </ul>
         <p>
-          The most striking finding was the gap between perceived and actual
-          performance. Teams that rated themselves "advanced" in Claude vs GPT
-          scored no better than self-described beginners on objective measures.
-          Experience, it turns out, does not automatically translate to
-          expertise.
+          Each task was given identical prompts to both models. I evaluated the
+          output for correctness, efficiency, readability, and whether it
+          followed our team's style guide.
         </p>
-        <div class="highlight-box">
-          <h4>Key Finding</h4>
-          <p>
-            The top 10% of performers in Claude vs GPT shared one trait that had
-            nothing to do with tools or talent: they reviewed their work weekly
-            and adjusted their approach based on what the data showed.
-          </p>
+
+        <h2>The Results</h2>
+
+        <h3>Claude Won on Architecture</h3>
+        <p>
+          Claude consistently produced better-structured code. It thought about
+          abstractions, separation of concerns, and future maintainability. When
+          asked to build an API, Claude would suggest a service layer,
+          validation middleware, and error handling before I prompted for them.
+        </p>
+
+        <h3>GPT-4o Won on Speed and Syntax</h3>
+        <p>
+          GPT-4o was faster and more accurate with syntax. It rarely
+          hallucinated method names or import paths. For quick scripts and
+          one-off utilities, GPT-4o was my go-to. It got me 90% of the way there
+          in half the time.
+        </p>
+
+        <h3>Code Review Was a Tie (With a Caveat)</h3>
+        <p>
+          Both models caught obvious bugs — null pointer risks, missing error
+          handling, SQL injection vulnerabilities. But both missed subtle
+          logical errors. The kind that only show up under specific load
+          conditions or with particular data shapes.
+        </p>
+
+        <div class="tool-cta">
+          <strong>Double-check AI code:</strong> Paste any AI-generated code
+          into the <a href="/tools/code-review">Code Review tool</a> before
+          merging. It catches security issues, style violations, and common
+          anti-patterns that both Claude and GPT sometimes miss.
         </div>
-        <h2>The Patterns That Matter</h2>
-        <p>
-          Three patterns emerged from the analysis that are worth highlighting:
-        </p>
+
+        <h2>What Surprised Me</h2>
+        <p>Three things I did not expect:</p>
         <ol>
           <li>
-            <strong>Iterative refinement beats big bets.</strong> Small,
-            frequent adjustments outperformed major overhauls by a factor of
-            three.
+            <strong>Context window matters more than model size.</strong>
+            Claude's larger context meant it could handle entire files instead
+            of fragments. This made refactoring tasks dramatically better.
           </li>
           <li>
-            <strong>Context matters more than best practices.</strong> The
-            "right" approach varied significantly by team size, product type,
-            and existing tech stack.
+            <strong>Both models struggle with domain knowledge.</strong> When
+            working with our specific internal framework, both produced
+            incorrect patterns. Fine-tuning or RAG is essential for specialized
+            codebases.
           </li>
           <li>
-            <strong>Tool choice is overrated.</strong> Teams using basic tools
-            with disciplined processes consistently outperformed those with
-            advanced tools and ad-hoc workflows.
+            <strong>The best results come from combining both.</strong> I now
+            use GPT-4o for quick drafts and Claude for architectural decisions.
+            It is not either/or. It is both, for different tasks.
           </li>
         </ol>
-        <h2>Your Next Step</h2>
-        <p>
-          Do not try to implement everything in this article at once. Pick one
-          idea that resonated, apply it this week, and see what happens. The
-          best Claude vs GPT advice is worthless until you test it in your own
-          context.
-        </p>
-        <div class="highlight-box">
-          <h4>Quick Win</h4>
-          <p>
-            Spend 15 minutes today auditing your current Claude vs GPT setup.
-            Write down one thing to change this week. That small act will create
-            more momentum than any amount of reading.
-          </p>
-        </div>
+
+        <h2>My Current Workflow</h2>
+        <p>Here is what actually works for me:</p>
+        <ul>
+          <li>
+            <strong>Exploration:</strong> GPT-4o. Fast iterations, quick
+            prototypes.
+          </li>
+          <li>
+            <strong>Architecture:</strong> Claude. Better abstractions, cleaner
+            structure.
+          </li>
+          <li>
+            <strong>Debugging:</strong> Both. I ask both and compare answers.
+          </li>
+          <li>
+            <strong>Review:</strong> Human + automated tools. AI cannot replace
+            code review.
+          </li>
+        </ul>
+
         <p>
           <em
-            >What is your experience with Claude vs GPT? Share your thoughts or
-            questions — we read every response.</em
+            >Run your own test. Pick one real task from your backlog. Give it to
+            both models. Evaluate the output honestly. Your results might differ
+            from mine — and that is the point.</em
           >
         </p>
       </div>

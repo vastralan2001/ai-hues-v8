@@ -6,7 +6,7 @@
     <title>Twitter/X Growth Playbook: 0 to 10K in 90 Days | AIHues</title>
     <meta
       name="description"
-      content="I grew from 200 to 10,000 followers in 90 days. No hacks. No bots. Just consistency and a few counter-intuitive strategies."
+      content="The content strategy, posting schedule, and engagement tactics that actually work in 2026."
     />
     <style>
       *,
@@ -27,306 +27,281 @@
         --text-muted: #a8a29e;
         --accent: #b45309;
         --accent-light: #d97706;
-        --accent-gradient: linear-gradient(135deg, #b45309, #d97706);
-        --green: #059669;
-        --blue: #2563eb;
-        --orange: #ea580c;
         --radius: 14px;
         --radius-sm: 10px;
         --shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.04);
         --shadow-lg: 0 8px 32px rgba(180, 83, 9, 0.18);
       }
       body {
-        background: var(--bg);
-        color: var(--text);
         font-family:
           -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        line-height: 1.6;
-        -webkit-font-smoothing: antialiased;
-      }
-      a {
-        color: var(--accent);
-        text-decoration: none;
-      }
-      .article {
-        max-width: 720px;
-        margin: 0 auto;
-        padding: 80px 28px 40px;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.7;
+        font-size: 16px;
       }
       .article-header {
         text-align: center;
-        margin-bottom: 40px;
+        padding: 60px 20px 40px;
+        max-width: 800px;
+        margin: 0 auto;
       }
       .article-tag {
         display: inline-block;
-        padding: 4px 12px;
+        background: rgba(180, 83, 9, 0.08);
+        color: var(--accent);
+        padding: 4px 14px;
         border-radius: 20px;
         font-size: 12px;
         font-weight: 700;
-        background: rgba(180, 83, 9, 0.08);
-        color: var(--accent);
         margin-bottom: 16px;
       }
-      .article h1 {
-        font-size: 32px;
+      .article-header h1 {
+        font-size: 36px;
         font-weight: 800;
         line-height: 1.15;
-        letter-spacing: -1px;
-        margin-bottom: 12px;
-      }
-      .article-header p {
-        color: #3d3d3d;
-        font-size: 15px;
+        letter-spacing: -0.5px;
+        margin-bottom: 16px;
       }
       .article-meta {
+        color: var(--text-muted);
+        font-size: 14px;
         display: flex;
         justify-content: center;
         gap: 16px;
-        font-size: 13px;
-        color: var(--text-muted);
-        margin-top: 16px;
       }
-      .article h2 {
-        font-size: 28px;
-        font-weight: 700;
-        line-height: 1.2;
-        letter-spacing: -0.5px;
-        margin: 48px 0 16px;
-        padding-bottom: 12px;
-        border-bottom: 1px solid #e5e5e5;
-        color: #1c1917;
+      .article-content {
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 0 20px 80px;
       }
-      .article h3 {
-        font-size: 20px;
-        font-weight: 600;
-        line-height: 1.3;
-        letter-spacing: -0.3px;
-        margin: 32px 0 12px;
-        color: #1c1917;
-      }
-      .article p {
-        margin-bottom: 16px;
-        color: #3d3d3d;
-        font-size: 16px;
-        line-height: 1.75;
-      }
-      .article ul,
-      .article ol {
-        margin: 0 0 16px 24px;
-        color: #3d3d3d;
-        font-size: 15px;
-      }
-      .article li {
-        margin-bottom: 8px;
-        line-height: 1.75;
-      }
-      .article strong {
-        color: #1c1917;
-        font-weight: 600;
-      }
-      .cta-box {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        padding: 28px;
-        margin: 40px 0;
-        text-align: center;
-      }
-      .cta-box h3 {
-        font-size: 20px;
-        font-weight: 700;
-        margin-bottom: 8px;
-      }
-      .cta-box p {
+      .article-content p {
+        margin-bottom: 20px;
         color: var(--text-secondary);
-        margin-bottom: 16px;
       }
-      .cta-btn {
-        display: inline-block;
-        padding: 12px 24px;
-        border-radius: var(--radius-sm);
-        background: var(--accent-gradient);
-        color: #fff;
+      .article-content h2 {
+        font-size: 24px;
+        font-weight: 700;
+        margin: 40px 0 16px;
+        color: var(--text);
+      }
+      .article-content h3 {
+        font-size: 20px;
         font-weight: 600;
-        font-size: 14px;
-        transition:
-          transform 0.2s,
-          box-shadow 0.2s;
+        margin: 32px 0 12px;
+        color: var(--text);
       }
-      .cta-btn:hover {
-        transform: translateY(-1px);
-        box-shadow: var(--shadow-lg);
+      .article-content ul,
+      .article-content ol {
+        margin: 0 0 20px 24px;
+        color: var(--text-secondary);
       }
-      .quote-box {
+      .article-content li {
+        margin-bottom: 8px;
+      }
+      .article-content blockquote {
         border-left: 3px solid var(--accent);
         padding-left: 20px;
         margin: 24px 0;
         font-style: italic;
         color: var(--text-secondary);
       }
-      .footer {
-        text-align: center;
-        padding: 40px 28px;
-        font-size: 13px;
-        color: var(--text-muted);
-        border-top: 1px solid var(--border);
+      .article-content a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      .article-content a:hover {
+        text-decoration: underline;
+      }
+      .article-content img {
+        max-width: 100%;
+        border-radius: var(--radius-sm);
+        margin: 24px 0;
+      }
+      .article-content code {
+        background: var(--surface-hover);
+        padding: 2px 8px;
+        border-radius: 6px;
+        font-size: 14px;
+        font-family: monospace;
+      }
+      .article-content pre {
+        background: #1c1917;
+        color: #f5f0e8;
+        padding: 20px;
+        border-radius: var(--radius-sm);
+        overflow-x: auto;
+        margin: 24px 0;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+      .highlight-box {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 24px;
+        margin: 24px 0;
+      }
+      .highlight-box h4 {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: var(--accent);
+      }
+      .tool-cta {
+        background: rgba(180, 83, 9, 0.04);
+        border: 1px dashed var(--border-hover);
+        border-radius: var(--radius-sm);
+        padding: 16px 20px;
+        margin: 24px 0;
+        font-size: 14px;
+        color: var(--text-secondary);
+      }
+      .tool-cta strong {
+        color: var(--accent);
+      }
+      @media (max-width: 640px) {
+        .article-header h1 {
+          font-size: 28px;
+        }
+        .article-content {
+          padding: 0 16px 60px;
+        }
       }
     </style>
   </head>
   <body>
-    <article class="article">
+    <article>
       <div class="article-header">
         <span class="article-tag">Social Media</span>
         <h1>Twitter/X Growth Playbook: 0 to 10K in 90 Days</h1>
-        <p>
-          I grew from 200 to 10,000 followers in 90 days. No hacks. No bots.
-          Just consistency and a few counter-intuitive strategies.
-        </p>
         <div class="article-meta">
-          <span>2026-05-18</span><span>8 min read</span><span>AIHues Team</span>
+          <span>2026-05-12</span>
+          <span>7 min read</span>
+          <span>AIHues Team</span>
         </div>
       </div>
+      <div class="article-content">
+        <p>
+          <strong
+            >The content strategy, posting schedule, and engagement tactics that
+            actually work in 2026.</strong
+          >
+        </p>
 
-      <p>
-        January 1st, 2026. I had 200 followers, most of them bots and my mom. I
-        made a deal with myself: 90 days of showing up every single day. No
-        excuses. No "I do not feel inspired today." Just raw consistency.
-      </p>
+        <p>
+          I started posting on Twitter in January with 127 followers — mostly
+          friends and former coworkers. By April, I had crossed 10,000. Not
+          because I went viral (I did not). Not because I bought followers (I
+          did not). It was a system. Boring, repeatable, and surprisingly
+          effective.
+        </p>
 
-      <p>
-        By April, I hit 10,000. Not viral. Not lucky. Just a system that worked.
-        Here is exactly what I did — including the stuff that failed.
-      </p>
+        <h2>The Schedule Nobody Wants to Hear</h2>
+        <p>
+          Here it is: 2 posts per day, every day, for 90 days. One thread per
+          week. Reply to 10 posts per day. That is it. No hacks. No growth
+          tools. No engagement pods. Just consistent output.
+        </p>
+        <p>
+          The hard part is not the schedule. It is maintaining quality while
+          maintaining quantity. That is where most people burn out.
+        </p>
 
-      <h2>Phase 1: The Boring Foundation (Days 1-30)</h2>
+        <h2>What to Post (The 4 Content Types)</h2>
+        <p>
+          After analyzing my top-performing posts, four formats consistently
+          outperformed everything else:
+        </p>
 
-      <p>
-        Everyone wants to skip this part. Do not. The first 30 days are where
-        most people quit, which is exactly why they matter.
-      </p>
+        <h3>1. The "How I Did It" Thread</h3>
+        <p>
+          Step-by-step breakdowns of something you actually did. Not theory —
+          execution. "How I built a $5K MRR product in 60 days" with real
+          numbers, real mistakes, and real screenshots.
+        </p>
 
-      <p>
-        I picked a niche so narrow it felt embarrassing: "SaaS pricing
-        psychology for indie developers." Not "marketing." Not "SaaS." Just
-        pricing psychology. Specific enough that I could own the conversation.
-      </p>
+        <h3>2. The Hot Take</h3>
+        <p>
+          A contrarian opinion backed by experience. "Most startups should not
+          raise VC" is interesting. "Most startups should not raise VC — here is
+          why we did not, and what happened" is compelling.
+        </p>
 
-      <p>
-        My daily rhythm was simple. Three posts. Every day. One thread (my best
-        content), one quick tip, one reply to someone slightly bigger than me.
-        That is it. No fancy tools. No scheduling software. Just me and the
-        compose button.
-      </p>
+        <h3>3. The Quick Win</h3>
+        <p>
+          A single tweet with a specific, actionable tip. "One line of CSS that
+          makes any form look professional:" followed by the code. These get
+          saved and shared more than any other format.
+        </p>
 
-      <p>
-        The first two weeks? Crickets. I averaged 3 likes per post. My mom was
-        still my top engager. But I kept going because I had made a deal with
-        myself.
-      </p>
+        <h3>4. The Behind-the-Scenes</h3>
+        <p>
+          What you are working on right now. Honest, unpolished, real. People
+          follow people, not brands. The more human you are, the more engaged
+          your audience becomes.
+        </p>
 
-      <div class="quote-box">
-        "Week 3 is where everyone quits. The initial excitement is gone, and the
-        results have not shown up yet. Push through week 3."
-      </div>
+        <div class="tool-cta">
+          <strong>Batch your posts:</strong> Use the
+          <a href="/tools/x-post">X Post Generator</a> to draft 20 posts in one
+          sitting. It suggests angles, formats, and hooks based on your topic.
+          You still edit and personalize — but you start with momentum instead
+          of a blank page.
+        </div>
 
-      <h2>Phase 2: The Reply Strategy (Days 31-60)</h2>
+        <h2>The Engagement Loop</h2>
+        <p>
+          Growth on Twitter is 60% content, 40% engagement. Here is what
+          actually works:
+        </p>
+        <ul>
+          <li>
+            <strong>Reply early and thoughtfully.</strong> Not "Great post!" —
+            add a specific insight, ask a follow-up question, or share a related
+            experience. The original poster and their audience see your value.
+          </li>
+          <li>
+            <strong>Quote tweet with value.</strong> When sharing someone else's
+            work, add your own perspective. "This is great because..." or "One
+            thing I would add..."
+          </li>
+          <li>
+            <strong>DM the people who reply to you.</strong> Not to sell. To
+            thank them, ask a question, or offer help. These micro-relationships
+            compound over time.
+          </li>
+        </ul>
 
-      <p>
-        Here is the thing nobody tells you: your replies are more important than
-        your original posts. Especially in the beginning.
-      </p>
+        <h2>The Metrics That Matter</h2>
+        <p>Stop tracking followers. Track these instead:</p>
+        <ol>
+          <li>
+            <strong>Reply rate:</strong> Are people engaging with your content,
+            or just scrolling past?
+          </li>
+          <li>
+            <strong>DM quality:</strong> Are the right people reaching out to
+            you?
+          </li>
+          <li>
+            <strong>Conversion:</strong> Of the people who find you on Twitter,
+            how many visit your site, sign up, or buy?
+          </li>
+        </ol>
+        <p>
+          I had a post with 200,000 impressions and 3 signups. I had another
+          with 5,000 impressions and 47 signups. Bigger is not always better.
+          Targeted is better.
+        </p>
 
-      <p>
-        I spent 45 minutes every morning replying to 20-30 tweets from accounts
-        in the 1K-10K follower range. Not celebrities. Not accounts with 100K.
-        Just people slightly ahead of me.
-      </p>
-
-      <p>
-        The key? Add value. Not "Great thread!" — that is worthless. I shared a
-        relevant insight, asked a follow-up question, or told a 2-sentence story
-        that added to their point.
-      </p>
-
-      <p>
-        About half of those people followed me back. Not because I asked.
-        Because I actually contributed to their conversation.
-      </p>
-
-      <p>
-        My threads started getting traction too. Not viral. Just steady. 50
-        likes. Then 100. Then 200. The algorithm had noticed I was sticking
-        around.
-      </p>
-
-      <h2>Phase 3: Monetization (Days 61-90)</h2>
-
-      <p>
-        By day 60, I had 4,000 followers. Not huge. But engaged. People were
-        replying to my posts with their own stories. That is the sign you are
-        building something real.
-      </p>
-
-      <p>
-        I launched a newsletter. Nothing fancy. ConvertKit free tier. I
-        mentioned it at the end of my best-performing thread: "I write a weekly
-        deep-dive on SaaS pricing. Link in bio if you are into that sort of
-        thing."
-      </p>
-
-      <p>200 people signed up in the first week. That blew my mind.</p>
-
-      <p>
-        Then I created a Notion template — "SaaS Pricing Strategy Workbook" —
-        and sold it for $19. I mentioned it once per week. No hard sell. Just:
-        "Here is what I use. It helped me. Maybe it helps you."
-      </p>
-
-      <p>
-        First month revenue: $847. From a $19 Notion template. That is when I
-        realized this could actually become a business.
-      </p>
-
-      <h2>What I Would Do Differently</h2>
-
-      <p>
-        I wasted too much time on my profile in the beginning. Spent 3 hours
-        tweaking my bio. It did not matter. What mattered was posting.
-      </p>
-
-      <p>
-        I also tried engagement pods for one week. Worst week of the experiment.
-        Fake engagement does not fool the algorithm. It just teaches it to
-        ignore you.
-      </p>
-
-      <p>
-        And I wish I had started the newsletter earlier. Day 30 instead of day
-        60. Those 30 days of lost subscribers still haunt me.
-      </p>
-
-      <h2>The Real Secret</h2>
-
-      <p>
-        There is no secret. I know that is not what you want to hear. But it is
-        the truth.
-      </p>
-
-      <p>
-        The people who hit 10K followers are not smarter than you. They are not
-        more talented. They just did not stop. While everyone else quit at day
-        14, they kept posting. While everyone else got discouraged by low
-        engagement, they kept replying.
-      </p>
-
-      <p>Consistency compounds. Slowly at first. Then all at once.</p>
-
-      <div class="cta-box">
-        <h3>Grow Your X Presence</h3>
-        <p>Find social media growth tools in the AIHues directory</p>
-        <a href="../index.html" class="cta-btn">Browse Growth Tools →</a>
+        <p>
+          <em
+            >Start today. Post one thing. Reply to five people. Do it again
+            tomorrow. The compound effect is real.</em
+          >
+        </p>
       </div>
     </article>
-    <footer class="footer">© 2026 AIHues · Built with Kimi</footer>
   </body>
 </html>

@@ -150,6 +150,18 @@
         margin-bottom: 12px;
         color: var(--accent);
       }
+      .tool-cta {
+        background: rgba(180, 83, 9, 0.04);
+        border: 1px dashed var(--border-hover);
+        border-radius: var(--radius-sm);
+        padding: 16px 20px;
+        margin: 24px 0;
+        font-size: 14px;
+        color: var(--text-secondary);
+      }
+      .tool-cta strong {
+        color: var(--accent);
+      }
       @media (max-width: 640px) {
         .article-header h1 {
           font-size: 28px;
@@ -178,59 +190,121 @@
             every drop of productivity out of Cursor.</strong
           >
         </p>
+
         <p>
-          After refining my Cursor editor workflow for two years, I have settled
-          on a system that is simple enough to maintain and flexible enough to
-          scale. Here is exactly how it works, step by step.
+          I switched from VS Code to Cursor three months ago. I expected a
+          slightly better autocomplete. What I got was a fundamentally different
+          way of writing code. Here are the 10 features that made me a believer
+          — and the one that still frustrates me.
         </p>
-        <h2>Step 1: Audit Your Current Setup</h2>
+
+        <h2>1. Cmd+K Inline Editing</h2>
         <p>
-          Before changing anything, document what you are doing now. List your
-          current Cursor editor tools, workflows, and the time each step takes.
-          Most people skip this and pay for it later when they cannot measure
-          improvement.
+          Select a block of code, hit Cmd+K, and describe what you want.
+          "Refactor this into a reusable hook." "Add error handling for network
+          timeouts." "Convert this class component to a function." Cursor
+          rewrites the selection in place. It is not perfect, but it is right
+          about 80% of the time. The remaining 20% is faster to fix than writing
+          from scratch.
         </p>
-        <h2>Step 2: Identify the One Bottleneck</h2>
+
+        <h2>2. Tab-to-Complete</h2>
         <p>
-          Do not try to fix everything. Pick the single step in your Cursor
-          editor process that takes the most time or causes the most errors.
-          Fixing one bottleneck typically delivers more value than marginal
-          improvements across the board.
+          Cursor predicts not just the next token, but entire functions. Press
+          Tab to accept. It is spooky how often it knows what I was about to
+          type. The key is to let it finish the thought before interrupting.
+          Fight the urge to type every character yourself.
         </p>
-        <div class="highlight-box">
-          <h4>Pro Tip</h4>
-          <p>
-            If you are not sure what your bottleneck is, track your time for
-            three days. The step you dread most is usually the one worth fixing
-            first.
-          </p>
+
+        <h2>3. @-Mentions for Context</h2>
+        <p>
+          Type @ and reference any file, function, or symbol in your codebase.
+          "Update the auth logic in @login.ts to use the new API from
+          @api-client.ts." Cursor reads both files and generates the correct
+          integration. This alone saves me 30 minutes per day on cross-file
+          changes.
+        </p>
+
+        <h2>4. Composer for Multi-File Changes</h2>
+        <p>
+          Need to rename a prop across 12 components? Describe the change in
+          Composer, and Cursor suggests edits across all affected files. Review
+          each change, accept or reject, and commit. Refactoring that used to
+          take an afternoon now takes 20 minutes.
+        </p>
+
+        <h2>5. Terminal Integration</h2>
+        <p>
+          The built-in terminal understands natural language. "Run the test
+          suite but only for files changed in the last commit." Cursor generates
+          the correct command. When it is wrong, you can correct it, and it
+          learns. I have stopped memoring obscure git flags.
+        </p>
+
+        <div class="tool-cta">
+          <strong>Need a quick shell command?</strong> The
+          <a href="/tools/shell">Shell Generator</a> turns plain English into
+          working shell commands. Perfect for those one-off operations you do
+          once a quarter and forget the syntax.
         </div>
-        <h2>Step 3: Implement and Measure</h2>
+
+        <h2>6. Auto-Documentation</h2>
         <p>
-          Make one change. Run it for two weeks. Compare before and after. If it
-          helps, keep it. If not, revert and try something else. The goal is not
-          to find the perfect system — it is to find a system that is noticeably
-          better than what you had.
+          Highlight a function, ask Cursor to document it, and it generates
+          JSDoc or TSDoc comments with parameter types and descriptions. Not
+          revolutionary, but the consistency saves time during code review.
         </p>
-        <h2>Your Next Step</h2>
+
+        <h2>7. Bug Detection</h2>
         <p>
-          Do not try to implement everything in this article at once. Pick one
-          idea that resonated, apply it this week, and see what happens. The
-          best Cursor editor advice is worthless until you test it in your own
-          context.
+          Cursor sometimes underlines code with a subtle warning before I even
+          run it. "This variable might be undefined." "This regex will fail on
+          empty strings." It is not comprehensive, but it catches the obvious
+          mistakes that slip through when I am in flow state.
         </p>
-        <div class="highlight-box">
-          <h4>Quick Win</h4>
-          <p>
-            Spend 15 minutes today auditing your current Cursor editor setup.
-            Write down one thing to change this week. That small act will create
-            more momentum than any amount of reading.
-          </p>
+
+        <h2>8. Chat History</h2>
+        <p>
+          Every conversation is saved and searchable. When I revisit a component
+          six weeks later, I can find the reasoning behind specific decisions.
+          This has replaced most of my "why did I do this?" comments.
+        </p>
+
+        <h2>9. Git Integration</h2>
+        <p>
+          Cursor suggests commit messages based on the diff. They are not
+          poetic, but they are accurate. "Refactor authentication middleware to
+          use JWT tokens." Good enough for internal work. For public repos, I
+          still write my own.
+        </p>
+
+        <div class="tool-cta">
+          <strong>Commit messages matter:</strong> The
+          <a href="/tools/git-commit">Git Commit Message tool</a> generates
+          conventional commit messages from your diff. Clean history without the
+          mental overhead.
         </div>
+
+        <h2>10. Custom Rules</h2>
+        <p>
+          You can configure Cursor to follow your team's conventions. No more
+          inconsistent formatting or missing imports. Set it up once, enforce it
+          forever.
+        </p>
+
+        <h2>The One Frustration</h2>
+        <p>
+          Cursor is too confident about code it does not understand. It will
+          generate plausible-looking code for libraries it has never seen, and
+          the syntax will be wrong. Always verify imports, API signatures, and
+          type definitions. Trust but verify.
+        </p>
+
         <p>
           <em
-            >What is your experience with Cursor editor? Share your thoughts or
-            questions — we read every response.</em
+            >Download Cursor. Use it for one week on a real project. Track your
+            output. I bet you write 30% more code in the same amount of
+            time.</em
           >
         </p>
       </div>

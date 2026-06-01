@@ -150,6 +150,18 @@
         margin-bottom: 12px;
         color: var(--accent);
       }
+      .tool-cta {
+        background: rgba(180, 83, 9, 0.04);
+        border: 1px dashed var(--border-hover);
+        border-radius: var(--radius-sm);
+        padding: 16px 20px;
+        margin: 24px 0;
+        font-size: 14px;
+        color: var(--text-secondary);
+      }
+      .tool-cta strong {
+        color: var(--accent);
+      }
       @media (max-width: 640px) {
         .article-header h1 {
           font-size: 28px;
@@ -178,55 +190,115 @@
             that haunt you later.</strong
           >
         </p>
+
         <p>
-          If you are trying to get database design indie right and feel
-          overwhelmed by conflicting advice, start here. I have stripped out
-          everything that sounds good in a tweet but fails in production.
+          When I started my first SaaS, I spent a week designing the perfect
+          database schema. Normalized to 3NF. Foreign keys everywhere. Enum
+          types for every status field. It was beautiful. It was also completely
+          unnecessary for a product with 50 users.
         </p>
-        <h2>Step 1: Audit Your Current Setup</h2>
         <p>
-          Before changing anything, document what you are doing now. List your
-          current database design indie tools, workflows, and the time each step
-          takes. Most people skip this and pay for it later when they cannot
-          measure improvement.
+          Two years later, that same schema was slowing us down. Migrations took
+          20 minutes. Queries that should take milliseconds took seconds. I had
+          optimized for elegance instead of pragmatism.
         </p>
-        <h2>Step 2: Identify the One Bottleneck</h2>
+
+        <h2>Start with SQLite (Yes, Really)</h2>
         <p>
-          Do not try to fix everything. Pick the single step in your database
-          design indie process that takes the most time or causes the most
-          errors. Fixing one bottleneck typically delivers more value than
-          marginal improvements across the board.
+          For your first 1,000 users, SQLite is probably enough. It requires
+          zero setup, runs in-process, and handles more concurrent reads than
+          most indie apps will ever need. The "SQLite does not scale" meme is
+          true for Twitter, but not for your side project.
         </p>
-        <div class="highlight-box">
-          <h4>Pro Tip</h4>
-          <p>
-            If you are not sure what your bottleneck is, track your time for
-            three days. The step you dread most is usually the one worth fixing
-            first.
-          </p>
+        <p>When do you outgrow SQLite? When you need:</p>
+        <ul>
+          <li>Multiple write-heavy processes</li>
+          <li>Complex analytics queries</li>
+          <li>Geographic distribution</li>
+          <li>Advanced features like JSONB or full-text search</li>
+        </ul>
+        <p>
+          Until then, SQLite lets you move fast. And moving fast is the only
+          thing that matters before product-market fit.
+        </p>
+
+        <h2>When to Switch to PostgreSQL</h2>
+        <p>
+          We switched at around 5,000 active users. The trigger was not
+          performance — it was a feature we needed (full-text search) that
+          SQLite handled poorly. The migration took a weekend. The schema stayed
+          almost identical.
+        </p>
+        <p>
+          PostgreSQL is the default choice for a reason. It is reliable,
+          well-documented, and has features you will eventually need: JSONB,
+          spatial queries, logical replication. But do not start there just
+          because it is "what serious apps use."
+        </p>
+
+        <h2>Schema Decisions That Matter Early</h2>
+        <p>Three schema choices that are hard to change later:</p>
+
+        <h3>1. Use UUIDs for Public IDs</h3>
+        <p>
+          Sequential integer IDs leak information. Competitors can estimate your
+          user count, order volume, and growth rate. Use UUIDs for anything
+          exposed in URLs or APIs. Keep integers internally if you want.
+        </p>
+
+        <h3>2. Add created_at and updated_at to Every Table</h3>
+        <p>
+          You will need them for debugging, analytics, and sorting. Adding them
+          later requires backfills. Do it from day one.
+        </p>
+
+        <h3>3. Avoid Soft Deletes (Initially)</h3>
+        <p>
+          Soft deletes add complexity: every query needs a deleted_at check,
+          foreign keys get weird, and you will eventually need a hard delete
+          anyway. Start with hard deletes and add soft deletes only when you
+          have a specific compliance requirement.
+        </p>
+
+        <div class="tool-cta">
+          <strong>Formatting SQL?</strong> The
+          <a href="/tools/sql">SQL Formatter</a> cleans up messy queries,
+          standardizes indentation, and catches basic syntax issues. Especially
+          useful when reviewing schema migrations.
         </div>
-        <h2>Step 3: Implement and Measure</h2>
+
+        <h2>When to Add Redis</h2>
         <p>
-          Make one change. Run it for two weeks. Compare before and after. If it
-          helps, keep it. If not, revert and try something else. The goal is not
-          to find the perfect system — it is to find a system that is noticeably
-          better than what you had.
+          Redis is not a database replacement. It is a caching layer, a session
+          store, and a rate limiter. We added Redis when:
         </p>
-        <h2>Looking Ahead</h2>
+        <ul>
+          <li>Our most-read query was taking 200ms</li>
+          <li>We needed real-time leaderboards</li>
+          <li>We wanted to rate-limit API endpoints</li>
+        </ul>
         <p>
-          The database design indie landscape will keep evolving. The specific
-          tools and techniques that work today may not work in 12 months. But
-          the underlying principles — clarity, measurement, and iteration — will
-          remain relevant regardless of what changes.
+          Each use case was independent. We did not add Redis because it was
+          trendy. We added it because we had a specific problem it solved.
         </p>
+
+        <h2>The Schema I Use Now</h2>
         <p>
-          Focus on building those muscles, and you will adapt faster than anyone
-          chasing the latest trend.
+          After three years of iterations, here is my current starting template:
         </p>
+        <ul>
+          <li>Every table has id (UUID), created_at, updated_at</li>
+          <li>Foreign keys with ON DELETE CASCADE</li>
+          <li>Indexes on every column used in WHERE, ORDER BY, or JOIN</li>
+          <li>No soft deletes until legally required</li>
+          <li>JSONB for flexible metadata, not for relational data</li>
+        </ul>
+
         <p>
           <em
-            >What is your experience with database design indie? Share your
-            thoughts or questions — we read every response.</em
+            >Your database schema is not a work of art. It is a tool. Optimize
+            for the problems you have today, not the problems you might have in
+            two years.</em
           >
         </p>
       </div>
