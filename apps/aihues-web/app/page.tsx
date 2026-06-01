@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 import { ToolCardV2 } from '@/components/CatalogCards';
 import { PageShell } from '@/components/SiteChrome';
-import { Sidebar } from '@/components/Sidebar';
+
 import { Logo } from '@/components/Logo';
 import { GameCreditBadge } from '@/components/GameCreditBadge';
 import type { CatalogGame } from '@/lib/catalog-api';
@@ -209,10 +209,7 @@ export default async function HomePage() {
 
   return (
     <PageShell variant='home' locale={locale}>
-      <Sidebar />
-
-      {/* Main content with sidebar offset on desktop */}
-      <div className='lg:ml-[240px]'>
+      <div>
         {/* ══════════════════════════════════════════════
             HERO
             ══════════════════════════════════════════════ */}
