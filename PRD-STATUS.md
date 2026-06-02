@@ -2,7 +2,7 @@
 
 > 测试环境：https://aihues-test.mse.msh.work  
 > 分支：`feature/design-refresh` → GitLab MR #3  
-> 更新时间：2026-06-01
+> 更新时间：2026-06-02
 
 ---
 
@@ -39,13 +39,14 @@ AIHues 是 AI 工具导航站 + 实用工具集合，定位 "AI Vibe Navigator"�
 
 **三种形态：**
 
-| 形态 | 说明 | 示例 |
-|---|---|---|
+| 形态                  | 说明                         | 示例               |
+| --------------------- | ---------------------------- | ------------------ |
 | **有评测的React工具** | 顶部标签：工具 / 评测 / 评论 | Ad Copy、JSON、JWT |
-| **无评测的React工具** | 仅显示工具本身 | Base64、UUID |
-| **静态HTML工具** | 跳转到 `.html` 文件 | 遗留的26个工具 |
+| **无评测的React工具** | 仅显示工具本身               | Base64、UUID       |
+| **静态HTML工具**      | 跳转到 `.html` 文件          | 遗留的26个工具     |
 
 **评测标签内容：**
+
 - 6维度雷达图（输出质量30% / 易用性20% / 性价比20% / 生态15% / 迭代10% / 社区5%）
 - 6个维度进度条
 - Pros/Cons 列表
@@ -53,6 +54,7 @@ AIHues 是 AI 工具导航站 + 实用工具集合，定位 "AI Vibe Navigator"�
 - **当前15个工具有评测数据**
 
 **评论标签内容：**
+
 - 6条占位评论（含评分、回复、点赞）
 - 支持提交评论（localStorage持久化，按工具隔离）
 - 最热/最新排序
@@ -77,10 +79,10 @@ Ad Copy、Blog Outline、Cold Email、X Post、LinkedIn、SEO Title、Meta、TL;
 
 ### 8. 定价 `/pricing`
 
-| 档位 | 价格 | 积分 |
-|---|---|---|
-| Free | 免费 | 100 credits/月 |
-| Pro | $9/月 | 2,000 credits/月 |
+| 档位 | 价格   | 积分              |
+| ---- | ------ | ----------------- |
+| Free | 免费   | 100 credits/月    |
+| Pro  | $9/月  | 2,000 credits/月  |
 | Team | $29/月 | 10,000 credits/月 |
 
 - 导航栏右上角显示当前积分余额（localStorage）
@@ -101,13 +103,13 @@ Ad Copy、Blog Outline、Cold Email、X Post、LinkedIn、SEO Title、Meta、TL;
 
 ## 三、技术栈
 
-| 层 | 技术 |
-|---|---|
+| 层   | 技术                                              |
+| ---- | ------------------------------------------------- |
 | 前端 | Next.js 16 + React 19 + Tailwind CSS + TypeScript |
-| 构建 | moonrepo + pnpm |
-| 部署 | ArgoCD 自动部署 |
-| 后端 | Go service（port 9005，当前 offline） |
-| API | Connect RPC（JSON over HTTP） |
+| 构建 | moonrepo + pnpm                                   |
+| 部署 | ArgoCD 自动部署                                   |
+| 后端 | Go service（port 9005，当前 offline）             |
+| API  | Connect RPC（JSON over HTTP）                     |
 
 ---
 
@@ -122,33 +124,38 @@ Ad Copy、Blog Outline、Cold Email、X Post、LinkedIn、SEO Title、Meta、TL;
 7. ✅ **首页去冗余** — 删除无效的 All/Free/Freemium/Paid 筛选
 8. ✅ **首页推广位** — Playbooks 改为外部合作伙伴链接
 9. ✅ **首页统计修复** — 移除 805 行硬编码 fallback 数组，`catalog-api.ts` fallback 改为动态生成自 `tool-data.ts`，确保首页/Developer/Utility/AI Writing/Games 数字与 57+30+8+19+3 完全一致
+10. ✅ **Wishlist 后端** — Next.js API Route + JSON 文件持久化（容器不可写时自动回退内存），提交/投票全链路可用，双语 UI
+11. ✅ **评论系统双语化** — 6 条占位评论随 locale 自动切换中英文，用户评论永久保留
+12. ✅ **积分初始化修复** — 新用户首次访问自动写入 100 credits（与定价页 Free 档位一致），游戏赢取/消耗同步正确
 
 ---
 
-## 六、关键决策点（需 leader 确认）
+## 六、关键决策点（1 个待 leader 确认）
 
 ### 决策 1：AI工具是否接入真实LLM？
 
 **现状：** 19个AI写作工具全是纯前端模板替换，用户觉得"没效果"。
 
 **接入LLM需要：**
+
 - 前端各AI工具改为调用统一API（Next.js API Route 或 Go后端中转）
 - LLM API Key（OpenAI/Kimi/DeepSeek，约 ¥0.05/次）
 - 每个AI调用消耗积分（已有积分系统UI铺垫）
 
 **影响：** 接入后19个AI工具从"模板填空"升级为"真正AI生成"，是产品核心体验跃迁。
 
-### 决策 2：Wishlist 后端排期
+### 决策 2：✅ 已完成 — Wishlist 后端已上线
 
-**现状：** 纯前端占位，提交和投票都不持久化。
+**实现：** Next.js API Route + JSON 文件持久化（`/tmp/aihues-wishes.json`），容器文件系统不可写时自动回退内存存储，功能永不挂掉。
 
-**需要后端：** wishes表 + 投票接口 + 用户身份（至少匿名ID）。
+- `GET /api/wishes` 拉取列表
+- `POST /api/wishes` 提交新需求
+- `POST /api/wishes/vote` 投票/取消投票（anonymous ID 防刷票）
+- 前端乐观更新，双语 UI
 
-### 决策 3：静态HTML工具迁移
+### 决策 3：✅ 已完成 — 26 个 HTML 工具已迁移 React
 
-**现状：** 26个工具仍是静态HTML，与React工具体验不一致。
-
-**建议：** 逐步迁移为React组件（可复用现有组件库），或至少统一导航和布局。
+**现状：** 57 个工具已全部走 React 组件，统一导航和布局。26 个遗留 HTML 文件已删除。
 
 ---
 
@@ -156,13 +163,13 @@ Ad Copy、Blog Outline、Cold Email、X Post、LinkedIn、SEO Title、Meta、TL;
 
 截图保存在 `screenshots/`：
 
-| 截图 | 内容 |
-|---|---|
-| `demo-home.png` | 首页（含热词+推广位） |
-| `demo-tools.png` | 工具列表页（57个工具） |
-| `demo-json.png` | JSON Formatter 纯前端工具 |
-| `demo-adcopy.png` | Ad Copy AI工具（带评测标签+积分） |
-| `demo-blog.png` | 博客文章 + 底部工具推荐卡片 |
-| `demo-compare.png` | 工具对比页 |
-| `demo-review-tab.png` | 工具详情页（评测+评论标签） |
-| `demo-pricing.png` | 定价页（Free/Pro/Team） |
+| 截图                  | 内容                              |
+| --------------------- | --------------------------------- |
+| `demo-home.png`       | 首页（含热词+推广位）             |
+| `demo-tools.png`      | 工具列表页（57个工具）            |
+| `demo-json.png`       | JSON Formatter 纯前端工具         |
+| `demo-adcopy.png`     | Ad Copy AI工具（带评测标签+积分） |
+| `demo-blog.png`       | 博客文章 + 底部工具推荐卡片       |
+| `demo-compare.png`    | 工具对比页                        |
+| `demo-review-tab.png` | 工具详情页（评测+评论标签）       |
+| `demo-pricing.png`    | 定价页（Free/Pro/Team）           |

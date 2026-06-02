@@ -8,7 +8,9 @@ export function GameCreditBadge({ locale }: { locale: Locale }) {
   const [credits] = useState<number | null>(() => {
     if (typeof window === 'undefined') return null;
     const stored = localStorage.getItem('aihues-credits');
-    return stored ? parseInt(stored, 10) : 0;
+    if (stored) return parseInt(stored, 10);
+    localStorage.setItem('aihues-credits', '100');
+    return 100;
   });
 
   return (

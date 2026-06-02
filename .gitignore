@@ -16,3 +16,6 @@ local.yaml
 .moon/cache
 .moon/docker
 .idea
+
+# Runtime data files
+data/wishes.json

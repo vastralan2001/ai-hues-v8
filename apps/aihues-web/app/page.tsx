@@ -294,17 +294,16 @@ export default async function HomePage() {
         </section>
 
         {/* ══════════════════════════════════════════════
-            EXTERNAL PROMO BAR
+            PARTNER SLOT (placeholder for Phase 2)
             ══════════════════════════════════════════════ */}
         <section className='mx-auto max-w-[1300px] px-8 pb-10'>
-          <Link
-            className='group relative block overflow-hidden rounded-[14px] px-6 py-5 text-white no-underline transition-all hover:shadow-[0_4px_16px_rgba(180,83,9,0.2)]'
-            href='https://girgrils.com'
-            rel='noopener noreferrer'
-            style={{ background: 'linear-gradient(135deg, #1c1917, #292524)' }}
-            target='_blank'
+          <div
+            className='group relative block overflow-hidden rounded-[14px] px-6 py-5 text-white no-underline transition-all'
+            style={{
+              background: 'linear-gradient(135deg, #1c1917, #292524)',
+              opacity: 0.6,
+            }}
           >
-            {/* Radial glow accent */}
             <div
               className='pointer-events-none absolute -right-[15%] -top-[40%] h-[250px] w-[250px] rounded-full'
               style={{
@@ -315,21 +314,24 @@ export default async function HomePage() {
             <div className='relative z-[1] flex items-center justify-between'>
               <div>
                 <span className='mb-2 inline-block rounded-md border border-[rgba(180,83,9,0.3)] bg-[rgba(180,83,9,0.2)] px-2.5 py-1 text-[11px] font-bold text-[#fbbf24]'>
-                  Partner
+                  {locale === 'zh' ? '合作伙伴' : 'Partner'}
                 </span>
                 <h3 className='mt-1 text-[17px] font-bold'>
-                  Discover more on Girgrils →
+                  {locale === 'zh'
+                    ? '合作伙伴推荐位（二期上线）'
+                    : 'Partner recommendations (Phase 2)'}
                 </h3>
                 <p className='mt-1 text-[12px] opacity-70'>
-                  Explore curated AI tools and growth resources from our
-                  partner.
+                  {locale === 'zh'
+                    ? '精选 AI 工具与增长资源推荐位，敬请期待。'
+                    : 'Curated AI tools and growth resources. Coming soon.'}
                 </p>
               </div>
-              <span className='text-[24px] opacity-60 transition-opacity group-hover:opacity-100'>
-                ↗
+              <span className='rounded-md bg-[rgba(255,255,255,0.1)] px-2.5 py-1 text-[11px] font-medium text-white/60'>
+                Coming soon
               </span>
             </div>
-          </Link>
+          </div>
         </section>
 
         {/* ══════════════════════════════════════════════

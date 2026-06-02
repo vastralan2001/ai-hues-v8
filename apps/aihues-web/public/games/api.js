@@ -109,7 +109,9 @@
       return typeof data.credits === 'number' ? data.credits : 0;
     } catch {
       const raw = localStorage.getItem('aihues-credits');
-      return raw ? parseInt(raw, 10) : 0;
+      if (raw) return parseInt(raw, 10);
+      localStorage.setItem('aihues-credits', '100');
+      return 100;
     }
   }
 
@@ -151,7 +153,10 @@
         localStorage.getItem('aihues-checkin-streak') || '0',
         10
       );
-      let credits = parseInt(localStorage.getItem('aihues-credits') || '0', 10);
+      let credits = parseInt(
+        localStorage.getItem('aihues-credits') || '100',
+        10
+      );
 
       if (last !== today) {
         credits += 10;

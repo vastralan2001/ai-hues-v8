@@ -1,142 +1,89 @@
 'use client';
 
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
+import { useI18n } from '@/lib/i18n';
 import { rankingHref } from '@/lib/routes';
 
-type WishStatus = 'PLANNED' | 'IN PROGRESS' | 'DONE';
+import type { Wish, WishStatus } from '@/lib/wishes';
+
 type WishFilter = 'ALL' | WishStatus;
 
-// Example wishlist items (replace with API data when voting system is live)
-const WISHLIST_ITEMS = [
-  {
-    rank: 1,
-    title: 'AI PDF Summarizer',
-    description:
-      'Upload long PDFs and get a concise outline, key quotes, and action items.',
-    category: 'AI Writing',
-    status: 'IN PROGRESS',
-    votes: 0,
-    date: '2026-05-20',
-  },
-  {
-    rank: 2,
-    title: 'Image Background Remover',
-    description:
-      'Remove backgrounds from product images and avatars with one click.',
-    category: 'Utility',
-    status: 'PLANNED',
-    votes: 0,
-    date: '2026-05-18',
-  },
-  {
-    rank: 3,
-    title: 'API Mock Server',
-    description:
-      'Paste OpenAPI or JSON examples and generate a temporary mock endpoint.',
-    category: 'Developer',
-    status: 'PLANNED',
-    votes: 0,
-    date: '2026-05-16',
-  },
-  {
-    rank: 4,
-    title: 'Resume Bullet Rewriter',
-    description:
-      'Turn rough work notes into quantified resume bullets in multiple tones.',
-    category: 'AI Writing',
-    status: 'DONE',
-    votes: 0,
-    date: '2026-05-12',
-  },
-  {
-    rank: 5,
-    title: 'SQL Schema Visualizer',
-    description:
-      'Convert CREATE TABLE statements into a clean relationship diagram.',
-    category: 'Developer',
-    status: 'IN PROGRESS',
-    votes: 0,
-    date: '2026-05-10',
-  },
-  {
-    rank: 6,
-    title: 'Meeting Notes Cleaner',
-    description:
-      'Paste messy meeting notes and receive decisions, owners, and next steps.',
-    category: 'Utility',
-    status: 'PLANNED',
-    votes: 0,
-    date: '2026-05-08',
-  },
-  {
-    rank: 7,
-    title: 'Prompt Version Diff',
-    description:
-      'Compare two prompt versions and highlight instruction, tone, and output changes.',
-    category: 'Developer',
-    status: 'PLANNED',
-    votes: 0,
-    date: '2026-05-06',
-  },
-  {
-    rank: 8,
-    title: 'Product Hunt Launch Kit',
-    description:
-      'Generate tagline, maker comment, launch checklist, and social copy.',
-    category: 'Growth',
-    status: 'DONE',
-    votes: 0,
-    date: '2026-05-03',
-  },
-  {
-    rank: 9,
-    title: 'Invoice OCR Checker',
-    description:
-      'Extract invoice fields and flag missing tax IDs, totals, and dates.',
-    category: 'Utility',
-    status: 'PLANNED',
-    votes: 0,
-    date: '2026-05-01',
-  },
-  {
-    rank: 10,
-    title: 'CSS Clamp Generator',
-    description:
-      'Generate responsive clamp() font sizes and spacing scales from min/max values.',
-    category: 'Developer',
-    status: 'DONE',
-    votes: 0,
-    date: '2026-04-29',
-  },
-] satisfies Array<{
-  rank: number;
-  title: string;
-  description: string;
-  category: string;
-  status: WishStatus;
-  votes: number;
-  date: string;
-}>;
-
-const filterLabels: Record<WishFilter, string> = {
+const filterLabelsEn: Record<WishFilter, string> = {
   ALL: 'All',
   'IN PROGRESS': 'In Progress',
   DONE: 'Done',
   PLANNED: 'Planned',
 };
 
+const filterLabelsZh: Record<WishFilter, string> = {
+  ALL: '全部',
+  'IN PROGRESS': '进行中',
+  DONE: '已完成',
+  PLANNED: '计划中',
+};
+
+function getAnonymousId(): string {
+  if (typeof window === 'undefined') return '';
+  let id = localStorage.getItem('aihues-anon-id');
+  if (!id) {
+    id = `anon-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    localStorage.setItem('aihues-anon-id', id);
+  }
+  return id;
+}
+
 export function WishlistBoard() {
+  const { locale } = useI18n();
+  const filterLabels = locale === 'zh' ? filterLabelsZh : filterLabelsEn;
+
+  const [wishes, setWishes] = useState<Wish[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
   const [filter, setFilter] = useState<WishFilter>('ALL');
   const [sort, setSort] = useState<'popular' | 'newest' | 'status'>('popular');
-  const [votedIds, setVotedIds] = useState<Set<string>>(new Set());
+
+  // Form state
+  const [formTitle, setFormTitle] = useState('');
+  const [formDesc, setFormDesc] = useState('');
+  const [formCategory, setFormCategory] = useState('Developer');
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  const anonymousId = useMemo(() => getAnonymousId(), []);
+
+  const fetchWishes = useCallback(async () => {
+    try {
+      setLoading(true);
+      const res = await fetch('/api/wishes');
+      const data = (await res.json()) as { wishes?: Wish[] };
+      setWishes(data.wishes ?? []);
+      setError('');
+    } catch {
+      setError(
+        locale === 'zh'
+          ? '加载失败，请刷新重试'
+          : 'Failed to load. Please refresh.'
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, [locale]);
+
+  useEffect(() => {
+    queueMicrotask(() => {
+      fetchWishes();
+    });
+  }, [fetchWishes]);
 
   const visibleWishes = useMemo(() => {
     const filtered =
       filter === 'ALL'
-        ? WISHLIST_ITEMS
-        : WISHLIST_ITEMS.filter((wish) => wish.status === filter);
+        ? wishes
+        : wishes.filter((wish) => wish.status === filter);
 
     return [...filtered].sort((first, second) => {
       if (sort === 'status') {
@@ -147,53 +94,194 @@ export function WishlistBoard() {
       }
       return second.votes - first.votes;
     });
-  }, [filter, sort]);
+  }, [filter, sort, wishes]);
 
-  function toggleVote(title: string) {
-    setVotedIds((current) => {
-      const next = new Set(current);
-      if (next.has(title)) {
-        next.delete(title);
-      } else {
-        next.add(title);
+  const topFive = useMemo(() => {
+    return [...wishes].sort((a, b) => b.votes - a.votes).slice(0, 5);
+  }, [wishes]);
+
+  async function handleSubmit() {
+    if (!formTitle.trim() || !formDesc.trim()) return;
+    setSubmitting(true);
+    setSubmitError('');
+    setSubmitSuccess(false);
+
+    try {
+      const res = await fetch('/api/wishes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: formTitle.trim(),
+          description: formDesc.trim(),
+          category: formCategory,
+        }),
+      });
+
+      if (!res.ok) {
+        const data = (await res.json()) as { error?: string };
+        throw new Error(data.error || 'Submit failed');
       }
-      return next;
-    });
+
+      setFormTitle('');
+      setFormDesc('');
+      setSubmitSuccess(true);
+      await fetchWishes();
+      setTimeout(() => setSubmitSuccess(false), 3000);
+    } catch (err) {
+      setSubmitError(
+        err instanceof Error
+          ? err.message
+          : locale === 'zh'
+            ? '提交失败'
+            : 'Submit failed'
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  async function toggleVote(wishId: string) {
+    const wish = wishes.find((w) => w.id === wishId);
+    if (!wish) return;
+
+    const hasVoted = wish.voters.includes(anonymousId);
+    const action = hasVoted ? 'down' : 'up';
+
+    // Optimistic UI update
+    setWishes((prev) =>
+      prev.map((w) => {
+        if (w.id !== wishId) return w;
+        const voted = w.voters.includes(anonymousId);
+        return {
+          ...w,
+          votes: voted ? Math.max(0, w.votes - 1) : w.votes + 1,
+          voters: voted
+            ? w.voters.filter((v) => v !== anonymousId)
+            : [...w.voters, anonymousId],
+        };
+      })
+    );
+
+    try {
+      const res = await fetch('/api/wishes/vote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ wishId, anonymousId, action }),
+      });
+
+      if (!res.ok) {
+        // Rollback on failure
+        setWishes((prev) =>
+          prev.map((w) => {
+            if (w.id !== wishId) return w;
+            const voted = w.voters.includes(anonymousId);
+            return {
+              ...w,
+              votes: voted ? Math.max(0, w.votes - 1) : w.votes + 1,
+              voters: voted
+                ? w.voters.filter((v) => v !== anonymousId)
+                : [...w.voters, anonymousId],
+            };
+          })
+        );
+      }
+    } catch {
+      // Rollback on network error
+      setWishes((prev) =>
+        prev.map((w) => {
+          if (w.id !== wishId) return w;
+          const voted = w.voters.includes(anonymousId);
+          return {
+            ...w,
+            votes: voted ? Math.max(0, w.votes - 1) : w.votes + 1,
+            voters: voted
+              ? w.voters.filter((v) => v !== anonymousId)
+              : [...w.voters, anonymousId],
+          };
+        })
+      );
+    }
   }
 
   return (
     <>
       <div className='wish-form'>
-        <input maxLength={60} placeholder='Tool name...' />
-        <textarea placeholder='Describe what it does...' />
+        <input
+          maxLength={60}
+          placeholder={locale === 'zh' ? '工具名称...' : 'Tool name...'}
+          value={formTitle}
+          onChange={(e) => setFormTitle(e.target.value)}
+        />
+        <textarea
+          placeholder={
+            locale === 'zh' ? '描述它的功能...' : 'Describe what it does...'
+          }
+          rows={3}
+          value={formDesc}
+          onChange={(e) => setFormDesc(e.target.value)}
+        />
         <div className='wish-form__row'>
-          <select defaultValue='Developer'>
+          <select
+            value={formCategory}
+            onChange={(e) => setFormCategory(e.target.value)}
+          >
             <option>Developer</option>
             <option>Writing</option>
             <option>Growth</option>
             <option>Other</option>
           </select>
-          <button className='button button--primary' type='button'>
-            Submit
+          <button
+            className='button button--primary'
+            disabled={submitting || !formTitle.trim() || !formDesc.trim()}
+            onClick={handleSubmit}
+            type='button'
+          >
+            {submitting
+              ? locale === 'zh'
+                ? '提交中...'
+                : 'Submitting...'
+              : locale === 'zh'
+                ? '提交'
+                : 'Submit'}
           </button>
         </div>
-        <p className='wish-hint'>Everyone can see and vote after submission</p>
+        {submitSuccess && (
+          <p className='wish-hint' style={{ color: '#22c55e' }}>
+            {locale === 'zh' ? '提交成功！' : 'Submitted successfully!'}
+          </p>
+        )}
+        {submitError && (
+          <p className='wish-hint' style={{ color: '#ef4444' }}>
+            {submitError}
+          </p>
+        )}
+        {!submitSuccess && !submitError && (
+          <p className='wish-hint'>
+            {locale === 'zh'
+              ? '所有人都可以看到并投票'
+              : 'Everyone can see and vote after submission'}
+          </p>
+        )}
       </div>
 
       <section className='wishlist-top'>
         <div className='wishlist-top__header'>
           <div>
             <span>🏆</span>
-            <strong>Top 5 Requests</strong>
+            <strong>{locale === 'zh' ? 'Top 5 需求' : 'Top 5 Requests'}</strong>
           </div>
-          <Link href={rankingHref}>Full Leaderboard →</Link>
+          <Link href={rankingHref}>
+            {locale === 'zh' ? '完整排行榜 →' : 'Full Leaderboard →'}
+          </Link>
         </div>
         <div className='wishlist-top__list'>
-          {WISHLIST_ITEMS.slice(0, 5).map((wish) => (
-            <div className='wishlist-top__item' key={wish.title}>
-              <strong>{wish.rank}</strong>
+          {topFive.map((wish, idx) => (
+            <div className='wishlist-top__item' key={wish.id}>
+              <strong>{idx + 1}</strong>
               <span>{wish.title}</span>
-              <small>{wish.votes} votes</small>
+              <small>
+                {wish.votes} {locale === 'zh' ? '票' : 'votes'}
+              </small>
             </div>
           ))}
         </div>
@@ -217,44 +305,65 @@ export function WishlistBoard() {
             onChange={(event) => setSort(event.target.value as typeof sort)}
             value={sort}
           >
-            <option value='popular'>Popular (by votes)</option>
-            <option value='newest'>Newest (by time)</option>
-            <option value='status'>By Status</option>
+            <option value='popular'>
+              {locale === 'zh' ? '最热（按票数）' : 'Popular (by votes)'}
+            </option>
+            <option value='newest'>
+              {locale === 'zh' ? '最新（按时间）' : 'Newest (by time)'}
+            </option>
+            <option value='status'>
+              {locale === 'zh' ? '按状态' : 'By Status'}
+            </option>
           </select>
         </label>
       </section>
 
-      <p className='wishlist-count'>{visibleWishes.length} items</p>
+      <p className='wishlist-count'>
+        {visibleWishes.length} {locale === 'zh' ? '条' : 'items'}
+      </p>
 
-      <div className='wish-list'>
-        {visibleWishes.map((wish) => {
-          const hasVoted = votedIds.has(wish.title);
-          const votes = wish.votes + (hasVoted ? 1 : 0);
+      {loading && (
+        <p style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>
+          {locale === 'zh' ? '加载中...' : 'Loading...'}
+        </p>
+      )}
 
-          return (
-            <article className='wish-card' key={wish.title}>
-              <button
-                aria-pressed={hasVoted}
-                className='vote-button'
-                onClick={() => toggleVote(wish.title)}
-                type='button'
-              >
-                <span aria-hidden='true'>👍</span>
-                <strong>{votes}</strong>
-              </button>
-              <div>
-                <h2>{wish.title}</h2>
-                <div className='tag-row'>
-                  <span>{wish.category}</span>
-                  <span>{wish.status}</span>
+      {error && !loading && (
+        <p style={{ textAlign: 'center', padding: '2rem', color: '#ef4444' }}>
+          {error}
+        </p>
+      )}
+
+      {!loading && !error && (
+        <div className='wish-list'>
+          {visibleWishes.map((wish) => {
+            const hasVoted = wish.voters.includes(anonymousId);
+
+            return (
+              <article className='wish-card' key={wish.id}>
+                <button
+                  aria-pressed={hasVoted}
+                  className='vote-button'
+                  onClick={() => toggleVote(wish.id)}
+                  type='button'
+                >
+                  <span aria-hidden='true'>👍</span>
+                  <strong>{wish.votes}</strong>
+                </button>
+                <div>
+                  <h2>{wish.title}</h2>
+                  <div className='tag-row'>
+                    <span>{wish.category}</span>
+                    <span>{wish.status}</span>
+                  </div>
+                  <p>{wish.description}</p>
+                  <small>{wish.date}</small>
                 </div>
-                <p>{wish.description}</p>
-                <small>{wish.date}</small>
-              </div>
-            </article>
-          );
-        })}
-      </div>
+              </article>
+            );
+          })}
+        </div>
+      )}
     </>
   );
 }
