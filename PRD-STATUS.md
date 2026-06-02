@@ -121,6 +121,7 @@ Ad Copy、Blog Outline、Cold Email、X Post、LinkedIn、SEO Title、Meta、TL;
 6. ✅ **首页热词修复** — 6个快捷标签改为可点击链接
 7. ✅ **首页去冗余** — 删除无效的 All/Free/Freemium/Paid 筛选
 8. ✅ **首页推广位** — Playbooks 改为外部合作伙伴链接
+9. ✅ **首页统计修复** — 移除 805 行硬编码 fallback 数组，`catalog-api.ts` fallback 改为动态生成自 `tool-data.ts`，确保首页/Developer/Utility/AI Writing/Games 数字与 57+30+8+19+3 完全一致
 
 ---
 
