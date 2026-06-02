@@ -1,0 +1,202 @@
+import type { Wish } from './wishes';
+
+const LS_KEY = 'aihues-wishlist';
+const LS_VOTED_KEY = 'aihues-wishlist-voted';
+
+const SEED_WISHES: Wish[] = [
+  {
+    id: 'wish-001',
+    title: 'AI PDF Summarizer',
+    description:
+      'Upload long PDFs and get a concise outline, key quotes, and action items.',
+    category: 'AI Writing',
+    status: 'IN PROGRESS',
+    votes: 12,
+    date: '2026-05-20',
+    voters: [],
+  },
+  {
+    id: 'wish-002',
+    title: 'Image Background Remover',
+    description:
+      'Remove backgrounds from product images and avatars with one click.',
+    category: 'Utility',
+    status: 'PLANNED',
+    votes: 9,
+    date: '2026-05-18',
+    voters: [],
+  },
+  {
+    id: 'wish-003',
+    title: 'API Mock Server',
+    description:
+      'Paste OpenAPI or JSON examples and generate a temporary mock endpoint.',
+    category: 'Developer',
+    status: 'PLANNED',
+    votes: 7,
+    date: '2026-05-16',
+    voters: [],
+  },
+  {
+    id: 'wish-004',
+    title: 'Resume Bullet Rewriter',
+    description:
+      'Turn rough work notes into quantified resume bullets in multiple tones.',
+    category: 'AI Writing',
+    status: 'DONE',
+    votes: 5,
+    date: '2026-05-12',
+    voters: [],
+  },
+  {
+    id: 'wish-005',
+    title: 'SQL Schema Visualizer',
+    description:
+      'Convert CREATE TABLE statements into a clean relationship diagram.',
+    category: 'Developer',
+    status: 'IN PROGRESS',
+    votes: 8,
+    date: '2026-05-10',
+    voters: [],
+  },
+  {
+    id: 'wish-006',
+    title: 'Meeting Notes Cleaner',
+    description:
+      'Paste messy meeting notes and receive decisions, owners, and next steps.',
+    category: 'Utility',
+    status: 'PLANNED',
+    votes: 4,
+    date: '2026-05-08',
+    voters: [],
+  },
+  {
+    id: 'wish-007',
+    title: 'Prompt Version Diff',
+    description:
+      'Compare two prompt versions and highlight instruction, tone, and output changes.',
+    category: 'Developer',
+    status: 'PLANNED',
+    votes: 6,
+    date: '2026-05-06',
+    voters: [],
+  },
+  {
+    id: 'wish-008',
+    title: 'Product Hunt Launch Kit',
+    description:
+      'Generate tagline, maker comment, launch checklist, and social copy.',
+    category: 'Growth',
+    status: 'DONE',
+    votes: 3,
+    date: '2026-05-03',
+    voters: [],
+  },
+  {
+    id: 'wish-009',
+    title: 'Invoice OCR Checker',
+    description:
+      'Extract invoice fields and flag missing tax IDs, totals, and dates.',
+    category: 'Utility',
+    status: 'PLANNED',
+    votes: 2,
+    date: '2026-05-01',
+    voters: [],
+  },
+  {
+    id: 'wish-010',
+    title: 'CSS Clamp Generator',
+    description:
+      'Generate responsive clamp() font sizes and spacing scales from min/max values.',
+    category: 'Developer',
+    status: 'DONE',
+    votes: 1,
+    date: '2026-04-29',
+    voters: [],
+  },
+];
+
+function loadRaw(): Wish[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return [];
+    return JSON.parse(raw) as Wish[];
+  } catch {
+    return [];
+  }
+}
+
+function saveRaw(wishes: Wish[]) {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem(LS_KEY, JSON.stringify(wishes));
+}
+
+export function loadWishes(): Wish[] {
+  const stored = loadRaw();
+  if (stored.length === 0) {
+    saveRaw(SEED_WISHES);
+    return [...SEED_WISHES];
+  }
+  return stored;
+}
+
+export function addWish(
+  wish: Omit<Wish, 'id' | 'votes' | 'date' | 'voters' | 'status'>
+): Wish {
+  const wishes = loadRaw();
+  const newWish: Wish = {
+    ...wish,
+    id: `wish-${Date.now()}`,
+    status: 'PLANNED',
+    votes: 0,
+    date: new Date().toISOString().slice(0, 10),
+    voters: [],
+  };
+  wishes.push(newWish);
+  saveRaw(wishes);
+  return newWish;
+}
+
+export function voteWish(
+  wishId: string,
+  anonymousId: string,
+  action: 'up' | 'down'
+): Wish | null {
+  const wishes = loadRaw();
+  const idx = wishes.findIndex((w) => w.id === wishId);
+  if (idx === -1) return null;
+
+  const wish = wishes[idx];
+  const hasVoted = wish.voters.includes(anonymousId);
+
+  if (action === 'up') {
+    if (!hasVoted) {
+      wish.votes += 1;
+      wish.voters.push(anonymousId);
+    }
+  } else {
+    if (hasVoted) {
+      wish.votes = Math.max(0, wish.votes - 1);
+      wish.voters = wish.voters.filter((v) => v !== anonymousId);
+    }
+  }
+
+  saveRaw(wishes);
+  return wish;
+}
+
+export function getVotedSet(): Set<string> {
+  if (typeof window === 'undefined') return new Set();
+  try {
+    const raw = localStorage.getItem(LS_VOTED_KEY);
+    return new Set(raw ? JSON.parse(raw) : []);
+  } catch {
+    return new Set();
+  }
+}
+
+export function saveVotedSet(voted: Set<string>) {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem(LS_VOTED_KEY, JSON.stringify([...voted]));
+}

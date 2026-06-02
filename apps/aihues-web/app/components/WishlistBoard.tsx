@@ -1,10 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { useI18n } from '@/lib/i18n';
 import { rankingHref } from '@/lib/routes';
+import { addWish, loadWishes, voteWish } from '@/lib/wishlist-local';
 
 import type { Wish, WishStatus } from '@/lib/wishes';
 
@@ -40,7 +41,6 @@ export function WishlistBoard() {
 
   const [wishes, setWishes] = useState<Wish[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
   const [filter, setFilter] = useState<WishFilter>('ALL');
   const [sort, setSort] = useState<'popular' | 'newest' | 'status'>('popular');
@@ -55,29 +55,26 @@ export function WishlistBoard() {
 
   const anonymousId = useMemo(() => getAnonymousId(), []);
 
-  const fetchWishes = useCallback(async () => {
-    try {
-      setLoading(true);
-      const res = await fetch('/api/wishes');
-      const data = (await res.json()) as { wishes?: Wish[] };
-      setWishes(data.wishes ?? []);
-      setError('');
-    } catch {
-      setError(
-        locale === 'zh'
-          ? '加载失败，请刷新重试'
-          : 'Failed to load. Please refresh.'
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, [locale]);
-
+  // Load from localStorage on mount (instant, no network)
   useEffect(() => {
     queueMicrotask(() => {
-      fetchWishes();
+      const data = loadWishes();
+      setWishes(data);
+      setLoading(false);
     });
-  }, [fetchWishes]);
+
+    // Optional: sync with API in background
+    fetch('/api/wishes')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data: { wishes?: Wish[] } | null) => {
+        if (data?.wishes && data.wishes.length > 0) {
+          queueMicrotask(() => setWishes(data.wishes ?? []));
+        }
+      })
+      .catch(() => {
+        // API unavailable — localStorage data already loaded
+      });
+  }, []);
 
   const visibleWishes = useMemo(() => {
     const filtered =
@@ -107,7 +104,20 @@ export function WishlistBoard() {
     setSubmitSuccess(false);
 
     try {
-      const res = await fetch('/api/wishes', {
+      // 1. Save locally first (instant, always works)
+      const newWish = addWish({
+        title: formTitle.trim(),
+        description: formDesc.trim(),
+        category: formCategory,
+      });
+      setWishes((prev) => [...prev, newWish]);
+      setFormTitle('');
+      setFormDesc('');
+      setSubmitSuccess(true);
+      setTimeout(() => setSubmitSuccess(false), 3000);
+
+      // 2. Try sync to API in background (optional)
+      fetch('/api/wishes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -115,18 +125,9 @@ export function WishlistBoard() {
           description: formDesc.trim(),
           category: formCategory,
         }),
+      }).catch(() => {
+        // API sync failed — local data is already saved
       });
-
-      if (!res.ok) {
-        const data = (await res.json()) as { error?: string };
-        throw new Error(data.error || 'Submit failed');
-      }
-
-      setFormTitle('');
-      setFormDesc('');
-      setSubmitSuccess(true);
-      await fetchWishes();
-      setTimeout(() => setSubmitSuccess(false), 3000);
     } catch (err) {
       setSubmitError(
         err instanceof Error
@@ -162,45 +163,17 @@ export function WishlistBoard() {
       })
     );
 
-    try {
-      const res = await fetch('/api/wishes/vote', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ wishId, anonymousId, action }),
-      });
+    // Save locally first
+    voteWish(wishId, anonymousId, action);
 
-      if (!res.ok) {
-        // Rollback on failure
-        setWishes((prev) =>
-          prev.map((w) => {
-            if (w.id !== wishId) return w;
-            const voted = w.voters.includes(anonymousId);
-            return {
-              ...w,
-              votes: voted ? Math.max(0, w.votes - 1) : w.votes + 1,
-              voters: voted
-                ? w.voters.filter((v) => v !== anonymousId)
-                : [...w.voters, anonymousId],
-            };
-          })
-        );
-      }
-    } catch {
-      // Rollback on network error
-      setWishes((prev) =>
-        prev.map((w) => {
-          if (w.id !== wishId) return w;
-          const voted = w.voters.includes(anonymousId);
-          return {
-            ...w,
-            votes: voted ? Math.max(0, w.votes - 1) : w.votes + 1,
-            voters: voted
-              ? w.voters.filter((v) => v !== anonymousId)
-              : [...w.voters, anonymousId],
-          };
-        })
-      );
-    }
+    // Try sync to API in background
+    fetch('/api/wishes/vote', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ wishId, anonymousId, action }),
+    }).catch(() => {
+      // API sync failed — local data is already saved
+    });
   }
 
   return (
@@ -328,13 +301,7 @@ export function WishlistBoard() {
         </p>
       )}
 
-      {error && !loading && (
-        <p style={{ textAlign: 'center', padding: '2rem', color: '#ef4444' }}>
-          {error}
-        </p>
-      )}
-
-      {!loading && !error && (
+      {!loading && (
         <div className='wish-list'>
           {visibleWishes.map((wish) => {
             const hasVoted = wish.voters.includes(anonymousId);

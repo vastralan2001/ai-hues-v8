@@ -6,6 +6,7 @@ import type { Locale } from '@/lib/dict';
 import { t } from '@/lib/dict';
 import RelatedTools from '@/components/RelatedTools';
 import ToolDetailTabs from '@/components/reviews/ToolDetailTabs';
+import { UsageTracker } from '@/components/UsageTracker';
 import WordCountTool from '@/components/tools/WordCountTool';
 import Base64Tool from '@/components/tools/Base64Tool';
 import UrlEncodeTool from '@/components/tools/UrlEncodeTool';
@@ -172,6 +173,7 @@ export default async function ToolPage({
   if (ReactTool) {
     return (
       <>
+        <UsageTracker slug={slug} />
         <ToolDetailTabs
           locale={locale}
           slug={slug}
