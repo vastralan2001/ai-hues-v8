@@ -47,7 +47,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'developer',
     price: 'free',
     credit: 0,
-    url: '/tools/jwt.html',
+    url: '/tools/jwt',
     isExternal: false,
   },
   {
@@ -60,7 +60,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'developer',
     price: 'free',
     credit: 0,
-    url: '/tools/json.html',
+    url: '/tools/json',
     isExternal: false,
   },
   {
@@ -73,7 +73,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'developer',
     price: 'free',
     credit: 0,
-    url: '/tools/regex.html',
+    url: '/tools/regex',
     isExternal: false,
   },
   {
@@ -86,7 +86,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'developer',
     price: 'free',
     credit: 0,
-    url: '/tools/uuid.html',
+    url: '/tools/uuid',
     isExternal: false,
   },
   {
@@ -99,7 +99,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'developer',
     price: 'free',
     credit: 0,
-    url: '/tools/timestamp.html',
+    url: '/tools/timestamp',
     isExternal: false,
   },
   {
@@ -112,7 +112,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'developer',
     price: 'free',
     credit: 0,
-    url: '/tools/base64.html',
+    url: '/tools/base64',
     isExternal: false,
   },
   {
@@ -125,7 +125,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'developer',
     price: 'free',
     credit: 0,
-    url: '/tools/sha256.html',
+    url: '/tools/sha256',
     isExternal: false,
   },
   {
@@ -138,7 +138,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'developer',
     price: 'free',
     credit: 0,
-    url: '/tools/sql.html',
+    url: '/tools/sql',
     isExternal: false,
   },
   {
@@ -151,7 +151,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'developer',
     price: 'free',
     credit: 0,
-    url: '/tools/url-encode.html',
+    url: '/tools/url-encode',
     isExternal: false,
   },
   {
@@ -164,7 +164,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'developer',
     price: 'free',
     credit: 0,
-    url: '/tools/base-convert.html',
+    url: '/tools/base-convert',
     isExternal: false,
   },
   {
@@ -177,7 +177,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'developer',
     price: 'free',
     credit: 0,
-    url: '/tools/password-gen.html',
+    url: '/tools/password-gen',
     isExternal: false,
   },
   {
@@ -190,7 +190,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'developer',
     price: 'free',
     credit: 0,
-    url: '/tools/http-status.html',
+    url: '/tools/http-status',
     isExternal: false,
   },
   {
@@ -203,7 +203,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'developer',
     price: 'free',
     credit: 0,
-    url: '/tools/html-entity.html',
+    url: '/tools/html-entity',
     isExternal: false,
   },
   {
@@ -216,7 +216,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'developer',
     price: 'free',
     credit: 0,
-    url: '/tools/cron-parser.html',
+    url: '/tools/cron-parser',
     isExternal: false,
   },
   {
@@ -229,7 +229,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'developer',
     price: 'free',
     credit: 0,
-    url: '/tools/code-explain.html',
+    url: '/tools/code-explain',
     isExternal: false,
   },
   {
@@ -242,7 +242,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'developer',
     price: 'freemium',
     credit: 15,
-    url: '/tools/code-review.html',
+    url: '/tools/code-review',
     isExternal: false,
   },
   {
@@ -255,7 +255,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'developer',
     price: 'free',
     credit: 0,
-    url: '/tools/shell.html',
+    url: '/tools/shell',
     isExternal: false,
   },
   {
@@ -268,7 +268,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'developer',
     price: 'free',
     credit: 0,
-    url: '/tools/git-commit.html',
+    url: '/tools/git-commit',
     isExternal: false,
   },
   {
@@ -281,7 +281,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'developer',
     price: 'free',
     credit: 0,
-    url: '/tools/ip-lookup.html',
+    url: '/tools/ip-lookup',
     isExternal: false,
   },
   {
@@ -294,7 +294,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'developer',
     price: 'free',
     credit: 0,
-    url: '/tools/curl-gen.html',
+    url: '/tools/curl-gen',
     isExternal: false,
   },
   {
@@ -307,7 +307,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'developer',
     price: 'free',
     credit: 0,
-    url: '/tools/image-to-base64.html',
+    url: '/tools/image-to-base64',
     isExternal: false,
   },
   {
@@ -320,7 +320,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'developer',
     price: 'free',
     credit: 0,
-    url: '/tools/css-gradient.html',
+    url: '/tools/css-gradient',
     isExternal: false,
   },
   {
@@ -333,7 +333,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'developer',
     price: 'free',
     credit: 0,
-    url: '/tools/color-convert.html',
+    url: '/tools/color-convert',
     isExternal: false,
   },
   {
@@ -346,7 +346,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'developer',
     price: 'free',
     credit: 0,
-    url: '/tools/csv-json.html',
+    url: '/tools/csv-json',
     isExternal: false,
   },
   {
@@ -359,7 +359,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'developer',
     price: 'freemium',
     credit: 10,
-    url: '/tools/diff-pro.html',
+    url: '/tools/diff-pro',
     isExternal: false,
   },
   {
@@ -372,7 +372,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'developer',
     price: 'free',
     credit: 0,
-    url: '/tools/unit-convert.html',
+    url: '/tools/unit-convert',
     isExternal: false,
   },
   {
@@ -385,7 +385,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'developer',
     price: 'free',
     credit: 0,
-    url: '/tools/qrcode.html',
+    url: '/tools/qrcode',
     isExternal: false,
   },
   {
@@ -398,7 +398,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'developer',
     price: 'free',
     credit: 0,
-    url: '/tools/markdown.html',
+    url: '/tools/markdown',
     isExternal: false,
   },
   {
@@ -411,7 +411,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'developer',
     price: 'free',
     credit: 0,
-    url: '/tools/pomodoro.html',
+    url: '/tools/pomodoro',
     isExternal: false,
   },
   {
@@ -424,7 +424,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'developer',
     price: 'free',
     credit: 0,
-    url: '/tools/chi-squared.html',
+    url: '/tools/chi-squared',
     isExternal: false,
   },
   /* Utility */
@@ -438,7 +438,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'utility',
     price: 'free',
     credit: 0,
-    url: '/tools/word-count.html',
+    url: '/tools/word-count',
     isExternal: false,
   },
   {
@@ -451,7 +451,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'utility',
     price: 'free',
     credit: 0,
-    url: '/tools/diff.html',
+    url: '/tools/diff',
     isExternal: false,
   },
   {
@@ -464,7 +464,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'utility',
     price: 'free',
     credit: 0,
-    url: '/tools/fullwidth.html',
+    url: '/tools/fullwidth',
     isExternal: false,
   },
   {
@@ -477,7 +477,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'utility',
     price: 'free',
     credit: 0,
-    url: '/tools/title-case.html',
+    url: '/tools/title-case',
     isExternal: false,
   },
   {
@@ -490,7 +490,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'utility',
     price: 'free',
     credit: 0,
-    url: '/tools/readability.html',
+    url: '/tools/readability',
     isExternal: false,
   },
   {
@@ -503,7 +503,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'utility',
     price: 'freemium',
     credit: 10,
-    url: '/tools/humanize.html',
+    url: '/tools/humanize',
     isExternal: false,
   },
   {
@@ -516,7 +516,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'utility',
     price: 'free',
     credit: 0,
-    url: '/tools/lorem-ipsum.html',
+    url: '/tools/lorem-ipsum',
     isExternal: false,
   },
   {
@@ -529,7 +529,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'utility',
     price: 'free',
     credit: 0,
-    url: '/tools/seo-title.html',
+    url: '/tools/seo-title',
     isExternal: false,
   },
   /* AI Writing */
@@ -543,7 +543,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'ai-writing',
     price: 'freemium',
     credit: 15,
-    url: '/tools/ad-copy.html',
+    url: '/tools/ad-copy',
     isExternal: false,
   },
   {
@@ -556,7 +556,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'ai-writing',
     price: 'free',
     credit: 0,
-    url: '/tools/alt-text.html',
+    url: '/tools/alt-text',
     isExternal: false,
   },
   {
@@ -569,7 +569,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'ai-writing',
     price: 'free',
     credit: 0,
-    url: '/tools/blog-outline.html',
+    url: '/tools/blog-outline',
     isExternal: false,
   },
   {
@@ -582,7 +582,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'ai-writing',
     price: 'free',
     credit: 0,
-    url: '/tools/changelog.html',
+    url: '/tools/changelog',
     isExternal: false,
   },
   {
@@ -595,7 +595,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'ai-writing',
     price: 'freemium',
     credit: 10,
-    url: '/tools/cold-email.html',
+    url: '/tools/cold-email',
     isExternal: false,
   },
   {
@@ -608,7 +608,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'ai-writing',
     price: 'free',
     credit: 0,
-    url: '/tools/docs.html',
+    url: '/tools/docs',
     isExternal: false,
   },
   {
@@ -621,7 +621,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'ai-writing',
     price: 'free',
     credit: 0,
-    url: '/tools/faq.html',
+    url: '/tools/faq',
     isExternal: false,
   },
   {
@@ -634,7 +634,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'ai-writing',
     price: 'freemium',
     credit: 10,
-    url: '/tools/linkedin.html',
+    url: '/tools/linkedin',
     isExternal: false,
   },
   {
@@ -647,7 +647,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'ai-writing',
     price: 'freemium',
     credit: 20,
-    url: '/tools/lp-hero.html',
+    url: '/tools/lp-hero',
     isExternal: false,
   },
   {
@@ -660,7 +660,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'ai-writing',
     price: 'free',
     credit: 0,
-    url: '/tools/meta.html',
+    url: '/tools/meta',
     isExternal: false,
   },
   {
@@ -673,7 +673,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'ai-writing',
     price: 'freemium',
     credit: 15,
-    url: '/tools/newsletter.html',
+    url: '/tools/newsletter',
     isExternal: false,
   },
   {
@@ -686,7 +686,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'ai-writing',
     price: 'free',
     credit: 0,
-    url: '/tools/pr-desc.html',
+    url: '/tools/pr-desc',
     isExternal: false,
   },
   {
@@ -699,7 +699,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'ai-writing',
     price: 'free',
     credit: 0,
-    url: '/tools/pseudo.html',
+    url: '/tools/pseudo',
     isExternal: false,
   },
   {
@@ -712,7 +712,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'ai-writing',
     price: 'free',
     credit: 0,
-    url: '/tools/push.html',
+    url: '/tools/push',
     isExternal: false,
   },
   {
@@ -725,7 +725,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'ai-writing',
     price: 'free',
     credit: 0,
-    url: '/tools/tagline.html',
+    url: '/tools/tagline',
     isExternal: false,
   },
   {
@@ -738,7 +738,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'ai-writing',
     price: 'free',
     credit: 0,
-    url: '/tools/tldr.html',
+    url: '/tools/tldr',
     isExternal: false,
   },
   {
@@ -751,7 +751,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'ai-writing',
     price: 'free',
     credit: 0,
-    url: '/tools/video-title.html',
+    url: '/tools/video-title',
     isExternal: false,
   },
   {
@@ -764,7 +764,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'ai-writing',
     price: 'free',
     credit: 0,
-    url: '/tools/x-post.html',
+    url: '/tools/x-post',
     isExternal: false,
   },
   {
@@ -777,7 +777,7 @@ export const LOCAL_TOOLS: ToolData[] = [
     category: 'ai-writing',
     price: 'freemium',
     credit: 20,
-    url: '/tools/yt-script.html',
+    url: '/tools/yt-script',
     isExternal: false,
   },
 ];

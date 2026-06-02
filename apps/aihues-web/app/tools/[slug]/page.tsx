@@ -1,7 +1,5 @@
 import { cookies } from 'next/headers';
-import { existsSync } from 'node:fs';
-import { join } from 'node:path';
-import { notFound, redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 
 import type { Locale } from '@/lib/dict';
@@ -186,12 +184,6 @@ export default async function ToolPage({
         />
       </>
     );
-  }
-
-  // Fallback to static HTML page if it exists
-  const htmlPath = join(process.cwd(), 'public', 'tools', `${slug}.html`);
-  if (existsSync(htmlPath)) {
-    redirect(`/tools/${slug}.html`);
   }
 
   notFound();
