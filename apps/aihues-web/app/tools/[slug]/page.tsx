@@ -7,6 +7,7 @@ import type { Metadata } from 'next';
 import type { Locale } from '@/lib/dict';
 import { t } from '@/lib/dict';
 import RelatedTools from '@/components/RelatedTools';
+import ToolDetailTabs from '@/components/reviews/ToolDetailTabs';
 import WordCountTool from '@/components/tools/WordCountTool';
 import Base64Tool from '@/components/tools/Base64Tool';
 import UrlEncodeTool from '@/components/tools/UrlEncodeTool';
@@ -173,8 +174,16 @@ export default async function ToolPage({
   if (ReactTool) {
     return (
       <>
-        <ReactTool locale={locale} />
-        <RelatedTools slug={slug} locale={locale} />
+        <ToolDetailTabs
+          locale={locale}
+          slug={slug}
+          toolElement={
+            <>
+              <ReactTool locale={locale} />
+              <RelatedTools slug={slug} locale={locale} />
+            </>
+          }
+        />
       </>
     );
   }

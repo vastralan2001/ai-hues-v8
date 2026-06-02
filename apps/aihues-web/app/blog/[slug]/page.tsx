@@ -6,6 +6,7 @@ import { PageShell } from '@/components/SiteChrome';
 import { getAllPosts } from '@/lib/blog-data';
 import NewsletterSubscribe from '@/components/NewsletterSubscribe';
 import RelatedArticles from '@/components/RelatedArticles';
+import BlogToolRecommend from '@/components/reviews/BlogToolRecommend';
 import '../article.css';
 
 const BASE_URL = 'https://aihues.com';
@@ -128,6 +129,7 @@ export default async function ArticlePage({
           dangerouslySetInnerHTML={{ __html: htmlContent }}
         />
 
+        <BlogToolRecommend tag={meta.tag} />
         <NewsletterSubscribe />
         <RelatedArticles currentSlug={slug} locale='en' />
       </main>
