@@ -164,6 +164,9 @@
         localStorage.setItem('aihues-credits', String(credits));
         localStorage.setItem('aihues-checkin-date', today);
         localStorage.setItem('aihues-checkin-streak', String(streak));
+        if (typeof gtag === 'function') {
+          gtag('event', 'game_checkin', { streak: streak });
+        }
       }
 
       return { success: last !== today, credits, streak };

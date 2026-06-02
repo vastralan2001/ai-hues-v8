@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useI18n } from '@/lib/i18n';
 import { rankingHref } from '@/lib/routes';
 import { addWish, loadWishes, voteWish } from '@/lib/wishlist-local';
+import { event, GA_EVENTS } from '@/lib/gtag';
 
 import type { Wish, WishStatus } from '@/lib/wishes';
 
@@ -105,15 +106,18 @@ export function WishlistBoard() {
 
     try {
       // 1. Save locally first (instant, always works)
+      const title = formTitle.trim();
+      const desc = formDesc.trim();
       const newWish = addWish({
-        title: formTitle.trim(),
-        description: formDesc.trim(),
+        title,
+        description: desc,
         category: formCategory,
       });
       setWishes((prev) => [...prev, newWish]);
       setFormTitle('');
       setFormDesc('');
       setSubmitSuccess(true);
+      event(GA_EVENTS.wishlistSubmit, { category: formCategory });
       setTimeout(() => setSubmitSuccess(false), 3000);
 
       // 2. Try sync to API in background (optional)
@@ -165,6 +169,7 @@ export function WishlistBoard() {
 
     // Save locally first
     voteWish(wishId, anonymousId, action);
+    event(GA_EVENTS.wishlistVote, { wishId, action });
 
     // Try sync to API in background
     fetch('/api/wishes/vote', {

@@ -1,3 +1,5 @@
+import { event, GA_EVENTS } from './gtag';
+
 export interface AiGenerateOptions {
   tool: string;
   locale?: string;
@@ -21,5 +23,9 @@ export async function aiGenerate(options: AiGenerateOptions): Promise<string> {
   }
 
   const data = (await res.json()) as { result?: string };
+  event(GA_EVENTS.toolGenerate, {
+    tool: options.tool,
+    locale: options.locale || 'en',
+  });
   return data.result || '';
 }

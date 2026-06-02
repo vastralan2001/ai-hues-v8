@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 
+import { event, GA_EVENTS } from '@/lib/gtag';
+
 export default function NewsletterSubscribe() {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
@@ -13,6 +15,7 @@ export default function NewsletterSubscribe() {
       return;
     }
     // Simulate subscription — replace with real API call later
+    event(GA_EVENTS.newsletterSubscribe);
     setStatus('success');
     setEmail('');
   };

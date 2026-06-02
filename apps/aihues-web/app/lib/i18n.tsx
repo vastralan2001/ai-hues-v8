@@ -9,6 +9,7 @@ import {
 } from 'react';
 
 import { t as dictT, type Locale } from './dict';
+import { event, GA_EVENTS } from './gtag';
 
 type I18nContextValue = {
   locale: Locale;
@@ -31,11 +32,15 @@ export function I18nProvider({
 }) {
   const [locale, setLocaleState] = useState<Locale>(initialLocale);
 
-  const setLocale = useCallback((l: Locale) => {
-    setLocaleState(l);
-    document.cookie = `aihues-locale=${l};path=/;max-age=31536000`;
-    document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
-  }, []);
+  const setLocale = useCallback(
+    (l: Locale) => {
+      setLocaleState(l);
+      document.cookie = `aihues-locale=${l};path=/;max-age=31536000`;
+      document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+      event(GA_EVENTS.localeSwitch, { from: locale, to: l });
+    },
+    [locale]
+  );
 
   const t = useCallback((key: string) => dictT(locale, key), [locale]);
 

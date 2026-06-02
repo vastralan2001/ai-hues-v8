@@ -7,6 +7,7 @@ import { ThemeProvider } from '@/lib/theme';
 import type { Locale } from '@/lib/dict';
 import type { Theme } from '@/lib/theme';
 import CommandPalette from '@/components/CommandPalette';
+import GoogleAnalytics from '@/components/GoogleAnalytics';
 
 import './globals.css';
 
@@ -43,6 +44,9 @@ export default async function RootLayout({
 
   return (
     <html data-theme={theme} lang={locale === 'zh' ? 'zh-CN' : 'en'}>
+      <head>
+        <GoogleAnalytics />
+      </head>
       <body>
         <I18nProvider initialLocale={locale}>
           <ThemeProvider initialTheme={theme}>

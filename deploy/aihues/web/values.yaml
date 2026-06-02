@@ -19,6 +19,8 @@ web:
       value: '1'
     - name: AIHUES_API_BASE_URL
       value: http://aihues-api.marci-dev.svc.cluster.local:80
+    - name: NEXT_PUBLIC_GA_ID
+      value: ''
 
   replicaCount: 1
 
