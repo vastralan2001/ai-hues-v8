@@ -34,10 +34,12 @@ export function I18nProvider({
 
   const setLocale = useCallback(
     (l: Locale) => {
+      if (l === locale) return;
       setLocaleState(l);
       document.cookie = `aihues-locale=${l};path=/;max-age=31536000`;
       document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
       event(GA_EVENTS.localeSwitch, { from: locale, to: l });
+      window.location.reload();
     },
     [locale]
   );

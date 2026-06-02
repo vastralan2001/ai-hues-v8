@@ -85,7 +85,7 @@ export function SiteHeader({
   return (
     <header
       style={{ backdropFilter: 'blur(20px) saturate(180%)' }}
-      className='sticky top-0 z-[100] border-b border-border bg-white/[0.92]'
+      className='sticky top-0 z-[100] border-b border-border bg-white/[0.92] dark:bg-[var(--surface)]/95'
     >
       <div className='mx-auto grid h-[68px] max-w-[1300px] grid-cols-[1fr_auto_1fr] items-center px-8'>
         {/* Logo */}
