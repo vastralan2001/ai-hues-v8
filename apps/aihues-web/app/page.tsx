@@ -62,7 +62,14 @@ const HOME_CATEGORIES = (locale: Locale) => [
 ];
 
 /* ── Quick search tags ── */
-const QUICK_TAGS = ['JWT', 'JSON', 'Regex', 'QR Code', 'Fortune', 'Hoops'];
+const QUICK_TAG_LINKS: { label: string; href: string }[] = [
+  { label: 'JWT', href: '/tools/jwt' },
+  { label: 'JSON', href: '/tools/json' },
+  { label: 'Regex', href: '/tools/regex' },
+  { label: 'QR Code', href: '/tools/qrcode' },
+  { label: 'Fortune', href: '/games/daily-luck' },
+  { label: 'Hoops', href: '/games/basketball' },
+];
 
 // Featured highlights (editor-curated until analytics API provides rankings)
 const POPULAR_HIGHLIGHTS = (locale: Locale) => [
@@ -273,45 +280,29 @@ export default async function HomePage() {
 
             {/* Quick-tag chips */}
             <div className='mt-3 flex flex-wrap justify-center gap-2'>
-              {QUICK_TAGS.map((tag) => (
-                <button
-                  key={tag}
+              {QUICK_TAG_LINKS.map((tag) => (
+                <Link
+                  key={tag.label}
                   className='rounded-full border border-border bg-surface px-3 py-1 text-[12px] font-medium text-secondary transition-all hover:border-accent hover:text-accent'
-                  type='button'
+                  href={tag.href}
                 >
-                  {tag}
-                </button>
+                  {tag.label}
+                </Link>
               ))}
             </div>
           </div>
         </section>
 
         {/* ══════════════════════════════════════════════
-            PRICE FILTER BAR
-            ══════════════════════════════════════════════ */}
-        <section className='mx-auto max-w-[1300px] px-8 pb-6'>
-          <div className='flex flex-wrap items-center justify-center gap-2'>
-            {(['all', 'free', 'freemium', 'paid'] as const).map((p) => (
-              <Link
-                key={p}
-                className='rounded-full border border-border bg-surface px-4 py-1.5 text-[13px] font-semibold text-secondary transition-all hover:border-accent hover:text-accent'
-                href={p === 'all' ? '/' : `/?price=${p}`}
-              >
-                {t(locale, `price.${p}`)}
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        {/* ══════════════════════════════════════════════
-            PLAYBOOKS DARK CARD
+            EXTERNAL PROMO BAR
             ══════════════════════════════════════════════ */}
         <section className='mx-auto max-w-[1300px] px-8 pb-10'>
-          <div
-            className='relative overflow-hidden rounded-[14px] px-6 py-5 text-white'
-            style={{
-              background: 'linear-gradient(135deg, #1c1917, #292524)',
-            }}
+          <Link
+            className='group relative block overflow-hidden rounded-[14px] px-6 py-5 text-white no-underline transition-all hover:shadow-[0_4px_16px_rgba(180,83,9,0.2)]'
+            href='https://girgrils.com'
+            rel='noopener noreferrer'
+            style={{ background: 'linear-gradient(135deg, #1c1917, #292524)' }}
+            target='_blank'
           >
             {/* Radial glow accent */}
             <div
@@ -321,43 +312,24 @@ export default async function HomePage() {
                   'radial-gradient(circle, rgba(180,83,9,0.12), transparent 70%)',
               }}
             />
-            <div className='relative z-[1]'>
-              <div className='mb-2 flex flex-wrap gap-2'>
-                <span className='rounded-md border border-[rgba(180,83,9,0.3)] bg-[rgba(180,83,9,0.2)] px-2.5 py-1 text-[11px] font-bold text-[#fbbf24]'>
-                  {t(locale, 'playbooks.badge1')}
+            <div className='relative z-[1] flex items-center justify-between'>
+              <div>
+                <span className='mb-2 inline-block rounded-md border border-[rgba(180,83,9,0.3)] bg-[rgba(180,83,9,0.2)] px-2.5 py-1 text-[11px] font-bold text-[#fbbf24]'>
+                  Partner
                 </span>
-                <span className='rounded-md border border-[rgba(180,83,9,0.3)] bg-[rgba(180,83,9,0.2)] px-2.5 py-1 text-[11px] font-bold text-[#fbbf24]'>
-                  {t(locale, 'playbooks.badge2')}
-                </span>
+                <h3 className='mt-1 text-[17px] font-bold'>
+                  Discover more on Girgrils →
+                </h3>
+                <p className='mt-1 text-[12px] opacity-70'>
+                  Explore curated AI tools and growth resources from our
+                  partner.
+                </p>
               </div>
-              <h3 className='mb-1 text-[17px] font-bold'>
-                {t(locale, 'playbooks.title')}
-              </h3>
-              <p className='mb-3 text-[12px] opacity-70'>
-                {t(locale, 'playbooks.desc')}
-              </p>
-              <div className='flex flex-wrap gap-2'>
-                <Link
-                  className='rounded-lg border border-white/10 bg-white/[0.06] px-3.5 py-1.5 text-[12px] font-semibold text-[#fbbf24] transition-all hover:bg-[rgba(180,83,9,0.3)]'
-                  href={toolsHref}
-                >
-                  🚀 {t(locale, 'sidebar.growth')}
-                </Link>
-                <Link
-                  className='rounded-lg border border-white/10 bg-white/[0.06] px-3.5 py-1.5 text-[12px] font-semibold text-[#fbbf24] transition-all hover:bg-[rgba(180,83,9,0.3)]'
-                  href={toolsCategoryHref('ai-writing')}
-                >
-                  ⭐ {t(locale, 'sidebar.aiProducts')}
-                </Link>
-                <Link
-                  className='rounded-lg border border-white/10 bg-white/[0.06] px-3.5 py-1.5 text-[12px] font-semibold text-[#fbbf24] transition-all hover:bg-[rgba(180,83,9,0.3)]'
-                  href={toolsHref}
-                >
-                  🔥 {t(locale, 'sidebar.openSource')}
-                </Link>
-              </div>
+              <span className='text-[24px] opacity-60 transition-opacity group-hover:opacity-100'>
+                ↗
+              </span>
             </div>
-          </div>
+          </Link>
         </section>
 
         {/* ══════════════════════════════════════════════
