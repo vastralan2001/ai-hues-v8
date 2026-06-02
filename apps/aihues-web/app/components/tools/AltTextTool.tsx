@@ -10,40 +10,6 @@ interface AltTextToolProps {
   locale: Locale;
 }
 
-function generateAltText(description: string, locale: Locale): string {
-  const isZh = locale === 'zh';
-  const d = description.trim();
-  if (!d) return '';
-
-  // Simple templates based on description length and content
-  if (d.length < 20) {
-    return isZh ? `图片显示了${d}` : `Image showing ${d}`;
-  }
-
-  if (
-    d.includes('chart') ||
-    d.includes('graph') ||
-    d.includes('图') ||
-    d.includes('图表')
-  ) {
-    return isZh
-      ? `图表展示了${d.replace(/chart|graph|图|图表/g, '')}的数据趋势`
-      : `Chart showing data trends for ${d.replace(/chart|graph/gi, '')}`;
-  }
-
-  if (d.includes('logo') || d.includes('标志') || d.includes('Logo')) {
-    return isZh ? `${d}的品牌标志` : `Brand logo of ${d}`;
-  }
-
-  if (d.includes('screenshot') || d.includes('截图')) {
-    return isZh
-      ? `界面截图：${d.replace(/截图/g, '')}`
-      : `Screenshot of ${d.replace(/screenshot/gi, '')}`;
-  }
-
-  return isZh ? `一张展示${d}的图片` : `A photograph showing ${d}`;
-}
-
 export default function AltTextTool({ locale }: AltTextToolProps) {
   const [input, setInput] = useState('');
   const [result, setResult] = useState('');
