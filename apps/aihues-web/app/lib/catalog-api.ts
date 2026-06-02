@@ -383,9 +383,29 @@ function filterFallbackTools(options: ListToolsOptions): CatalogTool[] {
 export async function safeListTools(options: ListToolsOptions = {}) {
   try {
     const result = await listTools(options);
+    // Merge: backend data takes precedence, local fallback fills gaps
+    const backendSlugs = new Set(result.tools.map((t) => t.slug));
+    let tools = [
+      ...result.tools,
+      ...LOCAL_FALLBACK_TOOLS.filter((t) => !backendSlugs.has(t.slug)),
+    ];
+
+    if (options.q) {
+      const q = options.q.toLowerCase();
+      tools = tools.filter(
+        (t) =>
+          t.name.toLowerCase().includes(q) ||
+          t.description.toLowerCase().includes(q)
+      );
+    }
+    if (options.category && options.category !== 'all') {
+      tools = tools.filter((t) => t.category === options.category);
+    }
+
     // Filter out external-link tools (not ready for launch)
-    const tools = result.tools.filter((t) => !t.externalUrl);
-    return { data: { ...result, tools }, error: null };
+    tools = tools.filter((t) => !t.externalUrl);
+
+    return { data: { ...result, tools, nextPageToken: '' }, error: null };
   } catch (error) {
     return {
       data: { tools: filterFallbackTools(options), nextPageToken: '' },
@@ -396,7 +416,14 @@ export async function safeListTools(options: ListToolsOptions = {}) {
 
 export async function safeListGames(options: ListGamesOptions = {}) {
   try {
-    return { data: await listGames(options), error: null };
+    const result = await listGames(options);
+    // Merge: backend data takes precedence, local fallback fills gaps
+    const backendSlugs = new Set(result.games.map((g) => g.slug));
+    const games = [
+      ...result.games,
+      ...LOCAL_FALLBACK_GAMES.filter((g) => !backendSlugs.has(g.slug)),
+    ];
+    return { data: { ...result, games, nextPageToken: '' }, error: null };
   } catch (error) {
     return {
       data: { games: LOCAL_FALLBACK_GAMES, nextPageToken: '' },
