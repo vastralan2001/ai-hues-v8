@@ -5,14 +5,24 @@ import Link from 'next/link';
 import type { Locale } from '@/lib/dict';
 import { getReviewBySlug, starRating } from '@/lib/reviews';
 import { getToolBySlug } from '@/lib/tool-data';
+import { useI18n } from '@/lib/i18n';
 import ReviewPanel from './ReviewPanel';
 import CommentSection from './CommentSection';
 
-const TABS = [
-  { key: 'tool', label: '工具' },
-  { key: 'review', label: '评测' },
-  { key: 'comments', label: '评论' },
-] as const;
+function useTabs(locale: Locale) {
+  const t = (key: string) => {
+    const dict: Record<Locale, Record<string, string>> = {
+      en: { tool: 'Tool', review: 'Review', comments: 'Comments' },
+      zh: { tool: '工具', review: '评测', comments: '评论' },
+    };
+    return dict[locale][key] || key;
+  };
+  return [
+    { key: 'tool', label: t('tool') },
+    { key: 'review', label: t('review') },
+    { key: 'comments', label: t('comments') },
+  ] as const;
+}
 
 export default function ToolDetailTabs({
   slug,
@@ -23,6 +33,8 @@ export default function ToolDetailTabs({
   locale: Locale;
   toolElement: React.ReactNode;
 }) {
+  const { t } = useI18n();
+  const TABS = useTabs(locale);
   const [activeTab, setActiveTab] =
     useState<(typeof TABS)[number]['key']>('tool');
   const review = getReviewBySlug(slug);
@@ -30,7 +42,7 @@ export default function ToolDetailTabs({
 
   const tabs = review
     ? TABS
-    : TABS.filter((t) => t.key !== 'review' && t.key !== 'comments');
+    : TABS.filter((tab) => tab.key !== 'review' && tab.key !== 'comments');
 
   return (
     <div className='mx-auto max-w-[900px] px-6 py-8'>
@@ -79,7 +91,7 @@ export default function ToolDetailTabs({
               rel='noopener noreferrer'
               target='_blank'
             >
-              访问官网 →
+              {t('review.visitOfficial')}
             </Link>
           )}
         </div>

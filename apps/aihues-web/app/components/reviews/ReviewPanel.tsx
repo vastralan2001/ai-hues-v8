@@ -4,19 +4,26 @@ import Link from 'next/link';
 import {
   type ToolReview,
   DIMENSION_LABELS,
+  DIMENSION_LABELS_EN,
   DIMENSION_WEIGHTS,
   starRating,
+  getReviewText,
 } from '@/lib/reviews';
+import { useI18n } from '@/lib/i18n';
 import RadarChart from './RadarChart';
 
 export default function ReviewPanel({ review }: { review: ToolReview }) {
+  const { locale, t } = useI18n();
+  const texts = getReviewText(review, locale);
+  const dimLabels = locale === 'zh' ? DIMENSION_LABELS : DIMENSION_LABELS_EN;
+
   const dimensionEntries = Object.entries(review.dimensions) as [
     keyof ToolReview['dimensions'],
     number,
   ][];
 
   const data = dimensionEntries.map(([, v]) => v);
-  const labels = dimensionEntries.map(([k]) => DIMENSION_LABELS[k]);
+  const labels = dimensionEntries.map(([k]) => dimLabels[k]);
 
   return (
     <div className='space-y-8'>
@@ -32,7 +39,8 @@ export default function ReviewPanel({ review }: { review: ToolReview }) {
             </span>
           </div>
           <p className='text-[13px] text-[#a8a29e]'>
-            基于6维实测模型 · {review.testedDate}测试
+            {t('review.basedOn')} · {t('review.testedDate')}:{' '}
+            {review.testedDate}
           </p>
         </div>
         <div className='flex justify-center'>
@@ -71,9 +79,11 @@ export default function ReviewPanel({ review }: { review: ToolReview }) {
       {/* Pros & Cons */}
       <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
         <div className='rounded-xl border border-[#dcfce7] bg-[#f0fdf4] p-4'>
-          <h4 className='mb-3 text-[13px] font-bold text-[#15803d]'>Pros</h4>
+          <h4 className='mb-3 text-[13px] font-bold text-[#15803d]'>
+            {t('review.pros')}
+          </h4>
           <ul className='space-y-2'>
-            {review.pros.map((p) => (
+            {texts.pros.map((p) => (
               <li
                 className='flex items-start gap-2 text-[13px] text-[#166534]'
                 key={p}
@@ -85,9 +95,11 @@ export default function ReviewPanel({ review }: { review: ToolReview }) {
           </ul>
         </div>
         <div className='rounded-xl border border-[#fee2e2] bg-[#fef2f2] p-4'>
-          <h4 className='mb-3 text-[13px] font-bold text-[#b91c1c]'>Cons</h4>
+          <h4 className='mb-3 text-[13px] font-bold text-[#b91c1c]'>
+            {t('review.cons')}
+          </h4>
           <ul className='space-y-2'>
-            {review.cons.map((c) => (
+            {texts.cons.map((c) => (
               <li
                 className='flex items-start gap-2 text-[13px] text-[#991b1b]'
                 key={c}
@@ -103,18 +115,20 @@ export default function ReviewPanel({ review }: { review: ToolReview }) {
       {/* Verdict */}
       <div className='rounded-xl border border-[#b45309]/15 bg-[rgba(180,83,9,0.04)] p-4'>
         <h4 className='mb-1 text-[13px] font-bold text-[#b45309]'>
-          一句话总结
+          {t('review.verdict')}
         </h4>
         <p className='text-[14px] leading-relaxed text-[#57534e]'>
-          {review.verdict}
+          {texts.verdict}
         </p>
       </div>
 
       {/* Best for */}
       <div>
-        <h4 className='mb-2 text-[13px] font-bold text-[#1c1917]'>适合人群</h4>
+        <h4 className='mb-2 text-[13px] font-bold text-[#1c1917]'>
+          {t('review.bestFor')}
+        </h4>
         <div className='flex flex-wrap gap-2'>
-          {review.bestFor.map((b) => (
+          {texts.bestFor.map((b) => (
             <span
               className='rounded-full bg-[#f5f5f4] px-3 py-1 text-[12px] text-[#57534e]'
               key={b}
@@ -129,7 +143,7 @@ export default function ReviewPanel({ review }: { review: ToolReview }) {
       {review.alternatives.length > 0 && (
         <div>
           <h4 className='mb-2 text-[13px] font-bold text-[#1c1917]'>
-            替代方案
+            {t('review.alternatives')}
           </h4>
           <div className='flex flex-wrap gap-2'>
             {review.alternatives.map((alt) => (
@@ -147,8 +161,8 @@ export default function ReviewPanel({ review }: { review: ToolReview }) {
 
       {/* Meta */}
       <div className='border-t border-[#e7e5e4] pt-3 text-[11px] text-[#a8a29e]'>
-        评测员: {review.reviewer} · 测试日期: {review.testedDate} · 最后更新:{' '}
-        {review.lastUpdated}
+        {t('review.testedBy')}: {review.reviewer} · {t('review.testedDate')}:{' '}
+        {review.testedDate} · {t('review.lastUpdated')}: {review.lastUpdated}
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useI18n } from '@/lib/i18n';
 
 interface Reply {
   id: string;
@@ -36,16 +37,16 @@ function avatarColor(name: string) {
   return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
 }
 
-function timeAgo(dateStr: string) {
+function timeAgo(dateStr: string, locale: string) {
   const diff = Date.now() - new Date(dateStr).getTime();
   const days = Math.floor(diff / 86400000);
   if (days > 30) return dateStr;
-  if (days > 0) return `${days}天前`;
+  if (days > 0) return locale === 'zh' ? `${days}天前` : `${days}d ago`;
   const hours = Math.floor(diff / 3600000);
-  if (hours > 0) return `${hours}小时前`;
+  if (hours > 0) return locale === 'zh' ? `${hours}小时前` : `${hours}h ago`;
   const mins = Math.floor(diff / 60000);
-  if (mins > 0) return `${mins}分钟前`;
-  return '刚刚';
+  if (mins > 0) return locale === 'zh' ? `${mins}分钟前` : `${mins}m ago`;
+  return locale === 'zh' ? '刚刚' : 'Just now';
 }
 
 const DEFAULT_COMMENTS: Comment[] = [
@@ -134,6 +135,7 @@ const DEFAULT_COMMENTS: Comment[] = [
 type SortMode = 'newest' | 'top';
 
 export default function CommentSection({ slug }: { slug?: string }) {
+  const { locale, t } = useI18n();
   const storageKey = slug
     ? `aihues-comments-${slug}`
     : 'aihues-comments-global';
@@ -181,7 +183,7 @@ export default function CommentSection({ slug }: { slug?: string }) {
 
   const handleSubmit = useCallback(() => {
     if (!input.trim()) return;
-    const name = authorName.trim() || '匿名用户';
+    const name = authorName.trim() || t('comment.anonymous');
     const newComment: Comment = {
       id: Date.now().toString(),
       author: name,
@@ -195,7 +197,7 @@ export default function CommentSection({ slug }: { slug?: string }) {
     setComments((prev) => [newComment, ...prev]);
     setInput('');
     setRating(0);
-  }, [input, rating, authorName]);
+  }, [input, rating, authorName, t]);
 
   const handleLike = useCallback((id: string) => {
     setComments((prev) =>
@@ -214,7 +216,7 @@ export default function CommentSection({ slug }: { slug?: string }) {
   const handleReply = useCallback(
     (commentId: string) => {
       if (!replyInput.trim()) return;
-      const name = authorName.trim() || '匿名用户';
+      const name = authorName.trim() || t('comment.anonymous');
       setComments((prev) =>
         prev.map((c) =>
           c.id === commentId
@@ -236,7 +238,7 @@ export default function CommentSection({ slug }: { slug?: string }) {
       setReplyInput('');
       setReplyTo(null);
     },
-    [replyInput, authorName]
+    [replyInput, authorName, t]
   );
 
   return (
@@ -244,7 +246,9 @@ export default function CommentSection({ slug }: { slug?: string }) {
       {/* Header */}
       <div className='flex items-center justify-between'>
         <div className='flex items-center gap-3'>
-          <h3 className='text-[16px] font-bold text-[#1c1917]'>用户评论</h3>
+          <h3 className='text-[16px] font-bold text-[#1c1917]'>
+            {t('comment.userComments')}
+          </h3>
           <span className='rounded-full bg-[#f5f5f4] px-2 py-0.5 text-[12px] font-semibold text-[#57534e]'>
             {comments.length}
           </span>
@@ -267,7 +271,7 @@ export default function CommentSection({ slug }: { slug?: string }) {
               onClick={() => setSort(m)}
               type='button'
             >
-              {m === 'top' ? '最热' : '最新'}
+              {m === 'top' ? t('comment.hot') : t('comment.newest')}
             </button>
           ))}
         </div>
@@ -279,7 +283,7 @@ export default function CommentSection({ slug }: { slug?: string }) {
           <input
             className='flex-1 rounded-lg border border-[#e7e5e4] bg-[#fafaf9] px-3 py-1.5 text-[13px] outline-none placeholder:text-[#a8a29e] focus:border-[#b45309]'
             onChange={(e) => setAuthorName(e.target.value)}
-            placeholder='你的昵称（可选）'
+            placeholder={t('comment.nickname')}
             type='text'
             value={authorName}
           />
@@ -304,13 +308,13 @@ export default function CommentSection({ slug }: { slug?: string }) {
         <textarea
           className='w-full resize-none rounded-lg border border-[#e7e5e4] bg-[#fafaf9] p-3 text-[14px] text-[#1c1917] outline-none placeholder:text-[#a8a29e] focus:border-[#b45309]'
           onChange={(e) => setInput(e.target.value)}
-          placeholder='用过这个工具？分享你的真实体验...'
+          placeholder={t('comment.placeholder')}
           rows={3}
           value={input}
         />
         <div className='mt-3 flex items-center justify-between'>
           <span className='text-[11px] text-[#a8a29e]'>
-            评论将保存在本地，刷新后仍可见
+            {t('comment.localStorage')}
           </span>
           <button
             className={`rounded-lg px-5 py-2 text-[13px] font-semibold transition-colors ${
@@ -322,7 +326,7 @@ export default function CommentSection({ slug }: { slug?: string }) {
             onClick={handleSubmit}
             type='button'
           >
-            提交评论
+            {t('comment.submit')}
           </button>
         </div>
       </div>
@@ -344,7 +348,7 @@ export default function CommentSection({ slug }: { slug?: string }) {
                 {c.author}
               </span>
               <span className='text-[11px] text-[#a8a29e]'>
-                {timeAgo(c.date)}
+                {timeAgo(c.date, locale)}
               </span>
               {c.rating && (
                 <span className='ml-auto text-[12px] text-[#b45309]'>
@@ -376,7 +380,7 @@ export default function CommentSection({ slug }: { slug?: string }) {
                 onClick={() => setReplyTo(replyTo === c.id ? null : c.id)}
                 type='button'
               >
-                回复
+                {t('comment.reply')}
               </button>
             </div>
 
@@ -387,7 +391,7 @@ export default function CommentSection({ slug }: { slug?: string }) {
                   className='flex-1 rounded-lg border border-[#e7e5e4] bg-white px-3 py-2 text-[13px] outline-none placeholder:text-[#a8a29e] focus:border-[#b45309]'
                   onChange={(e) => setReplyInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleReply(c.id)}
-                  placeholder='写下你的回复...'
+                  placeholder={t('comment.writeReply')}
                   type='text'
                   value={replyInput}
                 />
@@ -396,7 +400,7 @@ export default function CommentSection({ slug }: { slug?: string }) {
                   onClick={() => handleReply(c.id)}
                   type='button'
                 >
-                  回复
+                  {t('comment.reply')}
                 </button>
               </div>
             )}
@@ -416,7 +420,7 @@ export default function CommentSection({ slug }: { slug?: string }) {
                         {r.author}
                       </span>
                       <span className='text-[10px] text-[#a8a29e]'>
-                        {timeAgo(r.date)}
+                        {timeAgo(r.date, locale)}
                       </span>
                     </div>
                     <p className='pl-7 text-[12px] text-[#57534e]'>

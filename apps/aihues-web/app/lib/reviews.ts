@@ -4,6 +4,8 @@
    Integration 15% + Iteration Speed 10% + Community 5%
 */
 
+import type { Locale } from './dict';
+
 export interface DimensionScores {
   outputQuality: number; // 输出质量 30%
   easeOfUse: number; // 易用性 20%
@@ -541,4 +543,279 @@ export const TAG_TO_TOOL_SLUGS: Record<string, string[]> = {
 
 export function getRelatedToolSlugsByTag(tag: string): string[] {
   return TAG_TO_TOOL_SLUGS[tag] || [];
+}
+
+/* ── English review content (bilingual support) ── */
+
+interface LocalizedReview {
+  pros: string[];
+  cons: string[];
+  verdict: string;
+  bestFor: string[];
+}
+
+const REVIEW_EN: Record<string, LocalizedReview> = {
+  'ad-copy': {
+    pros: [
+      'Generates 3 ad copy variants in one click',
+      'Supports A/B test structures',
+      'Well-optimized for Chinese context',
+    ],
+    cons: [
+      'Limited creative depth, needs manual polish',
+      'No multilingual mixed output',
+      'Underperforms on long-form copy',
+    ],
+    verdict:
+      'Great for quick ad copy drafts and saving brainstorm time, but major campaigns still need human creative direction.',
+    bestFor: [
+      'Small business advertisers',
+      'E-commerce operators',
+      'Social media creators',
+    ],
+  },
+  'blog-outline': {
+    pros: [
+      'Clear 6-section structure with strong logic',
+      'Auto-generates SEO keyword suggestions',
+      'Supports long-form (3000+ words) outlines',
+    ],
+    cons: [
+      'Limited vertical domain expertise coverage',
+      'Lacks data citations and case studies',
+      'Single output format',
+    ],
+    verdict:
+      "A strong 'first push' for blog creation—helps build article skeletons from scratch, but filling in the substance still requires domain expertise.",
+    bestFor: ['Content marketers', 'Independent bloggers', 'SEO practitioners'],
+  },
+  'cold-email': {
+    pros: [
+      '3 classic outreach templates',
+      'Auto-adjusts tone (formal/friendly/direct)',
+      'Includes follow-up email sequences',
+    ],
+    cons: [
+      'Limited personalization, easy to spot as template',
+      'No recipient background research',
+      'Not suitable for high-ticket B2B sales',
+    ],
+    verdict:
+      "A solid 'door knocker' for cold outreach, great for volume, but conversion ceiling is obvious—high-value clients still need 1:1 customization.",
+    bestFor: ['BD specialists', 'Startup founders', 'SaaS salespeople'],
+  },
+  'code-review': {
+    pros: [
+      'Identifies common anti-patterns and performance traps',
+      'Provides refactoring suggestions, not just problem lists',
+      'Supports multiple programming languages',
+    ],
+    cons: [
+      'Limited understanding of business logic',
+      'Slow on large codebases',
+      'Shallow security vulnerability detection',
+    ],
+    verdict:
+      "A 'gatekeeper' for code quality—great for daily CR supplements and junior dev learning, but critical business logic still needs senior engineers.",
+    bestFor: ['Junior developers', 'Tech teams', 'Open-source contributors'],
+  },
+  json: {
+    pros: [
+      'Zero latency, fully local execution',
+      'Dark theme syntax highlighting',
+      'Collapsible tree structure',
+      'Precise error pinpointing',
+    ],
+    cons: ['May lag on oversized JSON (>10MB)', 'No JSON Schema validation'],
+    verdict:
+      "The 'Swiss Army knife' of developer toolboxes—format, validate, and browse in one go. No internet needed, privacy guaranteed.",
+    bestFor: ['Frontend developers', 'Backend developers', 'API debuggers'],
+  },
+  jwt: {
+    pros: [
+      'One-click decoding, no software install needed',
+      'Auto-detects expiration time',
+      'Supports JWS and JWE',
+      'Auto Base64 recognition',
+    ],
+    cons: [
+      'No JWT signature verification (needs secret key)',
+      'No batch parsing',
+    ],
+    verdict:
+      "The 'stopwatch' for JWT debugging—faster and lighter than jwt.io, ideal for frequent token debugging scenarios.",
+    bestFor: [
+      'Full-stack developers',
+      'DevOps engineers',
+      'Security engineers',
+    ],
+  },
+  linkedin: {
+    pros: [
+      '3 post formats (story/list/opinion)',
+      'Auto-adds hashtags and emojis',
+      'B2B context tone optimization',
+    ],
+    cons: [
+      'Limited long-form structure variety',
+      'Cannot auto-fetch personal achievements',
+      'Limited support for non-English markets',
+    ],
+    verdict:
+      "An 'accelerator' for LinkedIn content ops—great for daily activity and professional branding, but deep thought leadership still needs original work.",
+    bestFor: [
+      'BD specialists',
+      'Startup founders',
+      'Professional content creators',
+    ],
+  },
+  'x-post': {
+    pros: [
+      '3 X post formats (topic/thread/quote)',
+      'Auto-optimizes for 280 char limit',
+      'Smart hashtag recommendations',
+    ],
+    cons: [
+      'Tone leans American internet style',
+      'No image alt text generation',
+      'Thread continuity is average',
+    ],
+    verdict:
+      "A 'shortcut' for X/Twitter content—great for daily hot topics and community engagement, but deep opinions still need personal voice.",
+    bestFor: ['Community managers', 'Indie developers', 'Content creators'],
+  },
+  'lp-hero': {
+    pros: [
+      'AIDA structure (Attention→Interest→Desire→Action)',
+      'Supports CTA button copy generation',
+      'Multi-industry templates (SaaS/e-commerce/services)',
+    ],
+    cons: [
+      'Missing visual design suggestions',
+      'Insufficient mobile copy consideration',
+      'Brand tone consistency hard to guarantee',
+    ],
+    verdict:
+      "The 'scaffolding' for landing page copy—helps quickly build hero section frameworks, but visual and design execution still needs a professional team.",
+    bestFor: ['Product managers', 'Indie developers', 'Growth hackers'],
+  },
+  'seo-title': {
+    pros: [
+      'Auto-detects title length (Google 60 char standard)',
+      'Generates 5 style variants',
+      'Includes keyword density suggestions',
+    ],
+    cons: [
+      'Limited long-tail keyword coverage',
+      'Cannot fetch real-time search volume',
+      'Limited multilingual SEO support',
+    ],
+    verdict:
+      "A 'quick generator' for SEO titles—produces search-engine-compliant title variants, but keyword strategy still needs SEO tools.",
+    bestFor: ['SEO specialists', 'Content ops', 'Independent bloggers'],
+  },
+  meta: {
+    pros: [
+      'Auto-generates meta title + description + keywords',
+      'Open Graph tag support',
+      'Real-time character count validation',
+    ],
+    cons: [
+      'Lacks competitor meta comparison',
+      'Cannot auto-scrape page content',
+      'No Schema.org structured data',
+    ],
+    verdict:
+      "A 'one-click fix' for page metadata—great for batch meta tag generation, but competitor analysis and structured data need extra tools.",
+    bestFor: ['SEO specialists', 'Frontend developers', 'Content ops'],
+  },
+  tldr: {
+    pros: [
+      'Multiple summary lengths (1/3/5 sentences)',
+      'Preserves key data and conclusions',
+      'Fast processing, even on long texts',
+    ],
+    cons: [
+      'Technical terminology accuracy could be better',
+      'No mixed-language support',
+      'Cannot generate bullet points',
+    ],
+    verdict:
+      "A 'speed-reading assistant' for the information overload era—quickly extracts core arguments from long texts, but professional domain summaries still need manual review of key terms.",
+    bestFor: ['Researchers', 'Investors', 'Content curators'],
+  },
+  regex: {
+    pros: [
+      'Real-time match highlighting and error tips',
+      'Supports multiple regex engines (PCRE/JS/Python)',
+      'Common regex template library',
+    ],
+    cons: [
+      'No performance warning for complex backtracking',
+      'No regex visualization diagrams',
+      'May lag on large text (>1MB)',
+    ],
+    verdict:
+      "An 'online lab' for regex—test, debug, and learn in one place. Lighter than regex101, ideal for quick validation.",
+    bestFor: ['Backend developers', 'DevOps engineers', 'Data analysts'],
+  },
+  'code-explain': {
+    pros: [
+      'Supports 10+ programming languages',
+      'Auto-identifies algorithm complexity',
+      'Explains obscure code in plain language',
+    ],
+    cons: [
+      'Limited business logic context understanding',
+      'Loses details on large code blocks',
+      'Explanation depth not adjustable (junior vs senior)',
+    ],
+    verdict:
+      "A 'translator' for code learning—great for understanding unfamiliar codebases and algorithm principles, but business logic still needs domain experts.",
+    bestFor: ['Junior developers', 'Tech interviewers', 'Code reviewers'],
+  },
+  'video-title': {
+    pros: [
+      '8 title styles (suspense/number/question/etc)',
+      'Auto-detects YouTube character limit',
+      'Keyword SEO-friendliness scoring',
+    ],
+    cons: [
+      'Weak optimization for Chinese video titles',
+      'Cannot analyze competitor channel strategies',
+      'Missing thumbnail copy suggestions',
+    ],
+    verdict:
+      "A 'title inspiration library' for YouTube creators—generates eye-catching title variants, but thumbnail strategy and competitor analysis need extra tools.",
+    bestFor: ['YouTube creators', 'Video ops', 'Content marketers'],
+  },
+};
+
+export function getReviewText(
+  review: ToolReview,
+  locale: Locale
+): { pros: string[]; cons: string[]; verdict: string; bestFor: string[] } {
+  if (locale === 'zh') {
+    return {
+      pros: review.pros,
+      cons: review.cons,
+      verdict: review.verdict,
+      bestFor: review.bestFor,
+    };
+  }
+  const en = REVIEW_EN[review.slug];
+  if (en) {
+    return {
+      pros: en.pros,
+      cons: en.cons,
+      verdict: en.verdict,
+      bestFor: en.bestFor,
+    };
+  }
+  return {
+    pros: review.pros,
+    cons: review.cons,
+    verdict: review.verdict,
+    bestFor: review.bestFor,
+  };
 }
