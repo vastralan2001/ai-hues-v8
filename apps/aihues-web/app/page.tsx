@@ -6,6 +6,7 @@ import { PageShell } from '@/components/SiteChrome';
 
 import { Logo } from '@/components/Logo';
 import { GameCreditBadge } from '@/components/GameCreditBadge';
+import { ClientDayStreak, ClientFreeCredits } from '@/components/ClientStats';
 import type { CatalogGame } from '@/lib/catalog-api';
 import { safeListGames, safeListTools } from '@/lib/catalog-api';
 import { t, type Locale } from '@/lib/dict';
@@ -199,8 +200,14 @@ export default async function HomePage() {
       label: t(locale, 'stats.devTools'),
     },
     { num: String(games.length || 0), label: t(locale, 'stats.games') },
-    { num: '—', label: t(locale, 'stats.freeCredits') },
-    { num: '—', label: t(locale, 'stats.dayStreak') },
+    {
+      num: <ClientFreeCredits />,
+      label: t(locale, 'stats.freeCredits'),
+    },
+    {
+      num: <ClientDayStreak />,
+      label: t(locale, 'stats.dayStreak'),
+    },
   ];
 
   const homeDevTools = HOME_DEVELOPER_SLUGS.map((slug) =>
@@ -424,7 +431,7 @@ export default async function HomePage() {
               </div>
               <div className='flex items-center gap-3'>
                 <span className='rounded-full border border-border bg-surface px-3.5 py-1.5 text-[14px] text-muted'>
-                  {categoryCounts.developer || 30} {t(locale, 'section.tools')}
+                  {categoryCounts.developer} {t(locale, 'section.tools')}
                 </span>
                 <Link
                   className='text-[14px] font-semibold text-accent hover:text-accent-light'
@@ -459,11 +466,11 @@ export default async function HomePage() {
               </div>
               <div className='flex items-center gap-3'>
                 <span className='rounded-full border border-border bg-surface px-3.5 py-1.5 text-[14px] text-muted'>
-                  {homeWritingTools.length} {t(locale, 'section.tools')}
+                  {categoryCounts['ai-writing']} {t(locale, 'section.tools')}
                 </span>
                 <Link
                   className='text-[14px] font-semibold text-accent hover:text-accent-light'
-                  href={toolsCategoryHref('utility')}
+                  href={toolsCategoryHref('ai-writing')}
                 >
                   {t(locale, 'section.allTools')}
                 </Link>
