@@ -23,7 +23,9 @@ AIHues 是 AI 工具导航站 + 实用工具集合，定位 "AI Vibe Navigator"�
 ### 1. 首页
 
 - 搜索框直达工具（支持 `/` 快捷键聚焦）
+- **6个热词快捷入口**（JWT/JSON/Regex/QR Code/Fortune/Hoops）— 点击直达对应工具/游戏
 - 分类浏览卡片：Developer / Utility / AI Writing / Games
+- **外部推广位** — 跳转至合作伙伴 Girgrils
 - Game Center 展示 3 个游戏 + 积分余额
 - Popular Tools 推荐位
 
@@ -31,7 +33,7 @@ AIHues 是 AI 工具导航站 + 实用工具集合，定位 "AI Vibe Navigator"�
 
 - **57个工具**，分 3 大类：Developer(30) / Utility(8) / AI Writing(19)
 - 每个工具卡片显示：图标、名称、描述、价格标签、积分消耗
-- 支持搜索 + 分类筛选 + 价格筛选
+- 支持搜索 + 分类筛选
 
 ### 3. 工具详情页 `/tools/{slug}`
 
@@ -109,17 +111,20 @@ Ad Copy、Blog Outline、Cold Email、X Post、LinkedIn、SEO Title、Meta、TL;
 
 ---
 
-## 四、已完成工作（本周）
+## 五、已完成工作（本周）
 
 1. ✅ 删除68篇博客中重复的"Related AIHues Tools"旧区块
-2. ✅ 评测数据从7条扩展到15条（新增 x-post/lp-hero/seo-title/meta/tldr/regex/code-explain/video-title）
+2. ✅ 评测数据从7条扩展到15条
 3. ✅ 博客Tag→工具映射覆盖全部11个tag
 4. ✅ 评论系统重写（localStorage持久化、点赞、回复、排序）
 5. ✅ 工具详情页添加积分消耗显示
+6. ✅ **首页热词修复** — 6个快捷标签改为可点击链接
+7. ✅ **首页去冗余** — 删除无效的 All/Free/Freemium/Paid 筛选
+8. ✅ **首页推广位** — Playbooks 改为外部合作伙伴链接
 
 ---
 
-## 五、关键决策点（需 leader 确认）
+## 六、关键决策点（需 leader 确认）
 
 ### 决策 1：AI工具是否接入真实LLM？
 
@@ -146,17 +151,17 @@ Ad Copy、Blog Outline、Cold Email、X Post、LinkedIn、SEO Title、Meta、TL;
 
 ---
 
-## 六、截图索引
+## 七、截图索引
 
-截图保存在 `/tmp/demo-*.png`：
+截图保存在 `screenshots/`：
 
 | 截图 | 内容 |
 |---|---|
-| `demo-home.png` | 首页 |
+| `demo-home.png` | 首页（含热词+推广位） |
 | `demo-tools.png` | 工具列表页（57个工具） |
 | `demo-json.png` | JSON Formatter 纯前端工具 |
-| `demo-adcopy.png` | Ad Copy AI工具（带评测标签） |
-| `demo-blog.png` | 博客文章 + 底部工具推荐 |
+| `demo-adcopy.png` | Ad Copy AI工具（带评测标签+积分） |
+| `demo-blog.png` | 博客文章 + 底部工具推荐卡片 |
 | `demo-compare.png` | 工具对比页 |
 | `demo-review-tab.png` | 工具详情页（评测+评论标签） |
-| `demo-pricing.png` | 定价页 |
+| `demo-pricing.png` | 定价页（Free/Pro/Team） |
