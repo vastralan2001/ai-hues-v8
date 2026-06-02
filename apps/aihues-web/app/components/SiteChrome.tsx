@@ -6,7 +6,6 @@ import {
   gameDetailHref,
   gamesHref,
   homeHref,
-  pricingHref,
   rankingHref,
   showcaseHref,
   toolsHref,
@@ -36,7 +35,6 @@ const headerLinks: Record<
     { href: gamesHref, labelKey: 'nav.games' },
     { href: blogHref, labelKey: 'nav.blog' },
     { href: wishlistHref, labelKey: 'nav.wishlist' },
-    { href: rankingHref, labelKey: 'nav.ranking' },
   ],
   tools: [
     { href: homeHref, labelKey: 'nav.home' },
@@ -44,7 +42,6 @@ const headerLinks: Record<
     { href: gamesHref, labelKey: 'nav.games' },
     { href: blogHref, labelKey: 'nav.blog' },
     { href: wishlistHref, labelKey: 'nav.wishlist' },
-    { href: rankingHref, labelKey: 'nav.ranking' },
   ],
   games: [
     { href: homeHref, labelKey: 'nav.home' },
@@ -52,7 +49,6 @@ const headerLinks: Record<
     { href: gamesHref, labelKey: 'nav.games' },
     { href: blogHref, labelKey: 'nav.blog' },
     { href: wishlistHref, labelKey: 'nav.wishlist' },
-    { href: rankingHref, labelKey: 'nav.ranking' },
   ],
   wishlist: [
     { href: homeHref, labelKey: 'nav.home' },
@@ -60,7 +56,6 @@ const headerLinks: Record<
     { href: gamesHref, labelKey: 'nav.games' },
     { href: blogHref, labelKey: 'nav.blog' },
     { href: wishlistHref, labelKey: 'nav.wishlist' },
-    { href: rankingHref, labelKey: 'nav.ranking' },
   ],
   ranking: [
     { href: homeHref, labelKey: 'nav.home' },
@@ -68,7 +63,6 @@ const headerLinks: Record<
     { href: gamesHref, labelKey: 'nav.games' },
     { href: blogHref, labelKey: 'nav.blog' },
     { href: wishlistHref, labelKey: 'nav.wishlist' },
-    { href: rankingHref, labelKey: 'nav.ranking' },
   ],
   default: [
     { href: homeHref, labelKey: 'nav.home' },
@@ -76,7 +70,6 @@ const headerLinks: Record<
     { href: gamesHref, labelKey: 'nav.games' },
     { href: blogHref, labelKey: 'nav.blog' },
     { href: wishlistHref, labelKey: 'nav.wishlist' },
-    { href: rankingHref, labelKey: 'nav.ranking' },
   ],
 };
 
@@ -205,7 +198,7 @@ export function SiteFooter({
                 links={[
                   [t(locale, 'game.daily'), gameDetailHref('daily-luck')],
                   [t(locale, 'game.popular'), gameDetailHref('slot-machine')],
-                  [t(locale, 'game.skill'), gameDetailHref('basketball')],
+                  [t(locale, 'game.hoops'), gameDetailHref('basketball')],
                 ]}
               />
               <FooterColumn
@@ -261,7 +254,7 @@ export function SiteFooter({
                   { href: toolsHref, labelKey: 'nav.tools' },
                   { href: '#categories', labelKey: 'categories.title' },
                   { href: wishlistHref, labelKey: 'nav.wishlist' },
-                  { href: pricingHref, labelKey: 'nav.discover' },
+                  { href: showcaseHref, labelKey: 'nav.showcase' },
                 ].map(({ href, labelKey }) => (
                   <Link
                     key={labelKey}
@@ -291,7 +284,7 @@ export function SiteFooter({
                   },
                   {
                     href: gameDetailHref('basketball'),
-                    labelKey: 'game.skill',
+                    labelKey: 'game.hoops',
                   },
                 ].map(({ href, labelKey }) => (
                   <Link
