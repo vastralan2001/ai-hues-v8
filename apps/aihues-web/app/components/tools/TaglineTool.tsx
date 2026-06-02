@@ -3,42 +3,12 @@
 import { useState } from 'react';
 
 import { PageShell } from '@/components/SiteChrome';
+import { aiGenerate } from '@/lib/ai-generate-client';
 import { t, type Locale } from '@/lib/dict';
 
 interface TaglineToolProps {
   locale: Locale;
 }
-
-const TEMPLATES: Record<string, string[]> = {
-  professional: [
-    '{product}: Excellence in every detail.',
-    'Trusted by professionals. Powered by {product}.',
-    '{product} — Where innovation meets reliability.',
-    'The smart choice for {category}.',
-    'Elevate your {category} with {product}.',
-  ],
-  fun: [
-    '{product}: Because {category} should be fun!',
-    'Make {category} awesome with {product}.',
-    '{product} — Your {category} superpower.',
-    "Life's too short for boring {category}. Try {product}.",
-    '{product}: The {category} tool you actually enjoy using.',
-  ],
-  bold: [
-    '{product}. No compromises.',
-    'Dominate {category} with {product}.',
-    '{product}: Built for those who demand more.',
-    "The future of {category} is here. It's called {product}.",
-    '{product} — Unapologetically powerful.',
-  ],
-  minimal: [
-    '{product}. Simply better.',
-    '{category}, refined.',
-    '{product} — Less noise, more results.',
-    'Clean. Focused. {product}.',
-    '{product} for modern {category}.',
-  ],
-};
 
 export default function TaglineTool({ locale }: TaglineToolProps) {
   const [product, setProduct] = useState('');
@@ -48,15 +18,24 @@ export default function TaglineTool({ locale }: TaglineToolProps) {
   );
   const [results, setResults] = useState<string[]>([]);
   const [copied, setCopied] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  function generate() {
-    const templates = TEMPLATES[tone];
-    const generated = templates.map((tmpl) =>
-      tmpl
-        .replace(/\{product\}/g, product || 'Your Product')
-        .replace(/\{category\}/g, category || 'business')
-    );
-    setResults(generated);
+  async function generate() {
+    setLoading(true);
+    setError('');
+    try {
+      const result = await aiGenerate({
+        tool: 'tagline',
+        locale,
+        inputs: { brand: product, benefit: category },
+      });
+      setResults(result.split('\n').filter((line) => line.trim()));
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to generate');
+    } finally {
+      setLoading(false);
+    }
   }
 
   function copy(text: string) {
@@ -131,8 +110,11 @@ export default function TaglineTool({ locale }: TaglineToolProps) {
             </div>
           </div>
 
+          {error && <p className='text-sm text-red-500'>{error}</p>}
+
           <button
-            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+            className={`rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={loading}
             onClick={generate}
             type='button'
           >

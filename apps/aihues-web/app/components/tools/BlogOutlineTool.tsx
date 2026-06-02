@@ -3,47 +3,11 @@
 import { useState } from 'react';
 
 import { PageShell } from '@/components/SiteChrome';
+import { aiGenerate } from '@/lib/ai-generate-client';
 import { t, type Locale } from '@/lib/dict';
 
 interface BlogOutlineToolProps {
   locale: Locale;
-}
-
-function generateOutline(
-  topic: string,
-  sections: number,
-  locale: Locale
-): string {
-  const isZh = locale === 'zh';
-  const t = topic || (isZh ? '这个主题' : 'this topic');
-  const lines: string[] = [];
-
-  lines.push(isZh ? `# ${t}` : `# ${t}`);
-  lines.push('');
-  lines.push(isZh ? '## 引言' : '## Introduction');
-  lines.push(
-    isZh ? `- 引入 ${t} 的背景和重要性` : `- Hook: Why ${t} matters now`
-  );
-  lines.push(isZh ? `- 说明本文将要涵盖的内容` : `- What this post will cover`);
-  lines.push('');
-
-  for (let i = 1; i <= sections; i++) {
-    lines.push(
-      isZh
-        ? `## 第 ${i} 部分：${t} 的关键方面 ${i}`
-        : `## Part ${i}: Key Aspect ${i} of ${t}`
-    );
-    lines.push(isZh ? `- 核心观点` : `- Core concept`);
-    lines.push(isZh ? `- 具体例子或数据` : `- Specific example or data`);
-    lines.push(isZh ? `- 可操作的建议` : `- Actionable takeaway`);
-    lines.push('');
-  }
-
-  lines.push(isZh ? '## 结论' : '## Conclusion');
-  lines.push(isZh ? `- 总结要点` : `- Recap key points`);
-  lines.push(isZh ? `- 行动号召` : `- Call to action`);
-
-  return lines.join('\n');
 }
 
 export default function BlogOutlineTool({ locale }: BlogOutlineToolProps) {
@@ -51,9 +15,24 @@ export default function BlogOutlineTool({ locale }: BlogOutlineToolProps) {
   const [sections, setSections] = useState('5');
   const [result, setResult] = useState('');
   const [copied, setCopied] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  function handleGenerate() {
-    setResult(generateOutline(topic, parseInt(sections) || 5, locale));
+  async function handleGenerate() {
+    setLoading(true);
+    setError('');
+    try {
+      const generated = await aiGenerate({
+        tool: 'blog-outline',
+        locale,
+        inputs: { topic, audience: '' },
+      });
+      setResult(generated);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setLoading(false);
+    }
   }
 
   function copy() {
@@ -102,12 +81,23 @@ export default function BlogOutlineTool({ locale }: BlogOutlineToolProps) {
           </div>
 
           <button
-            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light disabled:opacity-50'
+            disabled={loading}
             onClick={handleGenerate}
             type='button'
           >
-            {t(locale, 'tool.blogOutline.generate')}
+            {loading
+              ? locale === 'zh'
+                ? '生成中...'
+                : 'Generating...'
+              : t(locale, 'tool.blogOutline.generate')}
           </button>
+
+          {error && (
+            <p className='mt-3 rounded-[10px] border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'>
+              {error}
+            </p>
+          )}
 
           {result && (
             <div className='mt-2'>

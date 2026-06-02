@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import { PageShell } from '@/components/SiteChrome';
+import { aiGenerate } from '@/lib/ai-generate-client';
 import { t, type Locale } from '@/lib/dict';
 
 interface MetaTagToolProps {
@@ -16,46 +17,24 @@ export default function MetaTagTool({ locale }: MetaTagToolProps) {
   const [author, setAuthor] = useState('');
   const [image, setImage] = useState('');
   const [output, setOutput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleGenerate = () => {
-    const lines: string[] = [];
-    lines.push(`<title>${escapeHtml(title.trim())}</title>`);
-    if (description.trim()) {
-      lines.push(
-        `<meta name="description" content="${escapeHtml(description.trim())}" />`
-      );
+  const handleGenerate = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const res = await aiGenerate({
+        tool: 'meta',
+        locale,
+        inputs: { topic: title, keyword: keywords },
+      });
+      setOutput(res);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setLoading(false);
     }
-    if (keywords.trim()) {
-      lines.push(
-        `<meta name="keywords" content="${escapeHtml(keywords.trim())}" />`
-      );
-    }
-    if (author.trim()) {
-      lines.push(
-        `<meta name="author" content="${escapeHtml(author.trim())}" />`
-      );
-    }
-    lines.push('<meta charset="UTF-8" />');
-    lines.push(
-      '<meta name="viewport" content="width=device-width, initial-scale=1.0" />'
-    );
-    if (title.trim()) {
-      lines.push(
-        `<meta property="og:title" content="${escapeHtml(title.trim())}" />`
-      );
-    }
-    if (description.trim()) {
-      lines.push(
-        `<meta property="og:description" content="${escapeHtml(description.trim())}" />`
-      );
-    }
-    if (image.trim()) {
-      lines.push(
-        `<meta property="og:image" content="${escapeHtml(image.trim())}" />`
-      );
-    }
-    lines.push('<meta property="og:type" content="website" />');
-    setOutput(lines.join('\n'));
   };
 
   const handleCopy = async () => {
@@ -135,12 +114,19 @@ export default function MetaTagTool({ locale }: MetaTagToolProps) {
         </div>
 
         <button
-          className='mt-5 rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+          className='mt-5 rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light disabled:opacity-50'
+          disabled={loading}
           onClick={handleGenerate}
           type='button'
         >
-          {t(locale, 'tool.meta.generate')}
+          {loading ? '...' : t(locale, 'tool.meta.generate')}
         </button>
+
+        {error && (
+          <div className='mt-4 rounded-[10px] border border-red-300 bg-red-50 p-3 text-sm text-red-600'>
+            {error}
+          </div>
+        )}
 
         {output && (
           <div className='mt-6'>
@@ -164,12 +150,4 @@ export default function MetaTagTool({ locale }: MetaTagToolProps) {
       </div>
     </PageShell>
   );
-}
-
-function escapeHtml(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
 }

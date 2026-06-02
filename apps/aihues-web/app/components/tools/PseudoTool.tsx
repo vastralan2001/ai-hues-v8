@@ -3,118 +3,35 @@
 import { useState } from 'react';
 
 import { PageShell } from '@/components/SiteChrome';
+import { aiGenerate } from '@/lib/ai-generate-client';
 import { t, type Locale } from '@/lib/dict';
 
 interface PseudoToolProps {
   locale: Locale;
 }
 
-function generatePseudo(description: string, locale: Locale): string {
-  const isZh = locale === 'zh';
-  const d = description.trim().toLowerCase();
-  if (!d) return '';
-
-  if (d.includes('sort') || d.includes('排序')) {
-    return isZh
-      ? `算法: 排序
-输入: 数组 A
-输出: 排序后的数组 A
-
-1. 对于 i 从 0 到 length(A)-1:
-2.   对于 j 从 0 到 length(A)-i-2:
-3.     如果 A[j] > A[j+1]:
-4.       交换 A[j] 和 A[j+1]
-5. 返回 A`
-      : `ALGORITHM: Sort
-INPUT: Array A
-OUTPUT: Sorted array A
-
-1. FOR i FROM 0 TO length(A)-1:
-2.   FOR j FROM 0 TO length(A)-i-2:
-3.     IF A[j] > A[j+1]:
-4.       SWAP A[j] AND A[j+1]
-5. RETURN A`;
-  }
-
-  if (d.includes('search') || d.includes('查找') || d.includes('搜索')) {
-    return isZh
-      ? `算法: 二分查找
-输入: 已排序数组 A, 目标值 x
-输出: x 的索引或 -1
-
-1. 设置 low = 0, high = length(A) - 1
-2. 当 low <= high:
-3.   mid = (low + high) / 2
-4.   如果 A[mid] == x, 返回 mid
-5.   如果 A[mid] < x, low = mid + 1
-6.   否则 high = mid - 1
-7. 返回 -1`
-      : `ALGORITHM: Binary Search
-INPUT: Sorted array A, target value x
-OUTPUT: Index of x or -1
-
-1. SET low = 0, high = length(A) - 1
-2. WHILE low <= high:
-3.   mid = (low + high) / 2
-4.   IF A[mid] == x, RETURN mid
-5.   IF A[mid] < x, low = mid + 1
-6.   ELSE high = mid - 1
-7. RETURN -1`;
-  }
-
-  if (d.includes('fibonacci') || d.includes('斐波那契')) {
-    return isZh
-      ? `算法: 斐波那契数列
-输入: 整数 n
-输出: 第 n 个斐波那契数
-
-1. 如果 n <= 1, 返回 n
-2. 设置 a = 0, b = 1
-3. 对于 i 从 2 到 n:
-4.   temp = a + b
-5.   a = b
-6.   b = temp
-7. 返回 b`
-      : `ALGORITHM: Fibonacci
-INPUT: Integer n
-OUTPUT: nth Fibonacci number
-
-1. IF n <= 1, RETURN n
-2. SET a = 0, b = 1
-3. FOR i FROM 2 TO n:
-4.   temp = a + b
-5.   a = b
-6.   b = temp
-7. RETURN b`;
-  }
-
-  // Generic fallback
-  return isZh
-    ? `算法: ${description}
-输入: [待定义]
-输出: [待定义]
-
-1. [步骤 1]
-2. [步骤 2]
-3. [步骤 3]
-4. 返回结果`
-    : `ALGORITHM: ${description}
-INPUT: [To be defined]
-OUTPUT: [To be defined]
-
-1. [Step 1]
-2. [Step 2]
-3. [Step 3]
-4. RETURN result`;
-}
-
 export default function PseudoTool({ locale }: PseudoToolProps) {
   const [input, setInput] = useState('');
   const [result, setResult] = useState('');
   const [copied, setCopied] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  function handleGenerate() {
-    setResult(generatePseudo(input, locale));
+  async function handleGenerate() {
+    setLoading(true);
+    setError('');
+    try {
+      const res = await aiGenerate({
+        tool: 'pseudo',
+        locale,
+        inputs: { code: input },
+      });
+      setResult(res);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setLoading(false);
+    }
   }
 
   function copy() {
@@ -148,12 +65,19 @@ export default function PseudoTool({ locale }: PseudoToolProps) {
           </div>
 
           <button
-            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light disabled:opacity-50'
+            disabled={loading}
             onClick={handleGenerate}
             type='button'
           >
-            {t(locale, 'tool.pseudo.generate')}
+            {loading ? '...' : t(locale, 'tool.pseudo.generate')}
           </button>
+
+          {error && (
+            <div className='mt-2 rounded-[10px] border border-red-300 bg-red-50 p-3 text-sm text-red-600'>
+              {error}
+            </div>
+          )}
 
           {result && (
             <div className='mt-2'>

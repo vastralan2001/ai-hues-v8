@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import { PageShell } from '@/components/SiteChrome';
+import { aiGenerate } from '@/lib/ai-generate-client';
 import { t, type Locale } from '@/lib/dict';
 
 interface PrDescToolProps {
@@ -17,6 +18,8 @@ export default function PrDescTool({ locale }: PrDescToolProps) {
   const [manualTesting, setManualTesting] = useState(false);
   const [issues, setIssues] = useState('');
   const [output, setOutput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const addChange = () => setChanges([...changes, '']);
   const updateChange = (index: number, value: string) => {
@@ -28,32 +31,29 @@ export default function PrDescTool({ locale }: PrDescToolProps) {
     setChanges(changes.filter((_, i) => i !== index));
   };
 
-  const handleGenerate = () => {
-    const lines: string[] = [];
-    lines.push('## Summary');
-    lines.push(title.trim() || 'Brief summary of changes');
-    lines.push('');
-    lines.push('## Changes');
-    for (const change of changes) {
-      if (change.trim()) lines.push(`- ${change.trim()}`);
+  const handleGenerate = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const changesText = [
+        title && `Title: ${title}`,
+        ...changes.filter((c) => c.trim()).map((c) => `- ${c.trim()}`),
+        `Testing: Unit tests [${unitTests ? 'x' : ' '}], Integration tests [${integrationTests ? 'x' : ' '}], Manual testing [${manualTesting ? 'x' : ' '}]`,
+        issues && `Related Issues: ${issues}`,
+      ]
+        .filter(Boolean)
+        .join('\n');
+      const result = await aiGenerate({
+        tool: 'pr-desc',
+        locale,
+        inputs: { changes: changesText },
+      });
+      setOutput(result);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to generate');
+    } finally {
+      setLoading(false);
     }
-    lines.push('');
-    lines.push('## Testing');
-    lines.push(
-      `- [${unitTests ? 'x' : ' '}] ${t(locale, 'tool.prDesc.unitTests')}`
-    );
-    lines.push(
-      `- [${integrationTests ? 'x' : ' '}] ${t(locale, 'tool.prDesc.integrationTests')}`
-    );
-    lines.push(
-      `- [${manualTesting ? 'x' : ' '}] ${t(locale, 'tool.prDesc.manualTesting')}`
-    );
-    if (issues.trim()) {
-      lines.push('');
-      lines.push('## Related Issues');
-      lines.push(issues.trim());
-    }
-    setOutput(lines.join('\n'));
   };
 
   const handleCopy = async () => {
@@ -171,8 +171,11 @@ export default function PrDescTool({ locale }: PrDescToolProps) {
           />
         </div>
 
+        {error && <p className='text-sm text-red-500'>{error}</p>}
+
         <button
-          className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+          className={`rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          disabled={loading}
           onClick={handleGenerate}
           type='button'
         >

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import { PageShell } from '@/components/SiteChrome';
+import { aiGenerate } from '@/lib/ai-generate-client';
 import { t, type Locale } from '@/lib/dict';
 
 interface NewsletterToolProps {
@@ -16,11 +17,24 @@ export default function NewsletterTool({ locale }: NewsletterToolProps) {
   const [cta, setCta] = useState('');
   const [result, setResult] = useState('');
   const [copied, setCopied] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  function format() {
-    const isZh = locale === 'zh';
-    const output = `${subject}\n${'─'.repeat(Math.max(subject.length, 20))}\n\n${preview ? `Preview: ${preview}\n\n` : ''}${body}\n\n${cta ? `[ ${cta} ]` : ''}`;
-    setResult(output);
+  async function handleGenerate() {
+    setLoading(true);
+    setError('');
+    try {
+      const output = await aiGenerate({
+        tool: 'newsletter',
+        locale,
+        inputs: { topic: subject, audience: preview },
+      });
+      setResult(output);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to generate');
+    } finally {
+      setLoading(false);
+    }
   }
 
   function copy() {
@@ -88,9 +102,12 @@ export default function NewsletterTool({ locale }: NewsletterToolProps) {
             />
           </div>
 
+          {error && <p className='text-sm text-red-500'>{error}</p>}
+
           <button
-            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
-            onClick={format}
+            className={`rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={loading}
+            onClick={handleGenerate}
             type='button'
           >
             {t(locale, 'tool.newsletter.format')}

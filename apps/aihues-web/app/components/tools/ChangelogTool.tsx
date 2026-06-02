@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import { PageShell } from '@/components/SiteChrome';
+import { aiGenerate } from '@/lib/ai-generate-client';
 import { t, type Locale } from '@/lib/dict';
 
 interface ChangelogToolProps {
@@ -38,6 +39,8 @@ export default function ChangelogTool({ locale }: ChangelogToolProps) {
     security: [],
   });
   const [output, setOutput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const addItem = (section: SectionKey) => {
     setSections((prev) => ({ ...prev, [section]: [...prev[section], ''] }));
@@ -57,21 +60,26 @@ export default function ChangelogTool({ locale }: ChangelogToolProps) {
     setSections(next);
   };
 
-  const handleGenerate = () => {
-    const lines: string[] = [];
-    lines.push(`## [${version.trim()}] - ${date.trim()}`);
-    lines.push('');
-    for (const key of SECTIONS) {
-      const items = sections[key].filter((i) => i.trim());
-      if (items.length > 0) {
-        lines.push(`### ${t(locale, `tool.changelog.${key}`)}`);
-        for (const item of items) {
-          lines.push(`- ${item.trim()}`);
-        }
-        lines.push('');
-      }
+  const handleGenerate = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const changesText = SECTIONS.flatMap((key) =>
+        sections[key]
+          .filter((i) => i.trim())
+          .map((item) => `[${key}] ${item.trim()}`)
+      ).join('\n');
+      const result = await aiGenerate({
+        tool: 'changelog',
+        locale,
+        inputs: { version, changes: changesText || 'No changes' },
+      });
+      setOutput(result);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to generate');
+    } finally {
+      setLoading(false);
     }
-    setOutput(lines.join('\n'));
   };
 
   const handleCopy = async () => {
@@ -158,8 +166,11 @@ export default function ChangelogTool({ locale }: ChangelogToolProps) {
           ))}
         </div>
 
+        {error && <p className='mt-4 text-sm text-red-500'>{error}</p>}
+
         <button
-          className='mt-6 rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+          className={`mt-6 rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          disabled={loading}
           onClick={handleGenerate}
           type='button'
         >

@@ -3,27 +3,35 @@
 import { useState } from 'react';
 
 import { PageShell } from '@/components/SiteChrome';
+import { aiGenerate } from '@/lib/ai-generate-client';
 import { t, type Locale } from '@/lib/dict';
 
 interface TldrToolProps {
   locale: Locale;
 }
 
-function extractSentences(text: string, count: number): string {
-  const sentences = text.match(/[^.!?]+[.!?]+/g) || [];
-  return sentences
-    .slice(0, count)
-    .map((s) => s.trim())
-    .join(' ');
-}
-
 export default function TldrTool({ locale }: TldrToolProps) {
   const [text, setText] = useState('');
   const [sentences, setSentences] = useState(3);
   const [summary, setSummary] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSummarize = () => {
-    setSummary(extractSentences(text, sentences));
+  const handleSummarize = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const generated = await aiGenerate({
+        tool: 'tldr',
+        locale,
+        inputs: { text },
+      });
+      setSummary(generated);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to generate');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCopy = async () => {
@@ -71,13 +79,16 @@ export default function TldrTool({ locale }: TldrToolProps) {
             />
           </label>
           <button
-            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light disabled:opacity-50'
+            disabled={loading}
             onClick={handleSummarize}
             type='button'
           >
-            {t(locale, 'tool.tldr.summarize')}
+            {loading ? '...' : t(locale, 'tool.tldr.summarize')}
           </button>
         </div>
+
+        {error && <p className='mt-4 text-sm text-red-500'>{error}</p>}
 
         {summary && (
           <div className='mt-6'>

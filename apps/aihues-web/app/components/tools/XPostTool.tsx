@@ -3,35 +3,12 @@
 import { useState } from 'react';
 
 import { PageShell } from '@/components/SiteChrome';
+import { aiGenerate } from '@/lib/ai-generate-client';
 import { t, type Locale } from '@/lib/dict';
 
 interface XPostToolProps {
   locale: Locale;
 }
-
-const TEMPLATES: Record<string, string[]> = {
-  casual: [
-    "Just discovered {topic} and I'm blown away 🤯 What do you think?",
-    'Hot take: {topic} is the most underrated thing right now.',
-    "Can't stop thinking about {topic}. Anyone else?",
-    '{topic} thread incoming 🧵',
-    'Unpopular opinion: {topic} deserves more hype.',
-  ],
-  professional: [
-    "Here's what I've learned about {topic} after 5 years in the industry.",
-    'A quick breakdown of {topic} for anyone getting started.',
-    'The state of {topic} in 2026: a thread.',
-    '3 things you need to know about {topic} this week.',
-    'Why {topic} matters more than ever right now.',
-  ],
-  witty: [
-    '{topic} is like a relationship — everyone talks about it, few understand it.',
-    'Me reading about {topic} at 2am: this is fine.',
-    'They said {topic} was a fad. They were wrong.',
-    'POV: you just understood {topic} after months of confusion.',
-    '{topic}: exists. Me: I must write a thread.',
-  ],
-};
 
 export default function XPostTool({ locale }: XPostToolProps) {
   const [topic, setTopic] = useState('');
@@ -40,13 +17,24 @@ export default function XPostTool({ locale }: XPostToolProps) {
   );
   const [results, setResults] = useState<string[]>([]);
   const [copied, setCopied] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  function generate() {
-    const templates = TEMPLATES[tone];
-    const generated = templates.map((tmpl) =>
-      tmpl.replace(/\{topic\}/g, topic || 'this topic')
-    );
-    setResults(generated);
+  async function generate() {
+    setLoading(true);
+    setError('');
+    try {
+      const result = await aiGenerate({
+        tool: 'x-post',
+        locale,
+        inputs: { topic, tone },
+      });
+      setResults([result]);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setLoading(false);
+    }
   }
 
   function copy(text: string) {
@@ -107,12 +95,23 @@ export default function XPostTool({ locale }: XPostToolProps) {
           </div>
 
           <button
-            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light disabled:opacity-50'
+            disabled={loading}
             onClick={generate}
             type='button'
           >
-            {t(locale, 'tool.xPost.generate')}
+            {loading
+              ? locale === 'zh'
+                ? '生成中...'
+                : 'Generating...'
+              : t(locale, 'tool.xPost.generate')}
           </button>
+
+          {error && (
+            <p className='mt-3 rounded-[10px] border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'>
+              {error}
+            </p>
+          )}
 
           {results.length > 0 && (
             <div className='space-y-3'>

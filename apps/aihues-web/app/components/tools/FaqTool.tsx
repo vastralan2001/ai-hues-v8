@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import { PageShell } from '@/components/SiteChrome';
+import { aiGenerate } from '@/lib/ai-generate-client';
 import { t, type Locale } from '@/lib/dict';
 
 interface FaqToolProps {
@@ -22,6 +23,8 @@ export default function FaqTool({ locale }: FaqToolProps) {
   const [format, setFormat] = useState<'html' | 'jsonld'>('html');
   const [result, setResult] = useState('');
   const [copied, setCopied] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   let nextId = 2;
 
   function addPair() {
@@ -36,48 +39,28 @@ export default function FaqTool({ locale }: FaqToolProps) {
     setPairs(pairs.map((p) => (p.id === id ? { ...p, [field]: value } : p)));
   }
 
-  function generate() {
-    const validPairs = pairs.filter(
-      (p) => p.question.trim() && p.answer.trim()
-    );
-    if (format === 'html') {
-      const items = validPairs
-        .map(
-          (p) =>
-            `  <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">\n` +
-            `    <h3 itemprop="name">${escapeHtml(p.question)}</h3>\n` +
-            `    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">\n` +
-            `      <div itemprop="text">${escapeHtml(p.answer)}</div>\n` +
-            `    </div>\n` +
-            `  </div>`
-        )
-        .join('\n');
-      setResult(
-        `<div itemscope itemtype="https://schema.org/FAQPage">\n${items}\n</div>`
-      );
-    } else {
-      const json = {
-        '@context': 'https://schema.org',
-        '@type': 'FAQPage',
-        mainEntity: validPairs.map((p) => ({
-          '@type': 'Question',
-          name: p.question,
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: p.answer,
-          },
-        })),
-      };
-      setResult(JSON.stringify(json, null, 2));
+  async function generate() {
+    setLoading(true);
+    setError('');
+    try {
+      const output = await aiGenerate({
+        tool: 'faq',
+        locale,
+        inputs: {
+          product: pairs[0]?.question.trim() || 'Product',
+          questions:
+            pairs
+              .map((p) => p.question)
+              .filter((q) => q.trim())
+              .join('\n') || 'General questions',
+        },
+      });
+      setResult(output);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to generate');
+    } finally {
+      setLoading(false);
     }
-  }
-
-  function escapeHtml(str: string): string {
-    return str
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
   }
 
   function copy() {
@@ -167,8 +150,11 @@ export default function FaqTool({ locale }: FaqToolProps) {
             ))}
           </div>
 
+          {error && <p className='text-sm text-red-500'>{error}</p>}
+
           <button
-            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+            className={`rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={loading}
             onClick={generate}
             type='button'
           >

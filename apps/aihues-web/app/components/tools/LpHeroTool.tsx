@@ -3,49 +3,68 @@
 import { useState } from 'react';
 
 import { PageShell } from '@/components/SiteChrome';
+import { aiGenerate } from '@/lib/ai-generate-client';
 import { t, type Locale } from '@/lib/dict';
 
 interface LpHeroToolProps {
   locale: Locale;
 }
 
-function generateHero(
-  product: string,
-  benefit: string,
-  audience: string,
-  locale: Locale
-) {
-  const isZh = locale === 'zh';
-  const p = product || (isZh ? '您的产品' : 'Your Product');
-  const b = benefit || (isZh ? '节省时间' : 'save time');
-  const a = audience || (isZh ? '专业人士' : 'professionals');
+interface HeroResult {
+  headline: string;
+  subheadline: string;
+  cta: string;
+}
 
-  if (isZh) {
-    return {
-      headline: `${p} — 让${a}${b}的最佳方式`,
-      subheadline: `加入数千名已经通过 ${p} 实现目标的 ${a}。无需信用卡，免费开始使用。`,
-      cta: '立即免费试用 →',
-    };
+function parseHeroOutput(text: string): HeroResult {
+  const lines = text
+    .split('\n')
+    .map((l) => l.trim())
+    .filter(Boolean);
+  let headline = '';
+  let subheadline = '';
+  let cta = '';
+
+  for (const line of lines) {
+    const hl = line.match(/^headline[：:]\s*(.+)$/i);
+    if (hl) headline = hl[1].trim();
+    const sh = line.match(/^subheadline[：:]\s*(.+)$/i);
+    if (sh) subheadline = sh[1].trim();
+    const ct = line.match(/^(?:cta|call to action)[：:]\s*(.+)$/i);
+    if (ct) cta = ct[1].trim();
   }
 
-  return {
-    headline: `${p} — The Best Way for ${a} to ${b}`,
-    subheadline: `Join thousands of ${a} who\'ve already achieved their goals with ${p}. No credit card required.`,
-    cta: 'Start Free Trial →',
-  };
+  if (!headline && lines[0]) headline = lines[0];
+  if (!subheadline && lines[1]) subheadline = lines[1];
+  if (!cta && lines[2]) cta = lines[2];
+
+  return { headline, subheadline, cta };
 }
 
 export default function LpHeroTool({ locale }: LpHeroToolProps) {
   const [product, setProduct] = useState('');
   const [benefit, setBenefit] = useState('');
   const [audience, setAudience] = useState('');
-  const [result, setResult] = useState<ReturnType<typeof generateHero> | null>(
-    null
-  );
+  const [result, setResult] = useState<HeroResult | null>(null);
   const [copied, setCopied] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  function handleGenerate() {
-    setResult(generateHero(product, benefit, audience, locale));
+  async function handleGenerate() {
+    setLoading(true);
+    setError('');
+    try {
+      const generated = await aiGenerate({
+        tool: 'lp-hero',
+        locale,
+        inputs: { product, benefit },
+      });
+      setResult(parseHeroOutput(generated));
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to generate');
+    } finally {
+      setLoading(false);
+    }
   }
 
   function copy(text: string) {
@@ -104,12 +123,15 @@ export default function LpHeroTool({ locale }: LpHeroToolProps) {
           </div>
 
           <button
-            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light disabled:opacity-50'
+            disabled={loading}
             onClick={handleGenerate}
             type='button'
           >
-            {t(locale, 'tool.lpHero.generate')}
+            {loading ? '...' : t(locale, 'tool.lpHero.generate')}
           </button>
+
+          {error && <p className='text-sm text-red-500'>{error}</p>}
 
           {result && (
             <div className='space-y-4'>
@@ -122,7 +144,7 @@ export default function LpHeroTool({ locale }: LpHeroToolProps) {
                     {result.headline}
                   </p>
                   <button
-                    className='shrink-0 rounded-[8px] border border-border bg-white dark:bg-gray-900 px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
+                    className='shrink-0 rounded-[8px] border border-border bg-white px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent dark:bg-gray-900'
                     onClick={() => copy(result.headline)}
                     type='button'
                   >
@@ -142,7 +164,7 @@ export default function LpHeroTool({ locale }: LpHeroToolProps) {
                     {result.subheadline}
                   </p>
                   <button
-                    className='shrink-0 rounded-[8px] border border-border bg-white dark:bg-gray-900 px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
+                    className='shrink-0 rounded-[8px] border border-border bg-white px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent dark:bg-gray-900'
                     onClick={() => copy(result.subheadline)}
                     type='button'
                   >
@@ -162,7 +184,7 @@ export default function LpHeroTool({ locale }: LpHeroToolProps) {
                     {result.cta}
                   </p>
                   <button
-                    className='shrink-0 rounded-[8px] border border-border bg-white dark:bg-gray-900 px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
+                    className='shrink-0 rounded-[8px] border border-border bg-white px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent dark:bg-gray-900'
                     onClick={() => copy(result.cta)}
                     type='button'
                   >

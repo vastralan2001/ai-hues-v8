@@ -3,54 +3,11 @@
 import { useState } from 'react';
 
 import { PageShell } from '@/components/SiteChrome';
+import { aiGenerate } from '@/lib/ai-generate-client';
 import { t, type Locale } from '@/lib/dict';
 
 interface ColdEmailToolProps {
   locale: Locale;
-}
-
-function generateEmail(
-  name: string,
-  company: string,
-  recipient: string,
-  recipientCompany: string,
-  purpose: string,
-  locale: Locale
-): string {
-  const isZh = locale === 'zh';
-  const n = name || (isZh ? '我' : 'I');
-  const c = company || (isZh ? '我们公司' : 'our company');
-  const r = recipient || (isZh ? '您好' : 'Hi there');
-  const rc = recipientCompany || (isZh ? '贵公司' : 'your company');
-  const p =
-    purpose || (isZh ? '探讨合作机会' : 'explore a potential partnership');
-
-  if (isZh) {
-    return `主题：关于与${rc}的${p}
-
-${r}，
-
-您好！我是${n}，来自${c}。我们注意到${rc}在行业内取得了出色的成绩，特此来信希望能${p}。
-
-我相信我们的解决方案能够为${rc}带来实质性的价值。如果您方便的话，希望能安排一次简短的通话，进一步探讨合作的可能性。
-
-期待您的回复！
-
-${n}
-${c}`;
-  }
-
-  return `Subject: ${p.charAt(0).toUpperCase() + p.slice(1)} with ${rc}
-
-Hi ${r === 'Hi there' ? 'there' : r},
-
-My name is ${n} and I'm with ${c}. I've been following ${rc} and am impressed by what you're building.
-
-I'd love to ${p} and explore how we might be able to help. Would you be open to a brief call next week?
-
-Looking forward to hearing from you.
-
-Best,\n${n}\n${c}`;
 }
 
 export default function ColdEmailTool({ locale }: ColdEmailToolProps) {
@@ -61,11 +18,24 @@ export default function ColdEmailTool({ locale }: ColdEmailToolProps) {
   const [purpose, setPurpose] = useState('');
   const [result, setResult] = useState('');
   const [copied, setCopied] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  function handleGenerate() {
-    setResult(
-      generateEmail(name, company, recipient, recipientCompany, purpose, locale)
-    );
+  async function handleGenerate() {
+    setLoading(true);
+    setError('');
+    try {
+      const generated = await aiGenerate({
+        tool: 'cold-email',
+        locale,
+        inputs: { recipient, product: company, purpose },
+      });
+      setResult(generated);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setLoading(false);
+    }
   }
 
   function copy() {
@@ -152,12 +122,23 @@ export default function ColdEmailTool({ locale }: ColdEmailToolProps) {
           </div>
 
           <button
-            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light disabled:opacity-50'
+            disabled={loading}
             onClick={handleGenerate}
             type='button'
           >
-            {t(locale, 'tool.coldEmail.generate')}
+            {loading
+              ? locale === 'zh'
+                ? '生成中...'
+                : 'Generating...'
+              : t(locale, 'tool.coldEmail.generate')}
           </button>
+
+          {error && (
+            <p className='mt-3 rounded-[10px] border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'>
+              {error}
+            </p>
+          )}
 
           {result && (
             <div className='mt-2'>

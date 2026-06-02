@@ -3,31 +3,12 @@
 import { useState } from 'react';
 
 import { PageShell } from '@/components/SiteChrome';
+import { aiGenerate } from '@/lib/ai-generate-client';
 import { t, type Locale } from '@/lib/dict';
 
 interface AdCopyToolProps {
   locale: Locale;
 }
-
-const TEMPLATES: Record<string, string[]> = {
-  google: [
-    'Headline: {product} — Built for {audience}',
-    'Description 1: Save time and get better results with {product}. Start your free trial today.',
-    'Description 2: Join thousands of {audience} who trust {product}. See why.',
-    'CTA: Try {product} Free →',
-  ],
-  meta: [
-    'Primary Text: Tired of struggling with {product}? We built the solution {audience} have been waiting for.',
-    'Headline: {product} — Made for {audience}',
-    'Description: Discover why {audience} love {product}. Free trial available.',
-    'CTA: Learn More',
-  ],
-  linkedin: [
-    "Intro: As a {audience}, you know the challenges of {product}. Here's how we solve them.",
-    'Body: {product} helps {audience} achieve more with less effort. Trusted by industry leaders.',
-    'CTA: Book a Demo',
-  ],
-};
 
 export default function AdCopyTool({ locale }: AdCopyToolProps) {
   const [product, setProduct] = useState('');
@@ -37,15 +18,24 @@ export default function AdCopyTool({ locale }: AdCopyToolProps) {
   );
   const [results, setResults] = useState<string[]>([]);
   const [copied, setCopied] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  function generate() {
-    const templates = TEMPLATES[platform];
-    const p = product || (locale === 'zh' ? '您的产品' : 'Your Product');
-    const a = audience || (locale === 'zh' ? '专业人士' : 'professionals');
-    const generated = templates.map((tmpl) =>
-      tmpl.replace(/\{product\}/g, p).replace(/\{audience\}/g, a)
-    );
-    setResults(generated);
+  async function generate() {
+    setLoading(true);
+    setError('');
+    try {
+      const result = await aiGenerate({
+        tool: 'ad-copy',
+        locale,
+        inputs: { product, audience },
+      });
+      setResults([result]);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setLoading(false);
+    }
   }
 
   function copy(text: string) {
@@ -119,12 +109,23 @@ export default function AdCopyTool({ locale }: AdCopyToolProps) {
           </div>
 
           <button
-            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light disabled:opacity-50'
+            disabled={loading}
             onClick={generate}
             type='button'
           >
-            {t(locale, 'tool.adCopy.generate')}
+            {loading
+              ? locale === 'zh'
+                ? '生成中...'
+                : 'Generating...'
+              : t(locale, 'tool.adCopy.generate')}
           </button>
+
+          {error && (
+            <p className='mt-3 rounded-[10px] border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'>
+              {error}
+            </p>
+          )}
 
           {results.length > 0 && (
             <div className='space-y-3'>

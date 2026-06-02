@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import { PageShell } from '@/components/SiteChrome';
+import { aiGenerate } from '@/lib/ai-generate-client';
 import { t, type Locale } from '@/lib/dict';
 
 interface AltTextToolProps {
@@ -47,9 +48,24 @@ export default function AltTextTool({ locale }: AltTextToolProps) {
   const [input, setInput] = useState('');
   const [result, setResult] = useState('');
   const [copied, setCopied] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  function handleGenerate() {
-    setResult(generateAltText(input, locale));
+  async function handleGenerate() {
+    setLoading(true);
+    setError('');
+    try {
+      const res = await aiGenerate({
+        tool: 'alt-text',
+        locale,
+        inputs: { description: input },
+      });
+      setResult(res);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setLoading(false);
+    }
   }
 
   function copy() {
@@ -87,12 +103,19 @@ export default function AltTextTool({ locale }: AltTextToolProps) {
           </div>
 
           <button
-            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light disabled:opacity-50'
+            disabled={loading}
             onClick={handleGenerate}
             type='button'
           >
-            {t(locale, 'tool.altText.generate')}
+            {loading ? '...' : t(locale, 'tool.altText.generate')}
           </button>
+
+          {error && (
+            <div className='mt-2 rounded-[10px] border border-red-300 bg-red-50 p-3 text-sm text-red-600'>
+              {error}
+            </div>
+          )}
 
           {result && (
             <div className='mt-2'>

@@ -3,85 +3,11 @@
 import { useState } from 'react';
 
 import { PageShell } from '@/components/SiteChrome';
+import { aiGenerate } from '@/lib/ai-generate-client';
 import { t, type Locale } from '@/lib/dict';
 
 interface DocsToolProps {
   locale: Locale;
-}
-
-function generateDocs(
-  signature: string,
-  language: string,
-  locale: Locale
-): string {
-  const isZh = locale === 'zh';
-
-  // Extract function name
-  const nameMatch = signature.match(/(?:function\s+|def\s+)?(\w+)\s*\(/);
-  const name = nameMatch ? nameMatch[1] : 'function';
-
-  // Extract parameters
-  const paramsMatch = signature.match(/\(([^)]*)\)/);
-  const params = paramsMatch
-    ? paramsMatch[1]
-        .split(',')
-        .map((p) => p.trim())
-        .filter((p) => p)
-    : [];
-
-  if (language === 'python') {
-    const paramLines = params
-      .map((p) => {
-        const [paramName] = p.split(/[=:]/);
-        return `    ${paramName.trim()} -- description`;
-      })
-      .join('\n');
-
-    return isZh
-      ? `def ${name}(${paramsMatch ? paramsMatch[1] : ''}):
-    """
-    简要描述 ${name} 的功能。
-
-    参数:
-${paramLines || '    无'}
-
-    返回:
-        返回值描述
-    """`
-      : `def ${name}(${paramsMatch ? paramsMatch[1] : ''}):
-    """
-    Brief description of ${name}.
-
-    Args:
-${paramLines || '    None'}
-
-    Returns:
-        Description of return value
-    """`;
-  }
-
-  const paramLines = params
-    .map((p) => {
-      const [paramName] = p.split(/[=:]/);
-      return ` * @param {paramName.trim()} - description`;
-    })
-    .join('\n');
-
-  return isZh
-    ? `/**
- * 简要描述 ${name} 的功能。
- *
-${paramLines || ' * 无参数'}
- * @returns 返回值描述
- */
-${signature}`
-    : `/**
- * Brief description of ${name}.
- *
-${paramLines || ' * No parameters'}
- * @returns Description of return value
- */
-${signature}`;
 }
 
 export default function DocsTool({ locale }: DocsToolProps) {
@@ -89,9 +15,24 @@ export default function DocsTool({ locale }: DocsToolProps) {
   const [language, setLanguage] = useState('javascript');
   const [result, setResult] = useState('');
   const [copied, setCopied] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  function handleGenerate() {
-    setResult(generateDocs(input, language, locale));
+  async function handleGenerate() {
+    setLoading(true);
+    setError('');
+    try {
+      const output = await aiGenerate({
+        tool: 'docs',
+        locale,
+        inputs: { product: input, params: language },
+      });
+      setResult(output);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to generate');
+    } finally {
+      setLoading(false);
+    }
   }
 
   function copy() {
@@ -139,8 +80,11 @@ export default function DocsTool({ locale }: DocsToolProps) {
             />
           </div>
 
+          {error && <p className='text-sm text-red-500'>{error}</p>}
+
           <button
-            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+            className={`rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={loading}
             onClick={handleGenerate}
             type='button'
           >

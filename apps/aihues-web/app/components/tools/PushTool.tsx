@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import { PageShell } from '@/components/SiteChrome';
+import { aiGenerate } from '@/lib/ai-generate-client';
 import { t, type Locale } from '@/lib/dict';
 
 interface PushToolProps {
@@ -17,52 +18,24 @@ export default function PushTool({ locale }: PushToolProps) {
   const [sound, setSound] = useState('default');
   const [result, setResult] = useState('');
   const [copied, setCopied] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  function generatePayload() {
-    let payload = '';
-    if (platform === 'ios') {
-      payload = JSON.stringify(
-        {
-          aps: {
-            alert: { title, body },
-            badge: parseInt(badge) || 0,
-            sound,
-          },
-        },
-        null,
-        2
-      );
-    } else if (platform === 'android') {
-      payload = JSON.stringify(
-        {
-          message: {
-            notification: { title, body },
-            android: {
-              notification: {
-                sound,
-                notification_count: parseInt(badge) || 0,
-              },
-            },
-          },
-        },
-        null,
-        2
-      );
-    } else {
-      payload = JSON.stringify(
-        {
-          notification: {
-            title,
-            body,
-            icon: '/icon.png',
-            badge: `/badge-${badge}.png`,
-          },
-        },
-        null,
-        2
-      );
+  async function handleGenerate() {
+    setLoading(true);
+    setError('');
+    try {
+      const res = await aiGenerate({
+        tool: 'push',
+        locale,
+        inputs: { product: title, scenario: body },
+      });
+      setResult(res);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setLoading(false);
     }
-    setResult(payload);
   }
 
   function copy() {
@@ -79,6 +52,7 @@ export default function PushTool({ locale }: PushToolProps) {
     setSound('default');
     setResult('');
     setCopied(false);
+    setError('');
   }
 
   const platforms: { key: 'ios' | 'android' | 'web'; label: string }[] = [
@@ -175,12 +149,12 @@ export default function PushTool({ locale }: PushToolProps) {
 
           <div className='flex flex-wrap gap-3'>
             <button
-              className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
-              disabled={!title.trim() && !body.trim()}
-              onClick={generatePayload}
+              className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light disabled:opacity-50'
+              disabled={(!title.trim() && !body.trim()) || loading}
+              onClick={handleGenerate}
               type='button'
             >
-              {t(locale, 'tool.push.generate')}
+              {loading ? '...' : t(locale, 'tool.push.generate')}
             </button>
             <button
               className='rounded-[10px] border border-border bg-surface px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
@@ -191,6 +165,12 @@ export default function PushTool({ locale }: PushToolProps) {
             </button>
           </div>
         </div>
+
+        {error && (
+          <div className='mt-4 rounded-[10px] border border-red-300 bg-red-50 p-3 text-sm text-red-600'>
+            {error}
+          </div>
+        )}
 
         {result && (
           <div className='mt-6'>

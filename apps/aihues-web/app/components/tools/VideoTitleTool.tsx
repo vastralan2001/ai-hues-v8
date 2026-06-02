@@ -3,42 +3,12 @@
 import { useState } from 'react';
 
 import { PageShell } from '@/components/SiteChrome';
+import { aiGenerate } from '@/lib/ai-generate-client';
 import { t, type Locale } from '@/lib/dict';
 
 interface VideoTitleToolProps {
   locale: Locale;
 }
-
-const TEMPLATES: Record<string, string[]> = {
-  howTo: [
-    'How to {topic} (Step-by-Step Guide)',
-    'How I Learned to {topic} in 30 Days',
-    'How to {topic} Like a Pro',
-    'The Easiest Way to {topic}',
-    'How to {topic} — Beginner to Advanced',
-  ],
-  list: [
-    '5 Things I Wish I Knew Before {topic}',
-    '10 {topic} Tips That Actually Work',
-    '7 Mistakes Everyone Makes with {topic}',
-    'Top 3 {topic} Tools You Need',
-    "15 {topic} Hacks You Can't Miss",
-  ],
-  question: [
-    'Is {topic} Worth It in 2026?',
-    'What No One Tells You About {topic}',
-    'Why Is {topic} So Hard?',
-    "Can You Really {topic}? Here's the Truth",
-    'Does {topic} Actually Work?',
-  ],
-  bold: [
-    '{topic} Changed Everything for Me',
-    "I Tried {topic} for 30 Days — Here's What Happened",
-    'The Truth About {topic} No One Talks About',
-    'Stop Doing {topic} Wrong',
-    '{topic} Is Not What You Think',
-  ],
-};
 
 export default function VideoTitleTool({ locale }: VideoTitleToolProps) {
   const [topic, setTopic] = useState('');
@@ -47,13 +17,24 @@ export default function VideoTitleTool({ locale }: VideoTitleToolProps) {
   );
   const [results, setResults] = useState<string[]>([]);
   const [copied, setCopied] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  function generate() {
-    const templates = TEMPLATES[style];
-    const generated = templates.map((tmpl) =>
-      tmpl.replace(/\{topic\}/g, topic || 'this topic')
-    );
-    setResults(generated);
+  async function generate() {
+    setLoading(true);
+    setError('');
+    try {
+      const generated = await aiGenerate({
+        tool: 'video-title',
+        locale,
+        inputs: { topic, style },
+      });
+      setResults(generated.split('\n').filter(Boolean));
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to generate');
+    } finally {
+      setLoading(false);
+    }
   }
 
   function copy(text: string) {
@@ -115,12 +96,15 @@ export default function VideoTitleTool({ locale }: VideoTitleToolProps) {
           </div>
 
           <button
-            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light disabled:opacity-50'
+            disabled={loading}
             onClick={generate}
             type='button'
           >
-            {t(locale, 'tool.videoTitle.generate')}
+            {loading ? '...' : t(locale, 'tool.videoTitle.generate')}
           </button>
+
+          {error && <p className='text-sm text-red-500'>{error}</p>}
 
           {results.length > 0 && (
             <div className='space-y-3'>
@@ -134,7 +118,7 @@ export default function VideoTitleTool({ locale }: VideoTitleToolProps) {
                 >
                   <p className='text-sm text-foreground'>{r}</p>
                   <button
-                    className='ml-4 shrink-0 rounded-[8px] border border-border bg-white dark:bg-gray-900 px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
+                    className='ml-4 shrink-0 rounded-[8px] border border-border bg-white px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent dark:bg-gray-900'
                     onClick={() => copy(r)}
                     type='button'
                   >

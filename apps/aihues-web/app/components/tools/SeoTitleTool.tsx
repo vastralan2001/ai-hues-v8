@@ -3,47 +3,36 @@
 import { useState } from 'react';
 
 import { PageShell } from '@/components/SiteChrome';
+import { aiGenerate } from '@/lib/ai-generate-client';
 import { t, type Locale } from '@/lib/dict';
 
 interface SeoTitleToolProps {
   locale: Locale;
 }
 
-interface AnalysisResult {
-  length: number;
-  lengthStatus: 'short' | 'optimal' | 'long';
-  hasKeyword: boolean;
-  hasBrand: boolean;
-  specialChars: number;
-}
-
-function analyzeTitle(
-  title: string,
-  keyword: string,
-  brand: string
-): AnalysisResult {
-  const length = title.length;
-  let lengthStatus: 'short' | 'optimal' | 'long' = 'optimal';
-  if (length < 30) lengthStatus = 'short';
-  else if (length > 60) lengthStatus = 'long';
-
-  const hasKeyword =
-    !keyword || title.toLowerCase().includes(keyword.toLowerCase());
-  const hasBrand = !brand || title.toLowerCase().includes(brand.toLowerCase());
-  const specialChars = (title.match(/[^a-zA-Z0-9\s\u4e00-\u9fa5]/g) || [])
-    .length;
-
-  return { length, lengthStatus, hasKeyword, hasBrand, specialChars };
-}
-
 export default function SeoTitleTool({ locale }: SeoTitleToolProps) {
   const [title, setTitle] = useState('');
   const [keyword, setKeyword] = useState('');
   const [brand, setBrand] = useState('');
-  const [result, setResult] = useState<AnalysisResult | null>(null);
+  const [result, setResult] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleAnalyze = () => {
-    setResult(analyzeTitle(title, keyword, brand));
+  const handleAnalyze = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const generated = await aiGenerate({
+        tool: 'seo-title',
+        locale,
+        inputs: { keyword, topic: title },
+      });
+      setResult(generated.split('\n').filter(Boolean));
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to generate');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCopy = async () => {
@@ -52,18 +41,6 @@ export default function SeoTitleTool({ locale }: SeoTitleToolProps) {
     } catch {
       // ignore
     }
-  };
-
-  const lengthLabels: Record<string, string> = {
-    short: t(locale, 'tool.seoTitle.tooShort'),
-    optimal: t(locale, 'tool.seoTitle.optimal'),
-    long: t(locale, 'tool.seoTitle.tooLong'),
-  };
-
-  const lengthColors: Record<string, string> = {
-    short: 'text-orange-500',
-    optimal: 'text-green-500',
-    long: 'text-red-500',
   };
 
   return (
@@ -114,11 +91,12 @@ export default function SeoTitleTool({ locale }: SeoTitleToolProps) {
 
         <div className='mt-4 flex gap-3'>
           <button
-            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light disabled:opacity-50'
+            disabled={loading}
             onClick={handleAnalyze}
             type='button'
           >
-            {t(locale, 'tool.seoTitle.analyze')}
+            {loading ? '...' : t(locale, 'tool.seoTitle.analyze')}
           </button>
           <button
             className='rounded-[10px] border border-border bg-surface px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
@@ -129,55 +107,28 @@ export default function SeoTitleTool({ locale }: SeoTitleToolProps) {
           </button>
         </div>
 
-        {result && (
-          <div className='mt-6 grid gap-3 sm:grid-cols-2'>
-            <div className='rounded-[14px] border border-border bg-surface p-4 text-center'>
-              <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
-                {t(locale, 'tool.seoTitle.length')}
-              </p>
-              <p
-                className={`mt-1 text-2xl font-extrabold ${lengthColors[result.lengthStatus]}`}
+        {error && <p className='mt-4 text-sm text-red-500'>{error}</p>}
+
+        {result.length > 0 && (
+          <div className='mt-6 space-y-3'>
+            <p className='text-sm font-semibold text-foreground'>
+              {t(locale, 'tool.seoTitle.result')}
+            </p>
+            {result.map((r, i) => (
+              <div
+                key={i}
+                className='flex items-center justify-between rounded-[14px] border border-border bg-surface p-4'
               >
-                {result.length}
-              </p>
-              <p className='mt-0.5 text-xs text-secondary'>
-                {lengthLabels[result.lengthStatus]}
-              </p>
-            </div>
-            <div className='rounded-[14px] border border-border bg-surface p-4 text-center'>
-              <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
-                {t(locale, 'tool.seoTitle.specialChars')}
-              </p>
-              <p className='mt-1 text-2xl font-extrabold text-accent'>
-                {result.specialChars}
-              </p>
-            </div>
-            <div
-              className={`rounded-[14px] border p-4 text-center ${
-                result.hasKeyword
-                  ? 'border-green-200 bg-green-50 dark:border-green-900 dark:bg-green-950/30'
-                  : 'border-red-200 bg-red-50 dark:border-red-900 dark:bg-red-950/30'
-              }`}
-            >
-              <p className='text-sm font-semibold'>
-                {result.hasKeyword
-                  ? t(locale, 'tool.seoTitle.hasKeyword')
-                  : t(locale, 'tool.seoTitle.missingKeyword')}
-              </p>
-            </div>
-            <div
-              className={`rounded-[14px] border p-4 text-center ${
-                result.hasBrand
-                  ? 'border-green-200 bg-green-50 dark:border-green-900 dark:bg-green-950/30'
-                  : 'border-red-200 bg-red-50 dark:border-red-900 dark:bg-red-950/30'
-              }`}
-            >
-              <p className='text-sm font-semibold'>
-                {result.hasBrand
-                  ? t(locale, 'tool.seoTitle.hasBrand')
-                  : t(locale, 'tool.seoTitle.missingBrand')}
-              </p>
-            </div>
+                <p className='text-sm text-foreground'>{r}</p>
+                <button
+                  className='ml-4 shrink-0 rounded-[8px] border border-border bg-white px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent dark:bg-gray-900'
+                  onClick={() => navigator.clipboard.writeText(r)}
+                  type='button'
+                >
+                  {t(locale, 'tool.wordCount.copy')}
+                </button>
+              </div>
+            ))}
           </div>
         )}
       </div>

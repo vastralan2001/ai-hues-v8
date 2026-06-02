@@ -3,81 +3,35 @@
 import { useState } from 'react';
 
 import { PageShell } from '@/components/SiteChrome';
+import { aiGenerate } from '@/lib/ai-generate-client';
 import { t, type Locale } from '@/lib/dict';
 
 interface HumanizeToolProps {
   locale: Locale;
 }
 
-function humanize(text: string, locale: Locale): string {
-  let result = text;
-
-  // Replace overly formal phrases
-  const replacements: [RegExp, string, string][] = [
-    [/It is important to note that/gi, 'Keep in mind that', '请注意'],
-    [/It should be noted that/gi, 'You should know that', '您应该知道'],
-    [/In conclusion/gi, 'So, to wrap this up', '所以，总结一下'],
-    [/Furthermore/gi, 'Also', '此外'],
-    [/Moreover/gi, "What's more", '更重要的是'],
-    [/Nevertheless/gi, 'Even so', '即便如此'],
-    [/Consequently/gi, 'As a result', '结果是'],
-    [/Therefore/gi, 'So', '所以'],
-    [/In order to/gi, 'To', '为了'],
-    [/Due to the fact that/gi, 'Because', '因为'],
-    [/In the event that/gi, 'If', '如果'],
-    [/At this point in time/gi, 'Right now', '现在'],
-    [/With regard to/gi, 'About', '关于'],
-    [/In accordance with/gi, 'Following', '按照'],
-    [/Subsequently/gi, 'After that', '之后'],
-    [/Additionally/gi, 'Plus', '另外'],
-    [/Utilize/gi, 'Use', '使用'],
-    [/Leverage/gi, 'Use', '使用'],
-    [/Implement/gi, 'Put in place', '实施'],
-    [/Facilitate/gi, 'Help', '帮助'],
-  ];
-
-  for (const [pattern, en, zh] of replacements) {
-    result = result.replace(pattern, locale === 'zh' ? zh : en);
-  }
-
-  // Add contractions if English
-  if (locale !== 'zh') {
-    result = result
-      .replace(/do not/gi, "don't")
-      .replace(/does not/gi, "doesn't")
-      .replace(/did not/gi, "didn't")
-      .replace(/will not/gi, "won't")
-      .replace(/cannot/gi, "can't")
-      .replace(/is not/gi, "isn't")
-      .replace(/are not/gi, "aren't")
-      .replace(/was not/gi, "wasn't")
-      .replace(/were not/gi, "weren't")
-      .replace(/has not/gi, "hasn't")
-      .replace(/have not/gi, "haven't")
-      .replace(/had not/gi, "hadn't")
-      .replace(/would not/gi, "wouldn't")
-      .replace(/could not/gi, "couldn't")
-      .replace(/should not/gi, "shouldn't")
-      .replace(/I am/gi, "I'm")
-      .replace(/you are/gi, "you're")
-      .replace(/they are/gi, "they're")
-      .replace(/we are/gi, "we're")
-      .replace(/it is/gi, "it's")
-      .replace(/that is/gi, "that's")
-      .replace(/there is/gi, "there's")
-      .replace(/what is/gi, "what's");
-  }
-
-  return result;
-}
-
 export default function HumanizeTool({ locale }: HumanizeToolProps) {
   const [input, setInput] = useState('');
   const [result, setResult] = useState('');
   const [copied, setCopied] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  function handleHumanize() {
-    setResult(humanize(input, locale));
+  async function handleHumanize() {
+    setLoading(true);
+    setError('');
+    try {
+      const generated = await aiGenerate({
+        tool: 'humanize',
+        locale,
+        inputs: { text: input },
+      });
+      setResult(generated);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setLoading(false);
+    }
   }
 
   function copy() {
@@ -110,12 +64,23 @@ export default function HumanizeTool({ locale }: HumanizeToolProps) {
           </div>
 
           <button
-            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light disabled:opacity-50'
+            disabled={loading}
             onClick={handleHumanize}
             type='button'
           >
-            {t(locale, 'tool.humanize.humanize')}
+            {loading
+              ? locale === 'zh'
+                ? '生成中...'
+                : 'Generating...'
+              : t(locale, 'tool.humanize.humanize')}
           </button>
+
+          {error && (
+            <p className='mt-3 rounded-[10px] border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'>
+              {error}
+            </p>
+          )}
 
           {result && (
             <div className='mt-2'>
