@@ -56,7 +56,7 @@ export default function ReviewPanel({ review }: { review: ToolReview }) {
             key={key}
           >
             <div className='text-[11px] text-[#78716c]'>
-              {DIMENSION_LABELS[key]}
+              {dimLabels[key]}
               <span className='ml-1 text-[10px]'>
                 ({Math.round(DIMENSION_WEIGHTS[key] * 100)}%)
               </span>

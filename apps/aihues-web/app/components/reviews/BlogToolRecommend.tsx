@@ -7,8 +7,10 @@ import {
   starRating,
 } from '@/lib/reviews';
 import { getToolBySlug } from '@/lib/tool-data';
+import { useI18n } from '@/lib/i18n';
 
 export default function BlogToolRecommend({ tag }: { tag: string }) {
+  const { t } = useI18n();
   const slugs = getRelatedToolSlugsByTag(tag).slice(0, 3);
   if (slugs.length === 0) return null;
 
@@ -26,9 +28,11 @@ export default function BlogToolRecommend({ tag }: { tag: string }) {
     <div className='mt-12 rounded-xl border border-[#e7e5e4] bg-[#fafaf9] p-5'>
       <div className='mb-4 flex items-center gap-2'>
         <span className='text-[16px]'>🛠️</span>
-        <h3 className='text-[15px] font-bold text-[#1c1917]'>相关工具推荐</h3>
+        <h3 className='text-[15px] font-bold text-[#1c1917]'>
+          {t('blog.relatedTools')}
+        </h3>
         <span className='ml-auto text-[11px] text-[#a8a29e]'>
-          来自 AIHues 评测
+          {t('blog.fromReview')}
         </span>
       </div>
 
@@ -56,7 +60,9 @@ export default function BlogToolRecommend({ tag }: { tag: string }) {
                 <span className='text-[#b45309]'>
                   {starRating(review.overall)}
                 </span>
-                <span className='ml-auto text-[#a8a29e]'>评测</span>
+                <span className='ml-auto text-[#a8a29e]'>
+                  {t('review.review')}
+                </span>
               </div>
             )}
           </Link>

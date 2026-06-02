@@ -729,6 +729,23 @@ export const dict: Record<Locale, Record<string, string>> = {
     'playbooks.badge1': 'AI Vibe Navigator',
     'playbooks.badge2': 'Built on Kimi',
     'playbooks.title': 'AIHues Growth Stack + AI Tools',
+    'blog.relatedTools': 'Related Tools',
+    'blog.fromReview': 'From AIHues Reviews',
+
+    'review.tool': 'Tool',
+    'review.review': 'Review',
+    'review.comments': 'Comments',
+    'review.pros': 'Pros',
+    'review.cons': 'Cons',
+    'review.verdict': 'Verdict',
+    'review.bestFor': 'Best For',
+    'review.alternatives': 'Alternatives',
+    'review.testedBy': 'Reviewer',
+    'review.testedDate': 'Tested',
+    'review.lastUpdated': 'Updated',
+    'review.basedOn': 'Based on 6-dimension model',
+    'review.visitOfficial': 'Visit Website →',
+
     'playbooks.desc':
       '100+ tools covering growth, AI products, open-source tracking, and design.',
   },
@@ -1456,6 +1473,9 @@ export const dict: Record<Locale, Record<string, string>> = {
     'comment.reply': '回复',
     'comment.writeReply': '写下你的回复...',
     'comment.anonymous': '匿名用户',
+
+    'blog.relatedTools': '相关工具推荐',
+    'blog.fromReview': '来自 AIHues 评测',
 
     'playbooks.desc': '100+ 工具覆盖出海增长、AI 产品、开源追踪和设计领域。',
   },
