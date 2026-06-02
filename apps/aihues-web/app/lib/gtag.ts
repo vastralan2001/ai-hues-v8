@@ -12,7 +12,12 @@ declare global {
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 export const pageview = (url: string) => {
-  if (typeof window === 'undefined' || !GA_ID) return;
+  if (
+    typeof window === 'undefined' ||
+    !GA_ID ||
+    typeof window.gtag !== 'function'
+  )
+    return;
   window.gtag('config', GA_ID, { page_path: url });
 };
 
@@ -20,7 +25,8 @@ export const event = (
   action: string,
   params?: Record<string, string | number | boolean | undefined>
 ) => {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined' || typeof window.gtag !== 'function')
+    return;
   window.gtag('event', action, params);
 };
 
