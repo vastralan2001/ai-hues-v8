@@ -1,6 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+
+interface Reply {
+  id: string;
+  author: string;
+  content: string;
+  date: string;
+}
 
 interface Comment {
   id: string;
@@ -8,73 +15,337 @@ interface Comment {
   content: string;
   date: string;
   rating?: number;
+  likes: number;
+  liked: boolean;
+  replies: Reply[];
 }
 
-const PLACEHOLDER_COMMENTS: Comment[] = [
+const AVATAR_COLORS = [
+  'bg-[#b45309]',
+  'bg-[#15803d]',
+  'bg-[#0369a1]',
+  'bg-[#7c3aed]',
+  'bg-[#be123c]',
+  'bg-[#0f766e]',
+];
+
+function avatarColor(name: string) {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++)
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+}
+
+function timeAgo(dateStr: string) {
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const days = Math.floor(diff / 86400000);
+  if (days > 30) return dateStr;
+  if (days > 0) return `${days}天前`;
+  const hours = Math.floor(diff / 3600000);
+  if (hours > 0) return `${hours}小时前`;
+  const mins = Math.floor(diff / 60000);
+  if (mins > 0) return `${mins}分钟前`;
+  return '刚刚';
+}
+
+const DEFAULT_COMMENTS: Comment[] = [
   {
     id: '1',
     author: '产品体验官',
-    content: '这个工具帮我省了不少时间，但输出质量确实需要人工二次打磨。',
-    date: '2026-05-20',
+    content:
+      '这个工具帮我省了不少时间，但输出质量确实需要人工二次打磨。总体来说性价比不错，适合快速产出初稿。',
+    date: '2026-05-28',
     rating: 4,
+    likes: 12,
+    liked: false,
+    replies: [
+      {
+        id: 'r1',
+        author: 'AIHues Team',
+        content: '感谢反馈！我们正在优化输出质量，预计下版本会有明显提升。',
+        date: '2026-05-29',
+      },
+    ],
   },
   {
     id: '2',
     author: '独立开发者小李',
-    content: '对比了三个同类产品，这个在易用性上确实做得最好，上手零门槛。',
-    date: '2026-05-18',
+    content:
+      '对比了三个同类产品，这个在易用性上确实做得最好，上手零门槛。界面清爽，没有乱七八糟的广告。',
+    date: '2026-05-26',
     rating: 5,
+    likes: 8,
+    liked: false,
+    replies: [],
+  },
+  {
+    id: '3',
+    author: 'SEO小王',
+    content:
+      '作为SEO从业者，这个工具的关键词建议功能给了我不少灵感。不过希望能增加竞品分析模块。',
+    date: '2026-05-24',
+    rating: 4,
+    likes: 5,
+    liked: false,
+    replies: [],
+  },
+  {
+    id: '4',
+    author: '前端阿伟',
+    content:
+      '纯前端运行，不用担心数据泄露，这点很赞。但复杂场景下处理能力还是有限。',
+    date: '2026-05-22',
+    rating: 3,
+    likes: 3,
+    liked: false,
+    replies: [],
+  },
+  {
+    id: '5',
+    author: '出海创业者Amy',
+    content:
+      '冷邮件模板帮我在一周内拿到了3个回复！虽然需要微调，但比自己从零写效率高太多了。',
+    date: '2026-05-20',
+    rating: 5,
+    likes: 15,
+    liked: false,
+    replies: [
+      {
+        id: 'r2',
+        author: 'BD老兵',
+        content: '同感同感！建议结合LinkedIn一起用，转化率更高。',
+        date: '2026-05-21',
+      },
+    ],
+  },
+  {
+    id: '6',
+    author: '技术写作者',
+    content:
+      '希望能支持导出功能，以及保存历史记录。现在每次生成都得手动复制粘贴，有点麻烦。',
+    date: '2026-05-18',
+    rating: 3,
+    likes: 2,
+    liked: false,
+    replies: [],
   },
 ];
 
-export default function CommentSection() {
-  const [comments] = useState<Comment[]>(PLACEHOLDER_COMMENTS);
+type SortMode = 'newest' | 'top';
+
+export default function CommentSection({ slug }: { slug?: string }) {
+  const storageKey = slug
+    ? `aihues-comments-${slug}`
+    : 'aihues-comments-global';
+
+  const [comments, setComments] = useState<Comment[]>(() => {
+    if (typeof window === 'undefined') return DEFAULT_COMMENTS;
+    try {
+      const raw = localStorage.getItem(storageKey);
+      return raw ? JSON.parse(raw) : DEFAULT_COMMENTS;
+    } catch {
+      return DEFAULT_COMMENTS;
+    }
+  });
   const [input, setInput] = useState('');
+  const [rating, setRating] = useState(0);
+  const [sort, setSort] = useState<SortMode>('top');
+  const [replyTo, setReplyTo] = useState<string | null>(null);
+  const [replyInput, setReplyInput] = useState('');
+  const [authorName, setAuthorName] = useState('');
+
+  // Persist to localStorage
+  useEffect(() => {
+    localStorage.setItem(storageKey, JSON.stringify(comments));
+  }, [comments, storageKey]);
+
+  const sortedComments = useMemo(() => {
+    const list = [...comments];
+    if (sort === 'newest') {
+      list.sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      );
+    } else {
+      list.sort((a, b) => b.likes - a.likes);
+    }
+    return list;
+  }, [comments, sort]);
+
+  const avgRating = useMemo(() => {
+    const rated = comments.filter((c) => c.rating);
+    if (!rated.length) return 0;
+    return +(
+      rated.reduce((s, c) => s + (c.rating || 0), 0) / rated.length
+    ).toFixed(1);
+  }, [comments]);
+
+  const handleSubmit = useCallback(() => {
+    if (!input.trim()) return;
+    const name = authorName.trim() || '匿名用户';
+    const newComment: Comment = {
+      id: Date.now().toString(),
+      author: name,
+      content: input.trim(),
+      date: new Date().toISOString().split('T')[0],
+      rating: rating || undefined,
+      likes: 0,
+      liked: false,
+      replies: [],
+    };
+    setComments((prev) => [newComment, ...prev]);
+    setInput('');
+    setRating(0);
+  }, [input, rating, authorName]);
+
+  const handleLike = useCallback((id: string) => {
+    setComments((prev) =>
+      prev.map((c) =>
+        c.id === id
+          ? {
+              ...c,
+              likes: c.liked ? c.likes - 1 : c.likes + 1,
+              liked: !c.liked,
+            }
+          : c
+      )
+    );
+  }, []);
+
+  const handleReply = useCallback(
+    (commentId: string) => {
+      if (!replyInput.trim()) return;
+      const name = authorName.trim() || '匿名用户';
+      setComments((prev) =>
+        prev.map((c) =>
+          c.id === commentId
+            ? {
+                ...c,
+                replies: [
+                  ...c.replies,
+                  {
+                    id: `r-${Date.now()}`,
+                    author: name,
+                    content: replyInput.trim(),
+                    date: new Date().toISOString().split('T')[0],
+                  },
+                ],
+              }
+            : c
+        )
+      );
+      setReplyInput('');
+      setReplyTo(null);
+    },
+    [replyInput, authorName]
+  );
 
   return (
-    <div className='space-y-4'>
-      <h3 className='text-[16px] font-bold text-[#1c1917]'>
-        用户评论 ({comments.length})
-      </h3>
+    <div className='space-y-5'>
+      {/* Header */}
+      <div className='flex items-center justify-between'>
+        <div className='flex items-center gap-3'>
+          <h3 className='text-[16px] font-bold text-[#1c1917]'>用户评论</h3>
+          <span className='rounded-full bg-[#f5f5f4] px-2 py-0.5 text-[12px] font-semibold text-[#57534e]'>
+            {comments.length}
+          </span>
+          {avgRating > 0 && (
+            <span className='text-[13px] text-[#b45309]'>
+              {'★'.repeat(Math.round(avgRating))}
+              {'☆'.repeat(5 - Math.round(avgRating))} {avgRating}
+            </span>
+          )}
+        </div>
+        <div className='flex items-center gap-1 rounded-lg border border-[#e7e5e4] p-0.5'>
+          {(['top', 'newest'] as SortMode[]).map((m) => (
+            <button
+              key={m}
+              className={`rounded-md px-2.5 py-1 text-[12px] font-medium transition-colors ${
+                sort === m
+                  ? 'bg-[#1c1917] text-white'
+                  : 'text-[#78716c] hover:text-[#1c1917]'
+              }`}
+              onClick={() => setSort(m)}
+              type='button'
+            >
+              {m === 'top' ? '最热' : '最新'}
+            </button>
+          ))}
+        </div>
+      </div>
 
       {/* Input */}
-      <div className='rounded-xl border border-[#e7e5e4] bg-white p-3'>
+      <div className='rounded-xl border border-[#e7e5e4] bg-white p-4'>
+        <div className='mb-3 flex items-center gap-2'>
+          <input
+            className='flex-1 rounded-lg border border-[#e7e5e4] bg-[#fafaf9] px-3 py-1.5 text-[13px] outline-none placeholder:text-[#a8a29e] focus:border-[#b45309]'
+            onChange={(e) => setAuthorName(e.target.value)}
+            placeholder='你的昵称（可选）'
+            type='text'
+            value={authorName}
+          />
+          <div className='flex items-center gap-1'>
+            {[1, 2, 3, 4, 5].map((s) => (
+              <button
+                className={`text-[16px] transition-colors ${
+                  s <= rating
+                    ? 'text-[#b45309]'
+                    : 'text-[#d6d3d1] hover:text-[#b45309]'
+                }`}
+                key={s}
+                onClick={() => setRating(s)}
+                onMouseEnter={() => {}}
+                type='button'
+              >
+                ★
+              </button>
+            ))}
+          </div>
+        </div>
         <textarea
-          className='w-full resize-none border-0 bg-transparent text-[14px] text-[#1c1917] outline-none placeholder:text-[#a8a29e]'
-          placeholder='用过这个工具？分享你的体验...（后端接入后可提交）'
+          className='w-full resize-none rounded-lg border border-[#e7e5e4] bg-[#fafaf9] p-3 text-[14px] text-[#1c1917] outline-none placeholder:text-[#a8a29e] focus:border-[#b45309]'
+          onChange={(e) => setInput(e.target.value)}
+          placeholder='用过这个工具？分享你的真实体验...'
           rows={3}
           value={input}
-          onChange={(e) => setInput(e.target.value)}
         />
-        <div className='mt-2 flex items-center justify-between'>
+        <div className='mt-3 flex items-center justify-between'>
           <span className='text-[11px] text-[#a8a29e]'>
-            后端接入后即可提交评论
+            评论将保存在本地，刷新后仍可见
           </span>
           <button
-            className='rounded-lg bg-[#e7e5e4] px-4 py-1.5 text-[13px] font-semibold text-[#a8a29e]'
-            disabled
+            className={`rounded-lg px-5 py-2 text-[13px] font-semibold transition-colors ${
+              input.trim()
+                ? 'bg-[#b45309] text-white hover:bg-[#92400e]'
+                : 'bg-[#e7e5e4] text-[#a8a29e]'
+            }`}
+            disabled={!input.trim()}
+            onClick={handleSubmit}
             type='button'
           >
-            提交
+            提交评论
           </button>
         </div>
       </div>
 
       {/* List */}
-      <div className='space-y-3'>
-        {comments.map((c) => (
+      <div className='space-y-4'>
+        {sortedComments.map((c) => (
           <div
-            className='rounded-lg border border-[#f5f5f4] bg-[#fafaf9] p-3'
+            className='rounded-xl border border-[#f5f5f4] bg-[#fafaf9] p-4'
             key={c.id}
           >
-            <div className='mb-1 flex items-center gap-2'>
-              <span className='flex h-6 w-6 items-center justify-center rounded-full bg-[#b45309] text-[10px] font-bold text-white'>
+            <div className='mb-2 flex items-center gap-2.5'>
+              <span
+                className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-bold text-white ${avatarColor(c.author)}`}
+              >
                 {c.author[0]}
               </span>
               <span className='text-[13px] font-semibold text-[#1c1917]'>
                 {c.author}
               </span>
-              <span className='text-[11px] text-[#a8a29e]'>{c.date}</span>
+              <span className='text-[11px] text-[#a8a29e]'>
+                {timeAgo(c.date)}
+              </span>
               {c.rating && (
                 <span className='ml-auto text-[12px] text-[#b45309]'>
                   {'★'.repeat(c.rating)}
@@ -82,7 +353,79 @@ export default function CommentSection() {
                 </span>
               )}
             </div>
-            <p className='pl-8 text-[13px] text-[#57534e]'>{c.content}</p>
+            <p className='pl-9 text-[13px] leading-relaxed text-[#57534e]'>
+              {c.content}
+            </p>
+
+            {/* Actions */}
+            <div className='mt-2 flex items-center gap-4 pl-9'>
+              <button
+                className={`flex items-center gap-1 text-[12px] transition-colors ${
+                  c.liked
+                    ? 'text-[#b45309]'
+                    : 'text-[#a8a29e] hover:text-[#b45309]'
+                }`}
+                onClick={() => handleLike(c.id)}
+                type='button'
+              >
+                <span>{c.liked ? '❤️' : '🤍'}</span>
+                <span>{c.likes}</span>
+              </button>
+              <button
+                className='text-[12px] text-[#a8a29e] hover:text-[#1c1917]'
+                onClick={() => setReplyTo(replyTo === c.id ? null : c.id)}
+                type='button'
+              >
+                回复
+              </button>
+            </div>
+
+            {/* Reply input */}
+            {replyTo === c.id && (
+              <div className='mt-3 flex gap-2 pl-9'>
+                <input
+                  className='flex-1 rounded-lg border border-[#e7e5e4] bg-white px-3 py-2 text-[13px] outline-none placeholder:text-[#a8a29e] focus:border-[#b45309]'
+                  onChange={(e) => setReplyInput(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleReply(c.id)}
+                  placeholder='写下你的回复...'
+                  type='text'
+                  value={replyInput}
+                />
+                <button
+                  className='rounded-lg bg-[#1c1917] px-4 py-2 text-[12px] font-semibold text-white hover:opacity-80'
+                  onClick={() => handleReply(c.id)}
+                  type='button'
+                >
+                  回复
+                </button>
+              </div>
+            )}
+
+            {/* Replies */}
+            {c.replies.length > 0 && (
+              <div className='mt-3 space-y-2 border-l-2 border-[#e7e5e4] pl-6'>
+                {c.replies.map((r) => (
+                  <div className='rounded-lg bg-white p-3' key={r.id}>
+                    <div className='mb-1 flex items-center gap-2'>
+                      <span
+                        className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[9px] font-bold text-white ${avatarColor(r.author)}`}
+                      >
+                        {r.author[0]}
+                      </span>
+                      <span className='text-[12px] font-semibold text-[#1c1917]'>
+                        {r.author}
+                      </span>
+                      <span className='text-[10px] text-[#a8a29e]'>
+                        {timeAgo(r.date)}
+                      </span>
+                    </div>
+                    <p className='pl-7 text-[12px] text-[#57534e]'>
+                      {r.content}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         ))}
       </div>

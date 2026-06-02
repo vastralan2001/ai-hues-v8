@@ -65,6 +65,11 @@ export default function ToolDetailTabs({
                   {starRating(review.overall)} {review.overall}
                 </span>
               )}
+              {tool.credit > 0 && (
+                <span className='flex items-center gap-1 rounded-full bg-[#fef3c7] px-2 py-0.5 text-[11px] font-semibold text-[#92400e]'>
+                  🪙 {tool.credit}
+                </span>
+              )}
             </div>
           </div>
           {tool.isExternal && (
@@ -104,7 +109,7 @@ export default function ToolDetailTabs({
       <div>
         {activeTab === 'tool' && <div>{toolElement}</div>}
         {activeTab === 'review' && review && <ReviewPanel review={review} />}
-        {activeTab === 'comments' && <CommentSection />}
+        {activeTab === 'comments' && <CommentSection slug={slug} />}
       </div>
     </div>
   );
