@@ -240,6 +240,35 @@ export const SEED_REVIEWS: ToolReview[] = [
     lastUpdated: '2026-06-01',
     reviewer: 'AIHues Team',
   },
+  {
+    slug: 'linkedin',
+    overall: 0,
+    dimensions: {
+      outputQuality: 3.5,
+      easeOfUse: 4.5,
+      value: 4.0,
+      integration: 2.5,
+      iterationSpeed: 3.5,
+      community: 3.0,
+    },
+    pros: [
+      '3种帖子格式（故事型/列表型/观点型）',
+      '自动添加hashtag和表情符号',
+      '针对B2B语境优化语气',
+    ],
+    cons: [
+      '长文内容结构较单一',
+      '无法自动抓取个人成就数据',
+      '对非英语市场支持有限',
+    ],
+    verdict:
+      'LinkedIn内容运营的「加速器」，适合保持日常活跃度和建立专业形象，但深度 thought leadership 仍需个人原创。',
+    bestFor: ['BD专员', '创业者', '职场内容创作者'],
+    alternatives: ['x-post', 'newsletter', 'ad-copy'],
+    testedDate: '2026-05-22',
+    lastUpdated: '2026-06-01',
+    reviewer: 'AIHues Team',
+  },
 ];
 
 // Compute overall scores
