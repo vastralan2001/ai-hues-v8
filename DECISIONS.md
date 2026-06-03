@@ -99,4 +99,4 @@ LLM API key not configured. Set KIMI_API_KEY, DEEPSEEK_API_KEY or OPENAI_API_KEY
 
 > **所有前端开发已完成，页面设计、文章、评测、交互全部可用。唯一阻塞发版的是 LLM API Key。**
 >
-> 请老板决定用 DeepSeek 还是 OpenAI，提供 API Key，我立即配置部署。
+> 请老板决定用 Kimi / DeepSeek / OpenAI，提供 API Key，我立即配置部署。
