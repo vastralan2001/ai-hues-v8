@@ -82,6 +82,7 @@ export default function QrcodeTool({ locale }: QrcodeToolProps) {
 
           {imageUrl && (
             <div className='mt-4 space-y-4 text-center'>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 alt='QR Code'
                 className='mx-auto rounded-[14px] border border-border bg-white p-4'

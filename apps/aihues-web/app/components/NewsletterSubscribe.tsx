@@ -1,23 +1,53 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 
 import { event, GA_EVENTS } from '@/lib/gtag';
 
+interface SubscriptionRecord {
+  email: string;
+  subscribedAt: string;
+}
+
+function getSubscription(): SubscriptionRecord | null {
+  if (typeof window === 'undefined') return null;
+  const raw = localStorage.getItem('aihues-newsletter-subscribed');
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw) as SubscriptionRecord;
+  } catch {
+    return null;
+  }
+}
+
 export default function NewsletterSubscribe() {
+  const subscription = useSyncExternalStore(
+    () => () => {},
+    getSubscription,
+    () => null
+  );
+
   const [email, setEmail] = useState('');
-  const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [justSubscribed, setJustSubscribed] = useState(false);
+
+  const isSubscribed = subscription !== null || justSubscribed;
+  const displayEmail = subscription?.email || '';
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !email.includes('@')) {
-      setStatus('error');
-      return;
-    }
-    // Simulate subscription — replace with real API call later
-    event(GA_EVENTS.newsletterSubscribe);
-    setStatus('success');
+    if (!email || !email.includes('@')) return;
+
+    const record: SubscriptionRecord = {
+      email,
+      subscribedAt: new Date().toISOString(),
+    };
+    localStorage.setItem(
+      'aihues-newsletter-subscribed',
+      JSON.stringify(record)
+    );
+    setJustSubscribed(true);
     setEmail('');
+    event(GA_EVENTS.newsletterSubscribe);
   };
 
   return (
@@ -31,9 +61,10 @@ export default function NewsletterSubscribe() {
           delivered to your inbox.
         </p>
 
-        {status === 'success' ? (
+        {isSubscribed ? (
           <div className='mt-5 rounded-lg bg-[rgba(180,83,9,0.08)] px-4 py-3 text-sm font-medium text-[#b45309]'>
-            Thanks for subscribing! Check your inbox soon.
+            Thanks for subscribing! {displayEmail ? `(${displayEmail})` : ''}{' '}
+            Check your inbox soon.
           </div>
         ) : (
           <form
@@ -43,10 +74,7 @@ export default function NewsletterSubscribe() {
             <input
               type='email'
               value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                if (status === 'error') setStatus('idle');
-              }}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder='Your email address'
               className='flex-1 rounded-lg border border-[#e8e2d9] bg-[#faf9f6] px-4 py-2.5 text-sm text-[#1c1917] outline-none transition-colors placeholder:text-[#a8a29e] focus:border-[#d97706] focus:bg-white'
               required

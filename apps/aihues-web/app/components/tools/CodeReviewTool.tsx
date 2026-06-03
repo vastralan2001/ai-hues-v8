@@ -9,11 +9,6 @@ interface CodeReviewToolProps {
   locale: Locale;
 }
 
-interface CheckItem {
-  key: string;
-  checked: boolean;
-}
-
 const ITEM_KEYS = [
   'itemQuality1',
   'itemQuality2',

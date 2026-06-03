@@ -72,6 +72,7 @@ export default function ImageToBase64Tool({ locale }: ImageToBase64ToolProps) {
                 <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
                   {t(locale, 'tool.imageBase64.preview')}
                 </p>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   alt='preview'
                   className='mt-2 max-h-[200px] rounded-[10px] border border-border'

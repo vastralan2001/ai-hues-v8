@@ -24,6 +24,7 @@ export default function CoverImage({
       className={`${className || ''} relative overflow-hidden`}
       style={{ background: gradientFromSlug(alt) }}
     >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         alt={alt}
         className='h-full w-full object-cover transition-transform duration-500 group-hover:scale-105'
