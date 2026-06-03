@@ -21,6 +21,8 @@ web:
       value: http://aihues-api.marci-dev.svc.cluster.local:80
     - name: NEXT_PUBLIC_GA_ID
       value: ''
+    - name: KIMI_API_KEY
+      value: ''
 
   replicaCount: 1
 

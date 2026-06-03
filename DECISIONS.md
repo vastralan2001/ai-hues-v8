@@ -57,7 +57,7 @@
 但**测试/生产环境没有配置 API Key**，用户点击 **Generate** 按钮后返回：
 
 ```
-LLM API key not configured. Set DEEPSEEK_API_KEY or OPENAI_API_KEY environment variable.
+LLM API key not configured. Set KIMI_API_KEY, DEEPSEEK_API_KEY or OPENAI_API_KEY environment variable.
 ```
 
 ### 影响范围
@@ -69,10 +69,11 @@ LLM API key not configured. Set DEEPSEEK_API_KEY or OPENAI_API_KEY environment v
 
 | 选项 | 成本 | 中文质量 | 国内访问 | 配置项 |
 |------|------|---------|---------|--------|
-| **DeepSeek**（推荐） | ¥0.002~0.008/次 | ⭐⭐⭐ 极好 | ✅ 直接访问 | `DEEPSEEK_API_KEY` |
+| **Kimi**（最推荐） | ¥0.012/千 tokens | ⭐⭐⭐ 极好 | ✅ 直接访问 | `KIMI_API_KEY` |
+| **DeepSeek** | ¥0.002~0.008/次 | ⭐⭐⭐ 极好 | ✅ 直接访问 | `DEEPSEEK_API_KEY` |
 | **OpenAI** | $0.0015~0.002/次 | ⭐⭐ 一般 | ❌ 需中转 | `OPENAI_API_KEY` |
 
-**建议**：选 DeepSeek。中文生成质量好、成本低、国内直连稳定。
+**建议**：**Kimi**（自家 API，中文长文本最强，接口完全兼容 OpenAI 格式，代码已支持）。DeepSeek 备选。
 
 **拿到 Key 后我 5 分钟配好部署。**
 

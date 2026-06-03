@@ -2,10 +2,30 @@ import { NextResponse } from 'next/server';
 
 import { buildPrompt } from '@/lib/ai-prompts';
 
-const API_KEY = process.env.DEEPSEEK_API_KEY || process.env.OPENAI_API_KEY;
-const API_URL = process.env.DEEPSEEK_API_KEY
-  ? 'https://api.deepseek.com/v1/chat/completions'
-  : 'https://api.openai.com/v1/chat/completions';
+function getLlmConfig() {
+  if (process.env.KIMI_API_KEY) {
+    return {
+      key: process.env.KIMI_API_KEY,
+      url: 'https://api.moonshot.cn/v1/chat/completions',
+      model: 'moonshot-v1-8k',
+    };
+  }
+  if (process.env.DEEPSEEK_API_KEY) {
+    return {
+      key: process.env.DEEPSEEK_API_KEY,
+      url: 'https://api.deepseek.com/v1/chat/completions',
+      model: 'deepseek-chat',
+    };
+  }
+  if (process.env.OPENAI_API_KEY) {
+    return {
+      key: process.env.OPENAI_API_KEY,
+      url: 'https://api.openai.com/v1/chat/completions',
+      model: 'gpt-3.5-turbo',
+    };
+  }
+  return null;
+}
 
 export const dynamic = 'force-dynamic';
 
@@ -26,11 +46,12 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!API_KEY) {
+    const config = getLlmConfig();
+    if (!config) {
       return NextResponse.json(
         {
           error:
-            'LLM API key not configured. Set DEEPSEEK_API_KEY or OPENAI_API_KEY environment variable.',
+            'LLM API key not configured. Set KIMI_API_KEY, DEEPSEEK_API_KEY or OPENAI_API_KEY environment variable.',
         },
         { status: 503 }
       );
@@ -38,14 +59,14 @@ export async function POST(request: Request) {
 
     const prompt = buildPrompt(tool, locale || 'en', inputs);
 
-    const res = await fetch(API_URL, {
+    const res = await fetch(config.url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${API_KEY}`,
+        Authorization: `Bearer ${config.key}`,
       },
       body: JSON.stringify({
-        model: process.env.DEEPSEEK_API_KEY ? 'deepseek-chat' : 'gpt-3.5-turbo',
+        model: config.model,
         messages: [
           { role: 'system', content: prompt.system },
           { role: 'user', content: prompt.user },
