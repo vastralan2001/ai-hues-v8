@@ -211,7 +211,7 @@ export const SEED_REVIEWS: ToolReview[] = [
     verdict:
       '开发者工具箱的「瑞士军刀」，格式化、校验、浏览一气呵成，无需联网，隐私无忧。',
     bestFor: ['前端开发者', '后端开发者', 'API调试人员'],
-    alternatives: ['csv-json', 'yaml-convert'],
+    alternatives: ['csv-json', 'markdown'],
     testedDate: '2026-04-01',
     lastUpdated: '2026-06-01',
     reviewer: 'AIHues Team',
@@ -382,7 +382,7 @@ export const SEED_REVIEWS: ToolReview[] = [
     verdict:
       '页面元信息的「一键补齐」，适合批量生成meta标签，但竞品分析和结构化数据需额外工具。',
     bestFor: ['SEO专员', '前端开发者', '内容运营'],
-    alternatives: ['seo-title', 'schema', 'blog-outline'],
+    alternatives: ['seo-title', 'lp-hero', 'blog-outline'],
     testedDate: '2026-05-25',
     lastUpdated: '2026-06-01',
     reviewer: 'AIHues Team',
