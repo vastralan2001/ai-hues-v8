@@ -32,13 +32,18 @@ export const event = (
 
 export const GA_EVENTS = {
   toolUse: 'tool_use',
+  toolClick: 'tool_click',
   toolGenerate: 'tool_generate',
+  toolCopy: 'tool_copy',
   gamePlay: 'game_play',
   gameCheckin: 'game_checkin',
   newsletterSubscribe: 'newsletter_subscribe',
   localeSwitch: 'locale_switch',
+  themeSwitch: 'theme_switch',
   categoryFilter: 'category_filter',
+  priceFilter: 'price_filter',
   search: 'search',
   wishlistSubmit: 'wishlist_submit',
   wishlistVote: 'wishlist_vote',
+  pageDuration: 'page_duration',
 } as const;

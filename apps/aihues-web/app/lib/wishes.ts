@@ -8,6 +8,7 @@ export interface Wish {
   title: string;
   description: string;
   category: string;
+  email?: string;
   status: WishStatus;
   votes: number;
   date: string;

@@ -8,6 +8,7 @@ import type { Locale } from '@/lib/dict';
 import type { Theme } from '@/lib/theme';
 import CommandPalette from '@/components/CommandPalette';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
+import { PageDurationTracker } from '@/components/PageDurationTracker';
 
 import './globals.css';
 
@@ -46,12 +47,17 @@ export default async function RootLayout({
     <html data-theme={theme} lang={locale === 'zh' ? 'zh-CN' : 'en'}>
       <head>
         <GoogleAnalytics />
+        <link rel='manifest' href='/manifest.json' />
+        <link rel='icon' href='/favicon.ico' sizes='any' />
+        <link rel='apple-touch-icon' href='/apple-touch-icon.png' />
+        <meta name='theme-color' content='#b45309' />
       </head>
       <body>
         <I18nProvider initialLocale={locale}>
           <ThemeProvider initialTheme={theme}>
             {children}
             <CommandPalette />
+            <PageDurationTracker />
           </ThemeProvider>
         </I18nProvider>
       </body>

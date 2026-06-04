@@ -49,6 +49,7 @@ export function WishlistBoard() {
   // Form state
   const [formTitle, setFormTitle] = useState('');
   const [formDesc, setFormDesc] = useState('');
+  const [formEmail, setFormEmail] = useState('');
   const [formCategory, setFormCategory] = useState('Developer');
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
@@ -98,8 +99,18 @@ export function WishlistBoard() {
     return [...wishes].sort((a, b) => b.votes - a.votes).slice(0, 5);
   }, [wishes]);
 
+  function validateEmail(email: string): boolean {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
   async function handleSubmit() {
     if (!formTitle.trim() || !formDesc.trim()) return;
+    if (!formEmail.trim() || !validateEmail(formEmail.trim())) {
+      setSubmitError(
+        locale === 'zh' ? '请输入有效的邮箱地址' : 'Please enter a valid email'
+      );
+      return;
+    }
     setSubmitting(true);
     setSubmitError('');
     setSubmitSuccess(false);
@@ -108,16 +119,22 @@ export function WishlistBoard() {
       // 1. Save locally first (instant, always works)
       const title = formTitle.trim();
       const desc = formDesc.trim();
+      const email = formEmail.trim();
       const newWish = addWish({
         title,
         description: desc,
         category: formCategory,
+        email,
       });
       setWishes((prev) => [...prev, newWish]);
       setFormTitle('');
       setFormDesc('');
+      setFormEmail('');
       setSubmitSuccess(true);
-      event(GA_EVENTS.wishlistSubmit, { category: formCategory });
+      event(GA_EVENTS.wishlistSubmit, {
+        category: formCategory,
+        has_email: true,
+      });
       setTimeout(() => setSubmitSuccess(false), 3000);
 
       // 2. Try sync to API in background (optional)
@@ -128,6 +145,7 @@ export function WishlistBoard() {
           title: formTitle.trim(),
           description: formDesc.trim(),
           category: formCategory,
+          email,
         }),
       }).catch(() => {
         // API sync failed — local data is already saved
@@ -197,6 +215,16 @@ export function WishlistBoard() {
           rows={3}
           value={formDesc}
           onChange={(e) => setFormDesc(e.target.value)}
+        />
+        <input
+          type='email'
+          placeholder={
+            locale === 'zh'
+              ? '你的邮箱（有进展时通知你）...'
+              : "Your email (we'll notify you of progress)..."
+          }
+          value={formEmail}
+          onChange={(e) => setFormEmail(e.target.value)}
         />
         <div className='wish-form__row'>
           <select

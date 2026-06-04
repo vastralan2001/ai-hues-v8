@@ -15,6 +15,7 @@ import type {
 } from '@/lib/catalog-api';
 import { toolCategories } from '@/lib/catalog-api';
 import { toolDetailHref } from '@/lib/routes';
+import { event, GA_EVENTS } from '@/lib/gtag';
 
 const PAGE_SIZE = 20;
 
@@ -197,7 +198,12 @@ export function ToolsInfiniteList({
         {PRICE_OPTIONS.map((opt) => (
           <button
             key={opt.key}
-            onClick={() => setActivePrice(opt.key)}
+            onClick={() => {
+              if (activePrice !== opt.key) {
+                event(GA_EVENTS.priceFilter, { price: opt.key });
+              }
+              setActivePrice(opt.key);
+            }}
             className={`rounded-full border px-3 py-1 text-xs font-semibold transition-colors ${
               activePrice === opt.key
                 ? 'border-accent bg-accent text-white'

@@ -7,6 +7,7 @@ import type {
 } from '@/lib/catalog-api';
 import { toolCategories } from '@/lib/catalog-api';
 import { t, type Locale } from '@/lib/dict';
+import { event, GA_EVENTS } from '@/lib/gtag';
 import {
   gameDetailHref,
   toolDetailHref,
@@ -124,6 +125,13 @@ export function ToolCard({
     <Link
       className='group relative block cursor-pointer rounded-[14px] border border-border bg-bg p-[22px] text-inherit no-underline transition-all duration-200 hover:-translate-y-0.5 hover:border-accent-light hover:shadow-[0_4px_12px_rgba(180,83,9,0.12),0_8px_32px_rgba(0,0,0,0.08)]'
       href={toolDetailHref(tool.slug)}
+      onClick={() => {
+        event(GA_EVENTS.toolClick, {
+          tool: tool.slug,
+          category: tool.category,
+          name: tool.name,
+        });
+      }}
     >
       {/* NEW badge */}
       {showNew && (
@@ -182,6 +190,13 @@ export function ToolCardV2({
     <Link
       className='group relative block cursor-pointer rounded-[14px] border border-border bg-bg p-[22px] text-inherit no-underline transition-all duration-200 hover:-translate-y-0.5 hover:border-accent-light hover:shadow-[0_4px_12px_rgba(180,83,9,0.12),0_8px_32px_rgba(0,0,0,0.08)]'
       href={toolDetailHref(tool.slug)}
+      onClick={() => {
+        event(GA_EVENTS.toolClick, {
+          tool: tool.slug,
+          category: tool.category,
+          name: tool.name,
+        });
+      }}
     >
       {showNew && (
         <span className='absolute right-3 top-3 rounded-full bg-accent px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-white'>
@@ -252,6 +267,12 @@ export function GameCard({
     <Link
       className='relative block cursor-pointer rounded-[14px] border border-border bg-bg px-7 py-7 text-center text-inherit no-underline transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_4px_12px_rgba(180,83,9,0.12),0_8px_32px_rgba(0,0,0,0.08)]'
       href={gameDetailHref(game.slug)}
+      onClick={() => {
+        event(GA_EVENTS.gamePlay, {
+          game: game.slug,
+          name: game.name,
+        });
+      }}
     >
       {/* Badge */}
       {badgeKey && (
