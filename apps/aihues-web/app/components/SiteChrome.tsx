@@ -13,6 +13,7 @@ import {
   blogHref,
 } from '@/lib/routes';
 import { Logo } from './Logo';
+import { BookmarkButton } from './BookmarkButton';
 
 type ChromeVariant =
   | 'home'
@@ -111,8 +112,10 @@ export function SiteHeader({
           ))}
         </nav>
 
-        {/* Right side intentionally empty — single-language site */}
-        <div className='justify-self-end' />
+        {/* Right side: bookmark button */}
+        <div className='justify-self-end'>
+          <BookmarkButton />
+        </div>
       </div>
     </header>
   );
