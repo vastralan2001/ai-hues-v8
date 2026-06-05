@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { ToolCardV2 } from '@/components/CatalogCards';
 import { PageShell } from '@/components/SiteChrome';
 
-import { Logo } from '@/components/Logo';
 import { GameCreditBadge } from '@/components/GameCreditBadge';
 import { ClientDayStreak, ClientFreeCredits } from '@/components/ClientStats';
 import type { CatalogGame } from '@/lib/catalog-api';
@@ -144,7 +143,7 @@ function HomeGameCard({ game, locale }: { game: CatalogGame; locale: Locale }) {
 
   return (
     <Link
-      className='relative block cursor-pointer rounded-[14px] border border-border bg-bg px-7 py-7 text-center text-inherit no-underline transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_4px_12px_rgba(180,83,9,0.12),0_8px_32px_rgba(0,0,0,0.08)]'
+      className='relative block cursor-pointer rounded-[16px] border border-border bg-surface px-7 py-7 text-center text-inherit no-underline transition-all duration-200 hover:border-[#1a1a19]'
       href={gameDetailHref(game.slug)}
     >
       <span className='mb-3 block text-[48px] leading-none'>{game.icon}</span>
@@ -159,10 +158,7 @@ function HomeGameCard({ game, locale }: { game: CatalogGame; locale: Locale }) {
         <p className='mb-4 text-[12px] leading-relaxed text-muted'>{meta}</p>
       )}
 
-      <span
-        className='inline-block rounded-[10px] px-7 py-[11px] text-[14px] font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_4px_16px_rgba(180,83,9,0.35)]'
-        style={{ background: 'linear-gradient(135deg, #b45309, #d97706)' }}
-      >
+      <span className='inline-block rounded-[12px] bg-[#1a1a19] px-7 py-[11px] text-[14px] font-medium text-white transition-all hover:bg-[#2a2a28]'>
         {t(locale, playLabelKey)}
       </span>
     </Link>
@@ -227,57 +223,53 @@ export default async function HomePage() {
         {/* ══════════════════════════════════════════════
             HERO
             ══════════════════════════════════════════════ */}
-        <section className='relative overflow-hidden px-8 pb-8 pt-[60px] text-center'>
-          {/* Radial glow */}
-          <div
-            className='pointer-events-none absolute left-1/2 top-0 h-[600px] w-[800px] -translate-x-1/2 -translate-y-[60%] rounded-full opacity-60'
-            style={{
-              background:
-                'radial-gradient(circle, rgba(180,83,9,0.08) 0%, transparent 70%)',
-            }}
-          />
-
-          <div className='relative mx-auto max-w-[680px]'>
-            {/* Logo + Title row */}
-            <h1 className='mb-2.5 flex items-center justify-center gap-2.5 text-[42px] font-extrabold leading-[1.08] tracking-[-1.5px]'>
-              <Logo size={40} />
-              <span className='text-foreground'>AIHues</span>
-              <span className='text-muted'>·</span>
-              <span
-                style={{
-                  background: 'linear-gradient(135deg, #b45309, #d97706)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}
-              >
-                AI Vibe Navigator
+        <section className='relative overflow-hidden px-8 pb-12 pt-[72px] text-center'>
+          <div className='relative mx-auto max-w-[720px]'>
+            {/* Claude-style spark icon + greeting */}
+            <div className='mb-4 flex items-center justify-center gap-3'>
+              <span className='text-[28px]' style={{ color: '#d97757' }}>
+                ✦
               </span>
+              <span className='text-[14px] font-medium text-muted'>
+                {locale === 'zh' ? '下午好，创作者' : 'Afternoon, creator'}
+              </span>
+            </div>
+
+            {/* Main headline — serif, large, warm */}
+            <h1
+              className='mb-4 text-[clamp(2rem,5vw,3.5rem)] font-normal leading-[1.15] tracking-[-0.02em] text-foreground'
+              style={{ fontFamily: "'Lora', Georgia, serif" }}
+            >
+              {locale === 'zh'
+                ? 'AI 工具太多，时间太少'
+                : 'Too many AI tools, too little time'}
             </h1>
 
-            <p className='mb-5 text-[16px] leading-relaxed text-secondary'>
-              {t(locale, 'hero.subtitle')}
+            <p
+              className='mx-auto mb-8 max-w-[560px] text-[17px] leading-relaxed text-secondary'
+              style={{ fontFamily: "'Lora', Georgia, serif" }}
+            >
+              {locale === 'zh'
+                ? '我们测试了 57 个 AI 工具，留下真正好用的。每个都附带实测评分、使用教程和诚实评价。'
+                : 'We tested 57 AI tools and kept the ones that actually work. Each comes with real scores, guides, and honest reviews.'}
             </p>
 
-            {/* AI search box */}
+            {/* Search box — white card, soft shadow, rounded */}
             <form
               action='/tools'
-              className='mx-auto w-full max-w-[600px]'
+              className='mx-auto w-full max-w-[580px]'
               method='get'
             >
-              <div className='flex items-center rounded-[14px] border border-border bg-bg px-1.5 py-1.5 shadow-[0_4px_16px_rgba(0,0,0,0.06)]'>
-                <span className='px-3 text-[22px]'>🤖</span>
+              <div className='flex items-center rounded-[16px] border border-border bg-surface px-2 py-2 shadow-[0_1px_3px_rgba(26,26,25,0.04)]'>
                 <input
-                  className='min-w-0 flex-1 border-0 bg-transparent text-[14px] text-foreground outline-none placeholder:text-muted'
+                  className='min-w-0 flex-1 border-0 bg-transparent px-4 text-[15px] text-foreground outline-none placeholder:text-muted'
+                  style={{ fontFamily: "'Lora', Georgia, serif" }}
                   name='q'
                   placeholder={t(locale, 'hero.searchPlaceholder')}
                   type='text'
                 />
                 <button
-                  className='rounded-[10px] px-5 py-2 text-[14px] font-semibold text-white transition-all hover:-translate-y-px hover:shadow-[0_4px_12px_rgba(180,83,9,0.3)]'
-                  style={{
-                    background: 'linear-gradient(135deg, #b45309, #d97706)',
-                  }}
+                  className='rounded-[12px] bg-[#1a1a19] px-6 py-2.5 text-[14px] font-medium text-white transition-all hover:bg-[#2a2a28]'
                   type='submit'
                 >
                   {t(locale, 'hero.askAI')}
@@ -285,12 +277,12 @@ export default async function HomePage() {
               </div>
             </form>
 
-            {/* Quick-tag chips */}
-            <div className='mt-3 flex flex-wrap justify-center gap-2'>
+            {/* Quick-tag chips — pill, subtle */}
+            <div className='mt-4 flex flex-wrap justify-center gap-2'>
               {QUICK_TAG_LINKS.map((tag) => (
                 <Link
                   key={tag.label}
-                  className='rounded-full border border-border bg-surface px-3 py-1 text-[12px] font-medium text-secondary transition-all hover:border-accent hover:text-accent'
+                  className='rounded-full border border-border bg-surface px-3.5 py-1.5 text-[13px] text-secondary transition-all hover:border-[#1a1a19] hover:text-foreground'
                   href={tag.href}
                 >
                   {tag.label}
@@ -304,37 +296,24 @@ export default async function HomePage() {
             PARTNER SLOT (placeholder for Phase 2)
             ══════════════════════════════════════════════ */}
         <section className='mx-auto max-w-[1300px] px-8 pb-10'>
-          <div
-            className='group relative block overflow-hidden rounded-[14px] px-6 py-5 text-white no-underline transition-all'
-            style={{
-              background: 'linear-gradient(135deg, #1c1917, #292524)',
-              opacity: 0.6,
-            }}
-          >
-            <div
-              className='pointer-events-none absolute -right-[15%] -top-[40%] h-[250px] w-[250px] rounded-full'
-              style={{
-                background:
-                  'radial-gradient(circle, rgba(180,83,9,0.12), transparent 70%)',
-              }}
-            />
+          <div className='group relative block overflow-hidden rounded-[16px] border border-border bg-surface px-6 py-5 text-foreground no-underline transition-all hover:border-[#1a1a19]'>
             <div className='relative z-[1] flex items-center justify-between'>
               <div>
-                <span className='mb-2 inline-block rounded-md border border-[rgba(180,83,9,0.3)] bg-[rgba(180,83,9,0.2)] px-2.5 py-1 text-[11px] font-bold text-[#fbbf24]'>
+                <span className='mb-2 inline-block rounded-md border border-border bg-[#f5f3ee] px-2.5 py-1 text-[11px] font-semibold text-muted'>
                   {locale === 'zh' ? '合作伙伴' : 'Partner'}
                 </span>
-                <h3 className='mt-1 text-[17px] font-bold'>
+                <h3 className='mt-1 text-[17px] font-semibold'>
                   {locale === 'zh'
                     ? '合作伙伴推荐位（二期上线）'
                     : 'Partner recommendations (Phase 2)'}
                 </h3>
-                <p className='mt-1 text-[12px] opacity-70'>
+                <p className='mt-1 text-[13px] text-muted'>
                   {locale === 'zh'
                     ? '精选 AI 工具与增长资源推荐位，敬请期待。'
                     : 'Curated AI tools and growth resources. Coming soon.'}
                 </p>
               </div>
-              <span className='rounded-md bg-[rgba(255,255,255,0.1)] px-2.5 py-1 text-[11px] font-medium text-white/60'>
+              <span className='rounded-md bg-[#f5f3ee] px-2.5 py-1 text-[11px] font-medium text-muted'>
                 Coming soon
               </span>
             </div>
@@ -361,7 +340,7 @@ export default async function HomePage() {
             {categories.map((cat) => (
               <Link
                 key={cat.key}
-                className='block cursor-pointer rounded-[14px] border border-border bg-bg p-[18px] text-inherit no-underline transition-all duration-[250ms] hover:-translate-y-0.5 hover:border-accent-light hover:shadow-[0_4px_12px_rgba(180,83,9,0.12),0_8px_32px_rgba(0,0,0,0.08)]'
+                className='block cursor-pointer rounded-[16px] border border-border bg-surface p-[18px] text-inherit no-underline transition-all duration-200 hover:border-[#1a1a19]'
                 href={cat.href}
               >
                 {/* Header row */}
@@ -400,7 +379,7 @@ export default async function HomePage() {
         {/* ══════════════════════════════════════════════
             STATS BAR
             ══════════════════════════════════════════════ */}
-        <div className='border-b border-t border-border bg-surface px-8 py-5'>
+        <div className='border-b border-t border-border bg-[#f5f3ee] px-8 py-5'>
           <div className='mx-auto flex max-w-[1300px] flex-wrap items-center justify-center gap-x-[60px] gap-y-4'>
             {stats.map((s) => (
               <div key={s.label} className='text-center'>
@@ -430,11 +409,11 @@ export default async function HomePage() {
                 </h2>
               </div>
               <div className='flex items-center gap-3'>
-                <span className='rounded-full border border-border bg-surface px-3.5 py-1.5 text-[14px] text-muted'>
+                <span className='rounded-full border border-border bg-bg px-3.5 py-1.5 text-[14px] text-muted'>
                   {categoryCounts.developer} {t(locale, 'section.tools')}
                 </span>
                 <Link
-                  className='text-[14px] font-semibold text-accent hover:text-accent-light'
+                  className='text-[14px] font-medium text-foreground underline underline-offset-4 hover:text-accent'
                   href={toolsCategoryHref('developer')}
                 >
                   {t(locale, 'section.allTools')}
@@ -465,11 +444,11 @@ export default async function HomePage() {
                 </h2>
               </div>
               <div className='flex items-center gap-3'>
-                <span className='rounded-full border border-border bg-surface px-3.5 py-1.5 text-[14px] text-muted'>
+                <span className='rounded-full border border-border bg-bg px-3.5 py-1.5 text-[14px] text-muted'>
                   {categoryCounts['ai-writing']} {t(locale, 'section.tools')}
                 </span>
                 <Link
-                  className='text-[14px] font-semibold text-accent hover:text-accent-light'
+                  className='text-[14px] font-medium text-foreground underline underline-offset-4 hover:text-accent'
                   href={toolsCategoryHref('ai-writing')}
                 >
                   {t(locale, 'section.allTools')}
@@ -538,7 +517,7 @@ export default async function HomePage() {
             {popularHighlights.map((item) => (
               <Link
                 key={item.href}
-                className='flex cursor-pointer flex-col gap-2 rounded-[14px] border border-border bg-bg p-5 text-inherit no-underline transition-all hover:-translate-y-0.5 hover:border-accent-light hover:shadow-[0_4px_12px_rgba(180,83,9,0.12)]'
+                className='flex cursor-pointer flex-col gap-2 rounded-[16px] border border-border bg-surface p-5 text-inherit no-underline transition-all hover:border-[#1a1a19]'
                 href={item.href}
               >
                 <div className='text-[11px] font-extrabold uppercase tracking-wider text-blue-600'>
@@ -562,28 +541,25 @@ export default async function HomePage() {
             DUAL ENGINE CTA BANNER
             ══════════════════════════════════════════════ */}
         <section className='mx-auto max-w-[1300px] px-8 pb-12'>
-          <div
-            className='flex flex-wrap items-center justify-between gap-4 rounded-[14px] px-8 py-7'
-            style={{ background: 'linear-gradient(135deg, #7c2d12, #92400e)' }}
-          >
+          <div className='flex flex-wrap items-center justify-between gap-4 rounded-[16px] border border-border bg-surface px-8 py-7'>
             <div>
               <div className='mb-1 flex flex-wrap gap-2'>
-                <span className='rounded-full bg-white/10 px-3 py-1 text-[11px] font-extrabold uppercase tracking-wider text-white'>
+                <span className='rounded-full bg-[#f5f3ee] px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-muted'>
                   DEV
                 </span>
-                <span className='rounded-full bg-white/10 px-3 py-1 text-[11px] font-extrabold uppercase tracking-wider text-white'>
+                <span className='rounded-full bg-[#f5f3ee] px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-muted'>
                   GAMES
                 </span>
               </div>
-              <h3 className='mb-1 text-[20px] font-bold text-white'>
+              <h3 className='mb-1 text-[20px] font-semibold text-foreground'>
                 {t(locale, 'section.dualEngine')}
               </h3>
-              <p className='m-0 text-[14px] text-white/70'>
+              <p className='m-0 text-[14px] text-muted'>
                 {t(locale, 'section.dualEngineDesc')}
               </p>
             </div>
             <Link
-              className='flex items-center gap-2 rounded-[10px] bg-white px-6 py-3 text-[14px] font-semibold text-accent transition-all hover:-translate-y-px hover:shadow-[0_4px_16px_rgba(255,255,255,0.18)]'
+              className='flex items-center gap-2 rounded-[12px] bg-[#1a1a19] px-6 py-3 text-[14px] font-medium text-white transition-all hover:bg-[#2a2a28]'
               href={toolsHref}
             >
               {t(locale, 'section.browseAll')}
@@ -594,19 +570,19 @@ export default async function HomePage() {
         {/* ══════════════════════════════════════════════
             WISHLIST CTA
             ══════════════════════════════════════════════ */}
-        <section
-          className='px-8 py-16 text-center'
-          style={{ background: 'linear-gradient(135deg, #b45309, #d97706)' }}
-        >
+        <section className='border-t border-border px-8 py-16 text-center'>
           <div className='mx-auto max-w-[560px]'>
-            <h2 className='mb-3 text-[28px] font-bold text-white'>
+            <h2
+              className='mb-3 text-[28px] font-normal text-foreground'
+              style={{ fontFamily: "'Lora', Georgia, serif" }}
+            >
               {t(locale, 'section.wishlistTitle')}
             </h2>
-            <p className='mb-6 text-[16px] text-white/80'>
+            <p className='mb-6 text-[16px] text-muted'>
               {t(locale, 'section.wishlistDesc')}
             </p>
             <Link
-              className='inline-flex items-center gap-2 rounded-[10px] bg-white px-7 py-3.5 text-[15px] font-semibold text-accent transition-all hover:-translate-y-px hover:shadow-[0_4px_18px_rgba(0,0,0,0.18)]'
+              className='inline-flex items-center gap-2 rounded-[12px] bg-[#1a1a19] px-7 py-3.5 text-[15px] font-medium text-white transition-all hover:bg-[#2a2a28]'
               href={wishlistHref}
             >
               {t(locale, 'section.submitIdea')}

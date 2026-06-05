@@ -84,8 +84,8 @@ export function SiteHeader({
 
   return (
     <header
-      style={{ backdropFilter: 'blur(20px) saturate(180%)' }}
-      className='sticky top-0 z-[100] border-b border-border bg-white/[0.92]'
+      style={{ backdropFilter: 'blur(16px)' }}
+      className='sticky top-0 z-[100] border-b border-border bg-[rgba(250,249,245,0.92)]'
     >
       <div className='mx-auto grid h-[68px] max-w-[1300px] grid-cols-[1fr_auto_1fr] items-center px-8'>
         {/* Logo */}
@@ -146,7 +146,7 @@ export function SiteFooter({
         <div className='mb-3 flex items-center justify-center gap-2.5 text-xl font-extrabold text-foreground'>
           <span
             className='flex h-8 w-8 items-center justify-center rounded-[8px] text-sm font-bold text-white'
-            style={{ background: 'linear-gradient(135deg, #b45309, #d97706)' }}
+            style={{ background: '#d97757' }}
           >
             H
           </span>

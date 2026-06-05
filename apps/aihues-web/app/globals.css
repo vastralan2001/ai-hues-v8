@@ -9,30 +9,32 @@
      --radius-sm     → rounded-sm (10px)
    ============================================================ */
 @theme {
-  /* Typography */
+  /* Typography — Claude style: serif body + sans-serif UI */
   --font-sans:
-    Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    var(--font-poppins), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    sans-serif;
+  --font-serif: var(--font-lora), 'Georgia', 'Times New Roman', serif;
 
-  /* Brand palette */
-  --color-bg: #ffffff;
-  --color-surface: #f8f9fb;
-  --color-surface-hover: #f1f3f7;
-  --color-border: #e8ecf1;
-  --color-border-strong: #d1d8e0;
-  --color-foreground: #0f172a;
-  --color-secondary: #475569;
-  --color-muted: #94a3b8;
-  --color-accent: #b45309;
-  --color-accent-light: #d97706;
-  --color-accent-bg: #fff3e0;
-  --color-green: #059669;
-  --color-green-bg: #ecfdf5;
-  --color-blue: #2563eb;
-  --color-blue-bg: #eff6ff;
-  --color-orange: #ea580c;
+  /* Brand palette — Claude-inspired warm neutrals */
+  --color-bg: #faf9f5;
+  --color-surface: #ffffff;
+  --color-surface-hover: #f5f3ee;
+  --color-border: #e8e6dc;
+  --color-border-strong: #d5d3cb;
+  --color-foreground: #1a1a19;
+  --color-secondary: #6b6960;
+  --color-muted: #9a9890;
+  --color-accent: #d97757;
+  --color-accent-light: #c46a4a;
+  --color-accent-bg: rgba(217, 119, 87, 0.08);
+  --color-green: #788c5d;
+  --color-green-bg: rgba(120, 140, 93, 0.08);
+  --color-blue: #6a9bcc;
+  --color-blue-bg: rgba(106, 155, 204, 0.08);
+  --color-orange: #d97757;
 
   /* Shape */
-  --radius: 14px;
+  --radius: 16px;
   --radius-sm: 10px;
 }
 
@@ -43,21 +45,20 @@
 :root {
   --bg: var(--color-bg);
   --surface: var(--color-surface);
-  --surface-soft: #eef4f2;
-  --surface-strong: #111827;
+  --surface-soft: #f5f3ee;
+  --surface-strong: #1a1a19;
   --border: var(--color-border);
   --border-strong: var(--color-border-strong);
   --text: var(--color-foreground);
   --text-muted: var(--color-secondary);
   --text-soft: var(--color-muted);
   --accent: var(--color-accent);
-  --accent-strong: #92400e;
+  --accent-strong: #c46a4a;
   --green: var(--color-green);
-  --amber: #b45309;
+  --amber: #d97757;
   --blue: var(--color-blue);
-  --shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.04);
-  --shadow-hover:
-    0 4px 12px rgba(180, 83, 9, 0.12), 0 8px 32px rgba(0, 0, 0, 0.08);
+  --shadow: 0 1px 2px rgba(26, 26, 25, 0.04);
+  --shadow-hover: 0 2px 8px rgba(26, 26, 25, 0.06);
 }
 
 /* JSON syntax highlight */
@@ -95,40 +96,39 @@
 
 /* Dark mode */
 [data-theme='dark'] {
-  --color-bg: #1a1410;
-  --color-surface: #14141f;
-  --color-surface-hover: #1e1e2e;
-  --color-border: #2a2a40;
-  --color-border-strong: #3a3a55;
-  --color-foreground: #f0f0f5;
-  --color-secondary: #9ca3af;
-  --color-muted: #6b7280;
-  --color-accent: #d97706;
-  --color-accent-light: #f59e0b;
-  --color-accent-bg: #2d1f0f;
-  --color-green: #34d399;
-  --color-green-bg: #064e3b;
-  --color-blue: #60a5fa;
-  --color-blue-bg: #1e3a5f;
-  --color-orange: #fb923c;
+  --color-bg: #1c1c1a;
+  --color-surface: #242422;
+  --color-surface-hover: #2d2d2a;
+  --color-border: #3a3a35;
+  --color-border-strong: #4a4a45;
+  --color-foreground: #f5f4f0;
+  --color-secondary: #a8a69e;
+  --color-muted: #7a7870;
+  --color-accent: #d97757;
+  --color-accent-light: #e08a6d;
+  --color-accent-bg: rgba(217, 119, 87, 0.12);
+  --color-green: #8aaa6d;
+  --color-green-bg: rgba(138, 170, 109, 0.1);
+  --color-blue: #7aabdb;
+  --color-blue-bg: rgba(122, 171, 219, 0.1);
+  --color-orange: #d97757;
 
   --bg: var(--color-bg);
   --surface: var(--color-surface);
-  --surface-soft: #1e1e2e;
-  --surface-strong: #0a0a12;
+  --surface-soft: #2d2d2a;
+  --surface-strong: #0f0f0e;
   --border: var(--color-border);
   --border-strong: var(--color-border-strong);
   --text: var(--color-foreground);
   --text-muted: var(--color-secondary);
   --text-soft: var(--color-muted);
   --accent: var(--color-accent);
-  --accent-strong: #f59e0b;
+  --accent-strong: #e08a6d;
   --green: var(--color-green);
-  --amber: #f59e0b;
+  --amber: #d97757;
   --blue: var(--color-blue);
-  --shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 4px 16px rgba(0, 0, 0, 0.3);
-  --shadow-hover:
-    0 4px 12px rgba(217, 119, 6, 0.15), 0 8px 32px rgba(0, 0, 0, 0.4);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-hover: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 /* ============================================================
@@ -144,8 +144,8 @@ body {
   margin: 0;
   background: var(--color-bg);
   color: var(--color-foreground);
-  font-family: var(--font-sans);
-  line-height: 1.6;
+  font-family: var(--font-serif);
+  line-height: 1.7;
 }
 
 a {
@@ -221,7 +221,7 @@ input {
     height: 34px;
     place-items: center;
     border-radius: 8px;
-    background: linear-gradient(135deg, var(--accent), #d97706);
+    background: var(--accent);
     color: #fff;
     font-size: 16px;
   }
@@ -881,7 +881,7 @@ input {
     display: block;
     height: 100%;
     border-radius: inherit;
-    background: linear-gradient(90deg, var(--accent), #d97706);
+    background: var(--accent);
   }
 
   .progress-panel__meta {
@@ -1981,10 +1981,7 @@ input {
     margin: 16px 0 0;
     font-size: clamp(36px, 5vw, 56px);
     font-weight: 800;
-    background: linear-gradient(135deg, #b45309, #d97706);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--accent);
   }
 
   .game-detail-hero p {

@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import { Poppins, Lora } from 'next/font/google';
 
 import { I18nProvider } from '@/lib/i18n';
 import { ThemeProvider } from '@/lib/theme';
@@ -9,6 +10,21 @@ import type { Theme } from '@/lib/theme';
 import CommandPalette from '@/components/CommandPalette';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 import { PageDurationTracker } from '@/components/PageDurationTracker';
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-poppins',
+  display: 'swap',
+});
+
+const lora = Lora({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  style: ['normal', 'italic'],
+  variable: '--font-lora',
+  display: 'swap',
+});
 
 import './globals.css';
 
@@ -44,13 +60,17 @@ export default async function RootLayout({
     (cookieStore.get('aihues-theme')?.value as Theme | undefined) || 'light';
 
   return (
-    <html data-theme={theme} lang={locale === 'zh' ? 'zh-CN' : 'en'}>
+    <html
+      data-theme={theme}
+      lang={locale === 'zh' ? 'zh-CN' : 'en'}
+      className={`${poppins.variable} ${lora.variable}`}
+    >
       <head>
         <GoogleAnalytics />
         <link rel='manifest' href='/manifest.json' />
         <link rel='icon' href='/favicon.ico' sizes='any' />
         <link rel='apple-touch-icon' href='/apple-touch-icon.png' />
-        <meta name='theme-color' content='#b45309' />
+        <meta name='theme-color' content='#d97757' />
       </head>
       <body>
         <I18nProvider initialLocale={locale}>

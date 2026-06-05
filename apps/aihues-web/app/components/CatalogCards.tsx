@@ -89,10 +89,10 @@ function PriceBadge({
   locale?: Locale;
 }) {
   const styles: Record<PriceTag, string> = {
-    free: 'text-[#059669] bg-[#ecfdf5] border-[#a7f3d0] dark:text-[#34d399] dark:bg-[#064e3b] dark:border-[#065f46]',
+    free: 'text-[#5a7a4a] bg-[#f5f3ee] border-[#e8e6dc] dark:text-[#8aaa6d] dark:bg-[#2d2d2a] dark:border-[#3a3a35]',
     freemium:
-      'text-[#b45309] bg-[#fffbeb] border-[#fde68a] dark:text-[#fbbf24] dark:bg-[#451a03] dark:border-[#78350f]',
-    paid: 'text-[#dc2626] bg-[#fef2f2] border-[#fecaca] dark:text-[#f87171] dark:bg-[#450a0a] dark:border-[#7f1d1d]',
+      'text-[#9a6a4a] bg-[#f5f3ee] border-[#e8e6dc] dark:text-[#d4a070] dark:bg-[#2d2d2a] dark:border-[#3a3a35]',
+    paid: 'text-[#8a5a5a] bg-[#f5f3ee] border-[#e8e6dc] dark:text-[#c48888] dark:bg-[#2d2d2a] dark:border-[#3a3a35]',
   };
 
   const labels: Record<PriceTag, Record<Locale, string>> = {
@@ -123,7 +123,7 @@ export function ToolCard({
 }) {
   return (
     <Link
-      className='group relative block cursor-pointer rounded-[14px] border border-border bg-bg p-[22px] text-inherit no-underline transition-all duration-200 hover:-translate-y-0.5 hover:border-accent-light hover:shadow-[0_4px_12px_rgba(180,83,9,0.12),0_8px_32px_rgba(0,0,0,0.08)]'
+      className='group relative block cursor-pointer rounded-[16px] border border-border bg-surface p-[22px] text-inherit no-underline transition-all duration-200 hover:border-[#1a1a19]'
       href={toolDetailHref(tool.slug)}
       onClick={() => {
         event(GA_EVENTS.toolClick, {
@@ -188,7 +188,7 @@ export function ToolCardV2({
 
   return (
     <Link
-      className='group relative block cursor-pointer rounded-[14px] border border-border bg-bg p-[22px] text-inherit no-underline transition-all duration-200 hover:-translate-y-0.5 hover:border-accent-light hover:shadow-[0_4px_12px_rgba(180,83,9,0.12),0_8px_32px_rgba(0,0,0,0.08)]'
+      className='group relative block cursor-pointer rounded-[16px] border border-border bg-surface p-[22px] text-inherit no-underline transition-all duration-200 hover:border-[#1a1a19]'
       href={toolDetailHref(tool.slug)}
       onClick={() => {
         event(GA_EVENTS.toolClick, {
@@ -265,7 +265,7 @@ export function GameCard({
 
   return (
     <Link
-      className='relative block cursor-pointer rounded-[14px] border border-border bg-bg px-7 py-7 text-center text-inherit no-underline transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_4px_12px_rgba(180,83,9,0.12),0_8px_32px_rgba(0,0,0,0.08)]'
+      className='relative block cursor-pointer rounded-[16px] border border-border bg-surface px-7 py-7 text-center text-inherit no-underline transition-all duration-200 hover:border-[#1a1a19]'
       href={gameDetailHref(game.slug)}
       onClick={() => {
         event(GA_EVENTS.gamePlay, {

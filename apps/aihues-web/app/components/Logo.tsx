@@ -25,14 +25,14 @@ export function Logo({ size = 28 }: { size?: number }) {
         strokeLinecap='round'
         strokeWidth='10'
       />
-      <rect fill='#d97706' height='30' rx='10' width='36' x='42' y='62' />
+      <rect fill='#d97757' height='30' rx='10' width='36' x='42' y='62' />
       <rect fill='#f59e0b' height='24' rx='8' width='28' x='46' y='38' />
       <circle cx='55' cy='50' fill='#fff' r='4' />
       <circle cx='65' cy='50' fill='#fff' r='4' />
       <circle cx='55' cy='50' fill='#1c1917' r='2' />
       <circle cx='65' cy='50' fill='#1c1917' r='2' />
       <line
-        stroke='#d97706'
+        stroke='#d97757'
         strokeLinecap='round'
         strokeWidth='3'
         x1='60'
@@ -56,7 +56,7 @@ export function Logo({ size = 28 }: { size?: number }) {
       <circle cx='90' cy='72' fill='#22c55e' r='2' />
       <circle cx='88' cy='76' fill='#3b82f6' r='2' />
       <line
-        stroke='#d97706'
+        stroke='#d97757'
         strokeLinecap='round'
         strokeWidth='3'
         x1='76'
