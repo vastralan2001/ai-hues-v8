@@ -2,7 +2,6 @@
 
 import { useMemo, useState } from 'react';
 
-import { PageShell } from '@/components/SiteChrome';
 import { t, type Locale } from '@/lib/dict';
 
 interface MarkdownToolProps {
@@ -90,41 +89,39 @@ export default function MarkdownTool({ locale }: MarkdownToolProps) {
   const preview = useMemo(() => markdownToHtml(input), [input]);
 
   return (
-    <PageShell variant='default' locale={locale}>
-      <div className='mx-auto max-w-[1100px] px-6 py-12'>
-        <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
-          {t(locale, 'tool.markdown.title')}
-        </h1>
-        <p className='mb-6 text-[15px] text-secondary'>
-          {t(locale, 'tool.markdown.desc')}
-        </p>
+    <div className='mx-auto max-w-[1100px] px-6 py-12'>
+      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
+        {t(locale, 'tool.markdown.title')}
+      </h1>
+      <p className='mb-6 text-[15px] text-secondary'>
+        {t(locale, 'tool.markdown.desc')}
+      </p>
 
-        <div className='grid gap-4 lg:grid-cols-2'>
-          {/* Input */}
-          <div>
-            <label className='mb-1.5 block text-sm font-semibold text-foreground'>
-              Markdown
-            </label>
-            <textarea
-              className='h-[500px] w-full resize-none rounded-[14px] border border-border bg-surface p-5 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
-              onChange={(e) => setInput(e.target.value)}
-              placeholder={t(locale, 'tool.markdown.placeholder')}
-              value={input}
-            />
-          </div>
+      <div className='grid gap-4 lg:grid-cols-2'>
+        {/* Input */}
+        <div>
+          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+            Markdown
+          </label>
+          <textarea
+            className='h-[500px] w-full resize-none rounded-[14px] border border-border bg-surface p-5 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+            onChange={(e) => setInput(e.target.value)}
+            placeholder={t(locale, 'tool.markdown.placeholder')}
+            value={input}
+          />
+        </div>
 
-          {/* Preview */}
-          <div>
-            <label className='mb-1.5 block text-sm font-semibold text-foreground'>
-              {t(locale, 'tool.markdown.preview')}
-            </label>
-            <div
-              className='h-[500px] overflow-auto rounded-[14px] border border-border bg-surface p-5 text-foreground'
-              dangerouslySetInnerHTML={{ __html: preview }}
-            />
-          </div>
+        {/* Preview */}
+        <div>
+          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+            {t(locale, 'tool.markdown.preview')}
+          </label>
+          <div
+            className='h-[500px] overflow-auto rounded-[14px] border border-border bg-surface p-5 text-foreground'
+            dangerouslySetInnerHTML={{ __html: preview }}
+          />
         </div>
       </div>
-    </PageShell>
+    </div>
   );
 }

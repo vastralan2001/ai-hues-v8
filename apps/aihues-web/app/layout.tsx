@@ -1,70 +1,33 @@
-import { cookies } from 'next/headers';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-import { Poppins, Lora } from 'next/font/google';
+import { Noto_Sans } from 'next/font/google';
 
 import { I18nProvider } from '@/lib/i18n';
-import { ThemeProvider } from '@/lib/theme';
-import type { Locale } from '@/lib/dict';
-import type { Theme } from '@/lib/theme';
 import CommandPalette from '@/components/CommandPalette';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 import { PageDurationTracker } from '@/components/PageDurationTracker';
 
-const poppins = Poppins({
+const notoSans = Noto_Sans({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
-  variable: '--font-poppins',
-  display: 'swap',
-});
-
-const lora = Lora({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  style: ['normal', 'italic'],
-  variable: '--font-lora',
+  variable: '--font-noto-sans',
   display: 'swap',
 });
 
 import './globals.css';
 
-export async function generateMetadata(): Promise<Metadata> {
-  const cookieStore = await cookies();
-  const locale =
-    (cookieStore.get('aihues-locale')?.value as Locale | undefined) || 'en';
+export const metadata: Metadata = {
+  title: {
+    default: 'AIHues — Find your AI vibe',
+    template: '%s - AIHues',
+  },
+  description:
+    'AI tools and lightweight games powered by the AIHues catalog API.',
+};
 
-  const isZh = locale === 'zh';
-
-  return {
-    title: {
-      default: isZh
-        ? 'AIHues — 找到你的 AI vibe'
-        : 'AIHues — Find your AI vibe',
-      template: isZh ? '%s - AIHues' : '%s - AIHues',
-    },
-    description: isZh
-      ? 'AI 工具、小游戏和实用工具导航平台。'
-      : 'AI tools and lightweight games powered by the AIHues catalog API.',
-  };
-}
-
-export default async function RootLayout({
-  children,
-}: {
-  children: ReactNode;
-}) {
-  const cookieStore = await cookies();
-  const locale: Locale =
-    (cookieStore.get('aihues-locale')?.value as Locale | undefined) || 'en';
-  const theme: Theme =
-    (cookieStore.get('aihues-theme')?.value as Theme | undefined) || 'light';
-
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html
-      data-theme={theme}
-      lang={locale === 'zh' ? 'zh-CN' : 'en'}
-      className={`${poppins.variable} ${lora.variable}`}
-    >
+    <html lang='en' className={`${notoSans.variable}`}>
       <head>
         <GoogleAnalytics />
         <link rel='manifest' href='/manifest.json' />
@@ -73,12 +36,10 @@ export default async function RootLayout({
         <meta name='theme-color' content='#d97757' />
       </head>
       <body>
-        <I18nProvider initialLocale={locale}>
-          <ThemeProvider initialTheme={theme}>
-            {children}
-            <CommandPalette />
-            <PageDurationTracker />
-          </ThemeProvider>
+        <I18nProvider initialLocale='en'>
+          {children}
+          <CommandPalette />
+          <PageDurationTracker />
         </I18nProvider>
       </body>
     </html>

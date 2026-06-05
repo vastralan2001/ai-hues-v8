@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 
-import { PageShell } from '@/components/SiteChrome';
 import { t, type Locale } from '@/lib/dict';
 
 interface ChiSquaredToolProps {
@@ -78,128 +77,124 @@ export default function ChiSquaredTool({ locale }: ChiSquaredToolProps) {
   }
 
   return (
-    <PageShell variant='default' locale={locale}>
-      <div className='mx-auto max-w-[700px] px-6 py-12'>
-        <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
-          {t(locale, 'tool.chiSquared.title')}
-        </h1>
-        <p className='mb-6 text-[15px] text-secondary'>
-          {t(locale, 'tool.chiSquared.desc')}
-        </p>
+    <div className='mx-auto max-w-[700px] px-6 py-12'>
+      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
+        {t(locale, 'tool.chiSquared.title')}
+      </h1>
+      <p className='mb-6 text-[15px] text-secondary'>
+        {t(locale, 'tool.chiSquared.desc')}
+      </p>
 
-        <div className='space-y-4'>
-          <div className='rounded-[14px] border border-border bg-surface overflow-hidden'>
-            <div className='grid grid-cols-[1fr_1fr_auto] border-b border-border bg-gray-50 dark:bg-gray-900 text-xs font-semibold text-secondary'>
-              <div className='px-4 py-2'>
-                {t(locale, 'tool.chiSquared.observed')}
-              </div>
-              <div className='px-4 py-2'>
-                {t(locale, 'tool.chiSquared.expected')}
-              </div>
-              <div className='px-4 py-2'></div>
+      <div className='space-y-4'>
+        <div className='rounded-[14px] border border-border bg-surface overflow-hidden'>
+          <div className='grid grid-cols-[1fr_1fr_auto] border-b border-border bg-gray-50 dark:bg-gray-900 text-xs font-semibold text-secondary'>
+            <div className='px-4 py-2'>
+              {t(locale, 'tool.chiSquared.observed')}
             </div>
-            {rows.map((row) => (
-              <div
-                key={row.id}
-                className='grid grid-cols-[1fr_1fr_auto] border-b border-border last:border-b-0'
-              >
-                <div className='px-2 py-2'>
-                  <input
-                    className='h-9 w-full rounded-[8px] border border-border bg-white dark:bg-gray-900 px-3 text-sm text-foreground focus:border-accent focus:outline-none'
-                    onChange={(e) =>
-                      updateRow(row.id, 'observed', e.target.value)
-                    }
-                    type='number'
-                    value={row.observed}
-                  />
-                </div>
-                <div className='px-2 py-2'>
-                  <input
-                    className='h-9 w-full rounded-[8px] border border-border bg-white dark:bg-gray-900 px-3 text-sm text-foreground focus:border-accent focus:outline-none'
-                    onChange={(e) =>
-                      updateRow(row.id, 'expected', e.target.value)
-                    }
-                    type='number'
-                    value={row.expected}
-                  />
-                </div>
-                <div className='flex items-center px-2 py-2'>
-                  {rows.length > 2 && (
-                    <button
-                      className='text-xs text-red-500 hover:text-red-600'
-                      onClick={() => removeRow(row.id)}
-                      type='button'
-                    >
-                      {t(locale, 'tool.chiSquared.remove')}
-                    </button>
-                  )}
-                </div>
-              </div>
-            ))}
+            <div className='px-4 py-2'>
+              {t(locale, 'tool.chiSquared.expected')}
+            </div>
+            <div className='px-4 py-2'></div>
           </div>
-
-          <button
-            className='rounded-[10px] border border-border bg-surface px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:border-accent hover:text-accent'
-            onClick={addRow}
-            type='button'
-          >
-            {t(locale, 'tool.chiSquared.addRow')}
-          </button>
-
-          <button
-            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
-            onClick={calculate}
-            type='button'
-          >
-            {t(locale, 'tool.chiSquared.calculate')}
-          </button>
-
-          {result && (
-            <div className='grid gap-3 sm:grid-cols-3'>
-              <div className='rounded-[14px] border border-border bg-surface p-4 text-center'>
-                <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
-                  {t(locale, 'tool.chiSquared.statistic')}
-                </p>
-                <p className='mt-1 text-2xl font-extrabold text-accent'>
-                  {result.chi2.toFixed(4)}
-                </p>
+          {rows.map((row) => (
+            <div
+              key={row.id}
+              className='grid grid-cols-[1fr_1fr_auto] border-b border-border last:border-b-0'
+            >
+              <div className='px-2 py-2'>
+                <input
+                  className='h-9 w-full rounded-[8px] border border-border bg-white dark:bg-gray-900 px-3 text-sm text-foreground focus:border-accent focus:outline-none'
+                  onChange={(e) =>
+                    updateRow(row.id, 'observed', e.target.value)
+                  }
+                  type='number'
+                  value={row.observed}
+                />
               </div>
-              <div className='rounded-[14px] border border-border bg-surface p-4 text-center'>
-                <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
-                  {t(locale, 'tool.chiSquared.df')}
-                </p>
-                <p className='mt-1 text-2xl font-extrabold text-accent'>
-                  {result.df}
-                </p>
+              <div className='px-2 py-2'>
+                <input
+                  className='h-9 w-full rounded-[8px] border border-border bg-white dark:bg-gray-900 px-3 text-sm text-foreground focus:border-accent focus:outline-none'
+                  onChange={(e) =>
+                    updateRow(row.id, 'expected', e.target.value)
+                  }
+                  type='number'
+                  value={row.expected}
+                />
               </div>
-              <div className='rounded-[14px] border border-border bg-surface p-4 text-center'>
-                <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
-                  {t(locale, 'tool.chiSquared.pValue')}
-                </p>
-                <p className='mt-1 text-2xl font-extrabold text-accent'>
-                  {result.pValue < 0.0001
-                    ? '< 0.0001'
-                    : result.pValue.toFixed(4)}
-                </p>
-              </div>
-              <div
-                className={`sm:col-span-3 rounded-[14px] border p-4 text-center ${
-                  result.pValue < 0.05
-                    ? 'border-green-200 bg-green-50 dark:border-green-900 dark:bg-green-950/30'
-                    : 'border-orange-200 bg-orange-50 dark:border-orange-900 dark:bg-orange-950/30'
-                }`}
-              >
-                <p className='text-sm font-semibold'>
-                  {result.pValue < 0.05
-                    ? t(locale, 'tool.chiSquared.significant')
-                    : t(locale, 'tool.chiSquared.notSignificant')}{' '}
-                  (p {'<'} 0.05)
-                </p>
+              <div className='flex items-center px-2 py-2'>
+                {rows.length > 2 && (
+                  <button
+                    className='text-xs text-red-500 hover:text-red-600'
+                    onClick={() => removeRow(row.id)}
+                    type='button'
+                  >
+                    {t(locale, 'tool.chiSquared.remove')}
+                  </button>
+                )}
               </div>
             </div>
-          )}
+          ))}
         </div>
+
+        <button
+          className='rounded-[10px] border border-border bg-surface px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:border-accent hover:text-accent'
+          onClick={addRow}
+          type='button'
+        >
+          {t(locale, 'tool.chiSquared.addRow')}
+        </button>
+
+        <button
+          className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+          onClick={calculate}
+          type='button'
+        >
+          {t(locale, 'tool.chiSquared.calculate')}
+        </button>
+
+        {result && (
+          <div className='grid gap-3 sm:grid-cols-3'>
+            <div className='rounded-[14px] border border-border bg-surface p-4 text-center'>
+              <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
+                {t(locale, 'tool.chiSquared.statistic')}
+              </p>
+              <p className='mt-1 text-2xl font-extrabold text-accent'>
+                {result.chi2.toFixed(4)}
+              </p>
+            </div>
+            <div className='rounded-[14px] border border-border bg-surface p-4 text-center'>
+              <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
+                {t(locale, 'tool.chiSquared.df')}
+              </p>
+              <p className='mt-1 text-2xl font-extrabold text-accent'>
+                {result.df}
+              </p>
+            </div>
+            <div className='rounded-[14px] border border-border bg-surface p-4 text-center'>
+              <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
+                {t(locale, 'tool.chiSquared.pValue')}
+              </p>
+              <p className='mt-1 text-2xl font-extrabold text-accent'>
+                {result.pValue < 0.0001 ? '< 0.0001' : result.pValue.toFixed(4)}
+              </p>
+            </div>
+            <div
+              className={`sm:col-span-3 rounded-[14px] border p-4 text-center ${
+                result.pValue < 0.05
+                  ? 'border-green-200 bg-green-50 dark:border-green-900 dark:bg-green-950/30'
+                  : 'border-orange-200 bg-orange-50 dark:border-orange-900 dark:bg-orange-950/30'
+              }`}
+            >
+              <p className='text-sm font-semibold'>
+                {result.pValue < 0.05
+                  ? t(locale, 'tool.chiSquared.significant')
+                  : t(locale, 'tool.chiSquared.notSignificant')}{' '}
+                (p {'<'} 0.05)
+              </p>
+            </div>
+          </div>
+        )}
       </div>
-    </PageShell>
+    </div>
   );
 }

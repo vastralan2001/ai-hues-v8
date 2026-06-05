@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 
 import type {
@@ -123,7 +125,7 @@ export function ToolCard({
 }) {
   return (
     <Link
-      className='group relative block cursor-pointer rounded-[16px] border border-border bg-surface p-[22px] text-inherit no-underline transition-all duration-200 hover:border-[#1a1a19]'
+      className='group relative block cursor-pointer rounded-[16px] border border-border bg-surface p-[22px] text-inherit no-underline transition-all duration-200 hover:border-border-strong'
       href={toolDetailHref(tool.slug)}
       onClick={() => {
         event(GA_EVENTS.toolClick, {
@@ -141,20 +143,8 @@ export function ToolCard({
       )}
 
       {/* Icon */}
-      <div
-        className='mb-3 flex h-[42px] w-[42px] items-center justify-center rounded-[11px] border border-border bg-surface text-xl transition-all duration-200 group-hover:border-transparent group-hover:text-white'
-        style={
-          {
-            // gradient applied via JS so it can be toggled on hover via Tailwind
-          }
-        }
-      >
-        <span
-          className='transition-all duration-200 group-hover:[filter:brightness(10)]'
-          style={{ display: 'contents' }}
-        >
-          {tool.icon}
-        </span>
+      <div className='mb-3 flex h-[42px] w-[42px] items-center justify-center rounded-[11px] border border-border bg-surface text-[13px] font-bold text-secondary'>
+        {tool.icon}
       </div>
 
       {/* Text */}
@@ -184,11 +174,10 @@ export function ToolCardV2({
   const fallback = getToolPricing(tool.slug);
   const price =
     tool.priceTag !== 'unspecified' ? tool.priceTag : fallback.price;
-  const credit = tool.creditCost > 0 ? tool.creditCost : (fallback.credit ?? 0);
 
   return (
     <Link
-      className='group relative block cursor-pointer rounded-[16px] border border-border bg-surface p-[22px] text-inherit no-underline transition-all duration-200 hover:border-[#1a1a19]'
+      className='group relative block cursor-pointer rounded-[16px] border border-border bg-surface p-[22px] text-inherit no-underline transition-all duration-200 hover:border-border-strong'
       href={toolDetailHref(tool.slug)}
       onClick={() => {
         event(GA_EVENTS.toolClick, {
@@ -204,8 +193,8 @@ export function ToolCardV2({
         </span>
       )}
 
-      {/* icon-wrap: bg becomes accent gradient on hover */}
-      <div className='mb-3 flex h-[42px] w-[42px] items-center justify-center rounded-[11px] border border-border bg-surface text-xl transition-all duration-200 group-hover:border-transparent group-hover:[background:linear-gradient(135deg,#b45309,#d97706)]'>
+      {/* icon-wrap */}
+      <div className='mb-3 flex h-[42px] w-[42px] items-center justify-center rounded-[11px] border border-border bg-surface text-[13px] font-bold text-secondary'>
         {tool.icon}
       </div>
 
@@ -216,14 +205,9 @@ export function ToolCardV2({
         {tool.description}
       </p>
 
-      {/* Price + Credit row */}
+      {/* Price row */}
       <div className='mt-3 flex items-center gap-2'>
         <PriceBadge price={price} locale={locale} />
-        {credit > 0 && (
-          <span className='text-[11px] font-semibold text-accent'>
-            🪙 {credit}
-          </span>
-        )}
       </div>
     </Link>
   );
@@ -246,10 +230,9 @@ const GAME_BADGES: Record<string, string> = {
 };
 
 const GAME_META: Record<string, string> = {
-  'daily-luck': '🧧 30 fortunes  🪙 +10 Credits  🔥 Streak bonus',
-  'slot-machine':
-    '🎰 3×3 reels  🆓 3 spins/day  🪙 +5~100/spin  🏆 Leaderboard',
-  basketball: '⏱️ 60 seconds  🏀 Physics  🪙 +10~50/game  🏆 Leaderboard',
+  'daily-luck': '30 fortunes · +10 Credits · Streak bonus',
+  'slot-machine': '3×3 reels · 3 spins/day · +5~100/spin · Leaderboard',
+  basketball: '60 seconds · Physics · +10~50/game · Leaderboard',
 };
 
 export function GameCard({
@@ -265,7 +248,7 @@ export function GameCard({
 
   return (
     <Link
-      className='relative block cursor-pointer rounded-[16px] border border-border bg-surface px-7 py-7 text-center text-inherit no-underline transition-all duration-200 hover:border-[#1a1a19]'
+      className='relative block cursor-pointer rounded-[16px] border border-border bg-surface px-7 py-7 text-center text-inherit no-underline transition-all duration-200 hover:border-border-strong'
       href={gameDetailHref(game.slug)}
       onClick={() => {
         event(GA_EVENTS.gamePlay, {
@@ -281,7 +264,9 @@ export function GameCard({
         </span>
       )}
 
-      <span className='mb-3 block text-[48px] leading-none'>{game.icon}</span>
+      <span className='mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-xl bg-accent-bg text-[18px] font-bold text-accent'>
+        {game.icon}
+      </span>
       <h3 className='mb-1.5 text-[18px] font-bold text-foreground'>
         {game.name}
       </h3>
@@ -294,10 +279,7 @@ export function GameCard({
         <p className='mb-4 text-[12px] leading-relaxed text-muted'>{meta}</p>
       )}
 
-      <span
-        className='inline-block rounded-[10px] px-7 py-[11px] text-[14px] font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_4px_16px_rgba(180,83,9,0.35)]'
-        style={{ background: 'linear-gradient(135deg, #b45309, #d97706)' }}
-      >
+      <span className='inline-block rounded-[12px] bg-accent px-7 py-[11px] text-[14px] font-medium text-white transition-all hover:bg-accent-light'>
         {t(locale, playLabelKey)}
       </span>
     </Link>
@@ -318,9 +300,9 @@ export function CategoryPills({
 }) {
   const labels: Record<ToolCategoryKey, string> = {
     all: 'All',
-    developer: '🛠️ Dev',
-    utility: '✍️ Utility',
-    'ai-writing': '🤖 AI Writing',
+    developer: 'Dev',
+    utility: 'Utility',
+    'ai-writing': 'AI Writing',
   };
 
   return (

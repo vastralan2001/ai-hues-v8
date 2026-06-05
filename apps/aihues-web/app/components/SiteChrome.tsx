@@ -12,9 +12,6 @@ import {
   wishlistHref,
   blogHref,
 } from '@/lib/routes';
-import { CreditDisplay } from './CreditDisplay';
-import { LangSwitcher } from './LangSwitcher';
-import { ThemeSwitcher } from './ThemeSwitcher';
 import { Logo } from './Logo';
 
 type ChromeVariant =
@@ -85,7 +82,7 @@ export function SiteHeader({
   return (
     <header
       style={{ backdropFilter: 'blur(16px)' }}
-      className='sticky top-0 z-[100] border-b border-border bg-[rgba(250,249,245,0.92)]'
+      className='sticky top-0 z-[100] border-b border-border bg-[rgba(255,255,255,0.92)]'
     >
       <div className='mx-auto grid h-[68px] max-w-[1300px] grid-cols-[1fr_auto_1fr] items-center px-8'>
         {/* Logo */}
@@ -114,12 +111,8 @@ export function SiteHeader({
           ))}
         </nav>
 
-        {/* Right side: Credit + Theme + Lang */}
-        <div className='flex items-center gap-3 justify-self-end'>
-          <CreditDisplay />
-          <ThemeSwitcher />
-          <LangSwitcher />
-        </div>
+        {/* Right side intentionally empty — single-language site */}
+        <div className='justify-self-end' />
       </div>
     </header>
   );
@@ -144,13 +137,8 @@ export function SiteFooter({
     return (
       <footer className='border-t border-border px-8 py-8 text-center text-[13px] text-muted'>
         <div className='mb-3 flex items-center justify-center gap-2.5 text-xl font-extrabold text-foreground'>
-          <span
-            className='flex h-8 w-8 items-center justify-center rounded-[8px] text-sm font-bold text-white'
-            style={{ background: '#d97757' }}
-          >
-            H
-          </span>
-          AIHues
+          <Logo size={32} />
+          <span>AIHues</span>
         </div>
         <div className='mb-3 flex justify-center gap-6'>
           <Link href={homeHref}>{t(locale, 'nav.home')}</Link>
@@ -169,15 +157,8 @@ export function SiteFooter({
           <div className='mb-8 flex flex-wrap items-start justify-between gap-6'>
             <div>
               <div className='mb-2 flex items-center gap-2.5 text-xl font-extrabold'>
-                <span
-                  className='flex h-8 w-8 items-center justify-center rounded-[8px] text-sm font-bold text-white'
-                  style={{
-                    background: 'linear-gradient(135deg, #b45309, #d97706)',
-                  }}
-                >
-                  H
-                </span>
-                AIHues
+                <Logo size={32} />
+                <span>AIHues</span>
               </div>
               <p className='max-w-[300px] text-[14px] text-muted'>
                 {t(locale, 'footer.tagline')}
@@ -227,15 +208,8 @@ export function SiteFooter({
           {/* Brand */}
           <div>
             <div className='mb-2 flex items-center gap-2.5 text-xl font-extrabold'>
-              <span
-                className='flex h-8 w-8 items-center justify-center rounded-[8px] text-sm font-bold text-white'
-                style={{
-                  background: 'linear-gradient(135deg, #b45309, #d97706)',
-                }}
-              >
-                H
-              </span>
-              AIHues
+              <Logo size={32} />
+              <span>AIHues</span>
             </div>
             <p className='max-w-[260px] text-[14px] text-muted'>
               {t(locale, 'footer.tagline')}

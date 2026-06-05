@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 
-import { PageShell } from '@/components/SiteChrome';
 import { t, type Locale } from '@/lib/dict';
 
 interface TimestampToolProps {
@@ -103,66 +102,64 @@ export default function TimestampTool({ locale }: TimestampToolProps) {
     : [];
 
   return (
-    <PageShell variant='default' locale={locale}>
-      <div className='mx-auto max-w-[900px] px-6 py-12'>
-        <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
-          {t(locale, 'tool.timestamp.title')}
-        </h1>
-        <p className='mb-6 text-[15px] text-secondary'>
-          {t(locale, 'tool.timestamp.desc')}
-        </p>
+    <div className='mx-auto max-w-[900px] px-6 py-12'>
+      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
+        {t(locale, 'tool.timestamp.title')}
+      </h1>
+      <p className='mb-6 text-[15px] text-secondary'>
+        {t(locale, 'tool.timestamp.desc')}
+      </p>
 
-        <input
-          className='h-12 w-full rounded-[14px] border border-border bg-surface px-5 font-mono text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
-          onChange={(e) => setInput(e.target.value)}
-          placeholder={t(locale, 'tool.timestamp.placeholder')}
-          type='text'
-          value={input}
-        />
+      <input
+        className='h-12 w-full rounded-[14px] border border-border bg-surface px-5 font-mono text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+        onChange={(e) => setInput(e.target.value)}
+        placeholder={t(locale, 'tool.timestamp.placeholder')}
+        type='text'
+        value={input}
+      />
 
-        <div className='mt-4 flex gap-3'>
-          <button
-            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
-            onClick={handleConvert}
-            type='button'
-          >
-            {t(locale, 'tool.timestamp.convert')}
-          </button>
-        </div>
-
-        {error && (
-          <p className='mt-3 rounded-[10px] border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'>
-            {error}
-          </p>
-        )}
-
-        {result && (
-          <div className='mt-6 flex flex-col gap-3'>
-            {statItems.map((item) => (
-              <div
-                className='flex items-center justify-between rounded-[10px] border border-border bg-surface px-4 py-3'
-                key={item.label}
-              >
-                <div>
-                  <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
-                    {item.label}
-                  </p>
-                  <p className='mt-0.5 font-mono text-sm text-foreground'>
-                    {item.value}
-                  </p>
-                </div>
-                <button
-                  className='ml-4 rounded-[8px] border border-border bg-bg px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
-                  onClick={() => handleCopy(item.value)}
-                  type='button'
-                >
-                  {t(locale, 'tool.wordCount.copy')}
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
+      <div className='mt-4 flex gap-3'>
+        <button
+          className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+          onClick={handleConvert}
+          type='button'
+        >
+          {t(locale, 'tool.timestamp.convert')}
+        </button>
       </div>
-    </PageShell>
+
+      {error && (
+        <p className='mt-3 rounded-[10px] border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'>
+          {error}
+        </p>
+      )}
+
+      {result && (
+        <div className='mt-6 flex flex-col gap-3'>
+          {statItems.map((item) => (
+            <div
+              className='flex items-center justify-between rounded-[10px] border border-border bg-surface px-4 py-3'
+              key={item.label}
+            >
+              <div>
+                <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
+                  {item.label}
+                </p>
+                <p className='mt-0.5 font-mono text-sm text-foreground'>
+                  {item.value}
+                </p>
+              </div>
+              <button
+                className='ml-4 rounded-[8px] border border-border bg-bg px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
+                onClick={() => handleCopy(item.value)}
+                type='button'
+              >
+                {t(locale, 'tool.wordCount.copy')}
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }

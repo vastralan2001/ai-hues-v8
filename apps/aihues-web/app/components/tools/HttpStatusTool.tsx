@@ -2,7 +2,6 @@
 
 import { useMemo, useState } from 'react';
 
-import { PageShell } from '@/components/SiteChrome';
 import { t, type Locale } from '@/lib/dict';
 
 interface HttpStatusToolProps {
@@ -137,42 +136,40 @@ export default function HttpStatusTool({ locale }: HttpStatusToolProps) {
   }, [query]);
 
   return (
-    <PageShell variant='default' locale={locale}>
-      <div className='mx-auto max-w-[900px] px-6 py-12'>
-        <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
-          {t(locale, 'tool.httpStatus.title')}
-        </h1>
-        <p className='mb-6 text-[15px] text-secondary'>
-          {t(locale, 'tool.httpStatus.desc')}
-        </p>
+    <div className='mx-auto max-w-[900px] px-6 py-12'>
+      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
+        {t(locale, 'tool.httpStatus.title')}
+      </h1>
+      <p className='mb-6 text-[15px] text-secondary'>
+        {t(locale, 'tool.httpStatus.desc')}
+      </p>
 
-        <input
-          className='h-12 w-full rounded-[14px] border border-border bg-surface px-5 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder={t(locale, 'tool.httpStatus.search')}
-          type='text'
-          value={query}
-        />
+      <input
+        className='h-12 w-full rounded-[14px] border border-border bg-surface px-5 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder={t(locale, 'tool.httpStatus.search')}
+        type='text'
+        value={query}
+      />
 
-        <div className='mt-6 flex flex-col gap-2'>
-          {filtered.map((status) => (
-            <div
-              className={`flex items-start gap-4 rounded-[10px] border border-border p-4 ${getStatusBg(status.code)}`}
-              key={status.code}
+      <div className='mt-6 flex flex-col gap-2'>
+        {filtered.map((status) => (
+          <div
+            className={`flex items-start gap-4 rounded-[10px] border border-border p-4 ${getStatusBg(status.code)}`}
+            key={status.code}
+          >
+            <span
+              className={`shrink-0 rounded-lg px-3 py-1 text-lg font-extrabold ${getStatusColor(status.code)}`}
             >
-              <span
-                className={`shrink-0 rounded-lg px-3 py-1 text-lg font-extrabold ${getStatusColor(status.code)}`}
-              >
-                {status.code}
-              </span>
-              <div>
-                <p className='font-semibold text-foreground'>{status.name}</p>
-                <p className='mt-0.5 text-sm text-secondary'>{status.desc}</p>
-              </div>
+              {status.code}
+            </span>
+            <div>
+              <p className='font-semibold text-foreground'>{status.name}</p>
+              <p className='mt-0.5 text-sm text-secondary'>{status.desc}</p>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
-    </PageShell>
+    </div>
   );
 }

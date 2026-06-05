@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 
-import { PageShell } from '@/components/SiteChrome';
 import { t, type Locale } from '@/lib/dict';
 
 interface ReadabilityToolProps {
@@ -75,70 +74,68 @@ export default function ReadabilityTool({ locale }: ReadabilityToolProps) {
   };
 
   return (
-    <PageShell variant='default' locale={locale}>
-      <div className='mx-auto max-w-[900px] px-6 py-12'>
-        <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
-          {t(locale, 'tool.readability.title')}
-        </h1>
-        <p className='mb-6 text-[15px] text-secondary'>
-          {t(locale, 'tool.readability.desc')}
-        </p>
+    <div className='mx-auto max-w-[900px] px-6 py-12'>
+      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
+        {t(locale, 'tool.readability.title')}
+      </h1>
+      <p className='mb-6 text-[15px] text-secondary'>
+        {t(locale, 'tool.readability.desc')}
+      </p>
 
-        <textarea
-          className='h-[200px] w-full resize-none rounded-[14px] border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
-          onChange={(e) => setText(e.target.value)}
-          placeholder={t(locale, 'tool.readability.placeholder')}
-          value={text}
-        />
+      <textarea
+        className='h-[200px] w-full resize-none rounded-[14px] border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+        onChange={(e) => setText(e.target.value)}
+        placeholder={t(locale, 'tool.readability.placeholder')}
+        value={text}
+      />
 
-        <button
-          className='mt-4 rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
-          onClick={handleAnalyze}
-          type='button'
-        >
-          {t(locale, 'tool.readability.analyze')}
-        </button>
+      <button
+        className='mt-4 rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+        onClick={handleAnalyze}
+        type='button'
+      >
+        {t(locale, 'tool.readability.analyze')}
+      </button>
 
-        {result && (
-          <div className='mt-6 grid gap-3 sm:grid-cols-2'>
-            <StatCard
-              label={t(locale, 'tool.readability.words')}
-              value={result.words}
-            />
-            <StatCard
-              label={t(locale, 'tool.readability.sentences')}
-              value={result.sentences}
-            />
-            <StatCard
-              label={t(locale, 'tool.readability.avgSentenceLength')}
-              value={result.avgSentenceLength.toFixed(1)}
-            />
-            <StatCard
-              label={t(locale, 'tool.readability.syllables')}
-              value={result.syllables}
-            />
-            <StatCard
-              label={t(locale, 'tool.readability.fleschEase')}
-              value={result.fleschEase.toFixed(1)}
-            />
-            <StatCard
-              label={t(locale, 'tool.readability.fleschGrade')}
-              value={result.fleschGrade.toFixed(1)}
-            />
+      {result && (
+        <div className='mt-6 grid gap-3 sm:grid-cols-2'>
+          <StatCard
+            label={t(locale, 'tool.readability.words')}
+            value={result.words}
+          />
+          <StatCard
+            label={t(locale, 'tool.readability.sentences')}
+            value={result.sentences}
+          />
+          <StatCard
+            label={t(locale, 'tool.readability.avgSentenceLength')}
+            value={result.avgSentenceLength.toFixed(1)}
+          />
+          <StatCard
+            label={t(locale, 'tool.readability.syllables')}
+            value={result.syllables}
+          />
+          <StatCard
+            label={t(locale, 'tool.readability.fleschEase')}
+            value={result.fleschEase.toFixed(1)}
+          />
+          <StatCard
+            label={t(locale, 'tool.readability.fleschGrade')}
+            value={result.fleschGrade.toFixed(1)}
+          />
 
-            {/* Rating */}
-            <div className='sm:col-span-2 rounded-[14px] border border-border bg-surface p-4 text-center'>
-              <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
-                {t(locale, 'tool.readability.rating')}
-              </p>
-              <p className='mt-1 text-xl font-extrabold text-accent'>
-                {getRating(result.fleschEase, locale)}
-              </p>
-            </div>
+          {/* Rating */}
+          <div className='sm:col-span-2 rounded-[14px] border border-border bg-surface p-4 text-center'>
+            <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
+              {t(locale, 'tool.readability.rating')}
+            </p>
+            <p className='mt-1 text-xl font-extrabold text-accent'>
+              {getRating(result.fleschEase, locale)}
+            </p>
           </div>
-        )}
-      </div>
-    </PageShell>
+        </div>
+      )}
+    </div>
   );
 }
 

@@ -1,11 +1,9 @@
-import { cookies } from 'next/headers';
 import Link from 'next/link';
 
 import { ToolCardV2 } from '@/components/CatalogCards';
 import { PageShell } from '@/components/SiteChrome';
 
-import { GameCreditBadge } from '@/components/GameCreditBadge';
-import { ClientDayStreak, ClientFreeCredits } from '@/components/ClientStats';
+// Stats removed per design refresh
 import type { CatalogGame } from '@/lib/catalog-api';
 import { safeListGames, safeListTools } from '@/lib/catalog-api';
 import { t, type Locale } from '@/lib/dict';
@@ -25,7 +23,7 @@ export const dynamic = 'force-dynamic';
 const HOME_CATEGORIES = (locale: Locale) => [
   {
     key: 'utility',
-    icon: '✍️',
+    letter: 'U',
     label: t(locale, 'cat.utility'),
     count: 0,
     desc: t(locale, 'cat.utilityDesc'),
@@ -34,7 +32,7 @@ const HOME_CATEGORIES = (locale: Locale) => [
   },
   {
     key: 'developer',
-    icon: '💻',
+    letter: 'D',
     label: t(locale, 'cat.developer'),
     count: 0,
     desc: t(locale, 'cat.developerDesc'),
@@ -43,7 +41,7 @@ const HOME_CATEGORIES = (locale: Locale) => [
   },
   {
     key: 'ai-writing',
-    icon: '🤖',
+    letter: 'A',
     label: t(locale, 'cat.aiWriting'),
     count: 0,
     desc: t(locale, 'cat.aiWritingDesc'),
@@ -52,7 +50,7 @@ const HOME_CATEGORIES = (locale: Locale) => [
   },
   {
     key: 'games',
-    icon: '🎮',
+    letter: 'G',
     label: t(locale, 'cat.games'),
     count: 0,
     desc: t(locale, 'cat.gamesDesc'),
@@ -111,10 +109,9 @@ const HOME_GAME_DESCRIPTIONS: Record<string, string> = {
 };
 
 const HOME_GAME_META: Record<string, string> = {
-  'daily-luck': '🧧 30 fortunes  🪙 +10 Credits  🔥 Streak bonus',
-  'slot-machine':
-    '🎰 3×3 reels  🆓 3 spins/day  🪙 +5~100/spin  🏆 Leaderboard',
-  basketball: '⏱️ 60 seconds  🏀 Physics  🪙 +10~50/game  🏆 Leaderboard',
+  'daily-luck': '30 fortunes · Daily draw · Streak bonus',
+  'slot-machine': '3×3 reels · 3 spins/day · Leaderboard',
+  basketball: '60 seconds · Physics · Leaderboard',
 };
 
 const HOME_DEVELOPER_SLUGS = [
@@ -143,10 +140,12 @@ function HomeGameCard({ game, locale }: { game: CatalogGame; locale: Locale }) {
 
   return (
     <Link
-      className='relative block cursor-pointer rounded-[16px] border border-border bg-surface px-7 py-7 text-center text-inherit no-underline transition-all duration-200 hover:border-[#1a1a19]'
+      className='relative block cursor-pointer rounded-[16px] border border-border bg-surface px-7 py-7 text-center text-inherit no-underline transition-all duration-200 hover:border-border-strong'
       href={gameDetailHref(game.slug)}
     >
-      <span className='mb-3 block text-[48px] leading-none'>{game.icon}</span>
+      <span className='mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-xl bg-accent-bg text-[18px] font-bold text-accent'>
+        {game.icon}
+      </span>
       <h3 className='mb-1.5 text-[18px] font-bold text-foreground'>
         {game.name}
       </h3>
@@ -158,7 +157,7 @@ function HomeGameCard({ game, locale }: { game: CatalogGame; locale: Locale }) {
         <p className='mb-4 text-[12px] leading-relaxed text-muted'>{meta}</p>
       )}
 
-      <span className='inline-block rounded-[12px] bg-[#1a1a19] px-7 py-[11px] text-[14px] font-medium text-white transition-all hover:bg-[#2a2a28]'>
+      <span className='inline-block rounded-[12px] bg-accent px-7 py-[11px] text-[14px] font-medium text-white transition-all hover:bg-accent-light'>
         {t(locale, playLabelKey)}
       </span>
     </Link>
@@ -166,9 +165,7 @@ function HomeGameCard({ game, locale }: { game: CatalogGame; locale: Locale }) {
 }
 
 export default async function HomePage() {
-  const cookieStore = await cookies();
-  const locale: Locale =
-    (cookieStore.get('aihues-locale')?.value as Locale | undefined) || 'en';
+  const locale = 'en' as Locale;
 
   const [
     {
@@ -196,14 +193,6 @@ export default async function HomePage() {
       label: t(locale, 'stats.devTools'),
     },
     { num: String(games.length || 0), label: t(locale, 'stats.games') },
-    {
-      num: <ClientFreeCredits />,
-      label: t(locale, 'stats.freeCredits'),
-    },
-    {
-      num: <ClientDayStreak />,
-      label: t(locale, 'stats.dayStreak'),
-    },
   ];
 
   const homeDevTools = HOME_DEVELOPER_SLUGS.map((slug) =>
@@ -225,51 +214,49 @@ export default async function HomePage() {
             ══════════════════════════════════════════════ */}
         <section className='relative overflow-hidden px-8 pb-12 pt-[72px] text-center'>
           <div className='relative mx-auto max-w-[720px]'>
-            {/* Claude-style spark icon + greeting */}
-            <div className='mb-4 flex items-center justify-center gap-3'>
-              <span className='text-[28px]' style={{ color: '#d97757' }}>
-                ✦
-              </span>
-              <span className='text-[14px] font-medium text-muted'>
-                {locale === 'zh' ? '下午好，创作者' : 'Afternoon, creator'}
+            {/* Mars-style minimal greeting */}
+            <div className='mb-4 flex items-center justify-center gap-2'>
+              <span className='inline-block h-1.5 w-1.5 rounded-full bg-accent' />
+              <span className='text-[13px] font-medium uppercase tracking-wider text-muted'>
+                {locale === 'zh' ? '为创造者精选' : 'Curated for makers'}
               </span>
             </div>
 
             {/* Main headline — serif, large, warm */}
             <h1
-              className='mb-4 text-[clamp(2rem,5vw,3.5rem)] font-normal leading-[1.15] tracking-[-0.02em] text-foreground'
-              style={{ fontFamily: "'Lora', Georgia, serif" }}
+              className='mb-4 text-[clamp(2rem,5vw,3.5rem)] font-semibold leading-[1.15] tracking-[-0.02em] text-foreground'
+              style={{ fontFamily: 'var(--font-sans)' }}
             >
               {locale === 'zh'
-                ? 'AI 工具太多，时间太少'
-                : 'Too many AI tools, too little time'}
+                ? '你的全能 AI 工具箱'
+                : 'Your all-in-one AI toolkit.'}
             </h1>
 
             <p
               className='mx-auto mb-8 max-w-[560px] text-[17px] leading-relaxed text-secondary'
-              style={{ fontFamily: "'Lora', Georgia, serif" }}
+              style={{ fontFamily: 'var(--font-sans)' }}
             >
               {locale === 'zh'
-                ? '我们测试了 57 个 AI 工具，留下真正好用的。每个都附带实测评分、使用教程和诚实评价。'
-                : 'We tested 57 AI tools and kept the ones that actually work. Each comes with real scores, guides, and honest reviews.'}
+                ? '57 款精选工具 + 3 个轻量小游戏，无需注册，打开即用。'
+                : '57 curated tools + 3 mini games. No signup, no paywall — just open and use.'}
             </p>
 
-            {/* Search box — white card, soft shadow, rounded */}
+            {/* Search box — Mars style: no shadow, clean border */}
             <form
               action='/tools'
               className='mx-auto w-full max-w-[580px]'
               method='get'
             >
-              <div className='flex items-center rounded-[16px] border border-border bg-surface px-2 py-2 shadow-[0_1px_3px_rgba(26,26,25,0.04)]'>
+              <div className='flex items-center rounded-[16px] border border-border bg-surface px-2 py-2 transition-colors hover:border-border-strong'>
                 <input
                   className='min-w-0 flex-1 border-0 bg-transparent px-4 text-[15px] text-foreground outline-none placeholder:text-muted'
-                  style={{ fontFamily: "'Lora', Georgia, serif" }}
+                  style={{ fontFamily: 'var(--font-sans)' }}
                   name='q'
                   placeholder={t(locale, 'hero.searchPlaceholder')}
                   type='text'
                 />
                 <button
-                  className='rounded-[12px] bg-[#1a1a19] px-6 py-2.5 text-[14px] font-medium text-white transition-all hover:bg-[#2a2a28]'
+                  className='rounded-[12px] bg-accent px-6 py-2.5 text-[14px] font-medium text-white transition-all hover:bg-accent-light'
                   type='submit'
                 >
                   {t(locale, 'hero.askAI')}
@@ -282,7 +269,7 @@ export default async function HomePage() {
               {QUICK_TAG_LINKS.map((tag) => (
                 <Link
                   key={tag.label}
-                  className='rounded-full border border-border bg-surface px-3.5 py-1.5 text-[13px] text-secondary transition-all hover:border-[#1a1a19] hover:text-foreground'
+                  className='rounded-full border border-border bg-surface px-3.5 py-1.5 text-[13px] text-secondary transition-all hover:border-border-strong hover:text-foreground'
                   href={tag.href}
                 >
                   {tag.label}
@@ -296,7 +283,7 @@ export default async function HomePage() {
             PARTNER SLOT (placeholder for Phase 2)
             ══════════════════════════════════════════════ */}
         <section className='mx-auto max-w-[1300px] px-8 pb-10'>
-          <div className='group relative block overflow-hidden rounded-[16px] border border-border bg-surface px-6 py-5 text-foreground no-underline transition-all hover:border-[#1a1a19]'>
+          <div className='group relative block overflow-hidden rounded-[16px] border border-border bg-surface px-6 py-5 text-foreground no-underline transition-all hover:border-border-strong'>
             <div className='relative z-[1] flex items-center justify-between'>
               <div>
                 <span className='mb-2 inline-block rounded-md border border-border bg-[#f5f3ee] px-2.5 py-1 text-[11px] font-semibold text-muted'>
@@ -340,16 +327,18 @@ export default async function HomePage() {
             {categories.map((cat) => (
               <Link
                 key={cat.key}
-                className='block cursor-pointer rounded-[16px] border border-border bg-surface p-[18px] text-inherit no-underline transition-all duration-200 hover:border-[#1a1a19]'
+                className='block cursor-pointer rounded-[16px] border border-border bg-surface p-[18px] text-inherit no-underline transition-all duration-200 hover:border-border-strong'
                 href={cat.href}
               >
                 {/* Header row */}
                 <div className='mb-2 flex items-center gap-2'>
-                  <span className='text-[20px] leading-none'>{cat.icon}</span>
+                  <span className='flex h-7 w-7 items-center justify-center rounded-md bg-accent-bg text-[11px] font-bold text-accent'>
+                    {cat.letter}
+                  </span>
                   <span className='flex-1 text-[14px] font-bold text-foreground'>
                     {cat.label}
                   </span>
-                  <span className='rounded-md bg-surface px-2 py-0.5 text-[11px] font-semibold text-muted'>
+                  <span className='rounded-md bg-surface-soft px-2 py-0.5 text-[11px] font-semibold text-muted'>
                     {categoryCounts[cat.key as keyof typeof categoryCounts] ||
                       cat.count}
                   </span>
@@ -402,7 +391,7 @@ export default async function HomePage() {
             <div className='mb-6 flex items-end justify-between'>
               <div>
                 <h2 className='text-[24px] font-bold tracking-[-0.5px]'>
-                  🛠️ {t(locale, 'section.devTools')}{' '}
+                  {t(locale, 'section.devTools')}{' '}
                   <span className='text-[16px] font-normal text-muted'>
                     ({t(locale, 'section.newThisWeek')})
                   </span>
@@ -437,7 +426,7 @@ export default async function HomePage() {
             <div className='mb-6 flex items-end justify-between'>
               <div>
                 <h2 className='text-[24px] font-bold tracking-[-0.5px]'>
-                  ✍️ {t(locale, 'section.writingTools')}{' '}
+                  {t(locale, 'section.writingTools')}{' '}
                   <span className='text-[16px] font-normal text-muted'>
                     ({t(locale, 'section.newThisWeek')})
                   </span>
@@ -473,20 +462,16 @@ export default async function HomePage() {
           style={{ background: 'var(--color-surface)' }}
         >
           <div className='mx-auto max-w-[1300px]'>
-            {/* Section header with credit balance */}
             <div className='mb-6 flex items-center justify-between'>
               <h2 className='text-[24px] font-bold tracking-[-0.5px]'>
-                🎮 {t(locale, 'section.gameCenter')}
+                {t(locale, 'section.gameCenter')}
               </h2>
-              <div className='flex items-center gap-4'>
-                <GameCreditBadge locale={locale} />
-                <Link
-                  className='text-[14px] font-semibold text-accent hover:text-accent-light'
-                  href={gamesHref}
-                >
-                  {t(locale, 'section.viewAll')}
-                </Link>
-              </div>
+              <Link
+                className='text-[14px] font-semibold text-accent hover:text-accent-light'
+                href={gamesHref}
+              >
+                {t(locale, 'section.viewAll')}
+              </Link>
             </div>
 
             <div className='grid grid-cols-3 gap-4 max-[760px]:grid-cols-1'>
@@ -503,7 +488,7 @@ export default async function HomePage() {
         <section className='mx-auto max-w-[1300px] px-8 py-12'>
           <div className='mb-6 flex items-end justify-between'>
             <h2 className='text-[24px] font-bold tracking-[-0.5px]'>
-              🔥 {t(locale, 'section.popularTools')}
+              {t(locale, 'section.popularTools')}
             </h2>
             <Link
               className='text-[14px] font-semibold text-accent hover:text-accent-light'
@@ -517,7 +502,7 @@ export default async function HomePage() {
             {popularHighlights.map((item) => (
               <Link
                 key={item.href}
-                className='flex cursor-pointer flex-col gap-2 rounded-[16px] border border-border bg-surface p-5 text-inherit no-underline transition-all hover:border-[#1a1a19]'
+                className='flex cursor-pointer flex-col gap-2 rounded-[16px] border border-border bg-surface p-5 text-inherit no-underline transition-all hover:border-border-strong'
                 href={item.href}
               >
                 <div className='text-[11px] font-extrabold uppercase tracking-wider text-blue-600'>
@@ -559,7 +544,7 @@ export default async function HomePage() {
               </p>
             </div>
             <Link
-              className='flex items-center gap-2 rounded-[12px] bg-[#1a1a19] px-6 py-3 text-[14px] font-medium text-white transition-all hover:bg-[#2a2a28]'
+              className='flex items-center gap-2 rounded-[12px] bg-accent px-6 py-3 text-[14px] font-medium text-white transition-all hover:bg-accent-light'
               href={toolsHref}
             >
               {t(locale, 'section.browseAll')}
@@ -574,7 +559,7 @@ export default async function HomePage() {
           <div className='mx-auto max-w-[560px]'>
             <h2
               className='mb-3 text-[28px] font-normal text-foreground'
-              style={{ fontFamily: "'Lora', Georgia, serif" }}
+              style={{ fontFamily: 'var(--font-sans)' }}
             >
               {t(locale, 'section.wishlistTitle')}
             </h2>
@@ -582,7 +567,7 @@ export default async function HomePage() {
               {t(locale, 'section.wishlistDesc')}
             </p>
             <Link
-              className='inline-flex items-center gap-2 rounded-[12px] bg-[#1a1a19] px-7 py-3.5 text-[15px] font-medium text-white transition-all hover:bg-[#2a2a28]'
+              className='inline-flex items-center gap-2 rounded-[12px] bg-accent px-7 py-3.5 text-[15px] font-medium text-white transition-all hover:bg-accent-light'
               href={wishlistHref}
             >
               {t(locale, 'section.submitIdea')}

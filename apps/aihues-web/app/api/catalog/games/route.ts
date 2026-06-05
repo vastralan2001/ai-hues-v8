@@ -6,7 +6,7 @@ const LOCAL_GAMES: CatalogGame[] = [
   {
     id: 'daily-luck',
     slug: 'daily-luck',
-    icon: '🧧',
+    icon: 'DF',
     name: 'Daily Fortune',
     description: 'Daily draw for wisdom & Credit rewards',
     status: 'ITEM_STATUS_PUBLISHED',
@@ -19,7 +19,7 @@ const LOCAL_GAMES: CatalogGame[] = [
   {
     id: 'slot-machine',
     slug: 'slot-machine',
-    icon: '🎰',
+    icon: 'LS',
     name: 'Lucky Slots',
     description: '3 free spins daily, win big prizes',
     status: 'ITEM_STATUS_PUBLISHED',
@@ -32,7 +32,7 @@ const LOCAL_GAMES: CatalogGame[] = [
   {
     id: 'basketball',
     slug: 'basketball',
-    icon: '🏀',
+    icon: 'BS',
     name: 'Basketball Shootout',
     description: '60 seconds to score maximum points',
     status: 'ITEM_STATUS_PUBLISHED',

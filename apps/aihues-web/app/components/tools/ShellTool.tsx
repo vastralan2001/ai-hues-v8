@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 
-import { PageShell } from '@/components/SiteChrome';
 import { t, type Locale } from '@/lib/dict';
 
 interface ShellToolProps {
@@ -185,50 +184,48 @@ export default function ShellTool({ locale }: ShellToolProps) {
   }
 
   return (
-    <PageShell variant='default' locale={locale}>
-      <div className='mx-auto max-w-[800px] px-6 py-12'>
-        <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
-          {t(locale, 'tool.shell.title')}
-        </h1>
-        <p className='mb-6 text-[15px] text-secondary'>
-          {t(locale, 'tool.shell.desc')}
-        </p>
+    <div className='mx-auto max-w-[800px] px-6 py-12'>
+      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
+        {t(locale, 'tool.shell.title')}
+      </h1>
+      <p className='mb-6 text-[15px] text-secondary'>
+        {t(locale, 'tool.shell.desc')}
+      </p>
 
-        <div className='space-y-4'>
-          <div>
-            <label className='mb-1.5 block text-sm font-semibold text-foreground'>
-              {t(locale, 'tool.shell.input')}
-            </label>
-            <input
-              className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 font-mono text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleExplain()}
-              placeholder='ls -la'
-              type='text'
-              value={input}
-            />
-          </div>
-
-          <button
-            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
-            onClick={handleExplain}
-            type='button'
-          >
-            {t(locale, 'tool.shell.explain')}
-          </button>
-
-          {result && (
-            <div className='rounded-[14px] border border-border bg-surface p-5'>
-              <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
-                {t(locale, 'tool.shell.result')}
-              </p>
-              <p className='mt-2 text-[15px] leading-relaxed text-foreground'>
-                {result}
-              </p>
-            </div>
-          )}
+      <div className='space-y-4'>
+        <div>
+          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+            {t(locale, 'tool.shell.input')}
+          </label>
+          <input
+            className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 font-mono text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleExplain()}
+            placeholder='ls -la'
+            type='text'
+            value={input}
+          />
         </div>
+
+        <button
+          className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+          onClick={handleExplain}
+          type='button'
+        >
+          {t(locale, 'tool.shell.explain')}
+        </button>
+
+        {result && (
+          <div className='rounded-[14px] border border-border bg-surface p-5'>
+            <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
+              {t(locale, 'tool.shell.result')}
+            </p>
+            <p className='mt-2 text-[15px] leading-relaxed text-foreground'>
+              {result}
+            </p>
+          </div>
+        )}
       </div>
-    </PageShell>
+    </div>
   );
 }

@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 
-import { PageShell } from '@/components/SiteChrome';
 import { aiGenerate } from '@/lib/ai-generate-client';
 import { t, type Locale } from '@/lib/dict';
 
@@ -43,78 +42,76 @@ export default function YtScriptTool({ locale }: YtScriptToolProps) {
   }
 
   return (
-    <PageShell variant='default' locale={locale}>
-      <div className='mx-auto max-w-[800px] px-6 py-12'>
-        <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
-          {t(locale, 'tool.ytScript.title')}
-        </h1>
-        <p className='mb-6 text-[15px] text-secondary'>
-          {t(locale, 'tool.ytScript.desc')}
-        </p>
+    <div className='mx-auto max-w-[800px] px-6 py-12'>
+      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
+        {t(locale, 'tool.ytScript.title')}
+      </h1>
+      <p className='mb-6 text-[15px] text-secondary'>
+        {t(locale, 'tool.ytScript.desc')}
+      </p>
 
-        <div className='space-y-4'>
-          <div className='grid gap-4 sm:grid-cols-2'>
-            <div>
-              <label className='mb-1.5 block text-sm font-semibold text-foreground'>
-                {t(locale, 'tool.ytScript.topic')}
-              </label>
-              <input
-                className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
-                onChange={(e) => setTopic(e.target.value)}
-                type='text'
-                value={topic}
-              />
+      <div className='space-y-4'>
+        <div className='grid gap-4 sm:grid-cols-2'>
+          <div>
+            <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+              {t(locale, 'tool.ytScript.topic')}
+            </label>
+            <input
+              className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+              onChange={(e) => setTopic(e.target.value)}
+              type='text'
+              value={topic}
+            />
+          </div>
+          <div>
+            <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+              {t(locale, 'tool.ytScript.duration')}
+            </label>
+            <input
+              className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+              min='1'
+              onChange={(e) => setDuration(e.target.value)}
+              type='number'
+              value={duration}
+            />
+          </div>
+        </div>
+
+        <button
+          className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light disabled:opacity-50'
+          disabled={loading}
+          onClick={handleGenerate}
+          type='button'
+        >
+          {loading ? '...' : t(locale, 'tool.ytScript.generate')}
+        </button>
+
+        {error && <p className='text-sm text-red-500'>{error}</p>}
+
+        {result && (
+          <div className='mt-2'>
+            <div className='mb-2 flex items-center justify-between'>
+              <span className='text-sm font-semibold text-foreground'>
+                {t(locale, 'tool.ytScript.result')}
+              </span>
+              <button
+                className='rounded-[8px] border border-border bg-surface px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
+                onClick={copy}
+                type='button'
+              >
+                {copied
+                  ? t(locale, 'tool.copy.copied')
+                  : t(locale, 'tool.wordCount.copy')}
+              </button>
             </div>
-            <div>
-              <label className='mb-1.5 block text-sm font-semibold text-foreground'>
-                {t(locale, 'tool.ytScript.duration')}
-              </label>
-              <input
-                className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
-                min='1'
-                onChange={(e) => setDuration(e.target.value)}
-                type='number'
-                value={duration}
-              />
+            <div className='min-h-[200px] w-full rounded-[14px] border border-border bg-surface p-5'>
+              <pre className='whitespace-pre-wrap font-mono text-sm text-foreground'>
+                {result}
+              </pre>
             </div>
           </div>
-
-          <button
-            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light disabled:opacity-50'
-            disabled={loading}
-            onClick={handleGenerate}
-            type='button'
-          >
-            {loading ? '...' : t(locale, 'tool.ytScript.generate')}
-          </button>
-
-          {error && <p className='text-sm text-red-500'>{error}</p>}
-
-          {result && (
-            <div className='mt-2'>
-              <div className='mb-2 flex items-center justify-between'>
-                <span className='text-sm font-semibold text-foreground'>
-                  {t(locale, 'tool.ytScript.result')}
-                </span>
-                <button
-                  className='rounded-[8px] border border-border bg-surface px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
-                  onClick={copy}
-                  type='button'
-                >
-                  {copied
-                    ? t(locale, 'tool.copy.copied')
-                    : t(locale, 'tool.wordCount.copy')}
-                </button>
-              </div>
-              <div className='min-h-[200px] w-full rounded-[14px] border border-border bg-surface p-5'>
-                <pre className='whitespace-pre-wrap font-mono text-sm text-foreground'>
-                  {result}
-                </pre>
-              </div>
-            </div>
-          )}
-        </div>
+        )}
       </div>
-    </PageShell>
+    </div>
   );
 }

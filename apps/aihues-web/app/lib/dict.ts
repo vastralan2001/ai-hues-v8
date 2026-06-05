@@ -36,7 +36,7 @@ export const dict: Record<Locale, Record<string, string>> = {
     'cat.utilityDesc': 'Word Count, Diff, Fullwidth, Readability, Humanize',
     'cat.developerDesc': 'JWT, JSON, Regex, Base64, UUID, QR Code, SHA256',
     'cat.aiWritingDesc': 'X Post, Blog Outline, SEO Title, Newsletter, PR Desc',
-    'cat.gamesDesc': 'Daily Fortune, Slots, Hoops — earn Credits',
+    'cat.gamesDesc': 'Daily Fortune, Slots, Hoops — free to play',
 
     // stats
     'stats.aiTools': 'AI Tools',
@@ -779,7 +779,7 @@ export const dict: Record<Locale, Record<string, string>> = {
     'cat.utilityDesc': '字数统计、文本对比、全角转换、可读性、人性化',
     'cat.developerDesc': 'JWT、JSON、正则、Base64、UUID、二维码、SHA256',
     'cat.aiWritingDesc': 'X 推文、博客大纲、SEO 标题、新闻稿、PR 描述',
-    'cat.gamesDesc': '每日幸运签、老虎机、投篮挑战 — 赚取积分',
+    'cat.gamesDesc': '每日幸运签、老虎机、投篮挑战 — 免费畅玩',
 
     // stats
     'stats.aiTools': 'AI 工具',

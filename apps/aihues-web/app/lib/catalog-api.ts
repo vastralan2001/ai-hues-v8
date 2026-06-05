@@ -240,7 +240,7 @@ function normalizeTool(item: RawCatalogItem): CatalogTool {
   return {
     id: item.id ?? item.slug ?? '',
     slug: item.slug ?? '',
-    icon: item.icon ?? '◇',
+    icon: item.name?.slice(0, 2).toUpperCase() ?? '◇',
     name: item.name ?? 'Untitled tool',
     description: item.description ?? '',
     category: protoToCategory(item.category),
@@ -257,7 +257,7 @@ function normalizeGame(item: RawCatalogItem): CatalogGame {
   return {
     id: item.id ?? item.slug ?? '',
     slug: item.slug ?? '',
-    icon: item.icon ?? '◇',
+    icon: item.name?.slice(0, 2).toUpperCase() ?? '◇',
     name: item.name ?? 'Untitled game',
     description: item.description ?? '',
     status: item.status ?? 'ITEM_STATUS_UNSPECIFIED',
@@ -310,7 +310,7 @@ export async function listGames(
 const LOCAL_FALLBACK_TOOLS: CatalogTool[] = LOCAL_TOOLS.map((t, idx) => ({
   id: t.slug,
   slug: t.slug,
-  icon: t.icon,
+  icon: t.name.slice(0, 2).toUpperCase(),
   name: t.name,
   description: t.description,
   category: t.category as CatalogTool['category'],
@@ -326,7 +326,7 @@ const LOCAL_FALLBACK_GAMES: CatalogGame[] = [
   {
     id: 'daily-luck',
     slug: 'daily-luck',
-    icon: '🧧',
+    icon: 'D',
     name: 'Daily Fortune',
     description: 'Daily draw for wisdom & Credit rewards',
     status: 'ITEM_STATUS_PUBLISHED',
@@ -339,7 +339,7 @@ const LOCAL_FALLBACK_GAMES: CatalogGame[] = [
   {
     id: 'slot-machine',
     slug: 'slot-machine',
-    icon: '🎰',
+    icon: 'S',
     name: 'Lucky Slots',
     description: '3 free spins daily, win big prizes',
     status: 'ITEM_STATUS_PUBLISHED',
@@ -352,7 +352,7 @@ const LOCAL_FALLBACK_GAMES: CatalogGame[] = [
   {
     id: 'basketball',
     slug: 'basketball',
-    icon: '🏀',
+    icon: 'B',
     name: 'Basketball Shootout',
     description: '60 seconds to score maximum points',
     status: 'ITEM_STATUS_PUBLISHED',

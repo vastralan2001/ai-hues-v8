@@ -18,49 +18,49 @@ function useGroups(): SidebarGroup[] {
   const { t } = useI18n();
   return [
     {
-      icon: '📁',
+      icon: 'A',
       labelKey: t('sidebar.allTools'),
       href: toolsHref,
       count: 57,
     },
     {
-      icon: '🚀',
+      icon: 'G',
       labelKey: t('sidebar.growth'),
       href: toolsHref,
       count: 70,
     },
     {
-      icon: '💻',
+      icon: 'D',
       labelKey: t('sidebar.devTools'),
       href: toolsCategoryHref('developer'),
       count: 30,
     },
     {
-      icon: '🛠️',
+      icon: 'U',
       labelKey: t('sidebar.utilities'),
       href: toolsCategoryHref('utility'),
       count: 8,
     },
     {
-      icon: '🤖',
+      icon: 'A',
       labelKey: t('sidebar.aiProducts'),
       href: toolsCategoryHref('ai-writing'),
       count: 19,
     },
     {
-      icon: '⭐',
+      icon: 'O',
       labelKey: t('sidebar.openSource'),
       href: toolsHref,
       count: 30,
     },
     {
-      icon: '🎨',
+      icon: 'D',
       labelKey: t('sidebar.design'),
       href: toolsHref,
       count: 12,
     },
     {
-      icon: '🎮',
+      icon: 'G',
       labelKey: t('sidebar.miniGames'),
       href: gamesHref,
       count: 3,

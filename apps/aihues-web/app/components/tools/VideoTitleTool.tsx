@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 
-import { PageShell } from '@/components/SiteChrome';
 import { aiGenerate } from '@/lib/ai-generate-client';
 import { t, type Locale } from '@/lib/dict';
 
@@ -51,87 +50,85 @@ export default function VideoTitleTool({ locale }: VideoTitleToolProps) {
   ];
 
   return (
-    <PageShell variant='default' locale={locale}>
-      <div className='mx-auto max-w-[800px] px-6 py-12'>
-        <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
-          {t(locale, 'tool.videoTitle.title')}
-        </h1>
-        <p className='mb-6 text-[15px] text-secondary'>
-          {t(locale, 'tool.videoTitle.desc')}
-        </p>
+    <div className='mx-auto max-w-[800px] px-6 py-12'>
+      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
+        {t(locale, 'tool.videoTitle.title')}
+      </h1>
+      <p className='mb-6 text-[15px] text-secondary'>
+        {t(locale, 'tool.videoTitle.desc')}
+      </p>
 
-        <div className='space-y-4'>
-          <div>
-            <label className='mb-1.5 block text-sm font-semibold text-foreground'>
-              {t(locale, 'tool.videoTitle.topic')}
-            </label>
-            <input
-              className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
-              onChange={(e) => setTopic(e.target.value)}
-              type='text'
-              value={topic}
-            />
+      <div className='space-y-4'>
+        <div>
+          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+            {t(locale, 'tool.videoTitle.topic')}
+          </label>
+          <input
+            className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+            onChange={(e) => setTopic(e.target.value)}
+            type='text'
+            value={topic}
+          />
+        </div>
+
+        <div>
+          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+            {t(locale, 'tool.videoTitle.style')}
+          </label>
+          <div className='flex flex-wrap gap-2'>
+            {styles.map((s) => (
+              <button
+                key={s.key}
+                className={`rounded-[10px] border px-4 py-2 text-sm font-medium transition-all ${
+                  style === s.key
+                    ? 'border-accent bg-accent text-white'
+                    : 'border-border bg-surface text-foreground hover:border-accent'
+                }`}
+                onClick={() => setStyle(s.key)}
+                type='button'
+              >
+                {s.label}
+              </button>
+            ))}
           </div>
+        </div>
 
-          <div>
-            <label className='mb-1.5 block text-sm font-semibold text-foreground'>
-              {t(locale, 'tool.videoTitle.style')}
-            </label>
-            <div className='flex flex-wrap gap-2'>
-              {styles.map((s) => (
+        <button
+          className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light disabled:opacity-50'
+          disabled={loading}
+          onClick={generate}
+          type='button'
+        >
+          {loading ? '...' : t(locale, 'tool.videoTitle.generate')}
+        </button>
+
+        {error && <p className='text-sm text-red-500'>{error}</p>}
+
+        {results.length > 0 && (
+          <div className='space-y-3'>
+            <p className='text-sm font-semibold text-foreground'>
+              {t(locale, 'tool.videoTitle.result')}
+            </p>
+            {results.map((r, i) => (
+              <div
+                key={i}
+                className='flex items-center justify-between rounded-[14px] border border-border bg-surface p-4'
+              >
+                <p className='text-sm text-foreground'>{r}</p>
                 <button
-                  key={s.key}
-                  className={`rounded-[10px] border px-4 py-2 text-sm font-medium transition-all ${
-                    style === s.key
-                      ? 'border-accent bg-accent text-white'
-                      : 'border-border bg-surface text-foreground hover:border-accent'
-                  }`}
-                  onClick={() => setStyle(s.key)}
+                  className='ml-4 shrink-0 rounded-[8px] border border-border bg-white px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent dark:bg-gray-900'
+                  onClick={() => copy(r)}
                   type='button'
                 >
-                  {s.label}
+                  {copied
+                    ? t(locale, 'tool.copy.copied')
+                    : t(locale, 'tool.wordCount.copy')}
                 </button>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
-
-          <button
-            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light disabled:opacity-50'
-            disabled={loading}
-            onClick={generate}
-            type='button'
-          >
-            {loading ? '...' : t(locale, 'tool.videoTitle.generate')}
-          </button>
-
-          {error && <p className='text-sm text-red-500'>{error}</p>}
-
-          {results.length > 0 && (
-            <div className='space-y-3'>
-              <p className='text-sm font-semibold text-foreground'>
-                {t(locale, 'tool.videoTitle.result')}
-              </p>
-              {results.map((r, i) => (
-                <div
-                  key={i}
-                  className='flex items-center justify-between rounded-[14px] border border-border bg-surface p-4'
-                >
-                  <p className='text-sm text-foreground'>{r}</p>
-                  <button
-                    className='ml-4 shrink-0 rounded-[8px] border border-border bg-white px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent dark:bg-gray-900'
-                    onClick={() => copy(r)}
-                    type='button'
-                  >
-                    {copied
-                      ? t(locale, 'tool.copy.copied')
-                      : t(locale, 'tool.wordCount.copy')}
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        )}
       </div>
-    </PageShell>
+    </div>
   );
 }

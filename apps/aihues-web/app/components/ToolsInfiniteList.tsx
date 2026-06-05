@@ -20,9 +20,9 @@ import { event, GA_EVENTS } from '@/lib/gtag';
 const PAGE_SIZE = 20;
 
 const CATEGORY_META: Record<string, { icon: string; label: string }> = {
-  developer: { icon: '🔧', label: 'Developer Tools' },
-  utility: { icon: '✏️', label: 'Writing Tools' },
-  'ai-writing': { icon: '🤖', label: 'AI Text Tools' },
+  developer: { icon: '', label: 'Developer Tools' },
+  utility: { icon: '', label: 'Writing Tools' },
+  'ai-writing': { icon: '', label: 'AI Text Tools' },
 };
 
 const NEW_TOOL_SLUGS = new Set([

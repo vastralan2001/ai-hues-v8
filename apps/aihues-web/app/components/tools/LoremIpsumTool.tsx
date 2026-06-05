@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 
-import { PageShell } from '@/components/SiteChrome';
 import { t, type Locale } from '@/lib/dict';
 
 interface LoremIpsumToolProps {
@@ -124,68 +123,66 @@ export default function LoremIpsumTool({ locale }: LoremIpsumToolProps) {
   };
 
   return (
-    <PageShell variant='default' locale={locale}>
-      <div className='mx-auto max-w-[900px] px-6 py-12'>
-        <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
-          {t(locale, 'tool.lorem.title')}
-        </h1>
-        <p className='mb-6 text-[15px] text-secondary'>
-          {t(locale, 'tool.lorem.desc')}
-        </p>
+    <div className='mx-auto max-w-[900px] px-6 py-12'>
+      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
+        {t(locale, 'tool.lorem.title')}
+      </h1>
+      <p className='mb-6 text-[15px] text-secondary'>
+        {t(locale, 'tool.lorem.desc')}
+      </p>
 
-        <div className='mb-4 flex flex-wrap items-center gap-6'>
-          <label className='flex items-center gap-3 text-sm text-foreground'>
-            <span>{t(locale, 'tool.lorem.paragraphs')}</span>
-            <input
-              className='h-10 w-20 rounded-[10px] border border-border bg-surface px-3 text-center text-sm focus:border-accent focus:outline-none'
-              max={20}
-              min={1}
-              onChange={(e) => setParagraphs(Number(e.target.value))}
-              type='number'
-              value={paragraphs}
-            />
-          </label>
-          <label className='flex items-center gap-3 text-sm text-foreground'>
-            <span>{t(locale, 'tool.lorem.sentences')}</span>
-            <input
-              className='h-10 w-20 rounded-[10px] border border-border bg-surface px-3 text-center text-sm focus:border-accent focus:outline-none'
-              max={20}
-              min={1}
-              onChange={(e) => setSentences(Number(e.target.value))}
-              type='number'
-              value={sentences}
-            />
-          </label>
-          <button
-            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
-            onClick={handleGenerate}
-            type='button'
-          >
-            {t(locale, 'tool.lorem.generate')}
-          </button>
-        </div>
-
-        {output && (
-          <div className='mt-2'>
-            <div className='mb-2 flex items-center justify-end'>
-              <button
-                className='rounded-[8px] border border-border bg-surface px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
-                onClick={handleCopy}
-                type='button'
-              >
-                {t(locale, 'tool.wordCount.copy')}
-              </button>
-            </div>
-            <div className='min-h-[200px] w-full rounded-[14px] border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground'>
-              {output.split('\n\n').map((p, i) => (
-                <p className='mb-4 last:mb-0' key={i}>
-                  {p}
-                </p>
-              ))}
-            </div>
-          </div>
-        )}
+      <div className='mb-4 flex flex-wrap items-center gap-6'>
+        <label className='flex items-center gap-3 text-sm text-foreground'>
+          <span>{t(locale, 'tool.lorem.paragraphs')}</span>
+          <input
+            className='h-10 w-20 rounded-[10px] border border-border bg-surface px-3 text-center text-sm focus:border-accent focus:outline-none'
+            max={20}
+            min={1}
+            onChange={(e) => setParagraphs(Number(e.target.value))}
+            type='number'
+            value={paragraphs}
+          />
+        </label>
+        <label className='flex items-center gap-3 text-sm text-foreground'>
+          <span>{t(locale, 'tool.lorem.sentences')}</span>
+          <input
+            className='h-10 w-20 rounded-[10px] border border-border bg-surface px-3 text-center text-sm focus:border-accent focus:outline-none'
+            max={20}
+            min={1}
+            onChange={(e) => setSentences(Number(e.target.value))}
+            type='number'
+            value={sentences}
+          />
+        </label>
+        <button
+          className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+          onClick={handleGenerate}
+          type='button'
+        >
+          {t(locale, 'tool.lorem.generate')}
+        </button>
       </div>
-    </PageShell>
+
+      {output && (
+        <div className='mt-2'>
+          <div className='mb-2 flex items-center justify-end'>
+            <button
+              className='rounded-[8px] border border-border bg-surface px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
+              onClick={handleCopy}
+              type='button'
+            >
+              {t(locale, 'tool.wordCount.copy')}
+            </button>
+          </div>
+          <div className='min-h-[200px] w-full rounded-[14px] border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground'>
+            {output.split('\n\n').map((p, i) => (
+              <p className='mb-4 last:mb-0' key={i}>
+                {p}
+              </p>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

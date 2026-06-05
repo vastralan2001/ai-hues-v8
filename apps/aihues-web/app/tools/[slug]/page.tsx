@@ -1,9 +1,9 @@
-import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 
 import type { Locale } from '@/lib/dict';
 import { t } from '@/lib/dict';
+import { PageShell } from '@/components/SiteChrome';
 import RelatedTools from '@/components/RelatedTools';
 import ToolDetailTabs from '@/components/reviews/ToolDetailTabs';
 import { UsageTracker } from '@/components/UsageTracker';
@@ -81,8 +81,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const cookieStore = await cookies();
-  const locale = (cookieStore.get('aihues-locale')?.value as Locale) || 'en';
+  const locale = 'en' as Locale;
 
   const dictKey =
     SLUG_TO_DICT_KEY[slug] ??
@@ -165,14 +164,13 @@ export default async function ToolPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const cookieStore = await cookies();
-  const locale = (cookieStore.get('aihues-locale')?.value as Locale) || 'en';
+  const locale = 'en' as Locale;
 
   // Render React-native tool if available
   const ReactTool = REACT_TOOLS[slug];
   if (ReactTool) {
     return (
-      <>
+      <PageShell variant='tools' locale={locale}>
         <UsageTracker slug={slug} />
         <ToolDetailTabs
           locale={locale}
@@ -184,7 +182,7 @@ export default async function ToolPage({
             </>
           }
         />
-      </>
+      </PageShell>
     );
   }
 

@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 
-import { PageShell } from '@/components/SiteChrome';
 import { t, type Locale } from '@/lib/dict';
 
 interface ColorToolProps {
@@ -126,79 +125,77 @@ export default function ColorTool({ locale }: ColorToolProps) {
   };
 
   return (
-    <PageShell variant='default' locale={locale}>
-      <div className='mx-auto max-w-[800px] px-6 py-12'>
-        <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
-          {t(locale, 'tool.color.title')}
-        </h1>
-        <p className='mb-6 text-[15px] text-secondary'>
-          {t(locale, 'tool.color.desc')}
-        </p>
+    <div className='mx-auto max-w-[800px] px-6 py-12'>
+      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
+        {t(locale, 'tool.color.title')}
+      </h1>
+      <p className='mb-6 text-[15px] text-secondary'>
+        {t(locale, 'tool.color.desc')}
+      </p>
 
-        <input
-          className='h-12 w-full rounded-[14px] border border-border bg-surface px-5 font-mono text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
-          onChange={(e) => setInput(e.target.value)}
-          placeholder={t(locale, 'tool.color.placeholder')}
-          type='text'
-          value={input}
-        />
+      <input
+        className='h-12 w-full rounded-[14px] border border-border bg-surface px-5 font-mono text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+        onChange={(e) => setInput(e.target.value)}
+        placeholder={t(locale, 'tool.color.placeholder')}
+        type='text'
+        value={input}
+      />
 
-        <div className='mt-4 flex gap-3'>
-          <button
-            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
-            onClick={handleConvert}
-            type='button'
-          >
-            {t(locale, 'tool.color.convert')}
-          </button>
-        </div>
-
-        {error && (
-          <p className='mt-3 rounded-[10px] border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'>
-            {error}
-          </p>
-        )}
-
-        {result && (
-          <div className='mt-6 flex flex-col gap-3'>
-            {/* Preview */}
-            <div className='flex items-center gap-4 rounded-[14px] border border-border bg-surface p-4'>
-              <span className='text-sm font-semibold text-foreground'>
-                {t(locale, 'tool.color.preview')}
-              </span>
-              <div
-                className='h-12 w-12 rounded-[10px] border border-border'
-                style={{ backgroundColor: result.hex }}
-              />
-              <span className='font-mono text-sm text-foreground'>
-                {result.hex}
-              </span>
-            </div>
-
-            {/* HEX */}
-            <ResultRow
-              label={t(locale, 'tool.color.hex')}
-              onCopy={() => handleCopy(result.hex)}
-              value={result.hex}
-            />
-
-            {/* RGB */}
-            <ResultRow
-              label={t(locale, 'tool.color.rgb')}
-              onCopy={() => handleCopy(result.rgb)}
-              value={result.rgb}
-            />
-
-            {/* HSL */}
-            <ResultRow
-              label={t(locale, 'tool.color.hsl')}
-              onCopy={() => handleCopy(result.hsl)}
-              value={result.hsl}
-            />
-          </div>
-        )}
+      <div className='mt-4 flex gap-3'>
+        <button
+          className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+          onClick={handleConvert}
+          type='button'
+        >
+          {t(locale, 'tool.color.convert')}
+        </button>
       </div>
-    </PageShell>
+
+      {error && (
+        <p className='mt-3 rounded-[10px] border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'>
+          {error}
+        </p>
+      )}
+
+      {result && (
+        <div className='mt-6 flex flex-col gap-3'>
+          {/* Preview */}
+          <div className='flex items-center gap-4 rounded-[14px] border border-border bg-surface p-4'>
+            <span className='text-sm font-semibold text-foreground'>
+              {t(locale, 'tool.color.preview')}
+            </span>
+            <div
+              className='h-12 w-12 rounded-[10px] border border-border'
+              style={{ backgroundColor: result.hex }}
+            />
+            <span className='font-mono text-sm text-foreground'>
+              {result.hex}
+            </span>
+          </div>
+
+          {/* HEX */}
+          <ResultRow
+            label={t(locale, 'tool.color.hex')}
+            onCopy={() => handleCopy(result.hex)}
+            value={result.hex}
+          />
+
+          {/* RGB */}
+          <ResultRow
+            label={t(locale, 'tool.color.rgb')}
+            onCopy={() => handleCopy(result.rgb)}
+            value={result.rgb}
+          />
+
+          {/* HSL */}
+          <ResultRow
+            label={t(locale, 'tool.color.hsl')}
+            onCopy={() => handleCopy(result.hsl)}
+            value={result.hsl}
+          />
+        </div>
+      )}
+    </div>
   );
 }
 

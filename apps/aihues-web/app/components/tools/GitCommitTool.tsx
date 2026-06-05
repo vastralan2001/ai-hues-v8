@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 
-import { PageShell } from '@/components/SiteChrome';
 import { t, type Locale } from '@/lib/dict';
 
 interface GitCommitToolProps {
@@ -52,118 +51,116 @@ export default function GitCommitTool({ locale }: GitCommitToolProps) {
   };
 
   return (
-    <PageShell variant='default' locale={locale}>
-      <div className='mx-auto max-w-[800px] px-6 py-12'>
-        <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
-          {t(locale, 'tool.gitCommit.title')}
-        </h1>
-        <p className='mb-6 text-[15px] text-secondary'>
-          {t(locale, 'tool.gitCommit.desc')}
-        </p>
+    <div className='mx-auto max-w-[800px] px-6 py-12'>
+      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
+        {t(locale, 'tool.gitCommit.title')}
+      </h1>
+      <p className='mb-6 text-[15px] text-secondary'>
+        {t(locale, 'tool.gitCommit.desc')}
+      </p>
 
-        <div className='flex flex-col gap-4'>
-          {/* Type */}
-          <div>
-            <label className='mb-1.5 block text-sm font-semibold text-foreground'>
-              {t(locale, 'tool.gitCommit.type')}
-            </label>
-            <select
-              className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground focus:border-accent focus:outline-none'
-              onChange={(e) => setType(e.target.value)}
-              value={type}
-            >
-              {COMMIT_TYPES.map((ct) => (
-                <option key={ct.key} value={ct.key}>
-                  {t(locale, ct.labelKey)}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Scope */}
-          <div>
-            <label className='mb-1.5 block text-sm font-semibold text-foreground'>
-              {t(locale, 'tool.gitCommit.scope')}
-            </label>
-            <input
-              className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
-              onChange={(e) => setScope(e.target.value)}
-              placeholder='e.g. auth, api, ui'
-              type='text'
-              value={scope}
-            />
-          </div>
-
-          {/* Description */}
-          <div>
-            <label className='mb-1.5 block text-sm font-semibold text-foreground'>
-              {t(locale, 'tool.gitCommit.description')}
-            </label>
-            <input
-              className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder='Short description of the change'
-              type='text'
-              value={description}
-            />
-          </div>
-
-          {/* Body */}
-          <div>
-            <label className='mb-1.5 block text-sm font-semibold text-foreground'>
-              {t(locale, 'tool.gitCommit.body')}
-            </label>
-            <textarea
-              className='h-[100px] w-full resize-none rounded-[10px] border border-border bg-surface p-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
-              onChange={(e) => setBody(e.target.value)}
-              placeholder='Detailed explanation of the change'
-              value={body}
-            />
-          </div>
-
-          {/* Footer */}
-          <div>
-            <label className='mb-1.5 block text-sm font-semibold text-foreground'>
-              {t(locale, 'tool.gitCommit.footer')}
-            </label>
-            <input
-              className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
-              onChange={(e) => setFooter(e.target.value)}
-              placeholder='Closes #123, BREAKING CHANGE: ...'
-              type='text'
-              value={footer}
-            />
-          </div>
+      <div className='flex flex-col gap-4'>
+        {/* Type */}
+        <div>
+          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+            {t(locale, 'tool.gitCommit.type')}
+          </label>
+          <select
+            className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground focus:border-accent focus:outline-none'
+            onChange={(e) => setType(e.target.value)}
+            value={type}
+          >
+            {COMMIT_TYPES.map((ct) => (
+              <option key={ct.key} value={ct.key}>
+                {t(locale, ct.labelKey)}
+              </option>
+            ))}
+          </select>
         </div>
 
-        <button
-          className='mt-5 rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
-          onClick={handleGenerate}
-          type='button'
-        >
-          {t(locale, 'tool.gitCommit.generate')}
-        </button>
+        {/* Scope */}
+        <div>
+          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+            {t(locale, 'tool.gitCommit.scope')}
+          </label>
+          <input
+            className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+            onChange={(e) => setScope(e.target.value)}
+            placeholder='e.g. auth, api, ui'
+            type='text'
+            value={scope}
+          />
+        </div>
 
-        {output && (
-          <div className='mt-6'>
-            <div className='mb-2 flex items-center justify-between'>
-              <span className='text-sm font-semibold text-foreground'>
-                {t(locale, 'tool.gitCommit.result')}
-              </span>
-              <button
-                className='rounded-[8px] border border-border bg-surface px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
-                onClick={handleCopy}
-                type='button'
-              >
-                {t(locale, 'tool.gitCommit.copy')}
-              </button>
-            </div>
-            <pre className='min-h-[80px] w-full whitespace-pre-wrap rounded-[14px] border border-border bg-surface p-5 font-mono text-sm text-foreground'>
-              {output}
-            </pre>
-          </div>
-        )}
+        {/* Description */}
+        <div>
+          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+            {t(locale, 'tool.gitCommit.description')}
+          </label>
+          <input
+            className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder='Short description of the change'
+            type='text'
+            value={description}
+          />
+        </div>
+
+        {/* Body */}
+        <div>
+          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+            {t(locale, 'tool.gitCommit.body')}
+          </label>
+          <textarea
+            className='h-[100px] w-full resize-none rounded-[10px] border border-border bg-surface p-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+            onChange={(e) => setBody(e.target.value)}
+            placeholder='Detailed explanation of the change'
+            value={body}
+          />
+        </div>
+
+        {/* Footer */}
+        <div>
+          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+            {t(locale, 'tool.gitCommit.footer')}
+          </label>
+          <input
+            className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+            onChange={(e) => setFooter(e.target.value)}
+            placeholder='Closes #123, BREAKING CHANGE: ...'
+            type='text'
+            value={footer}
+          />
+        </div>
       </div>
-    </PageShell>
+
+      <button
+        className='mt-5 rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+        onClick={handleGenerate}
+        type='button'
+      >
+        {t(locale, 'tool.gitCommit.generate')}
+      </button>
+
+      {output && (
+        <div className='mt-6'>
+          <div className='mb-2 flex items-center justify-between'>
+            <span className='text-sm font-semibold text-foreground'>
+              {t(locale, 'tool.gitCommit.result')}
+            </span>
+            <button
+              className='rounded-[8px] border border-border bg-surface px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
+              onClick={handleCopy}
+              type='button'
+            >
+              {t(locale, 'tool.gitCommit.copy')}
+            </button>
+          </div>
+          <pre className='min-h-[80px] w-full whitespace-pre-wrap rounded-[14px] border border-border bg-surface p-5 font-mono text-sm text-foreground'>
+            {output}
+          </pre>
+        </div>
+      )}
+    </div>
   );
 }
