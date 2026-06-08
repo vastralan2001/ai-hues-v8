@@ -54,7 +54,7 @@ sast-scan-js:
 lint:
   stage: test
   script:
-    - pnpm check
+    - pnpm moon run aihues-web:lint aihues-web:format-check aihues-web:typecheck
     - echo "✅ Lint successful"
 
 build:
