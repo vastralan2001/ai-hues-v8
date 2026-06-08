@@ -6,6 +6,7 @@ import { I18nProvider } from '@/lib/i18n';
 import CommandPalette from '@/components/CommandPalette';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 import { PageDurationTracker } from '@/components/PageDurationTracker';
+import AgentChat from '@/components/AgentChat';
 
 const notoSans = Noto_Sans({
   subsets: ['latin'],
@@ -40,6 +41,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           {children}
           <CommandPalette />
           <PageDurationTracker />
+          <AgentChat />
         </I18nProvider>
       </body>
     </html>
