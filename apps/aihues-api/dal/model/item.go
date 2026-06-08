@@ -23,10 +23,10 @@ type Item struct {
 	Category    catalogv1.ItemCategory `gorm:"column:category;default:0;not null"`
 
 	// ── 新增字段 ──
-	PriceTag   catalogv1.PriceTag `gorm:"column:price_tag;default:0;not null;comment:价格标签 0=未指定 1=免费 2=增值 3=付费"`
-	ExternalURL string            `gorm:"column:external_url;type:text;comment:外链地址"`
-	Tags       string             `gorm:"column:tags;type:text;comment:逗号分隔的关键词标签"`
-	CreditCost int32              `gorm:"column:credit_cost;default:0;not null;comment:积分消耗"`
+	PriceTag    catalogv1.PriceTag `gorm:"column:price_tag;default:0;not null;comment:价格标签 0=未指定 1=免费 2=增值 3=付费"`
+	ExternalURL string             `gorm:"column:external_url;type:text;comment:外链地址"`
+	Tags        string             `gorm:"column:tags;type:text;comment:逗号分隔的关键词标签"`
+	CreditCost  int32              `gorm:"column:credit_cost;default:0;not null;comment:积分消耗"`
 
 	CreatedAt time.Time `gorm:"column:created_at;not null"`
 	UpdatedAt time.Time `gorm:"column:updated_at;not null"`
