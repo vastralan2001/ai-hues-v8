@@ -16,6 +16,7 @@ import type {
 import { toolCategories } from '@/lib/catalog-api';
 import { toolDetailHref } from '@/lib/routes';
 import { event, GA_EVENTS } from '@/lib/gtag';
+import { ToolIcon } from './ToolIcon';
 
 const PAGE_SIZE = 20;
 
@@ -255,7 +256,9 @@ export function ToolsInfiniteList({
                     href={toolDetailHref(tool.slug)}
                     key={tool.id}
                   >
-                    <span>{tool.icon}</span>
+                    <span className='inline-flex align-middle mr-1.5'>
+                      <ToolIcon slug={tool.slug} size={16} />
+                    </span>
                     {tool.name}
                   </a>
                 ))}

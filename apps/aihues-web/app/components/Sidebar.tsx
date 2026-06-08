@@ -5,9 +5,11 @@ import { useState } from 'react';
 
 import { useI18n } from '@/lib/i18n';
 import { gamesHref, toolsCategoryHref, toolsHref } from '@/lib/routes';
+import { ToolIcon } from './ToolIcon';
 
 interface SidebarGroup {
   icon: string;
+  slug?: string;
   labelKey: string;
   href: string;
   count?: number;
@@ -19,30 +21,35 @@ function useGroups(): SidebarGroup[] {
   return [
     {
       icon: 'A',
+      slug: 'all',
       labelKey: t('sidebar.allTools'),
       href: toolsHref,
       count: 57,
     },
     {
       icon: 'G',
+      slug: 'growth',
       labelKey: t('sidebar.growth'),
       href: toolsHref,
       count: 70,
     },
     {
       icon: 'D',
+      slug: 'developer',
       labelKey: t('sidebar.devTools'),
       href: toolsCategoryHref('developer'),
       count: 30,
     },
     {
       icon: 'U',
+      slug: 'utility',
       labelKey: t('sidebar.utilities'),
       href: toolsCategoryHref('utility'),
       count: 8,
     },
     {
       icon: 'A',
+      slug: 'ai-writing',
       labelKey: t('sidebar.aiProducts'),
       href: toolsCategoryHref('ai-writing'),
       count: 19,
@@ -61,6 +68,7 @@ function useGroups(): SidebarGroup[] {
     },
     {
       icon: 'G',
+      slug: 'games',
       labelKey: t('sidebar.miniGames'),
       href: gamesHref,
       count: 3,
@@ -104,7 +112,11 @@ export function Sidebar() {
                   type='button'
                 >
                   <span className='w-[22px] text-center text-[16px]'>
-                    {group.icon}
+                    {group.slug ? (
+                      <ToolIcon slug={group.slug} size={18} />
+                    ) : (
+                      group.icon
+                    )}
                   </span>
                   <span className='flex-1 text-left'>{group.labelKey}</span>
                   {group.count != null && (
@@ -124,7 +136,11 @@ export function Sidebar() {
                   href={group.href}
                 >
                   <span className='w-[22px] text-center text-[16px]'>
-                    {group.icon}
+                    {group.slug ? (
+                      <ToolIcon slug={group.slug} size={18} />
+                    ) : (
+                      group.icon
+                    )}
                   </span>
                   <span className='flex-1'>{group.labelKey}</span>
                   {group.count != null && (

@@ -8,6 +8,7 @@ import { getToolBySlug } from '@/lib/tool-data';
 import { useI18n } from '@/lib/i18n';
 import ReviewPanel from './ReviewPanel';
 import CommentSection from './CommentSection';
+import { ToolIcon } from '@/components/ToolIcon';
 
 function useTabs(locale: Locale) {
   const t = (key: string) => {
@@ -49,7 +50,9 @@ export default function ToolDetailTabs({
       {/* Tool header */}
       {tool && (
         <div className='mb-6 flex items-start gap-4'>
-          <span className='text-[40px]'>{tool.icon}</span>
+          <span className='text-[40px]'>
+            <ToolIcon slug={tool.slug} size={40} />
+          </span>
           <div className='flex-1'>
             <h1 className='text-[24px] font-extrabold text-[#1c1917]'>
               {tool.name}

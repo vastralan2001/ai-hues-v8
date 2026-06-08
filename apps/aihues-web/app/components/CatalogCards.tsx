@@ -10,6 +10,7 @@ import type {
 import { toolCategories } from '@/lib/catalog-api';
 import { t, type Locale } from '@/lib/dict';
 import { event, GA_EVENTS } from '@/lib/gtag';
+import { ToolIcon } from './ToolIcon';
 import {
   gameDetailHref,
   toolDetailHref,
@@ -143,8 +144,8 @@ export function ToolCard({
       )}
 
       {/* Icon */}
-      <div className='mb-3 flex h-[42px] w-[42px] items-center justify-center rounded-[11px] border border-border bg-surface text-[13px] font-bold text-secondary'>
-        {tool.icon}
+      <div className='mb-3 flex h-[42px] w-[42px] items-center justify-center rounded-[11px] border border-border bg-surface text-secondary'>
+        <ToolIcon slug={tool.slug} size={20} />
       </div>
 
       {/* Text */}
@@ -194,8 +195,8 @@ export function ToolCardV2({
       )}
 
       {/* icon-wrap */}
-      <div className='mb-3 flex h-[42px] w-[42px] items-center justify-center rounded-[11px] border border-border bg-surface text-[13px] font-bold text-secondary'>
-        {tool.icon}
+      <div className='mb-3 flex h-[42px] w-[42px] items-center justify-center rounded-[11px] border border-border bg-surface text-secondary'>
+        <ToolIcon slug={tool.slug} size={20} />
       </div>
 
       <h3 className='mb-1 text-[15px] font-semibold leading-tight text-foreground'>
@@ -264,8 +265,8 @@ export function GameCard({
         </span>
       )}
 
-      <span className='mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-xl bg-accent-bg text-[18px] font-bold text-accent'>
-        {game.icon}
+      <span className='mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-xl bg-accent-bg text-accent'>
+        <ToolIcon slug={game.slug} size={24} />
       </span>
       <h3 className='mb-1.5 text-[18px] font-bold text-foreground'>
         {game.name}

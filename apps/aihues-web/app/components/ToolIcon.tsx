@@ -1,0 +1,166 @@
+'use client';
+
+import {
+  ArrowLeftRight,
+  ArrowRightLeft,
+  BarChart3,
+  Bell,
+  BookOpen,
+  Calculator,
+  CalendarClock,
+  Clapperboard,
+  Clock,
+  Code,
+  Code2,
+  Copy,
+  Database,
+  Dices,
+  Eye,
+  FileJson,
+  FileText,
+  Fingerprint,
+  Gamepad2,
+  GitCommit,
+  GitCompare,
+  GitPullRequest,
+  Globe,
+  Hash,
+  Heading,
+  HelpCircle,
+  Image,
+  ImagePlus,
+  Key,
+  KeyRound,
+  LayoutGrid,
+  Lightbulb,
+  Link,
+  List,
+  Lock,
+  LucideIcon,
+  Mail,
+  MapPin,
+  Megaphone,
+  MessageSquare,
+  Newspaper,
+  Paintbrush,
+  Palette,
+  PenTool,
+  QrCode,
+  Ruler,
+  ScrollText,
+  Search,
+  Sparkles,
+  Table,
+  Tag,
+  Target,
+  Terminal,
+  Timer,
+  TrendingUp,
+  Trophy,
+  Type,
+  Users,
+  Video,
+  Wand2,
+  Wrench,
+} from 'lucide-react';
+
+/* ── slug → Lucide icon mapping ─────────────────────────────── */
+const TOOL_ICONS: Record<string, LucideIcon> = {
+  /* Developer */
+  jwt: Key,
+  json: FileJson,
+  regex: Search,
+  uuid: Fingerprint,
+  timestamp: Clock,
+  base64: Hash,
+  sha256: Lock,
+  sql: Database,
+  'url-encode': Link,
+  'base-convert': ArrowRightLeft,
+  'password-gen': KeyRound,
+  'http-status': Globe,
+  'html-entity': Code,
+  'cron-parser': CalendarClock,
+  'code-explain': Lightbulb,
+  'code-review': Eye,
+  shell: Terminal,
+  'git-commit': GitCommit,
+  'ip-lookup': MapPin,
+  'curl-gen': Globe,
+  'image-to-base64': Image,
+  'css-gradient': Paintbrush,
+  'color-convert': Palette,
+  'csv-json': Table,
+  'diff-pro': GitCompare,
+  'unit-convert': Ruler,
+  qrcode: QrCode,
+  markdown: FileText,
+  pomodoro: Timer,
+  'chi-squared': Calculator,
+
+  /* Utility */
+  'word-count': Type,
+  diff: Copy,
+  fullwidth: ArrowLeftRight,
+  'title-case': Heading,
+  readability: BookOpen,
+  humanize: Sparkles,
+  'lorem-ipsum': FileText,
+  'seo-title': Search,
+
+  /* AI Writing */
+  'ad-copy': Megaphone,
+  'alt-text': ImagePlus,
+  'blog-outline': List,
+  changelog: ScrollText,
+  'cold-email': Mail,
+  docs: BookOpen,
+  faq: HelpCircle,
+  linkedin: MessageSquare,
+  'lp-hero': Target,
+  meta: Tag,
+  newsletter: Newspaper,
+  'pr-desc': GitPullRequest,
+  pseudo: Code2,
+  push: Bell,
+  tagline: PenTool,
+  tldr: FileText,
+  'video-title': Video,
+  'x-post': MessageSquare,
+  'yt-script': Clapperboard,
+
+  /* Games */
+  'daily-luck': Sparkles,
+  'slot-machine': Dices,
+  basketball: Trophy,
+
+  /* Categories */
+  all: LayoutGrid,
+  developer: Code2,
+  utility: Wrench,
+  'ai-writing': Wand2,
+  growth: TrendingUp,
+  community: Users,
+  seo: Search,
+  analytics: BarChart3,
+  content: PenTool,
+  games: Gamepad2,
+};
+
+export function ToolIcon({
+  slug,
+  size = 20,
+  className = '',
+}: {
+  slug: string;
+  size?: number;
+  className?: string;
+}) {
+  const Icon = TOOL_ICONS[slug];
+  if (!Icon) return null;
+  return <Icon size={size} strokeWidth={1.7} className={className} />;
+}
+
+export function hasToolIcon(slug: string): boolean {
+  return slug in TOOL_ICONS;
+}
