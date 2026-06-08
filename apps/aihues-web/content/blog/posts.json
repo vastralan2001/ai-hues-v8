@@ -6,7 +6,8 @@
     "excerpt": "The new rules of Product Hunt launches, and why #1 of the day does not guarantee long-term success. Practical tips, templates, and AI-powered shortcuts to...",
     "date": "2026-05-31",
     "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/launching-on-product-hunt-what-worked-in-2026/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&q=80",
+    "description": "I launched three products on Product Hunt in 2026. Two flopped. One hit #1. Here is what I wish I knew before spending six weeks on the wrong things."
   },
   {
     "slug": "app-store-optimization-in-2026-beyond-keywords",
@@ -21,7 +22,7 @@
     "slug": "claude-3-7-vs-gpt-4o-which-one-actually-writes-better-code",
     "tag": "AI Tools",
     "title": "Claude 3.7 vs GPT-4o: Which One Actually Writes Better Code?",
-    "excerpt": "I ran both models through 50 real-world coding tasks. Here is what the numbers say \u2014 and what surprised me.",
+    "excerpt": "I ran both models through 50 real-world coding tasks. Here is what the numbers say — and what surprised me.",
     "date": "2026-05-30",
     "readTime": "8 min",
     "coverImage": "https://picsum.photos/seed/claude-3-7-vs-gpt-4o-which-one-actually-writes-better-code/600/400"
@@ -33,7 +34,8 @@
     "excerpt": "Subscription creep, API limits, and the one feature that actually matters when you scale content production.",
     "date": "2026-05-29",
     "readTime": "6 min",
-    "coverImage": "https://picsum.photos/seed/the-hidden-costs-of-ai-writing-tools-nobody-talks-about/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=600&q=80",
+    "description": "I ran a content agency using AI tools for 18 months. The bill was not the problem. What actually broke us was something nobody prices."
   },
   {
     "slug": "react-server-components-a-practical-guide",
@@ -75,7 +77,7 @@
     "slug": "growth-tools-2026",
     "tag": "Growth",
     "title": "2026 Overseas Growth Toolkit: 70+ Tools",
-    "excerpt": "From social listening to Reddit marketing, KOL management to SEO optimization \u2014 this curated list covers all the growth tools indie developers and SaaS...",
+    "excerpt": "From social listening to Reddit marketing, KOL management to SEO optimization — this curated list covers all the growth tools indie developers and SaaS...",
     "date": "2026-05-27",
     "readTime": "8 min",
     "coverImage": "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=600&q=80"
@@ -129,7 +131,7 @@
     "slug": "the-dark-side-of-growth-hacking-what-not-to-do",
     "tag": "Growth",
     "title": "The Dark Side of Growth Hacking: What Not to Do",
-    "excerpt": "Fake reviews, bot traffic, and black-hat SEO \u2014 the shortcuts that will kill your startup. Practical tips, templates, and AI-powered shortcuts to get results...",
+    "excerpt": "Fake reviews, bot traffic, and black-hat SEO — the shortcuts that will kill your startup. Practical tips, templates, and AI-powered shortcuts to get results...",
     "date": "2026-05-25",
     "readTime": "6 min",
     "coverImage": "https://picsum.photos/seed/the-dark-side-of-growth-hacking-what-not-to-do/600/400"
@@ -147,7 +149,7 @@
     "slug": "ai-content-strategy",
     "tag": "Content",
     "title": "AI Content Strategy: Scale Quality Without Losing the Human Touch",
-    "excerpt": "How we produce 50+ pieces of content per month using AI \u2014 without sounding like everyone else. Practical tips, templates, and AI-powered shortcuts to get...",
+    "excerpt": "How we produce 50+ pieces of content per month using AI — without sounding like everyone else. Practical tips, templates, and AI-powered shortcuts to get...",
     "date": "2026-05-25",
     "readTime": "8 min",
     "coverImage": "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=600&q=80"
@@ -309,7 +311,7 @@
     "slug": "web-performance-in-2026-core-web-vitals-and-beyond",
     "tag": "Development",
     "title": "Web Performance in 2026: Core Web Vitals and Beyond",
-    "excerpt": "LCP, INP, CLS \u2014 what to optimize, what to ignore, and the tools that help. Practical tips, templates, and AI-powered shortcuts to get results faster.",
+    "excerpt": "LCP, INP, CLS — what to optimize, what to ignore, and the tools that help. Practical tips, templates, and AI-powered shortcuts to get results faster.",
     "date": "2026-05-19",
     "readTime": "7 min",
     "coverImage": "https://picsum.photos/seed/web-performance-in-2026-core-web-vitals-and-beyond/600/400"
@@ -399,7 +401,7 @@
     "slug": "ai-voice-cloning-use-cases-ethics-and-the-tools-that-get-it-",
     "tag": "AI Tools",
     "title": "AI Voice Cloning: Use Cases and Top Tools",
-    "excerpt": "From podcast editing to audiobooks, here is where voice AI shines \u2014 and where it crosses the line. Practical tips, templates, and AI-powered shortcuts to...",
+    "excerpt": "From podcast editing to audiobooks, here is where voice AI shines — and where it crosses the line. Practical tips, templates, and AI-powered shortcuts to...",
     "date": "2026-05-16",
     "readTime": "7 min",
     "coverImage": "https://picsum.photos/seed/ai-voice-cloning-use-cases-ethics-and-the-tools-that-get-it-/600/400"
@@ -417,7 +419,7 @@
     "slug": "kol-marketing",
     "tag": "KOL Marketing",
     "title": "KOL Marketing from 0 to 1 for Indie Developers",
-    "excerpt": "No budget for big influencers? No problem. Learn how to find micro-influencers on Twitter/X, YouTube, and TikTok who are willing to endorse you for free \u2014...",
+    "excerpt": "No budget for big influencers? No problem. Learn how to find micro-influencers on Twitter/X, YouTube, and TikTok who are willing to endorse you for free —...",
     "date": "2026-05-15",
     "readTime": "5 min",
     "coverImage": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&q=80"
@@ -471,7 +473,7 @@
     "slug": "schema-markup-that-actually-moves-the-needle",
     "tag": "SEO",
     "title": "Schema Markup That Actually Moves the Needle",
-    "excerpt": "FAQ, HowTo, and Product schema \u2014 which ones drive clicks and which are a waste of time. Practical tips, templates, and AI-powered shortcuts to get results...",
+    "excerpt": "FAQ, HowTo, and Product schema — which ones drive clicks and which are a waste of time. Practical tips, templates, and AI-powered shortcuts to get results...",
     "date": "2026-05-14",
     "readTime": "6 min",
     "coverImage": "https://picsum.photos/seed/schema-markup-that-actually-moves-the-needle/600/400"
@@ -507,7 +509,7 @@
     "slug": "testing-strategies-for-small-teams",
     "tag": "Development",
     "title": "Testing Strategies for Small Teams",
-    "excerpt": "Unit, integration, e2e \u2014 what to test, what to skip, and how much coverage is enough. Practical tips, templates, and AI-powered shortcuts to get results faster.",
+    "excerpt": "Unit, integration, e2e — what to test, what to skip, and how much coverage is enough. Practical tips, templates, and AI-powered shortcuts to get results faster.",
     "date": "2026-05-13",
     "readTime": "7 min",
     "coverImage": "https://picsum.photos/seed/testing-strategies-for-small-teams/600/400"
@@ -678,7 +680,7 @@
     "slug": "community-led-growth-the-playbook-for-2026",
     "tag": "Growth",
     "title": "Community-Led Growth: The Playbook for 2026",
-    "excerpt": "Discord, Slack, Circle, or\u81ea\u5efa? How to build a community that drives product adoption. Practical tips, templates, and AI-powered shortcuts to get results faster.",
+    "excerpt": "Discord, Slack, Circle, or自建? How to build a community that drives product adoption. Practical tips, templates, and AI-powered shortcuts to get results faster.",
     "date": "2026-05-07",
     "readTime": "8 min",
     "coverImage": "https://picsum.photos/seed/community-led-growth-the-playbook-for-2026/600/400"
