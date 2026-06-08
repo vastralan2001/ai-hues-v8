@@ -59,10 +59,13 @@ lint:
 
 build:
   stage: build
+  tags:
+    - docker
   script:
-    - pnpm moon run :container
+    - docker build -f apps/aihues-web/Dockerfile -t msai-cn-beijing.cr.volces.com/msai/aihues-web:$CI_COMMIT_SHORT_SHA .
+    - docker push msai-cn-beijing.cr.volces.com/msai/aihues-web:$CI_COMMIT_SHORT_SHA
     - echo "✅ Build image successful"
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: $CI_COMMIT_BRANCH == "feature/design-refresh"
-    - when: on_success
+      when: on_success
