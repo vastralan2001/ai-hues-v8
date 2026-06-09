@@ -291,13 +291,21 @@ async function callLlm(
       }),
     });
 
-    if (!res.ok) return null;
+    if (!res.ok) {
+      const errText = await res.text().catch(() => 'unknown');
+      console.error(
+        `[Agent LLM] API error: ${res.status} ${res.statusText}`,
+        errText.slice(0, 500)
+      );
+      return null;
+    }
 
     const data = (await res.json()) as {
       choices?: Array<{ message?: { content?: string } }>;
     };
     return data.choices?.[0]?.message?.content?.trim() || null;
-  } catch {
+  } catch (err) {
+    console.error('[Agent LLM] Network error:', err);
     return null;
   }
 }
@@ -362,15 +370,15 @@ export async function processAgentMessage(
       }
     }
 
-    // Fallback: no LLM configured → suggest the tool page
+    // Fallback: LLM unavailable → suggest the tool page with explanation
     const toolRecs = recommendToolsByKeyword(contentIntent.tool, 1);
+    const isZh = locale === 'zh';
     return {
       message: {
         role: 'agent',
-        content:
-          locale === 'zh'
-            ? `我可以帮你使用 **${toolRecs[0]?.name || contentIntent.tool}** 工具。请点击下方链接前往工具页面生成内容。`
-            : `I can help you with the **${toolRecs[0]?.name || contentIntent.tool}** tool. Click the link below to open it.`,
+        content: isZh
+          ? `AI 生成服务暂时不可用，你可以使用 **${toolRecs[0]?.name || contentIntent.tool}** 工具来生成内容。点击下方链接前往工具页面。`
+          : `AI generation is temporarily unavailable. You can use the **${toolRecs[0]?.name || contentIntent.tool}** tool instead. Click the link below.`,
         metadata: { type: 'tools', tools: toolRecs },
       },
     };
