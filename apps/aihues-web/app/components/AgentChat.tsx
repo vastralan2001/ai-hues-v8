@@ -14,6 +14,7 @@ import {
   Zap,
   ZapOff,
 } from 'lucide-react';
+import { useAgentChat } from './AgentChatContext';
 import type { AgentMessage, RecommendedTool } from '@/lib/agent/types';
 
 interface AgentChatProps {
@@ -231,7 +232,8 @@ function ToolCard({ tool }: { tool: RecommendedTool }) {
 
 /* ── Main Agent Chat Component ── */
 export default function AgentChat({ locale = 'en' }: AgentChatProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, openChat, closeChat, pendingMessage, clearPendingMessage } =
+    useAgentChat();
   const [messages, setMessages] = useState<AgentMessage[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -239,6 +241,7 @@ export default function AgentChat({ locale = 'en' }: AgentChatProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const hasWelcomedRef = useRef(false);
+  const pendingSentRef = useRef(false);
 
   const isZh = locale === 'zh';
 
@@ -250,12 +253,77 @@ export default function AgentChat({ locale = 'en' }: AgentChatProps) {
     scrollToBottom();
   }, [messages, isLoading, scrollToBottom]);
 
-  // Focus input when opened
+  // When opened, ensure welcome message + auto-send pending message
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => inputRef.current?.focus(), 100);
+
+      // Show welcome if first open
+      if (!hasWelcomedRef.current) {
+        hasWelcomedRef.current = true;
+        setMessages([
+          {
+            role: 'agent',
+            content: isZh
+              ? `👋 你好！我是 **HuesBot**，AIHues 的智能助手。\n\n我可以帮你：\n- 推荐合适的工具\n- 直接生成内容（SEO标题、博客大纲、推文等）\n- 回答关于 AIHues 的问题\n\n试试说 "帮我生成 5 个 SEO 标题" 或 "推荐一个 JSON 格式化工具"\n\n${aiMode ? '⚡ AI 模式已开启 — 回复由大模型生成' : '🔒 AI 模式已关闭 — 使用规则匹配回复，省 token'}`
+              : `👋 Hi! I'm **HuesBot**, your AIHues assistant.\n\nI can help you:\n- Recommend the right tools\n- Generate content directly (SEO titles, blog outlines, posts, etc.)\n- Answer questions about AIHues\n\nTry saying "help me write SEO titles" or "recommend a JSON formatter"\n\n${aiMode ? '⚡ AI Mode ON — responses powered by LLM' : '🔒 AI Mode OFF — using rule-based responses to save tokens'}`,
+            metadata: { type: 'text' },
+          },
+        ]);
+      }
+
+      // Auto-send pending message after welcome
+      if (pendingMessage && !pendingSentRef.current) {
+        pendingSentRef.current = true;
+        const text = pendingMessage;
+        clearPendingMessage();
+        setTimeout(() => {
+          setMessages((prev) => {
+            const userMsg: AgentMessage = { role: 'user', content: text };
+            const nextMessages = [...prev, userMsg];
+            setIsLoading(true);
+            fetch('/api/agent', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                messages: nextMessages,
+                locale,
+                enableLlm: aiMode,
+              }),
+            })
+              .then((res) => (res.ok ? res.json() : Promise.reject()))
+              .then((data) => {
+                const agentMsg: AgentMessage = data.message || {
+                  role: 'agent',
+                  content: isZh
+                    ? '抱歉，服务暂时不可用。'
+                    : 'Sorry, the service is temporarily unavailable.',
+                };
+                setMessages((p) => [...p, agentMsg]);
+              })
+              .catch(() => {
+                setMessages((p) => [
+                  ...p,
+                  {
+                    role: 'agent',
+                    content: isZh
+                      ? '连接失败，请稍后再试。'
+                      : 'Connection failed. Please try again later.',
+                    metadata: { type: 'error' },
+                  },
+                ]);
+              })
+              .finally(() => setIsLoading(false));
+            return nextMessages;
+          });
+          pendingSentRef.current = false;
+        }, 600);
+      }
+    } else {
+      hasWelcomedRef.current = false;
     }
-  }, [isOpen]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, pendingMessage]);
 
   const sendMessage = async () => {
     const text = input.trim();
@@ -314,28 +382,12 @@ export default function AgentChat({ locale = 'en' }: AgentChatProps) {
     }
   };
 
-  const openChat = useCallback(() => {
-    setIsOpen(true);
-    if (!hasWelcomedRef.current) {
-      hasWelcomedRef.current = true;
-      setMessages([
-        {
-          role: 'agent',
-          content: isZh
-            ? `👋 你好！我是 **HuesBot**，AIHues 的智能助手。\n\n我可以帮你：\n- 推荐合适的工具\n- 直接生成内容（SEO标题、博客大纲、推文等）\n- 回答关于 AIHues 的问题\n\n试试说 "帮我生成 5 个 SEO 标题" 或 "推荐一个 JSON 格式化工具"\n\n${aiMode ? '⚡ AI 模式已开启 — 回复由大模型生成' : '🔒 AI 模式已关闭 — 使用规则匹配回复，省 token'}`
-            : `👋 Hi! I'm **HuesBot**, your AIHues assistant.\n\nI can help you:\n- Recommend the right tools\n- Generate content directly (SEO titles, blog outlines, posts, etc.)\n- Answer questions about AIHues\n\nTry saying "help me write SEO titles" or "recommend a JSON formatter"\n\n${aiMode ? '⚡ AI Mode ON — responses powered by LLM' : '🔒 AI Mode OFF — using rule-based responses to save tokens'}`,
-          metadata: { type: 'text' },
-        },
-      ]);
-    }
-  }, [isZh, aiMode]);
-
   return (
     <>
       {/* Floating Button */}
       {!isOpen && (
         <button
-          onClick={openChat}
+          onClick={() => openChat()}
           className='fixed bottom-6 right-6 z-[200] flex h-14 w-14 items-center justify-center rounded-full bg-accent text-white shadow-lg shadow-accent/25 transition-all hover:scale-105 hover:shadow-xl active:scale-95'
           aria-label='Open AI assistant'
         >
@@ -377,7 +429,7 @@ export default function AgentChat({ locale = 'en' }: AgentChatProps) {
               {aiMode ? (isZh ? 'AI 开' : 'ON') : isZh ? 'AI 关' : 'OFF'}
             </button>
             <button
-              onClick={() => setIsOpen(false)}
+              onClick={closeChat}
               className='flex h-8 w-8 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/20 hover:text-white'
               aria-label='Close'
             >

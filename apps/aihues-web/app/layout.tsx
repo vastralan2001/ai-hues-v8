@@ -7,6 +7,7 @@ import CommandPalette from '@/components/CommandPalette';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 import { PageDurationTracker } from '@/components/PageDurationTracker';
 import AgentChat from '@/components/AgentChat';
+import { AgentChatProvider } from '@/components/AgentChatContext';
 
 const notoSans = Noto_Sans({
   subsets: ['latin'],
@@ -38,10 +39,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body>
         <I18nProvider initialLocale='en'>
-          {children}
-          <CommandPalette />
-          <PageDurationTracker />
-          <AgentChat />
+          <AgentChatProvider>
+            {children}
+            <CommandPalette />
+            <PageDurationTracker />
+            <AgentChat />
+          </AgentChatProvider>
         </I18nProvider>
       </body>
     </html>
