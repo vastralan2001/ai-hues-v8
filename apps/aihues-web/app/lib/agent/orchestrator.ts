@@ -80,7 +80,7 @@ function detectContentIntent(
     extract: (msg: string) => Record<string, string>;
   }> = [
     {
-      keywords: ['seo title', 'seo 标题', '标题优化'],
+      keywords: ['seo title', 'seo标题', '标题优化'],
       tool: 'seo-title',
       extract: (msg) => {
         const kw = msg
@@ -149,7 +149,7 @@ function detectContentIntent(
       },
     },
     {
-      keywords: ['humanize', '去ai', '去 ai', '自然化'],
+      keywords: ['humanize', '去ai', '去ai', '自然化'],
       tool: 'humanize',
       extract: (msg) => {
         const text = msg
@@ -235,7 +235,7 @@ function detectContentIntent(
       },
     },
     {
-      keywords: ['alt text', 'alt 文本', '图片描述'],
+      keywords: ['alt text', 'alt文本', '图片描述'],
       tool: 'alt-text',
       extract: (msg) => {
         return { description: msg };
