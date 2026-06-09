@@ -103,6 +103,31 @@ moon ci                            # CI 模式
 3. **静态站点**：参考当前 `apps/aihues-web/moon.yml`
 4. 同步更新 `pnpm-workspace.yaml`（如有 catalog 项依赖）和 `tsconfig.json`（如需 composite reference）
 
+## 推送前自查流程（强制）
+
+**每次 `git push` 前必须完成以下三步检查，全绿才能推送。** 这是防止 CI 失败和测试环境出问题的最后防线。
+
+```bash
+# 1. init — 确保依赖最新（如有 package.json / pnpm-lock.yaml 变更）
+pnpm install
+
+# 2. test — 代码质量检查（lint + format + typecheck + test）
+pnpm check
+# 等价于：moon run :lint :format :typecheck :test
+
+# 3. build — 生产构建验证
+pnpm moon run aihues-web:build
+```
+
+**判断标准：**
+- `pnpm check` 输出 `Tasks: X completed` 且无 `Error`
+- `pnpm moon run aihues-web:build` 输出 `Compiled successfully` 或静态页面列表
+- 任一阶段出现红色 `Error` 或 exit code 非 0 → **禁止推送**，先本地修复
+
+**特殊情况：**
+- 仅修改文档（`*.md`）或配置文件（非代码）→ 可跳过 build，但仍需 `pnpm check`
+- 网络问题导致 Google Fonts 下载失败 → 重试一次，若持续失败可跳过（非代码问题）
+
 ## 常见问题
 
 - **`pnpm check` 提示 "No tasks found"**：正常。aihues-web 是 HTML 项目，moon node tasks 不会派发到它。等有 TS 项目时会自然激活。
