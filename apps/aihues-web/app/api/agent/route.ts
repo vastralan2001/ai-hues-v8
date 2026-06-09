@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as AgentRequest;
-    const { messages, locale = 'en' } = body;
+    const { messages, locale = 'en', enableLlm = true } = body;
 
     if (!messages || !Array.isArray(messages)) {
       return NextResponse.json(
@@ -16,7 +16,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const response = await processAgentMessage(messages, locale);
+    const response = await processAgentMessage(messages, locale, enableLlm);
     return NextResponse.json(response);
   } catch (err) {
     return NextResponse.json(

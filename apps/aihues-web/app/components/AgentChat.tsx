@@ -11,6 +11,8 @@ import {
   ExternalLink,
   ChevronRight,
   User,
+  Zap,
+  ZapOff,
 } from 'lucide-react';
 import type { AgentMessage, RecommendedTool } from '@/lib/agent/types';
 
@@ -233,6 +235,7 @@ export default function AgentChat({ locale = 'en' }: AgentChatProps) {
   const [messages, setMessages] = useState<AgentMessage[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [aiMode, setAiMode] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const hasWelcomedRef = useRef(false);
@@ -268,7 +271,11 @@ export default function AgentChat({ locale = 'en' }: AgentChatProps) {
       const res = await fetch('/api/agent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: newMessages, locale }),
+        body: JSON.stringify({
+          messages: newMessages,
+          locale,
+          enableLlm: aiMode,
+        }),
       });
 
       if (!res.ok) {
@@ -315,13 +322,13 @@ export default function AgentChat({ locale = 'en' }: AgentChatProps) {
         {
           role: 'agent',
           content: isZh
-            ? '👋 你好！我是 **HuesBot**，AIHues 的智能助手。\n\n我可以帮你：\n- 推荐合适的工具\n- 直接生成内容（SEO标题、博客大纲、推文等）\n- 回答关于 AIHues 的问题\n\n试试说 "帮我生成 5 个 SEO 标题" 或 "推荐一个 JSON 格式化工具"'
-            : '👋 Hi! I\'m **HuesBot**, your AIHues assistant.\n\nI can help you:\n- Recommend the right tools\n- Generate content directly (SEO titles, blog outlines, posts, etc.)\n- Answer questions about AIHues\n\nTry saying "help me write SEO titles" or "recommend a JSON formatter"',
+            ? `👋 你好！我是 **HuesBot**，AIHues 的智能助手。\n\n我可以帮你：\n- 推荐合适的工具\n- 直接生成内容（SEO标题、博客大纲、推文等）\n- 回答关于 AIHues 的问题\n\n试试说 "帮我生成 5 个 SEO 标题" 或 "推荐一个 JSON 格式化工具"\n\n${aiMode ? '⚡ AI 模式已开启 — 回复由大模型生成' : '🔒 AI 模式已关闭 — 使用规则匹配回复，省 token'}`
+            : `👋 Hi! I'm **HuesBot**, your AIHues assistant.\n\nI can help you:\n- Recommend the right tools\n- Generate content directly (SEO titles, blog outlines, posts, etc.)\n- Answer questions about AIHues\n\nTry saying "help me write SEO titles" or "recommend a JSON formatter"\n\n${aiMode ? '⚡ AI Mode ON — responses powered by LLM' : '🔒 AI Mode OFF — using rule-based responses to save tokens'}`,
           metadata: { type: 'text' },
         },
       ]);
     }
-  }, [isZh]);
+  }, [isZh, aiMode]);
 
   return (
     <>
@@ -354,6 +361,21 @@ export default function AgentChat({ locale = 'en' }: AgentChatProps) {
                 </div>
               </div>
             </div>
+            {/* AI Mode Toggle */}
+            <button
+              onClick={() => setAiMode((v) => !v)}
+              className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium transition-all ${
+                aiMode ? 'bg-white/20 text-white' : 'bg-white/10 text-white/60'
+              }`}
+              title={
+                aiMode
+                  ? 'AI Mode ON — click to save tokens'
+                  : 'AI Mode OFF — click for smarter responses'
+              }
+            >
+              {aiMode ? <Zap size={12} /> : <ZapOff size={12} />}
+              {aiMode ? (isZh ? 'AI 开' : 'ON') : isZh ? 'AI 关' : 'OFF'}
+            </button>
             <button
               onClick={() => setIsOpen(false)}
               className='flex h-8 w-8 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/20 hover:text-white'

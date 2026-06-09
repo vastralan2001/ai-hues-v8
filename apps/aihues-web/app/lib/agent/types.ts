@@ -30,6 +30,7 @@ export interface ToolCallPayload {
 export interface AgentRequest {
   messages: AgentMessage[];
   locale?: string;
+  enableLlm?: boolean;
 }
 
 export interface AgentResponse {

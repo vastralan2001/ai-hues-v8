@@ -305,7 +305,8 @@ async function callLlm(
 /* ── Main orchestrator ── */
 export async function processAgentMessage(
   messages: AgentMessage[],
-  locale = 'en'
+  locale = 'en',
+  enableLlm = true
 ): Promise<AgentResponse> {
   const lastUserMessage = [...messages]
     .reverse()
@@ -380,7 +381,7 @@ export async function processAgentMessage(
 
   // 3. Try LLM for general chat + tool recommendation
   const config = getLlmConfig();
-  if (config) {
+  if (config && enableLlm) {
     const systemPrompt = buildAgentSystemPrompt(locale);
     const toolContext = keywordTools.length
       ? `\n\nRelevant tools the user might need:\n${keywordTools.map((t) => `- ${t.name}: ${t.description} (${t.url})`).join('\n')}`
@@ -410,7 +411,7 @@ export async function processAgentMessage(
     }
   }
 
-  // 4. Fallback: no LLM → pure keyword-based response
+  // 4. Fallback: no LLM or LLM disabled → pure keyword-based response
   if (keywordTools.length > 0) {
     const isZh = locale === 'zh';
     const toolList = keywordTools

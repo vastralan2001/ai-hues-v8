@@ -22,7 +22,7 @@ web:
     - name: NEXT_PUBLIC_GA_ID
       value: ''
     - name: KIMI_API_KEY
-      value: ''
+      value: 'sk-qeZNEFZjIC3qabra8Qgn50DKZiVTihlqe7NulsylJrn26Ha5'
 
   replicaCount: 1
 
