@@ -245,7 +245,6 @@ export default async function HomePage() {
 
             {/* Search box — Ask AI now opens HuesBot */}
             <HeroSearch
-              locale={locale}
               searchPlaceholder={t(locale, 'hero.searchPlaceholder')}
               askAILabel={t(locale, 'hero.askAI')}
             />
