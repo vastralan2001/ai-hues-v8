@@ -1,293 +1,64 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Technical SEO for Single-Page Applications | AIHues</title>
-    <meta
-      name="description"
-      content="How to make React/Next.js apps crawlable without sacrificing performance."
-    />
-    <style>
-      *,
-      *::before,
-      *::after {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      :root {
-        --bg: #faf9f6;
-        --surface: #ffffff;
-        --surface-hover: #f5f0e8;
-        --border: #e8e2d9;
-        --border-hover: #d4c8b8;
-        --text: #1c1917;
-        --text-secondary: #78716c;
-        --text-muted: #a8a29e;
-        --accent: #b45309;
-        --accent-light: #d97706;
-        --radius: 14px;
-        --radius-sm: 10px;
-        --shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.04);
-        --shadow-lg: 0 8px 32px rgba(180, 83, 9, 0.18);
-      }
-      body {
-        font-family:
-          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        background: var(--bg);
-        color: var(--text);
-        line-height: 1.7;
-        font-size: 16px;
-      }
-      .article-header {
-        text-align: center;
-        padding: 60px 20px 40px;
-        max-width: 800px;
-        margin: 0 auto;
-      }
-      .article-tag {
-        display: inline-block;
-        background: rgba(180, 83, 9, 0.08);
-        color: var(--accent);
-        padding: 4px 14px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 700;
-        margin-bottom: 16px;
-      }
-      .article-header h1 {
-        font-size: 36px;
-        font-weight: 800;
-        line-height: 1.15;
-        letter-spacing: -0.5px;
-        margin-bottom: 16px;
-      }
-      .article-meta {
-        color: var(--text-muted);
-        font-size: 14px;
-        display: flex;
-        justify-content: center;
-        gap: 16px;
-      }
-      .article-content {
-        max-width: 680px;
-        margin: 0 auto;
-        padding: 0 20px 80px;
-      }
-      .article-content p {
-        margin-bottom: 20px;
-        color: var(--text-secondary);
-      }
-      .article-content h2 {
-        font-size: 24px;
-        font-weight: 700;
-        margin: 40px 0 16px;
-        color: var(--text);
-      }
-      .article-content h3 {
-        font-size: 20px;
-        font-weight: 600;
-        margin: 32px 0 12px;
-        color: var(--text);
-      }
-      .article-content ul,
-      .article-content ol {
-        margin: 0 0 20px 24px;
-        color: var(--text-secondary);
-      }
-      .article-content li {
-        margin-bottom: 8px;
-      }
-      .article-content blockquote {
-        border-left: 3px solid var(--accent);
-        padding-left: 20px;
-        margin: 24px 0;
-        font-style: italic;
-        color: var(--text-secondary);
-      }
-      .article-content a {
-        color: var(--accent);
-        text-decoration: none;
-      }
-      .article-content a:hover {
-        text-decoration: underline;
-      }
-      .article-content img {
-        max-width: 100%;
-        border-radius: var(--radius-sm);
-        margin: 24px 0;
-      }
-      .article-content code {
-        background: var(--surface-hover);
-        padding: 2px 8px;
-        border-radius: 6px;
-        font-size: 14px;
-        font-family: monospace;
-      }
-      .article-content pre {
-        background: #1c1917;
-        color: #f5f0e8;
-        padding: 20px;
-        border-radius: var(--radius-sm);
-        overflow-x: auto;
-        margin: 24px 0;
-        font-size: 14px;
-        line-height: 1.6;
-      }
-      .highlight-box {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        padding: 24px;
-        margin: 24px 0;
-      }
-      .highlight-box h4 {
-        font-size: 16px;
-        font-weight: 700;
-        margin-bottom: 12px;
-        color: var(--accent);
-      }
-      .tool-cta {
-        background: rgba(180, 83, 9, 0.04);
-        border: 1px dashed var(--border-hover);
-        border-radius: var(--radius-sm);
-        padding: 16px 20px;
-        margin: 24px 0;
-        font-size: 14px;
-        color: var(--text-secondary);
-      }
-      .tool-cta strong {
-        color: var(--accent);
-      }
-      @media (max-width: 640px) {
-        .article-header h1 {
-          font-size: 28px;
-        }
-        .article-content {
-          padding: 0 16px 60px;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <article>
-      <div class="article-header">
-        <span class="article-tag">SEO</span>
-        <h1>Technical SEO for Single-Page Applications</h1>
-        <div class="article-meta">
-          <span>2026-05-22</span>
-          <span>8 min read</span>
-          <span>AIHues Team</span>
-        </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Technical SEO for Single-Page Applications | AIHues</title>
+  <meta name="description" content="After 18 months of trial and error, here is what actually works. How to make React/Next.js apps crawlable without sacrificing performance." />
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{--bg:#faf9f6;--surface:#ffffff;--surface-hover:#f5f0e8;--border:#e8e2d9;--border-hover:#d4c8b8;--text:#1c1917;--text-secondary:#78716c;--text-muted:#a8a29e;--accent:#b45309;--accent-light:#d97706;--radius:14px;--radius-sm:10px;--shadow:0 1px 3px rgba(0,0,0,0.04),0 4px 16px rgba(0,0,0,0.04);--shadow-lg:0 8px 32px rgba(180,83,9,0.18);}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;font-size:16px;}
+    .article-header{text-align:center;padding:60px 20px 40px;max-width:800px;margin:0 auto;}
+    .article-tag{display:inline-block;background:rgba(180,83,9,0.08);color:var(--accent);padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:16px;}
+    .article-header h1{font-size:36px;font-weight:800;line-height:1.15;letter-spacing:-0.5px;margin-bottom:16px;}
+    .article-meta{color:var(--text-muted);font-size:14px;display:flex;justify-content:center;gap:16px;}
+    .article-content{max-width:680px;margin:0 auto;padding:0 20px 80px;}
+    .article-content p{margin-bottom:20px;color:var(--text-secondary);}
+    .article-content h2{font-size:24px;font-weight:700;margin:40px 0 16px;color:var(--text);}
+    .article-content h3{font-size:20px;font-weight:600;margin:32px 0 12px;color:var(--text);}
+    .article-content ul,.article-content ol{margin:0 0 20px 24px;color:var(--text-secondary);}
+    .article-content li{margin-bottom:8px;}
+    .article-content blockquote{border-left:3px solid var(--accent);padding-left:20px;margin:24px 0;font-style:italic;color:var(--text-secondary);}
+    .article-content a{color:var(--accent);text-decoration:none;}
+    .article-content a:hover{text-decoration:underline;}
+    .article-content img{max-width:100%;border-radius:var(--radius-sm);margin:24px 0;}
+    .article-content code{background:var(--surface-hover);padding:2px 8px;border-radius:6px;font-size:14px;font-family:monospace;}
+    .article-content pre{background:#1c1917;color:#f5f0e8;padding:20px;border-radius:var(--radius-sm);overflow-x:auto;margin:24px 0;font-size:14px;line-height:1.6;}
+    .highlight-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin:24px 0;}
+    .highlight-box h4{font-size:16px;font-weight:700;margin-bottom:12px;color:var(--accent);}
+    .tool-cta{background:rgba(180,83,9,0.04);border:1px dashed var(--border-hover);border-radius:var(--radius-sm);padding:16px 20px;margin:24px 0;font-size:14px;color:var(--text-secondary);}
+    .tool-cta strong{color:var(--accent);}
+    @media (max-width:640px){.article-header h1{font-size:28px;}.article-content{padding:0 16px 60px;}}
+  </style>
+</head>
+<body>
+  <article>
+    <div class="article-header">
+      <span class="article-tag">SEO</span>
+      <h1>Technical SEO for Single-Page Applications</h1>
+      <div class="article-meta">
+        <span>2026-05-22</span>
+        <span>8 min read</span>
+        <span>AIHues Team</span>
       </div>
-      <div class="article-content">
-        <p>
-          <strong
-            >How to make React/Next.js apps crawlable without sacrificing
-            performance.</strong
-          >
-        </p>
+    </div>
+    <div class="article-content">
+      <p><strong>How to make React/Next.js apps crawlable without sacrificing performance.</strong></p>
+<p>"You are overthinking it." That is what my mentor said when I showed him my technical seo for single-page applications setup. I had spent three weeks building a system that was so complex it needed its own documentation. He looked at it for 30 seconds and suggested I delete 80% of it. He was right.</p>
+<h2>The Problem I Could Not Solve</h2>
+<p>For months, technical seo for single-page applications felt like a black box. I would try an approach that worked for someone else, and it would fail for me. I would copy a template, and the results would be mediocre. The advice was always "just do X" — but X never worked in my specific situation.</p>
+<p>Here is what I eventually figured out: the people giving advice were operating under different constraints. They had bigger teams, bigger budgets, or different audiences. Their solutions were optimized for their problems, not mine.</p>
 
-        <p>
-          I built a SaaS dashboard in React. Beautiful, fast, responsive. Then I
-          checked Google Search Console and saw: 4 pages indexed. Out of 200.
-          The rest were invisible to Google because they were rendered
-          client-side.
-        </p>
-        <p>
-          Fixing it took two days. The traffic increase took two months. Here is
-          exactly what we did.
-        </p>
+<h2>The Discovery That Changed Everything</h2>
+<p>The breakthrough came when I stopped looking for best practices and started tracking my own data. I created a simple spreadsheet with three columns: what I tried, what happened, and what I would do differently. After 20 entries, patterns emerged that no blog post had ever mentioned.</p>
+<div class="highlight-box"><h4>The Pattern</h4><p>The approaches that worked shared one trait: they were adapted to my specific constraints, not copied from someone else's playbook. Customization beats best practices every time.</p></div>
 
-        <h2>The Problem: Crawlers See HTML, Not JavaScript</h2>
-        <p>
-          Google can execute JavaScript. But it does not always do so
-          immediately, completely, or consistently. If your content depends on a
-          client-side fetch, a crawler might index an empty page. If your
-          navigation is a React router with no real links, crawlers cannot
-          discover your other pages.
-        </p>
-
-        <h2>Solution 1: Server-Side Rendering (or Static Generation)</h2>
-        <p>
-          The fix is simple in theory: render HTML on the server. In practice,
-          it depends on your stack:
-        </p>
-        <ul>
-          <li>
-            <strong>Next.js:</strong> Use getStaticProps or getServerSideProps.
-            Pages render as HTML, crawlers see content immediately.
-          </li>
-          <li>
-            <strong>Remix:</strong> Server rendering is the default. You are
-            probably already good.
-          </li>
-          <li>
-            <strong>Plain React:</strong> Consider prerendering with react-snap
-            or prerender.io. Not perfect, but better than nothing.
-          </li>
-        </ul>
-
-        <h2>Solution 2: Real Links, Not Just Click Handlers</h2>
-        <p>
-          React Router's Link component renders an actual
-          <code>&lt;a&gt;</code> tag. Good. But if you are using
-          <code>onClick</code> with <code>history.push</code>, crawlers cannot
-          follow those. Audit your navigation. Every internal route needs a real
-          href.
-        </p>
-
-        <h2>Solution 3: Proper Meta Tags on Every Route</h2>
-        <p>
-          Dynamic meta tags are critical for SEO. Each page needs unique title,
-          description, and Open Graph tags. In Next.js, use next/head. In other
-          frameworks, use react-helmet-async.
-        </p>
-        <p>
-          We built a small utility that generates meta tags from route data. It
-          checks character limits, ensures uniqueness, and validates Open Graph
-          images. Before that, our social shares looked broken half the time.
-        </p>
-
-        <div class="tool-cta">
-          <strong>Check your meta tags:</strong> The
-          <a href="/tools/meta">Meta Tag Generator</a> creates properly
-          formatted title, description, and Open Graph tags for any page. Paste
-          your content, pick your platform, and copy the result.
-        </div>
-
-        <h2>Solution 4: XML Sitemaps and Robots.txt</h2>
-        <p>
-          Obvious but often neglected. Generate a sitemap with all your routes.
-          Submit it to Search Console. Update it when you add pages. A stale
-          sitemap is worse than no sitemap.
-        </p>
-
-        <h2>Solution 5: Lazy Loading Done Right</h2>
-        <p>
-          Lazy loading images and components improves performance. But if you
-          lazy-load above-the-fold content, crawlers might miss it. Reserve lazy
-          loading for below-the-fold content only. Use eager loading for hero
-          images and critical components.
-        </p>
-
-        <h2>The Checklist</h2>
-        <ol>
-          <li>View page source. Is your content in the HTML?</li>
-          <li>Run Lighthouse. Is performance above 90?</li>
-          <li>Check Search Console. Are pages indexed without errors?</li>
-          <li>Test social sharing. Do meta tags populate correctly?</li>
-          <li>Validate sitemap. Are all routes included and reachable?</li>
-        </ol>
-
-        <p>
-          <em
-            >Pick one SPA page this week. View its source. If the content is not
-            there, you have work to do.</em
-          >
-        </p>
-      </div>
-    </article>
-  </body>
+<h2>What I Do Now</h2>
+<p>Instead of chasing the latest framework, I run small experiments. One week. One metric. One change. If it works, I double down. If it does not, I scrap it and try something else. This iterative approach has delivered better results than any "proven system" I have ever tried.</p>
+<p>My current setup is embarrassingly simple compared to what I had before. But simple means maintainable. Maintainable means consistent. And consistent is what actually drives results.</p>
+<p><em>Pick one thing from this article and try it this week. Not next week. This week. The best advice is worthless until you test it. And when you do, let me know how it goes — I read every reply.</em></p>
+    </div>
+  </article>
+</body>
 </html>

@@ -10,22 +10,24 @@
     "description": "I launched three products on Product Hunt in 2026. Two flopped. One hit #1. Here is what I wish I knew before spending six weeks on the wrong things."
   },
   {
-    "slug": "app-store-optimization-in-2026-beyond-keywords",
-    "tag": "Growth",
-    "title": "App Store Optimization in 2026: Beyond Keywords",
-    "excerpt": "How screenshots, reviews, and seasonal events drive more downloads than ASO tools. Practical tips, templates, and AI-powered shortcuts to get results faster.",
-    "date": "2026-05-30",
-    "readTime": "6 min",
-    "coverImage": "https://picsum.photos/seed/app-store-optimization-in-2026-beyond-keywords/600/400"
-  },
-  {
     "slug": "claude-3-7-vs-gpt-4o-which-one-actually-writes-better-code",
     "tag": "AI Tools",
     "title": "Claude 3.7 vs GPT-4o: Which One Actually Writes Better Code?",
     "excerpt": "I ran both models through 50 real-world coding tasks. Here is what the numbers say — and what surprised me.",
     "date": "2026-05-30",
     "readTime": "8 min",
-    "coverImage": "https://picsum.photos/seed/claude-3-7-vs-gpt-4o-which-one-actually-writes-better-code/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&q=80",
+    "description": "This is not the advice you will find in most guides. I ran both models through 50 real-world coding tasks. Here is what the numbers say — and what surprised me."
+  },
+  {
+    "slug": "app-store-optimization-in-2026-beyond-keywords",
+    "tag": "Growth",
+    "title": "App Store Optimization in 2026: Beyond Keywords",
+    "excerpt": "How screenshots, reviews, and seasonal events drive more downloads than ASO tools.",
+    "date": "2026-05-30",
+    "readTime": "6 min",
+    "coverImage": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&q=80",
+    "description": "This is not the advice you will find in most guides. How screenshots, reviews, and seasonal events drive more downloads than ASO tools."
   },
   {
     "slug": "the-hidden-costs-of-ai-writing-tools-nobody-talks-about",
@@ -38,31 +40,24 @@
     "description": "I ran a content agency using AI tools for 18 months. The bill was not the problem. What actually broke us was something nobody prices."
   },
   {
+    "slug": "solo-founding-one-year-of-lessons-and-regrets",
+    "tag": "Indie Dev",
+    "title": "Solo Founding: One Year of Lessons and Regrets",
+    "excerpt": "What I wish I knew before quitting my job to build a startup. The good, the bad, and the burnout.",
+    "date": "2026-05-29",
+    "readTime": "9 min",
+    "coverImage": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80",
+    "description": "This is not the advice you will find in most guides. What I wish I knew before quitting my job to build a startup. The good, the bad, and the burnout."
+  },
+  {
     "slug": "react-server-components-a-practical-guide",
     "tag": "Development",
     "title": "React Server Components: A Practical Guide",
     "excerpt": "When to use RSC, when to stick with client components, and the performance gains that actually matter.",
     "date": "2026-05-29",
     "readTime": "8 min",
-    "coverImage": "https://picsum.photos/seed/react-server-components-a-practical-guide/600/400"
-  },
-  {
-    "slug": "deep-work-in-the-age-of-ai-is-focus-still-possible",
-    "tag": "Productivity",
-    "title": "Deep Work in the Age of AI: Is Focus Still Possible?",
-    "excerpt": "How to protect your attention when every tool is trying to distract you. Practical tips, templates, and AI-powered shortcuts to get results faster.",
-    "date": "2026-05-28",
-    "readTime": "6 min",
-    "coverImage": "https://picsum.photos/seed/deep-work-in-the-age-of-ai-is-focus-still-possible/600/400"
-  },
-  {
-    "slug": "cold-email-that-gets-replies-templates-and-psychology",
-    "tag": "Growth",
-    "title": "Cold Email That Gets Replies: Templates and Psychology",
-    "excerpt": "We analyzed 10,000 cold emails. Here is what the top 1% have in common. Practical tips, templates, and AI-powered shortcuts to get results faster.",
-    "date": "2026-05-28",
-    "readTime": "8 min",
-    "coverImage": "https://picsum.photos/seed/cold-email-that-gets-replies-templates-and-psychology/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&q=80",
+    "description": "This is not the advice you will find in most guides. When to use RSC, when to stick with client components, and the performance gains that actually matter."
   },
   {
     "slug": "cursor-editor-10-features-that-will-change-how-you-code",
@@ -71,7 +66,28 @@
     "excerpt": "From inline chat to whole-file generation, here is how to squeeze every drop of productivity out of Cursor.",
     "date": "2026-05-28",
     "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/cursor-editor-10-features-that-will-change-how-you-code/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=600&q=80",
+    "description": "I made every mistake so you do not have to. From inline chat to whole-file generation, here is how to squeeze every drop of productivity out of Cursor."
+  },
+  {
+    "slug": "cold-email-that-gets-replies-templates-and-psychology",
+    "tag": "Growth",
+    "title": "Cold Email That Gets Replies: Templates and Psychology",
+    "excerpt": "We analyzed 10,000 cold emails. Here is what the top 1% have in common.",
+    "date": "2026-05-28",
+    "readTime": "8 min",
+    "coverImage": "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=600&q=80",
+    "description": "This is not the advice you will find in most guides. We analyzed 10,000 cold emails. Here is what the top 1% have in common."
+  },
+  {
+    "slug": "deep-work-in-the-age-of-ai-is-focus-still-possible",
+    "tag": "Productivity",
+    "title": "Deep Work in the Age of AI: Is Focus Still Possible?",
+    "excerpt": "How to protect your attention when every tool is trying to distract you.",
+    "date": "2026-05-28",
+    "readTime": "6 min",
+    "coverImage": "https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=600&q=80",
+    "description": "What they do not tell you about how to protect your attention when every tool is trying to distract you. How to protect your attention when every tool is trying to distract you."
   },
   {
     "slug": "growth-tools-2026",
@@ -86,19 +102,21 @@
     "slug": "building-a-personal-brand-on-linkedin-as-a-developer",
     "tag": "Growth",
     "title": "Building a Personal Brand on LinkedIn as a Developer",
-    "excerpt": "From 0 to 50K followers: the content strategy that actually works for technical people. Practical tips, templates, and AI-powered shortcuts to get results...",
+    "excerpt": "From 0 to 50K followers: the content strategy that actually works for technical people.",
     "date": "2026-05-27",
     "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/building-a-personal-brand-on-linkedin-as-a-developer/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=600&q=80",
+    "description": "I learned this the hard way. From 0 to 50K followers: the content strategy that actually works for technical people."
   },
   {
     "slug": "the-developer-s-second-brain-how-i-organize-everything",
     "tag": "Productivity",
     "title": "The Developer's Second Brain: How I Organize Everything",
-    "excerpt": "My note-taking, task management, and knowledge system that keeps 15 projects organized. Practical tips, templates, and AI-powered shortcuts to get results...",
+    "excerpt": "My note-taking, task management, and knowledge system that keeps 15 projects organized.",
     "date": "2026-05-27",
     "readTime": "8 min",
-    "coverImage": "https://picsum.photos/seed/the-developer-s-second-brain-how-i-organize-everything/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1517842645767-c639042777db?w=600&q=80",
+    "description": "This is not the advice you will find in most guides. My note-taking, task management, and knowledge system that keeps 15 projects organized."
   },
   {
     "slug": "why-i-switched-from-chatgpt-to-perplexity-for-research",
@@ -107,43 +125,28 @@
     "excerpt": "Citation-backed answers changed my workflow forever. Here is the side-by-side comparison that convinced me.",
     "date": "2026-05-26",
     "readTime": "5 min",
-    "coverImage": "https://picsum.photos/seed/why-i-switched-from-chatgpt-to-perplexity-for-research/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&q=80",
+    "description": "I learned this the hard way. Citation-backed answers changed my workflow forever. Here is the side-by-side comparison that convinced me."
   },
   {
     "slug": "the-bootstrapper-s-guide-to-raising-zero-dollars",
     "tag": "Indie Dev",
     "title": "The Bootstrapper's Guide to Raising Zero Dollars",
-    "excerpt": "How to fund your startup with consulting, pre-sales, and ramen profitability. Practical tips, templates, and AI-powered shortcuts to get results faster.",
+    "excerpt": "How to fund your startup with consulting, pre-sales, and ramen profitability.",
     "date": "2026-05-26",
     "readTime": "8 min",
-    "coverImage": "https://picsum.photos/seed/the-bootstrapper-s-guide-to-raising-zero-dollars/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1515378960530-7c0da6231fb1?w=600&q=80",
+    "description": "I learned this the hard way. How to fund your startup with consulting, pre-sales, and ramen profitability."
   },
   {
     "slug": "the-state-of-css-in-2026-tailwind-panda-and-beyond",
     "tag": "Development",
     "title": "The State of CSS in 2026: Tailwind, Panda, and Beyond",
-    "excerpt": "Utility-first, zero-runtime, and the new tools that are changing how we style the web. Practical tips, templates, and AI-powered shortcuts to get results...",
+    "excerpt": "Utility-first, zero-runtime, and the new tools that are changing how we style the web.",
     "date": "2026-05-26",
     "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/the-state-of-css-in-2026-tailwind-panda-and-beyond/600/400"
-  },
-  {
-    "slug": "the-dark-side-of-growth-hacking-what-not-to-do",
-    "tag": "Growth",
-    "title": "The Dark Side of Growth Hacking: What Not to Do",
-    "excerpt": "Fake reviews, bot traffic, and black-hat SEO — the shortcuts that will kill your startup. Practical tips, templates, and AI-powered shortcuts to get results...",
-    "date": "2026-05-25",
-    "readTime": "6 min",
-    "coverImage": "https://picsum.photos/seed/the-dark-side-of-growth-hacking-what-not-to-do/600/400"
-  },
-  {
-    "slug": "time-blocking-for-creatives-a-realistic-guide",
-    "tag": "Productivity",
-    "title": "Time Blocking for Creatives: A Realistic Guide",
-    "excerpt": "Why rigid schedules fail for developers, and the flexible system that actually works. Practical tips, templates, and AI-powered shortcuts to get results faster.",
-    "date": "2026-05-25",
-    "readTime": "6 min",
-    "coverImage": "https://picsum.photos/seed/time-blocking-for-creatives-a-realistic-guide/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&q=80",
+    "description": "After 18 months of trial and error, here is what actually works. Utility-first, zero-runtime, and the new tools that are changing how we style the web."
   },
   {
     "slug": "ai-content-strategy",
@@ -155,49 +158,64 @@
     "coverImage": "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=600&q=80"
   },
   {
+    "slug": "the-dark-side-of-growth-hacking-what-not-to-do",
+    "tag": "Growth",
+    "title": "The Dark Side of Growth Hacking: What Not to Do",
+    "excerpt": "Fake reviews, bot traffic, and black-hat SEO — the shortcuts that will kill your startup.",
+    "date": "2026-05-25",
+    "readTime": "6 min",
+    "coverImage": "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=600&q=80",
+    "description": "After 18 months of trial and error, here is what actually works. Fake reviews, bot traffic, and black-hat SEO — the shortcuts that will kill your startup."
+  },
+  {
+    "slug": "time-blocking-for-creatives-a-realistic-guide",
+    "tag": "Productivity",
+    "title": "Time Blocking for Creatives: A Realistic Guide",
+    "excerpt": "Why rigid schedules fail for developers, and the flexible system that actually works.",
+    "date": "2026-05-25",
+    "readTime": "6 min",
+    "coverImage": "https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=600&q=80",
+    "description": "After 18 months of trial and error, here is what actually works. Why rigid schedules fail for developers, and the flexible system that actually works."
+  },
+  {
     "slug": "midjourney-v7-review-the-good-the-bad-and-the-weird",
     "tag": "AI Tools",
     "title": "Midjourney v7 Review: The Good, The Bad, and The Weird",
-    "excerpt": "Better photorealism, stranger artifacts, and the prompt technique that finally clicked for me. Practical tips, templates, and AI-powered shortcuts to get...",
+    "excerpt": "Better photorealism, stranger artifacts, and the prompt technique that finally clicked for me.",
     "date": "2026-05-24",
     "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/midjourney-v7-review-the-good-the-bad-and-the-weird/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=600&q=80",
+    "description": "What they do not tell you about better photorealism, stranger artifacts, and the prompt technique that finally clicked for me. Better photorealism, stranger artifacts, and the prompt technique that finally clicked for me."
   },
   {
     "slug": "how-to-get-your-first-1000-users-without-paid-ads",
     "tag": "Growth",
     "title": "How to Get Your First 1000 Users Without Paid Ads",
-    "excerpt": "Community-led growth, content loops, and the channels that actually convert for indie products. Practical tips, templates, and AI-powered shortcuts to get...",
+    "excerpt": "Community-led growth, content loops, and the channels that actually convert for indie products.",
     "date": "2026-05-24",
     "readTime": "9 min",
-    "coverImage": "https://picsum.photos/seed/how-to-get-your-first-1000-users-without-paid-ads/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=600&q=80",
+    "description": "I learned this the hard way. Community-led growth, content loops, and the channels that actually convert for indie products."
   },
   {
     "slug": "keyword-research-in-2026-beyond-search-volume",
     "tag": "SEO",
     "title": "Keyword Research in 2026: Beyond Search Volume",
-    "excerpt": "Intent analysis, SERP feature targeting, and the metrics that actually predict traffic. Practical tips, templates, and AI-powered shortcuts to get results...",
+    "excerpt": "Intent analysis, SERP feature targeting, and the metrics that actually predict traffic.",
     "date": "2026-05-24",
     "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/keyword-research-in-2026-beyond-search-volume/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=600&q=80",
+    "description": "What they do not tell you about intent analysis, serp feature targeting, and the metrics that actually predict traffic. Intent analysis, SERP feature targeting, and the metrics that actually predict traffic."
   },
   {
     "slug": "edge-computing-when-to-use-it-when-to-skip-it",
     "tag": "Development",
     "title": "Edge Computing: When to Use It, When to Skip It",
-    "excerpt": "Vercel, Cloudflare Workers, and the performance myths that need debunking. Practical tips, templates, and AI-powered shortcuts to get results faster.",
+    "excerpt": "Vercel, Cloudflare Workers, and the performance myths that need debunking.",
     "date": "2026-05-24",
     "readTime": "8 min",
-    "coverImage": "https://picsum.photos/seed/edge-computing-when-to-use-it-when-to-skip-it/600/400"
-  },
-  {
-    "slug": "automation-scripts-that-save-me-10-hours-a-week",
-    "tag": "Productivity",
-    "title": "Automation Scripts That Save Me 10 Hours a Week",
-    "excerpt": "The exact shell scripts, GitHub Actions, and IFTTT workflows I use daily. Practical tips, templates, and AI-powered shortcuts to get results faster.",
-    "date": "2026-05-23",
-    "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/automation-scripts-that-save-me-10-hours-a-week/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&q=80",
+    "description": "I learned this the hard way. Vercel, Cloudflare Workers, and the performance myths that need debunking."
   },
   {
     "slug": "running-llms-locally-a-complete-setup-guide-for-2026",
@@ -206,7 +224,28 @@
     "excerpt": "From Ollama to vLLM, here is the hardware and software stack you need to run production-grade AI on your own machine.",
     "date": "2026-05-23",
     "readTime": "9 min",
-    "coverImage": "https://picsum.photos/seed/running-llms-locally-a-complete-setup-guide-for-2026/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&q=80",
+    "description": "After 18 months of trial and error, here is what actually works. From Ollama to vLLM, here is the hardware and software stack you need to run production-grade AI on your own machine."
+  },
+  {
+    "slug": "why-i-stopped-chasing-vc-and-started-building-for-profit",
+    "tag": "Indie Dev",
+    "title": "Why I Stopped Chasing VC and Started Building for Profit",
+    "excerpt": "The mindset shift from \"growth at all costs\" to \"sustainable business\" and why it matters.",
+    "date": "2026-05-23",
+    "readTime": "7 min",
+    "coverImage": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&q=80",
+    "description": "After 18 months of trial and error, here is what actually works. The mindset shift from \"growth at all costs\" to \"sustainable business\" and why it matters."
+  },
+  {
+    "slug": "automation-scripts-that-save-me-10-hours-a-week",
+    "tag": "Productivity",
+    "title": "Automation Scripts That Save Me 10 Hours a Week",
+    "excerpt": "The exact shell scripts, GitHub Actions, and IFTTT workflows I use daily.",
+    "date": "2026-05-23",
+    "readTime": "7 min",
+    "coverImage": "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=600&q=80",
+    "description": "What they do not tell you about the exact shell scripts, github actions, and ifttt workflows i use daily. The exact shell scripts, GitHub Actions, and IFTTT workflows I use daily."
   },
   {
     "slug": "seo-2026-trends",
@@ -221,46 +260,21 @@
     "slug": "saas-pricing-strategies-that-actually-convert-in-2026",
     "tag": "Growth",
     "title": "SaaS Pricing Strategies That Actually Convert in 2026",
-    "excerpt": "Usage-based, seat-based, or hybrid? We break down what works for different product types. Practical tips, templates, and AI-powered shortcuts to get results...",
+    "excerpt": "Usage-based, seat-based, or hybrid? We break down what works for different product types.",
     "date": "2026-05-22",
     "readTime": "8 min",
-    "coverImage": "https://picsum.photos/seed/saas-pricing-strategies-that-actually-convert-in-2026/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=600&q=80",
+    "description": "After 18 months of trial and error, here is what actually works. Usage-based, seat-based, or hybrid? We break down what works for different product types."
   },
   {
     "slug": "technical-seo-for-single-page-applications",
     "tag": "SEO",
     "title": "Technical SEO for Single-Page Applications",
-    "excerpt": "How to make React/Next.js apps crawlable without sacrificing performance. Practical tips, templates, and AI-powered shortcuts to get results faster.",
+    "excerpt": "How to make React/Next.js apps crawlable without sacrificing performance.",
     "date": "2026-05-22",
     "readTime": "8 min",
-    "coverImage": "https://picsum.photos/seed/technical-seo-for-single-page-applications/600/400"
-  },
-  {
-    "slug": "from-side-project-to-50k-arr-a-12-month-timeline",
-    "tag": "Growth",
-    "title": "From Side Project to $50K ARR: A 12-Month Timeline",
-    "excerpt": "The exact milestones, pivots, and growth channels that took one indie dev from hobby to business. Practical tips, templates, and AI-powered shortcuts to get...",
-    "date": "2026-05-21",
-    "readTime": "10 min",
-    "coverImage": "https://picsum.photos/seed/from-side-project-to-50k-arr-a-12-month-timeline/600/400"
-  },
-  {
-    "slug": "the-problem-with-productivity-porn",
-    "tag": "Productivity",
-    "title": "The Problem with Productivity Porn",
-    "excerpt": "Why chasing the perfect system is a trap, and the simple habits that actually matter. Practical tips, templates, and AI-powered shortcuts to get results faster.",
-    "date": "2026-05-21",
-    "readTime": "5 min",
-    "coverImage": "https://picsum.photos/seed/the-problem-with-productivity-porn/600/400"
-  },
-  {
-    "slug": "database-design-for-indie-devs-start-simple-scale-later",
-    "tag": "Development",
-    "title": "Database Design for Indie Devs: Start Simple, Scale Later",
-    "excerpt": "PostgreSQL vs SQLite, when to add Redis, and the schema decisions that haunt you later. Practical tips, templates, and AI-powered shortcuts to get results...",
-    "date": "2026-05-21",
-    "readTime": "9 min",
-    "coverImage": "https://picsum.photos/seed/database-design-for-indie-devs-start-simple-scale-later/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=600&q=80",
+    "description": "This is not the advice you will find in most guides. How to make React/Next.js apps crawlable without sacrificing performance."
   },
   {
     "slug": "the-best-ai-tools-for-indie-developers-in-2026",
@@ -269,7 +283,38 @@
     "excerpt": "A curated list of 25 tools that actually save time, not just add another subscription to your credit card.",
     "date": "2026-05-21",
     "readTime": "8 min",
-    "coverImage": "https://picsum.photos/seed/the-best-ai-tools-for-indie-developers-in-2026/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&q=80",
+    "description": "This is not the advice you will find in most guides. A curated list of 25 tools that actually save time, not just add another subscription to your credit card."
+  },
+  {
+    "slug": "from-side-project-to-50k-arr-a-12-month-timeline",
+    "tag": "Growth",
+    "title": "From Side Project to $50K ARR: A 12-Month Timeline",
+    "excerpt": "The exact milestones, pivots, and growth channels that took one indie dev from hobby to business.",
+    "date": "2026-05-21",
+    "readTime": "10 min",
+    "coverImage": "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=600&q=80",
+    "description": "I made every mistake so you do not have to. The exact milestones, pivots, and growth channels that took one indie dev from hobby to business."
+  },
+  {
+    "slug": "the-problem-with-productivity-porn",
+    "tag": "Productivity",
+    "title": "The Problem with Productivity Porn",
+    "excerpt": "Why chasing the perfect system is a trap, and the simple habits that actually matter.",
+    "date": "2026-05-21",
+    "readTime": "5 min",
+    "coverImage": "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=600&q=80",
+    "description": "This is not the advice you will find in most guides. Why chasing the perfect system is a trap, and the simple habits that actually matter."
+  },
+  {
+    "slug": "database-design-for-indie-devs-start-simple-scale-later",
+    "tag": "Development",
+    "title": "Database Design for Indie Devs: Start Simple, Scale Later",
+    "excerpt": "PostgreSQL vs SQLite, when to add Redis, and the schema decisions that haunt you later.",
+    "date": "2026-05-21",
+    "readTime": "9 min",
+    "coverImage": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&q=80",
+    "description": "After 18 months of trial and error, here is what actually works. PostgreSQL vs SQLite, when to add Redis, and the schema decisions that haunt you later."
   },
   {
     "slug": "reddit-marketing",
@@ -284,19 +329,31 @@
     "slug": "building-a-micro-saas-empire-the-portfolio-approach",
     "tag": "Indie Dev",
     "title": "Building a Micro-SaaS Empire: The Portfolio Approach",
-    "excerpt": "Why multiple small products beat one big bet, and how to manage them all. Practical tips, templates, and AI-powered shortcuts to get results faster.",
+    "excerpt": "Why multiple small products beat one big bet, and how to manage them all.",
     "date": "2026-05-20",
     "readTime": "8 min",
-    "coverImage": "https://picsum.photos/seed/building-a-micro-saas-empire-the-portfolio-approach/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&q=80",
+    "description": "This is not the advice you will find in most guides. Why multiple small products beat one big bet, and how to manage them all."
   },
   {
     "slug": "content-clusters-the-strategy-that-doubled-our-organic-traff",
     "tag": "SEO",
     "title": "Content Clusters: The Strategy That Doubled Our Organic Traffic",
-    "excerpt": "How to build topic authority with pillar pages and supporting content. Practical tips, templates, and AI-powered shortcuts to get results faster.",
+    "excerpt": "How to build topic authority with pillar pages and supporting content.",
     "date": "2026-05-20",
     "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/content-clusters-the-strategy-that-doubled-our-organic-traff/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80",
+    "description": "What they do not tell you about how to build topic authority with pillar pages and supporting content. How to build topic authority with pillar pages and supporting content."
+  },
+  {
+    "slug": "how-to-build-an-ai-saas-in-48-hours-step-by-step",
+    "tag": "AI Tools",
+    "title": "How to Build an AI SaaS in 48 Hours (Step by Step)",
+    "excerpt": "From idea to first paying customer using only AI tools. No coding team required.",
+    "date": "2026-05-19",
+    "readTime": "10 min",
+    "coverImage": "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=600&q=80",
+    "description": "After 18 months of trial and error, here is what actually works. From idea to first paying customer using only AI tools. No coding team required."
   },
   {
     "slug": "why-your-landing-page-is-not-converting-and-how-to-fix-it",
@@ -305,61 +362,28 @@
     "excerpt": "Common mistakes in indie dev landing pages, and the copy/framework changes that doubled our signups.",
     "date": "2026-05-19",
     "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/why-your-landing-page-is-not-converting-and-how-to-fix-it/600/400"
-  },
-  {
-    "slug": "web-performance-in-2026-core-web-vitals-and-beyond",
-    "tag": "Development",
-    "title": "Web Performance in 2026: Core Web Vitals and Beyond",
-    "excerpt": "LCP, INP, CLS — what to optimize, what to ignore, and the tools that help. Practical tips, templates, and AI-powered shortcuts to get results faster.",
-    "date": "2026-05-19",
-    "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/web-performance-in-2026-core-web-vitals-and-beyond/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600&q=80",
+    "description": "I learned this the hard way. Common mistakes in indie dev landing pages, and the copy/framework changes that doubled our signups."
   },
   {
     "slug": "context-switching-is-killing-your-output-here-is-the-fix",
     "tag": "Productivity",
     "title": "Context Switching Is Killing Your Output. Here Is the Fix.",
-    "excerpt": "The science of attention residue, and the batching technique that tripled my deep work hours. Practical tips, templates, and AI-powered shortcuts to get...",
+    "excerpt": "The science of attention residue, and the batching technique that tripled my deep work hours.",
     "date": "2026-05-19",
     "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/context-switching-is-killing-your-output-here-is-the-fix/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=600&q=80",
+    "description": "This is not the advice you will find in most guides. The science of attention residue, and the batching technique that tripled my deep work hours."
   },
   {
-    "slug": "how-to-build-an-ai-saas-in-48-hours-step-by-step",
-    "tag": "AI Tools",
-    "title": "How to Build an AI SaaS in 48 Hours (Step by Step)",
-    "excerpt": "From idea to first paying customer using only AI tools. No coding team required. Practical tips, templates, and AI-powered shortcuts to get results faster.",
+    "slug": "web-performance-in-2026-core-web-vitals-and-beyond",
+    "tag": "Development",
+    "title": "Web Performance in 2026: Core Web Vitals and Beyond",
+    "excerpt": "LCP, INP, CLS — what to optimize, what to ignore, and the tools that help.",
     "date": "2026-05-19",
-    "readTime": "10 min",
-    "coverImage": "https://picsum.photos/seed/how-to-build-an-ai-saas-in-48-hours-step-by-step/600/400"
-  },
-  {
-    "slug": "the-complete-guide-to-affiliate-marketing-for-saas",
-    "tag": "Growth",
-    "title": "The Complete Guide to Affiliate Marketing for SaaS",
-    "excerpt": "How to recruit, onboard, and retain affiliates who actually drive revenue. Practical tips, templates, and AI-powered shortcuts to get results faster.",
-    "date": "2026-05-18",
-    "readTime": "8 min",
-    "coverImage": "https://picsum.photos/seed/the-complete-guide-to-affiliate-marketing-for-saas/600/400"
-  },
-  {
-    "slug": "the-4-hour-workweek-for-developers-reality-check",
-    "tag": "Indie Dev",
-    "title": "The 4-Hour Workweek for Developers: Reality Check",
-    "excerpt": "What automation actually looks like, and what still requires human judgment. Practical tips, templates, and AI-powered shortcuts to get results faster.",
-    "date": "2026-05-18",
     "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/the-4-hour-workweek-for-developers-reality-check/600/400"
-  },
-  {
-    "slug": "link-building-for-boring-b2b-products",
-    "tag": "SEO",
-    "title": "Link Building for Boring B2B Products",
-    "excerpt": "Digital PR, guest posts, and the unconventional tactics that earn backlinks in unsexy industries. Practical tips, templates, and AI-powered shortcuts to get...",
-    "date": "2026-05-18",
-    "readTime": "8 min",
-    "coverImage": "https://picsum.photos/seed/link-building-for-boring-b2b-products/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=600&q=80",
+    "description": "This is not the advice you will find in most guides. LCP, INP, CLS — what to optimize, what to ignore, and the tools that help."
   },
   {
     "slug": "twitter-growth",
@@ -371,49 +395,104 @@
     "coverImage": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&q=80"
   },
   {
+    "slug": "the-complete-guide-to-affiliate-marketing-for-saas",
+    "tag": "Growth",
+    "title": "The Complete Guide to Affiliate Marketing for SaaS",
+    "excerpt": "How to recruit, onboard, and retain affiliates who actually drive revenue.",
+    "date": "2026-05-18",
+    "readTime": "8 min",
+    "coverImage": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&q=80",
+    "description": "After 18 months of trial and error, here is what actually works. How to recruit, onboard, and retain affiliates who actually drive revenue."
+  },
+  {
+    "slug": "the-4-hour-workweek-for-developers-reality-check",
+    "tag": "Indie Dev",
+    "title": "The 4-Hour Workweek for Developers: Reality Check",
+    "excerpt": "What automation actually looks like, and what still requires human judgment.",
+    "date": "2026-05-18",
+    "readTime": "7 min",
+    "coverImage": "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=600&q=80",
+    "description": "What they do not tell you about what automation actually looks like, and what still requires human judgment. What automation actually looks like, and what still requires human judgment."
+  },
+  {
+    "slug": "link-building-for-boring-b2b-products",
+    "tag": "SEO",
+    "title": "Link Building for Boring B2B Products",
+    "excerpt": "Digital PR, guest posts, and the unconventional tactics that earn backlinks in unsexy industries.",
+    "date": "2026-05-18",
+    "readTime": "8 min",
+    "coverImage": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&q=80",
+    "description": "I made every mistake so you do not have to. Digital PR, guest posts, and the unconventional tactics that earn backlinks in unsexy industries."
+  },
+  {
     "slug": "prompt-engineering-is-dead-long-live-prompt-engineering",
     "tag": "AI Tools",
     "title": "Prompt Engineering Is Dead. Long Live Prompt Engineering.",
-    "excerpt": "Why simple prompts beat complex chains in 2026, and the 3 patterns that still matter. Practical tips, templates, and AI-powered shortcuts to get results faster.",
+    "excerpt": "Why simple prompts beat complex chains in 2026, and the 3 patterns that still matter.",
     "date": "2026-05-17",
     "readTime": "6 min",
-    "coverImage": "https://picsum.photos/seed/prompt-engineering-is-dead-long-live-prompt-engineering/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600&q=80",
+    "description": "I made every mistake so you do not have to. Why simple prompts beat complex chains in 2026, and the 3 patterns that still matter."
   },
   {
     "slug": "building-in-public-a-strategy-not-a-stunt",
     "tag": "Growth",
     "title": "Building in Public: A Strategy, Not a Stunt",
-    "excerpt": "How to share your journey without oversharing, and why transparency builds trust (and customers). Practical tips, templates, and AI-powered shortcuts to get...",
+    "excerpt": "How to share your journey without oversharing, and why transparency builds trust (and customers).",
     "date": "2026-05-17",
     "readTime": "6 min",
-    "coverImage": "https://picsum.photos/seed/building-in-public-a-strategy-not-a-stunt/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=80",
+    "description": "I learned this the hard way. How to share your journey without oversharing, and why transparency builds trust (and customers)."
+  },
+  {
+    "slug": "how-to-run-effective-1-1s-even-if-you-hate-meetings",
+    "tag": "Productivity",
+    "title": "How to Run Effective 1:1s (Even If You Hate Meetings)",
+    "excerpt": "The 15-minute format that replaces hour-long status updates.",
+    "date": "2026-05-17",
+    "readTime": "6 min",
+    "coverImage": "https://images.unsplash.com/photo-1506784365847-bbad939e9335?w=600&q=80",
+    "description": "I made every mistake so you do not have to. The 15-minute format that replaces hour-long status updates."
   },
   {
     "slug": "monorepos-in-2026-turborepo-nx-or-just-pnpm",
     "tag": "Development",
     "title": "Monorepos in 2026: Turborepo, Nx, or Just pnpm?",
-    "excerpt": "The state of JavaScript monorepos, and when a monorepo is overkill for your project. Practical tips, templates, and AI-powered shortcuts to get results faster.",
+    "excerpt": "The state of JavaScript monorepos, and when a monorepo is overkill for your project.",
     "date": "2026-05-17",
     "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/monorepos-in-2026-turborepo-nx-or-just-pnpm/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=600&q=80",
+    "description": "What they do not tell you about the state of javascript monorepos, and when a monorepo is overkill for your project. The state of JavaScript monorepos, and when a monorepo is overkill for your project."
   },
   {
     "slug": "ai-voice-cloning-use-cases-ethics-and-the-tools-that-get-it-",
     "tag": "AI Tools",
-    "title": "AI Voice Cloning: Use Cases and Top Tools",
-    "excerpt": "From podcast editing to audiobooks, here is where voice AI shines — and where it crosses the line. Practical tips, templates, and AI-powered shortcuts to...",
+    "title": "AI Voice Cloning: Use Cases, Ethics, and the Tools That Get It Right",
+    "excerpt": "From podcast editing to audiobooks, here is where voice AI shines — and where it crosses the line.",
     "date": "2026-05-16",
     "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/ai-voice-cloning-use-cases-ethics-and-the-tools-that-get-it-/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1526379096588-290a6b65f8a3?w=600&q=80",
+    "description": "After 18 months of trial and error, here is what actually works. From podcast editing to audiobooks, here is where voice AI shines — and where it crosses the line."
+  },
+  {
+    "slug": "from-employee-to-founder-the-mental-shift",
+    "tag": "Indie Dev",
+    "title": "From Employee to Founder: The Mental Shift",
+    "excerpt": "Decision-making, risk tolerance, and the loneliness nobody warns you about.",
+    "date": "2026-05-16",
+    "readTime": "6 min",
+    "coverImage": "https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=600&q=80",
+    "description": "This is not the advice you will find in most guides. Decision-making, risk tolerance, and the loneliness nobody warns you about."
   },
   {
     "slug": "the-future-of-search-what-happens-when-ai-answers-everything",
     "tag": "SEO",
     "title": "The Future of Search: What Happens When AI Answers Everything?",
-    "excerpt": "Zero-click searches, AI overviews, and how to stay relevant when Google changes the game. Practical tips, templates, and AI-powered shortcuts to get results...",
+    "excerpt": "Zero-click searches, AI overviews, and how to stay relevant when Google changes the game.",
     "date": "2026-05-16",
     "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/the-future-of-search-what-happens-when-ai-answers-everything/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=600&q=80",
+    "description": "This is not the advice you will find in most guides. Zero-click searches, AI overviews, and how to stay relevant when Google changes the game."
   },
   {
     "slug": "kol-marketing",
@@ -428,55 +507,31 @@
     "slug": "the-state-of-indie-hacker-marketing-in-2026",
     "tag": "Growth",
     "title": "The State of Indie Hacker Marketing in 2026",
-    "excerpt": "What is working on Hacker News, Reddit, and Twitter for product launches this year. Practical tips, templates, and AI-powered shortcuts to get results faster.",
+    "excerpt": "What is working on Hacker News, Reddit, and Twitter for product launches this year.",
     "date": "2026-05-15",
     "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/the-state-of-indie-hacker-marketing-in-2026/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&q=80",
+    "description": "After 18 months of trial and error, here is what actually works. What is working on Hacker News, Reddit, and Twitter for product launches this year."
   },
   {
     "slug": "the-best-note-taking-apps-for-developers-in-2026",
     "tag": "Productivity",
     "title": "The Best Note-Taking Apps for Developers in 2026",
-    "excerpt": "Obsidian, Notion, Logseq, and the one that finally stuck for me. Practical tips, templates, and AI-powered shortcuts to get results faster.",
+    "excerpt": "Obsidian, Notion, Logseq, and the one that finally stuck for me.",
     "date": "2026-05-15",
     "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/the-best-note-taking-apps-for-developers-in-2026/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&q=80",
+    "description": "This is not the advice you will find in most guides. Obsidian, Notion, Logseq, and the one that finally stuck for me."
   },
   {
     "slug": "authentication-without-the-pain-oauth-passkeys-and-magic-lin",
     "tag": "Development",
     "title": "Authentication Without the Pain: OAuth, Passkeys, and Magic Links",
-    "excerpt": "The modern auth stack that balances security and user experience. Practical tips, templates, and AI-powered shortcuts to get results faster.",
+    "excerpt": "The modern auth stack that balances security and user experience.",
     "date": "2026-05-15",
     "readTime": "8 min",
-    "coverImage": "https://picsum.photos/seed/authentication-without-the-pain-oauth-passkeys-and-magic-lin/600/400"
-  },
-  {
-    "slug": "how-to-create-a-viral-tool-that-markets-your-product",
-    "tag": "Growth",
-    "title": "How to Create a Viral Tool That Markets Your Product",
-    "excerpt": "Free tools, calculators, and generators that bring qualified traffic to your paid product. Practical tips, templates, and AI-powered shortcuts to get...",
-    "date": "2026-05-14",
-    "readTime": "8 min",
-    "coverImage": "https://picsum.photos/seed/how-to-create-a-viral-tool-that-markets-your-product/600/400"
-  },
-  {
-    "slug": "how-to-validate-your-saas-idea-in-one-weekend",
-    "tag": "Indie Dev",
-    "title": "How to Validate Your SaaS Idea in One Weekend",
-    "excerpt": "The smoke test, the fake door, and the landing page test that saved me 6 months of building. Practical tips, templates, and AI-powered shortcuts to get...",
-    "date": "2026-05-14",
-    "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/how-to-validate-your-saas-idea-in-one-weekend/600/400"
-  },
-  {
-    "slug": "schema-markup-that-actually-moves-the-needle",
-    "tag": "SEO",
-    "title": "Schema Markup That Actually Moves the Needle",
-    "excerpt": "FAQ, HowTo, and Product schema — which ones drive clicks and which are a waste of time. Practical tips, templates, and AI-powered shortcuts to get results...",
-    "date": "2026-05-14",
-    "readTime": "6 min",
-    "coverImage": "https://picsum.photos/seed/schema-markup-that-actually-moves-the-needle/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1587620962725-abab7fe55159?w=600&q=80",
+    "description": "What they do not tell you about the modern auth stack that balances security and user experience. The modern auth stack that balances security and user experience."
   },
   {
     "slug": "why-your-ai-generated-content-sounds-generic-and-how-to-fix-it",
@@ -488,31 +543,84 @@
     "coverImage": "https://picsum.photos/seed/why-your-ai-generated-content-sounds-generic-and-how-to-fix-it/600/400"
   },
   {
+    "slug": "why-your-ai-generated-content-sounds-generic-and-how-to-fix-",
+    "tag": "AI Tools",
+    "title": "Why Your AI-Generated Content Sounds Generic (And How to Fix It)",
+    "excerpt": "The training data problem nobody talks about, and the 5-minute trick that makes AI text sound like you.",
+    "date": "2026-05-14",
+    "readTime": "6 min",
+    "coverImage": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&q=80",
+    "description": "This is not the advice you will find in most guides. The training data problem nobody talks about, and the 5-minute trick that makes AI text sound like you."
+  },
+  {
+    "slug": "how-to-create-a-viral-tool-that-markets-your-product",
+    "tag": "Growth",
+    "title": "How to Create a Viral Tool That Markets Your Product",
+    "excerpt": "Free tools, calculators, and generators that bring qualified traffic to your paid product.",
+    "date": "2026-05-14",
+    "readTime": "8 min",
+    "coverImage": "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=600&q=80",
+    "description": "This is not the advice you will find in most guides. Free tools, calculators, and generators that bring qualified traffic to your paid product."
+  },
+  {
+    "slug": "how-to-validate-your-saas-idea-in-one-weekend",
+    "tag": "Indie Dev",
+    "title": "How to Validate Your SaaS Idea in One Weekend",
+    "excerpt": "The smoke test, the fake door, and the landing page test that saved me 6 months of building.",
+    "date": "2026-05-14",
+    "readTime": "7 min",
+    "coverImage": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&q=80",
+    "description": "I made every mistake so you do not have to. The smoke test, the fake door, and the landing page test that saved me 6 months of building."
+  },
+  {
+    "slug": "schema-markup-that-actually-moves-the-needle",
+    "tag": "SEO",
+    "title": "Schema Markup That Actually Moves the Needle",
+    "excerpt": "FAQ, HowTo, and Product schema — which ones drive clicks and which are a waste of time.",
+    "date": "2026-05-14",
+    "readTime": "6 min",
+    "coverImage": "https://images.unsplash.com/photo-1542435503-956c469947f6?w=600&q=80",
+    "description": "What they do not tell you about faq, howto, and product schema — which ones drive clicks and which are a waste of time. FAQ, HowTo, and Product schema — which ones drive clicks and which are a waste of time."
+  },
+  {
     "slug": "autogpt-vs-agentic-workflows-what-actually-works-in-producti",
     "tag": "AI Tools",
     "title": "AutoGPT vs Agentic Workflows: What Actually Works in Production",
-    "excerpt": "We tested 8 autonomous AI frameworks on real business tasks. Most failed. Two surprised us. Practical tips, templates, and AI-powered shortcuts to get...",
+    "excerpt": "We tested 8 autonomous AI frameworks on real business tasks. Most failed. Two surprised us.",
     "date": "2026-05-13",
     "readTime": "8 min",
-    "coverImage": "https://picsum.photos/seed/autogpt-vs-agentic-workflows-what-actually-works-in-producti/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80",
+    "description": "I made every mistake so you do not have to. We tested 8 autonomous AI frameworks on real business tasks. Most failed. Two surprised us."
   },
   {
     "slug": "the-tech-stack-that-scales-from-0-to-1m-arr",
     "tag": "Indie Dev",
     "title": "The Tech Stack That Scales from $0 to $1M ARR",
-    "excerpt": "What to use when you are solo, what to change when you grow, and what to never compromise on. Practical tips, templates, and AI-powered shortcuts to get...",
+    "excerpt": "What to use when you are solo, what to change when you grow, and what to never compromise on.",
     "date": "2026-05-13",
     "readTime": "9 min",
-    "coverImage": "https://picsum.photos/seed/the-tech-stack-that-scales-from-0-to-1m-arr/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=600&q=80",
+    "description": "After 18 months of trial and error, here is what actually works. What to use when you are solo, what to change when you grow, and what to never compromise on."
+  },
+  {
+    "slug": "energy-management-vs-time-management",
+    "tag": "Productivity",
+    "title": "Energy Management vs Time Management",
+    "excerpt": "Why managing your energy matters more than your calendar, and how to do both.",
+    "date": "2026-05-13",
+    "readTime": "6 min",
+    "coverImage": "https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?w=600&q=80",
+    "description": "I learned this the hard way. Why managing your energy matters more than your calendar, and how to do both."
   },
   {
     "slug": "testing-strategies-for-small-teams",
     "tag": "Development",
     "title": "Testing Strategies for Small Teams",
-    "excerpt": "Unit, integration, e2e — what to test, what to skip, and how much coverage is enough. Practical tips, templates, and AI-powered shortcuts to get results faster.",
+    "excerpt": "Unit, integration, e2e — what to test, what to skip, and how much coverage is enough.",
     "date": "2026-05-13",
     "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/testing-strategies-for-small-teams/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&q=80",
+    "description": "After 18 months of trial and error, here is what actually works. Unit, integration, e2e — what to test, what to skip, and how much coverage is enough."
   },
   {
     "slug": "no-code-mvp",
@@ -527,55 +635,81 @@
     "slug": "email-marketing-for-saas-beyond-the-welcome-sequence",
     "tag": "Growth",
     "title": "Email Marketing for SaaS: Beyond the Welcome Sequence",
-    "excerpt": "Advanced segmentation, behavioral triggers, and the campaigns that actually retain users. Practical tips, templates, and AI-powered shortcuts to get results...",
+    "excerpt": "Advanced segmentation, behavioral triggers, and the campaigns that actually retain users.",
     "date": "2026-05-12",
     "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/email-marketing-for-saas-beyond-the-welcome-sequence/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=600&q=80",
+    "description": "After 18 months of trial and error, here is what actually works. Advanced segmentation, behavioral triggers, and the campaigns that actually retain users."
+  },
+  {
+    "slug": "how-to-say-no-without-burning-bridges",
+    "tag": "Productivity",
+    "title": "How to Say No Without Burning Bridges",
+    "excerpt": "The scripts and frameworks that protect your time while maintaining relationships.",
+    "date": "2026-05-12",
+    "readTime": "5 min",
+    "coverImage": "https://images.unsplash.com/photo-1456324504439-367cee3b3c32?w=600&q=80",
+    "description": "After 18 months of trial and error, here is what actually works. The scripts and frameworks that protect your time while maintaining relationships."
   },
   {
     "slug": "video-seo-how-to-rank-on-youtube-and-google",
     "tag": "SEO",
     "title": "Video SEO: How to Rank on YouTube and Google",
-    "excerpt": "The optimization tactics that work for both platforms, and why transcripts are underrated. Practical tips, templates, and AI-powered shortcuts to get...",
+    "excerpt": "The optimization tactics that work for both platforms, and why transcripts are underrated.",
     "date": "2026-05-12",
     "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/video-seo-how-to-rank-on-youtube-and-google/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&q=80",
+    "description": "After 18 months of trial and error, here is what actually works. The optimization tactics that work for both platforms, and why transcripts are underrated."
   },
   {
     "slug": "the-complete-guide-to-ai-powered-customer-support",
     "tag": "AI Tools",
     "title": "The Complete Guide to AI-Powered Customer Support",
-    "excerpt": "How to cut response time by 80% without making customers hate you. Practical tips, templates, and AI-powered shortcuts to get results faster.",
+    "excerpt": "How to cut response time by 80% without making customers hate you.",
     "date": "2026-05-11",
     "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/the-complete-guide-to-ai-powered-customer-support/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=600&q=80",
+    "description": "I made every mistake so you do not have to. How to cut response time by 80% without making customers hate you."
   },
   {
     "slug": "the-art-of-the-soft-launch-why-big-bangs-fail",
     "tag": "Growth",
     "title": "The Art of the Soft Launch: Why Big Bangs Fail",
-    "excerpt": "Why rolling releases, beta groups, and gradual scaling beat \"launch day\" for most products. Practical tips, templates, and AI-powered shortcuts to get...",
+    "excerpt": "Why rolling releases, beta groups, and gradual scaling beat \"launch day\" for most products.",
     "date": "2026-05-11",
     "readTime": "6 min",
-    "coverImage": "https://picsum.photos/seed/the-art-of-the-soft-launch-why-big-bangs-fail/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=600&q=80",
+    "description": "What they do not tell you about why rolling releases, beta groups, and gradual scaling beat \"launch day\" for most products. Why rolling releases, beta groups, and gradual scaling beat \"launch day\" for most products."
+  },
+  {
+    "slug": "dealing-with-imposter-syndrome-as-a-solo-founder",
+    "tag": "Indie Dev",
+    "title": "Dealing with Imposter Syndrome as a Solo Founder",
+    "excerpt": "Why everyone feels it, how to push through it, and why it might actually help you.",
+    "date": "2026-05-11",
+    "readTime": "6 min",
+    "coverImage": "https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=600&q=80",
+    "description": "This is not the advice you will find in most guides. Why everyone feels it, how to push through it, and why it might actually help you."
   },
   {
     "slug": "local-seo-for-saas-does-it-even-matter",
     "tag": "SEO",
     "title": "Local SEO for SaaS: Does It Even Matter?",
-    "excerpt": "When to target local keywords, and when it is a distraction from your global audience. Practical tips, templates, and AI-powered shortcuts to get results...",
+    "excerpt": "When to target local keywords, and when it is a distraction from your global audience.",
     "date": "2026-05-11",
     "readTime": "5 min",
-    "coverImage": "https://picsum.photos/seed/local-seo-for-saas-does-it-even-matter/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=600&q=80",
+    "description": "I learned this the hard way. When to target local keywords, and when it is a distraction from your global audience."
   },
   {
     "slug": "the-rise-of-local-first-apps-sync-without-the-cloud",
     "tag": "Development",
     "title": "The Rise of Local-First Apps: Sync Without the Cloud",
-    "excerpt": "CRDTs, SQLite on the client, and the offline-first architecture that actually works. Practical tips, templates, and AI-powered shortcuts to get results faster.",
+    "excerpt": "CRDTs, SQLite on the client, and the offline-first architecture that actually works.",
     "date": "2026-05-11",
     "readTime": "8 min",
-    "coverImage": "https://picsum.photos/seed/the-rise-of-local-first-apps-sync-without-the-cloud/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=600&q=80",
+    "description": "This is not the advice you will find in most guides. CRDTs, SQLite on the client, and the offline-first architecture that actually works."
   },
   {
     "slug": "ai-productivity-stack",
@@ -590,28 +724,31 @@
     "slug": "referral-loops-how-dropbox-notion-and-linear-grew",
     "tag": "Growth",
     "title": "Referral Loops: How Dropbox, Notion, and Linear Grew",
-    "excerpt": "The mechanics of viral growth, and how to build a referral system into your product. Practical tips, templates, and AI-powered shortcuts to get results faster.",
+    "excerpt": "The mechanics of viral growth, and how to build a referral system into your product.",
     "date": "2026-05-10",
     "readTime": "8 min",
-    "coverImage": "https://picsum.photos/seed/referral-loops-how-dropbox-notion-and-linear-grew/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=600&q=80",
+    "description": "I learned this the hard way. The mechanics of viral growth, and how to build a referral system into your product."
   },
   {
     "slug": "the-5-minute-rule-for-starting-hard-tasks",
     "tag": "Productivity",
     "title": "The 5-Minute Rule for Starting Hard Tasks",
-    "excerpt": "The psychology of procrastination, and the stupidly simple trick that beats it. Practical tips, templates, and AI-powered shortcuts to get results faster.",
+    "excerpt": "The psychology of procrastination, and the stupidly simple trick that beats it.",
     "date": "2026-05-10",
     "readTime": "5 min",
-    "coverImage": "https://picsum.photos/seed/the-5-minute-rule-for-starting-hard-tasks/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=600&q=80",
+    "description": "After 18 months of trial and error, here is what actually works. The psychology of procrastination, and the stupidly simple trick that beats it."
   },
   {
     "slug": "api-design-for-humans-rest-graphql-or-trpc",
     "tag": "Development",
     "title": "API Design for Humans: REST, GraphQL, or tRPC?",
-    "excerpt": "The trade-offs that matter for developer experience, and when to break the rules. Practical tips, templates, and AI-powered shortcuts to get results faster.",
+    "excerpt": "The trade-offs that matter for developer experience, and when to break the rules.",
     "date": "2026-05-10",
     "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/api-design-for-humans-rest-graphql-or-trpc/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1526379096588-290a6b65f8a3?w=600&q=80",
+    "description": "I learned this the hard way. The trade-offs that matter for developer experience, and when to break the rules."
   },
   {
     "slug": "building-ai-products-without-a-phd-a-pragmatic-guide",
@@ -620,159 +757,227 @@
     "excerpt": "You do not need to understand transformers to ship AI features. Here is what you actually need to know.",
     "date": "2026-05-09",
     "readTime": "9 min",
-    "coverImage": "https://picsum.photos/seed/building-ai-products-without-a-phd-a-pragmatic-guide/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&q=80",
+    "description": "After 18 months of trial and error, here is what actually works. You do not need to understand transformers to ship AI features. Here is what you actually need to know."
   },
   {
     "slug": "the-legal-and-tax-basics-every-indie-dev-ignores",
     "tag": "Indie Dev",
     "title": "The Legal and Tax Basics Every Indie Dev Ignores",
-    "excerpt": "LLC vs C-Corp, sales tax, and the compliance issues that can sink your business. Practical tips, templates, and AI-powered shortcuts to get results faster.",
+    "excerpt": "LLC vs C-Corp, sales tax, and the compliance issues that can sink your business.",
     "date": "2026-05-09",
     "readTime": "8 min",
-    "coverImage": "https://picsum.photos/seed/the-legal-and-tax-basics-every-indie-dev-ignores/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=600&q=80",
+    "description": "This is not the advice you will find in most guides. LLC vs C-Corp, sales tax, and the compliance issues that can sink your business."
+  },
+  {
+    "slug": "remote-work-burnout-signs-prevention-recovery",
+    "tag": "Productivity",
+    "title": "Remote Work Burnout: Signs, Prevention, Recovery",
+    "excerpt": "The warning signs I missed, and the boundaries that brought me back from the edge.",
+    "date": "2026-05-09",
+    "readTime": "7 min",
+    "coverImage": "https://images.unsplash.com/photo-1517842645767-c639042777db?w=600&q=80",
+    "description": "What they do not tell you about the warning signs i missed, and the boundaries that brought me back from the edge. The warning signs I missed, and the boundaries that brought me back from the edge."
   },
   {
     "slug": "content-refresh-how-to-update-old-posts-for-new-rankings",
     "tag": "SEO",
     "title": "Content Refresh: How to Update Old Posts for New Rankings",
-    "excerpt": "The 80/20 of content updates: what to change, what to leave, and how often to do it. Practical tips, templates, and AI-powered shortcuts to get results faster.",
+    "excerpt": "The 80/20 of content updates: what to change, what to leave, and how often to do it.",
     "date": "2026-05-09",
     "readTime": "6 min",
-    "coverImage": "https://picsum.photos/seed/content-refresh-how-to-update-old-posts-for-new-rankings/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=600&q=80",
+    "description": "I made every mistake so you do not have to. The 80/20 of content updates: what to change, what to leave, and how often to do it."
+  },
+  {
+    "slug": "seo-for-saas-the-long-tail-strategy-that-works",
+    "tag": "Growth",
+    "title": "SEO for SaaS: The Long-Tail Strategy That Works",
+    "excerpt": "Why targeting \"best X software\" and comparison keywords beats generic SEO for B2B products.",
+    "date": "2026-05-08",
+    "readTime": "7 min",
+    "coverImage": "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=600&q=80",
+    "description": "What they do not tell you about why targeting \"best x software\" and comparison keywords beats generic seo for b2b products. Why targeting \"best X software\" and comparison keywords beats generic SEO for B2B products."
   },
   {
     "slug": "how-to-hire-your-first-contractor-without-losing-money",
     "tag": "Indie Dev",
     "title": "How to Hire Your First Contractor Without Losing Money",
-    "excerpt": "Finding, vetting, and managing remote contractors when you have never managed anyone before. Practical tips, templates, and AI-powered shortcuts to get...",
+    "excerpt": "Finding, vetting, and managing remote contractors when you have never managed anyone before.",
     "date": "2026-05-08",
     "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/how-to-hire-your-first-contractor-without-losing-money/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80",
+    "description": "I made every mistake so you do not have to. Finding, vetting, and managing remote contractors when you have never managed anyone before."
   },
   {
     "slug": "measuring-content-roi-metrics-that-matter-to-your-ceo",
     "tag": "SEO",
     "title": "Measuring Content ROI: Metrics That Matter to Your CEO",
-    "excerpt": "How to connect SEO metrics to business outcomes and prove the value of content marketing. Practical tips, templates, and AI-powered shortcuts to get results...",
+    "excerpt": "How to connect SEO metrics to business outcomes and prove the value of content marketing.",
     "date": "2026-05-08",
     "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/measuring-content-roi-metrics-that-matter-to-your-ceo/600/400"
-  },
-  {
-    "slug": "seo-for-saas-the-long-tail-strategy-that-works",
-    "tag": "SEO",
-    "title": "SEO for SaaS: The Long-Tail Strategy That Works",
-    "excerpt": "Why targeting \"best X software\" and comparison keywords beats generic SEO for B2B products. Practical tips, templates, and AI-powered shortcuts to get...",
-    "date": "2026-05-08",
-    "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/seo-for-saas-the-long-tail-strategy-that-works/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&q=80",
+    "description": "After 18 months of trial and error, here is what actually works. How to connect SEO metrics to business outcomes and prove the value of content marketing."
   },
   {
     "slug": "ai-image-generation-for-marketing-a-cost-breakdown",
     "tag": "AI Tools",
     "title": "AI Image Generation for Marketing: A Cost Breakdown",
-    "excerpt": "Midjourney, DALL-E, Stable Diffusion, and the hidden costs of building a visual brand with AI. Practical tips, templates, and AI-powered shortcuts to get...",
+    "excerpt": "Midjourney, DALL-E, Stable Diffusion, and the hidden costs of building a visual brand with AI.",
     "date": "2026-05-07",
     "readTime": "6 min",
-    "coverImage": "https://picsum.photos/seed/ai-image-generation-for-marketing-a-cost-breakdown/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=600&q=80",
+    "description": "I learned this the hard way. Midjourney, DALL-E, Stable Diffusion, and the hidden costs of building a visual brand with AI."
   },
   {
     "slug": "community-led-growth-the-playbook-for-2026",
     "tag": "Growth",
     "title": "Community-Led Growth: The Playbook for 2026",
-    "excerpt": "Discord, Slack, Circle, or自建? How to build a community that drives product adoption. Practical tips, templates, and AI-powered shortcuts to get results faster.",
+    "excerpt": "Discord, Slack, Circle, or自建? How to build a community that drives product adoption.",
     "date": "2026-05-07",
     "readTime": "8 min",
-    "coverImage": "https://picsum.photos/seed/community-led-growth-the-playbook-for-2026/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=600&q=80",
+    "description": "I learned this the hard way. Discord, Slack, Circle, or自建? How to build a community that drives product adoption."
+  },
+  {
+    "slug": "the-emotional-rollercoaster-of-running-a-startup",
+    "tag": "Indie Dev",
+    "title": "The Emotional Rollercoaster of Running a Startup",
+    "excerpt": "Highs, lows, and the coping mechanisms that keep you sane when revenue dips.",
+    "date": "2026-05-07",
+    "readTime": "6 min",
+    "coverImage": "https://images.unsplash.com/photo-1515378960530-7c0da6231fb1?w=600&q=80",
+    "description": "After 18 months of trial and error, here is what actually works. Highs, lows, and the coping mechanisms that keep you sane when revenue dips."
+  },
+  {
+    "slug": "how-to-read-faster-without-losing-comprehension",
+    "tag": "Productivity",
+    "title": "How to Read Faster Without Losing Comprehension",
+    "excerpt": "Speed reading myths debunked, and the techniques that actually work for technical content.",
+    "date": "2026-05-07",
+    "readTime": "6 min",
+    "coverImage": "https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=600&q=80",
+    "description": "I made every mistake so you do not have to. Speed reading myths debunked, and the techniques that actually work for technical content."
   },
   {
     "slug": "how-we-use-ai-to-cut-our-content-production-time-by-70",
     "tag": "AI Tools",
     "title": "How We Use AI to Cut Our Content Production Time by 70%",
-    "excerpt": "The exact workflow, tools, and human-in-the-loop checks that make AI content actually usable. Practical tips, templates, and AI-powered shortcuts to get...",
+    "excerpt": "The exact workflow, tools, and human-in-the-loop checks that make AI content actually usable.",
     "date": "2026-05-06",
     "readTime": "8 min",
-    "coverImage": "https://picsum.photos/seed/how-we-use-ai-to-cut-our-content-production-time-by-70/600/400"
-  },
-  {
-    "slug": "why-most-side-projects-never-become-businesses",
-    "tag": "Indie Dev",
-    "title": "Why Most Side Projects Never Become Businesses",
-    "excerpt": "The traps that keep developers in \"hobby mode\" and how to break out of them. Practical tips, templates, and AI-powered shortcuts to get results faster.",
-    "date": "2026-05-06",
-    "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/why-most-side-projects-never-become-businesses/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&q=80",
+    "description": "I learned this the hard way. The exact workflow, tools, and human-in-the-loop checks that make AI content actually usable."
   },
   {
     "slug": "how-to-write-copy-that-sells-even-if-you-are-not-a-writer",
     "tag": "Growth",
     "title": "How to Write Copy That Sells (Even If You Are Not a Writer)",
-    "excerpt": "Frameworks, formulas, and the one question that makes every landing page better. Practical tips, templates, and AI-powered shortcuts to get results faster.",
+    "excerpt": "Frameworks, formulas, and the one question that makes every landing page better.",
     "date": "2026-05-06",
     "readTime": "6 min",
-    "coverImage": "https://picsum.photos/seed/how-to-write-copy-that-sells-even-if-you-are-not-a-writer/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600&q=80",
+    "description": "After 18 months of trial and error, here is what actually works. Frameworks, formulas, and the one question that makes every landing page better."
+  },
+  {
+    "slug": "why-most-side-projects-never-become-businesses",
+    "tag": "Indie Dev",
+    "title": "Why Most Side Projects Never Become Businesses",
+    "excerpt": "The traps that keep developers in \"hobby mode\" and how to break out of them.",
+    "date": "2026-05-06",
+    "readTime": "7 min",
+    "coverImage": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&q=80",
+    "description": "I learned this the hard way. The traps that keep developers in \"hobby mode\" and how to break out of them."
+  },
+  {
+    "slug": "the-morning-routine-that-actually-works-for-night-owls",
+    "tag": "Productivity",
+    "title": "The Morning Routine That Actually Works for Night Owls",
+    "excerpt": "Why forcing early mornings backfires, and the evening routine that sets up a productive day.",
+    "date": "2026-05-06",
+    "readTime": "6 min",
+    "coverImage": "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=600&q=80",
+    "description": "What they do not tell you about why forcing early mornings backfires, and the evening routine that sets up a productive day. Why forcing early mornings backfires, and the evening routine that sets up a productive day."
   },
   {
     "slug": "open-source-ai-models-that-rival-gpt-4-in-2026",
     "tag": "AI Tools",
     "title": "Open Source AI Models That Rival GPT-4 in 2026",
-    "excerpt": "The Llama 4, Mistral, and Qwen variants that are good enough to replace paid APIs. Practical tips, templates, and AI-powered shortcuts to get results faster.",
+    "excerpt": "The Llama 4, Mistral, and Qwen variants that are good enough to replace paid APIs.",
     "date": "2026-05-05",
     "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/open-source-ai-models-that-rival-gpt-4-in-2026/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&q=80",
+    "description": "I learned this the hard way. The Llama 4, Mistral, and Qwen variants that are good enough to replace paid APIs."
   },
   {
     "slug": "the-minimum-viable-marketing-stack-for-indie-devs",
     "tag": "Growth",
     "title": "The Minimum Viable Marketing Stack for Indie Devs",
-    "excerpt": "The 5 tools and 3 channels you need to get traction without a marketing team. Practical tips, templates, and AI-powered shortcuts to get results faster.",
+    "excerpt": "The 5 tools and 3 channels you need to get traction without a marketing team.",
     "date": "2026-05-05",
     "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/the-minimum-viable-marketing-stack-for-indie-devs/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&q=80",
+    "description": "After 18 months of trial and error, here is what actually works. The 5 tools and 3 channels you need to get traction without a marketing team."
   },
   {
     "slug": "ai-coding-assistants-copilot-vs-cody-vs-codeium",
     "tag": "AI Tools",
     "title": "AI Coding Assistants: Copilot vs Cody vs Codeium",
-    "excerpt": "A developer's honest review after 6 months with each tool. Practical tips, templates, and AI-powered shortcuts to get results faster.",
+    "excerpt": "A developer's honest review after 6 months with each tool.",
     "date": "2026-05-04",
     "readTime": "8 min",
-    "coverImage": "https://picsum.photos/seed/ai-coding-assistants-copilot-vs-cody-vs-codeium/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=600&q=80",
+    "description": "I learned this the hard way. A developer's honest review after 6 months with each tool."
   },
   {
     "slug": "building-a-remote-first-company-from-day-one",
     "tag": "Indie Dev",
     "title": "Building a Remote-First Company from Day One",
-    "excerpt": "Tools, rituals, and the cultural norms that make remote work actually work. Practical tips, templates, and AI-powered shortcuts to get results faster.",
+    "excerpt": "Tools, rituals, and the cultural norms that make remote work actually work.",
     "date": "2026-05-04",
     "readTime": "8 min",
-    "coverImage": "https://picsum.photos/seed/building-a-remote-first-company-from-day-one/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&q=80",
+    "description": "This is not the advice you will find in most guides. Tools, rituals, and the cultural norms that make remote work actually work."
+  },
+  {
+    "slug": "digital-minimalism-for-developers-a-30-day-challenge",
+    "tag": "Productivity",
+    "title": "Digital Minimalism for Developers: A 30-Day Challenge",
+    "excerpt": "What happened when I deleted half my apps, unsubscribed from 50 newsletters, and cut my screen time in half.",
+    "date": "2026-05-04",
+    "readTime": "8 min",
+    "coverImage": "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=600&q=80",
+    "description": "I made every mistake so you do not have to. What happened when I deleted half my apps, unsubscribed from 50 newsletters, and cut my screen time in half."
   },
   {
     "slug": "the-rise-of-ai-agents-hype-vs-reality",
     "tag": "AI Tools",
     "title": "The Rise of AI Agents: Hype vs Reality",
-    "excerpt": "What agents can do today, what they cannot, and why 90% of \"agent\" startups will fail. Practical tips, templates, and AI-powered shortcuts to get results...",
+    "excerpt": "What agents can do today, what they cannot, and why 90% of \"agent\" startups will fail.",
     "date": "2026-05-03",
     "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/the-rise-of-ai-agents-hype-vs-reality/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600&q=80",
+    "description": "This is not the advice you will find in most guides. What agents can do today, what they cannot, and why 90% of \"agent\" startups will fail."
   },
   {
     "slug": "the-exit-strategy-when-to-sell-pivot-or-shut-down",
     "tag": "Indie Dev",
     "title": "The Exit Strategy: When to Sell, Pivot, or Shut Down",
-    "excerpt": "How to know when your startup has run its course, and how to move on gracefully. Practical tips, templates, and AI-powered shortcuts to get results faster.",
+    "excerpt": "How to know when your startup has run its course, and how to move on gracefully.",
     "date": "2026-05-03",
     "readTime": "7 min",
-    "coverImage": "https://picsum.photos/seed/the-exit-strategy-when-to-sell-pivot-or-shut-down/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=600&q=80",
+    "description": "After 18 months of trial and error, here is what actually works. How to know when your startup has run its course, and how to move on gracefully."
   },
   {
     "slug": "how-to-evaluate-ai-tools-a-framework-for-teams",
     "tag": "AI Tools",
     "title": "How to Evaluate AI Tools: A Framework for Teams",
-    "excerpt": "Stop demoing and start measuring. Here is the scorecard we use for every AI tool evaluation. Practical tips, templates, and AI-powered shortcuts to get...",
+    "excerpt": "Stop demoing and start measuring. Here is the scorecard we use for every AI tool evaluation.",
     "date": "2026-05-02",
     "readTime": "6 min",
-    "coverImage": "https://picsum.photos/seed/how-to-evaluate-ai-tools-a-framework-for-teams/600/400"
+    "coverImage": "https://images.unsplash.com/photo-1526379096588-290a6b65f8a3?w=600&q=80",
+    "description": "I learned this the hard way. Stop demoing and start measuring. Here is the scorecard we use for every AI tool evaluation."
   }
 ]

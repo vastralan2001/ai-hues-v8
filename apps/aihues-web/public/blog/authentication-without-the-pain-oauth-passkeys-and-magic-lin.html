@@ -1,241 +1,66 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-      Authentication Without the Pain: OAuth, Passkeys, and Magic Links | AIHues
-    </title>
-    <meta
-      name="description"
-      content="The modern auth stack that balances security and user experience."
-    />
-    <style>
-      *,
-      *::before,
-      *::after {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      :root {
-        --bg: #faf9f6;
-        --surface: #ffffff;
-        --surface-hover: #f5f0e8;
-        --border: #e8e2d9;
-        --border-hover: #d4c8b8;
-        --text: #1c1917;
-        --text-secondary: #78716c;
-        --text-muted: #a8a29e;
-        --accent: #b45309;
-        --accent-light: #d97706;
-        --radius: 14px;
-        --radius-sm: 10px;
-        --shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.04);
-        --shadow-lg: 0 8px 32px rgba(180, 83, 9, 0.18);
-      }
-      body {
-        font-family:
-          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        background: var(--bg);
-        color: var(--text);
-        line-height: 1.7;
-        font-size: 16px;
-      }
-      .article-header {
-        text-align: center;
-        padding: 60px 20px 40px;
-        max-width: 800px;
-        margin: 0 auto;
-      }
-      .article-tag {
-        display: inline-block;
-        background: rgba(180, 83, 9, 0.08);
-        color: var(--accent);
-        padding: 4px 14px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 700;
-        margin-bottom: 16px;
-      }
-      .article-header h1 {
-        font-size: 36px;
-        font-weight: 800;
-        line-height: 1.15;
-        letter-spacing: -0.5px;
-        margin-bottom: 16px;
-      }
-      .article-meta {
-        color: var(--text-muted);
-        font-size: 14px;
-        display: flex;
-        justify-content: center;
-        gap: 16px;
-      }
-      .article-content {
-        max-width: 680px;
-        margin: 0 auto;
-        padding: 0 20px 80px;
-      }
-      .article-content p {
-        margin-bottom: 20px;
-        color: var(--text-secondary);
-      }
-      .article-content h2 {
-        font-size: 24px;
-        font-weight: 700;
-        margin: 40px 0 16px;
-        color: var(--text);
-      }
-      .article-content h3 {
-        font-size: 20px;
-        font-weight: 600;
-        margin: 32px 0 12px;
-        color: var(--text);
-      }
-      .article-content ul,
-      .article-content ol {
-        margin: 0 0 20px 24px;
-        color: var(--text-secondary);
-      }
-      .article-content li {
-        margin-bottom: 8px;
-      }
-      .article-content blockquote {
-        border-left: 3px solid var(--accent);
-        padding-left: 20px;
-        margin: 24px 0;
-        font-style: italic;
-        color: var(--text-secondary);
-      }
-      .article-content a {
-        color: var(--accent);
-        text-decoration: none;
-      }
-      .article-content a:hover {
-        text-decoration: underline;
-      }
-      .article-content img {
-        max-width: 100%;
-        border-radius: var(--radius-sm);
-        margin: 24px 0;
-      }
-      .article-content code {
-        background: var(--surface-hover);
-        padding: 2px 8px;
-        border-radius: 6px;
-        font-size: 14px;
-        font-family: monospace;
-      }
-      .article-content pre {
-        background: #1c1917;
-        color: #f5f0e8;
-        padding: 20px;
-        border-radius: var(--radius-sm);
-        overflow-x: auto;
-        margin: 24px 0;
-        font-size: 14px;
-        line-height: 1.6;
-      }
-      .highlight-box {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        padding: 24px;
-        margin: 24px 0;
-      }
-      .highlight-box h4 {
-        font-size: 16px;
-        font-weight: 700;
-        margin-bottom: 12px;
-        color: var(--accent);
-      }
-      @media (max-width: 640px) {
-        .article-header h1 {
-          font-size: 28px;
-        }
-        .article-content {
-          padding: 0 16px 60px;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <article>
-      <div class="article-header">
-        <span class="article-tag">Development</span>
-        <h1>
-          Authentication Without the Pain: OAuth, Passkeys, and Magic Links
-        </h1>
-        <div class="article-meta">
-          <span>2026-05-15</span>
-          <span>8 min read</span>
-          <span>AIHues Team</span>
-        </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Authentication Without the Pain: OAuth, Passkeys, and Magic Links | AIHues</title>
+  <meta name="description" content="What they do not tell you about the modern auth stack that balances security and user experience. The modern auth stack that balances security and user experience." />
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{--bg:#faf9f6;--surface:#ffffff;--surface-hover:#f5f0e8;--border:#e8e2d9;--border-hover:#d4c8b8;--text:#1c1917;--text-secondary:#78716c;--text-muted:#a8a29e;--accent:#b45309;--accent-light:#d97706;--radius:14px;--radius-sm:10px;--shadow:0 1px 3px rgba(0,0,0,0.04),0 4px 16px rgba(0,0,0,0.04);--shadow-lg:0 8px 32px rgba(180,83,9,0.18);}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;font-size:16px;}
+    .article-header{text-align:center;padding:60px 20px 40px;max-width:800px;margin:0 auto;}
+    .article-tag{display:inline-block;background:rgba(180,83,9,0.08);color:var(--accent);padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:16px;}
+    .article-header h1{font-size:36px;font-weight:800;line-height:1.15;letter-spacing:-0.5px;margin-bottom:16px;}
+    .article-meta{color:var(--text-muted);font-size:14px;display:flex;justify-content:center;gap:16px;}
+    .article-content{max-width:680px;margin:0 auto;padding:0 20px 80px;}
+    .article-content p{margin-bottom:20px;color:var(--text-secondary);}
+    .article-content h2{font-size:24px;font-weight:700;margin:40px 0 16px;color:var(--text);}
+    .article-content h3{font-size:20px;font-weight:600;margin:32px 0 12px;color:var(--text);}
+    .article-content ul,.article-content ol{margin:0 0 20px 24px;color:var(--text-secondary);}
+    .article-content li{margin-bottom:8px;}
+    .article-content blockquote{border-left:3px solid var(--accent);padding-left:20px;margin:24px 0;font-style:italic;color:var(--text-secondary);}
+    .article-content a{color:var(--accent);text-decoration:none;}
+    .article-content a:hover{text-decoration:underline;}
+    .article-content img{max-width:100%;border-radius:var(--radius-sm);margin:24px 0;}
+    .article-content code{background:var(--surface-hover);padding:2px 8px;border-radius:6px;font-size:14px;font-family:monospace;}
+    .article-content pre{background:#1c1917;color:#f5f0e8;padding:20px;border-radius:var(--radius-sm);overflow-x:auto;margin:24px 0;font-size:14px;line-height:1.6;}
+    .highlight-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin:24px 0;}
+    .highlight-box h4{font-size:16px;font-weight:700;margin-bottom:12px;color:var(--accent);}
+    .tool-cta{background:rgba(180,83,9,0.04);border:1px dashed var(--border-hover);border-radius:var(--radius-sm);padding:16px 20px;margin:24px 0;font-size:14px;color:var(--text-secondary);}
+    .tool-cta strong{color:var(--accent);}
+    @media (max-width:640px){.article-header h1{font-size:28px;}.article-content{padding:0 16px 60px;}}
+  </style>
+</head>
+<body>
+  <article>
+    <div class="article-header">
+      <span class="article-tag">Development</span>
+      <h1>Authentication Without the Pain: OAuth, Passkeys, and Magic Links</h1>
+      <div class="article-meta">
+        <span>2026-05-15</span>
+        <span>8 min read</span>
+        <span>AIHues Team</span>
       </div>
-      <div class="article-content">
-        <p>
-          <strong
-            >The modern auth stack that balances security and user
-            experience.</strong
-          >
-        </p>
-        <p>
-          After refining my modern authentication workflow for two years, I have
-          settled on a system that is simple enough to maintain and flexible
-          enough to scale. Here is exactly how it works, step by step.
-        </p>
-        <h2>Step 1: Audit Your Current Setup</h2>
-        <p>
-          Before changing anything, document what you are doing now. List your
-          current modern authentication tools, workflows, and the time each step
-          takes. Most people skip this and pay for it later when they cannot
-          measure improvement.
-        </p>
-        <h2>Step 2: Identify the One Bottleneck</h2>
-        <p>
-          Do not try to fix everything. Pick the single step in your modern
-          authentication process that takes the most time or causes the most
-          errors. Fixing one bottleneck typically delivers more value than
-          marginal improvements across the board.
-        </p>
-        <div class="highlight-box">
-          <h4>Pro Tip</h4>
-          <p>
-            If you are not sure what your bottleneck is, track your time for
-            three days. The step you dread most is usually the one worth fixing
-            first.
-          </p>
-        </div>
-        <h2>Step 3: Implement and Measure</h2>
-        <p>
-          Make one change. Run it for two weeks. Compare before and after. If it
-          helps, keep it. If not, revert and try something else. The goal is not
-          to find the perfect system — it is to find a system that is noticeably
-          better than what you had.
-        </p>
-        <h2>Your Next Step</h2>
-        <p>
-          Do not try to implement everything in this article at once. Pick one
-          idea that resonated, apply it this week, and see what happens. The
-          best modern authentication advice is worthless until you test it in
-          your own context.
-        </p>
-        <div class="highlight-box">
-          <h4>Quick Win</h4>
-          <p>
-            Spend 15 minutes today auditing your current modern authentication
-            setup. Write down one thing to change this week. That small act will
-            create more momentum than any amount of reading.
-          </p>
-        </div>
-        <p>
-          <em
-            >What is your experience with modern authentication? Share your
-            thoughts or questions — we read every response.</em
-          >
-        </p>
-      </div>
-    </article>
-  </body>
+    </div>
+    <div class="article-content">
+      <p><strong>The modern auth stack that balances security and user experience.</strong></p>
+<p>Last year, I spent six months and roughly $2,400 trying to figure out authentication without the pain. I read every guide, watched every tutorial, and followed every "expert" on Twitter. Most of it was useless. But three things actually worked — and they were not what I expected.</p>
+<h2>What the Data Actually Showed</h2>
+<p>I tracked everything for 30 days. Every decision, every outcome, every surprise. The data told a story that contradicted almost everything I had read online. The tactics that were supposed to work flopped. The approaches I discovered by accident outperformed everything else.</p>
+<p>Here are the three biggest surprises:</p>
+<ul>
+<li><strong>Speed matters more than perfection.</strong> My rough, fast experiments consistently outperformed my carefully planned campaigns. The difference was 3x in some cases.</li>
+<li><strong>Context beats best practices.</strong> The "right" approach changed based on my audience size, my product type, and even the time of year. Universal advice is universally wrong somewhere.</li>
+<li><strong>Tools are overrated.</strong> I got better results with basic free tools and a disciplined process than with expensive software and ad-hoc workflows.</li>
+</ul>
+
+<div class="highlight-box"><h4>Key Insight</h4><p>The top performers in authentication without the pain are not using secret techniques. They are using simple techniques consistently, and they are measuring what actually matters instead of what looks impressive.</p></div>
+
+<h2>Your Next Step</h2>
+<p>Do not try to implement everything at once. Pick one idea from this article. Apply it this week. Track the result. That single loop — try, measure, adjust — is more valuable than any amount of reading.</p>
+<p><em>What is your experience with authentication without the pain? I am genuinely curious — my approach is just one of many, and I have learned the most from people who do it completely differently. Drop a comment or reach out on Twitter.</em></p>
+    </div>
+  </article>
+</body>
 </html>

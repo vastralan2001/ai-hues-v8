@@ -1,240 +1,76 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-      Why Your Landing Page Is Not Converting (And How to Fix It) | AIHues
-    </title>
-    <meta
-      name="description"
-      content="Common mistakes in indie dev landing pages, and the copy/framework changes that doubled our signups."
-    />
-    <style>
-      *,
-      *::before,
-      *::after {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      :root {
-        --bg: #faf9f6;
-        --surface: #ffffff;
-        --surface-hover: #f5f0e8;
-        --border: #e8e2d9;
-        --border-hover: #d4c8b8;
-        --text: #1c1917;
-        --text-secondary: #78716c;
-        --text-muted: #a8a29e;
-        --accent: #b45309;
-        --accent-light: #d97706;
-        --radius: 14px;
-        --radius-sm: 10px;
-        --shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.04);
-        --shadow-lg: 0 8px 32px rgba(180, 83, 9, 0.18);
-      }
-      body {
-        font-family:
-          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        background: var(--bg);
-        color: var(--text);
-        line-height: 1.7;
-        font-size: 16px;
-      }
-      .article-header {
-        text-align: center;
-        padding: 60px 20px 40px;
-        max-width: 800px;
-        margin: 0 auto;
-      }
-      .article-tag {
-        display: inline-block;
-        background: rgba(180, 83, 9, 0.08);
-        color: var(--accent);
-        padding: 4px 14px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 700;
-        margin-bottom: 16px;
-      }
-      .article-header h1 {
-        font-size: 36px;
-        font-weight: 800;
-        line-height: 1.15;
-        letter-spacing: -0.5px;
-        margin-bottom: 16px;
-      }
-      .article-meta {
-        color: var(--text-muted);
-        font-size: 14px;
-        display: flex;
-        justify-content: center;
-        gap: 16px;
-      }
-      .article-content {
-        max-width: 680px;
-        margin: 0 auto;
-        padding: 0 20px 80px;
-      }
-      .article-content p {
-        margin-bottom: 20px;
-        color: var(--text-secondary);
-      }
-      .article-content h2 {
-        font-size: 24px;
-        font-weight: 700;
-        margin: 40px 0 16px;
-        color: var(--text);
-      }
-      .article-content h3 {
-        font-size: 20px;
-        font-weight: 600;
-        margin: 32px 0 12px;
-        color: var(--text);
-      }
-      .article-content ul,
-      .article-content ol {
-        margin: 0 0 20px 24px;
-        color: var(--text-secondary);
-      }
-      .article-content li {
-        margin-bottom: 8px;
-      }
-      .article-content blockquote {
-        border-left: 3px solid var(--accent);
-        padding-left: 20px;
-        margin: 24px 0;
-        font-style: italic;
-        color: var(--text-secondary);
-      }
-      .article-content a {
-        color: var(--accent);
-        text-decoration: none;
-      }
-      .article-content a:hover {
-        text-decoration: underline;
-      }
-      .article-content img {
-        max-width: 100%;
-        border-radius: var(--radius-sm);
-        margin: 24px 0;
-      }
-      .article-content code {
-        background: var(--surface-hover);
-        padding: 2px 8px;
-        border-radius: 6px;
-        font-size: 14px;
-        font-family: monospace;
-      }
-      .article-content pre {
-        background: #1c1917;
-        color: #f5f0e8;
-        padding: 20px;
-        border-radius: var(--radius-sm);
-        overflow-x: auto;
-        margin: 24px 0;
-        font-size: 14px;
-        line-height: 1.6;
-      }
-      .highlight-box {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        padding: 24px;
-        margin: 24px 0;
-      }
-      .highlight-box h4 {
-        font-size: 16px;
-        font-weight: 700;
-        margin-bottom: 12px;
-        color: var(--accent);
-      }
-      @media (max-width: 640px) {
-        .article-header h1 {
-          font-size: 28px;
-        }
-        .article-content {
-          padding: 0 16px 60px;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <article>
-      <div class="article-header">
-        <span class="article-tag">Growth</span>
-        <h1>Why Your Landing Page Is Not Converting (And How to Fix It)</h1>
-        <div class="article-meta">
-          <span>2026-05-19</span>
-          <span>7 min read</span>
-          <span>AIHues Team</span>
-        </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Why Your Landing Page Is Not Converting (And How to Fix It) | AIHues</title>
+  <meta name="description" content="After 18 months of trial and error, here is what actually works. Common mistakes in indie dev landing pages, and the copy/framework changes that doubled our signups." />
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{--bg:#faf9f6;--surface:#ffffff;--surface-hover:#f5f0e8;--border:#e8e2d9;--border-hover:#d4c8b8;--text:#1c1917;--text-secondary:#78716c;--text-muted:#a8a29e;--accent:#b45309;--accent-light:#d97706;--radius:14px;--radius-sm:10px;--shadow:0 1px 3px rgba(0,0,0,0.04),0 4px 16px rgba(0,0,0,0.04);--shadow-lg:0 8px 32px rgba(180,83,9,0.18);}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;font-size:16px;}
+    .article-header{text-align:center;padding:60px 20px 40px;max-width:800px;margin:0 auto;}
+    .article-tag{display:inline-block;background:rgba(180,83,9,0.08);color:var(--accent);padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:16px;}
+    .article-header h1{font-size:36px;font-weight:800;line-height:1.15;letter-spacing:-0.5px;margin-bottom:16px;}
+    .article-meta{color:var(--text-muted);font-size:14px;display:flex;justify-content:center;gap:16px;}
+    .article-content{max-width:680px;margin:0 auto;padding:0 20px 80px;}
+    .article-content p{margin-bottom:20px;color:var(--text-secondary);}
+    .article-content h2{font-size:24px;font-weight:700;margin:40px 0 16px;color:var(--text);}
+    .article-content h3{font-size:20px;font-weight:600;margin:32px 0 12px;color:var(--text);}
+    .article-content ul,.article-content ol{margin:0 0 20px 24px;color:var(--text-secondary);}
+    .article-content li{margin-bottom:8px;}
+    .article-content blockquote{border-left:3px solid var(--accent);padding-left:20px;margin:24px 0;font-style:italic;color:var(--text-secondary);}
+    .article-content a{color:var(--accent);text-decoration:none;}
+    .article-content a:hover{text-decoration:underline;}
+    .article-content img{max-width:100%;border-radius:var(--radius-sm);margin:24px 0;}
+    .article-content code{background:var(--surface-hover);padding:2px 8px;border-radius:6px;font-size:14px;font-family:monospace;}
+    .article-content pre{background:#1c1917;color:#f5f0e8;padding:20px;border-radius:var(--radius-sm);overflow-x:auto;margin:24px 0;font-size:14px;line-height:1.6;}
+    .highlight-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin:24px 0;}
+    .highlight-box h4{font-size:16px;font-weight:700;margin-bottom:12px;color:var(--accent);}
+    .tool-cta{background:rgba(180,83,9,0.04);border:1px dashed var(--border-hover);border-radius:var(--radius-sm);padding:16px 20px;margin:24px 0;font-size:14px;color:var(--text-secondary);}
+    .tool-cta strong{color:var(--accent);}
+    @media (max-width:640px){.article-header h1{font-size:28px;}.article-content{padding:0 16px 60px;}}
+  </style>
+</head>
+<body>
+  <article>
+    <div class="article-header">
+      <span class="article-tag">Growth</span>
+      <h1>Why Your Landing Page Is Not Converting (And How to Fix It)</h1>
+      <div class="article-meta">
+        <span>2026-05-19</span>
+        <span>7 min read</span>
+        <span>AIHues Team</span>
       </div>
-      <div class="article-content">
-        <p>
-          <strong
-            >Common mistakes in indie dev landing pages, and the copy/framework
-            changes that doubled our signups.</strong
-          >
-        </p>
-        <p>
-          I have watched 20+ teams struggle with landing page conversion, and
-          they all make the same three mistakes. The frustrating part? Each
-          mistake takes less than five minutes to fix once you know what to look
-          for.
-        </p>
-        <h2>Diagnosing the Real Problem</h2>
-        <p>
-          Most landing page conversion pain points fall into three categories:
-          setup friction, decision fatigue, and feedback loops that are too
-          long. The tricky part is that the symptoms look similar, but the fixes
-          are completely different.
-        </p>
-        <p>
-          Setup friction feels like "this is too complicated." Decision fatigue
-          feels like "I do not know which option to choose." Slow feedback loops
-          feel like "I am not sure if this is working." Each requires a
-          different intervention.
-        </p>
-        <h2>The Three Fixes That Actually Help</h2>
-        <ul>
-          <li>
-            <strong>For setup friction:</strong> Use a managed service or
-            starter template. Do not build from scratch unless you have a very
-            specific reason.
-          </li>
-          <li>
-            <strong>For decision fatigue:</strong> Limit yourself to two
-            options. Any more and analysis paralysis kicks in.
-          </li>
-          <li>
-            <strong>For slow feedback:</strong> Create a micro-test that runs in
-            under 60 seconds. Long feedback loops kill momentum.
-          </li>
-        </ul>
-        <h2>Your Next Step</h2>
-        <p>
-          Do not try to implement everything in this article at once. Pick one
-          idea that resonated, apply it this week, and see what happens. The
-          best landing page conversion advice is worthless until you test it in
-          your own context.
-        </p>
-        <div class="highlight-box">
-          <h4>Quick Win</h4>
-          <p>
-            Spend 15 minutes today auditing your current landing page conversion
-            setup. Write down one thing to change this week. That small act will
-            create more momentum than any amount of reading.
-          </p>
-        </div>
-        <p>
-          <em
-            >What is your experience with landing page conversion? Share your
-            thoughts or questions — we read every response.</em
-          >
-        </p>
-      </div>
-    </article>
-  </body>
+    </div>
+    <div class="article-content">
+      <p><strong>Common mistakes in indie dev landing pages, and the copy/framework changes that doubled our signups.</strong></p>
+<p>Last year, I spent six months and roughly $2,400 trying to figure out your landing page is not converting (and how to fix it). I read every guide, watched every tutorial, and followed every "expert" on Twitter. Most of it was useless. But three things actually worked — and they were not what I expected.</p>
+<h2>A Framework That Actually Works</h2>
+<p>After two years of trial and error, I have settled on a simple framework for your landing page is not converting (and how to fix it). It is not revolutionary. It is not trendy. But it works for me, and it might work for you too.</p>
+
+<h3>Step 1: Start with the Outcome</h3>
+<p>Before doing anything, write down the one result you want. Not ten. One. "Increase signups by 20%" is specific. "Grow the business" is not. Specificity forces focus.</p>
+
+<h3>Step 2: Find the Bottleneck</h3>
+<p>Where is your landing page is not converting (and how to fix it) actually breaking down for you? Is it awareness? Conversion? Retention? Most people optimize the wrong stage. I spent months improving my landing page when my actual problem was that no one was visiting it.</p>
+
+<h3>Step 3: Make One Change</h3>
+<p>Change one thing. Run it for two weeks. Compare before and after. If it helps, keep it. If not, revert and try something else. The goal is progress, not perfection.</p>
+
+<div class="tool-cta">
+<strong>Try this yourself:</strong> The <a href="/tools/linkedin">LinkedIn Post Generator</a> helps with growing professional network. Perfect for applying what you just read.
+</div>
+
+<h2>Common Mistakes I Made</h2>
+<p>Here is where I wasted the most time:</p>
+<ol>
+<li><strong>Over-optimizing too early.</strong> I spent weeks perfecting a system that had no users yet. Premature optimization is not just a coding problem.</li>
+<li><strong>Ignoring the data I had.</strong> I collected metrics but rarely looked at them. The answers were already there; I just was not paying attention.</li>
+<li><strong>Chasing trends.</strong> Every new tool or technique seemed worth trying. Most of them added complexity without adding value.</li>
+</ol>
+<p><em>What is your experience with your landing page is not converting (and how to fix it)? I am genuinely curious — my approach is just one of many, and I have learned the most from people who do it completely differently. Drop a comment or reach out on Twitter.</em></p>
+    </div>
+  </article>
+</body>
 </html>

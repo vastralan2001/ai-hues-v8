@@ -1,241 +1,76 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Referral Loops: How Dropbox, Notion, and Linear Grew | AIHues</title>
-    <meta
-      name="description"
-      content="The mechanics of viral growth, and how to build a referral system into your product."
-    />
-    <style>
-      *,
-      *::before,
-      *::after {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      :root {
-        --bg: #faf9f6;
-        --surface: #ffffff;
-        --surface-hover: #f5f0e8;
-        --border: #e8e2d9;
-        --border-hover: #d4c8b8;
-        --text: #1c1917;
-        --text-secondary: #78716c;
-        --text-muted: #a8a29e;
-        --accent: #b45309;
-        --accent-light: #d97706;
-        --radius: 14px;
-        --radius-sm: 10px;
-        --shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.04);
-        --shadow-lg: 0 8px 32px rgba(180, 83, 9, 0.18);
-      }
-      body {
-        font-family:
-          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        background: var(--bg);
-        color: var(--text);
-        line-height: 1.7;
-        font-size: 16px;
-      }
-      .article-header {
-        text-align: center;
-        padding: 60px 20px 40px;
-        max-width: 800px;
-        margin: 0 auto;
-      }
-      .article-tag {
-        display: inline-block;
-        background: rgba(180, 83, 9, 0.08);
-        color: var(--accent);
-        padding: 4px 14px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 700;
-        margin-bottom: 16px;
-      }
-      .article-header h1 {
-        font-size: 36px;
-        font-weight: 800;
-        line-height: 1.15;
-        letter-spacing: -0.5px;
-        margin-bottom: 16px;
-      }
-      .article-meta {
-        color: var(--text-muted);
-        font-size: 14px;
-        display: flex;
-        justify-content: center;
-        gap: 16px;
-      }
-      .article-content {
-        max-width: 680px;
-        margin: 0 auto;
-        padding: 0 20px 80px;
-      }
-      .article-content p {
-        margin-bottom: 20px;
-        color: var(--text-secondary);
-      }
-      .article-content h2 {
-        font-size: 24px;
-        font-weight: 700;
-        margin: 40px 0 16px;
-        color: var(--text);
-      }
-      .article-content h3 {
-        font-size: 20px;
-        font-weight: 600;
-        margin: 32px 0 12px;
-        color: var(--text);
-      }
-      .article-content ul,
-      .article-content ol {
-        margin: 0 0 20px 24px;
-        color: var(--text-secondary);
-      }
-      .article-content li {
-        margin-bottom: 8px;
-      }
-      .article-content blockquote {
-        border-left: 3px solid var(--accent);
-        padding-left: 20px;
-        margin: 24px 0;
-        font-style: italic;
-        color: var(--text-secondary);
-      }
-      .article-content a {
-        color: var(--accent);
-        text-decoration: none;
-      }
-      .article-content a:hover {
-        text-decoration: underline;
-      }
-      .article-content img {
-        max-width: 100%;
-        border-radius: var(--radius-sm);
-        margin: 24px 0;
-      }
-      .article-content code {
-        background: var(--surface-hover);
-        padding: 2px 8px;
-        border-radius: 6px;
-        font-size: 14px;
-        font-family: monospace;
-      }
-      .article-content pre {
-        background: #1c1917;
-        color: #f5f0e8;
-        padding: 20px;
-        border-radius: var(--radius-sm);
-        overflow-x: auto;
-        margin: 24px 0;
-        font-size: 14px;
-        line-height: 1.6;
-      }
-      .highlight-box {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        padding: 24px;
-        margin: 24px 0;
-      }
-      .highlight-box h4 {
-        font-size: 16px;
-        font-weight: 700;
-        margin-bottom: 12px;
-        color: var(--accent);
-      }
-      @media (max-width: 640px) {
-        .article-header h1 {
-          font-size: 28px;
-        }
-        .article-content {
-          padding: 0 16px 60px;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <article>
-      <div class="article-header">
-        <span class="article-tag">Growth</span>
-        <h1>Referral Loops: How Dropbox, Notion, and Linear Grew</h1>
-        <div class="article-meta">
-          <span>2026-05-10</span>
-          <span>8 min read</span>
-          <span>AIHues Team</span>
-        </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Referral Loops: How Dropbox, Notion, and Linear Grew | AIHues</title>
+  <meta name="description" content="This is not the advice you will find in most guides. The mechanics of viral growth, and how to build a referral system into your product." />
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{--bg:#faf9f6;--surface:#ffffff;--surface-hover:#f5f0e8;--border:#e8e2d9;--border-hover:#d4c8b8;--text:#1c1917;--text-secondary:#78716c;--text-muted:#a8a29e;--accent:#b45309;--accent-light:#d97706;--radius:14px;--radius-sm:10px;--shadow:0 1px 3px rgba(0,0,0,0.04),0 4px 16px rgba(0,0,0,0.04);--shadow-lg:0 8px 32px rgba(180,83,9,0.18);}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;font-size:16px;}
+    .article-header{text-align:center;padding:60px 20px 40px;max-width:800px;margin:0 auto;}
+    .article-tag{display:inline-block;background:rgba(180,83,9,0.08);color:var(--accent);padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:16px;}
+    .article-header h1{font-size:36px;font-weight:800;line-height:1.15;letter-spacing:-0.5px;margin-bottom:16px;}
+    .article-meta{color:var(--text-muted);font-size:14px;display:flex;justify-content:center;gap:16px;}
+    .article-content{max-width:680px;margin:0 auto;padding:0 20px 80px;}
+    .article-content p{margin-bottom:20px;color:var(--text-secondary);}
+    .article-content h2{font-size:24px;font-weight:700;margin:40px 0 16px;color:var(--text);}
+    .article-content h3{font-size:20px;font-weight:600;margin:32px 0 12px;color:var(--text);}
+    .article-content ul,.article-content ol{margin:0 0 20px 24px;color:var(--text-secondary);}
+    .article-content li{margin-bottom:8px;}
+    .article-content blockquote{border-left:3px solid var(--accent);padding-left:20px;margin:24px 0;font-style:italic;color:var(--text-secondary);}
+    .article-content a{color:var(--accent);text-decoration:none;}
+    .article-content a:hover{text-decoration:underline;}
+    .article-content img{max-width:100%;border-radius:var(--radius-sm);margin:24px 0;}
+    .article-content code{background:var(--surface-hover);padding:2px 8px;border-radius:6px;font-size:14px;font-family:monospace;}
+    .article-content pre{background:#1c1917;color:#f5f0e8;padding:20px;border-radius:var(--radius-sm);overflow-x:auto;margin:24px 0;font-size:14px;line-height:1.6;}
+    .highlight-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin:24px 0;}
+    .highlight-box h4{font-size:16px;font-weight:700;margin-bottom:12px;color:var(--accent);}
+    .tool-cta{background:rgba(180,83,9,0.04);border:1px dashed var(--border-hover);border-radius:var(--radius-sm);padding:16px 20px;margin:24px 0;font-size:14px;color:var(--text-secondary);}
+    .tool-cta strong{color:var(--accent);}
+    @media (max-width:640px){.article-header h1{font-size:28px;}.article-content{padding:0 16px 60px;}}
+  </style>
+</head>
+<body>
+  <article>
+    <div class="article-header">
+      <span class="article-tag">Growth</span>
+      <h1>Referral Loops: How Dropbox, Notion, and Linear Grew</h1>
+      <div class="article-meta">
+        <span>2026-05-10</span>
+        <span>8 min read</span>
+        <span>AIHues Team</span>
       </div>
-      <div class="article-content">
-        <p>
-          <strong
-            >The mechanics of viral growth, and how to build a referral system
-            into your product.</strong
-          >
-        </p>
-        <p>
-          When I first started exploring referral growth loops, I made every
-          mistake in the book. I overcomplicated things, chased features I did
-          not need, and wasted weeks on approaches that sounded good in theory
-          but fell apart in practice.
-        </p>
-        <h2>What I Learned the Hard Way</h2>
-        <p>
-          The first thing that surprised me was how much time I wasted on setup.
-          I spent three days configuring the perfect referral growth loops
-          environment before realizing that half the features I had enabled were
-          solving problems I did not actually have.
-        </p>
-        <p>Here is what I should have done instead:</p>
-        <ul>
-          <li>
-            <strong>Start with defaults.</strong> Most referral growth loops
-            tools work well out of the box. Optimize only after you hit a real
-            limitation.
-          </li>
-          <li>
-            <strong>Measure before tuning.</strong> I optimized for speed when
-            my actual bottleneck was accuracy. A simple benchmark would have
-            saved me hours.
-          </li>
-          <li>
-            <strong>Document your decisions.</strong> Three weeks in, I could
-            not remember why I had chosen a specific approach. A one-line
-            comment would have prevented a costly rewrite.
-          </li>
-        </ul>
-        <h2>The Turning Point</h2>
-        <p>
-          About six weeks into the project, I made a small change that had an
-          outsized impact. Instead of trying to optimize everything at once, I
-          focused on a single metric: consistency. That one shift simplified my
-          entire workflow and eliminated 80% of the friction I had been
-          fighting.
-        </p>
-        <h2>What I Would Do Differently</h2>
-        <p>
-          If I were starting over with referral growth loops today, I would
-          spend less time reading and more time doing. The fastest way to learn
-          is to build something small, break it, and fix it. Everything else is
-          just preparation.
-        </p>
-        <div class="highlight-box">
-          <h4>Takeaway</h4>
-          <p>
-            Start small. Measure obsessively. Optimize only what matters.
-            Everything else is noise.
-          </p>
-        </div>
-        <p>
-          <em
-            >What is your experience with referral growth loops? Share your
-            thoughts or questions — we read every response.</em
-          >
-        </p>
-      </div>
-    </article>
-  </body>
+    </div>
+    <div class="article-content">
+      <p><strong>The mechanics of viral growth, and how to build a referral system into your product.</strong></p>
+<p>Last year, I spent six months and roughly $2,400 trying to figure out referral loops. I read every guide, watched every tutorial, and followed every "expert" on Twitter. Most of it was useless. But three things actually worked — and they were not what I expected.</p>
+<h2>A Framework That Actually Works</h2>
+<p>After two years of trial and error, I have settled on a simple framework for referral loops. It is not revolutionary. It is not trendy. But it works for me, and it might work for you too.</p>
+
+<h3>Step 1: Start with the Outcome</h3>
+<p>Before doing anything, write down the one result you want. Not ten. One. "Increase signups by 20%" is specific. "Grow the business" is not. Specificity forces focus.</p>
+
+<h3>Step 2: Find the Bottleneck</h3>
+<p>Where is referral loops actually breaking down for you? Is it awareness? Conversion? Retention? Most people optimize the wrong stage. I spent months improving my landing page when my actual problem was that no one was visiting it.</p>
+
+<h3>Step 3: Make One Change</h3>
+<p>Change one thing. Run it for two weeks. Compare before and after. If it helps, keep it. If not, revert and try something else. The goal is progress, not perfection.</p>
+
+<div class="tool-cta">
+<strong>Try this yourself:</strong> The <a href="/tools/seo-title">SEO Title Optimizer</a> helps with optimizing headlines. Perfect for applying what you just read.
+</div>
+
+<h2>Common Mistakes I Made</h2>
+<p>Here is where I wasted the most time:</p>
+<ol>
+<li><strong>Over-optimizing too early.</strong> I spent weeks perfecting a system that had no users yet. Premature optimization is not just a coding problem.</li>
+<li><strong>Ignoring the data I had.</strong> I collected metrics but rarely looked at them. The answers were already there; I just was not paying attention.</li>
+<li><strong>Chasing trends.</strong> Every new tool or technique seemed worth trying. Most of them added complexity without adding value.</li>
+</ol>
+<p><em>Pick one thing from this article and try it this week. Not next week. This week. The best advice is worthless until you test it. And when you do, let me know how it goes — I read every reply.</em></p>
+    </div>
+  </article>
+</body>
 </html>
