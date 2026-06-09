@@ -9,6 +9,7 @@ import {
   toolCategories,
 } from '@/lib/catalog-api';
 import { gameDetailHref, toolsCategoryHref, toolsHref } from '@/lib/routes';
+import { ToolIcon } from '@/components/ToolIcon';
 
 export const dynamic = 'force-dynamic';
 
@@ -111,7 +112,9 @@ export default async function DiscoverPage() {
               href={gameDetailHref(game.slug)}
               key={game.id}
             >
-              <span className='feature-card__icon'>{game.icon}</span>
+              <span className='feature-card__icon'>
+                <ToolIcon slug={game.slug} size={20} />
+              </span>
               <h3>{game.name}</h3>
               <p>{game.description}</p>
             </Link>

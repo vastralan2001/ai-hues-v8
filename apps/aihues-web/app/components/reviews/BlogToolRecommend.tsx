@@ -8,6 +8,7 @@ import {
 } from '@/lib/reviews';
 import { getToolBySlug } from '@/lib/tool-data';
 import { useI18n } from '@/lib/i18n';
+import { ToolIcon } from '@/components/ToolIcon';
 
 export default function BlogToolRecommend({ tag }: { tag: string }) {
   const { t } = useI18n();
@@ -44,7 +45,9 @@ export default function BlogToolRecommend({ tag }: { tag: string }) {
             key={slug}
           >
             <div className='mb-2 flex items-center gap-2'>
-              <span className='text-[18px]'>{tool.icon}</span>
+              <span className='text-[18px]'>
+                <ToolIcon slug={tool.slug} size={18} />
+              </span>
               <span className='text-[13px] font-bold text-[#1c1917] group-hover:text-[#b45309]'>
                 {tool.name}
               </span>

@@ -7,6 +7,7 @@ import HeroSearch from '@/components/HeroSearch';
 // Stats removed per design refresh
 import type { CatalogGame } from '@/lib/catalog-api';
 import { safeListGames, safeListTools } from '@/lib/catalog-api';
+import { ToolIcon } from '@/components/ToolIcon';
 import { t, type Locale } from '@/lib/dict';
 import {
   gameDetailHref,
@@ -144,8 +145,8 @@ function HomeGameCard({ game, locale }: { game: CatalogGame; locale: Locale }) {
       className='relative block cursor-pointer rounded-[16px] border border-border bg-surface px-7 py-7 text-center text-inherit no-underline transition-all duration-200 hover:border-border-strong'
       href={gameDetailHref(game.slug)}
     >
-      <span className='mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-xl bg-accent-bg text-[18px] font-bold text-accent'>
-        {game.icon}
+      <span className='mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-xl bg-accent-bg text-accent'>
+        <ToolIcon slug={game.slug} size={24} />
       </span>
       <h3 className='mb-1.5 text-[18px] font-bold text-foreground'>
         {game.name}
