@@ -17,8 +17,6 @@ export interface ToolData {
   credit: number;
   url: string;
   isExternal: boolean;
-  /** Hidden from listings (Phase 1 — API-dependent tools) */
-  hidden?: boolean;
 }
 
 export const TOOL_CATEGORIES = [
@@ -547,7 +545,6 @@ export const LOCAL_TOOLS: ToolData[] = [
     credit: 15,
     url: '/tools/ad-copy',
     isExternal: false,
-    hidden: true,
   },
   {
     slug: 'alt-text',
@@ -561,7 +558,6 @@ export const LOCAL_TOOLS: ToolData[] = [
     credit: 0,
     url: '/tools/alt-text',
     isExternal: false,
-    hidden: true,
   },
   {
     slug: 'blog-outline',
@@ -575,7 +571,6 @@ export const LOCAL_TOOLS: ToolData[] = [
     credit: 0,
     url: '/tools/blog-outline',
     isExternal: false,
-    hidden: true,
   },
   {
     slug: 'changelog',
@@ -589,7 +584,6 @@ export const LOCAL_TOOLS: ToolData[] = [
     credit: 0,
     url: '/tools/changelog',
     isExternal: false,
-    hidden: true,
   },
   {
     slug: 'cold-email',
@@ -603,7 +597,6 @@ export const LOCAL_TOOLS: ToolData[] = [
     credit: 10,
     url: '/tools/cold-email',
     isExternal: false,
-    hidden: true,
   },
   {
     slug: 'docs',
@@ -617,7 +610,6 @@ export const LOCAL_TOOLS: ToolData[] = [
     credit: 0,
     url: '/tools/docs',
     isExternal: false,
-    hidden: true,
   },
   {
     slug: 'faq',
@@ -631,7 +623,6 @@ export const LOCAL_TOOLS: ToolData[] = [
     credit: 0,
     url: '/tools/faq',
     isExternal: false,
-    hidden: true,
   },
   {
     slug: 'linkedin',
@@ -645,7 +636,6 @@ export const LOCAL_TOOLS: ToolData[] = [
     credit: 10,
     url: '/tools/linkedin',
     isExternal: false,
-    hidden: true,
   },
   {
     slug: 'lp-hero',
@@ -659,7 +649,6 @@ export const LOCAL_TOOLS: ToolData[] = [
     credit: 20,
     url: '/tools/lp-hero',
     isExternal: false,
-    hidden: true,
   },
   {
     slug: 'meta',
@@ -673,7 +662,6 @@ export const LOCAL_TOOLS: ToolData[] = [
     credit: 0,
     url: '/tools/meta',
     isExternal: false,
-    hidden: true,
   },
   {
     slug: 'newsletter',
@@ -687,7 +675,6 @@ export const LOCAL_TOOLS: ToolData[] = [
     credit: 15,
     url: '/tools/newsletter',
     isExternal: false,
-    hidden: true,
   },
   {
     slug: 'pr-desc',
@@ -701,7 +688,6 @@ export const LOCAL_TOOLS: ToolData[] = [
     credit: 0,
     url: '/tools/pr-desc',
     isExternal: false,
-    hidden: true,
   },
   {
     slug: 'pseudo',
@@ -715,7 +701,6 @@ export const LOCAL_TOOLS: ToolData[] = [
     credit: 0,
     url: '/tools/pseudo',
     isExternal: false,
-    hidden: true,
   },
   {
     slug: 'push',
@@ -729,7 +714,6 @@ export const LOCAL_TOOLS: ToolData[] = [
     credit: 0,
     url: '/tools/push',
     isExternal: false,
-    hidden: true,
   },
   {
     slug: 'tagline',
@@ -743,7 +727,6 @@ export const LOCAL_TOOLS: ToolData[] = [
     credit: 0,
     url: '/tools/tagline',
     isExternal: false,
-    hidden: true,
   },
   {
     slug: 'tldr',
@@ -757,7 +740,6 @@ export const LOCAL_TOOLS: ToolData[] = [
     credit: 0,
     url: '/tools/tldr',
     isExternal: false,
-    hidden: true,
   },
   {
     slug: 'video-title',
@@ -771,7 +753,6 @@ export const LOCAL_TOOLS: ToolData[] = [
     credit: 0,
     url: '/tools/video-title',
     isExternal: false,
-    hidden: true,
   },
   {
     slug: 'x-post',
@@ -785,7 +766,6 @@ export const LOCAL_TOOLS: ToolData[] = [
     credit: 0,
     url: '/tools/x-post',
     isExternal: false,
-    hidden: true,
   },
   {
     slug: 'yt-script',
@@ -799,7 +779,6 @@ export const LOCAL_TOOLS: ToolData[] = [
     credit: 20,
     url: '/tools/yt-script',
     isExternal: false,
-    hidden: true,
   },
 ];
 

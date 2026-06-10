@@ -1,7 +1,6 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { event, GA_EVENTS } from '@/lib/gtag';
 
 import { t, type Locale } from '@/lib/dict';
 
@@ -39,8 +38,7 @@ export default function WordCountTool({ locale }: WordCountToolProps) {
 
   const handleCopy = async () => {
     try {
-      await event(GA_EVENTS.toolCopy, { tool: 'word-count' });
-      navigator.clipboard.writeText(text);
+      await navigator.clipboard.writeText(text);
     } catch {
       // ignore
     }

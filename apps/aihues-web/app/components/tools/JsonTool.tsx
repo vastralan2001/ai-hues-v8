@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { event, GA_EVENTS } from '@/lib/gtag';
 
 import { t, type Locale } from '@/lib/dict';
 
@@ -81,8 +80,7 @@ export default function JsonTool({ locale }: JsonToolProps) {
   const handleCopy = async () => {
     try {
       const text = output.replace(/<[^>]+>/g, '');
-      await event(GA_EVENTS.toolCopy, { tool: 'json' });
-      navigator.clipboard.writeText(text);
+      await navigator.clipboard.writeText(text);
     } catch {
       // ignore
     }

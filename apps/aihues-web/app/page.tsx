@@ -8,14 +8,15 @@ import HeroSearch from '@/components/HeroSearch';
 import type { CatalogGame } from '@/lib/catalog-api';
 import { safeListGames, safeListTools } from '@/lib/catalog-api';
 import { ToolIcon } from '@/components/ToolIcon';
-import { event, GA_EVENTS } from '@/lib/gtag';
 import { t, type Locale } from '@/lib/dict';
 import {
   gameDetailHref,
   gamesHref,
+  rankingHref,
   toolDetailHref,
   toolsCategoryHref,
   toolsHref,
+  wishlistHref,
 } from '@/lib/routes';
 
 export const dynamic = 'force-dynamic';
@@ -111,8 +112,8 @@ const HOME_GAME_DESCRIPTIONS: Record<string, string> = {
 
 const HOME_GAME_META: Record<string, string> = {
   'daily-luck': '30 fortunes · Daily draw · Streak bonus',
-  'slot-machine': '3×3 reels · 3 spins/day',
-  basketball: '60 seconds · Physics',
+  'slot-machine': '3×3 reels · 3 spins/day · Leaderboard',
+  basketball: '60 seconds · Physics · Leaderboard',
 };
 
 const HOME_DEVELOPER_SLUGS = [
@@ -313,9 +314,6 @@ export default async function HomePage() {
                 key={cat.key}
                 className='block cursor-pointer rounded-[16px] border border-border bg-surface p-[18px] text-inherit no-underline transition-all duration-200 hover:border-border-strong'
                 href={cat.href}
-                onClick={() =>
-                  event(GA_EVENTS.categoryFilter, { category: cat.key })
-                }
               >
                 {/* Header row */}
                 <div className='mb-2 flex items-center gap-2'>
@@ -479,7 +477,7 @@ export default async function HomePage() {
             </h2>
             <Link
               className='text-[14px] font-semibold text-accent hover:text-accent-light'
-              href={toolsHref}
+              href={rankingHref}
             >
               {t(locale, 'section.viewAll')}
             </Link>
@@ -535,6 +533,29 @@ export default async function HomePage() {
               href={toolsHref}
             >
               {t(locale, 'section.browseAll')}
+            </Link>
+          </div>
+        </section>
+
+        {/* ══════════════════════════════════════════════
+            WISHLIST CTA
+            ══════════════════════════════════════════════ */}
+        <section className='border-t border-border px-8 py-16 text-center'>
+          <div className='mx-auto max-w-[560px]'>
+            <h2
+              className='mb-3 text-[28px] font-normal text-foreground'
+              style={{ fontFamily: 'var(--font-sans)' }}
+            >
+              {t(locale, 'section.wishlistTitle')}
+            </h2>
+            <p className='mb-6 text-[16px] text-muted'>
+              {t(locale, 'section.wishlistDesc')}
+            </p>
+            <Link
+              className='inline-flex items-center gap-2 rounded-[12px] bg-accent px-7 py-3.5 text-[15px] font-medium text-white transition-all hover:bg-accent-light'
+              href={wishlistHref}
+            >
+              {t(locale, 'section.submitIdea')}
             </Link>
           </div>
         </section>

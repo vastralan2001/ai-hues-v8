@@ -1,7 +1,6 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { event, GA_EVENTS } from '@/lib/gtag';
 
 import { t, type Locale } from '@/lib/dict';
 
@@ -61,8 +60,7 @@ export default function PasswordTool({ locale }: PasswordToolProps) {
 
   const handleCopy = async () => {
     try {
-      await event(GA_EVENTS.toolCopy, { tool: 'password' });
-      navigator.clipboard.writeText(password);
+      await navigator.clipboard.writeText(password);
     } catch {
       // ignore
     }

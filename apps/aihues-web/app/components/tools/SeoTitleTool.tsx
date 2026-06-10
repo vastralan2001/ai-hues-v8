@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { event, GA_EVENTS } from '@/lib/gtag';
 
 import { aiGenerate } from '@/lib/ai-generate-client';
 import { t, type Locale } from '@/lib/dict';
@@ -37,8 +36,7 @@ export default function SeoTitleTool({ locale }: SeoTitleToolProps) {
 
   const handleCopy = async () => {
     try {
-      await event(GA_EVENTS.toolCopy, { tool: 'seo-title' });
-      navigator.clipboard.writeText(title);
+      await navigator.clipboard.writeText(title);
     } catch {
       // ignore
     }
@@ -122,10 +120,7 @@ export default function SeoTitleTool({ locale }: SeoTitleToolProps) {
               <p className='text-sm text-foreground'>{r}</p>
               <button
                 className='ml-4 shrink-0 rounded-[8px] border border-border bg-white px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent dark:bg-gray-900'
-                onClick={() => {
-                  event(GA_EVENTS.toolCopy, { tool: 'seo-title' });
-                  navigator.clipboard.writeText(r);
-                }}
+                onClick={() => navigator.clipboard.writeText(r)}
                 type='button'
               >
                 {t(locale, 'tool.wordCount.copy')}
