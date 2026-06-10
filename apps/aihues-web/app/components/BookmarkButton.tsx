@@ -2,14 +2,10 @@
 
 import { useCallback, useState } from 'react';
 
-import { event, GA_EVENTS } from '@/lib/gtag';
-
 export function BookmarkButton() {
   const [showTip, setShowTip] = useState(false);
 
   const handleClick = useCallback(() => {
-    event(GA_EVENTS.bookmarkClick);
-
     // Legacy IE method (no modern browser supports this)
     try {
       const ext = (window as unknown as Record<string, unknown>).external;

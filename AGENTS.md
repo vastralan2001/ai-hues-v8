@@ -138,12 +138,6 @@ pnpm moon run aihues-web:build
 
 > 以下偏好由用户在对话中直接提出，优先级高于一般默认行为。
 
-### 部署与验证规范
-- **CI/CD 文件（`.gitlab-ci.yml`、`Dockerfile`、`deploy/` 目录）由研发老师维护，AI 代理不得修改**
-- **任何改动必须先本地验证**：`pnpm check`（lint + format + typecheck）→ `pnpm moon run aihues-web:build` 全绿才算通过
-- **用户没说部署，就不要部署**：本地 `pnpm dev` 开浏览器验证效果即可
-- **只有用户明确说"推测试环境"或"部署"时，才执行 `git push`**
-
 ### 交互语言
 - **主要沟通语言**：中文（用户用中文提问，用中文回答）
 - **代码/技术术语**：保持英文（如 API、组件名、变量名等）

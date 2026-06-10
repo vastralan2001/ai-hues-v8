@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { event, GA_EVENTS } from '@/lib/gtag';
 
 import { aiGenerate } from '@/lib/ai-generate-client';
 import { t, type Locale } from '@/lib/dict';
@@ -84,8 +83,7 @@ export default function ChangelogTool({ locale }: ChangelogToolProps) {
 
   const handleCopy = async () => {
     try {
-      await event(GA_EVENTS.toolCopy, { tool: 'changelog' });
-      navigator.clipboard.writeText(output);
+      await navigator.clipboard.writeText(output);
     } catch {
       // ignore
     }

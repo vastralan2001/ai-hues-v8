@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { event, GA_EVENTS } from '@/lib/gtag';
 
 import { t, type Locale } from '@/lib/dict';
 
@@ -34,8 +33,7 @@ export default function UrlEncodeTool({ locale }: UrlEncodeToolProps) {
 
   const handleCopy = async () => {
     try {
-      await event(GA_EVENTS.toolCopy, { tool: 'url-encode' });
-      navigator.clipboard.writeText(output);
+      await navigator.clipboard.writeText(output);
     } catch {
       // ignore
     }

@@ -36,7 +36,6 @@ export const GA_EVENTS = {
   toolGenerate: 'tool_generate',
   toolCopy: 'tool_copy',
   gamePlay: 'game_play',
-  gameScore: 'game_score',
   gameCheckin: 'game_checkin',
   newsletterSubscribe: 'newsletter_subscribe',
   localeSwitch: 'locale_switch',
@@ -47,7 +46,4 @@ export const GA_EVENTS = {
   wishlistSubmit: 'wishlist_submit',
   wishlistVote: 'wishlist_vote',
   pageDuration: 'page_duration',
-  blogClick: 'blog_click',
-  bookmarkClick: 'bookmark_click',
-  commandPalette: 'command_palette',
 } as const;

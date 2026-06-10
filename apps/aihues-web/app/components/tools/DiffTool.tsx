@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { event, GA_EVENTS } from '@/lib/gtag';
 
 import { t, type Locale } from '@/lib/dict';
 
@@ -66,8 +65,7 @@ export default function DiffTool({ locale }: DiffToolProps) {
 
   const handleCopy = async (text: string) => {
     try {
-      await event(GA_EVENTS.toolCopy, { tool: 'diff' });
-      navigator.clipboard.writeText(text);
+      await navigator.clipboard.writeText(text);
     } catch {
       // ignore
     }

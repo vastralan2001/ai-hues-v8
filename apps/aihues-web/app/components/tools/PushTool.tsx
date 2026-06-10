@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { event, GA_EVENTS } from '@/lib/gtag';
 
 import { aiGenerate } from '@/lib/ai-generate-client';
 import { t, type Locale } from '@/lib/dict';
@@ -40,7 +39,6 @@ export default function PushTool({ locale }: PushToolProps) {
 
   function copy() {
     if (!result) return;
-    event(GA_EVENTS.toolCopy, { tool: 'push' });
     navigator.clipboard.writeText(result);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);

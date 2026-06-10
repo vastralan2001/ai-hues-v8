@@ -70,10 +70,6 @@
    * @param {object} [metadata]
    */
   async function submitScore(gameSlug, playerName, score, metadata) {
-    if (typeof gtag === 'function') {
-      gtag('event', 'game_score', { game: gameSlug, score: score });
-    }
-
     const entry = {
       name: playerName || 'Anonymous',
       score: score,

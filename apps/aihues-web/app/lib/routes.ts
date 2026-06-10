@@ -3,6 +3,8 @@ import type { ToolCategoryKey } from '@/lib/catalog-api';
 export const homeHref = '/';
 export const toolsHref = '/tools';
 export const gamesHref = '/games';
+export const wishlistHref = '/wishlist';
+export const rankingHref = '/ranking';
 export const pricingHref = '/pricing';
 export const collectionHref = '/collection';
 export const showcaseHref = '/showcase';

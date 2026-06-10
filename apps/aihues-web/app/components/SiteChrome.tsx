@@ -6,13 +6,22 @@ import {
   gameDetailHref,
   gamesHref,
   homeHref,
+  rankingHref,
   showcaseHref,
   toolsHref,
+  wishlistHref,
   blogHref,
 } from '@/lib/routes';
 import { Logo } from './Logo';
+import { BookmarkButton } from './BookmarkButton';
 
-type ChromeVariant = 'home' | 'tools' | 'games' | 'default';
+type ChromeVariant =
+  | 'home'
+  | 'tools'
+  | 'games'
+  | 'wishlist'
+  | 'ranking'
+  | 'default';
 
 const headerLinks: Record<
   ChromeVariant,
@@ -23,24 +32,42 @@ const headerLinks: Record<
     { href: toolsHref, labelKey: 'nav.tools' },
     { href: gamesHref, labelKey: 'nav.games' },
     { href: blogHref, labelKey: 'nav.blog' },
+    { href: wishlistHref, labelKey: 'nav.wishlist' },
   ],
   tools: [
     { href: homeHref, labelKey: 'nav.home' },
     { href: toolsHref, labelKey: 'nav.tools' },
     { href: gamesHref, labelKey: 'nav.games' },
     { href: blogHref, labelKey: 'nav.blog' },
+    { href: wishlistHref, labelKey: 'nav.wishlist' },
   ],
   games: [
     { href: homeHref, labelKey: 'nav.home' },
     { href: toolsHref, labelKey: 'nav.tools' },
     { href: gamesHref, labelKey: 'nav.games' },
     { href: blogHref, labelKey: 'nav.blog' },
+    { href: wishlistHref, labelKey: 'nav.wishlist' },
+  ],
+  wishlist: [
+    { href: homeHref, labelKey: 'nav.home' },
+    { href: toolsHref, labelKey: 'nav.tools' },
+    { href: gamesHref, labelKey: 'nav.games' },
+    { href: blogHref, labelKey: 'nav.blog' },
+    { href: wishlistHref, labelKey: 'nav.wishlist' },
+  ],
+  ranking: [
+    { href: homeHref, labelKey: 'nav.home' },
+    { href: toolsHref, labelKey: 'nav.tools' },
+    { href: gamesHref, labelKey: 'nav.games' },
+    { href: blogHref, labelKey: 'nav.blog' },
+    { href: wishlistHref, labelKey: 'nav.wishlist' },
   ],
   default: [
     { href: homeHref, labelKey: 'nav.home' },
     { href: toolsHref, labelKey: 'nav.tools' },
     { href: gamesHref, labelKey: 'nav.games' },
     { href: blogHref, labelKey: 'nav.blog' },
+    { href: wishlistHref, labelKey: 'nav.wishlist' },
   ],
 };
 
@@ -84,6 +111,11 @@ export function SiteHeader({
             </Link>
           ))}
         </nav>
+
+        {/* Right side: bookmark button */}
+        <div className='justify-self-end'>
+          <BookmarkButton />
+        </div>
       </div>
     </header>
   );
@@ -114,8 +146,59 @@ export function SiteFooter({
         <div className='mb-3 flex justify-center gap-6'>
           <Link href={homeHref}>{t(locale, 'nav.home')}</Link>
           <Link href={toolsHref}>{t(locale, 'nav.tools')}</Link>
+          <Link href={rankingHref}>{t(locale, 'nav.ranking')}</Link>
         </div>
         {t(locale, 'footer.copyright')}
+      </footer>
+    );
+  }
+
+  if (variant === 'ranking') {
+    return (
+      <footer className='border-t border-border px-8 py-12'>
+        <div className='mx-auto max-w-[1300px]'>
+          <div className='mb-8 flex flex-wrap items-start justify-between gap-6'>
+            <div>
+              <div className='mb-2 flex items-center gap-2.5 text-xl font-extrabold'>
+                <Logo size={32} />
+                <span>AIHues</span>
+              </div>
+              <p className='max-w-[300px] text-[14px] text-muted'>
+                {t(locale, 'footer.tagline')}
+              </p>
+            </div>
+            <div className='flex flex-wrap gap-10'>
+              <FooterColumn
+                heading={t(locale, 'footer.product')}
+                links={[
+                  [t(locale, 'nav.tools'), toolsHref],
+                  [t(locale, 'categories.title'), `${homeHref}#categories`],
+                  [t(locale, 'nav.discover'), showcaseHref],
+                  [t(locale, 'nav.wishlist'), wishlistHref],
+                ]}
+              />
+              <FooterColumn
+                heading={t(locale, 'footer.games')}
+                links={[
+                  [t(locale, 'game.daily'), gameDetailHref('daily-luck')],
+                  [t(locale, 'game.popular'), gameDetailHref('slot-machine')],
+                  [t(locale, 'game.hoops'), gameDetailHref('basketball')],
+                ]}
+              />
+              <FooterColumn
+                heading={t(locale, 'footer.company')}
+                links={[
+                  [t(locale, 'footer.about'), '/about'],
+                  [t(locale, 'nav.blog'), '/blog'],
+                  [t(locale, 'footer.terms'), '/terms'],
+                ]}
+              />
+            </div>
+          </div>
+          <div className='border-t border-border pt-6 text-center text-[13px] text-muted'>
+            {t(locale, 'footer.copyright')}
+          </div>
+        </div>
       </footer>
     );
   }
@@ -147,6 +230,7 @@ export function SiteFooter({
                 {[
                   { href: toolsHref, labelKey: 'nav.tools' },
                   { href: '#categories', labelKey: 'categories.title' },
+                  { href: wishlistHref, labelKey: 'nav.wishlist' },
                   { href: showcaseHref, labelKey: 'nav.showcase' },
                 ].map(({ href, labelKey }) => (
                   <Link
@@ -224,7 +308,6 @@ export function SiteFooter({
   );
 }
 
-/* Phase 1: FooterColumn unused — kept for future use
 function FooterColumn({
   heading,
   links,
@@ -251,7 +334,6 @@ function FooterColumn({
     </div>
   );
 }
-*/
 
 export function PageShell({
   children,

@@ -132,7 +132,7 @@ export default async function CollectionPage() {
           style={{ textAlign: 'center', padding: '40px 20px' }}
         >
           <p style={{ fontSize: '14px', color: '#78716c' }}>
-            Collection feature coming in Phase 2.
+            Leaderboard coming soon. Start collecting to be the first!
           </p>
         </div>
       </section>

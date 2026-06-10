@@ -3,8 +3,6 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { event, GA_EVENTS } from '@/lib/gtag';
-
 interface Item {
   id: string;
   title: string;
@@ -130,7 +128,6 @@ export default function CommandPalette() {
 
   const onSelect = useCallback(
     (item: Item) => {
-      event(GA_EVENTS.commandPalette, { type: item.type, slug: item.id });
       setOpen(false);
       setQuery('');
       router.push(item.href);
