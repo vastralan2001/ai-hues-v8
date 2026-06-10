@@ -62,12 +62,10 @@ build:
   tags:
     - docker
   script:
-    - docker build -f apps/aihues-web/Dockerfile --build-arg HTTP_PROXY=$HTTP_PROXY --build-arg HTTPS_PROXY=$HTTPS_PROXY -t msai-cn-beijing.cr.volces.com/msai/aihues-web:$CI_COMMIT_SHORT_SHA .
+    - docker build -f apps/aihues-web/Dockerfile -t msai-cn-beijing.cr.volces.com/msai/aihues-web:$CI_COMMIT_SHORT_SHA .
     - docker push msai-cn-beijing.cr.volces.com/msai/aihues-web:$CI_COMMIT_SHORT_SHA
     - echo "✅ Build image successful"
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: $CI_COMMIT_BRANCH == "feature/design-refresh"
-      when: on_success
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       when: on_success

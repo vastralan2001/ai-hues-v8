@@ -22,12 +22,6 @@ RUN --mount=type=bind,source=package.json,target=package.json \
 ###########################################################
 FROM base AS workspace
 ARG X_MOON_LOG=info
-ARG HTTP_PROXY
-ARG HTTPS_PROXY
-ENV HTTP_PROXY=$HTTP_PROXY
-ENV HTTPS_PROXY=$HTTPS_PROXY
-ENV http_proxy=$HTTP_PROXY
-ENV https_proxy=$HTTPS_PROXY
 
 COPY . .
 RUN --mount=type=cache,target=/root/.proto \
