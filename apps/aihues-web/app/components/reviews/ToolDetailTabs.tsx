@@ -6,8 +6,7 @@ import type { Locale } from '@/lib/dict';
 import { getReviewBySlug, starRating } from '@/lib/reviews';
 import { getToolBySlug } from '@/lib/tool-data';
 import { useI18n } from '@/lib/i18n';
-import ReviewPanel from './ReviewPanel';
-import CommentSection from './CommentSection';
+
 import { ToolIcon } from '@/components/ToolIcon';
 
 function useTabs(locale: Locale) {
@@ -41,9 +40,8 @@ export default function ToolDetailTabs({
   const review = getReviewBySlug(slug);
   const tool = getToolBySlug(slug);
 
-  const tabs = review
-    ? TABS
-    : TABS.filter((tab) => tab.key !== 'review' && tab.key !== 'comments');
+  // Reviews & comments hidden for Phase 1
+  const tabs = TABS.filter((tab) => tab.key === 'tool');
 
   return (
     <div className='mx-auto max-w-[900px] px-6 py-8'>
@@ -116,11 +114,7 @@ export default function ToolDetailTabs({
       </div>
 
       {/* Tab content */}
-      <div>
-        {activeTab === 'tool' && <div>{toolElement}</div>}
-        {activeTab === 'review' && review && <ReviewPanel review={review} />}
-        {activeTab === 'comments' && <CommentSection slug={slug} />}
-      </div>
+      <div>{activeTab === 'tool' && <div>{toolElement}</div>}</div>
     </div>
   );
 }

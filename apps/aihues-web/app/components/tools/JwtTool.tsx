@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { event, GA_EVENTS } from '@/lib/gtag';
 
 import { t, type Locale } from '@/lib/dict';
 
@@ -84,7 +85,8 @@ export default function JwtTool({ locale }: JwtToolProps) {
 
   const handleCopy = async (text: string) => {
     try {
-      await navigator.clipboard.writeText(text);
+      await event(GA_EVENTS.toolCopy, { tool: 'jwt' });
+      navigator.clipboard.writeText(text);
     } catch {
       // ignore
     }
