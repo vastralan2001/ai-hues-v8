@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { event, GA_EVENTS } from '@/lib/gtag';
 
 import { t, type Locale } from '@/lib/dict';
 
@@ -37,7 +38,8 @@ export default function HtmlEntityTool({ locale }: HtmlEntityToolProps) {
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(output);
+      await event(GA_EVENTS.toolCopy, { tool: 'html-entity' });
+      navigator.clipboard.writeText(output);
     } catch {
       // ignore
     }

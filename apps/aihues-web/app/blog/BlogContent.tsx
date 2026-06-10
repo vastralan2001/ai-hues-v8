@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 
+import { event, GA_EVENTS } from '@/lib/gtag';
 import NewsletterSubscribe from '@/components/NewsletterSubscribe';
 import CoverImage from '@/components/CoverImage';
 import type { BlogPost } from '@/lib/blog-data';
@@ -131,6 +132,7 @@ export default function BlogContent({ initialPosts }: Props) {
                 key={post.slug}
                 href={`/blog/${post.slug}`}
                 className='group flex flex-col overflow-hidden rounded-[14px] border border-[#e8e2d9] bg-white transition-all hover:-translate-y-1 hover:border-[#d97706] hover:shadow-[0_4px_12px_rgba(180,83,9,0.12),0_8px_32px_rgba(0,0,0,0.08)]'
+                onClick={() => event(GA_EVENTS.blogClick, { slug: post.slug })}
               >
                 {/* Cover Image */}
                 <div className='relative h-[180px] overflow-hidden'>

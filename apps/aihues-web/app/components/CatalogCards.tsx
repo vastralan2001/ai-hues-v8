@@ -232,8 +232,8 @@ const GAME_BADGES: Record<string, string> = {
 
 const GAME_META: Record<string, string> = {
   'daily-luck': '30 fortunes · +10 Credits · Streak bonus',
-  'slot-machine': '3×3 reels · 3 spins/day · +5~100/spin · Leaderboard',
-  basketball: '60 seconds · Physics · +10~50/game · Leaderboard',
+  'slot-machine': '3×3 reels · 3 spins/day · +5~100/spin',
+  basketball: '60 seconds · Physics · +10~50/game',
 };
 
 export function GameCard({

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { event, GA_EVENTS } from '@/lib/gtag';
 
 import { aiGenerate } from '@/lib/ai-generate-client';
 import { t, type Locale } from '@/lib/dict';
@@ -38,6 +39,7 @@ export default function AdCopyTool({ locale }: AdCopyToolProps) {
   }
 
   function copy(text: string) {
+    event(GA_EVENTS.toolCopy, { tool: 'ad-copy' });
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);

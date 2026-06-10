@@ -1,10 +1,9 @@
 'use client';
 
-import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 
 import { useI18n } from '@/lib/i18n';
-import { rankingHref } from '@/lib/routes';
+
 import { addWish, loadWishes, voteWish } from '@/lib/wishlist-local';
 import { event, GA_EVENTS } from '@/lib/gtag';
 
@@ -276,9 +275,9 @@ export function WishlistBoard() {
             <span>🏆</span>
             <strong>{locale === 'zh' ? 'Top 5 需求' : 'Top 5 Requests'}</strong>
           </div>
-          <Link href={rankingHref}>
-            {locale === 'zh' ? '完整排行榜 →' : 'Full Leaderboard →'}
-          </Link>
+          <span className='text-muted'>
+            {locale === 'zh' ? 'Coming soon' : 'Coming soon'}
+          </span>
         </div>
         <div className='wishlist-top__list'>
           {topFive.map((wish, idx) => (

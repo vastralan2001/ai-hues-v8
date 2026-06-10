@@ -307,7 +307,9 @@ export async function listGames(
   };
 }
 
-const LOCAL_FALLBACK_TOOLS: CatalogTool[] = LOCAL_TOOLS.map((t, idx) => ({
+const LOCAL_FALLBACK_TOOLS: CatalogTool[] = LOCAL_TOOLS.filter(
+  (t) => !t.hidden
+).map((t, idx) => ({
   id: t.slug,
   slug: t.slug,
   icon: t.name.slice(0, 2).toUpperCase(),
