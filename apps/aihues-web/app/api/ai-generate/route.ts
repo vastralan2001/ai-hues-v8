@@ -95,6 +95,12 @@ export async function POST(request: Request) {
     };
     const result = data.choices?.[0]?.message?.content?.trim() || '';
 
+    // Simple usage logging (inspect container logs to review)
+    const promptChars = prompt.system.length + prompt.user.length;
+    console.log(
+      `[AI-Generate] tool=${tool} model=${config.model} promptChars=${promptChars} resultChars=${result.length}`
+    );
+
     return NextResponse.json({ result });
   } catch (err) {
     return NextResponse.json(

@@ -1,10 +1,8 @@
 'use client';
 
-import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 
 import { useI18n } from '@/lib/i18n';
-import { rankingHref } from '@/lib/routes';
 import { addWish, loadWishes, voteWish } from '@/lib/wishlist-local';
 import { event, GA_EVENTS } from '@/lib/gtag';
 
@@ -221,7 +219,7 @@ export function WishlistBoard() {
           placeholder={
             locale === 'zh'
               ? '你的邮箱（有进展时通知你）...'
-              : "Your email (we'll notify you of progress)..."
+              : 'Your email (optional)...'
           }
           value={formEmail}
           onChange={(e) => setFormEmail(e.target.value)}
@@ -276,9 +274,7 @@ export function WishlistBoard() {
             <span>🏆</span>
             <strong>{locale === 'zh' ? 'Top 5 需求' : 'Top 5 Requests'}</strong>
           </div>
-          <Link href={rankingHref}>
-            {locale === 'zh' ? '完整排行榜 →' : 'Full Leaderboard →'}
-          </Link>
+          {/* Phase 1: Full Leaderboard hidden - ranking page removed */}
         </div>
         <div className='wishlist-top__list'>
           {topFive.map((wish, idx) => (

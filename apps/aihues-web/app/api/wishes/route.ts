@@ -15,6 +15,7 @@ export async function POST(request: Request) {
       title?: string;
       description?: string;
       category?: string;
+      email?: string;
     };
 
     if (!body.title?.trim() || !body.description?.trim()) {
@@ -28,6 +29,7 @@ export async function POST(request: Request) {
       title: body.title.trim(),
       description: body.description.trim(),
       category: body.category?.trim() || 'Other',
+      email: body.email?.trim(),
     });
 
     return NextResponse.json({ wish }, { status: 201 });
