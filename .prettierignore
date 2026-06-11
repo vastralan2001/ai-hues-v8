@@ -24,3 +24,4 @@ apps/aihues-web/content/blog/posts.json
 # moonrepo cache
 .moon/cache
 .moon/docker
+test-results/

@@ -23,6 +23,10 @@ web:
       value: ''
     - name: KIMI_API_KEY
       value: 'sk-qeZNEFZjIC3qabra8Qgn50DKZiVTihlqe7NulsylJrn26Ha5'
+    - name: KIMI_API_BASE_URL
+      value: 'https://openai.app.msh.team/v1/chat/completions'
+    - name: KIMI_API_MODEL
+      value: 'deepseek-chat'
 
   replicaCount: 1
 
