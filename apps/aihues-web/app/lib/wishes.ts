@@ -15,10 +15,10 @@ export interface Wish {
   voters: string[];
 }
 
-// Use /tmp for containers (guaranteed writable) with fallback to cwd for local dev
+// Use /data for containers (PVC-mounted) with fallback to cwd for local dev
 const DATA_PATH =
   process.env.NODE_ENV === 'production'
-    ? '/tmp/aihues-wishes.json'
+    ? '/data/aihues-wishes.json'
     : join(process.cwd(), 'data', 'wishes.json');
 
 // Memory fallback when filesystem is read-only (e.g. some container runtimes)
@@ -143,7 +143,7 @@ function ensureDataFile(): boolean {
   try {
     const dir =
       process.env.NODE_ENV === 'production'
-        ? '/tmp'
+        ? '/data'
         : join(process.cwd(), 'data');
     if (!existsSync(dir)) {
       mkdirSync(dir, { recursive: true });
