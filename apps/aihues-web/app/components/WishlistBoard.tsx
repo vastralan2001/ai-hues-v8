@@ -103,12 +103,7 @@ export function WishlistBoard() {
 
   async function handleSubmit() {
     if (!formTitle.trim() || !formDesc.trim()) return;
-    if (!formEmail.trim() || !validateEmail(formEmail.trim())) {
-      setSubmitError(
-        locale === 'zh' ? '请输入有效的邮箱地址' : 'Please enter a valid email'
-      );
-      return;
-    }
+    // Email hidden in Phase 1 — notification feature coming in Phase 2
     setSubmitting(true);
     setSubmitError('');
     setSubmitSuccess(false);
@@ -131,7 +126,7 @@ export function WishlistBoard() {
       setSubmitSuccess(true);
       event(GA_EVENTS.wishlistSubmit, {
         category: formCategory,
-        has_email: true,
+        has_email: false, // Phase 1: email field hidden
       });
       setTimeout(() => setSubmitSuccess(false), 3000);
 
@@ -214,16 +209,7 @@ export function WishlistBoard() {
           value={formDesc}
           onChange={(e) => setFormDesc(e.target.value)}
         />
-        <input
-          type='email'
-          placeholder={
-            locale === 'zh'
-              ? '你的邮箱（有进展时通知你）...'
-              : 'Your email (optional)...'
-          }
-          value={formEmail}
-          onChange={(e) => setFormEmail(e.target.value)}
-        />
+        {/* Email hidden in Phase 1 — notification coming in Phase 2 */}
         <div className='wish-form__row'>
           <select
             value={formCategory}
