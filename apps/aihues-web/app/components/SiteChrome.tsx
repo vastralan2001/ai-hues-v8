@@ -84,26 +84,27 @@ export function SiteHeader({
       style={{ backdropFilter: 'blur(16px)' }}
       className='sticky top-0 z-[100] border-b border-border bg-[rgba(255,255,255,0.92)]'
     >
-      <div className='mx-auto grid h-[68px] max-w-[1300px] grid-cols-[1fr_auto_1fr] items-center px-8'>
+      <div className='mx-auto flex h-[68px] max-w-[1300px] items-center justify-between px-4 md:px-8'>
         {/* Logo */}
         <Link
           aria-label='AIHues home'
-          className='flex items-center gap-2.5 justify-self-start text-xl font-extrabold text-foreground'
+          className='flex shrink-0 items-center gap-2 text-lg font-extrabold text-foreground md:gap-2.5 md:text-xl'
           href={homeHref}
         >
-          <Logo size={32} />
+          <Logo size={28} />
           <span>AIHues</span>
         </Link>
 
-        {/* Nav links */}
+        {/* Nav links — scrollable on mobile */}
         <nav
           aria-label='Primary navigation'
-          className='flex items-center gap-7 justify-self-center'
+          className='mx-3 flex flex-1 items-center justify-center gap-4 overflow-x-auto whitespace-nowrap py-2 md:mx-6 md:gap-7'
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {links.map(({ href, labelKey }) => (
             <Link
               key={labelKey}
-              className='text-[14px] font-medium text-secondary transition-colors duration-150 hover:text-foreground'
+              className='text-[13px] font-medium text-secondary transition-colors duration-150 hover:text-foreground md:text-[14px]'
               href={href}
             >
               {t(locale, labelKey)}
@@ -112,7 +113,7 @@ export function SiteHeader({
         </nav>
 
         {/* Right side: bookmark button */}
-        <div className='justify-self-end'>
+        <div className='shrink-0'>
           <BookmarkButton />
         </div>
       </div>
