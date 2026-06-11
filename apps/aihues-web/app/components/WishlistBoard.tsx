@@ -126,7 +126,7 @@ export function WishlistBoard() {
       setSubmitSuccess(true);
       event(GA_EVENTS.wishlistSubmit, {
         category: formCategory,
-        has_email: false, // Phase 1: email field hidden
+        has_email: !!email,
       });
       setTimeout(() => setSubmitSuccess(false), 3000);
 
@@ -209,7 +209,17 @@ export function WishlistBoard() {
           value={formDesc}
           onChange={(e) => setFormDesc(e.target.value)}
         />
-        {/* Email hidden in Phase 1 — notification coming in Phase 2 */}
+        <input
+          maxLength={80}
+          placeholder={
+            locale === 'zh'
+              ? '你的邮箱（可选，上线后通知你）'
+              : 'Your email (optional, get notified when built)'
+          }
+          type='email'
+          value={formEmail}
+          onChange={(e) => setFormEmail(e.target.value)}
+        />
         <div className='wish-form__row'>
           <select
             value={formCategory}
