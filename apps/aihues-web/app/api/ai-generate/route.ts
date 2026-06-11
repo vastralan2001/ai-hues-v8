@@ -9,7 +9,7 @@ function getLlmConfig() {
       url:
         process.env.KIMI_API_BASE_URL ||
         'https://api.moonshot.cn/v1/chat/completions',
-      model: process.env.KIMI_API_MODEL || 'deepseek-chat',
+      model: process.env.KIMI_API_MODEL || 'gpt-4.1',
     };
   }
   if (process.env.DEEPSEEK_API_KEY) {

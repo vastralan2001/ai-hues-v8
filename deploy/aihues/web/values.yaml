@@ -26,7 +26,7 @@ web:
     - name: KIMI_API_BASE_URL
       value: 'https://openai.app.msh.team/v1/chat/completions'
     - name: KIMI_API_MODEL
-      value: 'deepseek-chat'
+      value: 'gpt-4.1'
 
   replicaCount: 1
 
