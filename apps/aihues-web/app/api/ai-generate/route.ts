@@ -6,22 +6,28 @@ function getLlmConfig() {
   if (process.env.KIMI_API_KEY) {
     return {
       key: process.env.KIMI_API_KEY,
-      url: 'https://api.moonshot.cn/v1/chat/completions',
-      model: 'moonshot-v1-8k',
+      url:
+        process.env.KIMI_API_BASE_URL ||
+        'https://api.moonshot.cn/v1/chat/completions',
+      model: process.env.KIMI_API_MODEL || 'moonshot-v1-8k',
     };
   }
   if (process.env.DEEPSEEK_API_KEY) {
     return {
       key: process.env.DEEPSEEK_API_KEY,
-      url: 'https://api.deepseek.com/v1/chat/completions',
-      model: 'deepseek-chat',
+      url:
+        process.env.DEEPSEEK_API_BASE_URL ||
+        'https://api.deepseek.com/v1/chat/completions',
+      model: process.env.DEEPSEEK_API_MODEL || 'deepseek-chat',
     };
   }
   if (process.env.OPENAI_API_KEY) {
     return {
       key: process.env.OPENAI_API_KEY,
-      url: 'https://api.openai.com/v1/chat/completions',
-      model: 'gpt-3.5-turbo',
+      url:
+        process.env.OPENAI_API_BASE_URL ||
+        'https://api.openai.com/v1/chat/completions',
+      model: process.env.OPENAI_API_MODEL || 'gpt-3.5-turbo',
     };
   }
   return null;

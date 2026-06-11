@@ -12,7 +12,6 @@ import { t, type Locale } from '@/lib/dict';
 import {
   gameDetailHref,
   gamesHref,
-  rankingHref,
   toolDetailHref,
   toolsCategoryHref,
   toolsHref,
@@ -265,34 +264,6 @@ export default async function HomePage() {
         </section>
 
         {/* ══════════════════════════════════════════════
-            PARTNER SLOT (placeholder for Phase 2)
-            ══════════════════════════════════════════════ */}
-        <section className='mx-auto max-w-[1300px] px-8 pb-10'>
-          <div className='group relative block overflow-hidden rounded-[16px] border border-border bg-surface px-6 py-5 text-foreground no-underline transition-all hover:border-border-strong'>
-            <div className='relative z-[1] flex items-center justify-between'>
-              <div>
-                <span className='mb-2 inline-block rounded-md border border-border bg-[#f5f3ee] px-2.5 py-1 text-[11px] font-semibold text-muted'>
-                  {locale === 'zh' ? '合作伙伴' : 'Partner'}
-                </span>
-                <h3 className='mt-1 text-[17px] font-semibold'>
-                  {locale === 'zh'
-                    ? '合作伙伴推荐位（二期上线）'
-                    : 'Partner recommendations (Phase 2)'}
-                </h3>
-                <p className='mt-1 text-[13px] text-muted'>
-                  {locale === 'zh'
-                    ? '精选 AI 工具与增长资源推荐位，敬请期待。'
-                    : 'Curated AI tools and growth resources. Coming soon.'}
-                </p>
-              </div>
-              <span className='rounded-md bg-[#f5f3ee] px-2.5 py-1 text-[11px] font-medium text-muted'>
-                Coming soon
-              </span>
-            </div>
-          </div>
-        </section>
-
-        {/* ══════════════════════════════════════════════
             BROWSE BY CATEGORY
             ══════════════════════════════════════════════ */}
         <section className='mx-auto max-w-[1300px] px-8 pb-10' id='categories'>
@@ -477,7 +448,7 @@ export default async function HomePage() {
             </h2>
             <Link
               className='text-[14px] font-semibold text-accent hover:text-accent-light'
-              href={rankingHref}
+              href={toolsHref}
             >
               {t(locale, 'section.viewAll')}
             </Link>

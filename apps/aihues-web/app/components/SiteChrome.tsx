@@ -6,7 +6,6 @@ import {
   gameDetailHref,
   gamesHref,
   homeHref,
-  rankingHref,
   showcaseHref,
   toolsHref,
   wishlistHref,
@@ -146,7 +145,6 @@ export function SiteFooter({
         <div className='mb-3 flex justify-center gap-6'>
           <Link href={homeHref}>{t(locale, 'nav.home')}</Link>
           <Link href={toolsHref}>{t(locale, 'nav.tools')}</Link>
-          <Link href={rankingHref}>{t(locale, 'nav.ranking')}</Link>
         </div>
         {t(locale, 'footer.copyright')}
       </footer>
