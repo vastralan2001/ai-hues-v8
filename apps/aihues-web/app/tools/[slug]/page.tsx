@@ -158,6 +158,10 @@ const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'chi-squared': ChiSquaredTool,
 };
 
+export function generateStaticParams() {
+  return Object.keys(REACT_TOOLS).map((slug) => ({ slug }));
+}
+
 export default async function ToolPage({
   params,
 }: {
