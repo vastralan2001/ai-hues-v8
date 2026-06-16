@@ -50,6 +50,7 @@ interface ListToolsResponse {
 
 interface ToolsInfiniteListProps {
   activeCategory: ToolCategoryKey;
+  categoryCounts?: Record<ToolCategoryKey, number>;
   initialNextPageToken: string;
   initialTools: CatalogTool[];
   q?: string;
@@ -64,6 +65,7 @@ const PRICE_OPTIONS: { key: PriceTagKey | 'all'; label: string }[] = [
 
 export function ToolsInfiniteList({
   activeCategory,
+  categoryCounts,
   initialNextPageToken,
   initialTools,
   q,
@@ -168,18 +170,19 @@ export function ToolsInfiniteList({
     [visibleTools]
   );
 
-  const categoryCounts = useMemo(
-    () => ({
-      all: visibleTools.length,
-      developer: visibleTools.filter((tool) => tool.category === 'developer')
-        .length,
-      utility: visibleTools.filter((tool) => tool.category === 'utility')
-        .length,
-      'ai-writing': visibleTools.filter(
-        (tool) => tool.category === 'ai-writing'
-      ).length,
-    }),
-    [visibleTools]
+  const resolvedCategoryCounts = useMemo(
+    () =>
+      categoryCounts ?? {
+        all: initialTools.length,
+        developer: initialTools.filter((tool) => tool.category === 'developer')
+          .length,
+        utility: initialTools.filter((tool) => tool.category === 'utility')
+          .length,
+        'ai-writing': initialTools.filter(
+          (tool) => tool.category === 'ai-writing'
+        ).length,
+      },
+    [categoryCounts, initialTools]
   );
 
   const renderToolCard = (tool: CatalogTool) => (
@@ -193,7 +196,11 @@ export function ToolsInfiniteList({
 
   return (
     <>
-      <CategoryPills active={activeCategory} counts={categoryCounts} q={q} />
+      <CategoryPills
+        active={activeCategory}
+        counts={resolvedCategoryCounts}
+        q={q}
+      />
 
       {/* Price filter pills */}
       <div className='flex flex-wrap items-center gap-2 pb-4 pt-2'>

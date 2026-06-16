@@ -3,6 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import {
   listTools,
   normalizeCategory,
+  searchTools,
   type CatalogTool,
 } from '@/lib/catalog-api';
 import { LOCAL_TOOLS } from '@/lib/tool-data';
@@ -44,14 +45,10 @@ export async function GET(request: NextRequest) {
     // Backend unavailable — already using LOCAL_FALLBACK above
   }
 
-  // Apply search filter
-  const q = searchParams.get('q')?.trim().toLowerCase();
+  // Apply search filter (fuzzy + semantic)
+  const q = searchParams.get('q')?.trim();
   if (q) {
-    tools = tools.filter(
-      (t) =>
-        t.name.toLowerCase().includes(q) ||
-        t.description.toLowerCase().includes(q)
-    );
+    tools = searchTools(tools, q);
   }
 
   // Apply category filter

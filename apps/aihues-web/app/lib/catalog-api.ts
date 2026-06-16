@@ -203,6 +203,141 @@ export function normalizeCategory(value?: string): ToolCategoryKey {
   return 'all';
 }
 
+/* ── Search helpers: fuzzy + token semantic matching ── */
+
+const SEARCH_SYNONYMS: Record<string, string[]> = {
+  ai: ['ai', 'writing', 'generator', 'copy', 'content', 'text'],
+  write: ['write', 'writing', 'copy', 'content', 'generator', 'draft'],
+  json: ['json', 'formatter', 'validator', 'format'],
+  url: ['url', 'encode', 'decode', 'link', 'uri'],
+  hash: ['hash', 'sha256', 'sha', 'md5', 'checksum'],
+  password: ['password', 'generator', 'secure', 'random'],
+  uuid: ['uuid', 'guid', 'id', 'identifier'],
+  image: ['image', 'base64', 'picture', 'photo', 'img'],
+  time: ['time', 'timestamp', 'unix', 'date', 'cron', 'schedule'],
+  sql: ['sql', 'query', 'database', 'db'],
+  code: ['code', 'developer', 'dev', 'programming'],
+  color: ['color', 'gradient', 'hex', 'rgb', 'hsl'],
+  diff: ['diff', 'compare', 'difference'],
+  qr: ['qr', 'qrcode', 'barcode'],
+  text: ['text', 'string', 'words', 'chars'],
+};
+
+function normalizeSearchText(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+}
+
+function tokenizeSearch(text: string): string[] {
+  return normalizeSearchText(text).split(/\s+/).filter(Boolean);
+}
+
+function fuzzyCharScore(needle: string, haystack: string): number {
+  let j = 0;
+  let matched = 0;
+  let gaps = 0;
+  for (const ch of haystack) {
+    if (j < needle.length && ch === needle[j]) {
+      j++;
+      matched++;
+    } else if (j > 0 && j < needle.length) {
+      gaps++;
+    }
+  }
+  if (j !== needle.length) return 0;
+  return matched / (haystack.length + gaps * 0.5 + 1);
+}
+
+function tokenMatchScore(token: string, text: string): number {
+  if (token.length === 0) return 0;
+  const normalized = normalizeSearchText(text);
+  if (normalized === token) return 3;
+  if (normalized.startsWith(`${token} `) || normalized.endsWith(` ${token}`))
+    return 2;
+  if (normalized.includes(token)) return 1;
+  return fuzzyCharScore(token, normalized) * 0.7;
+}
+
+function expandQueryTokens(rawTokens: string[]): string[] {
+  const expanded = new Set<string>();
+  for (const token of rawTokens) {
+    expanded.add(token);
+    const synonyms = SEARCH_SYNONYMS[token];
+    if (synonyms) {
+      for (const synonym of synonyms) {
+        expanded.add(synonym);
+      }
+    }
+  }
+  return Array.from(expanded);
+}
+
+function scoreTool(tool: CatalogTool, queryTokens: string[]): number {
+  const fields: { text: string; weight: number }[] = [
+    { text: tool.name, weight: 1.6 },
+    { text: tool.slug, weight: 1.3 },
+    { text: tool.category, weight: 0.8 },
+    { text: tool.description, weight: 0.7 },
+    ...tool.tags.map((tag) => ({ text: tag, weight: 1.0 })),
+  ];
+
+  let total = 0;
+  for (const token of queryTokens) {
+    let best = 0;
+    for (const { text, weight } of fields) {
+      const score = tokenMatchScore(token, text) * weight;
+      if (score > best) best = score;
+    }
+    if (best === 0) return 0; // every token must match at least one field
+    total += best;
+  }
+
+  // phrase-match bonus when the full query appears in name or description
+  const phrase = queryTokens.join(' ');
+  if (normalizeSearchText(tool.name).includes(phrase)) total += 0.8;
+  if (normalizeSearchText(tool.description).includes(phrase)) total += 0.4;
+
+  return total;
+}
+
+export function searchTools(
+  tools: CatalogTool[],
+  q: string,
+  options: { threshold?: number; limit?: number } = {}
+): CatalogTool[] {
+  const rawTokens = tokenizeSearch(q);
+  if (rawTokens.length === 0) return tools;
+
+  const tokens = expandQueryTokens(rawTokens);
+  const threshold = options.threshold ?? 0.3;
+
+  const scored = tools
+    .map((tool) => ({ tool, score: scoreTool(tool, tokens) }))
+    .filter((entry) => entry.score >= threshold)
+    .sort((a, b) => b.score - a.score);
+
+  const result = scored.map((entry) => entry.tool);
+  return options.limit ? result.slice(0, options.limit) : result;
+}
+
+export function getToolCategoryCounts(): Record<ToolCategoryKey, number> {
+  const internal = LOCAL_FALLBACK_TOOLS.filter((t) => !t.externalUrl);
+  const counts: Record<ToolCategoryKey, number> = {
+    all: internal.length,
+    developer: 0,
+    utility: 0,
+    'ai-writing': 0,
+  };
+  for (const tool of internal) {
+    if (tool.category === 'developer') counts.developer++;
+    if (tool.category === 'utility') counts.utility++;
+    if (tool.category === 'ai-writing') counts['ai-writing']++;
+  }
+  return counts;
+}
+
 async function connectJson<TRequest extends object, TResponse>(
   method: 'ListTools' | 'ListGames',
   body: TRequest
@@ -367,12 +502,7 @@ const LOCAL_FALLBACK_GAMES: CatalogGame[] = [
 function filterFallbackTools(options: ListToolsOptions): CatalogTool[] {
   let tools = LOCAL_FALLBACK_TOOLS;
   if (options.q) {
-    const q = options.q.toLowerCase();
-    tools = tools.filter(
-      (t) =>
-        t.name.toLowerCase().includes(q) ||
-        t.description.toLowerCase().includes(q)
-    );
+    tools = searchTools(tools, options.q);
   }
   if (options.category && options.category !== 'all') {
     tools = tools.filter((t) => t.category === options.category);
@@ -391,12 +521,7 @@ export async function safeListTools(options: ListToolsOptions = {}) {
     ];
 
     if (options.q) {
-      const q = options.q.toLowerCase();
-      tools = tools.filter(
-        (t) =>
-          t.name.toLowerCase().includes(q) ||
-          t.description.toLowerCase().includes(q)
-      );
+      tools = searchTools(tools, options.q);
     }
     if (options.category && options.category !== 'all') {
       tools = tools.filter((t) => t.category === options.category);

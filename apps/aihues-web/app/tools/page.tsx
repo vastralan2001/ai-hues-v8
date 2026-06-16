@@ -3,7 +3,11 @@ import type { Metadata } from 'next';
 import { ToolSearchForm } from '@/components/SearchForm';
 import { PageShell } from '@/components/SiteChrome';
 import { ToolsInfiniteList } from '@/components/ToolsInfiniteList';
-import { normalizeCategory, safeListTools } from '@/lib/catalog-api';
+import {
+  getToolCategoryCounts,
+  normalizeCategory,
+  safeListTools,
+} from '@/lib/catalog-api';
 
 export const dynamic = 'force-dynamic';
 
@@ -37,6 +41,7 @@ export default async function ToolsPage({
     q,
   });
 
+  const categoryCounts = getToolCategoryCounts();
   const totalLabel =
     tools.length > 0
       ? `${tools.length}${nextPageToken ? '+' : ''} tools covering development, writing, growth, and productivity`
@@ -56,6 +61,7 @@ export default async function ToolsPage({
       <section className='section section--compact'>
         <ToolsInfiniteList
           activeCategory={category}
+          categoryCounts={categoryCounts}
           initialNextPageToken={nextPageToken}
           initialTools={tools}
           key={`${category}:${q ?? ''}`}
