@@ -24,6 +24,7 @@ FROM base AS workspace
 ARG X_MOON_LOG=info
 
 COPY . .
+COPY .moon/plugins/toolchains /root/.moon/plugins/toolchains
 RUN --mount=type=cache,target=/root/.proto \
   pnpm moon docker scaffold aihues-web --log="$X_MOON_LOG"
 
@@ -36,6 +37,7 @@ ARG PROTO_OFFLINE=0
 
 COPY --from=workspace /src/.moon/docker/workspace .
 COPY --from=workspace /src/.moon/docker/sources .
+COPY --from=workspace /root/.moon/plugins/toolchains /root/.moon/plugins/toolchains
 
 RUN --mount=type=cache,target=/root/.proto \
   --mount=type=cache,target=/root/.pnpm-store \
