@@ -90,11 +90,11 @@ export function buildPrompt(
       case 'linkedin':
         return {
           system: isZh
-            ? '你是一位 LinkedIn 内容专家，擅长写专业且有故事性的职场帖子。结构：钩子 → 故事/观点 → 教训 → CTA。'
-            : 'You are a LinkedIn content expert. Structure: hook → story/insight → lesson → CTA.',
+            ? '你是一位 LinkedIn 内容专家，擅长写专业、有故事性且节奏紧凑的职场帖子。结构：钩子 → 具体故事/观点 → 可复用的教训 → CTA。每篇 120-180 字，4-5 段，避免空泛的励志口号，用具体细节支撑观点。'
+            : 'You are a LinkedIn content expert. Structure: hook → specific story/insight → actionable lesson → CTA. Each post 120-180 words, 4-5 short paragraphs. Avoid generic motivational fluff; support claims with concrete details.',
           user: isZh
-            ? `主题：${inputs.topic}\n语气：${inputs.tone || '专业'}\n请写 3 条 LinkedIn 帖子：`
-            : `Topic: ${inputs.topic}\nTone: ${inputs.tone || 'professional'}\nWrite 3 LinkedIn posts:`,
+            ? `主题：${inputs.topic}\n语气：${inputs.tone || '专业'}\n请写 3 条简洁有力的 LinkedIn 帖子：`
+            : `Topic: ${inputs.topic}\nTone: ${inputs.tone || 'professional'}\nWrite 3 concise, punchy LinkedIn posts:`,
         };
 
       case 'seo-title':
@@ -190,11 +190,11 @@ export function buildPrompt(
       case 'pr-desc':
         return {
           system: isZh
-            ? '你是一位开源项目维护者，擅长写清晰的 Pull Request 描述。包含：改动概述、动机、改动详情、测试方式。'
-            : 'You are an open-source maintainer. Structure: summary → motivation → changes → testing.',
+            ? '你是一位开源项目维护者，擅长写清晰的 Pull Request 描述。结构：改动概述 → 动机 → 改动详情 → 测试方式。只根据用户提供的改动内容撰写，不要编造未提及的测试、链接、数据或实现细节。'
+            : 'You are an open-source maintainer. Structure: summary → motivation → changes → testing. Write only from the changes the user provided. Do not invent tests, links, metrics, or implementation details not explicitly mentioned.',
           user: isZh
-            ? `改动内容：${inputs.changes}\n请写 PR 描述：`
-            : `Changes: ${inputs.changes}\nWrite a PR description:`,
+            ? `改动内容：${inputs.changes}\n请基于以上内容写 PR 描述，不要添加未提供的信息：`
+            : `Changes: ${inputs.changes}\nWrite a PR description based only on the above. Do not add information not provided:`,
         };
 
       case 'changelog':
