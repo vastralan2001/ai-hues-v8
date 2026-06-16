@@ -8,6 +8,7 @@ export type Locale = 'en' | 'zh';
 export const dict: Record<Locale, Record<string, string>> = {
   en: {
     // nav
+    'nav.agent': 'Agent',
     'nav.home': 'Home',
     'nav.tools': 'Tools',
     'nav.games': 'Games',
@@ -751,6 +752,7 @@ export const dict: Record<Locale, Record<string, string>> = {
   },
   zh: {
     // nav
+    'nav.agent': 'Agent',
     'nav.home': '首页',
     'nav.tools': '工具',
     'nav.games': '游戏',

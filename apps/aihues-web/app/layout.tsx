@@ -1,16 +1,23 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-import { Noto_Sans } from 'next/font/google';
+import { Poppins, Lora } from 'next/font/google';
 
 import { I18nProvider } from '@/lib/i18n';
 import CommandPalette from '@/components/CommandPalette';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 import { PageDurationTracker } from '@/components/PageDurationTracker';
 
-const notoSans = Noto_Sans({
+const poppins = Poppins({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
-  variable: '--font-noto-sans',
+  variable: '--font-poppins',
+  display: 'swap',
+});
+
+const lora = Lora({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-lora',
   display: 'swap',
 });
 
@@ -48,7 +55,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang='en' className={`${notoSans.variable}`}>
+    <html lang='en' className={`${poppins.variable} ${lora.variable}`}>
       <head>
         <GoogleAnalytics />
         <link rel='manifest' href='/manifest.json' />
@@ -56,7 +63,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <link rel='apple-touch-icon' href='/apple-touch-icon.png' />
         <meta name='theme-color' content='#d97757' />
       </head>
-      <body>
+      <body className='font-sans antialiased'>
         <I18nProvider initialLocale='en'>
           {children}
           <CommandPalette />

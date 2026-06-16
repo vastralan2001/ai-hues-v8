@@ -10,6 +10,7 @@ import {
   toolsHref,
   wishlistHref,
   blogHref,
+  agentHref,
 } from '@/lib/routes';
 import { Logo } from './Logo';
 import { BookmarkButton } from './BookmarkButton';
@@ -27,6 +28,7 @@ const headerLinks: Record<
   Array<{ href: string; labelKey: string }>
 > = {
   home: [
+    { href: agentHref, labelKey: 'nav.agent' },
     { href: homeHref, labelKey: 'nav.home' },
     { href: toolsHref, labelKey: 'nav.tools' },
     { href: gamesHref, labelKey: 'nav.games' },
@@ -34,6 +36,7 @@ const headerLinks: Record<
     { href: wishlistHref, labelKey: 'nav.wishlist' },
   ],
   tools: [
+    { href: agentHref, labelKey: 'nav.agent' },
     { href: homeHref, labelKey: 'nav.home' },
     { href: toolsHref, labelKey: 'nav.tools' },
     { href: gamesHref, labelKey: 'nav.games' },
@@ -41,6 +44,7 @@ const headerLinks: Record<
     { href: wishlistHref, labelKey: 'nav.wishlist' },
   ],
   games: [
+    { href: agentHref, labelKey: 'nav.agent' },
     { href: homeHref, labelKey: 'nav.home' },
     { href: toolsHref, labelKey: 'nav.tools' },
     { href: gamesHref, labelKey: 'nav.games' },
@@ -48,6 +52,7 @@ const headerLinks: Record<
     { href: wishlistHref, labelKey: 'nav.wishlist' },
   ],
   wishlist: [
+    { href: agentHref, labelKey: 'nav.agent' },
     { href: homeHref, labelKey: 'nav.home' },
     { href: toolsHref, labelKey: 'nav.tools' },
     { href: gamesHref, labelKey: 'nav.games' },
@@ -55,6 +60,7 @@ const headerLinks: Record<
     { href: wishlistHref, labelKey: 'nav.wishlist' },
   ],
   ranking: [
+    { href: agentHref, labelKey: 'nav.agent' },
     { href: homeHref, labelKey: 'nav.home' },
     { href: toolsHref, labelKey: 'nav.tools' },
     { href: gamesHref, labelKey: 'nav.games' },
@@ -62,6 +68,7 @@ const headerLinks: Record<
     { href: wishlistHref, labelKey: 'nav.wishlist' },
   ],
   default: [
+    { href: agentHref, labelKey: 'nav.agent' },
     { href: homeHref, labelKey: 'nav.home' },
     { href: toolsHref, labelKey: 'nav.tools' },
     { href: gamesHref, labelKey: 'nav.games' },
@@ -82,7 +89,7 @@ export function SiteHeader({
   return (
     <header
       style={{ backdropFilter: 'blur(16px)' }}
-      className='sticky top-0 z-[100] border-b border-border bg-[rgba(255,255,255,0.92)]'
+      className='sticky top-0 z-[100] border-b border-border bg-[rgba(250,249,245,0.92)]'
     >
       <div className='mx-auto flex h-[68px] max-w-[1300px] items-center justify-between px-4 md:px-8'>
         {/* Logo */}

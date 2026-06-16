@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import { ToolCardV2 } from '@/components/CatalogCards';
-import HeroSearch from '@/components/HeroSearch';
+import AgentHeroInput from '@/components/AgentHeroInput';
 import { PageShell } from '@/components/SiteChrome';
 import { ToolIcon } from '@/components/ToolIcon';
 import type { CatalogGame } from '@/lib/catalog-api';
@@ -259,44 +259,51 @@ export default async function HomePage() {
               </span>
             </div>
 
-            {/* Main headline — large, warm, editorial, single line */}
+            {/* Main headline — A2 editorial, problem-driven */}
             <h1 className='mb-5 text-[clamp(1.75rem,5vw,3.5rem)] font-bold leading-[1.1] tracking-[-0.02em] text-foreground'>
               {locale === 'zh' ? (
                 <>
-                  你的全能 <span className='text-accent'>AI 工具箱</span>
+                  写不出文案？调不好代码？
+                  <br />
+                  找不到合适的 <span className='text-accent'>AI 工具</span>？
                 </>
               ) : (
                 <>
-                  Your all-in-one{' '}
-                  <span className='text-accent'>AI toolkit.</span>
+                  Stuck writing? Debugging?
+                  <br />
+                  Hunting for the right{' '}
+                  <span className='text-accent'>AI tool</span>?
                 </>
               )}
             </h1>
 
-            <p className='mx-auto mb-8 max-w-[540px] text-[17px] leading-relaxed text-secondary'>
+            <p className='mx-auto mb-8 max-w-[560px] text-[17px] leading-relaxed text-secondary'>
               {locale === 'zh'
-                ? '57 款精选工具 + 3 个轻量小游戏，无需注册，打开即用。'
-                : '57 curated tools + 3 mini games. No signup, no paywall — just open and use.'}
+                ? '我们把真正好用的 AI 工具筛出来，按场景分类，附上实测评分和使用指南。不用大海捞针。'
+                : 'We filtered out the actually useful AI tools, categorized them by scenario, with real test scores and step-by-step guides. No more needle-in-a-haystack.'}
             </p>
 
-            {/* Search box */}
-            <HeroSearch
-              searchPlaceholder={t(locale, 'hero.searchPlaceholder')}
-              askAILabel={t(locale, 'hero.askAI')}
-            />
+            {/* Agent prompt input */}
+            <AgentHeroInput />
 
             {/* Quick-tag chips */}
             <div className='mt-5 flex flex-wrap justify-center gap-2.5'>
               {QUICK_TAG_LINKS.map((tag) => (
                 <Link
                   key={tag.label}
-                  className='rounded-full border border-border bg-white px-4 py-2 text-[13px] font-medium text-secondary shadow-sm transition-all hover:-translate-y-0.5 hover:border-border-strong hover:text-foreground hover:shadow-md'
+                  className='rounded-full border border-border bg-surface px-4 py-2 text-[13px] font-medium text-secondary transition-all hover:-translate-y-0.5 hover:border-border-strong hover:text-foreground'
                   href={tag.href}
                 >
                   {tag.label}
                 </Link>
               ))}
             </div>
+
+            <p className='mt-6 text-[13px] text-muted'>
+              {locale === 'zh'
+                ? '覆盖营销、开发、设计、运营 4 大场景'
+                : 'Covering marketing, dev, design, and ops'}
+            </p>
           </div>
         </section>
 

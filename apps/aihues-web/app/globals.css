@@ -34,24 +34,22 @@
      --radius-sm     → rounded-sm (10px)
    ============================================================ */
 @theme {
-  /* Typography — Radiance + Noto Sans (Dota 2 style) */
+  /* Typography — Poppins + Lora (warm editorial) */
   --font-sans:
-    'Radiance', var(--font-noto-sans), 'Noto Sans', -apple-system,
-    BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-serif:
-    'Radiance', var(--font-noto-sans), 'Noto Sans', -apple-system,
-    BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    var(--font-poppins), 'Poppins', -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, sans-serif;
+  --font-serif: var(--font-lora), 'Lora', Georgia, 'Times New Roman', serif;
 
-  /* Warm White Mars palette — opacity-layered neutrals */
-  --color-bg: #ffffff;
+  /* Warm editorial palette (Claude-style) */
+  --color-bg: #faf9f5;
   --color-surface: #f5f3ee;
   --color-surface-hover: #eceae3;
   --color-surface-soft: #eceae3;
-  --color-border: rgba(26, 26, 25, 0.1);
-  --color-border-strong: rgba(26, 26, 25, 0.2);
-  --color-foreground: rgba(26, 26, 25, 0.92);
-  --color-secondary: rgba(26, 26, 25, 0.55);
-  --color-muted: rgba(26, 26, 25, 0.38);
+  --color-border: #e8e6dc;
+  --color-border-strong: #dcdad0;
+  --color-foreground: #1a1a19;
+  --color-secondary: #3d3d3a;
+  --color-muted: #8a8880;
   --color-accent: #d97757;
   --color-accent-light: #c46a4a;
   --color-accent-bg: rgba(217, 119, 87, 0.08);
