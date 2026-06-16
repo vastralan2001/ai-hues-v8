@@ -75,6 +75,8 @@ pnpm --filter @aiushtha/aihues-web test:e2e   # Playwright E2E 测试
 ```
 
 > 根 `package.json` 的 scripts 与 mars 完全一致，只暴露 `prepare` 和 `check`；其他任务统一通过 `pnpm moon run ...` 调用。`apps/aihues-web/package.json` 额外提供 `test` 和 `test:e2e`。
+>
+> **注意**：改代码时请勿直接修改 CI/CD 配置（如 Dockerfile、`.gitlab-ci.yml`、Argo 部署文件等）。如确需修复 CI/CD，请先说明原因并征得用户同意。
 
 ## Git 钩子
 
@@ -154,6 +156,7 @@ pnpm moon run aihues-web:build
 ## 常见问题
 
 - **`pnpm check` 提示 "No tasks found"**：正常。`aihues-web` 的 lint/format/typecheck/test 任务由 Next.js / node tag 提供，moon 根级 node tasks 不会派发到它。当前 `pnpm check` 已改为直接调用 `aihues-web:*` 任务。
+- **CI Docker build 下载 TypeScript toolchain 插件超时**：已修复。仓库在 `.moon/plugins/toolchains/` 中内置了 TypeScript toolchain WASM 插件，并在 `.moon/toolchain.yml` 中通过 `plugin: 'file://...'` 指定本地文件，同时在 `.moon/workspace.yml` 的 `docker.scaffold.include` 中把该插件纳入 Docker workspace skeleton，避免 CI 从 GitHub 下载。
 - **`pnpm check` 与全仓 `:lint :format :typecheck :test` 的区别**：全仓检查会包含 Go 包（`aihues-api`、`builder`、`cfg`、`database`），需要本机安装 Go 工具链。当前项目重点为 `aihues-web`，因此 `pnpm check` 默认只检查 `aihues-web`，与 `.gitlab-ci.yml` 保持一致。
 - **moonrepo 缓存异常**：`moon run <target> --cache=off` 绕过缓存。
 - **commit-msg 拒绝 Merge/Revert 类型**：`git-conventional-commits` 默认跳过 git 自动生成的 merge / fixup / squash 提交。手工写的非常规消息仍会被拦截。
@@ -187,3 +190,8 @@ A. 手动挑选 Unsplash 真实照片（质量好，耗时约 2h/10篇）
 B. 生成品牌风格插画（风格统一，需要设计师 1-2天）
 C. 保持现状（最快，但仍有 AI 味）
 ```
+
+### CI / CD 与提交流程
+
+- **改代码时不动 CI/CD**：不修改 Dockerfile、`.gitlab-ci.yml`、Argo / deploy 等发布流水线配置；确需修复时先征得用户同意。
+- **提交 GitLab 前本地先跑 test + build**：每次 push 到 GitLab 前，必须先跑 `pnpm check` 和 `pnpm moon run aihues-web:build`，确认通过后再提交。
