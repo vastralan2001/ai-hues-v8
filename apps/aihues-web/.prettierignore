@@ -1,1 +1,5 @@
+.next
 test-results/
+data/wishes.json
+data/wishes.e2e.json
+

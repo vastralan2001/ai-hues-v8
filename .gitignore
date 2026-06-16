@@ -19,4 +19,10 @@ local.yaml
 
 # Runtime data files
 data/wishes.json
+apps/aihues-web/data/wishes.json
+apps/aihues-web/data/wishes.e2e.json
 test-results/
+
+# Kimi 会话导出（含敏感对话，勿提交）
+.kimi-handoff/
+kimi-export-*.md

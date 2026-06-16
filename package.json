@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "prepare": "simple-git-hooks",
-    "check": "moon run :lint :format :typecheck :test"
+    "check": "moon run aihues-web:lint aihues-web:format-check aihues-web:typecheck aihues-web:test"
   },
   "devDependencies": {
     "@moonrepo/cli": "^1.41.5",
