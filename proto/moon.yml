@@ -14,4 +14,5 @@ tasks:
       - '/buf.yaml'
       - '/buf.gen.yaml'
     outputs:
-      - '/gen/go/**/*'
+      - '/packages/proto-go/**/*'
+      - '/packages/proto-es/**/*_pb.ts'

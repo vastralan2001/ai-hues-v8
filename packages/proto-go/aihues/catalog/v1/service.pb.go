@@ -273,7 +273,7 @@ const file_aihues_catalog_v1_service_proto_rawDesc = "" +
 	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken2\xc0\x01\n" +
 	"\x0eCatalogService\x12V\n" +
 	"\tListTools\x12#.aihues.catalog.v1.ListToolsRequest\x1a$.aihues.catalog.v1.ListToolsResponse\x12V\n" +
-	"\tListGames\x12#.aihues.catalog.v1.ListGamesRequest\x1a$.aihues.catalog.v1.ListGamesResponseB?Z=github.com/aihues/aiushtha/gen/go/aihues/catalog/v1;catalogv1b\x06proto3"
+	"\tListGames\x12#.aihues.catalog.v1.ListGamesRequest\x1a$.aihues.catalog.v1.ListGamesResponseBJZHgithub.com/aihues/aiushtha/packages/proto-go/aihues/catalog/v1;catalogv1b\x06proto3"
 
 var (
 	file_aihues_catalog_v1_service_proto_rawDescOnce sync.Once

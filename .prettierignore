@@ -4,6 +4,7 @@
 dist
 *_pb.js
 *_pb.d.ts
+packages/proto-es/**/*_pb.ts
 *_connect.js
 *_connect.d.ts
 build/

@@ -5,7 +5,7 @@ import (
 
 	"connectrpc.com/connect"
 
-	catalogv1 "github.com/aihues/aiushtha/gen/go/aihues/catalog/v1"
+	catalogv1 "github.com/aihues/aiushtha/packages/proto-go/aihues/catalog/v1"
 
 	"github.com/aihues/aiushtha/apps/aihues-api/dal/model"
 )

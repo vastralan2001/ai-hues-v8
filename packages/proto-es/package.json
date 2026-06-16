@@ -1,0 +1,9 @@
+{
+  "name": "@aiushtha/proto-es",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@bufbuild/protobuf": "^2.5.0"
+  }
+}

@@ -4,7 +4,7 @@ package aihues.catalog.v1;
 
 import "google/protobuf/timestamp.proto";
 
-option go_package = "github.com/aihues/aiushtha/gen/go/aihues/catalog/v1;catalogv1";
+option go_package = "github.com/aihues/aiushtha/packages/proto-go/aihues/catalog/v1;catalogv1";
 
 // 条目类型（多态目录表的行类型判别符；仅用于内部存储，不暴露在 Tool / Game 消息上）
 enum ItemKind {

@@ -7,7 +7,7 @@ import (
 	"connectrpc.com/connect"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	catalogv1 "github.com/aihues/aiushtha/gen/go/aihues/catalog/v1"
+	catalogv1 "github.com/aihues/aiushtha/packages/proto-go/aihues/catalog/v1"
 
 	itemdal "github.com/aihues/aiushtha/apps/aihues-api/dal/item"
 	"github.com/aihues/aiushtha/apps/aihues-api/dal/model"

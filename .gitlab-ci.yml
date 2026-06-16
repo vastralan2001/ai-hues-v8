@@ -54,20 +54,16 @@ sast-scan-js:
 lint:
   stage: test
   script:
-    - pnpm moon run aihues-web:lint aihues-web:format-check aihues-web:typecheck
+    - pnpm moon run protos:generate
+    - git diff --exit-code packages/proto-go packages/proto-es
+    - pnpm check
     - echo "✅ Lint successful"
 
 build:
   stage: build
-  tags:
-    - docker
   script:
-    - docker build -f apps/aihues-web/Dockerfile -t msai-cn-beijing.cr.volces.com/msai/aihues-web:$CI_COMMIT_SHORT_SHA .
-    - docker push msai-cn-beijing.cr.volces.com/msai/aihues-web:$CI_COMMIT_SHORT_SHA
+    - pnpm moon run :container
     - echo "✅ Build image successful"
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-    - if: $CI_COMMIT_BRANCH == "feature/design-refresh"
-      when: on_success
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == "feature/design-refresh"
-      when: on_success
+    - when: on_success

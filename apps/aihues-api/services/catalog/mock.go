@@ -8,8 +8,8 @@ import (
 	"connectrpc.com/connect"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	catalogv1 "github.com/aihues/aiushtha/gen/go/aihues/catalog/v1"
-	"github.com/aihues/aiushtha/gen/go/aihues/catalog/v1/catalogv1connect"
+	catalogv1 "github.com/aihues/aiushtha/packages/proto-go/aihues/catalog/v1"
+	"github.com/aihues/aiushtha/packages/proto-go/aihues/catalog/v1/catalogv1connect"
 )
 
 // MemoryService is an in-memory catalog service for local dev.

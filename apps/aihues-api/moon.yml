@@ -25,7 +25,7 @@ tasks:
       - '**/*.go'
       - '/go.mod'
       - '/go.sum'
-      - '/gen/go/**/*'
+      - '/packages/proto-go/**/*'
       - '/packages/database/**/*'
     outputs:
       - 'dist/aihues-api'

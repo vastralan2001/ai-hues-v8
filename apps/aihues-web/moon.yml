@@ -4,6 +4,7 @@ type: application
 language: typescript
 platform: node
 tags:
+  - docker
   - nextjs
 
 tasks:
@@ -22,3 +23,8 @@ tasks:
       - '.next'
     options:
       mergeArgs: replace
+
+  typecheck:
+    inputs:
+      - 'app/**/*'
+      - 'tsconfig.json'

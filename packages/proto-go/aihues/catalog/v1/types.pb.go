@@ -586,7 +586,7 @@ const file_aihues_catalog_v1_types_proto_rawDesc = "" +
 	"\x15PRICE_TAG_UNSPECIFIED\x10\x00\x12\x12\n" +
 	"\x0ePRICE_TAG_FREE\x10\x01\x12\x16\n" +
 	"\x12PRICE_TAG_FREEMIUM\x10\x02\x12\x12\n" +
-	"\x0ePRICE_TAG_PAID\x10\x03B?Z=github.com/aihues/aiushtha/gen/go/aihues/catalog/v1;catalogv1b\x06proto3"
+	"\x0ePRICE_TAG_PAID\x10\x03BJZHgithub.com/aihues/aiushtha/packages/proto-go/aihues/catalog/v1;catalogv1b\x06proto3"
 
 var (
 	file_aihues_catalog_v1_types_proto_rawDescOnce sync.Once

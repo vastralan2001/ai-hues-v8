@@ -4,7 +4,7 @@ package model
 import (
 	"time"
 
-	catalogv1 "github.com/aihues/aiushtha/gen/go/aihues/catalog/v1"
+	catalogv1 "github.com/aihues/aiushtha/packages/proto-go/aihues/catalog/v1"
 	"github.com/rs/xid"
 	"gorm.io/gorm"
 )

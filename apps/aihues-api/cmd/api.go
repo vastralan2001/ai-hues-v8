@@ -11,7 +11,7 @@ import (
 	"github.com/samber/do/v2"
 	"github.com/spf13/cobra"
 
-	"github.com/aihues/aiushtha/gen/go/aihues/catalog/v1/catalogv1connect"
+	"github.com/aihues/aiushtha/packages/proto-go/aihues/catalog/v1/catalogv1connect"
 
 	"github.com/aihues/aiushtha/apps/aihues-api/config"
 )

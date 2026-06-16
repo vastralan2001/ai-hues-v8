@@ -8,7 +8,7 @@ import (
 	"github.com/samber/do/v2"
 	"gorm.io/gorm"
 
-	"github.com/aihues/aiushtha/gen/go/aihues/catalog/v1/catalogv1connect"
+	"github.com/aihues/aiushtha/packages/proto-go/aihues/catalog/v1/catalogv1connect"
 
 	"github.com/aihues/aiushtha/apps/aihues-api/config"
 	itemdal "github.com/aihues/aiushtha/apps/aihues-api/dal/item"
