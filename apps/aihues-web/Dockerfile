@@ -25,6 +25,8 @@ ARG X_MOON_LOG=info
 
 COPY . .
 RUN --mount=type=cache,target=/root/.proto \
+  mkdir -p /root/.proto/plugins && \
+  cp -n .moon/plugins/toolchains/*.wasm /root/.proto/plugins/ 2>/dev/null || true && \
   pnpm moon docker scaffold aihues-web --log="$X_MOON_LOG"
 
 ###########################################################
