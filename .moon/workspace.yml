@@ -12,9 +12,10 @@ vcs:
   provider: gitlab
   defaultBranch: master
 
-# Include the vendored TypeScript toolchain WASM plugin in the Docker workspace
-# skeleton, so that CI Docker builds do not need to download it from GitHub.
+# Include vendored WASM plugins and .prototools in the Docker workspace skeleton,
+# so that CI Docker builds do not need to download them from GitHub.
 docker:
   scaffold:
     include:
+      - '.prototools'
       - '.moon/plugins/toolchains/*.wasm'

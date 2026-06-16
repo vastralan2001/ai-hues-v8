@@ -156,7 +156,7 @@ pnpm moon run aihues-web:build
 ## 常见问题
 
 - **`pnpm check` 提示 "No tasks found"**：正常。`aihues-web` 的 lint/format/typecheck/test 任务由 Next.js / node tag 提供，moon 根级 node tasks 不会派发到它。当前 `pnpm check` 已改为直接调用 `aihues-web:*` 任务。
-- **CI Docker build 下载 TypeScript toolchain 插件超时**：已修复。仓库在 `.moon/plugins/toolchains/` 中内置了 TypeScript toolchain WASM 插件，并在 `.moon/toolchain.yml` 中通过 `plugin: 'file://...'` 指定本地文件，同时在 `.moon/workspace.yml` 的 `docker.scaffold.include` 中把该插件纳入 Docker workspace skeleton，避免 CI 从 GitHub 下载。
+- **CI Docker build 下载 moon/proto WASM 插件超时**：已修复。仓库在 `.moon/plugins/toolchains/` 中内置了 TypeScript toolchain、node、pnpm 的 WASM 插件；`.moon/toolchain.yml` 指定本地 TypeScript 插件，`.prototools` 指定本地 node/pnpm 插件；`.moon/workspace.yml` 的 `docker.scaffold.include` 把 `.prototools` 和插件目录纳入 Docker workspace skeleton，避免 CI 从 GitHub 下载。
 - **`pnpm check` 与全仓 `:lint :format :typecheck :test` 的区别**：全仓检查会包含 Go 包（`aihues-api`、`builder`、`cfg`、`database`），需要本机安装 Go 工具链。当前项目重点为 `aihues-web`，因此 `pnpm check` 默认只检查 `aihues-web`，与 `.gitlab-ci.yml` 保持一致。
 - **moonrepo 缓存异常**：`moon run <target> --cache=off` 绕过缓存。
 - **commit-msg 拒绝 Merge/Revert 类型**：`git-conventional-commits` 默认跳过 git 自动生成的 merge / fixup / squash 提交。手工写的非常规消息仍会被拦截。
