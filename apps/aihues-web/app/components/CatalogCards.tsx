@@ -114,53 +114,7 @@ function PriceBadge({
 }
 
 /* ─────────────────────────────────────────────
-   Tool card  — matches reference site design
-   Icon-wrap turns gradient on hover, NEW badge
-   ───────────────────────────────────────────── */
-export function ToolCard({
-  tool,
-  showNew = false,
-}: {
-  tool: CatalogTool;
-  showNew?: boolean;
-}) {
-  return (
-    <Link
-      className='group relative block cursor-pointer rounded-[16px] border border-border bg-surface p-[22px] text-inherit no-underline transition-all duration-200 hover:border-border-strong'
-      href={toolDetailHref(tool.slug)}
-      onClick={() => {
-        event(GA_EVENTS.toolClick, {
-          tool: tool.slug,
-          category: tool.category,
-          name: tool.name,
-        });
-      }}
-    >
-      {/* NEW badge */}
-      {showNew && (
-        <span className='absolute right-3 top-3 rounded-full bg-accent px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-white'>
-          NEW
-        </span>
-      )}
-
-      {/* Icon */}
-      <div className='mb-3 flex h-[42px] w-[42px] items-center justify-center rounded-[11px] border border-border bg-surface text-secondary'>
-        <ToolIcon slug={tool.slug} size={20} />
-      </div>
-
-      {/* Text */}
-      <h3 className='mb-1 text-[15px] font-semibold leading-tight text-foreground'>
-        {tool.name}
-      </h3>
-      <p className='m-0 text-[12px] leading-[1.45] text-secondary'>
-        {tool.description}
-      </p>
-    </Link>
-  );
-}
-
-/* ─────────────────────────────────────────────
-   Tool card with hover-gradient icon + price tag
+   Tool card — icon, NEW badge, and price tag
    ───────────────────────────────────────────── */
 export function ToolCardV2({
   tool,

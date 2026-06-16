@@ -92,13 +92,13 @@ export function SiteHeader({
           href={homeHref}
         >
           <Logo size={28} />
-          <span>AIHues</span>
+          <span className='hidden md:inline'>AIHues</span>
         </Link>
 
         {/* Nav links — scrollable on mobile */}
         <nav
           aria-label='Primary navigation'
-          className='mx-3 flex flex-1 items-center justify-center gap-4 overflow-x-auto whitespace-nowrap py-2 md:mx-6 md:gap-7'
+          className='mx-3 flex flex-1 items-center justify-start gap-4 overflow-x-auto whitespace-nowrap py-2 md:mx-6 md:justify-center md:gap-7'
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {links.map(({ href, labelKey }) => (
@@ -166,7 +166,7 @@ export function SiteFooter({
                 {t(locale, 'footer.tagline')}
               </p>
             </div>
-            <div className='flex flex-wrap gap-10'>
+            <div className='flex flex-col gap-8 sm:flex-row sm:flex-wrap sm:gap-10'>
               <FooterColumn
                 heading={t(locale, 'footer.product')}
                 links={[
@@ -219,7 +219,7 @@ export function SiteFooter({
           </div>
 
           {/* Link columns */}
-          <div className='flex flex-wrap gap-10'>
+          <div className='flex flex-col gap-8 sm:flex-row sm:flex-wrap sm:gap-10'>
             {/* Product */}
             <div>
               <h4 className='mb-3 text-[14px] font-semibold text-foreground'>

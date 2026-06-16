@@ -63,6 +63,7 @@ export default function Base64Tool({ locale }: Base64ToolProps) {
 
       <textarea
         className='h-[200px] w-full resize-none rounded-[14px] border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+        data-testid='base64-input'
         onChange={(e) => setInput(e.target.value)}
         placeholder={t(locale, 'tool.base64.placeholder')}
         value={input}
@@ -71,6 +72,7 @@ export default function Base64Tool({ locale }: Base64ToolProps) {
       <div className='mt-4 flex flex-wrap items-center gap-3'>
         <button
           className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+          data-testid='base64-encode'
           onClick={handleEncode}
           type='button'
         >
@@ -114,7 +116,10 @@ export default function Base64Tool({ locale }: Base64ToolProps) {
               {t(locale, 'tool.wordCount.copy')}
             </button>
           </div>
-          <div className='min-h-[120px] w-full rounded-[14px] border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground'>
+          <div
+            className='min-h-[120px] w-full rounded-[14px] border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground'
+            data-testid='base64-output'
+          >
             <pre className='whitespace-pre-wrap break-all font-mono text-sm'>
               {output}
             </pre>

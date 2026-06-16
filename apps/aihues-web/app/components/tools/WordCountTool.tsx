@@ -2,16 +2,8 @@
 
 import { useMemo, useState } from 'react';
 
+import { countWords } from '@/lib/word-count';
 import { t, type Locale } from '@/lib/dict';
-
-function countWords(text: string): number {
-  const englishWords = text
-    .trim()
-    .split(/\s+/)
-    .filter((w) => /[a-zA-Z]/.test(w)).length;
-  const chineseChars = (text.match(/[\u4e00-\u9fa5]/g) || []).length;
-  return englishWords + chineseChars;
-}
 
 interface WordCountToolProps {
   locale: Locale;
@@ -55,12 +47,16 @@ export default function WordCountTool({ locale }: WordCountToolProps) {
 
       <textarea
         className='h-[320px] w-full resize-none rounded-[14px] border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+        data-testid='word-count-input'
         onChange={(e) => setText(e.target.value)}
         placeholder={t(locale, 'tool.wordCount.placeholder')}
         value={text}
       />
 
-      <div className='mt-5 grid grid-cols-3 gap-3 sm:grid-cols-6'>
+      <div
+        className='mt-5 grid grid-cols-3 gap-3 sm:grid-cols-6'
+        data-testid='word-count-stats'
+      >
         <StatCard
           label={t(locale, 'tool.wordCount.chars')}
           value={stats.chars}

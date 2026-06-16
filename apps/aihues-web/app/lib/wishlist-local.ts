@@ -200,3 +200,7 @@ export function saveVotedSet(voted: Set<string>) {
   if (typeof window === 'undefined') return;
   localStorage.setItem(LS_VOTED_KEY, JSON.stringify([...voted]));
 }
+
+export function saveWishes(wishes: Wish[]) {
+  saveRaw(wishes);
+}

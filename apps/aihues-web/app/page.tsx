@@ -1,13 +1,11 @@
 import Link from 'next/link';
 
 import { ToolCardV2 } from '@/components/CatalogCards';
-import { PageShell } from '@/components/SiteChrome';
 import HeroSearch from '@/components/HeroSearch';
-
-// Stats removed per design refresh
+import { PageShell } from '@/components/SiteChrome';
+import { ToolIcon } from '@/components/ToolIcon';
 import type { CatalogGame } from '@/lib/catalog-api';
 import { safeListGames, safeListTools } from '@/lib/catalog-api';
-import { ToolIcon } from '@/components/ToolIcon';
 import { t, type Locale } from '@/lib/dict';
 import {
   gameDetailHref,
@@ -18,7 +16,8 @@ import {
   wishlistHref,
 } from '@/lib/routes';
 
-export const dynamic = 'force-dynamic';
+// Revalidate every 60s so the catalog stays fresh without forcing SSR on every hit.
+export const revalidate = 60;
 
 /* ── Static category data with icons & sample tags ── */
 const HOME_CATEGORIES = (locale: Locale) => [
@@ -59,6 +58,33 @@ const HOME_CATEGORIES = (locale: Locale) => [
     href: gamesHref,
   },
 ];
+
+/* ── Category card themes ── */
+const CATEGORY_THEMES: Record<
+  string,
+  { gradient: string; bg: string; fg: string }
+> = {
+  utility: {
+    gradient: 'linear-gradient(90deg, #6a9bcc, #8ab4d9)',
+    bg: 'rgba(106, 155, 204, 0.12)',
+    fg: '#4a7aa8',
+  },
+  developer: {
+    gradient: 'linear-gradient(90deg, #788c5d, #9aad7d)',
+    bg: 'rgba(120, 140, 93, 0.12)',
+    fg: '#5c6e45',
+  },
+  'ai-writing': {
+    gradient: 'linear-gradient(90deg, #d97757, #e79b7d)',
+    bg: 'rgba(217, 119, 87, 0.12)',
+    fg: '#b55d3d',
+  },
+  games: {
+    gradient: 'linear-gradient(90deg, #c7a24c, #dec06e)',
+    bg: 'rgba(199, 162, 76, 0.12)',
+    fg: '#9a7d38',
+  },
+};
 
 /* ── Quick search tags ── */
 const QUICK_TAG_LINKS: { label: string; href: string }[] = [
@@ -213,47 +239,58 @@ export default async function HomePage() {
         {/* ══════════════════════════════════════════════
             HERO
             ══════════════════════════════════════════════ */}
-        <section className='relative overflow-hidden px-8 pb-12 pt-[72px] text-center'>
-          <div className='relative mx-auto max-w-[720px]'>
-            {/* Mars-style minimal greeting */}
-            <div className='mb-4 flex items-center justify-center gap-2'>
-              <span className='inline-block h-1.5 w-1.5 rounded-full bg-accent' />
-              <span className='text-[13px] font-medium uppercase tracking-wider text-muted'>
+        <section className='relative overflow-hidden px-6 pb-10 pt-[72px] text-center'>
+          {/* Ambient background */}
+          <div
+            aria-hidden='true'
+            className='pointer-events-none absolute inset-0 -z-10'
+            style={{
+              background:
+                'radial-gradient(ellipse 90% 70% at 50% 0%, rgba(217,119,87,0.14), transparent 55%), radial-gradient(ellipse 70% 50% at 50% 100%, rgba(106,155,204,0.10), transparent 50%)',
+            }}
+          />
+
+          <div className='relative mx-auto max-w-[760px]'>
+            {/* Pill kicker */}
+            <div className='mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-white/80 px-4 py-1.5 shadow-sm backdrop-blur-sm'>
+              <span className='inline-block h-2 w-2 rounded-full bg-accent' />
+              <span className='text-[12px] font-semibold uppercase tracking-wider text-secondary'>
                 {locale === 'zh' ? '为创造者精选' : 'Curated for makers'}
               </span>
             </div>
 
-            {/* Main headline — serif, large, warm */}
-            <h1
-              className='mb-4 text-[clamp(2rem,5vw,3.5rem)] font-semibold leading-[1.15] tracking-[-0.02em] text-foreground'
-              style={{ fontFamily: 'var(--font-sans)' }}
-            >
-              {locale === 'zh'
-                ? '你的全能 AI 工具箱'
-                : 'Your all-in-one AI toolkit.'}
+            {/* Main headline — large, warm, editorial, single line */}
+            <h1 className='mb-5 text-[clamp(1.75rem,5vw,3.5rem)] font-bold leading-[1.1] tracking-[-0.02em] text-foreground'>
+              {locale === 'zh' ? (
+                <>
+                  你的全能 <span className='text-accent'>AI 工具箱</span>
+                </>
+              ) : (
+                <>
+                  Your all-in-one{' '}
+                  <span className='text-accent'>AI toolkit.</span>
+                </>
+              )}
             </h1>
 
-            <p
-              className='mx-auto mb-8 max-w-[560px] text-[17px] leading-relaxed text-secondary'
-              style={{ fontFamily: 'var(--font-sans)' }}
-            >
+            <p className='mx-auto mb-8 max-w-[540px] text-[17px] leading-relaxed text-secondary'>
               {locale === 'zh'
                 ? '57 款精选工具 + 3 个轻量小游戏，无需注册，打开即用。'
                 : '57 curated tools + 3 mini games. No signup, no paywall — just open and use.'}
             </p>
 
-            {/* Search box — Ask AI now opens HuesBot */}
+            {/* Search box */}
             <HeroSearch
               searchPlaceholder={t(locale, 'hero.searchPlaceholder')}
               askAILabel={t(locale, 'hero.askAI')}
             />
 
-            {/* Quick-tag chips — pill, subtle */}
-            <div className='mt-4 flex flex-wrap justify-center gap-2'>
+            {/* Quick-tag chips */}
+            <div className='mt-5 flex flex-wrap justify-center gap-2.5'>
               {QUICK_TAG_LINKS.map((tag) => (
                 <Link
                   key={tag.label}
-                  className='rounded-full border border-border bg-surface px-3.5 py-1.5 text-[13px] text-secondary transition-all hover:border-border-strong hover:text-foreground'
+                  className='rounded-full border border-border bg-white px-4 py-2 text-[13px] font-medium text-secondary shadow-sm transition-all hover:-translate-y-0.5 hover:border-border-strong hover:text-foreground hover:shadow-md'
                   href={tag.href}
                 >
                   {tag.label}
@@ -279,59 +316,95 @@ export default async function HomePage() {
             </Link>
           </div>
 
-          <div className='grid grid-cols-4 gap-3 max-[900px]:grid-cols-2 max-[540px]:grid-cols-1'>
-            {categories.map((cat) => (
-              <Link
-                key={cat.key}
-                className='block cursor-pointer rounded-[16px] border border-border bg-surface p-[18px] text-inherit no-underline transition-all duration-200 hover:border-border-strong'
-                href={cat.href}
-              >
-                {/* Header row */}
-                <div className='mb-2 flex items-center gap-2'>
-                  <span className='flex h-7 w-7 items-center justify-center rounded-md bg-accent-bg text-[11px] font-bold text-accent'>
-                    {cat.letter}
-                  </span>
-                  <span className='flex-1 text-[14px] font-bold text-foreground'>
-                    {cat.label}
-                  </span>
-                  <span className='rounded-md bg-surface-soft px-2 py-0.5 text-[11px] font-semibold text-muted'>
-                    {categoryCounts[cat.key as keyof typeof categoryCounts] ||
-                      cat.count}
-                  </span>
-                </div>
+          <div className='grid grid-cols-4 gap-4 max-[900px]:grid-cols-2 max-[540px]:grid-cols-1'>
+            {categories.map((cat) => {
+              const theme = CATEGORY_THEMES[cat.key];
+              return (
+                <Link
+                  key={cat.key}
+                  className='group relative block cursor-pointer overflow-hidden rounded-[20px] border border-border bg-white p-5 text-inherit no-underline shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-border-strong hover:shadow-lg'
+                  href={cat.href}
+                >
+                  {/* Decorative top accent */}
+                  <div
+                    aria-hidden='true'
+                    className='absolute inset-x-0 top-0 h-1 opacity-60 transition-opacity group-hover:opacity-100'
+                    style={{ background: theme.gradient }}
+                  />
 
-                {/* Description */}
-                <p className='mb-2.5 text-[12px] leading-snug text-secondary'>
-                  {cat.desc}
-                </p>
-
-                {/* Sample tags */}
-                <div className='flex flex-wrap gap-1'>
-                  {cat.tags.map((tag) => (
+                  {/* Header row */}
+                  <div className='mb-3 flex items-center gap-3'>
                     <span
-                      key={tag}
-                      className='rounded-[5px] border border-border bg-surface px-2 py-0.5 text-[10px] text-muted'
+                      className='flex h-9 w-9 items-center justify-center rounded-[10px] text-[13px] font-bold transition-transform duration-300 group-hover:scale-110'
+                      style={{
+                        background: theme.bg,
+                        color: theme.fg,
+                      }}
                     >
-                      {tag}
+                      {cat.letter}
                     </span>
-                  ))}
-                </div>
-              </Link>
-            ))}
+                    <span className='flex-1 text-[16px] font-bold text-foreground'>
+                      {cat.label}
+                    </span>
+                    <span className='rounded-full bg-surface px-2.5 py-1 text-[11px] font-semibold text-muted'>
+                      {categoryCounts[cat.key as keyof typeof categoryCounts] ||
+                        cat.count}
+                    </span>
+                  </div>
+
+                  {/* Description */}
+                  <p className='mb-4 text-[13px] leading-relaxed text-foreground/70'>
+                    {cat.desc}
+                  </p>
+
+                  {/* Sample tags */}
+                  <div className='flex flex-wrap gap-1.5'>
+                    {cat.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className='rounded-[6px] border border-border bg-surface px-2 py-0.5 text-[11px] text-muted transition-colors group-hover:border-border-strong group-hover:text-secondary'
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </section>
 
         {/* ══════════════════════════════════════════════
             STATS BAR
             ══════════════════════════════════════════════ */}
-        <div className='border-b border-t border-border bg-[#f5f3ee] px-8 py-5'>
-          <div className='mx-auto flex max-w-[1300px] flex-wrap items-center justify-center gap-x-[60px] gap-y-4'>
-            {stats.map((s) => (
+        <div className='relative overflow-hidden border-b border-t border-border bg-surface px-8 py-8'>
+          <div
+            aria-hidden='true'
+            className='pointer-events-none absolute inset-0 opacity-40'
+            style={{
+              backgroundImage:
+                'radial-gradient(circle at 20% 50%, rgba(217,119,87,0.08) 0%, transparent 40%), radial-gradient(circle at 80% 50%, rgba(106,155,204,0.08) 0%, transparent 40%)',
+            }}
+          />
+          <div className='relative mx-auto flex max-w-[1100px] flex-wrap items-center justify-center gap-x-[80px] gap-y-5'>
+            {stats.map((s, index) => (
               <div key={s.label} className='text-center'>
-                <div className='text-[24px] font-extrabold leading-tight text-foreground'>
+                <div
+                  className='text-[36px] font-extrabold leading-none tracking-[-0.03em] text-foreground'
+                  style={{
+                    background:
+                      index === 0
+                        ? 'linear-gradient(135deg, #d97757, #c46a4a)'
+                        : index === 1
+                          ? 'linear-gradient(135deg, #788c5d, #5c6e45)'
+                          : 'linear-gradient(135deg, #c7a24c, #9a7d38)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                  }}
+                >
                   {s.num}
                 </div>
-                <div className='mt-0.5 text-[11px] font-semibold uppercase tracking-wider text-muted'>
+                <div className='mt-1.5 text-[12px] font-semibold uppercase tracking-wider text-muted'>
                   {s.label}
                 </div>
               </div>
@@ -340,17 +413,17 @@ export default async function HomePage() {
         </div>
 
         {/* ══════════════════════════════════════════════
-            DEVELOPER TOOLS – NEW THIS WEEK
+            DEVELOPER TOOLS – FEATURED
             ══════════════════════════════════════════════ */}
         {homeDevTools.length > 0 && (
           <section className='mx-auto max-w-[1300px] px-8 py-12' id='new-tools'>
-            <div className='mb-6 flex items-end justify-between'>
+            <div className='mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between'>
               <div>
+                <div className='mb-1.5 text-[11px] font-extrabold uppercase tracking-wider text-accent'>
+                  {t(locale, 'section.featured')}
+                </div>
                 <h2 className='text-[24px] font-bold tracking-[-0.5px]'>
-                  {t(locale, 'section.devTools')}{' '}
-                  <span className='text-[16px] font-normal text-muted'>
-                    ({t(locale, 'section.newThisWeek')})
-                  </span>
+                  {t(locale, 'section.devTools')}
                 </h2>
               </div>
               <div className='flex items-center gap-3'>
@@ -368,24 +441,24 @@ export default async function HomePage() {
 
             <div className='grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-3'>
               {homeDevTools.map((tool) => (
-                <ToolCardV2 key={tool.id} locale={locale} showNew tool={tool} />
+                <ToolCardV2 key={tool.id} locale={locale} tool={tool} />
               ))}
             </div>
           </section>
         )}
 
         {/* ══════════════════════════════════════════════
-            WRITING TOOLS – NEW THIS WEEK
+            WRITING TOOLS – FEATURED
             ══════════════════════════════════════════════ */}
         {homeWritingTools.length > 0 && (
           <section className='mx-auto max-w-[1300px] px-8 pb-12'>
-            <div className='mb-6 flex items-end justify-between'>
+            <div className='mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between'>
               <div>
+                <div className='mb-1.5 text-[11px] font-extrabold uppercase tracking-wider text-accent'>
+                  {t(locale, 'section.featured')}
+                </div>
                 <h2 className='text-[24px] font-bold tracking-[-0.5px]'>
-                  {t(locale, 'section.writingTools')}{' '}
-                  <span className='text-[16px] font-normal text-muted'>
-                    ({t(locale, 'section.newThisWeek')})
-                  </span>
+                  {t(locale, 'section.writingTools')}
                 </h2>
               </div>
               <div className='flex items-center gap-3'>
@@ -403,7 +476,7 @@ export default async function HomePage() {
 
             <div className='grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-3'>
               {homeWritingTools.map((tool) => (
-                <ToolCardV2 key={tool.id} locale={locale} showNew tool={tool} />
+                <ToolCardV2 key={tool.id} locale={locale} tool={tool} />
               ))}
             </div>
           </section>
@@ -461,7 +534,7 @@ export default async function HomePage() {
                 className='flex cursor-pointer flex-col gap-2 rounded-[16px] border border-border bg-surface p-5 text-inherit no-underline transition-all hover:border-border-strong'
                 href={item.href}
               >
-                <div className='text-[11px] font-extrabold uppercase tracking-wider text-blue-600'>
+                <div className='text-[11px] font-extrabold uppercase tracking-wider text-accent'>
                   {item.kicker}
                 </div>
                 <div className='text-[15px] font-bold text-foreground'>

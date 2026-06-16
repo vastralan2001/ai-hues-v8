@@ -6,7 +6,7 @@ import {
   CategoryPills,
   EmptyState,
   getToolPricing,
-  ToolCard,
+  ToolCardV2,
 } from '@/components/CatalogCards';
 import type {
   CatalogTool,
@@ -183,8 +183,9 @@ export function ToolsInfiniteList({
   );
 
   const renderToolCard = (tool: CatalogTool) => (
-    <ToolCard
+    <ToolCardV2
       key={tool.id}
+      locale='en'
       showNew={NEW_TOOL_SLUGS.has(tool.slug)}
       tool={tool}
     />

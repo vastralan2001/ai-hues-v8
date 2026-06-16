@@ -16,13 +16,34 @@ const notoSans = Noto_Sans({
 
 import './globals.css';
 
+const SITE_TITLE = 'AIHues — Find your AI vibe';
+const SITE_DESCRIPTION =
+  'AI tools and lightweight games powered by the AIHues catalog API.';
+const BASE_URL = 'https://aihues.com';
+
 export const metadata: Metadata = {
   title: {
-    default: 'AIHues — Find your AI vibe',
+    default: SITE_TITLE,
     template: '%s - AIHues',
   },
-  description:
-    'AI tools and lightweight games powered by the AIHues catalog API.',
+  description: SITE_DESCRIPTION,
+  metadataBase: new URL(BASE_URL),
+  openGraph: {
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    url: BASE_URL,
+    siteName: 'AIHues',
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+  },
+  alternates: {
+    canonical: './',
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

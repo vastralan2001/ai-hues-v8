@@ -55,6 +55,7 @@ export default function UuidTool({ locale }: UuidToolProps) {
       <div className='flex flex-wrap gap-3'>
         <button
           className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+          data-testid='uuid-generate'
           onClick={() => generate(1)}
           type='button'
         >
@@ -96,7 +97,10 @@ export default function UuidTool({ locale }: UuidToolProps) {
                 key={`${uuid}-${index}`}
                 className='flex items-center justify-between rounded-[10px] border border-border bg-surface px-4 py-3'
               >
-                <code className='font-mono text-sm text-foreground'>
+                <code
+                  className='font-mono text-sm text-foreground'
+                  data-testid='uuid-item'
+                >
                   {uuid}
                 </code>
                 <button

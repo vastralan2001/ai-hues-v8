@@ -1,8 +1,0 @@
-User-agent: *
-Allow: /
-Allow: /tools/
-Allow: /games/
-Allow: /blog/
-Disallow: /js/
-
-Sitemap: https://aihues.com/sitemap.xml

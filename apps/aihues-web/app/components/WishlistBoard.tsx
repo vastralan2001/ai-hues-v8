@@ -3,7 +3,12 @@
 import { useEffect, useMemo, useState } from 'react';
 
 import { useI18n } from '@/lib/i18n';
-import { addWish, loadWishes, voteWish } from '@/lib/wishlist-local';
+import {
+  addWish,
+  loadWishes,
+  saveWishes,
+  voteWish,
+} from '@/lib/wishlist-local';
 import { event, GA_EVENTS } from '@/lib/gtag';
 
 import type { Wish, WishStatus } from '@/lib/wishes';
@@ -34,6 +39,11 @@ function getAnonymousId(): string {
   return id;
 }
 
+function validateEmail(email: string): boolean {
+  if (!email) return true;
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
 export function WishlistBoard() {
   const { locale } = useI18n();
   const filterLabels = locale === 'zh' ? filterLabelsZh : filterLabelsEn;
@@ -55,7 +65,7 @@ export function WishlistBoard() {
 
   const anonymousId = useMemo(() => getAnonymousId(), []);
 
-  // Load from localStorage on mount (instant, no network)
+  // Load from localStorage first (instant), then sync with server (source of truth)
   useEffect(() => {
     queueMicrotask(() => {
       const data = loadWishes();
@@ -63,18 +73,22 @@ export function WishlistBoard() {
       setLoading(false);
     });
 
-    // Optional: sync with API in background
-    fetch('/api/wishes')
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data: { wishes?: Wish[] } | null) => {
-        if (data?.wishes && data.wishes.length > 0) {
-          queueMicrotask(() => setWishes(data.wishes ?? []));
-        }
-      })
-      .catch(() => {
-        // API unavailable — localStorage data already loaded
-      });
+    syncWithServer();
   }, []);
+
+  async function syncWithServer() {
+    try {
+      const res = await fetch('/api/wishes');
+      if (!res.ok) return;
+      const data = (await res.json()) as { wishes?: Wish[] };
+      if (data.wishes) {
+        saveWishes(data.wishes);
+        queueMicrotask(() => setWishes(data.wishes ?? []));
+      }
+    } catch {
+      // API unavailable — localStorage data already loaded
+    }
+  }
 
   const visibleWishes = useMemo(() => {
     const filtered =
@@ -97,29 +111,62 @@ export function WishlistBoard() {
     return [...wishes].sort((a, b) => b.votes - a.votes).slice(0, 5);
   }, [wishes]);
 
-  function validateEmail(email: string): boolean {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  }
-
   async function handleSubmit() {
     if (!formTitle.trim() || !formDesc.trim()) return;
-    // Email hidden in Phase 1 — notification feature coming in Phase 2
+
+    const title = formTitle.trim();
+    const desc = formDesc.trim();
+    const email = formEmail.trim();
+
+    if (email && !validateEmail(email)) {
+      setSubmitError(
+        locale === 'zh'
+          ? '请输入有效的邮箱地址'
+          : 'Please enter a valid email address'
+      );
+      return;
+    }
+
     setSubmitting(true);
     setSubmitError('');
     setSubmitSuccess(false);
 
+    // Optimistic local update for instant feedback
+    let optimisticWish: Wish | null = null;
     try {
-      // 1. Save locally first (instant, always works)
-      const title = formTitle.trim();
-      const desc = formDesc.trim();
-      const email = formEmail.trim();
-      const newWish = addWish({
+      optimisticWish = addWish({
         title,
         description: desc,
         category: formCategory,
         email,
       });
-      setWishes((prev) => [...prev, newWish]);
+    } catch {
+      optimisticWish = null;
+    }
+    if (optimisticWish) {
+      setWishes((prev) => [...prev, optimisticWish]);
+    }
+
+    try {
+      // Sync to server (source of truth)
+      const res = await fetch('/api/wishes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title,
+          description: desc,
+          category: formCategory,
+          email,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error('Server rejected the wish');
+      }
+
+      // Refresh from server to get canonical state (including generated id/votes)
+      await syncWithServer();
+
       setFormTitle('');
       setFormDesc('');
       setFormEmail('');
@@ -129,21 +176,8 @@ export function WishlistBoard() {
         has_email: !!email,
       });
       setTimeout(() => setSubmitSuccess(false), 3000);
-
-      // 2. Try sync to API in background (optional)
-      fetch('/api/wishes', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: formTitle.trim(),
-          description: formDesc.trim(),
-          category: formCategory,
-          email,
-        }),
-      }).catch(() => {
-        // API sync failed — local data is already saved
-      });
     } catch (err) {
+      // Keep optimistic local wish if server failed so user data is not lost
       setSubmitError(
         err instanceof Error
           ? err.message
@@ -163,7 +197,10 @@ export function WishlistBoard() {
     const hasVoted = wish.voters.includes(anonymousId);
     const action = hasVoted ? 'down' : 'up';
 
-    // Optimistic UI update
+    // Snapshot current state for rollback
+    const previousWishes = [...wishes];
+
+    // Optimistic UI + localStorage update
     setWishes((prev) =>
       prev.map((w) => {
         if (w.id !== wishId) return w;
@@ -177,19 +214,27 @@ export function WishlistBoard() {
         };
       })
     );
-
-    // Save locally first
     voteWish(wishId, anonymousId, action);
     event(GA_EVENTS.wishlistVote, { wishId, action });
 
-    // Try sync to API in background
-    fetch('/api/wishes/vote', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ wishId, anonymousId, action }),
-    }).catch(() => {
-      // API sync failed — local data is already saved
-    });
+    // Sync to server (source of truth)
+    try {
+      const res = await fetch('/api/wishes/vote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ wishId, anonymousId, action }),
+      });
+
+      if (!res.ok) {
+        throw new Error('Server rejected the vote');
+      }
+
+      await syncWithServer();
+    } catch {
+      // Rollback to previous state on failure
+      setWishes(previousWishes);
+      saveWishes(previousWishes);
+    }
   }
 
   return (

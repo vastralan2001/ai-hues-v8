@@ -47,23 +47,17 @@ export default function ToolDetailTabs({
     <div className='mx-auto max-w-[900px] px-6 py-8'>
       {/* Tool header */}
       {tool && (
-        <div className='mb-6 flex items-start gap-4'>
-          <span className='text-[40px]'>
-            <ToolIcon slug={tool.slug} size={40} />
-          </span>
-          <div className='flex-1'>
-            <h1 className='text-[24px] font-extrabold text-[#1c1917]'>
-              {tool.name}
-            </h1>
-            <p className='mt-1 text-[14px] text-[#78716c]'>
-              {tool.description}
-            </p>
-            <div className='mt-2 flex items-center gap-3'>
-              <span className='rounded-full bg-[#f5f5f4] px-2.5 py-0.5 text-[11px] text-[#57534e]'>
+        <div className='mb-8 flex items-center gap-4 rounded-[20px] border border-border bg-surface p-4 sm:gap-5 sm:p-6'>
+          <div className='flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-[14px] border border-border bg-white text-[26px] shadow-sm sm:h-[56px] sm:w-[56px] sm:text-[28px]'>
+            <ToolIcon slug={tool.slug} size={26} />
+          </div>
+          <div className='min-w-0 flex-1'>
+            <div className='flex flex-wrap items-center gap-2.5'>
+              <span className='rounded-full border border-border bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-muted'>
                 {tool.category}
               </span>
               <span
-                className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${
+                className={`rounded-full px-3 py-1 text-[11px] font-semibold ${
                   tool.price === 'free'
                     ? 'bg-[#dcfce7] text-[#15803d]'
                     : tool.price === 'freemium'
@@ -74,15 +68,16 @@ export default function ToolDetailTabs({
                 {tool.price}
               </span>
               {review && (
-                <span className='text-[13px] text-[#b45309]'>
-                  {starRating(review.overall)} {review.overall}
+                <span className='flex items-center gap-1 text-[13px] font-medium text-accent'>
+                  <span>{starRating(review.overall)}</span>
+                  <span>{review.overall}</span>
                 </span>
               )}
             </div>
           </div>
           {tool.isExternal && (
             <Link
-              className='rounded-lg bg-[#1c1917] px-4 py-2 text-[13px] font-semibold text-white transition-opacity hover:opacity-80'
+              className='shrink-0 rounded-[12px] bg-foreground px-5 py-2.5 text-[13px] font-semibold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:opacity-90'
               href={tool.url}
               rel='noopener noreferrer'
               target='_blank'

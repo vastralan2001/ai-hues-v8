@@ -47,7 +47,7 @@ export const dict: Record<Locale, Record<string, string>> = {
 
     // sections
     'section.devTools': 'Developer Tools',
-    'section.newThisWeek': 'New This Week',
+    'section.featured': 'Featured',
     'section.tools': 'tools',
     'section.allTools': 'All tools →',
     'section.writingTools': 'Writing Tools',
@@ -790,7 +790,7 @@ export const dict: Record<Locale, Record<string, string>> = {
 
     // sections
     'section.devTools': '开发者工具',
-    'section.newThisWeek': '本周上新',
+    'section.featured': '精选',
     'section.tools': '个工具',
     'section.allTools': '全部工具 →',
     'section.writingTools': '写作工具',

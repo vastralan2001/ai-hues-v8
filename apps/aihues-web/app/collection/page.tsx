@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
 
-import { ApiNotice, EmptyState, ToolCard } from '@/components/CatalogCards';
+import { ApiNotice, EmptyState, ToolCardV2 } from '@/components/CatalogCards';
 import { PageShell } from '@/components/SiteChrome';
 import { safeListTools, toolCategories } from '@/lib/catalog-api';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: 'Collection',
@@ -89,7 +89,7 @@ export default async function CollectionPage() {
         {tools.length > 0 ? (
           <div className='catalog-grid'>
             {tools.map((tool) => (
-              <ToolCard key={tool.id} tool={tool} />
+              <ToolCardV2 key={tool.id} locale='en' tool={tool} />
             ))}
           </div>
         ) : (

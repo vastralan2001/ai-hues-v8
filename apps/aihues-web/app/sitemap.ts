@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 
 import { getAllPosts } from '@/lib/blog-data';
-import { ALL_TOOLS } from '@/lib/tool-data';
+import { PUBLISHED_TOOL_SLUGS } from '@/lib/published-tools';
 
 const BASE_URL = 'https://aihues.com';
 
@@ -13,9 +13,10 @@ const STATIC_PATHS = [
   '/pricing',
   '/showcase',
   '/discover',
-  '/ranking',
   '/collection',
   '/wishlist',
+  '/about',
+  '/terms',
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -26,8 +27,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: path === '' ? 1.0 : 0.8,
   }));
 
-  const toolPages = ALL_TOOLS.map((tool) => ({
-    url: `${BASE_URL}/tools/${tool.slug}`,
+  const toolPages = PUBLISHED_TOOL_SLUGS.map((slug) => ({
+    url: `${BASE_URL}/tools/${slug}`,
     lastModified: new Date(),
     changeFrequency: 'weekly' as const,
     priority: 0.7,

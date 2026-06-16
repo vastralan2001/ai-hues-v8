@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 
 import type { Locale } from '@/lib/dict';
 import { t } from '@/lib/dict';
+import { PUBLISHED_TOOL_SLUGS } from '@/lib/published-tools';
 import { PageShell } from '@/components/SiteChrome';
 import RelatedTools from '@/components/RelatedTools';
 import ToolDetailTabs from '@/components/reviews/ToolDetailTabs';
@@ -159,7 +160,7 @@ const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
 };
 
 export function generateStaticParams() {
-  return Object.keys(REACT_TOOLS).map((slug) => ({ slug }));
+  return PUBLISHED_TOOL_SLUGS.map((slug) => ({ slug }));
 }
 
 export default async function ToolPage({
@@ -171,6 +172,9 @@ export default async function ToolPage({
   const locale = 'en' as Locale;
 
   // Render React-native tool if available
+  if (!PUBLISHED_TOOL_SLUGS.includes(slug)) {
+    notFound();
+  }
   const ReactTool = REACT_TOOLS[slug];
   if (ReactTool) {
     return (

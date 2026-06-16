@@ -97,6 +97,7 @@ export default function JsonTool({ locale }: JsonToolProps) {
 
       <textarea
         className='h-[200px] w-full resize-none rounded-[14px] border border-border bg-surface p-5 font-mono text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+        data-testid='json-input'
         onChange={(e) => setInput(e.target.value)}
         placeholder={t(locale, 'tool.json.placeholder')}
         value={input}
@@ -105,6 +106,7 @@ export default function JsonTool({ locale }: JsonToolProps) {
       <div className='mt-4 flex flex-wrap gap-3'>
         <button
           className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+          data-testid='json-format'
           onClick={handleFormat}
           type='button'
         >
@@ -148,6 +150,7 @@ export default function JsonTool({ locale }: JsonToolProps) {
           </div>
           <pre
             className='min-h-[120px] overflow-auto rounded-[14px] border border-border bg-surface p-5 font-mono text-sm leading-relaxed'
+            data-testid='json-output'
             dangerouslySetInnerHTML={{ __html: output }}
           />
         </div>
