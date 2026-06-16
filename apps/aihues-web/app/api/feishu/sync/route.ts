@@ -25,10 +25,35 @@ function slugify(title: string): string {
  * POST /api/feishu/sync
  * Trigger a manual sync from Feishu wiki to local blog posts.
  * Requires FEISHU_APP_ID and FEISHU_APP_SECRET env vars.
+ * Optional: FEISHU_SYNC_SECRET — when set, requires Bearer or x-feishu-sync-secret header.
  * Query param: spaceId (Feishu wiki space ID)
  */
+function isAuthorized(request: Request): boolean {
+  const secret = process.env.FEISHU_SYNC_SECRET;
+  if (!secret) {
+    // No secret configured — keep local dev behavior unchanged
+    return true;
+  }
+
+  const authHeader = request.headers.get('authorization') || '';
+  const customHeader = request.headers.get('x-feishu-sync-secret') || '';
+
+  if (authHeader.toLowerCase().startsWith('bearer ')) {
+    return authHeader.slice(7) === secret;
+  }
+
+  return customHeader === secret;
+}
+
 export async function POST(request: Request) {
   try {
+    if (!isAuthorized(request)) {
+      return NextResponse.json(
+        { error: 'Unauthorized. Provide FEISHU_SYNC_SECRET header.' },
+        { status: 401 }
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const spaceId = searchParams.get('spaceId');
 

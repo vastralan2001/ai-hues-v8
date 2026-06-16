@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
-import { join } from 'path';
+import { isAbsolute, join } from 'path';
 
 export type WishStatus = 'PLANNED' | 'IN PROGRESS' | 'DONE';
 
@@ -16,10 +16,20 @@ export interface Wish {
 }
 
 // Use /data for containers (PVC-mounted) with fallback to cwd for local dev
+// AIHUES_WISHES_PATH can override the local dev path for test isolation
+function getLocalDataPath(): string {
+  if (process.env.AIHUES_WISHES_PATH) {
+    return isAbsolute(process.env.AIHUES_WISHES_PATH)
+      ? process.env.AIHUES_WISHES_PATH
+      : join(process.cwd(), process.env.AIHUES_WISHES_PATH);
+  }
+  return join(process.cwd(), 'data', 'wishes.json');
+}
+
 const DATA_PATH =
   process.env.NODE_ENV === 'production'
     ? '/data/aihues-wishes.json'
-    : join(process.cwd(), 'data', 'wishes.json');
+    : getLocalDataPath();
 
 // Memory fallback when filesystem is read-only (e.g. some container runtimes)
 let memoryWishes: Wish[] | null = null;

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 
 import { getAllPosts } from '@/lib/blog-data';
+import { PUBLISHED_TOOL_SLUGS } from '@/lib/published-tools';
 import { ALL_TOOLS } from '@/lib/tool-data';
 
 export const dynamic = 'force-static';
@@ -14,6 +15,8 @@ interface SearchItem {
 }
 
 export async function GET() {
+  const publishedSlugSet = new Set(PUBLISHED_TOOL_SLUGS);
+
   const items: SearchItem[] = [
     { id: 'home', title: 'Home', href: '/', type: 'page' },
     { id: 'tools', title: 'Tools', href: '/tools', type: 'page' },
@@ -30,13 +33,15 @@ export async function GET() {
     },
     { id: 'wishlist', title: 'Wishlist', href: '/wishlist', type: 'page' },
 
-    ...ALL_TOOLS.map((tool) => ({
-      id: tool.slug,
-      title: tool.name,
-      subtitle: tool.category,
-      href: `/tools/${tool.slug}`,
-      type: 'tool' as const,
-    })),
+    ...ALL_TOOLS.filter((tool) => publishedSlugSet.has(tool.slug)).map(
+      (tool) => ({
+        id: tool.slug,
+        title: tool.name,
+        subtitle: tool.category,
+        href: `/tools/${tool.slug}`,
+        type: 'tool' as const,
+      })
+    ),
 
     ...getAllPosts().map((post) => ({
       id: post.slug,
