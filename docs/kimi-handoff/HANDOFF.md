@@ -42,6 +42,10 @@
 - 每次 push 前本地跑 `pnpm check` + `pnpm moon run aihues-web:build`（文档-only 可跳过 build）
 - 遇到权限问题先向用户求助，不继续硬做
 
+## 首页调整
+
+- `apps/aihues-web/app/page.tsx`：把 hero 区下方的 "57 款精选工具 + 3 个轻量小游戏..." / "57 curated tools + 3 mini games..." 副标题暂时注释隐藏，让搜索框/对话区域整体上移。
+
 ## AI 写作工具 prompt 升级
 
 - `apps/aihues-web/app/lib/ai-prompts.ts`：
