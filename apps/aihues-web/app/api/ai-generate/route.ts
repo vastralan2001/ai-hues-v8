@@ -77,8 +77,8 @@ export async function POST(request: Request) {
           { role: 'system', content: prompt.system },
           { role: 'user', content: prompt.user },
         ],
-        temperature: 0.7,
-        max_tokens: 2000,
+        temperature: prompt.temperature ?? 0.7,
+        max_tokens: prompt.maxTokens ?? 2000,
       }),
     });
 

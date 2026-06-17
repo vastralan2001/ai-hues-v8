@@ -20,10 +20,10 @@
 
 ## 还没做完的待办
 
+- [x] 修复 `apps/aihues-web/app/lib/ai-prompts.ts` 里 `seo-title` 重复定义的 bug
+- [x] 为主要 AI 写作工具补充 few-shot 和输出格式约束
+- [x] 为每个 AI 工具设置合适的 `temperature` 和 `max_tokens`
 - [ ] 继续优化剩余 56 个工具组件的 spacing（4/8 rhythm）
-- [ ] 修复 `apps/aihues-web/app/lib/ai-prompts.ts` 里 `seo-title` 重复定义的 bug
-- [ ] 为主要 AI 写作工具补充 few-shot 和输出格式约束
-- [ ] 为每个 AI 工具设置合适的 `temperature` 和 `max_tokens`
 - [ ] 决定 `feature/design-refresh` 与 `master`（已切为静态 HTML 架构）的合并策略
 
 ## 关键环境配置
@@ -41,6 +41,15 @@
 - 不改 CI/CD 配置，确需修改时先说明并征得同意
 - 每次 push 前本地跑 `pnpm check` + `pnpm moon run aihues-web:build`（文档-only 可跳过 build）
 - 遇到权限问题先向用户求助，不继续硬做
+
+## AI 写作工具 prompt 升级
+
+- `apps/aihues-web/app/lib/ai-prompts.ts`：
+  - 删掉了重复的 `seo-title` case。
+  - 给所有 AI 写作工具加了输出格式约束。
+  - 为每个工具设置了 `temperature` 和 `maxTokens`：创意类偏高（0.75-0.85），事实/解释类偏低（0.3-0.5）。
+- `apps/aihues-web/app/api/ai-generate/route.ts`：读取 prompt 的 `temperature` / `maxTokens`，未设置时回退到 0.7 / 2000。
+- 本地测试：`seo-title`、`ad-copy`、`humanize` 三个工具通过 `curl` 调用 `/api/ai-generate` 验证通过。
 
 ## 飞书 PRD 脚本升级
 
