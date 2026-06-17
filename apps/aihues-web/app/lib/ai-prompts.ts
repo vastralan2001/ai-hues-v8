@@ -258,16 +258,6 @@ Output: If you're not using AI to cut the busywork, you're probably working hard
             : `Page topic: ${inputs.topic}\nKeyword: ${inputs.keyword || inputs.topic}\nGenerate meta tags:`,
         };
 
-      case 'seo-title':
-        return {
-          system: isZh
-            ? '你是一位 SEO 专家，擅长写高点击率、包含关键词的标题。输出 5 个标题选项。'
-            : 'You are an SEO expert. Write high-CTR, keyword-rich titles. Output 5 options.',
-          user: isZh
-            ? `关键词：${inputs.keyword}\n内容主题：${inputs.topic || inputs.keyword}\n请生成 5 个 SEO 标题：`
-            : `Keyword: ${inputs.keyword}\nTopic: ${inputs.topic || inputs.keyword}\nGenerate 5 SEO titles:`,
-        };
-
       default:
         return {
           system: isZh
