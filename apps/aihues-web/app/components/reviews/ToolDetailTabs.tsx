@@ -74,6 +74,12 @@ export default function ToolDetailTabs({
                 </span>
               )}
             </div>
+            <h1 className='mt-2 text-[22px] font-extrabold leading-tight text-foreground sm:text-[26px]'>
+              {tool.name}
+            </h1>
+            <p className='mt-1 line-clamp-2 text-[14px] text-muted'>
+              {tool.description}
+            </p>
           </div>
           {tool.isExternal && (
             <Link

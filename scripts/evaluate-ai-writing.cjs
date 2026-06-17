@@ -4,6 +4,7 @@ const path = require('path');
 const API_URL =
   process.env.AIHUES_EVAL_API_URL || 'http://localhost:3000/api/ai-generate';
 const LOCALE = 'zh';
+const RUN_SUFFIX = process.env.AIHUES_EVAL_SUFFIX || '';
 
 const testCases = [
   {
@@ -303,12 +304,8 @@ async function main() {
   }
 
   const md = buildMarkdown(results);
-  const outPath = path.resolve(
-    __dirname,
-    '..',
-    'docs',
-    `ai-writing-evaluation-${new Date().toISOString().slice(0, 10)}.md`
-  );
+  const baseName = `ai-writing-evaluation-${new Date().toISOString().slice(0, 10)}${RUN_SUFFIX ? `-${RUN_SUFFIX}` : ''}`;
+  const outPath = path.resolve(__dirname, '..', 'docs', `${baseName}.md`);
   fs.writeFileSync(outPath, md, 'utf8');
   console.log(`\n报告已生成: ${outPath}`);
 

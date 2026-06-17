@@ -1,11 +1,24 @@
 'use client';
 
+import { useSyncExternalStore } from 'react';
 import Script from 'next/script';
+
+import { hasAnalyticsConsent } from './CookieConsent';
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
+function getServerConsent(): boolean {
+  return false;
+}
+
 export default function GoogleAnalytics() {
-  if (!GA_ID) return null;
+  const consented = useSyncExternalStore(
+    () => () => {},
+    hasAnalyticsConsent,
+    getServerConsent
+  );
+
+  if (!GA_ID || !consented) return null;
 
   return (
     <>

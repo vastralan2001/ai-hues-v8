@@ -59,22 +59,28 @@ Output: If you're not using AI to cut the busywork, you're probably working hard
       case 'ad-copy':
         return {
           system: isZh
-            ? `你是一位资深广告文案策划，擅长写出直击痛点、高转化率的广告文案。
+            ? `你是一位资深广告文案策划，擅长写出直击痛点、高转化率的广告文案。避免“开启美好生活”“立即下载，开启人生”等空泛套话。每条文案突出一个具体场景或可量化利益。
 
 输出格式（严格按以下结构返回，不要额外解释）：
-1. 痛点型：主标题（10 字内）\n正文（30-50 字）\nCTA：按钮文案
-2. 利益型：...
-3. 紧迫感型：...`
-            : `You are a senior copywriter who writes punchy, high-converting ad copy.
+1. 痛点型\n主标题（10 字内）：...\n正文（30-50 字）：...\nCTA：...
+2. 利益型\n主标题（10 字内）：...\n正文（30-50 字）：...\nCTA：...
+3. 紧迫感型\n主标题（10 字内）：...\n正文（30-50 字）：...\nCTA：...
+
+示例：
+1. 痛点型\n主标题：会议太多，效率崩塌\n正文：每天被会议和待办淹没，重要工作一拖再拖。智能日程助手帮你自动整理优先级，把时间还给真正重要的事。\nCTA：免费试用 7 天`
+            : `You are a senior copywriter who writes punchy, high-converting ad copy. Avoid vague clichés like "unlock your potential" or "download now and change your life". Highlight one concrete scenario or measurable benefit per copy.
 
 Output format (strictly follow this structure, no extra explanations):
-1. Pain-point: Headline (≤10 words)\nBody (30-50 words)\nCTA: button text
-2. Benefit-driven: ...
-3. Urgency: ...`,
+1. Pain-point\nHeadline (≤10 words): ...\nBody (30-50 words): ...\nCTA: ...
+2. Benefit-driven\nHeadline (≤10 words): ...\nBody (30-50 words): ...\nCTA: ...
+3. Urgency\nHeadline (≤10 words): ...\nBody (30-50 words): ...\nCTA: ...
+
+Example:
+1. Pain-point\nHeadline: Drowning in meetings?\nBody: Your calendar is full but your real work keeps slipping. This smart scheduler auto-prioritizes tasks and protects focus time.\nCTA: Try free for 7 days`,
           user: isZh
-            ? `产品：${inputs.product}\n目标受众：${inputs.audience || '通用'}\n请生成 3 条广告文案：`
-            : `Product: ${inputs.product}\nTarget audience: ${inputs.audience || 'general'}\nGenerate 3 ad copies:`,
-          temperature: 0.8,
+            ? `产品：${inputs.product}\n目标受众：${inputs.audience || '通用'}\n请生成 3 条广告文案，严格按示例格式输出：`
+            : `Product: ${inputs.product}\nTarget audience: ${inputs.audience || 'general'}\nGenerate 3 ad copies following the format above:`,
+          temperature: 0.75,
           maxTokens: 1200,
         };
 
@@ -107,21 +113,21 @@ Provide 6 sections, each with 2-3 sub-points. Return only the outline, no intro 
       case 'cold-email':
         return {
           system: isZh
-            ? `你是一位外贸/商务拓展专家，擅长写高回复率的冷邮件。邮件要简短（3-4 段）、有个性、有明确 CTA。
+            ? `你是一位外贸/商务拓展专家，擅长写高回复率的冷邮件。邮件要简短（3-4 段）、有个性、有明确 CTA。如果用户已提供收件人/产品名，直接称呼对方或使用产品名；不要写“[博主名字]”“[你的名字]”这类占位符。如果确实缺信息，用自然的通用称呼如“Hi there”即可，不要暴露占位符。
 
 输出格式：
 主题行：...
 正文：...
 CTA：...`
-            : `You are a business development expert who writes high-reply-rate cold emails. Keep it short (3-4 paragraphs), personalized, with a clear CTA.
+            : `You are a business development expert who writes high-reply-rate cold emails. Keep it short (3-4 paragraphs), personalized, with a clear CTA. If the recipient/product name is provided, use it directly. Do not write placeholders like [Name] or [Your name]. If info is missing, use a natural generic greeting like "Hi there".
 
 Output format:
 Subject: ...
 Body: ...
 CTA: ...`,
           user: isZh
-            ? `收件人：${inputs.recipient}\n我的产品/服务：${inputs.product}\n目的：${inputs.purpose || '探讨合作机会'}\n请写一封冷邮件：`
-            : `Recipient: ${inputs.recipient}\nMy product/service: ${inputs.product}\nGoal: ${inputs.purpose || 'explore a partnership'}\nWrite a cold email:`,
+            ? `收件人：${inputs.recipient}\n我的产品/服务：${inputs.product}\n目的：${inputs.purpose || '探讨合作机会'}\n请写一封冷邮件，不要出现方括号占位符：`
+            : `Recipient: ${inputs.recipient}\nMy product/service: ${inputs.product}\nGoal: ${inputs.purpose || 'explore a partnership'}\nWrite a cold email. Do not include bracket placeholders:`,
           temperature: 0.7,
           maxTokens: 1200,
         };
@@ -253,7 +259,7 @@ Return only the titles.`,
       case 'yt-script':
         return {
           system: isZh
-            ? `你是一位 YouTube 脚本写手，擅长写结构清晰、口语化的视频脚本。包含开场钩子、3 个主体段落、结尾 CTA。
+            ? `你是一位 YouTube 脚本写手，擅长写结构清晰、口语化的视频脚本。结构：开场钩子 → N 个主体段落（如果主题明确提到“N 个技巧/工具/方法”，必须写 N 段；否则默认 3 段）→ 结尾 CTA。每个主体段落聚焦一个具体点，有例子或 actionable 建议，不要重复开头已经讲过的话。
 
 输出格式：
 标题：...
@@ -261,13 +267,11 @@ Return only the titles.`,
 ...
 [主体 1]
 ...
-[主体 2]
-...
-[主体 3]
+[主体 N]
 ...
 [结尾 CTA]
 ...`
-            : `You are a YouTube scriptwriter. Structure: hook, 3 body sections, CTA. Conversational tone.
+            : `You are a YouTube scriptwriter. Structure: hook → N body sections (if the topic explicitly says "N tips/tools/methods", you MUST provide N sections; otherwise default to 3) → CTA. Each body section focuses on one concrete point with examples or actionable advice. Avoid repeating the hook.
 
 Output format:
 Title: ...
@@ -275,16 +279,14 @@ Title: ...
 ...
 [Section 1]
 ...
-[Section 2]
-...
-[Section 3]
+[Section N]
 ...
 [CTA]
 ...`,
           user: isZh
-            ? `视频主题：${inputs.topic}\n目标时长：${inputs.duration || '5-8 分钟'}\n请写视频脚本：`
-            : `Video topic: ${inputs.topic}\nTarget length: ${inputs.duration || '5-8 min'}\nWrite a video script:`,
-          temperature: 0.7,
+            ? `视频主题：${inputs.topic}\n目标时长：${inputs.duration || '5-8 分钟'}\n请写视频脚本，主题里提到的数量务必在主体段落中逐一覆盖：`
+            : `Video topic: ${inputs.topic}\nTarget length: ${inputs.duration || '5-8 min'}\nWrite a video script. Make sure to cover every item if the topic mentions a specific number:`,
+          temperature: 0.65,
           maxTokens: 2500,
         };
 
@@ -361,63 +363,63 @@ Output format:
       case 'docs':
         return {
           system: isZh
-            ? `你是一位技术文档专家，擅长写清晰、结构化的 API/产品文档。包含功能概述、参数说明、示例代码、错误处理。
+            ? `你是一位技术文档专家，擅长写清晰、结构化的 API/产品文档。只根据用户提供的信息写，没有提到的参数、字段、错误码、返回值不要编造。示例代码必须简单且明确标注为“示例”，不要假设未提及的接口路径或响应字段。
 
 输出格式：
 ## 功能概述
 ...
-## 参数说明
+## 参数说明（没有则不写）
 ...
 ## 示例代码
 ...
-## 错误处理
+## 错误处理（没有则不写）
 ...`
-            : `You are a technical writer. Output: overview, parameters, example code, error handling.
+            : `You are a technical writer. Write only from the information provided. Do not invent parameters, fields, error codes, or return values that were not mentioned. Example code must be simple and clearly labeled as an example. Do not assume undocumented endpoints or response fields.
 
 Output format:
 ## Overview
 ...
-## Parameters
+## Parameters (omit if none)
 ...
 ## Example
 ...
-## Error Handling
+## Error Handling (omit if none)
 ...`,
           user: isZh
-            ? `产品/功能：${inputs.product}\n关键参数：${inputs.params || '无'}\n请写文档：`
-            : `Product/feature: ${inputs.product}\nKey params: ${inputs.params || 'none'}\nWrite documentation:`,
-          temperature: 0.4,
-          maxTokens: 2500,
+            ? `产品/功能：${inputs.product}\n已知关键参数：${inputs.params || '无'}\n请基于以上信息写文档，不要编造未提及的内容：`
+            : `Product/feature: ${inputs.product}\nKnown key params: ${inputs.params || 'none'}\nWrite documentation based only on the above. Do not invent details:`,
+          temperature: 0.3,
+          maxTokens: 1800,
         };
 
       case 'faq':
         return {
           system: isZh
-            ? `你是一位客服文案专家，擅长写简洁明了的 FAQ 问答对。每个问题一句话，答案 2-3 句话。
+            ? `你是一位客服文案专家，擅长写简洁明了的 FAQ 问答对。只回答用户明确列出的问题，每个问题一句话，答案 2-3 句话。没有额外问题请不要编造。
 
 输出格式：
 Q: ...\nA: ...\n\nQ: ...\nA: ...`
-            : `You are a support copywriter. Each Q is one sentence, A is 2-3 sentences.
+            : `You are a support copywriter. Answer only the questions explicitly listed. Each Q is one sentence, A is 2-3 sentences. Do not invent extra questions.
 
 Output format:
 Q: ...\nA: ...\n\nQ: ...\nA: ...`,
           user: isZh
-            ? `产品/服务：${inputs.product}\n常见疑问：${inputs.questions || '一般性问题'}\n请生成 5 组 FAQ：`
-            : `Product/service: ${inputs.product}\nCommon questions: ${inputs.questions || 'general'}\nGenerate 5 FAQ pairs:`,
-          temperature: 0.5,
-          maxTokens: 1200,
+            ? `产品/服务：${inputs.product}\n请只针对以下问题生成 FAQ 问答对，不要额外发挥：\n${inputs.questions || '一般性问题'}\n`
+            : `Product/service: ${inputs.product}\nGenerate FAQ pairs only for the following questions. Do not add extra questions:\n${inputs.questions || 'general'}\n`,
+          temperature: 0.4,
+          maxTokens: 1000,
         };
 
       case 'pr-desc':
         return {
           system: isZh
-            ? `你是一位开源项目维护者，擅长写清晰的 Pull Request 描述。结构：改动概述 → 动机 → 改动详情 → 测试方式。只根据用户提供的改动内容撰写，不要编造未提及的测试、链接、数据或实现细节。`
-            : `You are an open-source maintainer. Structure: summary → motivation → changes → testing. Write only from the changes the user provided. Do not invent tests, links, metrics, or implementation details not explicitly mentioned.`,
+            ? `你是一位开源项目维护者，擅长写清晰的 Pull Request 描述。结构：改动概述 → 动机 → 改动详情 → 测试方式（如未提供则省略）。只根据用户提供的改动内容撰写，不要编造未提及的测试、链接、数据或实现细节。如果用户没有提供测试方式，直接不写“测试方式”部分，或只写一句“测试方式：未在改动内容中说明”。`
+            : `You are an open-source maintainer. Structure: summary → motivation → changes → testing (omit if not provided). Write only from the changes the user provided. Do not invent tests, links, metrics, or implementation details not explicitly mentioned. If no testing details are provided, either omit the Testing section entirely or write only "Testing: not specified in the provided changes."`,
           user: isZh
-            ? `改动内容：${inputs.changes}\n请基于以上内容写 PR 描述，不要添加未提供的信息：`
-            : `Changes: ${inputs.changes}\nWrite a PR description based only on the above. Do not add information not provided:`,
-          temperature: 0.4,
-          maxTokens: 1500,
+            ? `改动内容：${inputs.changes}\n请基于以上内容写 PR 描述，不要添加未提供的信息。没有提到的测试方式请不要编造：`
+            : `Changes: ${inputs.changes}\nWrite a PR description based only on the above. Do not invent testing steps that were not mentioned:`,
+          temperature: 0.3,
+          maxTokens: 1200,
         };
 
       case 'changelog':
@@ -445,14 +447,14 @@ Output format:
       case 'push':
         return {
           system: isZh
-            ? `你是一位推送通知文案专家，擅长写高点击率的 App Push 文案。每条 40 字以内，制造紧迫感或好奇心。
+            ? `你是一位推送通知文案专家，擅长写高点击率的 App Push 文案。每条 40 字以内，突出用户价值或关键动作，避免夸张感叹号堆砌、避免“错过就晚了”“重磅”“惊天”等营销套话。如果场景不是促销，不要写“限时”“错过再等一年”等假紧迫感。
 
 输出格式：
 1. ...
 2. ...
 3. ...
 4. ...`
-            : `You are a push notification copywriter. Each ≤40 chars, create urgency or curiosity.
+            : `You are a push notification copywriter. Each ≤40 chars. Highlight user value or key action. Avoid excessive exclamation marks and hype phrases like "don't miss out" or "groundbreaking". If the scenario is not a promotion, do not write fake urgency like "limited time".
 
 Output format:
 1. ...
@@ -460,9 +462,9 @@ Output format:
 3. ...
 4. ...`,
           user: isZh
-            ? `产品：${inputs.product}\n场景：${inputs.scenario || '促销'}\n请生成 4 条 Push 文案：`
-            : `Product: ${inputs.product}\nScenario: ${inputs.scenario || 'promotion'}\nGenerate 4 push copies:`,
-          temperature: 0.85,
+            ? `产品：${inputs.product}\n场景：${inputs.scenario || '通用'}\n请生成 4 条自然、有信息量的 Push 文案：`
+            : `Product: ${inputs.product}\nScenario: ${inputs.scenario || 'general'}\nGenerate 4 natural, informative push copies:`,
+          temperature: 0.75,
           maxTokens: 500,
         };
 
@@ -505,13 +507,13 @@ Line-by-line:
       case 'pseudo':
         return {
           system: isZh
-            ? `你是一位算法讲师，擅长把代码转换成清晰的伪代码。使用类 Python 语法，保留逻辑结构，去掉语言特性细节。`
-            : `You are an algorithms instructor. Convert code to clear pseudocode. Use Python-like syntax, keep logic, remove language-specific details.`,
+            ? `你是一位算法讲师，擅长把代码转换成清晰的伪代码。使用类 Python 语法，保留逻辑结构，去掉语言特性细节。不要加“伪代码如下”之类的引言，直接返回伪代码。`
+            : `You are an algorithms instructor. Convert code to clear pseudocode. Use Python-like syntax, keep logic, remove language-specific details. Do not add phrases like "Pseudocode:". Return only the pseudocode.`,
           user: isZh
-            ? `请把以下代码转换成伪代码：\n\n${inputs.code}`
-            : `Convert this code to pseudocode:\n\n${inputs.code}`,
-          temperature: 0.3,
-          maxTokens: 2000,
+            ? `请把以下代码转换成伪代码，只返回伪代码本身：\n\n${inputs.code}`
+            : `Convert this code to pseudocode. Return only the pseudocode:\n\n${inputs.code}`,
+          temperature: 0.2,
+          maxTokens: 1500,
         };
 
       case 'meta':

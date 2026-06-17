@@ -63,17 +63,17 @@ const faqs = [
   {
     question: 'Can I keep using the free tools?',
     answer:
-      'Yes. The React app keeps the public catalog available while paid plans add higher limits and workflow history.',
+      'Yes. All catalog tools and games remain free to use. Paid plans add higher AI credit limits, saved history, and team features.',
   },
   {
-    question: 'What happens to legacy tool pages?',
+    question: 'How do credits work?',
     answer:
-      'Tool detail pages stay available during migration, and catalog pages link to them until each tool is rebuilt in React.',
+      'Credits are consumed when you run AI-powered writing or generation workflows. Free users receive a monthly allowance; Pro and Team plans include more credits.',
   },
   {
     question: 'Can teams share credits?',
     answer:
-      'The Team tier is designed around shared workspaces, team credits, and repeatable presets.',
+      'The Team tier is designed around shared workspaces, pooled credits, and reusable prompt presets.',
   },
 ];
 
@@ -81,7 +81,7 @@ export default function PricingPage() {
   return (
     <PageShell>
       <section className='page-hero'>
-        <p className='kicker'>Pricing</p>
+        <p className='kicker'>Plans</p>
         <h1>
           <span style={{ color: 'var(--color-accent)' }}>Pricing</span>
         </h1>

@@ -17,6 +17,7 @@ const STATIC_PATHS = [
   '/wishlist',
   '/about',
   '/terms',
+  '/privacy',
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

@@ -63,8 +63,9 @@ export default function NewsletterSubscribe() {
 
         {isSubscribed ? (
           <div className='mt-5 rounded-lg bg-[rgba(180,83,9,0.08)] px-4 py-3 text-sm font-medium text-[#b45309]'>
-            Thanks for subscribing! {displayEmail ? `(${displayEmail})` : ''}{' '}
-            Check your inbox soon.
+            Thanks for your interest! Newsletter emails aren&apos;t live yet —
+            we&apos;ll let you know when they are.{' '}
+            {displayEmail ? `(${displayEmail})` : ''}
           </div>
         ) : (
           <form

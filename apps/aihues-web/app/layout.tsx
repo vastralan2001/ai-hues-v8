@@ -5,6 +5,7 @@ import { Noto_Sans } from 'next/font/google';
 import { I18nProvider } from '@/lib/i18n';
 import CommandPalette from '@/components/CommandPalette';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
+import CookieConsent from '@/components/CookieConsent';
 import { PageDurationTracker } from '@/components/PageDurationTracker';
 
 const notoSans = Noto_Sans({
@@ -61,6 +62,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           {children}
           <CommandPalette />
           <PageDurationTracker />
+          <CookieConsent />
         </I18nProvider>
       </body>
     </html>

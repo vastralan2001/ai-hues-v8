@@ -190,6 +190,8 @@ export function SiteFooter({
                   [t(locale, 'footer.about'), '/about'],
                   [t(locale, 'nav.blog'), '/blog'],
                   [t(locale, 'footer.terms'), '/terms'],
+                  [t(locale, 'footer.privacy'), '/privacy'],
+                  [t(locale, 'footer.contact'), 'mailto:hello@aihues.com'],
                 ]}
               />
             </div>
@@ -284,6 +286,11 @@ export function SiteFooter({
                   { href: '/about', labelKey: 'footer.about' },
                   { href: '/blog', labelKey: 'nav.blog' },
                   { href: '/terms', labelKey: 'footer.terms' },
+                  { href: '/privacy', labelKey: 'footer.privacy' },
+                  {
+                    href: 'mailto:hello@aihues.com',
+                    labelKey: 'footer.contact',
+                  },
                 ].map(({ href, labelKey }) => (
                   <Link
                     key={labelKey}

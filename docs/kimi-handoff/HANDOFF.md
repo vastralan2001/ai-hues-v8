@@ -102,12 +102,33 @@
 - `master` 分支已改为静态 HTML 架构，与 `feature/design-refresh` 的 Next.js 架构严重分叉，后续合并需要专门规划。
 - 飞书文档权限问题已解决：脚本创建文档后自动调用 `drive/v1/permissions/{token}/public?type=docx` 设置为组织内可编辑。
 
+## 2026-06-17 夜间迭代（用户离线后）
+
+- **AI 写作工具 prompt 二轮迭代**：修复 pr-desc/pseudo/faq/yt-script/push/docs/cold-email/ad-copy 的格式与 AI 味问题。
+- **重新评估**：生成 `docs/ai-writing-evaluation-2026-06-17-v2.md` 对比报告，21 个工具全部成功。
+- **上线前合规/UI 修复**：
+  - 新增 `/privacy` 隐私政策页
+  - 新增 Cookie Consent Banner，`GoogleAnalytics` 仅在同意后加载
+  - 工具详情页显示工具名称和描述
+  - Newsletter 成功文案去掉了虚假承诺
+  - Pricing 页面清理遗留 migration 文案
+  - 页脚增加 Privacy 和 Contact（mailto）
+- **生成报告**：`docs/pre-launch-readiness-2026-06-17.md`
+- **验证**：`pnpm check` + `pnpm moon run aihues-web:build` 全绿（180 页静态生成）。
+
+## 明天验收重点
+
+1. 查看 `docs/pre-launch-readiness-2026-06-17.md`。
+2. 在 `docs/ai-writing-evaluation-2026-06-17-v2.md` 里填写人工评估。
+3. 决定：是否保留 Newsletter 表单 / Pricing 页面 / 评论评测功能。
+
 ## 续接建议
 
 下次启动时，先读：
 
 1. `AGENTS.md` — 仓库约定
-2. `scripts/prd-design-refresh.md` — 最新 PRD
-3. 本文件 — 会话上下文
+2. `docs/pre-launch-readiness-2026-06-17.md` — 上线前准备度
+3. `docs/ai-writing-evaluation-2026-06-17-v2.md` — AI 写作效果
+4. 本文件 — 会话上下文
 
-然后按待办顺序继续，建议先解决 `feature/design-refresh` 与 `master` 的合并策略。
+然后按待办顺序继续，建议先解决 Newsletter / Pricing 的上线策略。

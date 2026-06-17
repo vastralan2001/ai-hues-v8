@@ -731,6 +731,8 @@ export const dict: Record<Locale, Record<string, string>> = {
     'footer.company': 'Company',
     'footer.about': 'About',
     'footer.terms': 'Terms',
+    'footer.privacy': 'Privacy',
+    'footer.contact': 'Contact',
     'footer.copyright': '© 2026 AIHues · Find your AI vibe · Built on Kimi',
     'footer.tagline': 'Find your AI vibe. 58 tools + 3 games that feel human.',
 
@@ -1195,6 +1197,8 @@ export const dict: Record<Locale, Record<string, string>> = {
     'footer.company': '公司',
     'footer.about': '关于',
     'footer.terms': '条款',
+    'footer.privacy': '隐私',
+    'footer.contact': '联系',
     'footer.copyright': '© 2026 AIHues · 找到你的 AI vibe · 基于 Kimi 构建',
     'footer.tagline': '找到你的 AI vibe。58 个工具 + 3 款游戏，自然流畅。',
 
