@@ -1,0 +1,52 @@
+{
+  "cases": [
+    {
+      "id": "zh-buzzwords",
+      "locale": "zh",
+      "desc": "中文 AI 套话密集",
+      "inputs": {
+        "text": "在当今数字化转型的浪潮中，企业必须 leveraging 云计算、大数据和人工智能等 robust 技术，才能 streamline 业务流程并提升核心竞争力。"
+      }
+    },
+    {
+      "id": "zh-hedging",
+      "locale": "zh",
+      "desc": "中文 hedging 过多",
+      "inputs": {
+        "text": "一般来说，通常情况下，用户在使用这款产品时可能会发现，它的界面设计比较友好，功能也较为丰富。"
+      }
+    },
+    {
+      "id": "zh-bullet",
+      "locale": "zh",
+      "desc": "中文 bullet/总结结构",
+      "inputs": {
+        "text": "值得一提的是，我们的产品具有三大优势：第一，操作简单；第二，功能强大；第三，性价比高。综上所述，它是您的最佳选择。"
+      }
+    },
+    {
+      "id": "en-buzzwords",
+      "locale": "en",
+      "desc": "英文 AI clichés 密集",
+      "inputs": {
+        "text": "In today's fast-paced digital landscape, it is crucial to leverage robust AI solutions to streamline workflows and foster innovation. It is worth noting that comprehensive adoption can significantly improve outcomes."
+      }
+    },
+    {
+      "id": "en-hedging",
+      "locale": "en",
+      "desc": "英文 hedging 过多",
+      "inputs": {
+        "text": "Generally speaking, in many cases, users often find that this approach can potentially lead to somewhat better results, although it is important to note that outcomes may vary."
+      }
+    },
+    {
+      "id": "en-bullet",
+      "locale": "en",
+      "desc": "英文 bullet/总结结构",
+      "inputs": {
+        "text": "Our platform offers three key benefits. First, it is user-friendly. Second, it is scalable. Third, it is cost-effective. In conclusion, we believe it is a pivotal solution."
+      }
+    }
+  ]
+}

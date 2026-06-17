@@ -1,0 +1,68 @@
+[
+  {
+    "id": "zh-buzzwords",
+    "locale": "zh",
+    "desc": "中文 AI 套话密集",
+    "inputs": {
+      "text": "在当今数字化转型的浪潮中，企业必须 leveraging 云计算、大数据和人工智能等 robust 技术，才能 streamline 业务流程并提升核心竞争力。"
+    },
+    "status": 200,
+    "result": "现在做企业，云计算、大数据、人工智能这些技术不用起来，基本就跟不上趟。关键是怎么把它们真正在业务里用起来，流程顺了，竞争力自然就上去了。",
+    "error": ""
+  },
+  {
+    "id": "zh-hedging",
+    "locale": "zh",
+    "desc": "中文 hedging 过多",
+    "inputs": {
+      "text": "一般来说，通常情况下，用户在使用这款产品时可能会发现，它的界面设计比较友好，功能也较为丰富。"
+    },
+    "status": 200,
+    "result": "用这款产品的时候，你会发现界面挺顺手，功能也不少。",
+    "error": ""
+  },
+  {
+    "id": "zh-bullet",
+    "locale": "zh",
+    "desc": "中文 bullet/总结结构",
+    "inputs": {
+      "text": "值得一提的是，我们的产品具有三大优势：第一，操作简单；第二，功能强大；第三，性价比高。综上所述，它是您的最佳选择。"
+    },
+    "status": 200,
+    "result": "我们这款产品有三个明显的优点：用起来很顺手，功能也够全，还特别划算。挑来挑去，选它准没错。",
+    "error": ""
+  },
+  {
+    "id": "en-buzzwords",
+    "locale": "en",
+    "desc": "英文 AI clichés 密集",
+    "inputs": {
+      "text": "In today's fast-paced digital landscape, it is crucial to leverage robust AI solutions to streamline workflows and foster innovation. It is worth noting that comprehensive adoption can significantly improve outcomes."
+    },
+    "status": 200,
+    "result": "If you’re working in tech right now, using smart AI tools isn’t just helpful—it’s pretty much a must if you want things to run smoothly and come up with new ideas. When you really commit to using them across the board, you’ll probably see a big difference.",
+    "error": ""
+  },
+  {
+    "id": "en-hedging",
+    "locale": "en",
+    "desc": "英文 hedging 过多",
+    "inputs": {
+      "text": "Generally speaking, in many cases, users often find that this approach can potentially lead to somewhat better results, although it is important to note that outcomes may vary."
+    },
+    "status": 200,
+    "result": "People sometimes find this approach gives better results, though your experience might be different.",
+    "error": ""
+  },
+  {
+    "id": "en-bullet",
+    "locale": "en",
+    "desc": "英文 bullet/总结结构",
+    "inputs": {
+      "text": "Our platform offers three key benefits. First, it is user-friendly. Second, it is scalable. Third, it is cost-effective. In conclusion, we believe it is a pivotal solution."
+    },
+    "status": 200,
+    "result": "You’ll find our platform easy to use, and it grows with you. Plus, it won’t break the bank. We think it could make a real difference.",
+    "error": ""
+  }
+]
