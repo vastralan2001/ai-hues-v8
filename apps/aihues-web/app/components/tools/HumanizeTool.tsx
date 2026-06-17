@@ -17,8 +17,12 @@ export default function HumanizeTool({ locale }: HumanizeToolProps) {
   const [error, setError] = useState('');
 
   async function handleHumanize() {
-    setLoading(true);
     setError('');
+    if (!input.trim()) {
+      setError(t(locale, 'tool.humanize.empty'));
+      return;
+    }
+    setLoading(true);
     try {
       const generated = await aiGenerate({
         tool: 'humanize',
@@ -42,31 +46,35 @@ export default function HumanizeTool({ locale }: HumanizeToolProps) {
 
   return (
     <div className='mx-auto max-w-[900px] px-6 py-12'>
-      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
+      <h1 className='hero-title mb-4 text-foreground'>
         {t(locale, 'tool.humanize.title')}
       </h1>
-      <p className='mb-6 text-[15px] text-secondary'>
+      <p className='mb-8 text-[16px] leading-relaxed text-secondary'>
         {t(locale, 'tool.humanize.desc')}
       </p>
 
-      <div className='space-y-4'>
+      <div className='space-y-6'>
         <div>
-          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+          <label className='mb-2 block text-sm font-semibold text-foreground'>
             {t(locale, 'tool.humanize.input')}
           </label>
           <textarea
             className='h-[200px] w-full resize-none rounded-[10px] border border-border bg-surface p-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
             onChange={(e) => setInput(e.target.value)}
+            placeholder={t(locale, 'tool.humanize.placeholder')}
             value={input}
           />
         </div>
 
         <button
-          className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light disabled:opacity-50'
+          className='inline-flex items-center justify-center gap-2 rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light disabled:opacity-60'
           disabled={loading}
           onClick={handleHumanize}
           type='button'
         >
+          {loading && (
+            <span className='inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white' />
+          )}
           {loading
             ? locale === 'zh'
               ? '生成中...'
@@ -75,17 +83,17 @@ export default function HumanizeTool({ locale }: HumanizeToolProps) {
         </button>
 
         {error && (
-          <p className='mt-3 rounded-[10px] border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'>
+          <p className='rounded-[10px] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'>
             {error}
           </p>
         )}
 
-        {result && (
-          <div className='mt-2'>
-            <div className='mb-2 flex items-center justify-between'>
-              <span className='text-sm font-semibold text-foreground'>
-                {t(locale, 'tool.humanize.result')}
-              </span>
+        <div>
+          <div className='mb-2 flex items-center justify-between'>
+            <span className='text-sm font-semibold text-foreground'>
+              {t(locale, 'tool.humanize.result')}
+            </span>
+            {result && (
               <button
                 className='rounded-[8px] border border-border bg-surface px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
                 onClick={copy}
@@ -95,14 +103,22 @@ export default function HumanizeTool({ locale }: HumanizeToolProps) {
                   ? t(locale, 'tool.copy.copied')
                   : t(locale, 'tool.wordCount.copy')}
               </button>
-            </div>
-            <div className='min-h-[120px] w-full rounded-[14px] border border-border bg-surface p-5'>
+            )}
+          </div>
+          <div className='min-h-[120px] w-full rounded-[14px] border border-border bg-surface p-5'>
+            {result ? (
               <p className='whitespace-pre-wrap text-[15px] leading-relaxed text-foreground'>
                 {result}
               </p>
-            </div>
+            ) : (
+              <p className='text-[15px] leading-relaxed text-muted'>
+                {locale === 'zh'
+                  ? '人性化后的文本将显示在这里。'
+                  : 'Humanized text will appear here.'}
+              </p>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

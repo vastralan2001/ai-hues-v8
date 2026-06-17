@@ -104,7 +104,7 @@ const POPULAR_HIGHLIGHTS = (locale: Locale) => [
     title: 'JWT Parser — Dev Essential',
     description:
       'One-click JWT decode with expiry detection & JSON highlighting',
-    metrics: 'Ease — · Speed — · Utility —',
+    metrics: 'Decode · Verify · Expiry',
   },
   {
     href: toolDetailHref('json'),
@@ -112,14 +112,14 @@ const POPULAR_HIGHLIGHTS = (locale: Locale) => [
     title: 'JSON Formatter — Most Elegant',
     description:
       'Dark theme highlighting, collapsible tree, precise error locating',
-    metrics: 'Ease — · Quality — · Design —',
+    metrics: 'Format · Validate · Highlight',
   },
   {
     href: gameDetailHref('daily-luck'),
     kicker: `${t(locale, 'cat.games')}`,
     title: 'Daily Fortune — Retention King',
     description: '30 wisdom quotes, 3D card flip, streak rewards & confetti',
-    metrics: 'Fun — · Design — · Retention —',
+    metrics: 'Fortune · Streak · Rewards',
   },
 ];
 
@@ -167,13 +167,13 @@ function HomeGameCard({ game, locale }: { game: CatalogGame; locale: Locale }) {
 
   return (
     <Link
-      className='relative block cursor-pointer rounded-[16px] border border-border bg-surface px-7 py-7 text-center text-inherit no-underline transition-all duration-200 hover:border-border-strong'
+      className='relative block cursor-pointer rounded-[16px] border border-border bg-surface px-6 py-6 text-center text-inherit no-underline transition-all duration-200 hover:border-border-strong'
       href={gameDetailHref(game.slug)}
     >
       <span className='mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-xl bg-accent-bg text-accent'>
         <ToolIcon slug={game.slug} size={24} />
       </span>
-      <h3 className='mb-1.5 text-[18px] font-bold text-foreground'>
+      <h3 className='mb-2 text-[18px] font-bold text-foreground'>
         {game.name}
       </h3>
       <p className='mb-4 text-[13px] leading-relaxed text-secondary'>
@@ -184,7 +184,7 @@ function HomeGameCard({ game, locale }: { game: CatalogGame; locale: Locale }) {
         <p className='mb-4 text-[12px] leading-relaxed text-muted'>{meta}</p>
       )}
 
-      <span className='inline-block rounded-[12px] bg-accent px-7 py-[11px] text-[14px] font-medium text-white transition-all hover:bg-accent-light'>
+      <span className='inline-block rounded-[12px] bg-accent px-6 py-3 text-[14px] font-medium text-white transition-all hover:bg-accent-light'>
         {t(locale, playLabelKey)}
       </span>
     </Link>
@@ -239,7 +239,7 @@ export default async function HomePage() {
         {/* ══════════════════════════════════════════════
             HERO
             ══════════════════════════════════════════════ */}
-        <section className='relative overflow-hidden px-6 pb-10 pt-[72px] text-center'>
+        <section className='relative overflow-hidden px-6 pb-12 pt-[72px] text-center'>
           {/* Ambient background */}
           <div
             aria-hidden='true'
@@ -252,7 +252,7 @@ export default async function HomePage() {
 
           <div className='relative mx-auto max-w-[760px]'>
             {/* Pill kicker */}
-            <div className='mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-white/80 px-4 py-1.5 shadow-sm backdrop-blur-sm'>
+            <div className='mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-white/80 px-4 py-2 shadow-sm backdrop-blur-sm'>
               <span className='inline-block h-2 w-2 rounded-full bg-accent' />
               <span className='text-[12px] font-semibold uppercase tracking-wider text-secondary'>
                 {locale === 'zh' ? '为创造者精选' : 'Curated for makers'}
@@ -260,10 +260,10 @@ export default async function HomePage() {
             </div>
 
             {/* Main headline — large, warm, editorial, single line */}
-            <h1 className='mb-5 text-[clamp(1.75rem,5vw,3.5rem)] font-bold leading-[1.1] tracking-[-0.02em] text-foreground'>
+            <h1 className='hero-title mb-5 text-foreground'>
               {locale === 'zh' ? (
                 <>
-                  你的全能 <span className='text-accent'>AI 工具箱</span>
+                  你的全能<span className='text-accent'>AI 工具箱</span>
                 </>
               ) : (
                 <>
@@ -273,7 +273,7 @@ export default async function HomePage() {
               )}
             </h1>
 
-            <p className='mx-auto mb-8 max-w-[540px] text-[17px] leading-relaxed text-secondary'>
+            <p className='mx-auto mb-8 max-w-[540px] text-base leading-relaxed text-secondary'>
               {locale === 'zh'
                 ? '57 款精选工具 + 3 个轻量小游戏，无需注册，打开即用。'
                 : '57 curated tools + 3 mini games. No signup, no paywall — just open and use.'}
@@ -286,7 +286,7 @@ export default async function HomePage() {
             />
 
             {/* Quick-tag chips */}
-            <div className='mt-5 flex flex-wrap justify-center gap-2.5'>
+            <div className='mt-5 flex flex-wrap justify-center gap-2'>
               {QUICK_TAG_LINKS.map((tag) => (
                 <Link
                   key={tag.label}
@@ -303,8 +303,8 @@ export default async function HomePage() {
         {/* ══════════════════════════════════════════════
             BROWSE BY CATEGORY
             ══════════════════════════════════════════════ */}
-        <section className='mx-auto max-w-[1300px] px-8 pb-10' id='categories'>
-          <div className='mb-5 flex items-center justify-between'>
+        <section className='mx-auto max-w-[1300px] px-8 pb-12' id='categories'>
+          <div className='mb-6 flex items-center justify-between'>
             <h2 className='text-[20px] font-bold'>
               {t(locale, 'categories.title')}
             </h2>
@@ -322,7 +322,7 @@ export default async function HomePage() {
               return (
                 <Link
                   key={cat.key}
-                  className='group relative block cursor-pointer overflow-hidden rounded-[20px] border border-border bg-white p-5 text-inherit no-underline shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-border-strong hover:shadow-lg'
+                  className='group relative block cursor-pointer overflow-hidden rounded-[20px] border border-border bg-white p-4 text-inherit no-underline shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-border-strong hover:shadow-lg'
                   href={cat.href}
                 >
                   {/* Decorative top accent */}
@@ -358,7 +358,7 @@ export default async function HomePage() {
                   </p>
 
                   {/* Sample tags */}
-                  <div className='flex flex-wrap gap-1.5'>
+                  <div className='flex flex-wrap gap-1'>
                     {cat.tags.map((tag) => (
                       <span
                         key={tag}
@@ -386,7 +386,7 @@ export default async function HomePage() {
                 'radial-gradient(circle at 20% 50%, rgba(217,119,87,0.08) 0%, transparent 40%), radial-gradient(circle at 80% 50%, rgba(106,155,204,0.08) 0%, transparent 40%)',
             }}
           />
-          <div className='relative mx-auto flex max-w-[1100px] flex-wrap items-center justify-center gap-x-[80px] gap-y-5'>
+          <div className='relative mx-auto grid max-w-[1100px] grid-cols-1 gap-8 sm:grid-cols-3'>
             {stats.map((s, index) => (
               <div key={s.label} className='text-center'>
                 <div
@@ -416,10 +416,13 @@ export default async function HomePage() {
             DEVELOPER TOOLS – FEATURED
             ══════════════════════════════════════════════ */}
         {homeDevTools.length > 0 && (
-          <section className='mx-auto max-w-[1300px] px-8 py-12' id='new-tools'>
+          <section
+            className='mx-auto max-w-[1300px] px-8 py-12'
+            id='featured-dev-tools'
+          >
             <div className='mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between'>
               <div>
-                <div className='mb-1.5 text-[11px] font-extrabold uppercase tracking-wider text-accent'>
+                <div className='mb-2 text-[11px] font-extrabold uppercase tracking-wider text-accent'>
                   {t(locale, 'section.featured')}
                 </div>
                 <h2 className='text-[24px] font-bold tracking-[-0.5px]'>
@@ -454,7 +457,7 @@ export default async function HomePage() {
           <section className='mx-auto max-w-[1300px] px-8 pb-12'>
             <div className='mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between'>
               <div>
-                <div className='mb-1.5 text-[11px] font-extrabold uppercase tracking-wider text-accent'>
+                <div className='mb-2 text-[11px] font-extrabold uppercase tracking-wider text-accent'>
                   {t(locale, 'section.featured')}
                 </div>
                 <h2 className='text-[24px] font-bold tracking-[-0.5px]'>
@@ -555,13 +558,13 @@ export default async function HomePage() {
             DUAL ENGINE CTA BANNER
             ══════════════════════════════════════════════ */}
         <section className='mx-auto max-w-[1300px] px-8 pb-12'>
-          <div className='flex flex-wrap items-center justify-between gap-4 rounded-[16px] border border-border bg-surface px-8 py-7'>
+          <div className='flex flex-wrap items-center justify-between gap-4 rounded-[16px] border border-border bg-surface px-8 py-6'>
             <div>
               <div className='mb-1 flex flex-wrap gap-2'>
-                <span className='rounded-full bg-[#f5f3ee] px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-muted'>
+                <span className='rounded-full bg-bg px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-muted'>
                   DEV
                 </span>
-                <span className='rounded-full bg-[#f5f3ee] px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-muted'>
+                <span className='rounded-full bg-bg px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-muted'>
                   GAMES
                 </span>
               </div>
@@ -586,10 +589,7 @@ export default async function HomePage() {
             ══════════════════════════════════════════════ */}
         <section className='border-t border-border px-8 py-16 text-center'>
           <div className='mx-auto max-w-[560px]'>
-            <h2
-              className='mb-3 text-[28px] font-normal text-foreground'
-              style={{ fontFamily: 'var(--font-sans)' }}
-            >
+            <h2 className='mb-3 text-[24px] font-bold tracking-[-0.5px] text-foreground'>
               {t(locale, 'section.wishlistTitle')}
             </h2>
             <p className='mb-6 text-[16px] text-muted'>

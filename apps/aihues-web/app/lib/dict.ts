@@ -604,6 +604,8 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.humanize.title': 'AI Text Humanizer',
     'tool.humanize.desc': 'Make AI-generated text sound more natural and human',
     'tool.humanize.input': 'AI-generated text',
+    'tool.humanize.placeholder': 'Paste AI-generated text here...',
+    'tool.humanize.empty': 'Please enter some text first.',
     'tool.humanize.humanize': 'Humanize',
     'tool.humanize.result': 'Humanized text',
 
@@ -1346,6 +1348,8 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.humanize.title': 'AI 文本人性化',
     'tool.humanize.desc': '让 AI 生成的文本听起来更自然、更像人类写作',
     'tool.humanize.input': 'AI 生成的文本',
+    'tool.humanize.placeholder': '在此粘贴 AI 生成的文本...',
+    'tool.humanize.empty': '请先输入一些文本。',
     'tool.humanize.humanize': '人性化',
     'tool.humanize.result': '人性化后的文本',
 
