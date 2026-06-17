@@ -1,5 +1,5 @@
 /* ── AIHues Complete Tool Database ──
-   89 tools: 57 local + 32 growth (external links)
+   90 tools: 58 local + 32 growth (external links)
    Frontend supplement when API returns incomplete data.
 */
 
@@ -778,6 +778,20 @@ export const LOCAL_TOOLS: ToolData[] = [
     price: 'freemium',
     credit: 20,
     url: '/tools/yt-script',
+    isExternal: false,
+  },
+  {
+    slug: 'kimi-code',
+    icon: '📘',
+    name: 'Kimi Code Cheat Sheet',
+    nameZh: 'Kimi Code 速查表',
+    description:
+      'Quick reference for Kimi Code CLI commands, shortcuts and prompts',
+    descriptionZh: '常用 Kimi Code CLI 命令、快捷键和提示词速查',
+    category: 'developer',
+    price: 'free',
+    credit: 0,
+    url: '/tools/kimi-code',
     isExternal: false,
   },
 ];

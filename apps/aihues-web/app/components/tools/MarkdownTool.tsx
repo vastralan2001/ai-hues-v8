@@ -100,11 +100,11 @@ export default function MarkdownTool({ locale }: MarkdownToolProps) {
       <div className='grid gap-4 lg:grid-cols-2'>
         {/* Input */}
         <div>
-          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+          <label className='mb-2 block text-sm font-semibold text-foreground'>
             Markdown
           </label>
           <textarea
-            className='h-[500px] w-full resize-none rounded-[14px] border border-border bg-surface p-5 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+            className='h-[500px] w-full resize-none rounded-2xl border border-border bg-surface p-5 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
             onChange={(e) => setInput(e.target.value)}
             placeholder={t(locale, 'tool.markdown.placeholder')}
             value={input}
@@ -113,11 +113,11 @@ export default function MarkdownTool({ locale }: MarkdownToolProps) {
 
         {/* Preview */}
         <div>
-          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+          <label className='mb-2 block text-sm font-semibold text-foreground'>
             {t(locale, 'tool.markdown.preview')}
           </label>
           <div
-            className='h-[500px] overflow-auto rounded-[14px] border border-border bg-surface p-5 text-foreground'
+            className='h-[500px] overflow-auto rounded-2xl border border-border bg-surface p-5 text-foreground'
             dangerouslySetInnerHTML={{ __html: preview }}
           />
         </div>

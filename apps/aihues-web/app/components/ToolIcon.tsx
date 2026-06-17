@@ -97,6 +97,7 @@ const TOOL_ICONS: Record<string, LucideIcon> = {
   markdown: FileText,
   pomodoro: Timer,
   'chi-squared': Calculator,
+  'kimi-code': BookOpen,
 
   /* Utility */
   'word-count': Type,

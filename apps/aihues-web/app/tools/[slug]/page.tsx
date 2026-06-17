@@ -65,6 +65,7 @@ import PseudoTool from '@/components/tools/PseudoTool';
 import DiffProTool from '@/components/tools/DiffProTool';
 import QrcodeTool from '@/components/tools/QrcodeTool';
 import ChiSquaredTool from '@/components/tools/ChiSquaredTool';
+import KimiCodeCheatSheetTool from '@/components/tools/KimiCodeCheatSheetTool';
 
 const SLUG_TO_DICT_KEY: Record<string, string> = {
   'lorem-ipsum': 'lorem',
@@ -157,6 +158,7 @@ const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   'diff-pro': DiffProTool,
   qrcode: QrcodeTool,
   'chi-squared': ChiSquaredTool,
+  'kimi-code': KimiCodeCheatSheetTool,
 };
 
 export function generateStaticParams() {

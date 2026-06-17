@@ -194,11 +194,11 @@ export default function ShellTool({ locale }: ShellToolProps) {
 
       <div className='space-y-4'>
         <div>
-          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+          <label className='mb-2 block text-sm font-semibold text-foreground'>
             {t(locale, 'tool.shell.input')}
           </label>
           <input
-            className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 font-mono text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+            className='h-12 w-full rounded-lg border border-border bg-surface px-4 font-mono text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleExplain()}
             placeholder='ls -la'
@@ -208,7 +208,7 @@ export default function ShellTool({ locale }: ShellToolProps) {
         </div>
 
         <button
-          className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+          className='rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
           onClick={handleExplain}
           type='button'
         >
@@ -216,7 +216,7 @@ export default function ShellTool({ locale }: ShellToolProps) {
         </button>
 
         {result && (
-          <div className='rounded-[14px] border border-border bg-surface p-5'>
+          <div className='rounded-2xl border border-border bg-surface p-5'>
             <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
               {t(locale, 'tool.shell.result')}
             </p>

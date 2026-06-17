@@ -79,7 +79,7 @@ export default function PomodoroTool({ locale }: PomodoroToolProps) {
       <div className='mb-8 flex justify-center gap-2'>
         {DURATION_OPTIONS.map((min) => (
           <button
-            className={`rounded-[10px] px-4 py-2 text-sm font-semibold transition-colors ${
+            className={`rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${
               duration === min
                 ? 'bg-accent text-white'
                 : 'border border-border bg-surface text-foreground hover:border-accent'
@@ -134,7 +134,7 @@ export default function PomodoroTool({ locale }: PomodoroToolProps) {
       <div className='flex justify-center gap-3'>
         {!isRunning ? (
           <button
-            className='rounded-[10px] bg-accent px-6 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+            className='rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
             onClick={handleStart}
             type='button'
           >
@@ -142,7 +142,7 @@ export default function PomodoroTool({ locale }: PomodoroToolProps) {
           </button>
         ) : (
           <button
-            className='rounded-[10px] border border-border bg-surface px-6 py-2.5 text-sm font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
+            className='rounded-lg border border-border bg-surface px-6 py-3 text-sm font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
             onClick={handlePause}
             type='button'
           >
@@ -150,7 +150,7 @@ export default function PomodoroTool({ locale }: PomodoroToolProps) {
           </button>
         )}
         <button
-          className='rounded-[10px] border border-border bg-surface px-6 py-2.5 text-sm font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
+          className='rounded-lg border border-border bg-surface px-6 py-3 text-sm font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
           onClick={handleReset}
           type='button'
         >

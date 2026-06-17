@@ -74,11 +74,11 @@ export default function PrDescTool({ locale }: PrDescToolProps) {
 
       {/* PR Title */}
       <div className='mb-4'>
-        <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+        <label className='mb-2 block text-sm font-semibold text-foreground'>
           {t(locale, 'tool.prDesc.prTitle')}
         </label>
         <input
-          className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+          className='h-12 w-full rounded-lg border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
           onChange={(e) => setTitle(e.target.value)}
           type='text'
           value={title}
@@ -87,7 +87,7 @@ export default function PrDescTool({ locale }: PrDescToolProps) {
 
       {/* Changes */}
       <div className='mb-4'>
-        <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+        <label className='mb-2 block text-sm font-semibold text-foreground'>
           {t(locale, 'tool.prDesc.changes')}
         </label>
         {changes.map((c, i) => (
@@ -111,7 +111,7 @@ export default function PrDescTool({ locale }: PrDescToolProps) {
           </div>
         ))}
         <button
-          className='rounded-[8px] border border-border bg-surface px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
+          className='rounded-[8px] border border-border bg-surface px-3 py-2 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
           onClick={addChange}
           type='button'
         >
@@ -120,7 +120,7 @@ export default function PrDescTool({ locale }: PrDescToolProps) {
       </div>
 
       {/* Testing */}
-      <div className='mb-4 rounded-[10px] border border-border bg-surface p-4'>
+      <div className='mb-4 rounded-lg border border-border bg-surface p-4'>
         <label className='mb-2 block text-sm font-semibold text-foreground'>
           {t(locale, 'tool.prDesc.testing')}
         </label>
@@ -157,11 +157,11 @@ export default function PrDescTool({ locale }: PrDescToolProps) {
 
       {/* Related Issues */}
       <div className='mb-4'>
-        <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+        <label className='mb-2 block text-sm font-semibold text-foreground'>
           {t(locale, 'tool.prDesc.relatedIssues')}
         </label>
         <input
-          className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+          className='h-12 w-full rounded-lg border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
           onChange={(e) => setIssues(e.target.value)}
           placeholder='Closes #123, Fixes #456'
           type='text'
@@ -172,7 +172,7 @@ export default function PrDescTool({ locale }: PrDescToolProps) {
       {error && <p className='text-sm text-red-500'>{error}</p>}
 
       <button
-        className={`rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+        className={`rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
         disabled={loading}
         onClick={handleGenerate}
         type='button'
@@ -194,7 +194,7 @@ export default function PrDescTool({ locale }: PrDescToolProps) {
               {t(locale, 'tool.wordCount.copy')}
             </button>
           </div>
-          <pre className='min-h-[120px] overflow-auto rounded-[14px] border border-border bg-surface p-5 font-mono text-sm text-foreground'>
+          <pre className='min-h-[120px] overflow-auto rounded-2xl border border-border bg-surface p-5 font-mono text-sm text-foreground'>
             {output}
           </pre>
         </div>

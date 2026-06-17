@@ -93,7 +93,7 @@ export default function JwtTool({ locale }: JwtToolProps) {
   const expiry = result ? getExpiryStatus(result.payload) : null;
 
   return (
-    <div className='mx-auto max-w-[900px] px-6 py-12'>
+    <div className='mx-auto max-w-4xl px-6 py-12'>
       <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
         {t(locale, 'tool.jwt.title')}
       </h1>
@@ -102,7 +102,7 @@ export default function JwtTool({ locale }: JwtToolProps) {
       </p>
 
       <textarea
-        className='h-[160px] w-full resize-none rounded-[14px] border border-border bg-surface p-5 font-mono text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+        className='h-[160px] w-full resize-none rounded-2xl border border-border bg-surface p-5 font-mono text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
         onChange={(e) => setInput(e.target.value)}
         placeholder={t(locale, 'tool.jwt.placeholder')}
         value={input}
@@ -110,7 +110,7 @@ export default function JwtTool({ locale }: JwtToolProps) {
 
       <div className='mt-4 flex gap-3'>
         <button
-          className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+          className='rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
           onClick={handleParse}
           type='button'
         >
@@ -119,7 +119,7 @@ export default function JwtTool({ locale }: JwtToolProps) {
       </div>
 
       {error && (
-        <p className='mt-3 rounded-[10px] border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'>
+        <p className='mt-3 rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'>
           {error}
         </p>
       )}
@@ -162,7 +162,7 @@ export default function JwtTool({ locale }: JwtToolProps) {
           />
 
           {/* Signature */}
-          <div className='rounded-[14px] border border-border bg-surface p-4'>
+          <div className='rounded-2xl border border-border bg-surface p-4'>
             <div className='mb-2 flex items-center justify-between'>
               <span className='text-sm font-semibold text-foreground'>
                 {t(locale, 'tool.jwt.signature')}
@@ -195,7 +195,7 @@ function JwtSection({
   onCopy: () => void;
 }) {
   return (
-    <div className='rounded-[14px] border border-border bg-surface'>
+    <div className='rounded-2xl border border-border bg-surface'>
       <div className='flex items-center justify-between border-b border-border px-4 py-3'>
         <span className='text-sm font-semibold text-foreground'>{label}</span>
         <button

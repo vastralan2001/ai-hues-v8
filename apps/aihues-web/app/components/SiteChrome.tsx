@@ -131,7 +131,7 @@ export function SiteFooter({
   if (variant === 'tools') {
     return (
       <footer className='border-t border-border px-8 py-8 text-center text-[13px] text-muted'>
-        {t(locale, 'footer.copyright')} · 57 {t(locale, 'section.tools')}
+        {t(locale, 'footer.copyright')} · 58 {t(locale, 'section.tools')}
       </footer>
     );
   }

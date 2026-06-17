@@ -34,7 +34,7 @@ export default function CodeExplainTool({ locale }: CodeExplainToolProps) {
   }
 
   return (
-    <div className='mx-auto max-w-[900px] px-6 py-12'>
+    <div className='mx-auto max-w-4xl px-6 py-12'>
       <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
         {t(locale, 'tool.codeExplain.title')}
       </h1>
@@ -44,11 +44,11 @@ export default function CodeExplainTool({ locale }: CodeExplainToolProps) {
 
       <div className='space-y-4'>
         <div>
-          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+          <label className='mb-2 block text-sm font-semibold text-foreground'>
             {t(locale, 'tool.codeExplain.language')}
           </label>
           <select
-            className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground focus:border-accent focus:outline-none'
+            className='h-12 w-full rounded-lg border border-border bg-surface px-4 text-sm text-foreground focus:border-accent focus:outline-none'
             onChange={(e) => setLanguage(e.target.value)}
             value={language}
           >
@@ -59,18 +59,18 @@ export default function CodeExplainTool({ locale }: CodeExplainToolProps) {
         </div>
 
         <div>
-          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+          <label className='mb-2 block text-sm font-semibold text-foreground'>
             {t(locale, 'tool.codeExplain.input')}
           </label>
           <textarea
-            className='h-[200px] w-full resize-none rounded-[10px] border border-border bg-surface p-4 font-mono text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+            className='h-[200px] w-full resize-none rounded-lg border border-border bg-surface p-4 font-mono text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
             onChange={(e) => setInput(e.target.value)}
             value={input}
           />
         </div>
 
         <button
-          className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light disabled:opacity-50'
+          className='rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light disabled:opacity-50'
           disabled={loading}
           onClick={handleExplain}
           type='button'
@@ -79,13 +79,13 @@ export default function CodeExplainTool({ locale }: CodeExplainToolProps) {
         </button>
 
         {error && (
-          <div className='rounded-[14px] border border-red-300 bg-red-50 p-5'>
+          <div className='rounded-2xl border border-red-300 bg-red-50 p-5'>
             <p className='text-sm text-red-600'>{error}</p>
           </div>
         )}
 
         {result && (
-          <div className='rounded-[14px] border border-border bg-surface p-5'>
+          <div className='rounded-2xl border border-border bg-surface p-5'>
             <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
               {t(locale, 'tool.codeExplain.result')}
             </p>

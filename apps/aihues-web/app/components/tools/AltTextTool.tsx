@@ -51,11 +51,11 @@ export default function AltTextTool({ locale }: AltTextToolProps) {
 
       <div className='space-y-4'>
         <div>
-          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+          <label className='mb-2 block text-sm font-semibold text-foreground'>
             {t(locale, 'tool.altText.input')}
           </label>
           <textarea
-            className='h-[120px] w-full resize-none rounded-[10px] border border-border bg-surface p-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+            className='h-[120px] w-full resize-none rounded-lg border border-border bg-surface p-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
             onChange={(e) => setInput(e.target.value)}
             placeholder={
               locale === 'zh'
@@ -67,7 +67,7 @@ export default function AltTextTool({ locale }: AltTextToolProps) {
         </div>
 
         <button
-          className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light disabled:opacity-50'
+          className='rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light disabled:opacity-50'
           disabled={loading}
           onClick={handleGenerate}
           type='button'
@@ -76,7 +76,7 @@ export default function AltTextTool({ locale }: AltTextToolProps) {
         </button>
 
         {error && (
-          <div className='mt-2 rounded-[10px] border border-red-300 bg-red-50 p-3 text-sm text-red-600'>
+          <div className='mt-2 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-600'>
             {error}
           </div>
         )}
@@ -97,7 +97,7 @@ export default function AltTextTool({ locale }: AltTextToolProps) {
                   : t(locale, 'tool.wordCount.copy')}
               </button>
             </div>
-            <div className='min-h-[60px] w-full rounded-[14px] border border-border bg-surface p-5'>
+            <div className='min-h-[60px] w-full rounded-2xl border border-border bg-surface p-5'>
               <p className='text-[15px] leading-relaxed text-foreground'>
                 {result}
               </p>

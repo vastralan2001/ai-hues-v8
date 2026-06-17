@@ -22,7 +22,7 @@ export const dict: Record<Locale, Record<string, string>> = {
     'hero.title': 'Find your',
     'hero.aiVibe': 'AI vibe',
     'hero.subtitle':
-      '57+ AI tools, mini games & utilities that just work. Tell us what you need.',
+      '58+ AI tools, mini games & utilities that just work. Tell us what you need.',
     'hero.searchPlaceholder': "e.g. 'parse JWT'... (Press / to focus)",
     'hero.askAI': 'Ask AI',
 
@@ -57,7 +57,7 @@ export const dict: Record<Locale, Record<string, string>> = {
     'section.popularTools': 'Popular Tools',
     'section.dualEngine': 'Tools + Games Dual Engine',
     'section.dualEngineDesc':
-      'Use tools, then play a game to relax. 57 tools + 3 games = complete platform.',
+      'Use tools, then play a game to relax. 58 tools + 3 games = complete platform.',
     'section.browseAll': 'Browse All Tools →',
     'section.wishlistTitle': "Can't find what you need?",
     'section.wishlistDesc': 'Submit your idea. Top requests get built first.',
@@ -718,6 +718,13 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.chiSquared.significant': 'Statistically significant',
     'tool.chiSquared.notSignificant': 'Not statistically significant',
 
+    'tool.kimiCode.title': 'Kimi Code Cheat Sheet',
+    'tool.kimiCode.desc':
+      'Quick reference for Kimi Code CLI commands, shortcuts and prompts',
+    'tool.kimiCode.search': 'Search commands...',
+    'tool.kimiCode.copy': 'Copy',
+    'tool.kimiCode.copied': 'Copied',
+
     // footer
     'footer.product': 'Product',
     'footer.games': 'Games',
@@ -725,7 +732,7 @@ export const dict: Record<Locale, Record<string, string>> = {
     'footer.about': 'About',
     'footer.terms': 'Terms',
     'footer.copyright': '© 2026 AIHues · Find your AI vibe · Built on Kimi',
-    'footer.tagline': 'Find your AI vibe. 57 tools + 3 games that feel human.',
+    'footer.tagline': 'Find your AI vibe. 58 tools + 3 games that feel human.',
 
     // playbooks
     'playbooks.badge1': 'AI Vibe Navigator',
@@ -767,7 +774,7 @@ export const dict: Record<Locale, Record<string, string>> = {
     'hero.title': '找到你的',
     'hero.aiVibe': 'AI vibe',
     'hero.subtitle':
-      '57+ AI 工具、小游戏和实用工具，开箱即用。告诉我们你的需求。',
+      '58+ AI 工具、小游戏和实用工具，开箱即用。告诉我们你的需求。',
     'hero.searchPlaceholder': "例如 '解析 JWT'... (按 / 聚焦)",
     'hero.askAI': '问 AI',
 
@@ -802,7 +809,7 @@ export const dict: Record<Locale, Record<string, string>> = {
     'section.popularTools': '热门工具',
     'section.dualEngine': '工具 + 游戏双引擎',
     'section.dualEngineDesc':
-      '用工具提高效率，再玩个小游戏放松。57 个工具 + 3 款游戏 = 完整平台。',
+      '用工具提高效率，再玩个小游戏放松。58 个工具 + 3 款游戏 = 完整平台。',
     'section.browseAll': '浏览全部工具 →',
     'section.wishlistTitle': '找不到你需要的？',
     'section.wishlistDesc': '提交你的想法。最受欢迎的请求优先开发。',
@@ -1189,7 +1196,7 @@ export const dict: Record<Locale, Record<string, string>> = {
     'footer.about': '关于',
     'footer.terms': '条款',
     'footer.copyright': '© 2026 AIHues · 找到你的 AI vibe · 基于 Kimi 构建',
-    'footer.tagline': '找到你的 AI vibe。57 个工具 + 3 款游戏，自然流畅。',
+    'footer.tagline': '找到你的 AI vibe。58 个工具 + 3 款游戏，自然流畅。',
 
     // playbooks
     'playbooks.badge1': 'AI Vibe Navigator',
@@ -1453,6 +1460,12 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.chiSquared.pValue': 'p 值',
     'tool.chiSquared.significant': '统计显著',
     'tool.chiSquared.notSignificant': '统计不显著',
+
+    'tool.kimiCode.title': 'Kimi Code 速查表',
+    'tool.kimiCode.desc': '常用 Kimi Code CLI 命令、快捷键和提示词速查',
+    'tool.kimiCode.search': '搜索命令...',
+    'tool.kimiCode.copy': '复制',
+    'tool.kimiCode.copied': '已复制',
 
     'review.tool': '工具',
     'review.review': '评测',

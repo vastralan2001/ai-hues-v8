@@ -62,7 +62,7 @@ export default function IpLookupTool({ locale }: IpLookupToolProps) {
   }
 
   return (
-    <div className='mx-auto max-w-[700px] px-6 py-12'>
+    <div className='mx-auto max-w-3xl px-6 py-12'>
       <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
         {t(locale, 'tool.ipLookup.title')}
       </h1>
@@ -72,11 +72,11 @@ export default function IpLookupTool({ locale }: IpLookupToolProps) {
 
       <div className='space-y-4'>
         <div>
-          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+          <label className='mb-2 block text-sm font-semibold text-foreground'>
             {t(locale, 'tool.ipLookup.input')}
           </label>
           <input
-            className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 font-mono text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+            className='h-12 w-full rounded-lg border border-border bg-surface px-4 font-mono text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleValidate()}
             placeholder='192.168.1.1'
@@ -86,7 +86,7 @@ export default function IpLookupTool({ locale }: IpLookupToolProps) {
         </div>
 
         <button
-          className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+          className='rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
           onClick={handleValidate}
           type='button'
         >
@@ -96,7 +96,7 @@ export default function IpLookupTool({ locale }: IpLookupToolProps) {
         {result && (
           <div className='space-y-3'>
             <div
-              className={`rounded-[14px] border p-4 text-center ${
+              className={`rounded-2xl border p-4 text-center ${
                 result.valid
                   ? 'border-green-200 bg-green-50 dark:border-green-900 dark:bg-green-950/30'
                   : 'border-red-200 bg-red-50 dark:border-red-900 dark:bg-red-950/30'
@@ -111,7 +111,7 @@ export default function IpLookupTool({ locale }: IpLookupToolProps) {
 
             {result.valid && (
               <div className='grid gap-3 sm:grid-cols-2'>
-                <div className='rounded-[14px] border border-border bg-surface p-4 text-center'>
+                <div className='rounded-2xl border border-border bg-surface p-4 text-center'>
                   <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
                     {t(locale, 'tool.ipLookup.type')}
                   </p>
@@ -121,7 +121,7 @@ export default function IpLookupTool({ locale }: IpLookupToolProps) {
                       : t(locale, `tool.ipLookup.${result.type}`)}
                   </p>
                 </div>
-                <div className='rounded-[14px] border border-border bg-surface p-4 text-center'>
+                <div className='rounded-2xl border border-border bg-surface p-4 text-center'>
                   <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
                     {t(locale, 'tool.ipLookup.networkClass')}
                   </p>

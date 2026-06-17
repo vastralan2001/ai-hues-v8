@@ -31,7 +31,7 @@ export function ToolSearchForm({
         defaultValue={q}
         id='tool-search'
         name='q'
-        placeholder='Search 57 tools...'
+        placeholder='Search 58 tools...'
         type='search'
       />
       {category !== 'all' ? (

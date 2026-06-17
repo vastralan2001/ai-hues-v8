@@ -83,11 +83,11 @@ export default function LpHeroTool({ locale }: LpHeroToolProps) {
 
       <div className='space-y-4'>
         <div>
-          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+          <label className='mb-2 block text-sm font-semibold text-foreground'>
             {t(locale, 'tool.lpHero.product')}
           </label>
           <input
-            className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+            className='h-12 w-full rounded-lg border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
             onChange={(e) => setProduct(e.target.value)}
             type='text'
             value={product}
@@ -95,11 +95,11 @@ export default function LpHeroTool({ locale }: LpHeroToolProps) {
         </div>
         <div className='grid gap-4 sm:grid-cols-2'>
           <div>
-            <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+            <label className='mb-2 block text-sm font-semibold text-foreground'>
               {t(locale, 'tool.lpHero.benefit')}
             </label>
             <input
-              className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+              className='h-12 w-full rounded-lg border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
               onChange={(e) => setBenefit(e.target.value)}
               placeholder={locale === 'zh' ? '节省时间' : 'save time'}
               type='text'
@@ -107,11 +107,11 @@ export default function LpHeroTool({ locale }: LpHeroToolProps) {
             />
           </div>
           <div>
-            <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+            <label className='mb-2 block text-sm font-semibold text-foreground'>
               {t(locale, 'tool.lpHero.audience')}
             </label>
             <input
-              className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+              className='h-12 w-full rounded-lg border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
               onChange={(e) => setAudience(e.target.value)}
               placeholder={locale === 'zh' ? '专业人士' : 'professionals'}
               type='text'
@@ -121,7 +121,7 @@ export default function LpHeroTool({ locale }: LpHeroToolProps) {
         </div>
 
         <button
-          className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light disabled:opacity-50'
+          className='rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light disabled:opacity-50'
           disabled={loading}
           onClick={handleGenerate}
           type='button'
@@ -133,7 +133,7 @@ export default function LpHeroTool({ locale }: LpHeroToolProps) {
 
         {result && (
           <div className='space-y-4'>
-            <div className='rounded-[14px] border border-border bg-surface p-5'>
+            <div className='rounded-2xl border border-border bg-surface p-5'>
               <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
                 {t(locale, 'tool.lpHero.headline')}
               </p>
@@ -153,7 +153,7 @@ export default function LpHeroTool({ locale }: LpHeroToolProps) {
               </div>
             </div>
 
-            <div className='rounded-[14px] border border-border bg-surface p-5'>
+            <div className='rounded-2xl border border-border bg-surface p-5'>
               <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
                 {t(locale, 'tool.lpHero.subheadline')}
               </p>
@@ -173,7 +173,7 @@ export default function LpHeroTool({ locale }: LpHeroToolProps) {
               </div>
             </div>
 
-            <div className='rounded-[14px] border border-border bg-surface p-5'>
+            <div className='rounded-2xl border border-border bg-surface p-5'>
               <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
                 {t(locale, 'tool.lpHero.cta')}
               </p>

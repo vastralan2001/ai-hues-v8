@@ -71,14 +71,14 @@ export default function PushTool({ locale }: PushToolProps) {
 
       <div className='space-y-4'>
         <div>
-          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+          <label className='mb-2 block text-sm font-semibold text-foreground'>
             {t(locale, 'tool.push.platform')}
           </label>
           <div className='flex flex-wrap gap-2'>
             {platforms.map((p) => (
               <button
                 key={p.key}
-                className={`rounded-[10px] border px-4 py-2 text-sm font-medium transition-all ${
+                className={`rounded-lg border px-4 py-2 text-sm font-medium transition-all ${
                   platform === p.key
                     ? 'border-accent bg-accent text-white'
                     : 'border-border bg-surface text-foreground hover:border-accent'
@@ -94,11 +94,11 @@ export default function PushTool({ locale }: PushToolProps) {
 
         <div className='grid gap-4 sm:grid-cols-2'>
           <div>
-            <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+            <label className='mb-2 block text-sm font-semibold text-foreground'>
               {t(locale, 'tool.push.notificationTitle')}
             </label>
             <input
-              className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+              className='h-12 w-full rounded-lg border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
               onChange={(e) => setTitle(e.target.value)}
               placeholder='New message'
               type='text'
@@ -106,11 +106,11 @@ export default function PushTool({ locale }: PushToolProps) {
             />
           </div>
           <div>
-            <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+            <label className='mb-2 block text-sm font-semibold text-foreground'>
               {t(locale, 'tool.push.body')}
             </label>
             <input
-              className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+              className='h-12 w-full rounded-lg border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
               onChange={(e) => setBody(e.target.value)}
               placeholder='You have a new notification'
               type='text'
@@ -121,11 +121,11 @@ export default function PushTool({ locale }: PushToolProps) {
 
         <div className='grid gap-4 sm:grid-cols-2'>
           <div>
-            <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+            <label className='mb-2 block text-sm font-semibold text-foreground'>
               {t(locale, 'tool.push.badge')}
             </label>
             <input
-              className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+              className='h-12 w-full rounded-lg border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
               min='0'
               onChange={(e) => setBadge(e.target.value)}
               type='number'
@@ -133,11 +133,11 @@ export default function PushTool({ locale }: PushToolProps) {
             />
           </div>
           <div>
-            <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+            <label className='mb-2 block text-sm font-semibold text-foreground'>
               {t(locale, 'tool.push.sound')}
             </label>
             <input
-              className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+              className='h-12 w-full rounded-lg border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
               onChange={(e) => setSound(e.target.value)}
               type='text'
               value={sound}
@@ -147,7 +147,7 @@ export default function PushTool({ locale }: PushToolProps) {
 
         <div className='flex flex-wrap gap-3'>
           <button
-            className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light disabled:opacity-50'
+            className='rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light disabled:opacity-50'
             disabled={(!title.trim() && !body.trim()) || loading}
             onClick={handleGenerate}
             type='button'
@@ -155,7 +155,7 @@ export default function PushTool({ locale }: PushToolProps) {
             {loading ? '...' : t(locale, 'tool.push.generate')}
           </button>
           <button
-            className='rounded-[10px] border border-border bg-surface px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
+            className='rounded-lg border border-border bg-surface px-5 py-3 text-sm font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
             onClick={clear}
             type='button'
           >
@@ -165,7 +165,7 @@ export default function PushTool({ locale }: PushToolProps) {
       </div>
 
       {error && (
-        <div className='mt-4 rounded-[10px] border border-red-300 bg-red-50 p-3 text-sm text-red-600'>
+        <div className='mt-4 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-600'>
           {error}
         </div>
       )}
@@ -186,7 +186,7 @@ export default function PushTool({ locale }: PushToolProps) {
                 : t(locale, 'tool.wordCount.copy')}
             </button>
           </div>
-          <div className='min-h-[120px] w-full rounded-[14px] border border-border bg-surface p-5'>
+          <div className='min-h-[120px] w-full rounded-2xl border border-border bg-surface p-5'>
             <pre className='whitespace-pre-wrap break-all font-mono text-sm text-foreground'>
               {result}
             </pre>

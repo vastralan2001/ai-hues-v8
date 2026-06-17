@@ -77,7 +77,7 @@ export default function ChiSquaredTool({ locale }: ChiSquaredToolProps) {
   }
 
   return (
-    <div className='mx-auto max-w-[700px] px-6 py-12'>
+    <div className='mx-auto max-w-3xl px-6 py-12'>
       <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
         {t(locale, 'tool.chiSquared.title')}
       </h1>
@@ -86,7 +86,7 @@ export default function ChiSquaredTool({ locale }: ChiSquaredToolProps) {
       </p>
 
       <div className='space-y-4'>
-        <div className='rounded-[14px] border border-border bg-surface overflow-hidden'>
+        <div className='rounded-2xl border border-border bg-surface overflow-hidden'>
           <div className='grid grid-cols-[1fr_1fr_auto] border-b border-border bg-gray-50 dark:bg-gray-900 text-xs font-semibold text-secondary'>
             <div className='px-4 py-2'>
               {t(locale, 'tool.chiSquared.observed')}
@@ -137,7 +137,7 @@ export default function ChiSquaredTool({ locale }: ChiSquaredToolProps) {
         </div>
 
         <button
-          className='rounded-[10px] border border-border bg-surface px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:border-accent hover:text-accent'
+          className='rounded-lg border border-border bg-surface px-5 py-3 text-sm font-medium text-foreground transition-colors hover:border-accent hover:text-accent'
           onClick={addRow}
           type='button'
         >
@@ -145,7 +145,7 @@ export default function ChiSquaredTool({ locale }: ChiSquaredToolProps) {
         </button>
 
         <button
-          className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+          className='rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
           onClick={calculate}
           type='button'
         >
@@ -154,7 +154,7 @@ export default function ChiSquaredTool({ locale }: ChiSquaredToolProps) {
 
         {result && (
           <div className='grid gap-3 sm:grid-cols-3'>
-            <div className='rounded-[14px] border border-border bg-surface p-4 text-center'>
+            <div className='rounded-2xl border border-border bg-surface p-4 text-center'>
               <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
                 {t(locale, 'tool.chiSquared.statistic')}
               </p>
@@ -162,7 +162,7 @@ export default function ChiSquaredTool({ locale }: ChiSquaredToolProps) {
                 {result.chi2.toFixed(4)}
               </p>
             </div>
-            <div className='rounded-[14px] border border-border bg-surface p-4 text-center'>
+            <div className='rounded-2xl border border-border bg-surface p-4 text-center'>
               <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
                 {t(locale, 'tool.chiSquared.df')}
               </p>
@@ -170,7 +170,7 @@ export default function ChiSquaredTool({ locale }: ChiSquaredToolProps) {
                 {result.df}
               </p>
             </div>
-            <div className='rounded-[14px] border border-border bg-surface p-4 text-center'>
+            <div className='rounded-2xl border border-border bg-surface p-4 text-center'>
               <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
                 {t(locale, 'tool.chiSquared.pValue')}
               </p>
@@ -179,7 +179,7 @@ export default function ChiSquaredTool({ locale }: ChiSquaredToolProps) {
               </p>
             </div>
             <div
-              className={`sm:col-span-3 rounded-[14px] border p-4 text-center ${
+              className={`sm:col-span-3 rounded-2xl border p-4 text-center ${
                 result.pValue < 0.05
                   ? 'border-green-200 bg-green-50 dark:border-green-900 dark:bg-green-950/30'
                   : 'border-orange-200 bg-orange-50 dark:border-orange-900 dark:bg-orange-950/30'

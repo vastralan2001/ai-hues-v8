@@ -276,8 +276,8 @@ export default async function HomePage() {
             {/* Hidden: subtitle removed to lift the search dialog
             <p className='mx-auto mb-8 max-w-[540px] text-base leading-relaxed text-secondary'>
               {locale === 'zh'
-                ? '57 款精选工具 + 3 个轻量小游戏，无需注册，打开即用。'
-                : '57 curated tools + 3 mini games. No signup, no paywall — just open and use.'}
+                ? '58 款精选工具 + 3 个轻量小游戏，无需注册，打开即用。'
+                : '58 curated tools + 3 mini games. No signup, no paywall — just open and use.'}
             </p>
             */}
 

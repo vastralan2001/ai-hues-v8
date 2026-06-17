@@ -49,7 +49,7 @@ export default function TldrTool({ locale }: TldrToolProps) {
       : 0;
 
   return (
-    <div className='mx-auto max-w-[900px] px-6 py-12'>
+    <div className='mx-auto max-w-4xl px-6 py-12'>
       <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
         {t(locale, 'tool.tldr.title')}
       </h1>
@@ -58,7 +58,7 @@ export default function TldrTool({ locale }: TldrToolProps) {
       </p>
 
       <textarea
-        className='h-[200px] w-full resize-none rounded-[14px] border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+        className='h-[200px] w-full resize-none rounded-2xl border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
         onChange={(e) => setText(e.target.value)}
         placeholder={t(locale, 'tool.tldr.placeholder')}
         value={text}
@@ -68,7 +68,7 @@ export default function TldrTool({ locale }: TldrToolProps) {
         <label className='flex items-center gap-3 text-sm text-foreground'>
           <span>{t(locale, 'tool.tldr.sentences')}</span>
           <input
-            className='h-10 w-20 rounded-[10px] border border-border bg-surface px-3 text-center text-sm focus:border-accent focus:outline-none'
+            className='h-10 w-20 rounded-lg border border-border bg-surface px-3 text-center text-sm focus:border-accent focus:outline-none'
             max={10}
             min={1}
             onChange={(e) => setSentences(Number(e.target.value))}
@@ -77,7 +77,7 @@ export default function TldrTool({ locale }: TldrToolProps) {
           />
         </label>
         <button
-          className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light disabled:opacity-50'
+          className='rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light disabled:opacity-50'
           disabled={loading}
           onClick={handleSummarize}
           type='button'
@@ -102,7 +102,7 @@ export default function TldrTool({ locale }: TldrToolProps) {
               {t(locale, 'tool.wordCount.copy')}
             </button>
           </div>
-          <div className='min-h-[80px] rounded-[14px] border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground'>
+          <div className='min-h-[80px] rounded-2xl border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground'>
             {summary}
           </div>
 

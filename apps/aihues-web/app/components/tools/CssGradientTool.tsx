@@ -76,14 +76,14 @@ export default function CssGradientTool({ locale }: CssGradientToolProps) {
 
       <div className='space-y-4'>
         <div>
-          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+          <label className='mb-2 block text-sm font-semibold text-foreground'>
             {t(locale, 'tool.cssGradient.type')}
           </label>
           <div className='flex flex-wrap gap-2'>
             {(['linear', 'radial'] as const).map((gradType) => (
               <button
                 key={gradType}
-                className={`rounded-[10px] border px-4 py-2 text-sm font-medium transition-all ${
+                className={`rounded-lg border px-4 py-2 text-sm font-medium transition-all ${
                   type === gradType
                     ? 'border-accent bg-accent text-white'
                     : 'border-border bg-surface text-foreground hover:border-accent'
@@ -101,7 +101,7 @@ export default function CssGradientTool({ locale }: CssGradientToolProps) {
 
         {type === 'linear' && (
           <div>
-            <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+            <label className='mb-2 block text-sm font-semibold text-foreground'>
               {t(locale, 'tool.cssGradient.angle')}: {angle}°
             </label>
             <input
@@ -116,7 +116,7 @@ export default function CssGradientTool({ locale }: CssGradientToolProps) {
         )}
 
         <div>
-          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+          <label className='mb-2 block text-sm font-semibold text-foreground'>
             {t(locale, 'tool.cssGradient.colors')}
           </label>
           <div className='space-y-2'>
@@ -155,7 +155,7 @@ export default function CssGradientTool({ locale }: CssGradientToolProps) {
             ))}
           </div>
           <button
-            className='mt-2 rounded-[10px] border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-accent hover:text-accent'
+            className='mt-2 rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-accent hover:text-accent'
             onClick={addColor}
             type='button'
           >
@@ -164,7 +164,7 @@ export default function CssGradientTool({ locale }: CssGradientToolProps) {
         </div>
 
         <button
-          className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+          className='rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
           onClick={generate}
           type='button'
         >
@@ -178,7 +178,7 @@ export default function CssGradientTool({ locale }: CssGradientToolProps) {
                 {t(locale, 'tool.cssGradient.preview')}
               </p>
               <div
-                className='h-[150px] w-full rounded-[14px] border border-border'
+                className='h-[150px] w-full rounded-2xl border border-border'
                 style={previewStyle}
               />
             </div>
@@ -197,7 +197,7 @@ export default function CssGradientTool({ locale }: CssGradientToolProps) {
                     : t(locale, 'tool.wordCount.copy')}
                 </button>
               </div>
-              <div className='min-h-[60px] w-full rounded-[14px] border border-border bg-surface p-5'>
+              <div className='min-h-[60px] w-full rounded-2xl border border-border bg-surface p-5'>
                 <pre className='whitespace-pre-wrap font-mono text-sm text-foreground'>
                   {css}
                 </pre>

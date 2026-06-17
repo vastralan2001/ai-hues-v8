@@ -134,7 +134,7 @@ export default function SqlTool({ locale }: SqlToolProps) {
   }
 
   return (
-    <div className='mx-auto max-w-[900px] px-6 py-12'>
+    <div className='mx-auto max-w-4xl px-6 py-12'>
       <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
         {t(locale, 'tool.sql.title')}
       </h1>
@@ -143,7 +143,7 @@ export default function SqlTool({ locale }: SqlToolProps) {
       </p>
 
       <textarea
-        className='h-[200px] w-full resize-none rounded-[14px] border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+        className='h-[200px] w-full resize-none rounded-2xl border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
         onChange={(e) => setInput(e.target.value)}
         placeholder='select id, name from users where active = 1 order by name'
         value={input}
@@ -151,7 +151,7 @@ export default function SqlTool({ locale }: SqlToolProps) {
 
       <div className='mt-4 flex gap-3'>
         <button
-          className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+          className='rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
           onClick={handleFormat}
           type='button'
         >
@@ -175,7 +175,7 @@ export default function SqlTool({ locale }: SqlToolProps) {
                 : t(locale, 'tool.wordCount.copy')}
             </button>
           </div>
-          <div className='min-h-[120px] w-full rounded-[14px] border border-border bg-surface p-5'>
+          <div className='min-h-[120px] w-full rounded-2xl border border-border bg-surface p-5'>
             <pre className='whitespace-pre-wrap font-mono text-sm text-foreground'>
               {result}
             </pre>

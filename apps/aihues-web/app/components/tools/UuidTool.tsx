@@ -54,7 +54,7 @@ export default function UuidTool({ locale }: UuidToolProps) {
 
       <div className='flex flex-wrap gap-3'>
         <button
-          className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+          className='rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
           data-testid='uuid-generate'
           onClick={() => generate(1)}
           type='button'
@@ -62,14 +62,14 @@ export default function UuidTool({ locale }: UuidToolProps) {
           {t(locale, 'tool.uuid.generate')}
         </button>
         <button
-          className='rounded-[10px] border border-border bg-surface px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
+          className='rounded-lg border border-border bg-surface px-5 py-3 text-sm font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
           onClick={() => generate(5)}
           type='button'
         >
           {t(locale, 'tool.uuid.generate5')}
         </button>
         <button
-          className='rounded-[10px] border border-border bg-surface px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
+          className='rounded-lg border border-border bg-surface px-5 py-3 text-sm font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
           onClick={() => generate(10)}
           type='button'
         >
@@ -77,7 +77,7 @@ export default function UuidTool({ locale }: UuidToolProps) {
         </button>
         {history.length > 0 && (
           <button
-            className='rounded-[10px] border border-border bg-surface px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
+            className='rounded-lg border border-border bg-surface px-5 py-3 text-sm font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
             onClick={copyAll}
             type='button'
           >
@@ -95,7 +95,7 @@ export default function UuidTool({ locale }: UuidToolProps) {
             {history.map((uuid, index) => (
               <div
                 key={`${uuid}-${index}`}
-                className='flex items-center justify-between rounded-[10px] border border-border bg-surface px-4 py-3'
+                className='flex items-center justify-between rounded-lg border border-border bg-surface px-4 py-3'
               >
                 <code
                   className='font-mono text-sm text-foreground'

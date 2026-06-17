@@ -101,22 +101,22 @@ export default function ChangelogTool({ locale }: ChangelogToolProps) {
       {/* Version + Date */}
       <div className='mb-6 flex gap-3'>
         <div className='flex-1'>
-          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+          <label className='mb-2 block text-sm font-semibold text-foreground'>
             {t(locale, 'tool.changelog.version')}
           </label>
           <input
-            className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground focus:border-accent focus:outline-none'
+            className='h-12 w-full rounded-lg border border-border bg-surface px-4 text-sm text-foreground focus:border-accent focus:outline-none'
             onChange={(e) => setVersion(e.target.value)}
             type='text'
             value={version}
           />
         </div>
         <div className='flex-1'>
-          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+          <label className='mb-2 block text-sm font-semibold text-foreground'>
             {t(locale, 'tool.changelog.date')}
           </label>
           <input
-            className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground focus:border-accent focus:outline-none'
+            className='h-12 w-full rounded-lg border border-border bg-surface px-4 text-sm text-foreground focus:border-accent focus:outline-none'
             onChange={(e) => setDate(e.target.value)}
             type='date'
             value={date}
@@ -128,7 +128,7 @@ export default function ChangelogTool({ locale }: ChangelogToolProps) {
       <div className='flex flex-col gap-4'>
         {SECTIONS.map((key) => (
           <div
-            className='rounded-[10px] border border-border bg-surface p-4'
+            className='rounded-lg border border-border bg-surface p-4'
             key={key}
           >
             <h2 className='mb-2 text-sm font-bold text-foreground'>
@@ -167,7 +167,7 @@ export default function ChangelogTool({ locale }: ChangelogToolProps) {
       {error && <p className='mt-4 text-sm text-red-500'>{error}</p>}
 
       <button
-        className={`mt-6 rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+        className={`mt-6 rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
         disabled={loading}
         onClick={handleGenerate}
         type='button'
@@ -189,7 +189,7 @@ export default function ChangelogTool({ locale }: ChangelogToolProps) {
               {t(locale, 'tool.wordCount.copy')}
             </button>
           </div>
-          <pre className='min-h-[120px] overflow-auto rounded-[14px] border border-border bg-surface p-5 font-mono text-sm text-foreground'>
+          <pre className='min-h-[120px] overflow-auto rounded-2xl border border-border bg-surface p-5 font-mono text-sm text-foreground'>
             {output}
           </pre>
         </div>

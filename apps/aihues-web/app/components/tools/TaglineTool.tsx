@@ -62,22 +62,22 @@ export default function TaglineTool({ locale }: TaglineToolProps) {
       <div className='space-y-4'>
         <div className='grid gap-4 sm:grid-cols-2'>
           <div>
-            <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+            <label className='mb-2 block text-sm font-semibold text-foreground'>
               {t(locale, 'tool.tagline.product')}
             </label>
             <input
-              className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+              className='h-12 w-full rounded-lg border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
               onChange={(e) => setProduct(e.target.value)}
               type='text'
               value={product}
             />
           </div>
           <div>
-            <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+            <label className='mb-2 block text-sm font-semibold text-foreground'>
               {t(locale, 'tool.tagline.category')}
             </label>
             <input
-              className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+              className='h-12 w-full rounded-lg border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
               onChange={(e) => setCategory(e.target.value)}
               placeholder='SaaS, coffee, fitness...'
               type='text'
@@ -87,14 +87,14 @@ export default function TaglineTool({ locale }: TaglineToolProps) {
         </div>
 
         <div>
-          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+          <label className='mb-2 block text-sm font-semibold text-foreground'>
             {t(locale, 'tool.tagline.tone')}
           </label>
           <div className='flex flex-wrap gap-2'>
             {tones.map((t) => (
               <button
                 key={t.key}
-                className={`rounded-[10px] border px-4 py-2 text-sm font-medium transition-all ${
+                className={`rounded-lg border px-4 py-2 text-sm font-medium transition-all ${
                   tone === t.key
                     ? 'border-accent bg-accent text-white'
                     : 'border-border bg-surface text-foreground hover:border-accent'
@@ -111,7 +111,7 @@ export default function TaglineTool({ locale }: TaglineToolProps) {
         {error && <p className='text-sm text-red-500'>{error}</p>}
 
         <button
-          className={`rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          className={`rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
           disabled={loading}
           onClick={generate}
           type='button'
@@ -127,7 +127,7 @@ export default function TaglineTool({ locale }: TaglineToolProps) {
             {results.map((r, i) => (
               <div
                 key={i}
-                className='flex items-center justify-between rounded-[14px] border border-border bg-surface p-4'
+                className='flex items-center justify-between rounded-2xl border border-border bg-surface p-4'
               >
                 <p className='text-sm text-foreground'>{r}</p>
                 <button

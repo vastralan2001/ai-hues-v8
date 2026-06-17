@@ -55,55 +55,55 @@ export default function MetaTagTool({ locale }: MetaTagToolProps) {
 
       <div className='flex flex-col gap-4'>
         <div>
-          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+          <label className='mb-2 block text-sm font-semibold text-foreground'>
             {t(locale, 'tool.meta.pageTitle')}
           </label>
           <input
-            className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+            className='h-12 w-full rounded-lg border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
             onChange={(e) => setTitle(e.target.value)}
             type='text'
             value={title}
           />
         </div>
         <div>
-          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+          <label className='mb-2 block text-sm font-semibold text-foreground'>
             {t(locale, 'tool.meta.description')}
           </label>
           <input
-            className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+            className='h-12 w-full rounded-lg border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
             onChange={(e) => setDescription(e.target.value)}
             type='text'
             value={description}
           />
         </div>
         <div>
-          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+          <label className='mb-2 block text-sm font-semibold text-foreground'>
             {t(locale, 'tool.meta.keywords')}
           </label>
           <input
-            className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+            className='h-12 w-full rounded-lg border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
             onChange={(e) => setKeywords(e.target.value)}
             type='text'
             value={keywords}
           />
         </div>
         <div>
-          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+          <label className='mb-2 block text-sm font-semibold text-foreground'>
             {t(locale, 'tool.meta.author')}
           </label>
           <input
-            className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+            className='h-12 w-full rounded-lg border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
             onChange={(e) => setAuthor(e.target.value)}
             type='text'
             value={author}
           />
         </div>
         <div>
-          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+          <label className='mb-2 block text-sm font-semibold text-foreground'>
             {t(locale, 'tool.meta.image')}
           </label>
           <input
-            className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+            className='h-12 w-full rounded-lg border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
             onChange={(e) => setImage(e.target.value)}
             type='text'
             value={image}
@@ -112,7 +112,7 @@ export default function MetaTagTool({ locale }: MetaTagToolProps) {
       </div>
 
       <button
-        className='mt-5 rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light disabled:opacity-50'
+        className='mt-5 rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light disabled:opacity-50'
         disabled={loading}
         onClick={handleGenerate}
         type='button'
@@ -121,7 +121,7 @@ export default function MetaTagTool({ locale }: MetaTagToolProps) {
       </button>
 
       {error && (
-        <div className='mt-4 rounded-[10px] border border-red-300 bg-red-50 p-3 text-sm text-red-600'>
+        <div className='mt-4 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-600'>
           {error}
         </div>
       )}
@@ -140,7 +140,7 @@ export default function MetaTagTool({ locale }: MetaTagToolProps) {
               {t(locale, 'tool.wordCount.copy')}
             </button>
           </div>
-          <pre className='min-h-[120px] overflow-auto rounded-[14px] border border-border bg-surface p-5 font-mono text-sm text-foreground'>
+          <pre className='min-h-[120px] overflow-auto rounded-2xl border border-border bg-surface p-5 font-mono text-sm text-foreground'>
             {output}
           </pre>
         </div>

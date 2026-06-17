@@ -86,7 +86,7 @@ export default function CodeReviewTool({ locale }: CodeReviewToolProps) {
       </p>
 
       {/* Progress bar */}
-      <div className='mb-8 rounded-[14px] border border-border bg-surface p-4'>
+      <div className='mb-8 rounded-2xl border border-border bg-surface p-4'>
         <div className='mb-2 flex items-center justify-between text-sm'>
           <span className='font-semibold text-foreground'>
             {t(locale, 'tool.codeReview.progress')}
@@ -107,7 +107,7 @@ export default function CodeReviewTool({ locale }: CodeReviewToolProps) {
       <div className='flex flex-col gap-6'>
         {CATEGORIES.map((cat) => (
           <div
-            className='rounded-[14px] border border-border bg-surface p-5'
+            className='rounded-2xl border border-border bg-surface p-5'
             key={cat.key}
           >
             <h2 className='mb-4 text-lg font-bold text-foreground'>

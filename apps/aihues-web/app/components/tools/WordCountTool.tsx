@@ -37,7 +37,7 @@ export default function WordCountTool({ locale }: WordCountToolProps) {
   };
 
   return (
-    <div className='mx-auto max-w-[900px] px-6 py-12'>
+    <div className='mx-auto max-w-4xl px-6 py-12'>
       <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
         {t(locale, 'tool.wordCount.title')}
       </h1>
@@ -46,7 +46,7 @@ export default function WordCountTool({ locale }: WordCountToolProps) {
       </p>
 
       <textarea
-        className='h-[320px] w-full resize-none rounded-[14px] border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+        className='h-[320px] w-full resize-none rounded-2xl border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
         data-testid='word-count-input'
         onChange={(e) => setText(e.target.value)}
         placeholder={t(locale, 'tool.wordCount.placeholder')}
@@ -85,14 +85,14 @@ export default function WordCountTool({ locale }: WordCountToolProps) {
 
       <div className='mt-5 flex gap-3'>
         <button
-          className='rounded-[10px] border border-border bg-surface px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
+          className='rounded-lg border border-border bg-surface px-5 py-3 text-sm font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
           onClick={() => setText('')}
           type='button'
         >
           {t(locale, 'tool.wordCount.clear')}
         </button>
         <button
-          className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+          className='rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
           onClick={handleCopy}
           type='button'
         >
@@ -105,7 +105,7 @@ export default function WordCountTool({ locale }: WordCountToolProps) {
 
 function StatCard({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className='rounded-[14px] border border-border bg-surface p-4 text-center transition-colors'>
+    <div className='rounded-2xl border border-border bg-surface p-4 text-center transition-colors'>
       <div className='text-[22px] font-extrabold text-accent'>{value}</div>
       <div className='mt-1 text-[11px] font-semibold uppercase tracking-wider text-secondary'>
         {label}

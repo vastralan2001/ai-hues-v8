@@ -106,7 +106,7 @@ export default function CronParserTool({ locale }: CronParserToolProps) {
   }
 
   return (
-    <div className='mx-auto max-w-[700px] px-6 py-12'>
+    <div className='mx-auto max-w-3xl px-6 py-12'>
       <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
         {t(locale, 'tool.cron.title')}
       </h1>
@@ -116,22 +116,22 @@ export default function CronParserTool({ locale }: CronParserToolProps) {
 
       <div className='space-y-4'>
         <div>
-          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+          <label className='mb-2 block text-sm font-semibold text-foreground'>
             {t(locale, 'tool.cron.input')}
           </label>
           <input
-            className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+            className='h-12 w-full rounded-lg border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleParse()}
             placeholder='0 9 * * 1-5'
             type='text'
             value={input}
           />
-          <p className='mt-1.5 text-xs text-muted'>min hour dom mon dow</p>
+          <p className='mt-2 text-xs text-muted'>min hour dom mon dow</p>
         </div>
 
         <button
-          className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+          className='rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
           onClick={handleParse}
           type='button'
         >
@@ -139,14 +139,14 @@ export default function CronParserTool({ locale }: CronParserToolProps) {
         </button>
 
         {error && (
-          <p className='rounded-[10px] border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'>
+          <p className='rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'>
             {t(locale, 'tool.cron.invalid')}
           </p>
         )}
 
         {result && (
           <div className='space-y-4'>
-            <div className='rounded-[14px] border border-border bg-surface p-5'>
+            <div className='rounded-2xl border border-border bg-surface p-5'>
               <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
                 {t(locale, 'tool.cron.result')}
               </p>
@@ -155,7 +155,7 @@ export default function CronParserTool({ locale }: CronParserToolProps) {
               </p>
             </div>
 
-            <div className='rounded-[14px] border border-border bg-surface p-5'>
+            <div className='rounded-2xl border border-border bg-surface p-5'>
               <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
                 {t(locale, 'tool.cron.nextRuns')}
               </p>

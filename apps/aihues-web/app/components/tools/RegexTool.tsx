@@ -86,7 +86,7 @@ export default function RegexTool({ locale }: RegexToolProps) {
   };
 
   return (
-    <div className='mx-auto max-w-[900px] px-6 py-12'>
+    <div className='mx-auto max-w-4xl px-6 py-12'>
       <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
         {t(locale, 'tool.regex.title')}
       </h1>
@@ -96,11 +96,11 @@ export default function RegexTool({ locale }: RegexToolProps) {
 
       {/* Pattern */}
       <div className='mb-4'>
-        <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+        <label className='mb-2 block text-sm font-semibold text-foreground'>
           {t(locale, 'tool.regex.pattern')}
         </label>
         <input
-          className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 font-mono text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+          className='h-12 w-full rounded-lg border border-border bg-surface px-4 font-mono text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
           onChange={(e) => setPattern(e.target.value)}
           placeholder={t(locale, 'tool.regex.patternPlaceholder')}
           type='text'
@@ -110,13 +110,13 @@ export default function RegexTool({ locale }: RegexToolProps) {
 
       {/* Flags */}
       <div className='mb-4'>
-        <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+        <label className='mb-2 block text-sm font-semibold text-foreground'>
           {t(locale, 'tool.regex.flags')}
         </label>
         <div className='flex flex-wrap gap-3'>
           {FLAG_OPTIONS.map((f) => (
             <label
-              className='flex cursor-pointer items-center gap-1.5 text-sm text-secondary'
+              className='flex cursor-pointer items-center gap-2 text-sm text-secondary'
               key={f.key}
             >
               <input
@@ -133,11 +133,11 @@ export default function RegexTool({ locale }: RegexToolProps) {
 
       {/* Test text */}
       <div className='mb-4'>
-        <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+        <label className='mb-2 block text-sm font-semibold text-foreground'>
           {t(locale, 'tool.regex.testText')}
         </label>
         <textarea
-          className='h-[160px] w-full resize-none rounded-[10px] border border-border bg-surface p-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+          className='h-[160px] w-full resize-none rounded-lg border border-border bg-surface p-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
           onChange={(e) => setText(e.target.value)}
           placeholder={t(locale, 'tool.regex.testTextPlaceholder')}
           value={text}
@@ -145,7 +145,7 @@ export default function RegexTool({ locale }: RegexToolProps) {
       </div>
 
       {error && (
-        <p className='mb-4 rounded-[10px] border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'>
+        <p className='mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'>
           {t(locale, 'tool.regex.error')}: {error}
         </p>
       )}
@@ -170,11 +170,11 @@ export default function RegexTool({ locale }: RegexToolProps) {
             <div className='flex flex-col gap-2'>
               {matches.map((m, i) => (
                 <div
-                  className='rounded-[10px] border border-border bg-surface p-3'
+                  className='rounded-lg border border-border bg-surface p-3'
                   key={i}
                 >
                   <div className='flex items-center gap-2'>
-                    <span className='rounded bg-accent px-1.5 py-0.5 text-[10px] font-bold text-white'>
+                    <span className='rounded bg-accent px-2 py-0.5 text-[10px] font-bold text-white'>
                       #{i + 1}
                     </span>
                     <code className='font-mono text-sm text-accent'>

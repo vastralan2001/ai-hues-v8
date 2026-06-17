@@ -102,7 +102,7 @@ export default function TimestampTool({ locale }: TimestampToolProps) {
     : [];
 
   return (
-    <div className='mx-auto max-w-[900px] px-6 py-12'>
+    <div className='mx-auto max-w-4xl px-6 py-12'>
       <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
         {t(locale, 'tool.timestamp.title')}
       </h1>
@@ -111,7 +111,7 @@ export default function TimestampTool({ locale }: TimestampToolProps) {
       </p>
 
       <input
-        className='h-12 w-full rounded-[14px] border border-border bg-surface px-5 font-mono text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+        className='h-12 w-full rounded-2xl border border-border bg-surface px-5 font-mono text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
         onChange={(e) => setInput(e.target.value)}
         placeholder={t(locale, 'tool.timestamp.placeholder')}
         type='text'
@@ -120,7 +120,7 @@ export default function TimestampTool({ locale }: TimestampToolProps) {
 
       <div className='mt-4 flex gap-3'>
         <button
-          className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+          className='rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
           onClick={handleConvert}
           type='button'
         >
@@ -129,7 +129,7 @@ export default function TimestampTool({ locale }: TimestampToolProps) {
       </div>
 
       {error && (
-        <p className='mt-3 rounded-[10px] border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'>
+        <p className='mt-3 rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'>
           {error}
         </p>
       )}
@@ -138,7 +138,7 @@ export default function TimestampTool({ locale }: TimestampToolProps) {
         <div className='mt-6 flex flex-col gap-3'>
           {statItems.map((item) => (
             <div
-              className='flex items-center justify-between rounded-[10px] border border-border bg-surface px-4 py-3'
+              className='flex items-center justify-between rounded-lg border border-border bg-surface px-4 py-3'
               key={item.label}
             >
               <div>

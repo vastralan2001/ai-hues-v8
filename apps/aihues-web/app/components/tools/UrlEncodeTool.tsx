@@ -40,7 +40,7 @@ export default function UrlEncodeTool({ locale }: UrlEncodeToolProps) {
   };
 
   return (
-    <div className='mx-auto max-w-[900px] px-6 py-12'>
+    <div className='mx-auto max-w-4xl px-6 py-12'>
       <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
         {t(locale, 'tool.urlEncode.title')}
       </h1>
@@ -49,7 +49,7 @@ export default function UrlEncodeTool({ locale }: UrlEncodeToolProps) {
       </p>
 
       <textarea
-        className='h-[200px] w-full resize-none rounded-[14px] border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+        className='h-[200px] w-full resize-none rounded-2xl border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
         onChange={(e) => setInput(e.target.value)}
         placeholder={t(locale, 'tool.urlEncode.placeholder')}
         value={input}
@@ -57,14 +57,14 @@ export default function UrlEncodeTool({ locale }: UrlEncodeToolProps) {
 
       <div className='mt-4 flex flex-wrap items-center gap-3'>
         <button
-          className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+          className='rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
           onClick={handleEncode}
           type='button'
         >
           {t(locale, 'tool.urlEncode.encode')}
         </button>
         <button
-          className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+          className='rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
           onClick={handleDecode}
           type='button'
         >
@@ -73,7 +73,7 @@ export default function UrlEncodeTool({ locale }: UrlEncodeToolProps) {
       </div>
 
       {error && (
-        <p className='mt-3 rounded-[10px] border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'>
+        <p className='mt-3 rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'>
           {error}
         </p>
       )}
@@ -92,7 +92,7 @@ export default function UrlEncodeTool({ locale }: UrlEncodeToolProps) {
               {t(locale, 'tool.wordCount.copy')}
             </button>
           </div>
-          <div className='min-h-[120px] w-full rounded-[14px] border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground'>
+          <div className='min-h-[120px] w-full rounded-2xl border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground'>
             <pre className='whitespace-pre-wrap break-all font-mono text-sm'>
               {output}
             </pre>

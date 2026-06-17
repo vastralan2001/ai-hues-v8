@@ -60,4 +60,5 @@ export const PUBLISHED_TOOL_SLUGS: string[] = [
   'diff-pro',
   'qrcode',
   'chi-squared',
+  'kimi-code',
 ];

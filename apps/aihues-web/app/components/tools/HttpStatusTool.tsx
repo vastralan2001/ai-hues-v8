@@ -136,7 +136,7 @@ export default function HttpStatusTool({ locale }: HttpStatusToolProps) {
   }, [query]);
 
   return (
-    <div className='mx-auto max-w-[900px] px-6 py-12'>
+    <div className='mx-auto max-w-4xl px-6 py-12'>
       <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
         {t(locale, 'tool.httpStatus.title')}
       </h1>
@@ -145,7 +145,7 @@ export default function HttpStatusTool({ locale }: HttpStatusToolProps) {
       </p>
 
       <input
-        className='h-12 w-full rounded-[14px] border border-border bg-surface px-5 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+        className='h-12 w-full rounded-2xl border border-border bg-surface px-5 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
         onChange={(e) => setQuery(e.target.value)}
         placeholder={t(locale, 'tool.httpStatus.search')}
         type='text'
@@ -155,7 +155,7 @@ export default function HttpStatusTool({ locale }: HttpStatusToolProps) {
       <div className='mt-6 flex flex-col gap-2'>
         {filtered.map((status) => (
           <div
-            className={`flex items-start gap-4 rounded-[10px] border border-border p-4 ${getStatusBg(status.code)}`}
+            className={`flex items-start gap-4 rounded-lg border border-border p-4 ${getStatusBg(status.code)}`}
             key={status.code}
           >
             <span

@@ -82,14 +82,14 @@ export default function FaqTool({ locale }: FaqToolProps) {
         {pairs.map((pair) => (
           <div
             key={pair.id}
-            className='rounded-[14px] border border-border bg-surface p-4 space-y-3'
+            className='rounded-2xl border border-border bg-surface p-4 space-y-3'
           >
             <div>
-              <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+              <label className='mb-2 block text-sm font-semibold text-foreground'>
                 {t(locale, 'tool.faq.question')}
               </label>
               <input
-                className='h-11 w-full rounded-[10px] border border-border bg-white dark:bg-gray-900 px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+                className='h-12 w-full rounded-lg border border-border bg-white dark:bg-gray-900 px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
                 onChange={(e) =>
                   updatePair(pair.id, 'question', e.target.value)
                 }
@@ -98,11 +98,11 @@ export default function FaqTool({ locale }: FaqToolProps) {
               />
             </div>
             <div>
-              <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+              <label className='mb-2 block text-sm font-semibold text-foreground'>
                 {t(locale, 'tool.faq.answer')}
               </label>
               <textarea
-                className='h-[100px] w-full resize-none rounded-[10px] border border-border bg-white dark:bg-gray-900 px-4 py-3 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+                className='h-[100px] w-full resize-none rounded-lg border border-border bg-white dark:bg-gray-900 px-4 py-3 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
                 onChange={(e) => updatePair(pair.id, 'answer', e.target.value)}
                 value={pair.answer}
               />
@@ -120,7 +120,7 @@ export default function FaqTool({ locale }: FaqToolProps) {
         ))}
 
         <button
-          className='rounded-[10px] border border-border bg-surface px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
+          className='rounded-lg border border-border bg-surface px-5 py-3 text-sm font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
           onClick={addPair}
           type='button'
         >
@@ -131,7 +131,7 @@ export default function FaqTool({ locale }: FaqToolProps) {
           {(['html', 'jsonld'] as const).map((f) => (
             <button
               key={f}
-              className={`rounded-[10px] border px-4 py-2 text-sm font-medium transition-all ${
+              className={`rounded-lg border px-4 py-2 text-sm font-medium transition-all ${
                 format === f
                   ? 'border-accent bg-accent text-white'
                   : 'border-border bg-surface text-foreground hover:border-accent'
@@ -149,7 +149,7 @@ export default function FaqTool({ locale }: FaqToolProps) {
         {error && <p className='text-sm text-red-500'>{error}</p>}
 
         <button
-          className={`rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          className={`rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
           disabled={loading}
           onClick={generate}
           type='button'
@@ -173,7 +173,7 @@ export default function FaqTool({ locale }: FaqToolProps) {
                   : t(locale, 'tool.wordCount.copy')}
               </button>
             </div>
-            <div className='min-h-[120px] w-full rounded-[14px] border border-border bg-surface p-5'>
+            <div className='min-h-[120px] w-full rounded-2xl border border-border bg-surface p-5'>
               <pre className='whitespace-pre-wrap break-all font-mono text-sm text-foreground'>
                 {result}
               </pre>

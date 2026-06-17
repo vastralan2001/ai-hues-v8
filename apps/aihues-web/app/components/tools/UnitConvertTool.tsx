@@ -96,7 +96,7 @@ export default function UnitConvertTool({ locale }: UnitConvertToolProps) {
       <div className='mb-6 flex gap-2'>
         {(['length', 'weight', 'temperature'] as UnitType[]).map((type) => (
           <button
-            className={`rounded-[10px] px-4 py-2 text-sm font-semibold transition-colors ${
+            className={`rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${
               unitType === type
                 ? 'bg-accent text-white'
                 : 'border border-border bg-surface text-foreground hover:border-accent'
@@ -113,22 +113,22 @@ export default function UnitConvertTool({ locale }: UnitConvertToolProps) {
       {/* Value + From/To */}
       <div className='mb-4 flex flex-wrap items-center gap-3'>
         <div>
-          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+          <label className='mb-2 block text-sm font-semibold text-foreground'>
             {t(locale, 'tool.unit.value')}
           </label>
           <input
-            className='h-11 w-32 rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground focus:border-accent focus:outline-none'
+            className='h-12 w-32 rounded-lg border border-border bg-surface px-4 text-sm text-foreground focus:border-accent focus:outline-none'
             onChange={(e) => setValue(Number(e.target.value))}
             type='number'
             value={value}
           />
         </div>
         <div>
-          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+          <label className='mb-2 block text-sm font-semibold text-foreground'>
             {t(locale, 'tool.unit.from')}
           </label>
           <select
-            className='h-11 rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground focus:border-accent focus:outline-none'
+            className='h-12 rounded-lg border border-border bg-surface px-4 text-sm text-foreground focus:border-accent focus:outline-none'
             onChange={(e) => setFromUnit(e.target.value)}
             value={fromUnit}
           >
@@ -147,11 +147,11 @@ export default function UnitConvertTool({ locale }: UnitConvertToolProps) {
           ⇄ {t(locale, 'tool.unit.swap')}
         </button>
         <div>
-          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+          <label className='mb-2 block text-sm font-semibold text-foreground'>
             {t(locale, 'tool.unit.to')}
           </label>
           <select
-            className='h-11 rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground focus:border-accent focus:outline-none'
+            className='h-12 rounded-lg border border-border bg-surface px-4 text-sm text-foreground focus:border-accent focus:outline-none'
             onChange={(e) => setToUnit(e.target.value)}
             value={toUnit}
           >
@@ -165,7 +165,7 @@ export default function UnitConvertTool({ locale }: UnitConvertToolProps) {
       </div>
 
       {/* Result */}
-      <div className='rounded-[14px] border border-border bg-surface p-5 text-center'>
+      <div className='rounded-2xl border border-border bg-surface p-5 text-center'>
         <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
           {t(locale, 'tool.unit.result')}
         </p>

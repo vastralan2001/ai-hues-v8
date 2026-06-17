@@ -29,7 +29,7 @@ export default function AboutPage() {
           </h2>
           <ul className='list-disc space-y-2 pl-5'>
             <li>
-              <strong>57+ interactive tools</strong> — from JSON formatters to
+              <strong>58+ interactive tools</strong> — from JSON formatters to
               AI copy generators, all free to use.
             </li>
             <li>

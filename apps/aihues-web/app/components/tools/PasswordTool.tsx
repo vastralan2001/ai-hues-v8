@@ -85,7 +85,7 @@ export default function PasswordTool({ locale }: PasswordToolProps) {
       </p>
 
       {/* Options */}
-      <div className='mb-6 grid gap-4 rounded-[14px] border border-border bg-surface p-5 sm:grid-cols-2'>
+      <div className='mb-6 grid gap-4 rounded-2xl border border-border bg-surface p-5 sm:grid-cols-2'>
         <label className='flex items-center gap-3 text-sm text-foreground'>
           <span>{t(locale, 'tool.password.length')}</span>
           <input
@@ -136,7 +136,7 @@ export default function PasswordTool({ locale }: PasswordToolProps) {
       </div>
 
       <button
-        className='rounded-[10px] bg-accent px-6 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+        className='rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
         onClick={handleGenerate}
         type='button'
       >
@@ -145,12 +145,12 @@ export default function PasswordTool({ locale }: PasswordToolProps) {
 
       {password && (
         <div className='mt-6'>
-          <div className='flex items-center gap-3 rounded-[14px] border border-border bg-surface px-5 py-4'>
+          <div className='flex items-center gap-3 rounded-2xl border border-border bg-surface px-5 py-4'>
             <code className='flex-1 break-all font-mono text-lg text-foreground'>
               {password}
             </code>
             <button
-              className='rounded-[8px] border border-border bg-bg px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
+              className='rounded-[8px] border border-border bg-bg px-3 py-2 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
               onClick={handleCopy}
               type='button'
             >

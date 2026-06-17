@@ -45,7 +45,7 @@ export default async function ToolsPage({
   const totalLabel =
     tools.length > 0
       ? `${tools.length}${nextPageToken ? '+' : ''} tools covering development, writing, growth, and productivity`
-      : '57+ tools covering development, writing, growth, and productivity';
+      : '58+ tools covering development, writing, growth, and productivity';
 
   return (
     <PageShell variant='tools'>

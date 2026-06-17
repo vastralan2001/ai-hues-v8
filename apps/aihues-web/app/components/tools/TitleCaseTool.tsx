@@ -98,7 +98,7 @@ export default function TitleCaseTool({ locale }: TitleCaseToolProps) {
   };
 
   return (
-    <div className='mx-auto max-w-[900px] px-6 py-12'>
+    <div className='mx-auto max-w-4xl px-6 py-12'>
       <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
         {t(locale, 'tool.titleCase.title')}
       </h1>
@@ -107,7 +107,7 @@ export default function TitleCaseTool({ locale }: TitleCaseToolProps) {
       </p>
 
       <textarea
-        className='h-[200px] w-full resize-none rounded-[14px] border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+        className='h-[200px] w-full resize-none rounded-2xl border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
         onChange={(e) => setInput(e.target.value)}
         placeholder={t(locale, 'tool.titleCase.placeholder')}
         value={input}
@@ -116,7 +116,7 @@ export default function TitleCaseTool({ locale }: TitleCaseToolProps) {
       <div className='mt-4 flex flex-wrap gap-2'>
         {CASE_BUTTONS.map((btn) => (
           <button
-            className='rounded-[10px] border border-border bg-surface px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
+            className='rounded-lg border border-border bg-surface px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
             key={btn.key}
             onClick={() => handleConvert(btn.key)}
             type='button'
@@ -140,7 +140,7 @@ export default function TitleCaseTool({ locale }: TitleCaseToolProps) {
               {t(locale, 'tool.wordCount.copy')}
             </button>
           </div>
-          <div className='min-h-[120px] w-full rounded-[14px] border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground'>
+          <div className='min-h-[120px] w-full rounded-2xl border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground'>
             {output}
           </div>
         </div>

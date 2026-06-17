@@ -62,11 +62,11 @@ export default function GitCommitTool({ locale }: GitCommitToolProps) {
       <div className='flex flex-col gap-4'>
         {/* Type */}
         <div>
-          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+          <label className='mb-2 block text-sm font-semibold text-foreground'>
             {t(locale, 'tool.gitCommit.type')}
           </label>
           <select
-            className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground focus:border-accent focus:outline-none'
+            className='h-12 w-full rounded-lg border border-border bg-surface px-4 text-sm text-foreground focus:border-accent focus:outline-none'
             onChange={(e) => setType(e.target.value)}
             value={type}
           >
@@ -80,11 +80,11 @@ export default function GitCommitTool({ locale }: GitCommitToolProps) {
 
         {/* Scope */}
         <div>
-          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+          <label className='mb-2 block text-sm font-semibold text-foreground'>
             {t(locale, 'tool.gitCommit.scope')}
           </label>
           <input
-            className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+            className='h-12 w-full rounded-lg border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
             onChange={(e) => setScope(e.target.value)}
             placeholder='e.g. auth, api, ui'
             type='text'
@@ -94,11 +94,11 @@ export default function GitCommitTool({ locale }: GitCommitToolProps) {
 
         {/* Description */}
         <div>
-          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+          <label className='mb-2 block text-sm font-semibold text-foreground'>
             {t(locale, 'tool.gitCommit.description')}
           </label>
           <input
-            className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+            className='h-12 w-full rounded-lg border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
             onChange={(e) => setDescription(e.target.value)}
             placeholder='Short description of the change'
             type='text'
@@ -108,11 +108,11 @@ export default function GitCommitTool({ locale }: GitCommitToolProps) {
 
         {/* Body */}
         <div>
-          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+          <label className='mb-2 block text-sm font-semibold text-foreground'>
             {t(locale, 'tool.gitCommit.body')}
           </label>
           <textarea
-            className='h-[100px] w-full resize-none rounded-[10px] border border-border bg-surface p-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+            className='h-[100px] w-full resize-none rounded-lg border border-border bg-surface p-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
             onChange={(e) => setBody(e.target.value)}
             placeholder='Detailed explanation of the change'
             value={body}
@@ -121,11 +121,11 @@ export default function GitCommitTool({ locale }: GitCommitToolProps) {
 
         {/* Footer */}
         <div>
-          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
+          <label className='mb-2 block text-sm font-semibold text-foreground'>
             {t(locale, 'tool.gitCommit.footer')}
           </label>
           <input
-            className='h-11 w-full rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+            className='h-12 w-full rounded-lg border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
             onChange={(e) => setFooter(e.target.value)}
             placeholder='Closes #123, BREAKING CHANGE: ...'
             type='text'
@@ -135,7 +135,7 @@ export default function GitCommitTool({ locale }: GitCommitToolProps) {
       </div>
 
       <button
-        className='mt-5 rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+        className='mt-5 rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
         onClick={handleGenerate}
         type='button'
       >
@@ -156,7 +156,7 @@ export default function GitCommitTool({ locale }: GitCommitToolProps) {
               {t(locale, 'tool.gitCommit.copy')}
             </button>
           </div>
-          <pre className='min-h-[80px] w-full whitespace-pre-wrap rounded-[14px] border border-border bg-surface p-5 font-mono text-sm text-foreground'>
+          <pre className='min-h-[80px] w-full whitespace-pre-wrap rounded-2xl border border-border bg-surface p-5 font-mono text-sm text-foreground'>
             {output}
           </pre>
         </div>
