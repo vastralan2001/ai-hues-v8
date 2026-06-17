@@ -42,10 +42,20 @@
 - 每次 push 前本地跑 `pnpm check` + `pnpm moon run aihues-web:build`（文档-only 可跳过 build）
 - 遇到权限问题先向用户求助，不继续硬做
 
+## 飞书 PRD 脚本升级
+
+- `scripts/create-feishu-prd.cjs` 已重写：现在直接读 Markdown 文件，走官方 `documents/blocks/convert` 接口转成 Block，再用 `descendant` 接口插入文档。
+- `scripts/read-feishu-prd.cjs` 已修正 block_type 枚举映射，能正确识别 heading/bullet/ordered/quote/divider/code。
+- 最新同步成功的飞书文档：https://moonshot.feishu.cn/docx/GiKqdsblMo40hYxfWZPcwKaPnNp
+- 用法：
+  ```bash
+  FEISHU_APP_ID=xxx FEISHU_APP_SECRET=yyy node scripts/create-feishu-prd.cjs [path/to/prd.md]
+  ```
+
 ## 已知问题
 
 - `master` 分支已改为静态 HTML 架构，与 `feature/design-refresh` 的 Next.js 架构严重分叉，后续合并需要专门规划。
-- 飞书应用创建的文档权限受限，API 设置公开访问返回 field validation failed，暂时通过脚本写入后再手动分享。
+- 飞书文档权限问题已解决：脚本创建文档后自动调用 `drive/v1/permissions/{token}/public?type=docx` 设置为组织内可编辑。
 
 ## 续接建议
 

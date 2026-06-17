@@ -1,11 +1,15 @@
 /**
- * Read Feishu docx content and print as plain text / markdown-ish format.
- * Usage: node scripts/read-feishu-prd.cjs
+ * Read Feishu docx content and print as Markdown-ish text.
+ *
+ * Usage:
+ *   FEISHU_APP_ID=xxx FEISHU_APP_SECRET=yyy node scripts/read-feishu-prd.cjs [doc_token]
+ *
+ * Defaults to DOC_TOKEN env var, or Uh70w2Wd7i1xoRkjgy9cPk17nib.
  */
 
 const FEISHU_APP_ID = process.env.FEISHU_APP_ID;
 const FEISHU_APP_SECRET = process.env.FEISHU_APP_SECRET;
-const DOC_TOKEN = process.env.FEISHU_DOC_TOKEN || 'Uh70w2Wd7i1xoRkjgy9cPk17nib';
+const DOC_TOKEN = process.argv[2] || process.env.FEISHU_DOC_TOKEN || 'Uh70w2Wd7i1xoRkjgy9cPk17nib';
 
 if (!FEISHU_APP_ID || !FEISHU_APP_SECRET) {
   console.error('Please set FEISHU_APP_ID and FEISHU_APP_SECRET');
@@ -17,7 +21,7 @@ async function getToken() {
     'https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal',
     {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
       body: JSON.stringify({ app_id: FEISHU_APP_ID, app_secret: FEISHU_APP_SECRET }),
     }
   );
@@ -51,35 +55,95 @@ function extractText(elements) {
     .join('');
 }
 
+// Official Feishu docx block_type enum.
+// See: https://open.feishu.cn/document/server-docs/docs/docs/docx-v1/data-structure/block
+const BLOCK_NAMES = {
+  1: 'page',
+  2: 'text',
+  3: 'heading1',
+  4: 'heading2',
+  5: 'heading3',
+  6: 'heading4',
+  7: 'heading5',
+  8: 'heading6',
+  9: 'heading7',
+  10: 'heading8',
+  11: 'heading9',
+  12: 'bullet',
+  13: 'ordered',
+  14: 'code',
+  15: 'quote',
+  16: 'equation',
+  17: 'todo',
+  18: 'bitable',
+  19: 'callout',
+  20: 'chat_card',
+  21: 'uml_diagram',
+  22: 'divider',
+  23: 'file',
+  24: 'grid',
+  25: 'grid_column',
+  26: 'iframe',
+  27: 'image',
+  28: 'isv',
+  29: 'mindnote',
+  30: 'sheet',
+  31: 'table',
+  32: 'table_cell',
+  33: 'view',
+  34: 'quote_container',
+};
+
+const HEADING_PREFIXES = {
+  3: '# ',
+  4: '## ',
+  5: '### ',
+  6: '#### ',
+  7: '##### ',
+  8: '###### ',
+  9: '####### ',
+  10: '######## ',
+  11: '######### ',
+};
+
 function blockToText(block) {
   const bt = block.block_type;
+  const name = BLOCK_NAMES[bt] || 'unknown';
+  const payload = block[name];
+
   switch (bt) {
     case 1:
-      return `[PAGE] ${extractText(block.page?.elements)}`;
-    case 2:
-      return extractText(block.text?.elements);
+      return `[PAGE] ${extractText(payload?.elements)}`;
     case 3:
-      return `# ${extractText(block.heading1?.elements)}`;
     case 4:
-      return `## ${extractText(block.heading2?.elements)}`;
     case 5:
-      return `### ${extractText(block.heading3?.elements)}`;
     case 6:
-      return `- ${extractText(block.bullet?.elements)}`;
     case 7:
-      return `1. ${extractText(block.ordered?.elements)}`;
+    case 8:
+    case 9:
+    case 10:
     case 11:
-      return '---';
+      return `${HEADING_PREFIXES[bt]}${extractText(payload?.elements)}`;
+    case 2:
+      return extractText(payload?.elements);
     case 12:
-      return `> ${extractText(block.quote?.elements)}`;
+      return `- ${extractText(payload?.elements)}`;
+    case 13:
+      return `1. ${extractText(payload?.elements)}`;
     case 14:
-      return `[CODE] ${extractText(block.code?.elements)}`;
+      return `\`\`\`\n${extractText(payload?.elements)}\n\`\`\``;
+    case 15:
+      return `> ${extractText(payload?.elements)}`;
+    case 17:
+      return `- [${payload?.done ? 'x' : ' '}] ${extractText(payload?.elements)}`;
     case 22:
-      return `[TABLE]`;
+      return '---';
+    case 31:
+      return '[TABLE]';
     case 32:
-      return `[CELL] ${extractText(block.table_cell?.elements)}`;
+      return `[CELL] ${extractText(payload?.elements)}`;
     default:
-      return `[BLOCK type=${bt}]`;
+      return `[BLOCK type=${bt} ${name}]`;
   }
 }
 
