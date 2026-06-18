@@ -72,6 +72,10 @@ function AgentChatDialog({
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [limits, setLimits] = useState<{
+    rate?: number;
+    tokens?: number;
+  }>({});
   const scrollRef = useRef<HTMLDivElement>(null);
   const sentPendingRef = useRef(false);
 
@@ -95,15 +99,27 @@ function AgentChatDialog({
             enableLlm: true,
           }),
         });
+        const rateRemaining = res.headers.get('x-ratelimit-remaining');
+        const tokenRemaining = res.headers.get('x-tokenbudget-remaining');
+        setLimits({
+          rate: rateRemaining ? Number(rateRemaining) : undefined,
+          tokens: tokenRemaining ? Number(tokenRemaining) : undefined,
+        });
+
         const data = await res.json().catch(() => null);
 
         if (!res.ok || !data?.message) {
+          const isBudgetError =
+            res.status === 429 && data?.error?.includes('budget');
           setMessages((prev) => [
             ...prev,
             {
               role: 'agent',
-              content:
-                locale === 'zh'
+              content: isBudgetError
+                ? locale === 'zh'
+                  ? '今日 token 额度已用完，请明天再试。'
+                  : "Today's token budget is used up. Please try again tomorrow."
+                : locale === 'zh'
                   ? '抱歉，服务暂时不可用，请稍后再试。'
                   : 'Sorry, the service is temporarily unavailable. Please try again later.',
               metadata: { type: 'error' },
@@ -202,23 +218,37 @@ function AgentChatDialog({
       </div>
 
       {/* Input */}
-      <div className='flex items-center gap-2 border-t border-border p-3'>
-        <input
-          type='text'
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder={t('agent.placeholder')}
-          className='flex-1 rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent'
-        />
-        <button
-          onClick={sendMessage}
-          disabled={!input.trim() || loading}
-          className='flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-white transition-opacity hover:opacity-90 disabled:opacity-40'
-          aria-label={t('agent.send')}
-        >
-          <Send className='h-4 w-4' />
-        </button>
+      <div className='border-t border-border p-3'>
+        <div className='flex items-center gap-2'>
+          <input
+            type='text'
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder={t('agent.placeholder')}
+            className='flex-1 rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent'
+          />
+          <button
+            onClick={sendMessage}
+            disabled={!input.trim() || loading}
+            className='flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-white transition-opacity hover:opacity-90 disabled:opacity-40'
+            aria-label={t('agent.send')}
+          >
+            <Send className='h-4 w-4' />
+          </button>
+        </div>
+        {(limits.rate !== undefined || limits.tokens !== undefined) && (
+          <div className='mt-1.5 flex gap-3 text-[11px] text-muted'>
+            <span>
+              {locale === 'zh' ? '剩余请求' : 'Requests left'}:{' '}
+              {limits.rate ?? '-'}
+            </span>
+            <span>
+              {locale === 'zh' ? '剩余 token' : 'Tokens left'}:{' '}
+              {limits.tokens ?? '-'}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );
