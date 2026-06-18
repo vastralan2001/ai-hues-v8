@@ -160,7 +160,7 @@ function AgentChatDialog({
     return (
       <button
         onClick={() => setOpen(true)}
-        className='fixed bottom-6 right-6 z-[150] flex h-12 w-12 items-center justify-center rounded-full bg-foreground text-white shadow-lg transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent'
+        className='fixed bottom-6 right-6 z-[150] flex h-12 w-12 items-center justify-center rounded-full bg-accent text-white shadow-lg transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent'
         aria-label={t('agent.open')}
       >
         <Sparkles className='h-5 w-5' />
@@ -171,7 +171,7 @@ function AgentChatDialog({
   return (
     <div className='fixed bottom-6 right-6 z-[150] flex w-[92vw] max-w-[420px] flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-xl'>
       {/* Header */}
-      <div className='flex items-center justify-between border-b border-border bg-foreground px-4 py-3'>
+      <div className='flex items-center justify-between border-b border-border bg-accent px-4 py-3'>
         <div className='flex items-center gap-2 text-white'>
           <Bot className='h-5 w-5' />
           <span className='font-semibold'>{t('agent.title')}</span>
@@ -194,7 +194,7 @@ function AgentChatDialog({
           <MessageBubble key={idx} message={m} locale={locale} />
         ))}
         {loading && (
-          <div className='flex items-center gap-2 self-start rounded-xl bg-muted/50 px-3 py-2 text-sm text-muted'>
+          <div className='flex items-center gap-2 self-start rounded-xl bg-muted/50 px-3 py-2 text-sm text-accent'>
             <Loader2 className='h-4 w-4 animate-spin' />
             {locale === 'zh' ? '思考中…' : 'Thinking…'}
           </div>
@@ -214,7 +214,7 @@ function AgentChatDialog({
         <button
           onClick={sendMessage}
           disabled={!input.trim() || loading}
-          className='flex h-9 w-9 items-center justify-center rounded-lg bg-foreground text-white transition-opacity hover:opacity-90 disabled:opacity-40'
+          className='flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-white transition-opacity hover:opacity-90 disabled:opacity-40'
           aria-label={t('agent.send')}
         >
           <Send className='h-4 w-4' />
@@ -299,7 +299,7 @@ function MessageBubble({
       <div
         className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
           isUser
-            ? 'bg-foreground text-white'
+            ? 'bg-accent text-white'
             : 'border border-border bg-white text-foreground'
         }`}
       >
