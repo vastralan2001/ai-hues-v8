@@ -728,6 +728,9 @@ export const dict: Record<Locale, Record<string, string>> = {
     // footer
     'footer.product': 'Product',
     'footer.games': 'Games',
+    'footer.dailyFortune': 'Daily Fortune',
+    'footer.luckySlots': 'Lucky Slots',
+    'footer.hoopsChallenge': 'Hoops Challenge',
     'footer.company': 'Company',
     'footer.about': 'About',
     'footer.terms': 'Terms',
@@ -1194,6 +1197,9 @@ export const dict: Record<Locale, Record<string, string>> = {
     // footer
     'footer.product': '产品',
     'footer.games': '游戏',
+    'footer.dailyFortune': '每日运势',
+    'footer.luckySlots': '幸运老虎机',
+    'footer.hoopsChallenge': '投篮挑战',
     'footer.company': '公司',
     'footer.about': '关于',
     'footer.terms': '条款',

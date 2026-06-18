@@ -179,9 +179,18 @@ export function SiteFooter({
               <FooterColumn
                 heading={t(locale, 'footer.games')}
                 links={[
-                  [t(locale, 'game.daily'), gameDetailHref('daily-luck')],
-                  [t(locale, 'game.popular'), gameDetailHref('slot-machine')],
-                  [t(locale, 'game.hoops'), gameDetailHref('basketball')],
+                  [
+                    t(locale, 'footer.dailyFortune'),
+                    gameDetailHref('daily-luck'),
+                  ],
+                  [
+                    t(locale, 'footer.luckySlots'),
+                    gameDetailHref('slot-machine'),
+                  ],
+                  [
+                    t(locale, 'footer.hoopsChallenge'),
+                    gameDetailHref('basketball'),
+                  ],
                 ]}
               />
               <FooterColumn
@@ -230,7 +239,7 @@ export function SiteFooter({
               <div className='grid gap-2'>
                 {[
                   { href: toolsHref, labelKey: 'nav.tools' },
-                  { href: '#categories', labelKey: 'categories.title' },
+                  { href: toolsHref, labelKey: 'categories.title' },
                   { href: wishlistHref, labelKey: 'nav.wishlist' },
                   { href: showcaseHref, labelKey: 'nav.showcase' },
                 ].map(({ href, labelKey }) => (
@@ -254,15 +263,15 @@ export function SiteFooter({
                 {[
                   {
                     href: gameDetailHref('daily-luck'),
-                    labelKey: 'game.daily',
+                    labelKey: 'footer.dailyFortune',
                   },
                   {
                     href: gameDetailHref('slot-machine'),
-                    labelKey: 'game.popular',
+                    labelKey: 'footer.luckySlots',
                   },
                   {
                     href: gameDetailHref('basketball'),
-                    labelKey: 'game.hoops',
+                    labelKey: 'footer.hoopsChallenge',
                   },
                 ].map(({ href, labelKey }) => (
                   <Link
