@@ -13,7 +13,7 @@ import Link from 'next/link';
 import { Bot, X, Send, Sparkles, Wrench, Loader2 } from 'lucide-react';
 
 import { useI18n } from '@/lib/i18n';
-import type { AgentMessage, RecommendedTool } from '@/lib/agent/types';
+import type { AgentMessage } from '@/lib/agent/types';
 
 interface AgentChatContextValue {
   open: boolean;
@@ -224,6 +224,65 @@ function AgentChatDialog({
   );
 }
 
+function renderMarkdownLike(content: string): React.ReactNode {
+  // Very small, safe renderer for LLM output: bold + markdown links.
+  const parts: React.ReactNode[] = [];
+  let key = 0;
+
+  const tokens: Array<{
+    type: 'text' | 'bold' | 'link';
+    value: string;
+    href?: string;
+  }> = [];
+  let lastIndex = 0;
+  const combinedRegex = /(\*\*[^*]+\*\*)|(\[[^\]]+\]\([^)]+\))/g;
+  let match: RegExpExecArray | null;
+
+  while ((match = combinedRegex.exec(content)) !== null) {
+    if (match.index > lastIndex) {
+      tokens.push({
+        type: 'text',
+        value: content.slice(lastIndex, match.index),
+      });
+    }
+    const token = match[0];
+    if (token.startsWith('**')) {
+      tokens.push({ type: 'bold', value: token.slice(2, -2) });
+    } else {
+      const linkMatch = /\[([^\]]+)\]\(([^)]+)\)/.exec(token);
+      if (linkMatch) {
+        tokens.push({ type: 'link', value: linkMatch[1], href: linkMatch[2] });
+      } else {
+        tokens.push({ type: 'text', value: token });
+      }
+    }
+    lastIndex = combinedRegex.lastIndex;
+  }
+  if (lastIndex < content.length) {
+    tokens.push({ type: 'text', value: content.slice(lastIndex) });
+  }
+
+  for (const token of tokens) {
+    if (token.type === 'text') {
+      parts.push(<span key={key++}>{token.value}</span>);
+    } else if (token.type === 'bold') {
+      parts.push(<strong key={key++}>{token.value}</strong>);
+    } else if (token.type === 'link' && token.href) {
+      parts.push(
+        <Link
+          key={key++}
+          href={token.href}
+          className='text-accent underline underline-offset-2 hover:opacity-80'
+        >
+          {token.value}
+        </Link>
+      );
+    }
+  }
+
+  return parts;
+}
+
 function MessageBubble({
   message,
   locale,
@@ -233,8 +292,7 @@ function MessageBubble({
 }) {
   const isUser = message.role === 'user';
   const metadata = message.metadata;
-  const tools =
-    (metadata?.tools ?? metadata?.toolCall) ? ([] as RecommendedTool[]) : [];
+  const tools = metadata?.tools ?? [];
 
   return (
     <div className={`flex w-full ${isUser ? 'justify-end' : 'justify-start'}`}>
@@ -245,7 +303,9 @@ function MessageBubble({
             : 'border border-border bg-white text-foreground'
         }`}
       >
-        <div className='whitespace-pre-wrap'>{message.content}</div>
+        <div className='whitespace-pre-wrap'>
+          {renderMarkdownLike(message.content)}
+        </div>
 
         {metadata?.toolCall && (
           <div className='mt-3 rounded-lg bg-muted/50 p-2 text-xs'>
