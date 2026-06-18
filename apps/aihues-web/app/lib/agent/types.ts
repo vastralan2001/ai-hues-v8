@@ -10,6 +10,12 @@ export interface AgentMessageMetadata {
   type: 'text' | 'tools' | 'tool_result' | 'error';
   tools?: RecommendedTool[];
   toolCall?: ToolCallPayload;
+  usageSummary?: {
+    calls: number;
+    totalTokens: number;
+    usd: number;
+    cny: number;
+  };
 }
 
 export interface RecommendedTool {

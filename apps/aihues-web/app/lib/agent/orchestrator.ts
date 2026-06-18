@@ -274,27 +274,43 @@ function detectContentIntent(
   return null;
 }
 
-/* ── Call LLM via existing API pattern ── */
-async function callLlm(
+export interface LlmUsage {
+  prompt_tokens: number;
+  completion_tokens: number;
+  total_tokens: number;
+}
+
+interface LlmResponse {
+  content: string | null;
+  usage?: LlmUsage;
+}
+
+/* ── Raw LLM call with usage tracking ── */
+async function callLlmRaw(
   messages: Array<{ role: string; content: string }>,
-  temperature = 0.7
-): Promise<string | null> {
+  temperature = 0.7,
+  maxTokens = 2000,
+  responseFormat?: { type: 'json_object' }
+): Promise<LlmResponse> {
   const config = getLlmConfig();
-  if (!config) return null;
+  if (!config) return { content: null };
 
   try {
+    const body: Record<string, unknown> = {
+      model: config.model,
+      messages,
+      temperature,
+      max_tokens: maxTokens,
+    };
+    if (responseFormat) body.response_format = responseFormat;
+
     const res = await fetch(config.url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${config.key}`,
       },
-      body: JSON.stringify({
-        model: config.model,
-        messages,
-        temperature,
-        max_tokens: 2000,
-      }),
+      body: JSON.stringify(body),
     });
 
     if (!res.ok) {
@@ -303,17 +319,258 @@ async function callLlm(
         `[Agent LLM] API error: ${res.status} ${res.statusText}`,
         errText.slice(0, 500)
       );
-      return null;
+      return { content: null };
     }
 
     const data = (await res.json()) as {
       choices?: Array<{ message?: { content?: string } }>;
+      usage?: LlmUsage;
     };
-    return data.choices?.[0]?.message?.content?.trim() || null;
+    return {
+      content: data.choices?.[0]?.message?.content?.trim() || null,
+      usage: data.usage,
+    };
   } catch (err) {
     console.error('[Agent LLM] Network error:', err);
-    return null;
+    return { content: null };
   }
+}
+
+/* ── Intent detection via LLM (JSON mode) ── */
+const WRITING_TOOL_SCHEMAS: Array<{
+  tool: string;
+  description: string;
+  params: Record<string, string>;
+}> = [
+  {
+    tool: 'humanize',
+    description: 'Make AI-generated text sound more natural',
+    params: { text: 'The text to humanize' },
+  },
+  {
+    tool: 'ad-copy',
+    description: 'Write ad copy for a product',
+    params: {
+      product: 'Product name/description',
+      audience: 'Target audience (optional)',
+    },
+  },
+  {
+    tool: 'blog-outline',
+    description: 'Generate a blog post outline',
+    params: { topic: 'Blog topic', audience: 'Target audience (optional)' },
+  },
+  {
+    tool: 'seo-title',
+    description: 'Generate SEO-friendly titles',
+    params: { keyword: 'Target keyword', topic: 'Topic (optional)' },
+  },
+  {
+    tool: 'x-post',
+    description: 'Write an X/Twitter post',
+    params: {
+      topic: 'Post topic',
+      tone: 'Tone, e.g. professional, casual (optional)',
+    },
+  },
+  {
+    tool: 'linkedin',
+    description: 'Write a LinkedIn post',
+    params: { topic: 'Post topic', tone: 'Tone (optional)' },
+  },
+  {
+    tool: 'cold-email',
+    description: 'Write a cold outreach email',
+    params: {
+      recipient: 'Recipient description',
+      product: 'Product/service',
+      purpose: 'Purpose (optional)',
+    },
+  },
+  {
+    tool: 'tagline',
+    description: 'Write a brand tagline or slogan',
+    params: {
+      brand: 'Brand or product name',
+      benefit: 'Key benefit (optional)',
+    },
+  },
+  {
+    tool: 'newsletter',
+    description: 'Write a newsletter issue',
+    params: { topic: 'Newsletter topic', audience: 'Audience (optional)' },
+  },
+  {
+    tool: 'tldr',
+    description: 'Summarize a long text',
+    params: { text: 'Long text to summarize' },
+  },
+  {
+    tool: 'video-title',
+    description: 'Generate video titles',
+    params: {
+      topic: 'Video topic',
+      style: 'Style, e.g. tutorial, listicle (optional)',
+    },
+  },
+  {
+    tool: 'yt-script',
+    description: 'Write a YouTube video script',
+    params: { topic: 'Video topic', duration: 'Target duration (optional)' },
+  },
+  {
+    tool: 'meta',
+    description: 'Generate meta title/description',
+    params: { topic: 'Page topic', keyword: 'Target keyword (optional)' },
+  },
+  {
+    tool: 'faq',
+    description: 'Generate FAQ Q&A pairs',
+    params: {
+      product: 'Product/service name',
+      questions: 'Specific questions (optional)',
+    },
+  },
+  {
+    tool: 'changelog',
+    description: 'Write a product changelog',
+    params: { version: 'Version (optional)', changes: 'List of changes' },
+  },
+  {
+    tool: 'pr-desc',
+    description: 'Write a pull request description',
+    params: { changes: 'List of changes' },
+  },
+  {
+    tool: 'lp-hero',
+    description: 'Write landing page hero copy',
+    params: { product: 'Product name', benefit: 'Key benefit (optional)' },
+  },
+  {
+    tool: 'code-explain',
+    description: 'Explain a piece of code',
+    params: {
+      code: 'Code snippet',
+      language: 'Programming language (optional)',
+    },
+  },
+  {
+    tool: 'pseudo',
+    description: 'Convert code to pseudocode',
+    params: { code: 'Code snippet' },
+  },
+  {
+    tool: 'alt-text',
+    description: 'Write image alt text',
+    params: { description: 'Image description or context' },
+  },
+  {
+    tool: 'push',
+    description: 'Write push notification copy',
+    params: {
+      product: 'Product/app name',
+      scenario: 'Scenario, e.g. new feature (optional)',
+    },
+  },
+  {
+    tool: 'docs',
+    description: 'Write technical documentation',
+    params: {
+      product: 'Product/feature name',
+      params: 'Key parameters (optional)',
+    },
+  },
+];
+
+function buildIntentSystemPrompt(locale: string): string {
+  const isZh = locale === 'zh';
+  const toolList = WRITING_TOOL_SCHEMAS.map((t) => {
+    const params = Object.entries(t.params)
+      .map(([k, desc]) => `    - ${k}: ${desc}`)
+      .join('\n');
+    return `- ${t.tool}: ${t.description}\n${params}`;
+  }).join('\n\n');
+
+  return isZh
+    ? `你是 AIHues Agent 的意图识别模块。请判断用户最后一条消息是想直接生成内容，还是只想咨询/推荐工具。
+
+可用的 AI 写作工具及其参数：
+${toolList}
+
+请严格按以下 JSON 格式回复，不要输出任何其他内容：
+{
+  "intent": "generate" | "recommend" | "none",
+  "tool": "工具 slug（intent 为 generate 时必填）",
+  "inputs": { "参数名": "从用户消息中提取的值" },
+  "reason": "简短判断理由"
+}
+
+规则：
+- 如果用户明确要求写/生成/改写/优化某类内容，intent 填 generate，并选择最匹配的工具。
+- 如果用户只是问“有没有/推荐一个 XXX 工具”，intent 填 recommend。
+- 如果与工具无关，intent 填 none。
+- 不要编造用户没有提供的信息；缺失参数可留空字符串或省略。`
+    : `You are the intent classifier for the AIHues Agent. Decide whether the user's last message wants direct content generation or just tool consultation/recommendation.
+
+Available AI writing tools and their parameters:
+${toolList}
+
+Reply with valid JSON only, no extra text:
+{
+  "intent": "generate" | "recommend" | "none",
+  "tool": "tool slug (required when intent is generate)",
+  "inputs": { "paramName": "value extracted from user message" },
+  "reason": "short reason"
+}
+
+Rules:
+- If the user explicitly asks to write/generate/rewrite/optimize content, set intent to "generate" and pick the best tool.
+- If the user asks "do you have/recommend an XXX tool", set intent to "recommend".
+- If unrelated to tools, set intent to "none".
+- Do not invent information the user did not provide; missing params can be empty or omitted.`;
+}
+
+async function detectIntentWithLlm(
+  userText: string,
+  locale: string
+): Promise<{
+  result: { tool: string; inputs: Record<string, string> } | null;
+  usage?: LlmUsage;
+}> {
+  const res = await callLlmRaw(
+    [
+      { role: 'system', content: buildIntentSystemPrompt(locale) },
+      { role: 'user', content: userText },
+    ],
+    0.2,
+    500,
+    { type: 'json_object' }
+  );
+
+  if (!res.content) return { result: null };
+
+  try {
+    const parsed = JSON.parse(res.content) as {
+      intent: string;
+      tool?: string;
+      inputs?: Record<string, string>;
+      reason?: string;
+    };
+    if (
+      parsed.intent === 'generate' &&
+      parsed.tool &&
+      isWritingTool(parsed.tool)
+    ) {
+      console.log('[Agent Intent] LLM detected:', parsed.tool, parsed.reason);
+      return {
+        result: { tool: parsed.tool, inputs: parsed.inputs || {} },
+        usage: res.usage,
+      };
+    }
+  } catch {
+    console.warn('[Agent Intent] Failed to parse LLM JSON:', res.content);
+  }
+  return { result: null, usage: res.usage };
 }
 
 /* ── Main orchestrator ── */
@@ -339,36 +596,83 @@ export async function processAgentMessage(
 
   const userText = lastUserMessage.content;
 
-  // 1. Try to detect direct content generation intent
-  const contentIntent = detectContentIntent(userText);
+  // Track LLM usage across all internal calls for this turn
+  const usageLog: LlmUsage[] = [];
+  const costEstimate: { usd: number; cny: number } = { usd: 0, cny: 0 };
+
+  // Helper to estimate cost (kimi-k2 / gpt-4.1-class pricing)
+  function estimateCost(u: LlmUsage): void {
+    // Approximate blended rate for the current proxy models:
+    // input $2 / 1M tokens, output $8 / 1M tokens (USD)
+    const inputUsd = (u.prompt_tokens / 1_000_000) * 2.0;
+    const outputUsd = (u.completion_tokens / 1_000_000) * 8.0;
+    costEstimate.usd += inputUsd + outputUsd;
+    // USD -> CNY at ~7.25 (approximate)
+    costEstimate.cny = costEstimate.usd * 7.25;
+  }
+
+  function logUsage(label: string, u?: LlmUsage): void {
+    if (!u) return;
+    usageLog.push(u);
+    estimateCost(u);
+    console.log(
+      `[Agent Usage] ${label}: prompt=${u.prompt_tokens}, completion=${u.completion_tokens}, total=${u.total_tokens}, accumulatedUSD=$${costEstimate.usd.toFixed(6)}`
+    );
+  }
+
+  // 1. Detect direct content generation intent
+  //    Prefer LLM structured classification; fall back to regex if LLM fails or is disabled.
+  let contentIntent: { tool: string; inputs: Record<string, string> } | null =
+    null;
+  const config = getLlmConfig();
+  if (config && enableLlm) {
+    const intentRes = await detectIntentWithLlm(userText, locale);
+    if (intentRes.usage) logUsage('intent_detection', intentRes.usage);
+    if (intentRes.result) contentIntent = intentRes.result;
+  }
+  if (!contentIntent) {
+    contentIntent = detectContentIntent(userText);
+  }
+
   if (contentIntent && isWritingTool(contentIntent.tool)) {
-    const config = getLlmConfig();
-    if (config) {
+    if (config && enableLlm) {
       // Call existing ai-generate logic via buildPrompt
       const prompt = buildPrompt(
         contentIntent.tool,
         locale,
         contentIntent.inputs
       );
-      const llmResult = await callLlm(
+      const llmResult = await callLlmRaw(
         [
           { role: 'system', content: prompt.system },
           { role: 'user', content: prompt.user },
         ],
-        0.7
+        0.7,
+        2000
       );
 
-      if (llmResult) {
+      if (llmResult.usage) logUsage('generation', llmResult.usage);
+
+      if (llmResult.content) {
         return {
           message: {
             role: 'agent',
-            content: llmResult,
+            content: llmResult.content,
             metadata: {
               type: 'tool_result',
               toolCall: {
                 tool: contentIntent.tool,
                 inputs: contentIntent.inputs,
-                result: llmResult,
+                result: llmResult.content,
+              },
+              usageSummary: {
+                calls: usageLog.length,
+                totalTokens: usageLog.reduce(
+                  (sum, u) => sum + u.total_tokens,
+                  0
+                ),
+                usd: costEstimate.usd,
+                cny: costEstimate.cny,
               },
             },
           },
@@ -394,7 +698,6 @@ export async function processAgentMessage(
   const keywordTools = recommendToolsByKeyword(userText, 3);
 
   // 3. Try LLM for general chat + tool recommendation
-  const config = getLlmConfig();
   if (config && enableLlm) {
     const systemPrompt = buildAgentSystemPrompt(locale);
     const toolContext = keywordTools.length
@@ -409,13 +712,14 @@ export async function processAgentMessage(
       })),
     ];
 
-    const llmResponse = await callLlm(llmMessages, 0.7);
+    const llmResponse = await callLlmRaw(llmMessages, 0.7, 2000);
+    if (llmResponse.usage) logUsage('general_chat', llmResponse.usage);
 
-    if (llmResponse) {
+    if (llmResponse.content) {
       return {
         message: {
           role: 'agent',
-          content: llmResponse,
+          content: llmResponse.content,
           metadata: keywordTools.length
             ? { type: 'tools', tools: keywordTools }
             : { type: 'text' },
