@@ -720,9 +720,17 @@ export async function processAgentMessage(
         message: {
           role: 'agent',
           content: llmResponse.content,
-          metadata: keywordTools.length
-            ? { type: 'tools', tools: keywordTools }
-            : { type: 'text' },
+          metadata: {
+            ...(keywordTools.length
+              ? { type: 'tools' as const, tools: keywordTools }
+              : { type: 'text' as const }),
+            usageSummary: {
+              calls: usageLog.length,
+              totalTokens: usageLog.reduce((sum, u) => sum + u.total_tokens, 0),
+              usd: costEstimate.usd,
+              cny: costEstimate.cny,
+            },
+          },
         },
         suggestedTools: keywordTools.length ? keywordTools : undefined,
       };
