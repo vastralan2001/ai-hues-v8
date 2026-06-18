@@ -224,6 +224,16 @@ function AgentChatDialog({
   );
 }
 
+function isSafeHref(href: string): boolean {
+  // Allow absolute web URLs, mailto, and internal relative paths.
+  // Reject javascript:, data:, blob:, etc. to prevent XSS via LLM-generated links.
+  return (
+    /^https?:\/\//i.test(href) ||
+    /^mailto:/i.test(href) ||
+    (href.startsWith('/') && !href.startsWith('//'))
+  );
+}
+
 function renderMarkdownLike(content: string): React.ReactNode {
   // Very small, safe renderer for LLM output: bold + markdown links.
   const parts: React.ReactNode[] = [];
@@ -267,7 +277,7 @@ function renderMarkdownLike(content: string): React.ReactNode {
       parts.push(<span key={key++}>{token.value}</span>);
     } else if (token.type === 'bold') {
       parts.push(<strong key={key++}>{token.value}</strong>);
-    } else if (token.type === 'link' && token.href) {
+    } else if (token.type === 'link' && token.href && isSafeHref(token.href)) {
       parts.push(
         <Link
           key={key++}
