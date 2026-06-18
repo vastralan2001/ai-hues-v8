@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { Search } from 'lucide-react';
 
+import { useAgentChat } from '@/components/AgentChat';
+
 interface HeroSearchProps {
   searchPlaceholder: string;
   askAILabel: string;
@@ -13,6 +15,7 @@ export default function HeroSearch({
   askAILabel,
 }: HeroSearchProps) {
   const [query, setQuery] = useState('');
+  const { openWithMessage } = useAgentChat();
 
   return (
     <form action='/tools' className='mx-auto w-full max-w-[620px]' method='get'>
@@ -30,7 +33,8 @@ export default function HeroSearch({
         />
         <button
           className='rounded-[14px] bg-accent px-6 py-2.5 text-[14px] font-semibold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-accent-light hover:shadow-md active:translate-y-0'
-          type='submit'
+          type='button'
+          onClick={() => openWithMessage(query)}
         >
           {askAILabel}
         </button>

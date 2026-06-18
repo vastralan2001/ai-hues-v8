@@ -737,6 +737,11 @@ export const dict: Record<Locale, Record<string, string>> = {
     'footer.privacy': 'Privacy',
     'footer.contact': 'Contact',
     'footer.copyright': '© 2026 AIHues · Find your AI vibe · Built on Kimi',
+    'agent.title': 'HuesBot',
+    'agent.open': 'Open AI assistant',
+    'agent.close': 'Close',
+    'agent.send': 'Send',
+    'agent.placeholder': "Ask anything, e.g. 'help me write an SEO title'",
     'footer.tagline': 'Find your AI vibe. 58 tools + 3 games that feel human.',
 
     // playbooks
@@ -1206,6 +1211,11 @@ export const dict: Record<Locale, Record<string, string>> = {
     'footer.privacy': '隐私',
     'footer.contact': '联系',
     'footer.copyright': '© 2026 AIHues · 找到你的 AI vibe · 基于 Kimi 构建',
+    'agent.title': 'HuesBot',
+    'agent.open': '打开 AI 助手',
+    'agent.close': '关闭',
+    'agent.send': '发送',
+    'agent.placeholder': "随便问，比如 '帮我写一个 SEO 标题'",
     'footer.tagline': '找到你的 AI vibe。58 个工具 + 3 款游戏，自然流畅。',
 
     // playbooks
