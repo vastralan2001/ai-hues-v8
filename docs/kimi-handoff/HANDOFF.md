@@ -113,14 +113,17 @@
   - Newsletter 成功文案去掉了虚假承诺
   - Pricing 页面清理遗留 migration 文案
   - 页脚增加 Privacy 和 Contact（mailto）
-- **生成报告**：`docs/pre-launch-readiness-2026-06-17.md`
+  - 工具目录 NEW badge 去重，只保留 `kimi-code`
+- **浏览器截图评估**：9 个页面 × 桌面/移动端共 18 张截图，保存在 `screenshots/eval-2026-06-17/`。
+- **生成报告**：`docs/pre-launch-readiness-2026-06-17.md`（含 Newsletter A/B/C/D 方案）。
 - **验证**：`pnpm check` + `pnpm moon run aihues-web:build` 全绿（180 页静态生成）。
 
 ## 明天验收重点
 
 1. 查看 `docs/pre-launch-readiness-2026-06-17.md`。
-2. 在 `docs/ai-writing-evaluation-2026-06-17-v2.md` 里填写人工评估。
-3. 决定：是否保留 Newsletter 表单 / Pricing 页面 / 评论评测功能。
+2. 查看 `screenshots/eval-2026-06-17/` 里的页面截图。
+3. 在 `docs/ai-writing-evaluation-2026-06-17-v2.md` 里填写人工评估。
+4. 决定：Newsletter 选 A/B/C/D 哪条路；Pricing 是否保留或加 "Coming soon"。
 
 ## 续接建议
 
