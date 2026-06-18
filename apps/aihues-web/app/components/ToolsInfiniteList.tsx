@@ -26,22 +26,8 @@ const CATEGORY_META: Record<string, { icon: string; label: string }> = {
   'ai-writing': { icon: '', label: 'AI Text Tools' },
 };
 
-const NEW_TOOL_SLUGS = new Set([
-  'jwt',
-  'json',
-  'regex',
-  'uuid',
-  'timestamp',
-  'markdown',
-  'qrcode',
-  'word-count',
-  'diff',
-  'fullwidth',
-  'readability',
-  'humanize',
-  'x-post',
-  'seo-title',
-]);
+// Keep this list small — if every card has a NEW badge, the badge loses meaning.
+const NEW_TOOL_SLUGS = new Set(['kimi-code']);
 
 interface ListToolsResponse {
   tools?: CatalogTool[];
