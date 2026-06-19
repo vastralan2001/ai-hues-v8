@@ -4,7 +4,6 @@ import { ToolCardV2 } from '@/components/CatalogCards';
 import HeroSearch from '@/components/HeroSearch';
 import HeroStage from '@/components/HeroStage';
 import { PageShell } from '@/components/SiteChrome';
-import { type SpotlightSlide } from '@/components/SpotlightCarousel';
 import { ToolIcon } from '@/components/ToolIcon';
 import ToolMarquee, { type MarqueeItem } from '@/components/ToolMarquee';
 import Typewriter from '@/components/Typewriter';
@@ -243,24 +242,6 @@ export default async function HomePage() {
   const categories = HOME_CATEGORIES(locale);
   const popularHighlights = POPULAR_HIGHLIGHTS(locale);
 
-  const spotlightSlides: SpotlightSlide[] = popularHighlights.map((item) => {
-    const isGame = item.href.includes('/games/');
-    return {
-      eyebrow: item.kicker,
-      title: item.title,
-      description: item.description,
-      metrics: item.metrics,
-      href: item.href,
-      cta: isGame
-        ? locale === 'zh'
-          ? '开始游戏'
-          : 'Play now'
-        : locale === 'zh'
-          ? '立即使用'
-          : 'Open tool',
-    };
-  });
-
   const marqueeRows: MarqueeItem[][] = [[], [], []];
   tools.forEach((tool, i) => {
     marqueeRows[i % 3].push({ slug: tool.slug, name: tool.name });
@@ -273,7 +254,6 @@ export default async function HomePage() {
             HERO
             ══════════════════════════════════════════════ */}
         <HeroStage
-          slides={spotlightSlides}
           marquee={
             marqueeRows.some((r) => r.length > 0) ? (
               <div className='w-full'>

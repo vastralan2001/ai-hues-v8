@@ -6,6 +6,12 @@ import { useEffect, useRef, useState } from 'react';
 import { Loader2, Search, Sparkles } from 'lucide-react';
 
 import { ToolIcon } from '@/components/ToolIcon';
+import {
+  computePicks,
+  defaultPicks,
+  examplesFromPicks,
+  usageMap,
+} from '@/lib/spotlight-picks';
 
 interface HeroSearchProps {
   searchPlaceholder: string;
@@ -31,6 +37,36 @@ export default function HeroSearch({
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const blurTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Rotating, usage-personalized example queries — one per category.
+  const [examples, setExamples] = useState<string[]>(() =>
+    examplesFromPicks(defaultPicks())
+  );
+  const [phIdx, setPhIdx] = useState(0);
+  const [phShown, setPhShown] = useState(true);
+
+  useEffect(() => {
+    const raf = requestAnimationFrame(() =>
+      setExamples(examplesFromPicks(computePicks(usageMap())))
+    );
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  useEffect(() => {
+    if (examples.length <= 1) return;
+    const reduce =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) return;
+    const iv = setInterval(() => {
+      setPhShown(false);
+      window.setTimeout(() => {
+        setPhIdx((i) => (i + 1) % examples.length);
+        setPhShown(true);
+      }, 320);
+    }, 3000);
+    return () => clearInterval(iv);
+  }, [examples]);
 
   async function runSearch(term: string) {
     const q = term.trim();
@@ -79,22 +115,41 @@ export default function HeroSearch({
           <span className='pl-3 text-muted transition-colors group-focus-within:text-accent'>
             <Search size={18} strokeWidth={2} />
           </span>
-          <input
-            className='min-w-0 flex-1 border-0 bg-transparent px-2 text-[16px] text-foreground outline-none placeholder:text-muted'
-            name='q'
-            placeholder={searchPlaceholder}
-            type='text'
-            autoComplete='off'
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              setOpen(true);
-            }}
-            onFocus={() => setOpen(true)}
-            onBlur={() => {
-              blurTimer.current = setTimeout(() => setOpen(false), 160);
-            }}
-          />
+          <div className='relative min-w-0 flex-1'>
+            <input
+              className='w-full border-0 bg-transparent px-2 text-[16px] text-foreground outline-none'
+              name='q'
+              placeholder=''
+              aria-label={searchPlaceholder}
+              type='text'
+              autoComplete='off'
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setOpen(true);
+              }}
+              onFocus={() => setOpen(true)}
+              onBlur={() => {
+                blurTimer.current = setTimeout(() => setOpen(false), 160);
+              }}
+            />
+            {query === '' && examples.length > 0 ? (
+              <span
+                aria-hidden='true'
+                className='pointer-events-none absolute inset-y-0 left-2 right-2 flex items-center'
+              >
+                <span
+                  className='truncate text-[16px] text-muted'
+                  style={{
+                    opacity: phShown ? 1 : 0,
+                    transition: 'opacity 300ms ease',
+                  }}
+                >
+                  {examples[phIdx]}
+                </span>
+              </span>
+            ) : null}
+          </div>
           <button
             className='inline-flex items-center gap-1.5 rounded-[14px] bg-accent px-6 py-2.5 text-[14px] font-semibold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-accent-light hover:shadow-md active:translate-y-0'
             type='submit'

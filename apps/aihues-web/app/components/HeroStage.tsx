@@ -1,7 +1,13 @@
 'use client';
 
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 
+import {
+  computePicks,
+  defaultPicks,
+  slidesFromPicks,
+  usageMap,
+} from '@/lib/spotlight-picks';
 import SpotlightCarousel, { type SpotlightSlide } from './SpotlightCarousel';
 
 // Full-viewport warm gradient palettes, crossfaded by the active slide.
@@ -9,19 +15,35 @@ const PALETTES = [
   'radial-gradient(140% 130% at 8% -10%, rgba(194,80,46,0.42), transparent 60%), radial-gradient(120% 120% at 100% 110%, rgba(217,140,70,0.30), transparent 60%)',
   'radial-gradient(140% 130% at 100% -10%, rgba(199,150,66,0.46), transparent 60%), radial-gradient(120% 120% at 0% 110%, rgba(194,80,46,0.28), transparent 60%)',
   'radial-gradient(140% 130% at 100% 110%, rgba(176,72,96,0.40), transparent 60%), radial-gradient(120% 120% at 0% -10%, rgba(217,119,87,0.30), transparent 60%)',
+  'radial-gradient(140% 130% at 0% 110%, rgba(120,90,166,0.34), transparent 60%), radial-gradient(120% 120% at 100% -10%, rgba(199,150,66,0.30), transparent 60%)',
+  'radial-gradient(140% 130% at 50% -20%, rgba(217,119,87,0.40), transparent 60%), radial-gradient(120% 120% at 50% 120%, rgba(176,72,96,0.26), transparent 60%)',
 ];
 
 export default function HeroStage({
-  slides,
   marquee,
   children,
 }: {
-  slides: SpotlightSlide[];
   marquee?: ReactNode;
   children: ReactNode;
 }) {
   const [active, setActive] = useState(0);
-  const layers = PALETTES.slice(0, Math.max(1, Math.min(slides.length, 3)));
+  // One spotlight slide per category — deterministic default for SSR, then
+  // re-picked from the user's usage after mount.
+  const [slides, setSlides] = useState<SpotlightSlide[]>(() =>
+    slidesFromPicks(defaultPicks())
+  );
+
+  useEffect(() => {
+    const raf = requestAnimationFrame(() =>
+      setSlides(slidesFromPicks(computePicks(usageMap())))
+    );
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  const layers = PALETTES.slice(
+    0,
+    Math.max(1, Math.min(slides.length, PALETTES.length))
+  );
 
   return (
     <section className='relative isolate flex min-h-[88vh] flex-col justify-center gap-12 overflow-x-clip py-12 lg:min-h-[calc(100vh-76px)]'>
