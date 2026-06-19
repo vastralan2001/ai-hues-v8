@@ -66,6 +66,9 @@ import DiffProTool from '@/components/tools/DiffProTool';
 import QrcodeTool from '@/components/tools/QrcodeTool';
 import ChiSquaredTool from '@/components/tools/ChiSquaredTool';
 import KimiCodeCheatSheetTool from '@/components/tools/KimiCodeCheatSheetTool';
+import CnConvertTool from '@/components/tools/CnConvertTool';
+import TableConvertTool from '@/components/tools/TableConvertTool';
+import CurlToCodeTool from '@/components/tools/CurlToCodeTool';
 
 const SLUG_TO_DICT_KEY: Record<string, string> = {
   'lorem-ipsum': 'lorem',
@@ -159,6 +162,9 @@ const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   qrcode: QrcodeTool,
   'chi-squared': ChiSquaredTool,
   'kimi-code': KimiCodeCheatSheetTool,
+  'cn-convert': CnConvertTool,
+  'table-convert': TableConvertTool,
+  'curl-to-code': CurlToCodeTool,
 };
 
 export function generateStaticParams() {

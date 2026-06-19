@@ -4,6 +4,8 @@ import { useState } from 'react';
 
 import { t, type Locale } from '@/lib/dict';
 
+import { CopyButton, Panel, ToolGrid, ToolHeader, TOOL_WRAP } from './_kit';
+
 interface UrlEncodeToolProps {
   locale: Locale;
 }
@@ -31,74 +33,70 @@ export default function UrlEncodeTool({ locale }: UrlEncodeToolProps) {
     }
   };
 
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(output);
-    } catch {
-      // ignore
-    }
-  };
+  const btn =
+    'h-8 rounded-[8px] px-3 text-[12px] font-semibold transition-colors';
 
   return (
-    <div className='mx-auto max-w-4xl px-6 py-12'>
-      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
-        {t(locale, 'tool.urlEncode.title')}
-      </h1>
-      <p className='mb-6 text-[15px] text-secondary'>
-        {t(locale, 'tool.urlEncode.desc')}
-      </p>
-
-      <textarea
-        className='h-[200px] w-full resize-none rounded-2xl border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
-        onChange={(e) => setInput(e.target.value)}
-        placeholder={t(locale, 'tool.urlEncode.placeholder')}
-        value={input}
+    <div className={TOOL_WRAP}>
+      <ToolHeader
+        eyebrow={t(locale, 'cat.developer')}
+        title={t(locale, 'tool.urlEncode.title')}
+        desc={t(locale, 'tool.urlEncode.desc')}
       />
 
-      <div className='mt-4 flex flex-wrap items-center gap-3'>
-        <button
-          className='rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
-          onClick={handleEncode}
-          type='button'
+      <ToolGrid>
+        <Panel
+          label={locale === 'zh' ? '输入' : 'Input'}
+          action={
+            <div className='flex items-center gap-2'>
+              <button
+                type='button'
+                onClick={handleEncode}
+                className={`${btn} bg-accent text-white hover:bg-accent-light`}
+              >
+                {t(locale, 'tool.urlEncode.encode')}
+              </button>
+              <button
+                type='button'
+                onClick={handleDecode}
+                className={`${btn} border border-border bg-bg text-secondary hover:border-accent hover:text-accent`}
+              >
+                {t(locale, 'tool.urlEncode.decode')}
+              </button>
+            </div>
+          }
         >
-          {t(locale, 'tool.urlEncode.encode')}
-        </button>
-        <button
-          className='rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
-          onClick={handleDecode}
-          type='button'
+          <textarea
+            className='min-h-[300px] w-full flex-1 resize-y border-0 bg-transparent p-4 font-mono text-[14px] leading-relaxed text-foreground outline-none placeholder:text-muted'
+            onChange={(e) => setInput(e.target.value)}
+            placeholder={t(locale, 'tool.urlEncode.placeholder')}
+            value={input}
+            spellCheck={false}
+          />
+          {error ? (
+            <div className='border-t border-border px-4 py-3 text-[13px] font-medium text-[#ff3849]'>
+              {error}
+            </div>
+          ) : null}
+        </Panel>
+
+        <Panel
+          label={t(locale, 'tool.urlEncode.result')}
+          action={output ? <CopyButton text={output} /> : null}
         >
-          {t(locale, 'tool.urlEncode.decode')}
-        </button>
-      </div>
-
-      {error && (
-        <p className='mt-3 rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'>
-          {error}
-        </p>
-      )}
-
-      {output && (
-        <div className='mt-5'>
-          <div className='mb-2 flex items-center justify-between'>
-            <span className='text-sm font-semibold text-foreground'>
-              {t(locale, 'tool.urlEncode.result')}
-            </span>
-            <button
-              className='rounded-[8px] border border-border bg-surface px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
-              onClick={handleCopy}
-              type='button'
-            >
-              {t(locale, 'tool.wordCount.copy')}
-            </button>
+          <div className='min-h-[300px] flex-1 overflow-auto p-4'>
+            {output ? (
+              <pre className='whitespace-pre-wrap break-all font-mono text-[14px] leading-relaxed text-foreground'>
+                {output}
+              </pre>
+            ) : (
+              <span className='text-[13px] text-muted'>
+                {locale === 'zh' ? '结果将显示在这里' : 'Output appears here'}
+              </span>
+            )}
           </div>
-          <div className='min-h-[120px] w-full rounded-2xl border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground'>
-            <pre className='whitespace-pre-wrap break-all font-mono text-sm'>
-              {output}
-            </pre>
-          </div>
-        </div>
-      )}
+        </Panel>
+      </ToolGrid>
     </div>
   );
 }

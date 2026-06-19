@@ -4,6 +4,8 @@ import { useMemo, useState } from 'react';
 
 import { t, type Locale } from '@/lib/dict';
 
+import { Panel, ToolGrid, ToolHeader, TOOL_WRAP } from './_kit';
+
 interface RegexToolProps {
   locale: Locale;
 }
@@ -86,42 +88,35 @@ export default function RegexTool({ locale }: RegexToolProps) {
   };
 
   return (
-    <div className='mx-auto max-w-4xl px-6 py-12'>
-      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
-        {t(locale, 'tool.regex.title')}
-      </h1>
-      <p className='mb-6 text-[15px] text-secondary'>
-        {t(locale, 'tool.regex.desc')}
-      </p>
+    <div className={TOOL_WRAP}>
+      <ToolHeader
+        eyebrow={t(locale, 'cat.developer')}
+        title={t(locale, 'tool.regex.title')}
+        desc={t(locale, 'tool.regex.desc')}
+      />
 
-      {/* Pattern */}
-      <div className='mb-4'>
-        <label className='mb-2 block text-sm font-semibold text-foreground'>
-          {t(locale, 'tool.regex.pattern')}
-        </label>
-        <input
-          className='h-12 w-full rounded-lg border border-border bg-surface px-4 font-mono text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
-          onChange={(e) => setPattern(e.target.value)}
-          placeholder={t(locale, 'tool.regex.patternPlaceholder')}
-          type='text'
-          value={pattern}
-        />
-      </div>
-
-      {/* Flags */}
-      <div className='mb-4'>
-        <label className='mb-2 block text-sm font-semibold text-foreground'>
-          {t(locale, 'tool.regex.flags')}
-        </label>
-        <div className='flex flex-wrap gap-3'>
+      {/* Pattern + flags */}
+      <div className='mb-5 rounded-[16px] border border-border bg-surface p-4'>
+        <div className='flex items-center gap-2 font-mono text-[15px]'>
+          <span className='text-muted'>/</span>
+          <input
+            className='min-w-0 flex-1 border-0 bg-transparent text-foreground outline-none placeholder:text-muted'
+            onChange={(e) => setPattern(e.target.value)}
+            placeholder={t(locale, 'tool.regex.patternPlaceholder')}
+            type='text'
+            value={pattern}
+          />
+          <span className='text-muted'>/{flagStr}</span>
+        </div>
+        <div className='mt-3 flex flex-wrap gap-3 border-t border-border pt-3'>
           {FLAG_OPTIONS.map((f) => (
             <label
-              className='flex cursor-pointer items-center gap-2 text-sm text-secondary'
+              className='flex cursor-pointer items-center gap-1.5 text-[13px] text-secondary'
               key={f.key}
             >
               <input
                 checked={flags.has(f.key)}
-                className='h-4 w-4 accent-accent'
+                className='h-4 w-4 accent-[color:var(--accent)]'
                 onChange={() => toggleFlag(f.key)}
                 type='checkbox'
               />
@@ -129,84 +124,76 @@ export default function RegexTool({ locale }: RegexToolProps) {
             </label>
           ))}
         </div>
+        {error ? (
+          <div className='mt-3 border-t border-border pt-3 text-[13px] font-medium text-[#ff3849]'>
+            {t(locale, 'tool.regex.error')}: {error}
+          </div>
+        ) : null}
       </div>
 
-      {/* Test text */}
-      <div className='mb-4'>
-        <label className='mb-2 block text-sm font-semibold text-foreground'>
-          {t(locale, 'tool.regex.testText')}
-        </label>
-        <textarea
-          className='h-[160px] w-full resize-none rounded-lg border border-border bg-surface p-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
-          onChange={(e) => setText(e.target.value)}
-          placeholder={t(locale, 'tool.regex.testTextPlaceholder')}
-          value={text}
-        />
-      </div>
+      <ToolGrid>
+        <Panel label={t(locale, 'tool.regex.testText')}>
+          <textarea
+            className='min-h-[340px] w-full flex-1 resize-y border-0 bg-transparent p-4 font-mono text-[13px] leading-relaxed text-foreground outline-none placeholder:text-muted'
+            onChange={(e) => setText(e.target.value)}
+            placeholder={t(locale, 'tool.regex.testTextPlaceholder')}
+            value={text}
+            spellCheck={false}
+          />
+        </Panel>
 
-      {error && (
-        <p className='mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'>
-          {t(locale, 'tool.regex.error')}: {error}
-        </p>
-      )}
-
-      {/* Matches */}
-      {pattern && text && !error && (
-        <div className='mt-2'>
-          <h2 className='mb-3 text-sm font-semibold text-foreground'>
-            {t(locale, 'tool.regex.matches')}
-            {matches.length > 0 && (
-              <span className='ml-2 rounded-full bg-accent px-2 py-0.5 text-xs text-white'>
-                {matches.length}
+        <Panel
+          label={t(locale, 'tool.regex.matches')}
+          hint={pattern && text ? String(matches.length) : undefined}
+        >
+          <div className='min-h-[340px] flex-1 overflow-auto p-3'>
+            {!pattern || !text ? (
+              <span className='text-[13px] text-muted'>
+                {locale === 'zh'
+                  ? '输入正则与测试文本'
+                  : 'Enter a pattern and test text'}
               </span>
-            )}
-          </h2>
-
-          {matches.length === 0 ? (
-            <p className='text-sm text-secondary'>
-              {t(locale, 'tool.regex.noMatches')}
-            </p>
-          ) : (
-            <div className='flex flex-col gap-2'>
-              {matches.map((m, i) => (
-                <div
-                  className='rounded-lg border border-border bg-surface p-3'
-                  key={i}
-                >
-                  <div className='flex items-center gap-2'>
-                    <span className='rounded bg-accent px-2 py-0.5 text-[10px] font-bold text-white'>
-                      #{i + 1}
-                    </span>
-                    <code className='font-mono text-sm text-accent'>
-                      {m.match}
-                    </code>
-                    <span className='ml-auto text-xs text-muted'>
-                      index {m.index}
-                    </span>
-                  </div>
-                  {m.groups.length > 0 && (
-                    <div className='mt-2 border-t border-border pt-2'>
-                      <span className='text-xs font-semibold text-secondary'>
-                        {t(locale, 'tool.regex.groups')}:
+            ) : matches.length === 0 ? (
+              <span className='text-[13px] text-secondary'>
+                {t(locale, 'tool.regex.noMatches')}
+              </span>
+            ) : (
+              <div className='flex flex-col gap-2'>
+                {matches.map((m, i) => (
+                  <div
+                    className='rounded-[10px] border border-border bg-bg p-3'
+                    key={i}
+                  >
+                    <div className='flex items-center gap-2'>
+                      <span className='rounded bg-accent px-1.5 py-0.5 text-[10px] font-bold text-white'>
+                        #{i + 1}
                       </span>
-                      <div className='mt-1 flex flex-wrap gap-2'>
+                      <code className='font-mono text-[13px] text-accent'>
+                        {m.match}
+                      </code>
+                      <span className='ml-auto text-[11px] text-muted'>
+                        index {m.index}
+                      </span>
+                    </div>
+                    {m.groups.length > 0 ? (
+                      <div className='mt-2 flex flex-wrap gap-2 border-t border-border pt-2'>
                         {m.groups.map((g, gi) => (
                           <code
-                            className='rounded bg-bg px-2 py-0.5 font-mono text-xs text-foreground'
+                            className='rounded bg-surface px-2 py-0.5 font-mono text-[11px] text-foreground'
                             key={gi}
                           >
                             ${gi + 1}: {g}
                           </code>
                         ))}
                       </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </Panel>
+      </ToolGrid>
     </div>
   );
 }

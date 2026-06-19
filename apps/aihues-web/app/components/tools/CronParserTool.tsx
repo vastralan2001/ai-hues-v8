@@ -4,6 +4,8 @@ import { useState } from 'react';
 
 import { t, type Locale } from '@/lib/dict';
 
+import { Panel, ToolHeader, TOOL_WRAP } from './_kit';
+
 interface CronParserToolProps {
   locale: Locale;
 }
@@ -106,70 +108,63 @@ export default function CronParserTool({ locale }: CronParserToolProps) {
   }
 
   return (
-    <div className='mx-auto max-w-3xl px-6 py-12'>
-      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
-        {t(locale, 'tool.cron.title')}
-      </h1>
-      <p className='mb-6 text-[15px] text-secondary'>
-        {t(locale, 'tool.cron.desc')}
-      </p>
+    <div className={TOOL_WRAP}>
+      <ToolHeader
+        eyebrow={t(locale, 'cat.developer')}
+        title={t(locale, 'tool.cron.title')}
+        desc={t(locale, 'tool.cron.desc')}
+      />
 
-      <div className='space-y-4'>
-        <div>
-          <label className='mb-2 block text-sm font-semibold text-foreground'>
-            {t(locale, 'tool.cron.input')}
-          </label>
+      <div className='mb-5'>
+        <div className='flex flex-wrap items-center gap-3'>
           <input
-            className='h-12 w-full rounded-lg border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+            className='h-12 min-w-0 flex-1 rounded-[12px] border border-border bg-surface px-4 font-mono text-[15px] text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleParse()}
             placeholder='0 9 * * 1-5'
             type='text'
             value={input}
           />
-          <p className='mt-2 text-xs text-muted'>min hour dom mon dow</p>
+          <button
+            className='h-12 shrink-0 rounded-[12px] bg-accent px-5 text-[13px] font-bold uppercase tracking-[0.06em] text-white transition-all hover:bg-accent-light'
+            onClick={handleParse}
+            type='button'
+          >
+            {t(locale, 'tool.cron.parse')}
+          </button>
         </div>
-
-        <button
-          className='rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
-          onClick={handleParse}
-          type='button'
-        >
-          {t(locale, 'tool.cron.parse')}
-        </button>
-
-        {error && (
-          <p className='rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'>
-            {t(locale, 'tool.cron.invalid')}
-          </p>
-        )}
-
-        {result && (
-          <div className='space-y-4'>
-            <div className='rounded-2xl border border-border bg-surface p-5'>
-              <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
-                {t(locale, 'tool.cron.result')}
-              </p>
-              <p className='mt-2 text-lg font-medium text-foreground'>
-                {result.description}
-              </p>
-            </div>
-
-            <div className='rounded-2xl border border-border bg-surface p-5'>
-              <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
-                {t(locale, 'tool.cron.nextRuns')}
-              </p>
-              <ul className='mt-2 space-y-1'>
-                {result.nextRuns.map((run, i) => (
-                  <li key={i} className='text-sm text-foreground'>
-                    {run}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        )}
+        <p className='mt-2 font-mono text-[12px] text-muted'>
+          min&nbsp;&nbsp;hour&nbsp;&nbsp;dom&nbsp;&nbsp;mon&nbsp;&nbsp;dow
+        </p>
       </div>
+
+      {error ? (
+        <div className='rounded-[12px] border border-[rgba(255,56,73,0.3)] bg-[rgba(255,56,73,0.06)] px-4 py-3 text-[13px] font-medium text-[#d12a3a]'>
+          {t(locale, 'tool.cron.invalid')}
+        </div>
+      ) : null}
+
+      {result ? (
+        <div className='grid grid-cols-1 gap-5 lg:grid-cols-2'>
+          <Panel label={t(locale, 'tool.cron.result')}>
+            <p className='p-5 text-[17px] font-medium leading-relaxed text-foreground'>
+              {result.description}
+            </p>
+          </Panel>
+          <Panel label={t(locale, 'tool.cron.nextRuns')}>
+            <ul className='flex flex-col divide-y divide-[color:var(--border)]'>
+              {result.nextRuns.map((run, i) => (
+                <li
+                  key={i}
+                  className='px-5 py-2.5 font-mono text-[14px] text-foreground'
+                >
+                  {run}
+                </li>
+              ))}
+            </ul>
+          </Panel>
+        </div>
+      ) : null}
     </div>
   );
 }

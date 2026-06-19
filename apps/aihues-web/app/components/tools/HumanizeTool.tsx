@@ -45,7 +45,7 @@ export default function HumanizeTool({ locale }: HumanizeToolProps) {
   }
 
   return (
-    <div className='mx-auto max-w-4xl px-6 py-12'>
+    <div className='max-w-[900px] py-10'>
       <h1 className='hero-title mb-4 text-foreground'>
         {t(locale, 'tool.humanize.title')}
       </h1>
@@ -59,7 +59,7 @@ export default function HumanizeTool({ locale }: HumanizeToolProps) {
             {t(locale, 'tool.humanize.input')}
           </label>
           <textarea
-            className='h-[200px] w-full resize-none rounded-lg border border-border bg-surface p-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+            className='h-[200px] w-full resize-none rounded-[10px] border border-border bg-surface p-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
             onChange={(e) => setInput(e.target.value)}
             placeholder={t(locale, 'tool.humanize.placeholder')}
             value={input}
@@ -67,7 +67,7 @@ export default function HumanizeTool({ locale }: HumanizeToolProps) {
         </div>
 
         <button
-          className='inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light disabled:opacity-60'
+          className='inline-flex items-center justify-center gap-2 rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light disabled:opacity-60'
           disabled={loading}
           onClick={handleHumanize}
           type='button'
@@ -83,7 +83,7 @@ export default function HumanizeTool({ locale }: HumanizeToolProps) {
         </button>
 
         {error && (
-          <p className='rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'>
+          <p className='rounded-[10px] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'>
             {error}
           </p>
         )}
@@ -105,7 +105,7 @@ export default function HumanizeTool({ locale }: HumanizeToolProps) {
               </button>
             )}
           </div>
-          <div className='min-h-[120px] w-full rounded-2xl border border-border bg-surface p-5'>
+          <div className='min-h-[120px] w-full rounded-[14px] border border-border bg-surface p-5'>
             {result ? (
               <p className='whitespace-pre-wrap text-[15px] leading-relaxed text-foreground'>
                 {result}

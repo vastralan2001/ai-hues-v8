@@ -74,8 +74,8 @@ export default function ReadabilityTool({ locale }: ReadabilityToolProps) {
   };
 
   return (
-    <div className='mx-auto max-w-4xl px-6 py-12'>
-      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
+    <div className='max-w-[900px] py-10'>
+      <h1 className='mb-2 text-[clamp(28px,3.4vw,40px)] font-extrabold tracking-[-0.02em] text-foreground'>
         {t(locale, 'tool.readability.title')}
       </h1>
       <p className='mb-6 text-[15px] text-secondary'>
@@ -83,14 +83,14 @@ export default function ReadabilityTool({ locale }: ReadabilityToolProps) {
       </p>
 
       <textarea
-        className='h-[200px] w-full resize-none rounded-2xl border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+        className='h-[200px] w-full resize-none rounded-[14px] border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
         onChange={(e) => setText(e.target.value)}
         placeholder={t(locale, 'tool.readability.placeholder')}
         value={text}
       />
 
       <button
-        className='mt-4 rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+        className='mt-4 rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
         onClick={handleAnalyze}
         type='button'
       >
@@ -125,7 +125,7 @@ export default function ReadabilityTool({ locale }: ReadabilityToolProps) {
           />
 
           {/* Rating */}
-          <div className='sm:col-span-2 rounded-2xl border border-border bg-surface p-4 text-center'>
+          <div className='sm:col-span-2 rounded-[14px] border border-border bg-surface p-4 text-center'>
             <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
               {t(locale, 'tool.readability.rating')}
             </p>
@@ -141,7 +141,7 @@ export default function ReadabilityTool({ locale }: ReadabilityToolProps) {
 
 function StatCard({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className='rounded-2xl border border-border bg-surface p-4 text-center'>
+    <div className='rounded-[14px] border border-border bg-surface p-4 text-center'>
       <div className='text-[22px] font-extrabold text-accent'>{value}</div>
       <div className='mt-1 text-[11px] font-semibold uppercase tracking-wider text-secondary'>
         {label}

@@ -1,8 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { t, type Locale } from '@/lib/dict';
+
+import { CopyButton, Panel, ToolGrid, ToolHeader, TOOL_WRAP } from './_kit';
 
 interface ColorToolProps {
   locale: Locale;
@@ -73,156 +75,154 @@ function rgbToHsl(
 }
 
 function parseColor(input: string): ColorResult | null {
-  input = input.trim();
-  const rgb = hexToRgb(input);
-  if (rgb) {
-    const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-    return {
-      hex: `#${rgb.r.toString(16).padStart(2, '0')}${rgb.g.toString(16).padStart(2, '0')}${rgb.b.toString(16).padStart(2, '0')}`,
-      rgb: `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`,
-      hsl: `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`,
-    };
+  const value = input.trim();
+  if (!value) return null;
+  let rgb = hexToRgb(value);
+  if (!rgb) {
+    const rgbMatch = value.match(/rgba?\(\s*(\d+)[,\s]+(\d+)[,\s]+(\d+)/i);
+    if (rgbMatch) {
+      rgb = {
+        r: Math.min(255, parseInt(rgbMatch[1])),
+        g: Math.min(255, parseInt(rgbMatch[2])),
+        b: Math.min(255, parseInt(rgbMatch[3])),
+      };
+    }
   }
-
-  const rgbMatch = input.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-  if (rgbMatch) {
-    const r = parseInt(rgbMatch[1]);
-    const g = parseInt(rgbMatch[2]);
-    const b = parseInt(rgbMatch[3]);
-    const hsl = rgbToHsl(r, g, b);
-    return {
-      hex: `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`,
-      rgb: `rgb(${r}, ${g}, ${b})`,
-      hsl: `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`,
-    };
-  }
-
-  return null;
+  if (!rgb) return null;
+  const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+  const hex = `#${rgb.r.toString(16).padStart(2, '0')}${rgb.g.toString(16).padStart(2, '0')}${rgb.b.toString(16).padStart(2, '0')}`;
+  return {
+    hex,
+    rgb: `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`,
+    hsl: `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`,
+  };
 }
+
+function readableOn(hex: string): string {
+  const rgb = hexToRgb(hex);
+  if (!rgb) return '#1c1917';
+  const lum = (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255;
+  return lum > 0.6 ? '#1c1917' : '#ffffff';
+}
+
+const SAMPLES = [
+  '#c2502e',
+  '#2563eb',
+  '#16a34a',
+  '#7c3aed',
+  '#0891b2',
+  '#1c1917',
+];
 
 export default function ColorTool({ locale }: ColorToolProps) {
-  const [input, setInput] = useState('');
-  const [result, setResult] = useState<ColorResult | null>(null);
-  const [error, setError] = useState('');
+  const zh = locale === 'zh';
+  const [input, setInput] = useState('#c2502e');
 
-  const handleConvert = () => {
-    const parsed = parseColor(input);
-    if (!parsed) {
-      setError('Invalid color format');
-      setResult(null);
-      return;
-    }
-    setError('');
-    setResult(parsed);
-  };
+  const result = useMemo(() => parseColor(input), [input]);
+  const invalid = input.trim().length > 0 && result === null;
+  const pickerValue = result?.hex ?? '#000000';
 
-  const handleCopy = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-    } catch {
-      // ignore
-    }
-  };
+  const rows = result
+    ? [
+        { label: 'HEX', value: result.hex },
+        { label: 'RGB', value: result.rgb },
+        { label: 'HSL', value: result.hsl },
+      ]
+    : [];
 
   return (
-    <div className='mx-auto max-w-[800px] px-6 py-12'>
-      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
-        {t(locale, 'tool.color.title')}
-      </h1>
-      <p className='mb-6 text-[15px] text-secondary'>
-        {t(locale, 'tool.color.desc')}
-      </p>
-
-      <input
-        className='h-12 w-full rounded-2xl border border-border bg-surface px-5 font-mono text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
-        onChange={(e) => setInput(e.target.value)}
-        placeholder={t(locale, 'tool.color.placeholder')}
-        type='text'
-        value={input}
+    <div className={TOOL_WRAP}>
+      <ToolHeader
+        eyebrow={t(locale, 'cat.developer')}
+        title={t(locale, 'tool.color.title')}
+        desc={t(locale, 'tool.color.desc')}
       />
 
-      <div className='mt-4 flex gap-3'>
-        <button
-          className='rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
-          onClick={handleConvert}
-          type='button'
-        >
-          {t(locale, 'tool.color.convert')}
-        </button>
-      </div>
+      <ToolGrid>
+        <Panel label={zh ? '输入' : 'Input'}>
+          <div className='space-y-4 p-4'>
+            <label className='relative block h-[176px] w-full cursor-pointer overflow-hidden rounded-[12px] border border-border'>
+              <span
+                className='absolute inset-0'
+                style={{
+                  background: result ? result.hex : 'var(--color-surface)',
+                }}
+              />
+              {result ? (
+                <span
+                  className='absolute bottom-3 left-4 font-mono text-[15px] font-semibold'
+                  style={{ color: readableOn(result.hex) }}
+                >
+                  {result.hex}
+                </span>
+              ) : null}
+              <input
+                aria-label={zh ? '拾色器' : 'Color picker'}
+                className='absolute inset-0 h-full w-full cursor-pointer opacity-0'
+                onChange={(e) => setInput(e.target.value)}
+                type='color'
+                value={pickerValue}
+              />
+            </label>
 
-      {error && (
-        <p className='mt-3 rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'>
-          {error}
-        </p>
-      )}
-
-      {result && (
-        <div className='mt-6 flex flex-col gap-3'>
-          {/* Preview */}
-          <div className='flex items-center gap-4 rounded-2xl border border-border bg-surface p-4'>
-            <span className='text-sm font-semibold text-foreground'>
-              {t(locale, 'tool.color.preview')}
-            </span>
-            <div
-              className='h-12 w-12 rounded-lg border border-border'
-              style={{ backgroundColor: result.hex }}
+            <input
+              className='h-12 w-full rounded-[12px] border border-border bg-bg px-4 font-mono text-[14px] text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+              onChange={(e) => setInput(e.target.value)}
+              placeholder={t(locale, 'tool.color.placeholder')}
+              type='text'
+              value={input}
             />
-            <span className='font-mono text-sm text-foreground'>
-              {result.hex}
-            </span>
+
+            <div className='flex flex-wrap gap-2'>
+              {SAMPLES.map((c) => (
+                <button
+                  aria-label={c}
+                  className='h-7 w-7 rounded-full border border-border transition-transform hover:scale-110'
+                  key={c}
+                  onClick={() => setInput(c)}
+                  style={{ background: c }}
+                  type='button'
+                />
+              ))}
+            </div>
           </div>
+        </Panel>
 
-          {/* HEX */}
-          <ResultRow
-            label={t(locale, 'tool.color.hex')}
-            onCopy={() => handleCopy(result.hex)}
-            value={result.hex}
-          />
-
-          {/* RGB */}
-          <ResultRow
-            label={t(locale, 'tool.color.rgb')}
-            onCopy={() => handleCopy(result.rgb)}
-            value={result.rgb}
-          />
-
-          {/* HSL */}
-          <ResultRow
-            label={t(locale, 'tool.color.hsl')}
-            onCopy={() => handleCopy(result.hsl)}
-            value={result.hsl}
-          />
-        </div>
-      )}
-    </div>
-  );
-}
-
-function ResultRow({
-  label,
-  value,
-  onCopy,
-}: {
-  label: string;
-  value: string;
-  onCopy: () => void;
-}) {
-  return (
-    <div className='flex items-center justify-between rounded-lg border border-border bg-surface px-4 py-3'>
-      <div>
-        <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
-          {label}
-        </p>
-        <p className='mt-0.5 font-mono text-sm text-foreground'>{value}</p>
-      </div>
-      <button
-        className='ml-4 rounded-[8px] border border-border bg-bg px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
-        onClick={onCopy}
-        type='button'
-      >
-        Copy
-      </button>
+        <Panel label={zh ? '结果' : 'Result'}>
+          {invalid ? (
+            <div className='p-4'>
+              <div className='rounded-[12px] border border-[rgba(255,56,73,0.3)] bg-[rgba(255,56,73,0.06)] px-4 py-3 text-[13px] font-medium text-[#d12a3a]'>
+                {zh ? '无效的颜色格式' : 'Invalid color format'}
+              </div>
+            </div>
+          ) : rows.length > 0 ? (
+            <div className='flex flex-col divide-y divide-[color:var(--border)]'>
+              {rows.map((row) => (
+                <div
+                  className='flex items-center justify-between gap-4 px-4 py-4'
+                  key={row.label}
+                >
+                  <div className='min-w-0'>
+                    <div className='text-[11px] font-bold uppercase tracking-[0.14em] text-secondary'>
+                      {row.label}
+                    </div>
+                    <div className='mt-1 break-all font-mono text-[15px] text-foreground'>
+                      {row.value}
+                    </div>
+                  </div>
+                  <CopyButton text={row.value} />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className='p-4'>
+              <div className='rounded-[12px] border border-dashed border-border px-4 py-12 text-center text-[14px] text-muted'>
+                {zh ? '输入 HEX 或 RGB 颜色值' : 'Enter a HEX or RGB color'}
+              </div>
+            </div>
+          )}
+        </Panel>
+      </ToolGrid>
     </div>
   );
 }

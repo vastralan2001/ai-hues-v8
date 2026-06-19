@@ -1,8 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { t, type Locale } from '@/lib/dict';
+
+import { CopyButton, Panel, ToolGrid, ToolHeader, TOOL_WRAP } from './_kit';
 
 interface Sha256ToolProps {
   locale: Locale;
@@ -19,77 +21,59 @@ async function sha256(text: string): Promise<string> {
 export default function Sha256Tool({ locale }: Sha256ToolProps) {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
-  const [error, setError] = useState('');
+  const seqRef = useRef(0);
 
-  const handleHash = async () => {
-    try {
-      setError('');
-      const hash = await sha256(input);
-      setOutput(hash);
-    } catch {
-      setError('Failed to compute hash');
+  const handleInput = (value: string) => {
+    setInput(value);
+    const seq = ++seqRef.current;
+    if (!value) {
+      setOutput('');
+      return;
     }
-  };
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(output);
-    } catch {
-      // ignore
-    }
+    sha256(value).then((h) => {
+      if (seq === seqRef.current) setOutput(h);
+    });
   };
 
   return (
-    <div className='mx-auto max-w-4xl px-6 py-12'>
-      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
-        {t(locale, 'tool.sha256.title')}
-      </h1>
-      <p className='mb-6 text-[15px] text-secondary'>
-        {t(locale, 'tool.sha256.desc')}
-      </p>
-
-      <textarea
-        className='h-[200px] w-full resize-none rounded-2xl border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
-        onChange={(e) => setInput(e.target.value)}
-        placeholder={t(locale, 'tool.sha256.placeholder')}
-        value={input}
+    <div className={TOOL_WRAP}>
+      <ToolHeader
+        eyebrow={t(locale, 'cat.developer')}
+        title={t(locale, 'tool.sha256.title')}
+        desc={t(locale, 'tool.sha256.desc')}
       />
 
-      <div className='mt-4 flex gap-3'>
-        <button
-          className='rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
-          onClick={handleHash}
-          type='button'
+      <ToolGrid>
+        <Panel label={locale === 'zh' ? '输入' : 'Input'}>
+          <textarea
+            className='min-h-[280px] w-full flex-1 resize-y border-0 bg-transparent p-4 text-[15px] leading-relaxed text-foreground outline-none placeholder:text-muted'
+            onChange={(e) => handleInput(e.target.value)}
+            placeholder={t(locale, 'tool.sha256.placeholder')}
+            value={input}
+            spellCheck={false}
+          />
+        </Panel>
+
+        <Panel
+          label='SHA-256'
+          hint={output ? '256-bit · hex' : undefined}
+          action={output ? <CopyButton text={output} /> : null}
         >
-          {t(locale, 'tool.sha256.hash')}
-        </button>
-      </div>
-
-      {error && (
-        <p className='mt-3 rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'>
-          {error}
-        </p>
-      )}
-
-      {output && (
-        <div className='mt-5'>
-          <div className='mb-2 flex items-center justify-between'>
-            <span className='text-sm font-semibold text-foreground'>
-              {t(locale, 'tool.sha256.result')}
-            </span>
-            <button
-              className='rounded-[8px] border border-border bg-surface px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
-              onClick={handleCopy}
-              type='button'
-            >
-              {t(locale, 'tool.wordCount.copy')}
-            </button>
+          <div className='flex min-h-[280px] flex-1 flex-col p-4'>
+            {output ? (
+              <code className='break-all font-mono text-[15px] leading-relaxed text-accent'>
+                {output}
+              </code>
+            ) : (
+              <span className='text-[13px] text-muted'>
+                {locale === 'zh'
+                  ? '哈希将实时计算并显示在这里'
+                  : 'Hash is computed live as you type'}
+              </span>
+            )}
           </div>
-          <div className='min-h-[80px] w-full break-all rounded-2xl border border-border bg-surface p-5 font-mono text-sm text-foreground'>
-            {output}
-          </div>
-        </div>
-      )}
+        </Panel>
+      </ToolGrid>
     </div>
   );
 }

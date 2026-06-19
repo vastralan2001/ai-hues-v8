@@ -44,7 +44,7 @@ export default function ToolDetailTabs({
   const tabs = TABS.filter((tab) => tab.key === 'tool');
 
   return (
-    <div className='mx-auto max-w-[900px] px-6 py-8'>
+    <div className='mx-auto max-w-[1300px] px-8 py-8'>
       {/* Tool header */}
       {tool && (
         <div className='mb-8 flex items-center gap-4 rounded-[20px] border border-border bg-surface p-4 sm:gap-5 sm:p-6'>

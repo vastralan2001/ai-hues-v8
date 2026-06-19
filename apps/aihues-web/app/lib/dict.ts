@@ -11,6 +11,7 @@ export const dict: Record<Locale, Record<string, string>> = {
     'nav.home': 'Home',
     'nav.tools': 'Tools',
     'nav.games': 'Games',
+    'nav.tests': 'Tests',
     'nav.blog': 'Blog',
     'nav.wishlist': 'Wishlist',
     'nav.ranking': 'Ranking',
@@ -70,8 +71,11 @@ export const dict: Record<Locale, Record<string, string>> = {
     'game.dailyLuckDesc': 'Daily draw for wisdom & Credit rewards',
     'game.slotMachineDesc': '3 free spins daily, win big prizes',
     'game.basketballDesc': '60 seconds to score maximum points',
-    'game.daily': 'DAILY',
-    'game.popular': 'POPULAR',
+    'game.skill': 'Skill',
+    'game.arcade': 'Arcade',
+    'game.fortune': 'Fortune',
+    'game.luck': 'Luck',
+    'game.jump': 'Jump →',
     'game.hoops': 'Hoops',
 
     // credit
@@ -704,6 +708,18 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.qrcode.generate': 'Generate',
     'tool.qrcode.download': 'Download',
 
+    'tool.cnConvert.title': 'Chinese Converter',
+    'tool.cnConvert.desc':
+      'Convert between Simplified and Traditional Chinese in real time, with phrase-level accuracy',
+
+    'tool.tableConvert.title': 'Table Converter',
+    'tool.tableConvert.desc':
+      'Convert CSV or Excel-pasted data into Markdown, HTML, or JSON',
+
+    'tool.curlToCode.title': 'cURL to Code',
+    'tool.curlToCode.desc':
+      'Paste a curl command and convert it to Python, JavaScript, Go, or PHP',
+
     'tool.chiSquared.title': 'Chi-Squared Calculator',
     'tool.chiSquared.desc':
       'Calculate chi-squared statistics for goodness-of-fit tests',
@@ -768,6 +784,7 @@ export const dict: Record<Locale, Record<string, string>> = {
     'nav.home': '首页',
     'nav.tools': '工具',
     'nav.games': '游戏',
+    'nav.tests': '测评',
     'nav.blog': '博客',
     'nav.wishlist': '许愿单',
     'nav.ranking': '排行榜',
@@ -827,8 +844,11 @@ export const dict: Record<Locale, Record<string, string>> = {
     'game.dailyLuckDesc': '每日抽签获取箴言和积分奖励',
     'game.slotMachineDesc': '每日 3 次免费旋转，赢取大奖',
     'game.basketballDesc': '60 秒内获得最高分',
-    'game.daily': '每日',
-    'game.popular': '热门',
+    'game.skill': '技巧',
+    'game.arcade': '街机',
+    'game.fortune': '运势',
+    'game.luck': '幸运',
+    'game.jump': '跳跃 →',
     'game.hoops': '投篮',
 
     // credit
@@ -1457,6 +1477,17 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.qrcode.size': '尺寸',
     'tool.qrcode.generate': '生成',
     'tool.qrcode.download': '下载',
+
+    'tool.cnConvert.title': '简繁转换',
+    'tool.cnConvert.desc': '中文简体与繁体实时互转，支持词组级精准转换',
+
+    'tool.tableConvert.title': '表格转换',
+    'tool.tableConvert.desc':
+      '把 CSV 或从 Excel 复制的表格转成 Markdown、HTML 或 JSON',
+
+    'tool.curlToCode.title': 'cURL 转代码',
+    'tool.curlToCode.desc':
+      '粘贴 curl 命令，转换成 Python、JavaScript、Go 或 PHP 代码',
 
     'tool.chiSquared.title': '卡方检验计算器',
     'tool.chiSquared.desc': '计算拟合优度检验的卡方统计量',

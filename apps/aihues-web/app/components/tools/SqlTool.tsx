@@ -4,6 +4,8 @@ import { useState } from 'react';
 
 import { t, type Locale } from '@/lib/dict';
 
+import { CopyButton, Panel, ToolGrid, ToolHeader, TOOL_WRAP } from './_kit';
+
 interface SqlToolProps {
   locale: Locale;
 }
@@ -120,68 +122,59 @@ function formatSql(sql: string): string {
 export default function SqlTool({ locale }: SqlToolProps) {
   const [input, setInput] = useState('');
   const [result, setResult] = useState('');
-  const [copied, setCopied] = useState(false);
-
   function handleFormat() {
     setResult(formatSql(input));
   }
 
-  function copy() {
-    if (!result) return;
-    navigator.clipboard.writeText(result);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  }
-
   return (
-    <div className='mx-auto max-w-4xl px-6 py-12'>
-      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
-        {t(locale, 'tool.sql.title')}
-      </h1>
-      <p className='mb-6 text-[15px] text-secondary'>
-        {t(locale, 'tool.sql.desc')}
-      </p>
-
-      <textarea
-        className='h-[200px] w-full resize-none rounded-2xl border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
-        onChange={(e) => setInput(e.target.value)}
-        placeholder='select id, name from users where active = 1 order by name'
-        value={input}
+    <div className={TOOL_WRAP}>
+      <ToolHeader
+        eyebrow={t(locale, 'cat.developer')}
+        title={t(locale, 'tool.sql.title')}
+        desc={t(locale, 'tool.sql.desc')}
       />
 
-      <div className='mt-4 flex gap-3'>
-        <button
-          className='rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
-          onClick={handleFormat}
-          type='button'
-        >
-          {t(locale, 'tool.sql.format')}
-        </button>
-      </div>
-
-      {result && (
-        <div className='mt-5'>
-          <div className='mb-2 flex items-center justify-between'>
-            <span className='text-sm font-semibold text-foreground'>
-              {t(locale, 'tool.sql.result')}
-            </span>
+      <ToolGrid>
+        <Panel
+          label={locale === 'zh' ? 'SQL 输入' : 'SQL input'}
+          action={
             <button
-              className='rounded-[8px] border border-border bg-surface px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
-              onClick={copy}
               type='button'
+              onClick={handleFormat}
+              className='h-8 rounded-[8px] bg-accent px-3 text-[12px] font-semibold text-white transition-colors hover:bg-accent-light'
             >
-              {copied
-                ? t(locale, 'tool.copy.copied')
-                : t(locale, 'tool.wordCount.copy')}
+              {t(locale, 'tool.sql.format')}
             </button>
+          }
+        >
+          <textarea
+            className='min-h-[320px] w-full flex-1 resize-y border-0 bg-transparent p-4 font-mono text-[14px] leading-relaxed text-foreground outline-none placeholder:text-muted'
+            onChange={(e) => setInput(e.target.value)}
+            placeholder='select id, name from users where active = 1 order by name'
+            value={input}
+            spellCheck={false}
+          />
+        </Panel>
+
+        <Panel
+          label={t(locale, 'tool.sql.result')}
+          action={result ? <CopyButton text={result} /> : null}
+        >
+          <div className='min-h-[320px] flex-1 overflow-auto p-4'>
+            {result ? (
+              <pre className='whitespace-pre-wrap font-mono text-[14px] leading-relaxed text-foreground'>
+                {result}
+              </pre>
+            ) : (
+              <span className='text-[13px] text-muted'>
+                {locale === 'zh'
+                  ? '格式化结果将显示在这里'
+                  : 'Formatted SQL appears here'}
+              </span>
+            )}
           </div>
-          <div className='min-h-[120px] w-full rounded-2xl border border-border bg-surface p-5'>
-            <pre className='whitespace-pre-wrap font-mono text-sm text-foreground'>
-              {result}
-            </pre>
-          </div>
-        </div>
-      )}
+        </Panel>
+      </ToolGrid>
     </div>
   );
 }

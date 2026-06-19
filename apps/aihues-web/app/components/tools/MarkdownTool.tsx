@@ -4,6 +4,8 @@ import { useMemo, useState } from 'react';
 
 import { t, type Locale } from '@/lib/dict';
 
+import { Panel, ToolGrid, ToolHeader, TOOL_WRAP } from './_kit';
+
 interface MarkdownToolProps {
   locale: Locale;
 }
@@ -89,39 +91,30 @@ export default function MarkdownTool({ locale }: MarkdownToolProps) {
   const preview = useMemo(() => markdownToHtml(input), [input]);
 
   return (
-    <div className='mx-auto max-w-[1100px] px-6 py-12'>
-      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
-        {t(locale, 'tool.markdown.title')}
-      </h1>
-      <p className='mb-6 text-[15px] text-secondary'>
-        {t(locale, 'tool.markdown.desc')}
-      </p>
+    <div className={TOOL_WRAP}>
+      <ToolHeader
+        eyebrow={t(locale, 'cat.developer')}
+        title={t(locale, 'tool.markdown.title')}
+        desc={t(locale, 'tool.markdown.desc')}
+      />
 
-      <div className='grid gap-4 lg:grid-cols-2'>
-        {/* Input */}
-        <div>
-          <label className='mb-2 block text-sm font-semibold text-foreground'>
-            Markdown
-          </label>
+      <ToolGrid>
+        <Panel label='Markdown'>
           <textarea
-            className='h-[500px] w-full resize-none rounded-2xl border border-border bg-surface p-5 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+            className='min-h-[520px] w-full flex-1 resize-y border-0 bg-transparent p-4 font-mono text-[14px] leading-relaxed text-foreground outline-none placeholder:text-muted'
             onChange={(e) => setInput(e.target.value)}
             placeholder={t(locale, 'tool.markdown.placeholder')}
             value={input}
+            spellCheck={false}
           />
-        </div>
-
-        {/* Preview */}
-        <div>
-          <label className='mb-2 block text-sm font-semibold text-foreground'>
-            {t(locale, 'tool.markdown.preview')}
-          </label>
+        </Panel>
+        <Panel label={t(locale, 'tool.markdown.preview')}>
           <div
-            className='h-[500px] overflow-auto rounded-2xl border border-border bg-surface p-5 text-foreground'
+            className='min-h-[520px] flex-1 overflow-auto p-5 text-[15px] text-foreground'
             dangerouslySetInnerHTML={{ __html: preview }}
           />
-        </div>
-      </div>
+        </Panel>
+      </ToolGrid>
     </div>
   );
 }

@@ -49,8 +49,8 @@ export default function LinkedinTool({ locale }: LinkedinToolProps) {
   ];
 
   return (
-    <div className='mx-auto max-w-[800px] px-6 py-12'>
-      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
+    <div className='max-w-[800px] py-10'>
+      <h1 className='mb-2 text-[clamp(28px,3.4vw,40px)] font-extrabold tracking-[-0.02em] text-foreground'>
         {t(locale, 'tool.linkedin.title')}
       </h1>
       <p className='mb-6 text-[15px] text-secondary'>

@@ -28,6 +28,7 @@ function staticHtmlSlugs(subdir: string): string[] {
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  serverExternalPackages: ['@huggingface/transformers'],
   async rewrites() {
     const toolSlugs = staticHtmlSlugs('tools');
     const gameSlugs = staticHtmlSlugs('games');

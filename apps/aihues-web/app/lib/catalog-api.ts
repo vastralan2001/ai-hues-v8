@@ -459,6 +459,19 @@ const LOCAL_FALLBACK_TOOLS: CatalogTool[] = LOCAL_TOOLS.map((t, idx) => ({
 
 const LOCAL_FALLBACK_GAMES: CatalogGame[] = [
   {
+    id: 'doodle-jump',
+    slug: 'doodle-jump',
+    icon: 'J',
+    name: 'Doodle Jump',
+    description: 'Hop ever higher across a starry night sky',
+    status: 'ITEM_STATUS_PUBLISHED',
+    sortOrder: 0,
+    priceTag: 'free',
+    externalUrl: '',
+    tags: [],
+    creditCost: 0,
+  },
+  {
     id: 'daily-luck',
     slug: 'daily-luck',
     icon: 'D',

@@ -1,12 +1,14 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 
+import HeaderBar from '@/components/HeaderBar';
 import { t, type Locale } from '@/lib/dict';
 import {
   gameDetailHref,
   gamesHref,
   homeHref,
   showcaseHref,
+  testsHref,
   toolsHref,
   wishlistHref,
   blogHref,
@@ -18,56 +20,31 @@ type ChromeVariant =
   | 'home'
   | 'tools'
   | 'games'
+  | 'tests'
   | 'wishlist'
   | 'ranking'
   | 'default';
+
+const mainLinks: Array<{ href: string; labelKey: string }> = [
+  { href: homeHref, labelKey: 'nav.home' },
+  { href: toolsHref, labelKey: 'nav.tools' },
+  { href: gamesHref, labelKey: 'nav.games' },
+  { href: testsHref, labelKey: 'nav.tests' },
+  { href: blogHref, labelKey: 'nav.blog' },
+  { href: wishlistHref, labelKey: 'nav.wishlist' },
+];
 
 const headerLinks: Record<
   ChromeVariant,
   Array<{ href: string; labelKey: string }>
 > = {
-  home: [
-    { href: homeHref, labelKey: 'nav.home' },
-    { href: toolsHref, labelKey: 'nav.tools' },
-    { href: gamesHref, labelKey: 'nav.games' },
-    { href: blogHref, labelKey: 'nav.blog' },
-    { href: wishlistHref, labelKey: 'nav.wishlist' },
-  ],
-  tools: [
-    { href: homeHref, labelKey: 'nav.home' },
-    { href: toolsHref, labelKey: 'nav.tools' },
-    { href: gamesHref, labelKey: 'nav.games' },
-    { href: blogHref, labelKey: 'nav.blog' },
-    { href: wishlistHref, labelKey: 'nav.wishlist' },
-  ],
-  games: [
-    { href: homeHref, labelKey: 'nav.home' },
-    { href: toolsHref, labelKey: 'nav.tools' },
-    { href: gamesHref, labelKey: 'nav.games' },
-    { href: blogHref, labelKey: 'nav.blog' },
-    { href: wishlistHref, labelKey: 'nav.wishlist' },
-  ],
-  wishlist: [
-    { href: homeHref, labelKey: 'nav.home' },
-    { href: toolsHref, labelKey: 'nav.tools' },
-    { href: gamesHref, labelKey: 'nav.games' },
-    { href: blogHref, labelKey: 'nav.blog' },
-    { href: wishlistHref, labelKey: 'nav.wishlist' },
-  ],
-  ranking: [
-    { href: homeHref, labelKey: 'nav.home' },
-    { href: toolsHref, labelKey: 'nav.tools' },
-    { href: gamesHref, labelKey: 'nav.games' },
-    { href: blogHref, labelKey: 'nav.blog' },
-    { href: wishlistHref, labelKey: 'nav.wishlist' },
-  ],
-  default: [
-    { href: homeHref, labelKey: 'nav.home' },
-    { href: toolsHref, labelKey: 'nav.tools' },
-    { href: gamesHref, labelKey: 'nav.games' },
-    { href: blogHref, labelKey: 'nav.blog' },
-    { href: wishlistHref, labelKey: 'nav.wishlist' },
-  ],
+  home: mainLinks,
+  tools: mainLinks,
+  games: mainLinks,
+  tests: mainLinks,
+  wishlist: mainLinks,
+  ranking: mainLinks,
+  default: mainLinks,
 };
 
 export function SiteHeader({
@@ -80,11 +57,8 @@ export function SiteHeader({
   const links = headerLinks[variant];
 
   return (
-    <header
-      style={{ backdropFilter: 'blur(16px)' }}
-      className='sticky top-0 z-[100] border-b border-border bg-[rgba(255,255,255,0.92)]'
-    >
-      <div className='mx-auto flex h-[68px] max-w-[1300px] items-center justify-between px-4 md:px-8'>
+    <HeaderBar>
+      <div className='mx-auto flex h-[76px] max-w-[1300px] items-center justify-between px-4 md:px-8'>
         {/* Logo */}
         <Link
           aria-label='AIHues home'
@@ -92,19 +66,21 @@ export function SiteHeader({
           href={homeHref}
         >
           <Logo size={28} />
-          <span className='hidden md:inline'>AIHues</span>
+          <span className='hidden uppercase tracking-[0.12em] md:inline'>
+            AIHues
+          </span>
         </Link>
 
         {/* Nav links — scrollable on mobile */}
         <nav
           aria-label='Primary navigation'
-          className='mx-3 flex flex-1 items-center justify-start gap-4 overflow-x-auto whitespace-nowrap py-2 md:mx-6 md:justify-center md:gap-7'
+          className='mx-3 flex flex-1 items-center justify-start gap-5 overflow-x-auto whitespace-nowrap py-2 md:mx-6 md:justify-center md:gap-9'
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {links.map(({ href, labelKey }) => (
             <Link
               key={labelKey}
-              className='text-[13px] font-medium text-secondary transition-colors duration-150 hover:text-foreground md:text-[14px]'
+              className='text-[13px] font-bold uppercase tracking-[0.14em] text-secondary transition-colors duration-150 hover:text-accent md:text-[15px]'
               href={href}
             >
               {t(locale, labelKey)}
@@ -117,7 +93,7 @@ export function SiteHeader({
           <BookmarkButton />
         </div>
       </div>
-    </header>
+    </HeaderBar>
   );
 }
 

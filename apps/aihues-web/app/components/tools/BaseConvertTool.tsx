@@ -1,8 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { t, type Locale } from '@/lib/dict';
+
+import { CopyButton, Panel, ToolGrid, ToolHeader, TOOL_WRAP } from './_kit';
 
 interface BaseConvertToolProps {
   locale: Locale;
@@ -19,130 +21,114 @@ export default function BaseConvertTool({ locale }: BaseConvertToolProps) {
   const [input, setInput] = useState('');
   const [fromBase, setFromBase] = useState(10);
   const [toBase, setToBase] = useState(16);
-  const [result, setResult] = useState('');
-  const [error, setError] = useState('');
-  const [copied, setCopied] = useState(false);
 
-  function convert() {
-    setError('');
-    setResult('');
-    try {
-      const trimmed = input.trim();
-      if (!trimmed) return;
-      const decimal = parseInt(trimmed, fromBase);
-      if (isNaN(decimal)) {
-        setError('Invalid number for selected base');
-        return;
-      }
-      const base = BASES.find((b) => b.value === toBase);
-      setResult((base?.prefix || '') + decimal.toString(toBase).toUpperCase());
-    } catch {
-      setError('Conversion error');
+  const { result, error, all } = useMemo(() => {
+    const trimmed = input.trim();
+    if (!trimmed)
+      return { result: '', error: '', all: [] as { b: number; v: string }[] };
+    const decimal = parseInt(trimmed, fromBase);
+    if (isNaN(decimal)) {
+      return { result: '', error: 'Invalid number for selected base', all: [] };
     }
-  }
+    const base = BASES.find((b) => b.value === toBase);
+    const result =
+      (base?.prefix || '') + decimal.toString(toBase).toUpperCase();
+    const all = BASES.map((b) => ({
+      b: b.value,
+      v: (b.prefix || '') + decimal.toString(b.value).toUpperCase(),
+    }));
+    return { result, error: '', all };
+  }, [input, fromBase, toBase]);
 
-  function copy() {
-    if (!result) return;
-    navigator.clipboard.writeText(result);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  }
+  const select =
+    'h-11 w-full rounded-[10px] border border-border bg-surface px-3 text-[14px] text-foreground focus:border-accent focus:outline-none';
 
   return (
-    <div className='mx-auto max-w-3xl px-6 py-12'>
-      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
-        {t(locale, 'tool.baseConvert.title')}
-      </h1>
-      <p className='mb-6 text-[15px] text-secondary'>
-        {t(locale, 'tool.baseConvert.desc')}
-      </p>
+    <div className={TOOL_WRAP}>
+      <ToolHeader
+        eyebrow={t(locale, 'cat.developer')}
+        title={t(locale, 'tool.baseConvert.title')}
+        desc={t(locale, 'tool.baseConvert.desc')}
+      />
 
-      <div className='space-y-4'>
-        <div>
-          <label className='mb-2 block text-sm font-semibold text-foreground'>
-            {t(locale, 'tool.baseConvert.input')}
-          </label>
-          <input
-            className='h-12 w-full rounded-lg border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
-            onChange={(e) => setInput(e.target.value)}
-            type='text'
-            value={input}
-          />
-        </div>
-
-        <div className='grid gap-4 sm:grid-cols-2'>
-          <div>
-            <label className='mb-2 block text-sm font-semibold text-foreground'>
-              {t(locale, 'tool.baseConvert.from')}
-            </label>
-            <select
-              className='h-12 w-full rounded-lg border border-border bg-surface px-4 text-sm text-foreground focus:border-accent focus:outline-none'
-              onChange={(e) => setFromBase(parseInt(e.target.value))}
-              value={fromBase}
-            >
-              {BASES.map((b) => (
-                <option key={b.value} value={b.value}>
-                  {b.label} ({b.value})
-                </option>
-              ))}
-            </select>
+      <ToolGrid>
+        <Panel label={t(locale, 'tool.baseConvert.input')}>
+          <div className='space-y-4 p-4'>
+            <input
+              className='h-12 w-full rounded-[10px] border border-border bg-bg px-4 font-mono text-[15px] text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+              onChange={(e) => setInput(e.target.value)}
+              placeholder='e.g. 255'
+              type='text'
+              value={input}
+            />
+            <div className='grid grid-cols-2 gap-3'>
+              <label className='block'>
+                <span className='mb-1.5 block text-[12px] font-semibold uppercase tracking-[0.1em] text-secondary'>
+                  {t(locale, 'tool.baseConvert.from')}
+                </span>
+                <select
+                  className={select}
+                  onChange={(e) => setFromBase(parseInt(e.target.value))}
+                  value={fromBase}
+                >
+                  {BASES.map((b) => (
+                    <option key={b.value} value={b.value}>
+                      {b.label} ({b.value})
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className='block'>
+                <span className='mb-1.5 block text-[12px] font-semibold uppercase tracking-[0.1em] text-secondary'>
+                  {t(locale, 'tool.baseConvert.to')}
+                </span>
+                <select
+                  className={select}
+                  onChange={(e) => setToBase(parseInt(e.target.value))}
+                  value={toBase}
+                >
+                  {BASES.map((b) => (
+                    <option key={b.value} value={b.value}>
+                      {b.label} ({b.value})
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+            {error ? (
+              <p className='text-[13px] font-medium text-[#ff3849]'>{error}</p>
+            ) : null}
           </div>
-          <div>
-            <label className='mb-2 block text-sm font-semibold text-foreground'>
-              {t(locale, 'tool.baseConvert.to')}
-            </label>
-            <select
-              className='h-12 w-full rounded-lg border border-border bg-surface px-4 text-sm text-foreground focus:border-accent focus:outline-none'
-              onChange={(e) => setToBase(parseInt(e.target.value))}
-              value={toBase}
-            >
-              {BASES.map((b) => (
-                <option key={b.value} value={b.value}>
-                  {b.label} ({b.value})
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
+        </Panel>
 
-        <button
-          className='rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
-          onClick={convert}
-          type='button'
+        <Panel
+          label={t(locale, 'tool.baseConvert.result')}
+          action={result ? <CopyButton text={result} /> : null}
         >
-          {t(locale, 'tool.baseConvert.convert')}
-        </button>
-
-        {error && (
-          <p className='rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'>
-            {error}
-          </p>
-        )}
-
-        {result && (
-          <div className='mt-2'>
-            <div className='mb-2 flex items-center justify-between'>
-              <span className='text-sm font-semibold text-foreground'>
-                {t(locale, 'tool.baseConvert.result')}
-              </span>
-              <button
-                className='rounded-[8px] border border-border bg-surface px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
-                onClick={copy}
-                type='button'
-              >
-                {copied
-                  ? t(locale, 'tool.copy.copied')
-                  : t(locale, 'tool.wordCount.copy')}
-              </button>
+          <div className='p-4'>
+            <div className='mb-4 break-all rounded-[10px] bg-bg p-4 font-mono text-[18px] font-bold text-accent'>
+              {result || '—'}
             </div>
-            <div className='min-h-[60px] w-full rounded-2xl border border-border bg-surface p-5'>
-              <pre className='whitespace-pre-wrap break-all font-mono text-sm text-foreground'>
-                {result}
-              </pre>
-            </div>
+            {all.length > 0 ? (
+              <div className='flex flex-col divide-y divide-[color:var(--border)]'>
+                {all.map((a) => (
+                  <div
+                    key={a.b}
+                    className='flex items-center justify-between gap-4 py-2.5'
+                  >
+                    <span className='text-[12px] font-semibold uppercase tracking-[0.1em] text-secondary'>
+                      {BASES.find((b) => b.value === a.b)?.label}
+                    </span>
+                    <code className='break-all font-mono text-[14px] text-foreground'>
+                      {a.v}
+                    </code>
+                  </div>
+                ))}
+              </div>
+            ) : null}
           </div>
-        )}
-      </div>
+        </Panel>
+      </ToolGrid>
     </div>
   );
 }

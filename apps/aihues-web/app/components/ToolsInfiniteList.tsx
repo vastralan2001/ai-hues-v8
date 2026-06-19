@@ -26,9 +26,6 @@ const CATEGORY_META: Record<string, { icon: string; label: string }> = {
   'ai-writing': { icon: '', label: 'AI Text Tools' },
 };
 
-// Keep this list small — if every card has a NEW badge, the badge loses meaning.
-const NEW_TOOL_SLUGS = new Set(['kimi-code']);
-
 interface ListToolsResponse {
   tools?: CatalogTool[];
   nextPageToken?: string;
@@ -172,12 +169,7 @@ export function ToolsInfiniteList({
   );
 
   const renderToolCard = (tool: CatalogTool) => (
-    <ToolCardV2
-      key={tool.id}
-      locale='en'
-      showNew={NEW_TOOL_SLUGS.has(tool.slug)}
-      tool={tool}
-    />
+    <ToolCardV2 key={tool.id} locale='en' tool={tool} />
   );
 
   return (

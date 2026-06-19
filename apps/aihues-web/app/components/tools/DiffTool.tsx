@@ -1,8 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { t, type Locale } from '@/lib/dict';
+
+import { CopyButton, Panel, ToolGrid, ToolHeader, TOOL_WRAP } from './_kit';
 
 interface DiffToolProps {
   locale: Locale;
@@ -32,7 +34,6 @@ function computeDiff(a: string, b: string): DiffLine[] {
       i++;
       j++;
     } else {
-      // Simple heuristic: check if next line in B matches current A
       const nextBMatch = j + 1 < linesB.length && linesA[i] === linesB[j + 1];
       const nextAMatch = i + 1 < linesA.length && linesA[i + 1] === linesB[j];
 
@@ -57,122 +58,87 @@ function computeDiff(a: string, b: string): DiffLine[] {
 export default function DiffTool({ locale }: DiffToolProps) {
   const [textA, setTextA] = useState('');
   const [textB, setTextB] = useState('');
-  const [diff, setDiff] = useState<DiffLine[]>([]);
 
-  const handleCompare = () => {
-    setDiff(computeDiff(textA, textB));
-  };
+  const diff = useMemo(() => {
+    if (!textA && !textB) return [];
+    return computeDiff(textA, textB);
+  }, [textA, textB]);
 
-  const handleCopy = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-    } catch {
-      // ignore
-    }
-  };
+  const added = diff.filter((d) => d.type === 'added').length;
+  const removed = diff.filter((d) => d.type === 'removed').length;
+  const same = diff.filter((d) => d.type === 'same').length;
 
-  const addedLines = diff.filter((d) => d.type === 'added').length;
-  const removedLines = diff.filter((d) => d.type === 'removed').length;
+  const ta =
+    'min-h-[240px] w-full flex-1 resize-y border-0 bg-transparent p-4 font-mono text-[13px] leading-relaxed text-foreground outline-none placeholder:text-muted';
 
   return (
-    <div className='mx-auto max-w-[1100px] px-6 py-12'>
-      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
-        {t(locale, 'tool.diff.title')}
-      </h1>
-      <p className='mb-6 text-[15px] text-secondary'>
-        {t(locale, 'tool.diff.desc')}
-      </p>
+    <div className={TOOL_WRAP}>
+      <ToolHeader
+        eyebrow={t(locale, 'cat.utility')}
+        title={t(locale, 'tool.diff.title')}
+        desc={t(locale, 'tool.diff.desc')}
+      />
 
-      <div className='mb-4 grid gap-4 sm:grid-cols-2'>
-        <div>
-          <label className='mb-2 block text-sm font-semibold text-foreground'>
-            {t(locale, 'tool.diff.textA')}
-          </label>
+      <ToolGrid>
+        <Panel label={t(locale, 'tool.diff.textA')} accent='#ff3849'>
           <textarea
-            className='h-[200px] w-full resize-none rounded-lg border border-border bg-surface p-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+            className={ta}
             onChange={(e) => setTextA(e.target.value)}
             value={textA}
+            spellCheck={false}
           />
-        </div>
-        <div>
-          <label className='mb-2 block text-sm font-semibold text-foreground'>
-            {t(locale, 'tool.diff.textB')}
-          </label>
+        </Panel>
+        <Panel label={t(locale, 'tool.diff.textB')} accent='#16c456'>
           <textarea
-            className='h-[200px] w-full resize-none rounded-lg border border-border bg-surface p-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+            className={ta}
             onChange={(e) => setTextB(e.target.value)}
             value={textB}
+            spellCheck={false}
           />
-        </div>
-      </div>
+        </Panel>
+      </ToolGrid>
 
-      <button
-        className='rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
-        onClick={handleCompare}
-        type='button'
-      >
-        {t(locale, 'tool.diff.compare')}
-      </button>
-
-      {diff.length > 0 && (
-        <div className='mt-6'>
-          <div className='mb-3 flex gap-4 text-xs font-semibold'>
-            <span className='text-secondary'>
-              {t(locale, 'tool.diff.unchanged')}:{' '}
-              {diff.filter((d) => d.type === 'same').length}
-            </span>
-            <span className='text-red-500'>
-              {t(locale, 'tool.diff.removed')}: {removedLines}
-            </span>
-            <span className='text-green-500'>
-              {t(locale, 'tool.diff.added')}: {addedLines}
-            </span>
-          </div>
-
-          <div className='rounded-2xl border border-border bg-surface overflow-hidden'>
-            <div className='max-h-[500px] overflow-auto'>
+      {diff.length > 0 ? (
+        <div className='mt-5'>
+          <Panel
+            label={locale === 'zh' ? '差异' : 'Diff'}
+            hint={`+${added} · -${removed} · =${same}`}
+            action={
+              <CopyButton
+                text={diff
+                  .filter((d) => d.type !== 'removed')
+                  .map((d) => d.text)
+                  .join('\n')}
+                label={`${t(locale, 'tool.diff.copy')} B`}
+              />
+            }
+          >
+            <div className='max-h-[460px] overflow-auto'>
               {diff.map((line, i) => (
                 <div
-                  className={`flex items-start gap-2 px-4 py-2 font-mono text-sm ${
+                  className={`flex items-start gap-2 px-4 py-1 font-mono text-[13px] ${
                     line.type === 'removed'
-                      ? 'bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400'
+                      ? 'bg-[rgba(255,56,73,0.08)] text-[#c4283a]'
                       : line.type === 'added'
-                        ? 'bg-green-50 text-green-700 dark:bg-green-950/30 dark:text-green-400'
+                        ? 'bg-[rgba(22,196,86,0.08)] text-[#138a3e]'
                         : 'text-foreground'
                   }`}
                   key={i}
                 >
-                  <span className='w-6 shrink-0 text-center text-xs text-muted select-none'>
+                  <span className='w-5 shrink-0 select-none text-center text-muted'>
                     {line.type === 'removed'
-                      ? '-'
+                      ? '−'
                       : line.type === 'added'
                         ? '+'
-                        : ' '}
+                        : ''}
                   </span>
                   <span className='break-all'>{line.text || ' '}</span>
                 </div>
               ))}
             </div>
-          </div>
-
-          <div className='mt-3 flex gap-3'>
-            <button
-              className='rounded-[8px] border border-border bg-surface px-3 py-2 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
-              onClick={() =>
-                handleCopy(
-                  diff
-                    .filter((d) => d.type !== 'removed')
-                    .map((d) => d.text)
-                    .join('\n')
-                )
-              }
-              type='button'
-            >
-              {t(locale, 'tool.diff.copy')} B
-            </button>
-          </div>
+          </Panel>
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

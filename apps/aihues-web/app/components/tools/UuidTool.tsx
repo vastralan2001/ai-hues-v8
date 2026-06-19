@@ -4,6 +4,8 @@ import { useCallback, useState } from 'react';
 
 import { t, type Locale } from '@/lib/dict';
 
+import { CopyButton, Panel, ToolHeader, TOOL_WRAP } from './_kit';
+
 interface UuidToolProps {
   locale: Locale;
 }
@@ -31,88 +33,83 @@ export default function UuidTool({ locale }: UuidToolProps) {
     try {
       await navigator.clipboard.writeText(uuid);
     } catch {
-      // ignore
+      /* ignore */
     }
   };
 
-  const copyAll = async () => {
-    try {
-      await navigator.clipboard.writeText(history.join('\n'));
-    } catch {
-      // ignore
-    }
-  };
+  const secondaryBtn =
+    'h-10 rounded-[10px] border border-border bg-bg px-4 text-[13px] font-semibold text-secondary transition-colors hover:border-accent hover:text-accent';
 
   return (
-    <div className='mx-auto max-w-[800px] px-6 py-12'>
-      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
-        {t(locale, 'tool.uuid.title')}
-      </h1>
-      <p className='mb-6 text-[15px] text-secondary'>
-        {t(locale, 'tool.uuid.desc')}
-      </p>
+    <div className={TOOL_WRAP}>
+      <ToolHeader
+        eyebrow={t(locale, 'cat.developer')}
+        title={t(locale, 'tool.uuid.title')}
+        desc={t(locale, 'tool.uuid.desc')}
+      />
 
-      <div className='flex flex-wrap gap-3'>
+      <div className='mb-6 flex flex-wrap gap-3'>
         <button
-          className='rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+          type='button'
           data-testid='uuid-generate'
           onClick={() => generate(1)}
-          type='button'
+          className='h-10 rounded-[10px] bg-accent px-5 text-[13px] font-bold uppercase tracking-[0.06em] text-white transition-all hover:bg-accent-light'
         >
           {t(locale, 'tool.uuid.generate')}
         </button>
         <button
-          className='rounded-lg border border-border bg-surface px-5 py-3 text-sm font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
-          onClick={() => generate(5)}
           type='button'
+          onClick={() => generate(5)}
+          className={secondaryBtn}
         >
           {t(locale, 'tool.uuid.generate5')}
         </button>
         <button
-          className='rounded-lg border border-border bg-surface px-5 py-3 text-sm font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
-          onClick={() => generate(10)}
           type='button'
+          onClick={() => generate(10)}
+          className={secondaryBtn}
         >
           {t(locale, 'tool.uuid.generate10')}
         </button>
-        {history.length > 0 && (
-          <button
-            className='rounded-lg border border-border bg-surface px-5 py-3 text-sm font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
-            onClick={copyAll}
-            type='button'
-          >
-            {t(locale, 'tool.uuid.copyAll')}
-          </button>
-        )}
+        {history.length > 0 ? (
+          <CopyButton
+            text={history.join('\n')}
+            label={t(locale, 'tool.uuid.copyAll')}
+            className='h-10 px-4 text-[13px]'
+          />
+        ) : null}
       </div>
 
-      {history.length > 0 && (
-        <div className='mt-6'>
-          <h2 className='mb-3 text-sm font-semibold text-foreground'>
-            {t(locale, 'tool.uuid.history')}
-          </h2>
-          <div className='flex flex-col gap-2'>
+      {history.length > 0 ? (
+        <Panel label={t(locale, 'tool.uuid.history')}>
+          <div className='flex flex-col divide-y divide-[color:var(--border)]'>
             {history.map((uuid, index) => (
               <div
                 key={`${uuid}-${index}`}
-                className='flex items-center justify-between rounded-lg border border-border bg-surface px-4 py-3'
+                className='flex items-center justify-between gap-4 px-4 py-3'
               >
                 <code
-                  className='font-mono text-sm text-foreground'
+                  className='font-mono text-[14px] text-foreground'
                   data-testid='uuid-item'
                 >
                   {uuid}
                 </code>
                 <button
-                  className='ml-4 rounded-[8px] border border-border bg-bg px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
-                  onClick={() => copyOne(uuid)}
                   type='button'
+                  onClick={() => copyOne(uuid)}
+                  className='shrink-0 rounded-[8px] border border-border bg-bg px-3 py-1 text-[12px] font-semibold text-secondary transition-colors hover:border-accent hover:text-accent'
                 >
                   {t(locale, 'tool.uuid.copy')}
                 </button>
               </div>
             ))}
           </div>
+        </Panel>
+      ) : (
+        <div className='rounded-[16px] border border-dashed border-border bg-surface px-4 py-12 text-center text-[14px] text-muted'>
+          {locale === 'zh'
+            ? '点击上方按钮生成 UUID'
+            : 'Generate UUIDs with the buttons above'}
         </div>
       )}
     </div>

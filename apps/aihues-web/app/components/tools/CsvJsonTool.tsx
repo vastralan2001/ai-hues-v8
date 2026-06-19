@@ -1,8 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { t, type Locale } from '@/lib/dict';
+
+import { CopyButton, Panel, ToolGrid, ToolHeader, TOOL_WRAP } from './_kit';
 
 interface CsvJsonToolProps {
   locale: Locale;
@@ -41,8 +43,7 @@ function toCSV(data: unknown[]): string {
 
 function isJSON(text: string): boolean {
   try {
-    const parsed = JSON.parse(text);
-    return Array.isArray(parsed);
+    return Array.isArray(JSON.parse(text));
   } catch {
     return false;
   }
@@ -50,84 +51,68 @@ function isJSON(text: string): boolean {
 
 export default function CsvJsonTool({ locale }: CsvJsonToolProps) {
   const [input, setInput] = useState('');
-  const [output, setOutput] = useState('');
-  const [error, setError] = useState('');
 
-  const handleConvert = () => {
+  const { output, error } = useMemo(() => {
+    if (!input.trim()) return { output: '', error: '' };
     try {
-      setError('');
       if (isJSON(input)) {
-        const data = JSON.parse(input);
-        setOutput(toCSV(data));
-      } else {
-        const data = parseCSV(input);
-        setOutput(JSON.stringify(data, null, 2));
+        return { output: toCSV(JSON.parse(input)), error: '' };
       }
+      return { output: JSON.stringify(parseCSV(input), null, 2), error: '' };
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Conversion failed');
-      setOutput('');
+      return {
+        output: '',
+        error: e instanceof Error ? e.message : 'Conversion failed',
+      };
     }
-  };
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(output);
-    } catch {
-      // ignore
-    }
-  };
+  }, [input]);
 
   return (
-    <div className='mx-auto max-w-4xl px-6 py-12'>
-      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
-        {t(locale, 'tool.csvJson.title')}
-      </h1>
-      <p className='mb-6 text-[15px] text-secondary'>
-        {t(locale, 'tool.csvJson.desc')}
-      </p>
-
-      <textarea
-        className='h-[200px] w-full resize-none rounded-2xl border border-border bg-surface p-5 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
-        onChange={(e) => setInput(e.target.value)}
-        placeholder={t(locale, 'tool.csvJson.placeholder')}
-        value={input}
+    <div className={TOOL_WRAP}>
+      <ToolHeader
+        eyebrow={t(locale, 'cat.developer')}
+        title={t(locale, 'tool.csvJson.title')}
+        desc={t(locale, 'tool.csvJson.desc')}
       />
 
-      <div className='mt-4 flex gap-3'>
-        <button
-          className='rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
-          onClick={handleConvert}
-          type='button'
+      <ToolGrid>
+        <Panel
+          label={locale === 'zh' ? 'CSV 或 JSON' : 'CSV or JSON'}
+          hint={
+            input.trim()
+              ? isJSON(input)
+                ? 'JSON → CSV'
+                : 'CSV → JSON'
+              : undefined
+          }
         >
-          {t(locale, 'tool.csvJson.convert')}
-        </button>
-      </div>
+          <textarea
+            className='min-h-[340px] w-full flex-1 resize-y border-0 bg-transparent p-4 font-mono text-[13px] leading-relaxed text-foreground outline-none placeholder:text-muted'
+            onChange={(e) => setInput(e.target.value)}
+            placeholder={t(locale, 'tool.csvJson.placeholder')}
+            value={input}
+            spellCheck={false}
+          />
+          {error ? (
+            <div className='border-t border-border px-4 py-3 text-[13px] font-medium text-[#ff3849]'>
+              {error}
+            </div>
+          ) : null}
+        </Panel>
 
-      {error && (
-        <p className='mt-3 rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'>
-          {error}
-        </p>
-      )}
-
-      {output && (
-        <div className='mt-5'>
-          <div className='mb-2 flex items-center justify-between'>
-            <span className='text-sm font-semibold text-foreground'>
-              {t(locale, 'tool.csvJson.result')}
-            </span>
-            <button
-              className='rounded-[8px] border border-border bg-surface px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
-              onClick={handleCopy}
-              type='button'
-            >
-              {t(locale, 'tool.wordCount.copy')}
-            </button>
-          </div>
-          <pre className='min-h-[120px] overflow-auto rounded-2xl border border-border bg-surface p-5 font-mono text-sm text-foreground'>
-            {output}
+        <Panel
+          label={t(locale, 'tool.csvJson.result')}
+          action={output ? <CopyButton text={output} /> : null}
+        >
+          <pre className='min-h-[340px] flex-1 overflow-auto whitespace-pre-wrap break-words p-4 font-mono text-[13px] leading-relaxed text-foreground'>
+            {output || (
+              <span className='text-muted'>
+                {locale === 'zh' ? '结果将显示在这里' : 'Output appears here'}
+              </span>
+            )}
           </pre>
-        </div>
-      )}
+        </Panel>
+      </ToolGrid>
     </div>
   );
 }
