@@ -263,6 +263,7 @@ export function usageMap(): Record<string, number> {
 
 export function slidesFromPicks(picks: Pick[]): SpotlightSlide[] {
   return picks.map(({ category, item }) => ({
+    slug: item.slug,
     eyebrow: category.label,
     title: item.title,
     description: item.description,
