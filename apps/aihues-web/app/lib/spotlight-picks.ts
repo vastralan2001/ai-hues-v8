@@ -3,11 +3,12 @@ import type { SpotlightSlide } from '@/components/SpotlightCarousel';
 
 /* Per-category picks for the hero spotlight + the Ask-AI placeholder.
 
-   Each category lists a few curated candidates (best-first). For a given
-   user we draw ONE item per category — the candidate they've used most
-   (from localStorage tool-usage), else the curated default — and order the
-   categories by how much the user engages with each. With no usage history
-   it falls back to a deterministic default (safe for SSR / first paint). */
+   Each category lists a few candidates (broadest mainstream appeal first).
+   For a given user we draw ONE item per category — the candidate they've
+   used most (from localStorage tool-usage), else the first/default — and
+   order the categories by how much the user engages with each. With no
+   usage history it falls back to a deterministic default (the broadly
+   popular set, safe for SSR / first paint). */
 
 export interface PickItem {
   slug: string;
@@ -23,7 +24,7 @@ export interface PickItem {
 export interface CategoryPicks {
   key: string;
   label: string; // spotlight eyebrow
-  items: PickItem[]; // best-first candidates
+  items: PickItem[]; // broadest-appeal candidate first
 }
 
 export const CATEGORY_PICKS: CategoryPicks[] = [
@@ -31,16 +32,6 @@ export const CATEGORY_PICKS: CategoryPicks[] = [
     key: 'developer',
     label: 'Developer Tools',
     items: [
-      {
-        slug: 'jwt',
-        title: 'JWT Parser',
-        description:
-          'Decode and inspect JSON Web Tokens with expiry detection and JSON highlighting.',
-        metrics: 'Decode · Verify · Expiry',
-        href: '/tools/jwt',
-        cta: 'Open tool',
-        query: 'parse a JWT',
-      },
       {
         slug: 'json',
         title: 'JSON Formatter',
@@ -50,6 +41,16 @@ export const CATEGORY_PICKS: CategoryPicks[] = [
         href: '/tools/json',
         cta: 'Open tool',
         query: 'format this JSON',
+      },
+      {
+        slug: 'jwt',
+        title: 'JWT Parser',
+        description:
+          'Decode and inspect JSON Web Tokens with expiry detection and JSON highlighting.',
+        metrics: 'Decode · Verify · Expiry',
+        href: '/tools/jwt',
+        cta: 'Open tool',
+        query: 'parse a JWT',
       },
       {
         slug: 'regex',
@@ -120,38 +121,28 @@ export const CATEGORY_PICKS: CategoryPicks[] = [
     ],
   },
   {
-    key: 'utility',
-    label: 'Utility',
+    key: 'tests',
+    label: 'Personality Test',
     items: [
       {
-        slug: 'word-count',
-        title: 'Word Counter',
+        slug: 'mbti',
+        title: 'MBTI Personality Test',
         description:
-          'Real-time character, word, line and reading-time counts as you type.',
-        metrics: 'Chars · Words · Read time',
-        href: '/tools/word-count',
-        cta: 'Open tool',
-        query: 'count my words',
+          'Five dimensions, one four-letter type — from Architect to Entertainer.',
+        metrics: '20 Q · 16 types',
+        href: '/tests/mbti',
+        cta: 'Take the test',
+        query: 'find my MBTI type',
       },
       {
-        slug: 'diff',
-        title: 'Diff Checker',
+        slug: 'sbti',
+        title: 'SBTI Personality Test',
         description:
-          'Compare two blocks of text and see exactly what changed, line by line.',
-        metrics: 'Compare · Highlight',
-        href: '/tools/diff',
-        cta: 'Open tool',
-        query: 'compare two texts',
-      },
-      {
-        slug: 'cn-convert',
-        title: 'Chinese Converter',
-        description:
-          'Convert instantly between Simplified and Traditional Chinese.',
-        metrics: '简体 · 繁体',
-        href: '/tools/cn-convert',
-        cta: 'Open tool',
-        query: 'convert simplified to traditional',
+          'A gloriously unscientific soul-scan — which internet archetype are you?',
+        metrics: '31 Q · Satirical',
+        href: '/tests/sbti',
+        cta: 'Take the test',
+        query: 'which internet archetype am I',
       },
     ],
   },
@@ -192,28 +183,38 @@ export const CATEGORY_PICKS: CategoryPicks[] = [
     ],
   },
   {
-    key: 'tests',
-    label: 'Personality Test',
+    key: 'utility',
+    label: 'Utility',
     items: [
       {
-        slug: 'sbti',
-        title: 'SBTI Personality Test',
+        slug: 'word-count',
+        title: 'Word Counter',
         description:
-          'A gloriously unscientific soul-scan — which internet archetype are you?',
-        metrics: '31 Q · Satirical',
-        href: '/tests/sbti',
-        cta: 'Take the test',
-        query: 'which internet archetype am I',
+          'Real-time character, word, line and reading-time counts as you type.',
+        metrics: 'Chars · Words · Read time',
+        href: '/tools/word-count',
+        cta: 'Open tool',
+        query: 'count my words',
       },
       {
-        slug: 'mbti',
-        title: 'MBTI Personality Test',
+        slug: 'diff',
+        title: 'Diff Checker',
         description:
-          'Five dimensions, one four-letter type — from Architect to Entertainer.',
-        metrics: '20 Q · 16 types',
-        href: '/tests/mbti',
-        cta: 'Take the test',
-        query: 'find my MBTI type',
+          'Compare two blocks of text and see exactly what changed, line by line.',
+        metrics: 'Compare · Highlight',
+        href: '/tools/diff',
+        cta: 'Open tool',
+        query: 'compare two texts',
+      },
+      {
+        slug: 'cn-convert',
+        title: 'Chinese Converter',
+        description:
+          'Convert instantly between Simplified and Traditional Chinese.',
+        metrics: '简体 · 繁体',
+        href: '/tools/cn-convert',
+        cta: 'Open tool',
+        query: 'convert simplified to traditional',
       },
     ],
   },
