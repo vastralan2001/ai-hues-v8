@@ -5,7 +5,6 @@ import { type ReactNode, useState } from 'react';
 import { slidesFromPicks } from '@/lib/spotlight-picks';
 import SpotlightCarousel from './SpotlightCarousel';
 
-// Full-viewport warm gradient palettes, crossfaded by the active slide.
 const PALETTES = [
   'radial-gradient(140% 130% at 8% -10%, rgba(194,80,46,0.42), transparent 60%), radial-gradient(120% 120% at 100% 110%, rgba(217,140,70,0.30), transparent 60%)',
   'radial-gradient(140% 130% at 100% -10%, rgba(199,150,66,0.46), transparent 60%), radial-gradient(120% 120% at 0% 110%, rgba(194,80,46,0.28), transparent 60%)',

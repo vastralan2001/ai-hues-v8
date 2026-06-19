@@ -19,7 +19,7 @@ export const TEST_META: TestMeta[] = [
     tagline: 'A gloriously unscientific soul-scan',
     description:
       '31 absurd questions map 15 “soul dimensions” to your internet archetype — Goblin, Doomer, Gigachad… plus one hidden type.',
-    accent: '#c2502e',
+    accent: 'var(--color-accent)',
     durationMin: 4,
     questionCount: sbtiConfig.questions.length,
     badge: 'Satirical',
@@ -30,7 +30,7 @@ export const TEST_META: TestMeta[] = [
     tagline: 'Find your four-letter type',
     description:
       '20 quick statements across five dimensions reveal your type and Assertive / Turbulent identity — Architect to Entertainer.',
-    accent: '#7e5aa6',
+    accent: 'var(--color-accent)',
     durationMin: 3,
     questionCount: mbtiConfig.questions.length,
     badge: 'Classic',

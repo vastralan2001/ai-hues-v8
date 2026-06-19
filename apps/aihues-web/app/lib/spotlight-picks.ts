@@ -1,11 +1,5 @@
 import type { SpotlightSlide } from '@/components/SpotlightCarousel';
 
-/* Fixed per-category picks for the hero spotlight + the Ask-AI placeholder.
-
-   One item per category — chosen as the broadest-appeal, overseas-friendly
-   product in each. These are intentionally FIXED (the same for every visitor,
-   no per-user personalization) so the hero always leads with the same set. */
-
 export interface PickItem {
   slug: string;
   title: string;

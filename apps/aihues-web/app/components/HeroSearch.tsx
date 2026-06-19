@@ -8,7 +8,6 @@ import { Loader2, Search, Sparkles } from 'lucide-react';
 import { ToolIcon } from '@/components/ToolIcon';
 import { examplesFromPicks } from '@/lib/spotlight-picks';
 
-// Fixed, one-per-category example queries cycled in the placeholder.
 const EXAMPLES = examplesFromPicks();
 
 interface HeroSearchProps {

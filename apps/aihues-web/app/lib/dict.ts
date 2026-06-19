@@ -247,7 +247,8 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.csvJson.result': 'Result',
 
     'tool.color.title': 'Color Converter',
-    'tool.color.desc': 'Convert between HEX, RGB, and HSL color formats',
+    'tool.color.desc':
+      'Convert between HEX, RGB, HSL, HSV, and CMYK color formats',
     'tool.color.placeholder': 'Enter HEX (e.g. #b45309) or rgb(...)...',
     'tool.color.convert': 'Convert',
     'tool.color.hex': 'HEX',
@@ -1021,7 +1022,7 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.csvJson.result': '结果',
 
     'tool.color.title': '颜色转换器',
-    'tool.color.desc': '在 HEX、RGB 和 HSL 颜色格式之间转换',
+    'tool.color.desc': '在 HEX、RGB、HSL、HSV、CMYK 颜色格式之间转换',
     'tool.color.placeholder': '输入 HEX (例如 #b45309) 或 rgb(...)...',
     'tool.color.convert': '转换',
     'tool.color.hex': 'HEX',

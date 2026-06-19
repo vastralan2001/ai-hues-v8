@@ -6,29 +6,29 @@ export function BookmarkButton() {
   const [showTip, setShowTip] = useState(false);
 
   const handleClick = useCallback(() => {
-    // Legacy IE method (no modern browser supports this)
     try {
       const ext = (window as unknown as Record<string, unknown>).external;
       if (ext && typeof ext === 'object' && 'AddFavorite' in ext) {
         (
           ext as { AddFavorite: (url: string, title: string) => void }
         ).AddFavorite(window.location.href, document.title);
-        return;
       }
     } catch {
       // ignore
     }
-
-    // Show manual shortcut tip
-    setShowTip(true);
-    setTimeout(() => setShowTip(false), 4000);
   }, []);
 
   return (
-    <div className='relative'>
+    <div
+      className='relative'
+      onMouseEnter={() => setShowTip(true)}
+      onMouseLeave={() => setShowTip(false)}
+      onFocus={() => setShowTip(true)}
+      onBlur={() => setShowTip(false)}
+    >
       <button
         aria-label='Bookmark this site'
-        className='flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[13px] font-medium text-secondary transition-colors hover:bg-[#f5f3ee] hover:text-foreground'
+        className='flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[13px] font-medium text-secondary transition-colors hover:bg-surface hover:text-foreground'
         onClick={handleClick}
         type='button'
       >
@@ -54,11 +54,11 @@ export function BookmarkButton() {
           </p>
           <p className='text-[12px] text-muted'>
             Press{' '}
-            <kbd className='rounded bg-[#f5f3ee] px-1.5 py-0.5 text-[11px] font-semibold text-foreground'>
+            <kbd className='rounded bg-surface px-1.5 py-0.5 text-[11px] font-semibold text-foreground'>
               {navigator.platform?.includes('Mac') ? 'Cmd' : 'Ctrl'}
             </kbd>{' '}
             +{' '}
-            <kbd className='rounded bg-[#f5f3ee] px-1.5 py-0.5 text-[11px] font-semibold text-foreground'>
+            <kbd className='rounded bg-surface px-1.5 py-0.5 text-[11px] font-semibold text-foreground'>
               D
             </kbd>{' '}
             to save this page.

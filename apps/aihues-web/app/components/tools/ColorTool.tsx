@@ -14,6 +14,8 @@ interface ColorResult {
   hex: string;
   rgb: string;
   hsl: string;
+  hsv: string;
+  cmyk: string;
 }
 
 function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
@@ -74,6 +76,58 @@ function rgbToHsl(
   };
 }
 
+function rgbToHsv(
+  r: number,
+  g: number,
+  b: number
+): { h: number; s: number; v: number } {
+  r /= 255;
+  g /= 255;
+  b /= 255;
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const d = max - min;
+  let h = 0;
+  if (d !== 0) {
+    switch (max) {
+      case r:
+        h = ((g - b) / d) % 6;
+        break;
+      case g:
+        h = (b - r) / d + 2;
+        break;
+      case b:
+        h = (r - g) / d + 4;
+        break;
+    }
+    h *= 60;
+    if (h < 0) h += 360;
+  }
+  return {
+    h: Math.round(h),
+    s: Math.round((max === 0 ? 0 : d / max) * 100),
+    v: Math.round(max * 100),
+  };
+}
+
+function rgbToCmyk(
+  r: number,
+  g: number,
+  b: number
+): { c: number; m: number; y: number; k: number } {
+  const rr = r / 255;
+  const gg = g / 255;
+  const bb = b / 255;
+  const k = 1 - Math.max(rr, gg, bb);
+  if (k === 1) return { c: 0, m: 0, y: 0, k: 100 };
+  return {
+    c: Math.round(((1 - rr - k) / (1 - k)) * 100),
+    m: Math.round(((1 - gg - k) / (1 - k)) * 100),
+    y: Math.round(((1 - bb - k) / (1 - k)) * 100),
+    k: Math.round(k * 100),
+  };
+}
+
 function parseColor(input: string): ColorResult | null {
   const value = input.trim();
   if (!value) return null;
@@ -90,11 +144,15 @@ function parseColor(input: string): ColorResult | null {
   }
   if (!rgb) return null;
   const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+  const hsv = rgbToHsv(rgb.r, rgb.g, rgb.b);
+  const cmyk = rgbToCmyk(rgb.r, rgb.g, rgb.b);
   const hex = `#${rgb.r.toString(16).padStart(2, '0')}${rgb.g.toString(16).padStart(2, '0')}${rgb.b.toString(16).padStart(2, '0')}`;
   return {
     hex,
     rgb: `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`,
     hsl: `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`,
+    hsv: `hsv(${hsv.h}, ${hsv.s}%, ${hsv.v}%)`,
+    cmyk: `cmyk(${cmyk.c}%, ${cmyk.m}%, ${cmyk.y}%, ${cmyk.k}%)`,
   };
 }
 
@@ -127,6 +185,8 @@ export default function ColorTool({ locale }: ColorToolProps) {
         { label: 'HEX', value: result.hex },
         { label: 'RGB', value: result.rgb },
         { label: 'HSL', value: result.hsl },
+        { label: 'HSV', value: result.hsv },
+        { label: 'CMYK', value: result.cmyk },
       ]
     : [];
 

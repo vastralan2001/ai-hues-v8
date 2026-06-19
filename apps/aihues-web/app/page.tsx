@@ -80,28 +80,28 @@ const CATEGORY_THEMES: Record<
   { gradient: string; bg: string; fg: string }
 > = {
   utility: {
-    gradient: '#c2502e',
+    gradient: 'var(--color-accent)',
     bg: 'rgba(26, 26, 25, 0.05)',
     fg: 'rgba(26, 26, 25, 0.7)',
   },
   developer: {
-    gradient: '#c2502e',
+    gradient: 'var(--color-accent)',
     bg: 'rgba(26, 26, 25, 0.05)',
     fg: 'rgba(26, 26, 25, 0.7)',
   },
   'ai-writing': {
-    gradient: '#c2502e',
-    bg: 'rgba(194, 80, 46, 0.1)',
+    gradient: 'var(--color-accent)',
+    bg: 'color-mix(in srgb, var(--color-accent) 10%, transparent)',
     fg: '#b1502f',
   },
   games: {
-    gradient: '#c2502e',
+    gradient: 'var(--color-accent)',
     bg: 'rgba(26, 26, 25, 0.05)',
     fg: 'rgba(26, 26, 25, 0.7)',
   },
   tests: {
-    gradient: '#c2502e',
-    bg: 'rgba(194, 80, 46, 0.1)',
+    gradient: 'var(--color-accent)',
+    bg: 'color-mix(in srgb, var(--color-accent) 10%, transparent)',
     fg: '#b1502f',
   },
 };
@@ -401,7 +401,7 @@ export default async function HomePage() {
             className='pointer-events-none absolute inset-0 opacity-50'
             style={{
               backgroundImage:
-                'radial-gradient(circle at 50% 50%, rgba(194,80,46,0.06) 0%, transparent 55%)',
+                'radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--color-accent) 6%, transparent) 0%, transparent 55%)',
             }}
           />
           <div className='relative mx-auto grid max-w-[1100px] grid-cols-2 gap-8 sm:grid-cols-4'>

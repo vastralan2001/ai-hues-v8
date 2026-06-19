@@ -16,8 +16,9 @@ export type SpotlightSlide = {
 };
 
 const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
-const DURATION = 650;
-const SHIFT = 40; // px of horizontal drift — small, so slides fade rather than hard-clip
+const DURATION = 560;
+const FADE_OUT = 220;
+const SHIFT = 22;
 
 export default function SpotlightCarousel({
   slides,
@@ -30,10 +31,6 @@ export default function SpotlightCarousel({
 }) {
   const count = slides.length;
 
-  // Slides are stacked; only the active one is visible. Each transition fades
-  // + drifts the outgoing slide out (in the travel direction) and the incoming
-  // slide in from the opposite side — so there is no sliding viewport edge and
-  // wrapping last→first reads the same as any other forward step.
   const [index, setIndex] = useState(0);
   const [prev, setPrev] = useState(-1);
   const [dir, setDir] = useState(1);
@@ -64,7 +61,6 @@ export default function SpotlightCarousel({
     [go, index, count]
   );
 
-  // Autoplay — always forward.
   useEffect(() => {
     if (paused || count <= 1) return;
     const reduce =
@@ -87,7 +83,6 @@ export default function SpotlightCarousel({
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {/* Stacked viewport — no overflow clip, so there is no edge to feel. */}
       <div
         className={`relative ${compact ? 'min-h-[430px]' : 'min-h-[460px]'}`}
         onTransitionEnd={onSlidesTransitionEnd}
@@ -95,15 +90,13 @@ export default function SpotlightCarousel({
         {slides.map((s, i) => {
           const isActive = i === index;
           const isPrev = i === prev;
-          const x = isActive
-            ? 0
+          const enterX = dir > 0 ? SHIFT : -SHIFT;
+          const x = isActive ? 0 : isPrev ? 0 : enterX;
+          const transition = isActive
+            ? `opacity ${DURATION}ms ${EASE}, transform ${DURATION}ms ${EASE}`
             : isPrev
-              ? dir > 0
-                ? -SHIFT
-                : SHIFT
-              : dir > 0
-                ? SHIFT
-                : -SHIFT;
+              ? `opacity ${FADE_OUT}ms ease`
+              : 'none';
           return (
             <div
               key={s.slug + i}
@@ -112,7 +105,7 @@ export default function SpotlightCarousel({
               style={{
                 opacity: isActive ? 1 : 0,
                 transform: `translateX(${x}px)`,
-                transition: `opacity ${DURATION}ms ${EASE}, transform ${DURATION}ms ${EASE}`,
+                transition,
                 pointerEvents: isActive ? 'auto' : 'none',
               }}
             >
@@ -172,7 +165,7 @@ export default function SpotlightCarousel({
                     className='relative hidden aspect-[4/3] items-center justify-center overflow-hidden rounded-[18px] border border-border md:flex'
                     style={{
                       background:
-                        'radial-gradient(120% 100% at 30% 10%, rgba(194,80,46,0.16), transparent 60%), radial-gradient(120% 120% at 90% 100%, rgba(199,162,76,0.14), transparent 55%), var(--color-bg)',
+                        'radial-gradient(120% 100% at 30% 10%, color-mix(in srgb, var(--color-accent) 16%, transparent), transparent 60%), radial-gradient(120% 120% at 90% 100%, rgba(199,162,76,0.14), transparent 55%), var(--color-bg)',
                     }}
                   >
                     <span className='text-accent/70'>
