@@ -209,7 +209,9 @@ export function ToolsInfiniteList({
             <span>
               {visibleTools.length} tool{visibleTools.length !== 1 ? 's' : ''}
               {q ? ` matching "${q}"` : ''}
-              {activePrice !== 'all' ? ` · ${activePrice}` : ''}
+              {activePrice !== 'all'
+                ? ` · ${PRICE_OPTIONS.find((o) => o.key === activePrice)?.label ?? activePrice}`
+                : ''}
             </span>
           </div>
           {visibleTools.length > 0 ? (

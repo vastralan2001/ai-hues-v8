@@ -57,7 +57,7 @@ export default function ToolDetailTabs({
                 {tool.category}
               </span>
               <span
-                className={`rounded-full px-3 py-1 text-[11px] font-semibold ${
+                className={`rounded-full px-3 py-1 text-[11px] font-semibold capitalize ${
                   tool.price === 'free'
                     ? 'bg-[#dcfce7] text-[#15803d]'
                     : tool.price === 'freemium'
