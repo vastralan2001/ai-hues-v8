@@ -229,6 +229,7 @@ export default async function HomePage() {
       label: t(locale, 'stats.devTools'),
     },
     { num: String(games.length || 0), label: t(locale, 'stats.games') },
+    { num: String(TEST_META.length || 0), label: t(locale, 'stats.tests') },
   ];
 
   const homeDevTools = HOME_DEVELOPER_SLUGS.map((slug) =>
@@ -423,7 +424,7 @@ export default async function HomePage() {
                 'radial-gradient(circle at 50% 50%, rgba(194,80,46,0.06) 0%, transparent 55%)',
             }}
           />
-          <div className='relative mx-auto grid max-w-[1100px] grid-cols-1 gap-8 sm:grid-cols-3'>
+          <div className='relative mx-auto grid max-w-[1100px] grid-cols-2 gap-8 sm:grid-cols-4'>
             {stats.map((s) => (
               <div key={s.label} className='text-center'>
                 <div className='text-[52px] font-extrabold leading-none tracking-[-0.03em] text-accent'>

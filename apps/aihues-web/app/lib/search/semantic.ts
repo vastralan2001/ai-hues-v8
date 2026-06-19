@@ -26,7 +26,7 @@ export interface SearchHit {
   title: string;
   subtitle: string;
   href: string;
-  type: 'tool' | 'game';
+  type: 'tool' | 'game' | 'test';
   score: number;
 }
 
@@ -35,7 +35,7 @@ interface Doc {
   title: string;
   subtitle: string;
   href: string;
-  type: 'tool' | 'game';
+  type: 'tool' | 'game' | 'test';
   text: string;
   searchText: string; // lowercased text used for the lexical boost
 }
@@ -108,6 +108,19 @@ const GAMES: { slug: string; title: string; desc: string }[] = [
   },
 ];
 
+const TESTS: { slug: string; title: string; desc: string }[] = [
+  {
+    slug: 'sbti',
+    title: 'SBTI',
+    desc: 'satirical personality test, soul scan quiz, internet archetype — goblin doomer gigachad, sb type indicator, mbti parody, who are you',
+  },
+  {
+    slug: 'mbti',
+    title: 'MBTI',
+    desc: 'personality test, 16 personalities, myers briggs type indicator, four letter type, introvert extrovert intuitive thinking, intj enfp quiz assessment',
+  },
+];
+
 function buildCorpus(): Doc[] {
   const published = new Set(PUBLISHED_TOOL_SLUGS);
   const tools: Doc[] = ALL_TOOLS.filter((t) => published.has(t.slug)).map(
@@ -137,7 +150,19 @@ function buildCorpus(): Doc[] {
       searchText: text.toLowerCase(),
     };
   });
-  return [...tools, ...games];
+  const tests: Doc[] = TESTS.map((t) => {
+    const text = `${t.title}. ${t.desc}. personality test quiz assessment`;
+    return {
+      slug: t.slug,
+      title: t.title,
+      subtitle: 'test',
+      href: `/tests/${t.slug}`,
+      type: 'test' as const,
+      text,
+      searchText: text.toLowerCase(),
+    };
+  });
+  return [...tools, ...games, ...tests];
 }
 
 interface Index {
@@ -149,6 +174,8 @@ interface Index {
 let indexPromise: Promise<Index> | null = null;
 
 async function buildIndex(): Promise<Index> {
+  const t0 = Date.now();
+  console.log('[search] building embedding index…');
   const extractor = await pipeline('feature-extraction', MODEL);
   const extract = async (text: string): Promise<Float32Array> => {
     const out = await extractor(text, { pooling: 'mean', normalize: true });
@@ -157,6 +184,9 @@ async function buildIndex(): Promise<Index> {
   const docs = buildCorpus();
   const vecs: Float32Array[] = [];
   for (const d of docs) vecs.push(await extract(d.text));
+  console.log(
+    `[search] index ready: ${docs.length} docs in ${Date.now() - t0}ms`
+  );
   return { extract, vecs, docs };
 }
 

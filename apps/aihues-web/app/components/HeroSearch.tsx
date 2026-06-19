@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { Loader2, Search, Sparkles } from 'lucide-react';
 
+import { ToolIcon } from '@/components/ToolIcon';
+
 interface HeroSearchProps {
   searchPlaceholder: string;
   askAILabel: string;
@@ -15,7 +17,7 @@ interface Hit {
   title: string;
   subtitle: string;
   href: string;
-  type: 'tool' | 'game';
+  type: 'tool' | 'game' | 'test';
   score: number;
 }
 
@@ -131,8 +133,8 @@ export default function HeroSearch({
                     className='flex items-center justify-between gap-3 px-4 py-2.5 transition-colors hover:bg-accent-bg'
                   >
                     <span className='flex min-w-0 items-center gap-3'>
-                      <span className='inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent-bg text-[11px] font-bold uppercase text-accent'>
-                        {r.type === 'game' ? 'G' : 'T'}
+                      <span className='inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent-bg text-accent'>
+                        <ToolIcon slug={r.slug} size={14} />
                       </span>
                       <span className='min-w-0'>
                         <span className='block truncate text-[14px] font-semibold text-foreground'>

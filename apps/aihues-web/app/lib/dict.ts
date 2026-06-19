@@ -45,6 +45,7 @@ export const dict: Record<Locale, Record<string, string>> = {
     'stats.aiTools': 'AI Tools',
     'stats.devTools': 'Dev Tools',
     'stats.games': 'Games',
+    'stats.tests': 'Tests',
     'stats.freeCredits': 'Free Credits',
     'stats.dayStreak': 'Day Streak',
 
@@ -820,6 +821,7 @@ export const dict: Record<Locale, Record<string, string>> = {
     'stats.aiTools': 'AI 工具',
     'stats.devTools': '开发工具',
     'stats.games': '小游戏',
+    'stats.tests': '测评',
     'stats.freeCredits': '免费积分',
     'stats.dayStreak': '连续签到',
 
