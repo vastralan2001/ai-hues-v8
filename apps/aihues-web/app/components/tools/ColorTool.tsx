@@ -10,6 +10,10 @@ interface ColorToolProps {
   locale: Locale;
 }
 
+type Format = 'hex' | 'rgb' | 'hsl' | 'hsv' | 'cmyk';
+
+type Rgb = { r: number; g: number; b: number };
+
 interface ColorResult {
   hex: string;
   rgb: string;
@@ -18,7 +22,17 @@ interface ColorResult {
   cmyk: string;
 }
 
-function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
+const FORMATS: Format[] = ['hex', 'rgb', 'hsl', 'hsv', 'cmyk'];
+
+const PLACEHOLDERS: Record<Format, string> = {
+  hex: '#c2502e or #c52',
+  rgb: 'rgb(194, 80, 46) or 194, 80, 46',
+  hsl: 'hsl(14, 62%, 47%)',
+  hsv: 'hsv(14, 76%, 76%)',
+  cmyk: 'cmyk(0%, 59%, 76%, 24%)',
+};
+
+function hexToRgb(hex: string): Rgb | null {
   const m = hex.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
   if (m) {
     return {
@@ -128,21 +142,89 @@ function rgbToCmyk(
   };
 }
 
-function parseColor(input: string): ColorResult | null {
-  const value = input.trim();
-  if (!value) return null;
-  let rgb = hexToRgb(value);
-  if (!rgb) {
-    const rgbMatch = value.match(/rgba?\(\s*(\d+)[,\s]+(\d+)[,\s]+(\d+)/i);
-    if (rgbMatch) {
-      rgb = {
-        r: Math.min(255, parseInt(rgbMatch[1])),
-        g: Math.min(255, parseInt(rgbMatch[2])),
-        b: Math.min(255, parseInt(rgbMatch[3])),
-      };
-    }
+function fromHueChroma(h: number, c: number, x: number, m: number): Rgb {
+  let r = 0;
+  let g = 0;
+  let b = 0;
+  if (h < 60) [r, g, b] = [c, x, 0];
+  else if (h < 120) [r, g, b] = [x, c, 0];
+  else if (h < 180) [r, g, b] = [0, c, x];
+  else if (h < 240) [r, g, b] = [0, x, c];
+  else if (h < 300) [r, g, b] = [x, 0, c];
+  else [r, g, b] = [c, 0, x];
+  return {
+    r: Math.round((r + m) * 255),
+    g: Math.round((g + m) * 255),
+    b: Math.round((b + m) * 255),
+  };
+}
+
+function hslToRgb(h: number, s: number, l: number): Rgb {
+  h = ((h % 360) + 360) % 360;
+  s /= 100;
+  l /= 100;
+  const c = (1 - Math.abs(2 * l - 1)) * s;
+  const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+  return fromHueChroma(h, c, x, l - c / 2);
+}
+
+function hsvToRgb(h: number, s: number, v: number): Rgb {
+  h = ((h % 360) + 360) % 360;
+  s /= 100;
+  v /= 100;
+  const c = v * s;
+  const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+  return fromHueChroma(h, c, x, v - c);
+}
+
+function cmykToRgb(c: number, m: number, y: number, k: number): Rgb {
+  c /= 100;
+  m /= 100;
+  y /= 100;
+  k /= 100;
+  return {
+    r: Math.round(255 * (1 - c) * (1 - k)),
+    g: Math.round(255 * (1 - m) * (1 - k)),
+    b: Math.round(255 * (1 - y) * (1 - k)),
+  };
+}
+
+function numbers(s: string): number[] {
+  return (s.match(/-?\d*\.?\d+/g) ?? []).map(Number);
+}
+
+const clamp = (n: number, max: number) => Math.max(0, Math.min(max, n));
+
+function inputToRgb(format: Format, value: string): Rgb | null {
+  const v = value.trim();
+  if (!v) return null;
+  if (format === 'hex') return hexToRgb(v);
+  const n = numbers(v);
+  if (format === 'cmyk') {
+    if (n.length < 4) return null;
+    return cmykToRgb(
+      clamp(n[0], 100),
+      clamp(n[1], 100),
+      clamp(n[2], 100),
+      clamp(n[3], 100)
+    );
   }
-  if (!rgb) return null;
+  if (n.length < 3) return null;
+  if (format === 'rgb') {
+    return {
+      r: Math.round(clamp(n[0], 255)),
+      g: Math.round(clamp(n[1], 255)),
+      b: Math.round(clamp(n[2], 255)),
+    };
+  }
+  if (format === 'hsl')
+    return hslToRgb(n[0], clamp(n[1], 100), clamp(n[2], 100));
+  if (format === 'hsv')
+    return hsvToRgb(n[0], clamp(n[1], 100), clamp(n[2], 100));
+  return null;
+}
+
+function rgbToResult(rgb: Rgb): ColorResult {
   const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
   const hsv = rgbToHsv(rgb.r, rgb.g, rgb.b);
   const cmyk = rgbToCmyk(rgb.r, rgb.g, rgb.b);
@@ -174,19 +256,36 @@ const SAMPLES = [
 
 export default function ColorTool({ locale }: ColorToolProps) {
   const zh = locale === 'zh';
+  const [format, setFormat] = useState<Format>('hex');
   const [input, setInput] = useState('#c2502e');
 
-  const result = useMemo(() => parseColor(input), [input]);
+  const result = useMemo(() => {
+    const rgb = inputToRgb(format, input);
+    return rgb ? rgbToResult(rgb) : null;
+  }, [format, input]);
+
   const invalid = input.trim().length > 0 && result === null;
   const pickerValue = result?.hex ?? '#000000';
 
-  const rows = result
+  function selectFormat(f: Format) {
+    if (f === format) return;
+    const rgb = inputToRgb(format, input);
+    if (rgb) setInput(rgbToResult(rgb)[f]);
+    setFormat(f);
+  }
+
+  function setFromHex(hex: string) {
+    const rgb = hexToRgb(hex);
+    if (rgb) setInput(rgbToResult(rgb)[format]);
+  }
+
+  const rows: { label: string; key: Format; value: string }[] = result
     ? [
-        { label: 'HEX', value: result.hex },
-        { label: 'RGB', value: result.rgb },
-        { label: 'HSL', value: result.hsl },
-        { label: 'HSV', value: result.hsv },
-        { label: 'CMYK', value: result.cmyk },
+        { label: 'HEX', key: 'hex', value: result.hex },
+        { label: 'RGB', key: 'rgb', value: result.rgb },
+        { label: 'HSL', key: 'hsl', value: result.hsl },
+        { label: 'HSV', key: 'hsv', value: result.hsv },
+        { label: 'CMYK', key: 'cmyk', value: result.cmyk },
       ]
     : [];
 
@@ -210,25 +309,47 @@ export default function ColorTool({ locale }: ColorToolProps) {
               />
               {result ? (
                 <span
-                  className='absolute bottom-3 left-4 font-mono text-[15px] font-semibold'
+                  className='absolute bottom-3 left-4 right-4 truncate font-mono text-[15px] font-semibold'
                   style={{ color: readableOn(result.hex) }}
                 >
-                  {result.hex}
+                  {result[format]}
                 </span>
               ) : null}
               <input
                 aria-label={zh ? '拾色器' : 'Color picker'}
                 className='absolute inset-0 h-full w-full cursor-pointer opacity-0'
-                onChange={(e) => setInput(e.target.value)}
+                onChange={(e) => setFromHex(e.target.value)}
                 type='color'
                 value={pickerValue}
               />
             </label>
 
+            <div
+              className='flex gap-1 rounded-[10px] border border-border bg-bg p-1'
+              role='group'
+              aria-label={zh ? '输入格式' : 'Input format'}
+            >
+              {FORMATS.map((f) => (
+                <button
+                  aria-pressed={format === f}
+                  className={`flex-1 rounded-[7px] px-2 py-1.5 text-[12px] font-semibold uppercase tracking-wide transition-colors ${
+                    format === f
+                      ? 'bg-accent text-white shadow-sm'
+                      : 'text-secondary hover:bg-surface hover:text-foreground'
+                  }`}
+                  key={f}
+                  onClick={() => selectFormat(f)}
+                  type='button'
+                >
+                  {f}
+                </button>
+              ))}
+            </div>
+
             <input
               className='h-12 w-full rounded-[12px] border border-border bg-bg px-4 font-mono text-[14px] text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
               onChange={(e) => setInput(e.target.value)}
-              placeholder={t(locale, 'tool.color.placeholder')}
+              placeholder={PLACEHOLDERS[format]}
               type='text'
               value={input}
             />
@@ -239,7 +360,7 @@ export default function ColorTool({ locale }: ColorToolProps) {
                   aria-label={c}
                   className='h-7 w-7 rounded-full border border-border transition-transform hover:scale-110'
                   key={c}
-                  onClick={() => setInput(c)}
+                  onClick={() => setFromHex(c)}
                   style={{ background: c }}
                   type='button'
                 />
@@ -260,11 +381,16 @@ export default function ColorTool({ locale }: ColorToolProps) {
               {rows.map((row) => (
                 <div
                   className='flex items-center justify-between gap-4 px-4 py-4'
-                  key={row.label}
+                  key={row.key}
                 >
                   <div className='min-w-0'>
-                    <div className='text-[11px] font-bold uppercase tracking-[0.14em] text-secondary'>
+                    <div
+                      className={`text-[11px] font-bold uppercase tracking-[0.14em] ${
+                        row.key === format ? 'text-accent' : 'text-secondary'
+                      }`}
+                    >
                       {row.label}
+                      {row.key === format ? ` · ${zh ? '输入' : 'input'}` : ''}
                     </div>
                     <div className='mt-1 break-all font-mono text-[15px] text-foreground'>
                       {row.value}
@@ -277,7 +403,7 @@ export default function ColorTool({ locale }: ColorToolProps) {
           ) : (
             <div className='p-4'>
               <div className='rounded-[12px] border border-dashed border-border px-4 py-12 text-center text-[14px] text-muted'>
-                {zh ? '输入 HEX 或 RGB 颜色值' : 'Enter a HEX or RGB color'}
+                {zh ? '输入一个颜色值' : 'Enter a color value'}
               </div>
             </div>
           )}
