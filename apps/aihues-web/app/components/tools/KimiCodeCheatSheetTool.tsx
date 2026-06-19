@@ -426,58 +426,46 @@ export default function KimiCodeCheatSheetTool({
       <div className='space-y-5'>
         {filtered.map((section) => (
           <Panel key={section.title} label={section.title}>
-            <div className='overflow-x-auto'>
-              <div className='table w-full'>
-                {section.items.map((item, idx) => {
-                  const isCopied = copied === item.cmd;
-                  const cell = `border-border px-4 py-3 align-middle transition-colors group-hover:bg-surface/50${
-                    idx === 0 ? '' : ' border-t'
-                  }`;
-                  return (
-                    <div
-                      key={`${section.title}-${idx}`}
-                      className='group table-row'
-                    >
-                      <div className={`table-cell whitespace-nowrap ${cell}`}>
-                        <div className='flex items-center gap-2'>
-                          <button
-                            aria-label={`Copy ${item.cmd}`}
-                            className='inline-flex items-center gap-2 rounded-[8px] border border-border bg-bg px-2.5 py-1 font-mono text-[13px] text-foreground transition-colors hover:border-accent/40 hover:bg-surface focus-visible:border-accent focus-visible:outline-none'
-                            onClick={() => copy(item.cmd)}
-                            type='button'
-                          >
-                            <span>{item.cmd}</span>
-                            {isCopied ? (
-                              <Check
-                                className='shrink-0 text-accent'
-                                size={13}
-                              />
-                            ) : (
-                              <Copy
-                                className='shrink-0 text-muted opacity-0 transition-opacity group-hover:opacity-70'
-                                size={13}
-                              />
-                            )}
-                          </button>
-                          {item.alias ? (
-                            <span className='font-mono text-[12px] text-muted'>
-                              {item.alias}
-                            </span>
-                          ) : null}
-                          {item.approval ? (
-                            <ApprovalPill kind={item.approval} />
-                          ) : null}
-                        </div>
-                      </div>
-                      <div className={`table-cell w-full ${cell}`}>
-                        <p className='text-[13px] leading-relaxed text-secondary'>
-                          {item.desc}
-                        </p>
-                      </div>
+            <div className='divide-y divide-border'>
+              {section.items.map((item, idx) => {
+                const isCopied = copied === item.cmd;
+                return (
+                  <div
+                    key={`${section.title}-${idx}`}
+                    className='group grid grid-cols-1 gap-x-6 gap-y-1.5 px-4 py-3 transition-colors hover:bg-surface/50 sm:grid-cols-2 sm:items-center'
+                  >
+                    <div className='flex flex-wrap items-center gap-2'>
+                      <button
+                        aria-label={`Copy ${item.cmd}`}
+                        className='inline-flex max-w-full items-center gap-2 rounded-[8px] border border-border bg-bg px-2.5 py-1 font-mono text-[13px] text-foreground transition-colors hover:border-accent/40 hover:bg-surface focus-visible:border-accent focus-visible:outline-none'
+                        onClick={() => copy(item.cmd)}
+                        type='button'
+                      >
+                        <span className='break-all text-left'>{item.cmd}</span>
+                        {isCopied ? (
+                          <Check className='shrink-0 text-accent' size={13} />
+                        ) : (
+                          <Copy
+                            className='shrink-0 text-muted opacity-0 transition-opacity group-hover:opacity-70'
+                            size={13}
+                          />
+                        )}
+                      </button>
+                      {item.alias ? (
+                        <span className='font-mono text-[12px] text-muted'>
+                          {item.alias}
+                        </span>
+                      ) : null}
+                      {item.approval ? (
+                        <ApprovalPill kind={item.approval} />
+                      ) : null}
                     </div>
-                  );
-                })}
-              </div>
+                    <p className='text-[13px] leading-relaxed text-secondary'>
+                      {item.desc}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
           </Panel>
         ))}
