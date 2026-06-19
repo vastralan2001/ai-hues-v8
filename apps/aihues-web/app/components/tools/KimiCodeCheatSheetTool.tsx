@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 
 import { t, type Locale } from '@/lib/dict';
+import { Panel, ToolHeader, TOOL_WRAP } from './_kit';
 
 interface KimiCodeCheatSheetToolProps {
   locale: Locale;
@@ -229,45 +230,36 @@ export default function KimiCodeCheatSheetTool({
   }
 
   return (
-    <div className='mx-auto max-w-4xl px-6 py-12'>
-      <h1 className='hero-title mb-4 text-foreground'>
-        {t(locale, 'tool.kimiCode.title')}
-      </h1>
-      <p className='mb-8 text-base leading-relaxed text-secondary'>
-        {t(locale, 'tool.kimiCode.desc')}
-      </p>
+    <div className={TOOL_WRAP}>
+      <ToolHeader
+        eyebrow={t(locale, 'cat.developer')}
+        title={t(locale, 'tool.kimiCode.title')}
+        desc={t(locale, 'tool.kimiCode.desc')}
+      />
 
-      <div className='mb-8'>
-        <input
-          className='h-12 w-full rounded-lg border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder={t(locale, 'tool.kimiCode.search')}
-          type='text'
-          value={query}
-        />
-      </div>
+      <input
+        className='mb-6 h-11 w-full rounded-[12px] border border-border bg-surface px-4 text-[14px] text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder={t(locale, 'tool.kimiCode.search')}
+        type='text'
+        value={query}
+      />
 
-      <div className='space-y-8'>
+      <div className='space-y-5'>
         {filtered.map((section) => (
-          <section
-            key={section.title}
-            className='rounded-2xl border border-border bg-surface p-5'
-          >
-            <h2 className='mb-4 text-lg font-bold text-foreground'>
-              {section.title}
-            </h2>
-            <div className='space-y-3'>
+          <Panel key={section.title} label={section.title}>
+            <div className='divide-y divide-border'>
               {section.items.map((item, idx) => (
                 <div
                   key={`${section.title}-${idx}`}
-                  className='grid items-start gap-4 md:grid-cols-[1fr_2fr]'
+                  className='grid items-start gap-3 px-4 py-3 md:grid-cols-[minmax(0,1fr)_1.4fr]'
                 >
                   <div className='flex items-start gap-2'>
-                    <code className='break-all rounded-lg bg-bg px-2 py-1 font-mono text-sm text-foreground'>
+                    <code className='break-all rounded-[8px] bg-bg px-2 py-1 font-mono text-[13px] text-foreground'>
                       {item.cmd}
                     </code>
                     <button
-                      className='shrink-0 rounded-lg border border-border bg-white px-2 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent dark:bg-gray-900'
+                      className='h-7 shrink-0 rounded-[8px] border border-border bg-bg px-2.5 text-[11px] font-semibold text-secondary transition-colors hover:border-accent hover:text-accent'
                       onClick={() => copy(item.cmd)}
                       type='button'
                     >
@@ -276,15 +268,17 @@ export default function KimiCodeCheatSheetTool({
                         : t(locale, 'tool.kimiCode.copy')}
                     </button>
                   </div>
-                  <p className='text-sm text-secondary'>{item.desc}</p>
+                  <p className='text-[13px] leading-relaxed text-secondary'>
+                    {item.desc}
+                  </p>
                 </div>
               ))}
             </div>
-          </section>
+          </Panel>
         ))}
 
         {filtered.length === 0 && (
-          <p className='text-center text-sm text-muted'>
+          <p className='text-center text-[13px] text-muted'>
             {locale === 'zh'
               ? '没有找到匹配的命令。'
               : 'No matching commands found.'}

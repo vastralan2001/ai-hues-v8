@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import { PageShell } from '@/components/SiteChrome';
+import { ToolIcon } from '@/components/ToolIcon';
 import { type Locale } from '@/lib/dict';
 import { testDetailHref } from '@/lib/routes';
 import { TEST_META } from '@/lib/tests';
@@ -47,10 +48,10 @@ export default function TestsPage() {
               </span>
 
               <span
-                className='mb-4 flex h-12 w-12 items-center justify-center rounded-[14px] text-[20px] font-black text-white'
+                className='mb-4 flex h-12 w-12 items-center justify-center rounded-[14px] text-white'
                 style={{ background: tm.accent }}
               >
-                {tm.name.slice(0, 1)}
+                <ToolIcon slug={tm.slug} size={24} className='text-white' />
               </span>
 
               <h2 className='text-[22px] font-extrabold text-foreground'>

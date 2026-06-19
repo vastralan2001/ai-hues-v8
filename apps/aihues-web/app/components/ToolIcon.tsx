@@ -6,15 +6,18 @@ import {
   BarChart3,
   Bell,
   BookOpen,
+  Brain,
   Calculator,
   CalendarClock,
   Clapperboard,
+  ClipboardList,
   Clock,
   Code,
   Code2,
   Copy,
   Database,
   Dices,
+  Drama,
   Eye,
   FileJson,
   FileText,
@@ -142,6 +145,11 @@ const TOOL_ICONS: Record<string, LucideIcon> = {
   'daily-luck': Sparkles,
   'slot-machine': Dices,
   basketball: Trophy,
+
+  /* Tests */
+  sbti: Drama,
+  mbti: Brain,
+  tests: ClipboardList,
 
   /* Categories */
   all: LayoutGrid,

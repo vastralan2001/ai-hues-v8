@@ -64,6 +64,15 @@ const HOME_CATEGORIES = (locale: Locale) => [
     tags: ['Fortune', 'Slots', 'Hoops'],
     href: gamesHref,
   },
+  {
+    key: 'tests',
+    letter: 'T',
+    label: t(locale, 'cat.tests'),
+    count: TEST_META.length,
+    desc: t(locale, 'cat.testsDesc'),
+    tags: ['SBTI', 'MBTI'],
+    href: testsHref,
+  },
 ];
 
 /* ── Category card themes ── */
@@ -90,6 +99,11 @@ const CATEGORY_THEMES: Record<
     gradient: '#c2502e',
     bg: 'rgba(26, 26, 25, 0.05)',
     fg: 'rgba(26, 26, 25, 0.7)',
+  },
+  tests: {
+    gradient: '#c2502e',
+    bg: 'rgba(194, 80, 46, 0.1)',
+    fg: '#b1502f',
   },
 };
 
@@ -339,7 +353,7 @@ export default async function HomePage() {
             </Link>
           </div>
 
-          <div className='grid grid-cols-4 gap-4 max-[900px]:grid-cols-2 max-[540px]:grid-cols-1'>
+          <div className='grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5'>
             {categories.map((cat) => {
               const theme = CATEGORY_THEMES[cat.key];
               return (
@@ -549,10 +563,10 @@ export default async function HomePage() {
                 className='card-lift relative flex items-start gap-4 rounded-[16px] border border-border bg-surface p-6 text-inherit no-underline'
               >
                 <span
-                  className='flex h-14 w-14 shrink-0 items-center justify-center rounded-[14px] text-[22px] font-black text-white'
+                  className='flex h-14 w-14 shrink-0 items-center justify-center rounded-[14px] text-white'
                   style={{ background: tm.accent }}
                 >
-                  {tm.name.slice(0, 1)}
+                  <ToolIcon slug={tm.slug} size={26} className='text-white' />
                 </span>
                 <div className='min-w-0'>
                   <div className='flex items-center gap-2'>
@@ -630,6 +644,9 @@ export default async function HomePage() {
                 </span>
                 <span className='rounded-full bg-bg px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-muted'>
                   GAMES
+                </span>
+                <span className='rounded-full bg-bg px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-muted'>
+                  TESTS
                 </span>
               </div>
               <h3 className='mb-1 text-[20px] font-semibold text-foreground'>

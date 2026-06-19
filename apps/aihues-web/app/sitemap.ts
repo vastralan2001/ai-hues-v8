@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next';
 
 import { getAllPosts } from '@/lib/blog-data';
 import { PUBLISHED_TOOL_SLUGS } from '@/lib/published-tools';
+import { TEST_META } from '@/lib/tests';
 
 const BASE_URL = 'https://aihues.com';
 
@@ -9,6 +10,7 @@ const STATIC_PATHS = [
   '',
   '/tools',
   '/games',
+  '/tests',
   '/blog',
   '/pricing',
   '/showcase',
@@ -35,6 +37,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
+  const testPages = TEST_META.map((tm) => ({
+    url: `${BASE_URL}/tests/${tm.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.7,
+  }));
+
   const posts = getAllPosts();
   const blogPages = posts.map((post) => ({
     url: `${BASE_URL}/blog/${post.slug}`,
@@ -43,5 +52,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...staticPages, ...toolPages, ...blogPages];
+  return [...staticPages, ...toolPages, ...testPages, ...blogPages];
 }

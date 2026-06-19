@@ -38,6 +38,8 @@ export const dict: Record<Locale, Record<string, string>> = {
     'cat.developerDesc': 'JWT, JSON, Regex, Base64, UUID, QR Code, SHA256',
     'cat.aiWritingDesc': 'X Post, Blog Outline, SEO Title, Newsletter, PR Desc',
     'cat.gamesDesc': 'Daily Fortune, Slots, Hoops — free to play',
+    'cat.tests': 'Tests',
+    'cat.testsDesc': 'SBTI & MBTI — find your type, free',
 
     // stats
     'stats.aiTools': 'AI Tools',
@@ -811,6 +813,8 @@ export const dict: Record<Locale, Record<string, string>> = {
     'cat.developerDesc': 'JWT、JSON、正则、Base64、UUID、二维码、SHA256',
     'cat.aiWritingDesc': 'X 推文、博客大纲、SEO 标题、新闻稿、PR 描述',
     'cat.gamesDesc': '每日幸运签、老虎机、投篮挑战 — 免费畅玩',
+    'cat.tests': '测评',
+    'cat.testsDesc': 'SBTI 与 MBTI — 测出你的人格类型，免费',
 
     // stats
     'stats.aiTools': 'AI 工具',

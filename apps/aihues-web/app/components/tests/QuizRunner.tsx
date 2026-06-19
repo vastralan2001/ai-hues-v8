@@ -5,6 +5,7 @@ import { useState } from 'react';
 
 import { getTest } from '@/lib/tests';
 import type { TestResult } from '@/lib/tests/types';
+import { ToolIcon } from '@/components/ToolIcon';
 import { testsHref } from '@/lib/routes';
 
 type Phase = 'intro' | 'quiz' | 'result';
@@ -72,6 +73,12 @@ export default function QuizRunner({ slug }: { slug: string }) {
           className='rounded-[20px] border border-border bg-surface p-8 text-center'
           style={{ boxShadow: `0 1px 0 ${accent}22` }}
         >
+          <span
+            className='mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-[16px] text-white'
+            style={{ background: accent }}
+          >
+            <ToolIcon slug={config.slug} size={28} className='text-white' />
+          </span>
           <span
             className='mb-3 inline-block rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em]'
             style={{ color: accent, background: `${accent}14` }}

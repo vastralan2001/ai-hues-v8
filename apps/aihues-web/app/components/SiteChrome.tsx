@@ -148,6 +148,7 @@ export function SiteFooter({
                 links={[
                   [t(locale, 'nav.tools'), toolsHref],
                   [t(locale, 'categories.title'), `${homeHref}#categories`],
+                  [t(locale, 'nav.tests'), testsHref],
                   [t(locale, 'nav.discover'), showcaseHref],
                   [t(locale, 'nav.wishlist'), wishlistHref],
                 ]}
@@ -216,6 +217,7 @@ export function SiteFooter({
                 {[
                   { href: toolsHref, labelKey: 'nav.tools' },
                   { href: toolsHref, labelKey: 'categories.title' },
+                  { href: testsHref, labelKey: 'nav.tests' },
                   { href: wishlistHref, labelKey: 'nav.wishlist' },
                   { href: showcaseHref, labelKey: 'nav.showcase' },
                 ].map(({ href, labelKey }) => (
