@@ -6,12 +6,10 @@ import { useEffect, useRef, useState } from 'react';
 import { Loader2, Search, Sparkles } from 'lucide-react';
 
 import { ToolIcon } from '@/components/ToolIcon';
-import {
-  computePicks,
-  defaultPicks,
-  examplesFromPicks,
-  usageMap,
-} from '@/lib/spotlight-picks';
+import { examplesFromPicks } from '@/lib/spotlight-picks';
+
+// Fixed, one-per-category example queries cycled in the placeholder.
+const EXAMPLES = examplesFromPicks();
 
 interface HeroSearchProps {
   searchPlaceholder: string;
@@ -38,22 +36,11 @@ export default function HeroSearch({
   const [open, setOpen] = useState(false);
   const blurTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Rotating, usage-personalized example queries — one per category.
-  const [examples, setExamples] = useState<string[]>(() =>
-    examplesFromPicks(defaultPicks())
-  );
   const [phIdx, setPhIdx] = useState(0);
   const [phShown, setPhShown] = useState(true);
 
   useEffect(() => {
-    const raf = requestAnimationFrame(() =>
-      setExamples(examplesFromPicks(computePicks(usageMap())))
-    );
-    return () => cancelAnimationFrame(raf);
-  }, []);
-
-  useEffect(() => {
-    if (examples.length <= 1) return;
+    if (EXAMPLES.length <= 1) return;
     const reduce =
       typeof window !== 'undefined' &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -61,12 +48,12 @@ export default function HeroSearch({
     const iv = setInterval(() => {
       setPhShown(false);
       window.setTimeout(() => {
-        setPhIdx((i) => (i + 1) % examples.length);
+        setPhIdx((i) => (i + 1) % EXAMPLES.length);
         setPhShown(true);
       }, 320);
     }, 3000);
     return () => clearInterval(iv);
-  }, [examples]);
+  }, []);
 
   async function runSearch(term: string) {
     const q = term.trim();
@@ -133,7 +120,7 @@ export default function HeroSearch({
                 blurTimer.current = setTimeout(() => setOpen(false), 160);
               }}
             />
-            {query === '' && examples.length > 0 ? (
+            {query === '' && EXAMPLES.length > 0 ? (
               <span
                 aria-hidden='true'
                 className='pointer-events-none absolute inset-y-0 left-2 right-2 flex items-center'
@@ -145,7 +132,7 @@ export default function HeroSearch({
                     transition: 'opacity 300ms ease',
                   }}
                 >
-                  {examples[phIdx]}
+                  {EXAMPLES[phIdx]}
                 </span>
               </span>
             ) : null}

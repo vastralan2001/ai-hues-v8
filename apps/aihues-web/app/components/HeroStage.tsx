@@ -1,14 +1,9 @@
 'use client';
 
-import { type ReactNode, useEffect, useState } from 'react';
+import { type ReactNode, useState } from 'react';
 
-import {
-  computePicks,
-  defaultPicks,
-  slidesFromPicks,
-  usageMap,
-} from '@/lib/spotlight-picks';
-import SpotlightCarousel, { type SpotlightSlide } from './SpotlightCarousel';
+import { slidesFromPicks } from '@/lib/spotlight-picks';
+import SpotlightCarousel from './SpotlightCarousel';
 
 // Full-viewport warm gradient palettes, crossfaded by the active slide.
 const PALETTES = [
@@ -27,18 +22,7 @@ export default function HeroStage({
   children: ReactNode;
 }) {
   const [active, setActive] = useState(0);
-  // One spotlight slide per category — deterministic default for SSR, then
-  // re-picked from the user's usage after mount.
-  const [slides, setSlides] = useState<SpotlightSlide[]>(() =>
-    slidesFromPicks(defaultPicks())
-  );
-
-  useEffect(() => {
-    const raf = requestAnimationFrame(() =>
-      setSlides(slidesFromPicks(computePicks(usageMap())))
-    );
-    return () => cancelAnimationFrame(raf);
-  }, []);
+  const slides = slidesFromPicks();
 
   const layers = PALETTES.slice(
     0,

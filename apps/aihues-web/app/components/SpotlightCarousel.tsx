@@ -15,8 +15,9 @@ export type SpotlightSlide = {
   cta: string;
 };
 
-const EASE = 'cubic-bezier(0.77, 0, 0.175, 1)';
-const DURATION = 600;
+const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
+const DURATION = 650;
+const SHIFT = 40; // px of horizontal drift — small, so slides fade rather than hard-clip
 
 export default function SpotlightCarousel({
   slides,
@@ -29,72 +30,56 @@ export default function SpotlightCarousel({
 }) {
   const count = slides.length;
 
-  // `pos` indexes into the cloned track [last, ...slides, first]; real slide
-  // i sits at pos i+1. We only ever move forward (pos+1); when we slide onto
-  // the trailing first-clone we snap back to the real first with no transition
-  // — so last→first always travels rightward and the loop has no visible seam.
-  const [pos, setPos] = useState(1);
-  const [anim, setAnim] = useState(true);
+  // Slides are stacked; only the active one is visible. Each transition fades
+  // + drifts the outgoing slide out (in the travel direction) and the incoming
+  // slide in from the opposite side — so there is no sliding viewport edge and
+  // wrapping last→first reads the same as any other forward step.
+  const [index, setIndex] = useState(0);
+  const [prev, setPrev] = useState(-1);
+  const [dir, setDir] = useState(1);
   const [paused, setPaused] = useState(false);
-  // Locked while a slide transition is in flight — prevents overshooting the
-  // cloned track (which would flash a blank slide) on rapid input.
   const lock = useRef(false);
 
-  const logical = count > 0 ? (pos - 1 + count) % count : 0;
-
   useEffect(() => {
-    onIndexChange?.(logical);
-  }, [logical, onIndexChange]);
+    onIndexChange?.(index);
+  }, [index, onIndexChange]);
 
-  // Re-enable the transition one frame after a no-transition snap so the
-  // jump itself is instant but the next move animates.
-  useEffect(() => {
-    if (anim) return;
-    const raf = requestAnimationFrame(() => setAnim(true));
-    return () => cancelAnimationFrame(raf);
-  }, [anim]);
+  const go = useCallback(
+    (target: number, d: number) => {
+      if (lock.current || target === index || count <= 1) return;
+      lock.current = true;
+      setDir(d);
+      setPrev(index);
+      setIndex(target);
+    },
+    [index, count]
+  );
 
-  const step = useCallback((dir: number) => {
-    if (lock.current) return;
-    lock.current = true;
-    setAnim(true);
-    setPos((p) => p + dir);
-  }, []);
+  const next = useCallback(
+    () => go((index + 1) % count, 1),
+    [go, index, count]
+  );
+  const back = useCallback(
+    () => go((index - 1 + count) % count, -1),
+    [go, index, count]
+  );
 
-  const goTo = useCallback((logicalIdx: number) => {
-    if (lock.current) return;
-    lock.current = true;
-    setAnim(true);
-    setPos(logicalIdx + 1);
-  }, []);
-
-  // Autoplay — always forward (through `step`, so it respects the lock).
+  // Autoplay — always forward.
   useEffect(() => {
     if (paused || count <= 1) return;
     const reduce =
       typeof window !== 'undefined' &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduce) return;
-    const t = setInterval(() => step(1), 5200);
+    const t = setInterval(() => next(), 5200);
     return () => clearInterval(t);
-  }, [paused, count, step]);
+  }, [paused, count, next]);
 
-  function onTrackTransitionEnd(e: React.TransitionEvent) {
-    if (e.propertyName !== 'transform' || e.target !== e.currentTarget) return;
-    if (pos === count + 1) {
-      setAnim(false);
-      setPos(1);
-    } else if (pos === 0) {
-      setAnim(false);
-      setPos(count);
-    }
-    lock.current = false;
+  function onSlidesTransitionEnd(e: React.TransitionEvent) {
+    if (e.propertyName === 'transform') lock.current = false;
   }
 
   if (count === 0) return null;
-
-  // Cloned track: a copy of the last slide up front, the first slide at the end.
-  const track = [slides[count - 1], ...slides, slides[0]];
 
   return (
     <div
@@ -102,54 +87,62 @@ export default function SpotlightCarousel({
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {/* Viewport */}
+      {/* Stacked viewport — no overflow clip, so there is no edge to feel. */}
       <div
-        className={`overflow-hidden rounded-[24px] ${
-          compact ? '' : 'border border-border bg-surface'
-        }`}
+        className={`relative ${compact ? 'min-h-[430px]' : 'min-h-[460px]'}`}
+        onTransitionEnd={onSlidesTransitionEnd}
       >
-        <div
-          className='flex'
-          onTransitionEnd={onTrackTransitionEnd}
-          style={{
-            transform: `translateX(-${pos * 100}%)`,
-            transition: anim ? `transform ${DURATION}ms ${EASE}` : 'none',
-          }}
-        >
-          {track.map((s, i) =>
-            compact ? (
-              <div key={'t' + i} className='w-full shrink-0'>
-                <div className='relative flex min-h-[430px] flex-col justify-center px-1 py-6'>
-                  <div className='relative'>
-                    <div className='mb-4 flex items-center gap-3'>
-                      <span className='flex h-11 w-11 items-center justify-center rounded-[13px] bg-accent-bg text-accent'>
-                        <ToolIcon slug={s.slug} size={22} />
-                      </span>
-                      <span className='inline-flex items-center rounded-full border border-border bg-white/70 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-accent backdrop-blur-md'>
-                        {s.eyebrow}
-                      </span>
-                    </div>
-                    <h3 className='mb-3 text-[28px] font-extrabold leading-[1.12] tracking-[-0.02em] text-foreground'>
-                      {s.title}
-                    </h3>
-                    <p className='mb-5 max-w-[400px] text-[15px] leading-relaxed text-secondary'>
-                      {s.description}
-                    </p>
-                    {s.metrics ? (
-                      <p className='mb-7 text-[12px] font-semibold uppercase tracking-[0.12em] text-muted'>
-                        {s.metrics}
-                      </p>
-                    ) : null}
-                    <Link className='btn-cta btn-cta--sm' href={s.href}>
-                      {s.cta}
-                    </Link>
+        {slides.map((s, i) => {
+          const isActive = i === index;
+          const isPrev = i === prev;
+          const x = isActive
+            ? 0
+            : isPrev
+              ? dir > 0
+                ? -SHIFT
+                : SHIFT
+              : dir > 0
+                ? SHIFT
+                : -SHIFT;
+          return (
+            <div
+              key={s.slug + i}
+              aria-hidden={!isActive}
+              className='absolute inset-0'
+              style={{
+                opacity: isActive ? 1 : 0,
+                transform: `translateX(${x}px)`,
+                transition: `opacity ${DURATION}ms ${EASE}, transform ${DURATION}ms ${EASE}`,
+                pointerEvents: isActive ? 'auto' : 'none',
+              }}
+            >
+              {compact ? (
+                <div className='flex h-full flex-col justify-center px-1'>
+                  <div className='mb-4 flex items-center gap-3'>
+                    <span className='flex h-11 w-11 items-center justify-center rounded-[13px] bg-accent-bg text-accent'>
+                      <ToolIcon slug={s.slug} size={22} />
+                    </span>
+                    <span className='inline-flex items-center rounded-full border border-border bg-white/70 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-accent backdrop-blur-md'>
+                      {s.eyebrow}
+                    </span>
                   </div>
+                  <h3 className='mb-3 text-[28px] font-extrabold leading-[1.12] tracking-[-0.02em] text-foreground'>
+                    {s.title}
+                  </h3>
+                  <p className='mb-5 max-w-[400px] text-[15px] leading-relaxed text-secondary'>
+                    {s.description}
+                  </p>
+                  {s.metrics ? (
+                    <p className='mb-7 text-[12px] font-semibold uppercase tracking-[0.12em] text-muted'>
+                      {s.metrics}
+                    </p>
+                  ) : null}
+                  <Link className='btn-cta btn-cta--sm w-fit' href={s.href}>
+                    {s.cta}
+                  </Link>
                 </div>
-              </div>
-            ) : (
-              <div key={'t' + i} className='w-full shrink-0'>
-                <div className='grid grid-cols-1 items-center gap-8 p-10 md:grid-cols-[1.1fr_0.9fr] md:p-14'>
-                  {/* Text */}
+              ) : (
+                <div className='grid h-full grid-cols-1 items-center gap-8 p-10 md:grid-cols-[1.1fr_0.9fr] md:p-14'>
                   <div>
                     <div className='mb-4 flex items-center gap-3'>
                       <span className='flex h-12 w-12 items-center justify-center rounded-[14px] bg-accent-bg text-accent'>
@@ -170,12 +163,10 @@ export default function SpotlightCarousel({
                         {s.metrics}
                       </p>
                     ) : null}
-                    <Link className='btn-cta' href={s.href}>
+                    <Link className='btn-cta w-fit' href={s.href}>
                       {s.cta}
                     </Link>
                   </div>
-
-                  {/* Feature visual */}
                   <div
                     aria-hidden='true'
                     className='relative hidden aspect-[4/3] items-center justify-center overflow-hidden rounded-[18px] border border-border md:flex'
@@ -189,10 +180,10 @@ export default function SpotlightCarousel({
                     </span>
                   </div>
                 </div>
-              </div>
-            )
-          )}
-        </div>
+              )}
+            </div>
+          );
+        })}
       </div>
 
       {/* Controls */}
@@ -202,14 +193,12 @@ export default function SpotlightCarousel({
             <button
               key={'dot' + s.slug + i}
               aria-label={`Go to slide ${i + 1}`}
-              onClick={() => goTo(i)}
+              onClick={() => go(i, i >= index ? 1 : -1)}
               className='h-2 rounded-full transition-all duration-300'
               style={{
-                width: i === logical ? 28 : 8,
+                width: i === index ? 28 : 8,
                 background:
-                  i === logical
-                    ? 'var(--accent)'
-                    : 'var(--color-border-strong)',
+                  i === index ? 'var(--accent)' : 'var(--color-border-strong)',
               }}
             />
           ))}
@@ -217,7 +206,7 @@ export default function SpotlightCarousel({
         <div className='flex gap-2'>
           <button
             aria-label='Previous'
-            onClick={() => step(-1)}
+            onClick={back}
             className='flex h-11 w-11 items-center justify-center rounded-full border border-border bg-white text-foreground transition-all duration-200 hover:-translate-y-0.5 hover:border-border-strong hover:shadow-md active:scale-95'
           >
             <svg width='18' height='18' viewBox='0 0 24 24' fill='none'>
@@ -232,7 +221,7 @@ export default function SpotlightCarousel({
           </button>
           <button
             aria-label='Next'
-            onClick={() => step(1)}
+            onClick={next}
             className='flex h-11 w-11 items-center justify-center rounded-full border border-border bg-white text-foreground transition-all duration-200 hover:-translate-y-0.5 hover:border-border-strong hover:shadow-md active:scale-95'
           >
             <svg width='18' height='18' viewBox='0 0 24 24' fill='none'>
