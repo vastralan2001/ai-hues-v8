@@ -26,6 +26,12 @@ import {
   type EngineInfo,
   type SearchResult,
 } from '@/lib/chess-engine';
+import {
+  ensureOpenings,
+  openingForFen,
+  POPULAR_OPENINGS,
+  type OpeningInfo,
+} from '@/lib/chess-openings';
 
 /* Chess — a WASM-engine board, Kimi-styled and borderless to match the other
    games. The square board blends into the themed background with translucent
@@ -207,8 +213,9 @@ const T = {
     reset: 'Reset',
     moves: 'Moves',
     best: 'Best',
-    playFromHere: 'Play from here',
-    spectateFromHere: 'Spectate from here',
+    playFromHere: 'Play here',
+    spectateFromHere: 'Spectate here',
+    loadOpening: 'Load opening…',
     evalHint:
       'Play makes moves by the rules. Use Move to drag pieces freely, or pick a piece to add; drag off the board to delete.',
     toMove: 'To move',
@@ -276,8 +283,9 @@ const T = {
     reset: '重置',
     moves: '棋谱',
     best: '推荐',
-    playFromHere: '从此局面对战',
-    spectateFromHere: '从此局面观战',
+    playFromHere: '从此对战',
+    spectateFromHere: '从此观战',
+    loadOpening: '载入开局…',
     evalHint:
       '走棋按规则走子；移动可自由拖动棋子，点选棋子可添加，拖出棋盘即删除。',
     toMove: '走子方',
@@ -497,6 +505,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     to: string;
   } | null>(null);
   const [playEval, setPlayEval] = useState(false);
+  const [opening, setOpening] = useState<OpeningInfo | null>(null);
 
   const movesEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -1060,11 +1069,22 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     setMaterial({ capW, capB, adv: wv - bv });
   }
 
+  function updateOpening() {
+    const chess = chessRef.current!;
+    const o = openingForFen(chess.fen());
+    if (o) {
+      setOpening(o);
+      return;
+    }
+    if (chess.history().length === 0) setOpening(null);
+  }
+
   function setStatusFromGame() {
     const chess = chessRef.current!;
     const t = modeRef.current === 'eval' ? editorTurnRef.current : chess.turn();
     setTurn(t);
     updateMaterial();
+    updateOpening();
     if (modeRef.current !== 'eval') {
       if (chess.isGameOver()) return;
       setStatusText(t === 'w' ? tx.whiteMove : tx.blackMove);
@@ -1634,6 +1654,23 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     if (modeRef.current === 'eval') analyzePosition();
   }
 
+  function loadOpening(moves: string) {
+    const chess = chessRef.current!;
+    chess.reset();
+    for (const m of moves.split(' ')) {
+      if (!m) continue;
+      try {
+        chess.move(m);
+      } catch {
+        break;
+      }
+    }
+    engineRef.current?.stop();
+    if (modeRef.current === 'eval') syncEditorTurn();
+    refreshView();
+    if (modeRef.current === 'eval') analyzePosition();
+  }
+
   function resolvedHumanColor(): Color {
     if (humanColor === 'random') return rnd() < 0.5 ? 'w' : 'b';
     return humanColor;
@@ -1704,6 +1741,19 @@ export default function ChessGame({ locale }: { locale: Locale }) {
   useEffect(() => {
     handlersRef.current = { togglePause, stepSpectate, undo, toggleFlip };
   });
+  useEffect(() => {
+    let alive = true;
+    ensureOpenings().then(() => {
+      if (!alive) return;
+      const chess = chessRef.current;
+      if (!chess) return;
+      const o = openingForFen(chess.fen());
+      if (o) setOpening(o);
+    });
+    return () => {
+      alive = false;
+    };
+  }, []);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const h = handlersRef.current;
@@ -1805,6 +1855,19 @@ export default function ChessGame({ locale }: { locale: Locale }) {
             <ArrowLeftRight size={15} />
           </button>
         </div>
+
+        {opening && (
+          <div className='-mt-1 flex items-center gap-1.5 text-[11px] leading-tight text-white/45'>
+            {opening.eco && (
+              <span className='shrink-0 rounded bg-white/10 px-1.5 py-0.5 font-bold text-white/60'>
+                {opening.eco}
+              </span>
+            )}
+            <span className='truncate' title={opening.name}>
+              {opening.name}
+            </span>
+          </div>
+        )}
 
         {(material.capW.length > 0 ||
           material.capB.length > 0 ||
@@ -2095,6 +2158,20 @@ export default function ChessGame({ locale }: { locale: Locale }) {
                   </button>
                 </div>
               </div>
+              <select
+                value=''
+                onChange={(e) => {
+                  if (e.target.value) loadOpening(e.target.value);
+                }}
+                className='w-full rounded-lg bg-white/10 px-2.5 py-1.5 text-[12px] font-medium text-white/75 outline-none ring-1 ring-white/10 transition-colors hover:bg-white/15 focus:ring-white/25'
+              >
+                <option value=''>{tx.loadOpening}</option>
+                {POPULAR_OPENINGS.map((o) => (
+                  <option key={o.name} value={o.moves} className='bg-[#1a1e27]'>
+                    {o.name}
+                  </option>
+                ))}
+              </select>
               <FenLoader
                 value={fenInput}
                 bad={fenBad}

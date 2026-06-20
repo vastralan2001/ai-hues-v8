@@ -29,6 +29,9 @@ apps/aihues-web/data/wishes.e2e.json
 # Vendored Stockfish WASM engine
 apps/aihues-web/public/engine/
 
+# Generated chess opening book (EPD -> ECO|name map)
+apps/aihues-web/public/chess-openings.json
+
 # moonrepo cache
 .moon/cache
 .moon/docker
