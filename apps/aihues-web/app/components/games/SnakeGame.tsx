@@ -141,12 +141,14 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
   const tx = T[zh ? 'zh' : 'en'];
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const fieldRef = useRef<HTMLDivElement | null>(null);
   const gRef = useRef<SGame | null>(null);
   const rafRef = useRef<number>(0);
   const phaseRef = useRef<'idle' | 'playing' | 'over'>('idle');
   const speedRef = useRef<Speed>('normal');
   const touchRef = useRef<{ x: number; y: number } | null>(null);
   const pausedRef = useRef(false);
+  const lastFpRef = useRef(0);
 
   const [phase, setPhase] = useState<'idle' | 'playing' | 'over'>('idle');
   const [score, setScore] = useState(0);
@@ -154,6 +156,7 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
   const [speed, setSpeed] = useState<Speed>('normal');
   const [awaiting, setAwaiting] = useState(false);
   const [paused, setPaused] = useState(false);
+  const [fieldPx, setFieldPx] = useState(0);
 
   useEffect(() => {
     const raf = requestAnimationFrame(() => {
@@ -547,11 +550,11 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
   }
 
   useEffect(() => {
-    const wrap = wrapRef.current;
+    const field = fieldRef.current;
     const canvas = canvasRef.current;
-    if (!wrap || !canvas) return;
+    if (!field || !canvas) return;
     function sizeNow() {
-      const el = wrapRef.current;
+      const el = fieldRef.current;
       const cv = canvasRef.current;
       if (!el || !cv) return;
       const rect = el.getBoundingClientRect();
@@ -564,6 +567,11 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
       const scale = Math.min(cw / FIELD, ch / FIELD);
       const offX = (cw - FIELD * scale) / 2;
       const offY = (ch - FIELD * scale) / 2;
+      const fp = Math.round(FIELD * scale);
+      if (fp !== lastFpRef.current) {
+        lastFpRef.current = fp;
+        setFieldPx(fp);
+      }
       if (!gRef.current) {
         gRef.current = {
           dpr,
@@ -593,7 +601,7 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
     }
     sizeNow();
     const ro = new ResizeObserver(() => sizeNow());
-    ro.observe(wrap);
+    ro.observe(field);
     rafRef.current = requestAnimationFrame(frame);
     return () => {
       cancelAnimationFrame(rafRef.current);
@@ -674,109 +682,116 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
   return (
     <div
       ref={wrapRef}
-      className='relative h-full min-h-[460px] w-full touch-none select-none'
+      className='relative flex min-h-[460px] w-full flex-col touch-none select-none'
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
-      <canvas ref={canvasRef} className='absolute inset-0 h-full w-full' />
+      <div
+        className='mx-auto flex h-[52px] w-full shrink-0 items-center justify-between text-white'
+        style={{ maxWidth: fieldPx || undefined }}
+      >
+        {phase === 'playing' ? (
+          <>
+            <span
+              key={score}
+              className='sn-score inline-block text-[26px] font-bold leading-none text-white/90'
+            >
+              {score}
+            </span>
+            <span className='flex items-center gap-2'>
+              {!paused ? (
+                <button
+                  type='button'
+                  aria-label={tx.pause}
+                  onClick={togglePause}
+                  className='flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1.5 text-white/80 transition-colors hover:bg-white/20 sm:px-3'
+                >
+                  <Pause size={13} />
+                  <span className='hidden text-[12px] font-semibold sm:inline'>
+                    {tx.pause}
+                  </span>
+                  <kbd className='hidden rounded bg-white/15 px-1.5 py-0.5 text-[10px] font-semibold text-white/55 sm:inline-block'>
+                    Space
+                  </kbd>
+                </button>
+              ) : null}
+              <span className='rounded-full bg-white/10 px-3 py-1 text-[13px] font-medium text-white/70'>
+                {tx.best} {best}
+              </span>
+            </span>
+          </>
+        ) : null}
+      </div>
 
-      {(phase === 'playing' || phase === 'over') && (
-        <div className='pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between p-5 text-white'>
-          <span
-            key={score}
-            className='sn-score inline-block text-[26px] font-bold leading-none text-white/90'
-          >
-            {score}
-          </span>
-          <span className='flex items-center gap-2'>
-            {phase === 'playing' && !paused ? (
+      <div ref={fieldRef} className='relative min-h-0 flex-1'>
+        <canvas ref={canvasRef} className='absolute inset-0 h-full w-full' />
+
+        {phase === 'playing' && awaiting && (
+          <div className='pointer-events-none absolute bottom-24 left-1/2 -translate-x-1/2'>
+            <span className='sn-in rounded-full bg-black/35 px-4 py-2 text-[13px] font-medium text-white/80 ring-1 ring-white/10'>
+              {tx.hint}
+            </span>
+          </div>
+        )}
+
+        {phase === 'playing' && (
+          <div className='absolute bottom-5 left-1/2 -translate-x-1/2 sm:hidden'>
+            <div className='grid grid-cols-3 grid-rows-3 gap-1.5'>
               <button
                 type='button'
-                aria-label={tx.pause}
-                onClick={togglePause}
-                className='pointer-events-auto flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1.5 text-white/80 transition-colors hover:bg-white/20 sm:px-3'
+                aria-label='Up'
+                onClick={() => changeDir(0, -1)}
+                className='sn-pad col-start-2 row-start-1'
               >
-                <Pause size={13} />
-                <span className='hidden text-[12px] font-semibold sm:inline'>
-                  {tx.pause}
-                </span>
-                <kbd className='hidden rounded bg-white/15 px-1.5 py-0.5 text-[10px] font-semibold text-white/55 sm:inline-block'>
-                  Space
-                </kbd>
+                ↑
               </button>
-            ) : null}
-            <span className='rounded-full bg-white/10 px-3 py-1 text-[13px] font-medium text-white/70'>
-              {tx.best} {best}
+              <button
+                type='button'
+                aria-label='Left'
+                onClick={() => changeDir(-1, 0)}
+                className='sn-pad col-start-1 row-start-2'
+              >
+                ←
+              </button>
+              <button
+                type='button'
+                aria-label='Down'
+                onClick={() => changeDir(0, 1)}
+                className='sn-pad col-start-2 row-start-2'
+              >
+                ↓
+              </button>
+              <button
+                type='button'
+                aria-label='Right'
+                onClick={() => changeDir(1, 0)}
+                className='sn-pad col-start-3 row-start-2'
+              >
+                →
+              </button>
+            </div>
+          </div>
+        )}
+
+        {phase === 'playing' && paused && (
+          <div className='sn-in absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-black/45 px-6 text-center'>
+            <div className='text-[15px] font-semibold uppercase tracking-[0.18em] text-white/70'>
+              {tx.paused}
+            </div>
+            <button
+              type='button'
+              onClick={togglePause}
+              className='sn-btn inline-flex items-center gap-2 rounded-full bg-white px-8 py-3 text-[15px] font-semibold text-[#121212] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#101512]'
+            >
+              <Play size={16} />
+              {tx.resume}
+            </button>
+            <span className='text-[12px] font-medium text-white/40'>
+              Space · P · Esc
             </span>
-          </span>
-        </div>
-      )}
-
-      {phase === 'playing' && awaiting && (
-        <div className='pointer-events-none absolute bottom-24 left-1/2 -translate-x-1/2'>
-          <span className='sn-in rounded-full bg-black/35 px-4 py-2 text-[13px] font-medium text-white/80 ring-1 ring-white/10'>
-            {tx.hint}
-          </span>
-        </div>
-      )}
-
-      {phase === 'playing' && (
-        <div className='absolute bottom-5 left-1/2 -translate-x-1/2 sm:hidden'>
-          <div className='grid grid-cols-3 grid-rows-3 gap-1.5'>
-            <button
-              type='button'
-              aria-label='Up'
-              onClick={() => changeDir(0, -1)}
-              className='sn-pad col-start-2 row-start-1'
-            >
-              ↑
-            </button>
-            <button
-              type='button'
-              aria-label='Left'
-              onClick={() => changeDir(-1, 0)}
-              className='sn-pad col-start-1 row-start-2'
-            >
-              ←
-            </button>
-            <button
-              type='button'
-              aria-label='Down'
-              onClick={() => changeDir(0, 1)}
-              className='sn-pad col-start-2 row-start-2'
-            >
-              ↓
-            </button>
-            <button
-              type='button'
-              aria-label='Right'
-              onClick={() => changeDir(1, 0)}
-              className='sn-pad col-start-3 row-start-2'
-            >
-              →
-            </button>
           </div>
-        </div>
-      )}
-
-      {phase === 'playing' && paused && (
-        <div className='sn-in absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-black/45 px-6 text-center'>
-          <div className='text-[15px] font-semibold uppercase tracking-[0.18em] text-white/70'>
-            {tx.paused}
-          </div>
-          <button
-            type='button'
-            onClick={togglePause}
-            className='sn-btn inline-flex items-center gap-2 rounded-full bg-white px-8 py-3 text-[15px] font-semibold text-[#121212] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#101512]'
-          >
-            <Play size={16} />
-            {tx.resume}
-          </button>
-          <span className='text-[12px] font-medium text-white/40'>
-            Space · P · Esc
-          </span>
-        </div>
-      )}
+        )}
+      </div>
 
       {phase === 'idle' && (
         <div className='sn-in absolute inset-0 flex flex-col items-center justify-center gap-5 px-6 text-center'>
