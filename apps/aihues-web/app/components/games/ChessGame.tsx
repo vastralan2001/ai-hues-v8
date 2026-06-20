@@ -277,7 +277,6 @@ export default function ChessGame({ locale }: { locale: Locale }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const gRef = useRef<ChessView | null>(null);
   const rafRef = useRef<number>(0);
-  const boardPxRef = useRef(0);
 
   const chessRef = useRef<Chess | null>(null);
   if (chessRef.current == null) {
@@ -317,7 +316,6 @@ export default function ChessGame({ locale }: { locale: Locale }) {
   const [evalFrac, setEvalFrac] = useState(0.5);
   const [evalText, setEvalText] = useState('0.0');
   const [evalDepth, setEvalDepth] = useState(0);
-  const [boardPx, setBoardPx] = useState(0);
   const [promotion, setPromotion] = useState<{
     from: string;
     to: string;
@@ -384,24 +382,18 @@ export default function ChessGame({ locale }: { locale: Locale }) {
   }
 
   function sizeNow() {
-    const field = fieldRef.current;
     const cv = canvasRef.current;
-    if (!field || !cv) return;
-    const r = field.getBoundingClientRect();
-    if (r.width < 2 || r.height < 2) return;
+    if (!cv) return;
+    const r = cv.getBoundingClientRect();
+    const size = Math.min(r.width, r.height);
+    if (size < 2) return;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const evalReserve = modeRef.current === 'eval' ? 22 : 0;
-    const availW = r.width - evalReserve;
-    const bp = Math.max(180, Math.floor(Math.min(availW, r.height) - 2));
-    cv.width = Math.round(bp * dpr);
-    cv.height = Math.round(bp * dpr);
-    cv.style.width = bp + 'px';
-    cv.style.height = bp + 'px';
-    if (bp !== boardPxRef.current) {
-      boardPxRef.current = bp;
-      setBoardPx(bp);
+    const target = Math.round(size * dpr);
+    if (cv.width !== target) {
+      cv.width = target;
+      cv.height = target;
     }
-    const scale = bp / BOARD;
+    const scale = size / BOARD;
     if (!gRef.current) gRef.current = makeView(dpr, scale);
     else Object.assign(gRef.current, { dpr, scale });
   }
@@ -441,9 +433,8 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     s = 1,
     alpha = 1
   ) {
-    const size = CELL * 0.86 * s;
+    const size = CELL * 0.82 * s;
     const ch = GLYPH[piece.type] + '︎';
-    const cyG = cy - size * 0.03;
     const white = piece.color === 'w';
     ctx.save();
     ctx.globalAlpha = alpha;
@@ -451,59 +442,33 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
-    ctx.save();
-    ctx.globalAlpha = alpha * 0.32;
-    ctx.fillStyle = '#000';
-    ctx.beginPath();
-    ctx.ellipse(
-      cx,
-      cy + size * 0.4,
-      size * 0.29,
-      size * 0.095,
-      0,
-      0,
-      Math.PI * 2
-    );
-    ctx.fill();
-    ctx.restore();
-
-    ctx.save();
-    ctx.shadowColor = 'rgba(0,0,0,0.55)';
-    ctx.shadowBlur = size * 0.11;
-    ctx.shadowOffsetY = size * 0.06;
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.fillText(ch, cx, cyG);
-    ctx.restore();
-
     const grad = ctx.createLinearGradient(
       cx,
-      cyG - size * 0.48,
+      cy - size * 0.46,
       cx,
-      cyG + size * 0.46
+      cy + size * 0.46
     );
     if (white) {
       grad.addColorStop(0, '#ffffff');
-      grad.addColorStop(0.5, '#eef1f6');
-      grad.addColorStop(1, '#b4bdca');
+      grad.addColorStop(1, '#ccd3dd');
     } else {
-      grad.addColorStop(0, '#727a88');
-      grad.addColorStop(0.5, '#3b4250');
-      grad.addColorStop(1, '#0d1015');
+      grad.addColorStop(0, '#4b5360');
+      grad.addColorStop(1, '#171b22');
     }
     ctx.fillStyle = grad;
-    ctx.fillText(ch, cx, cyG);
+    ctx.fillText(ch, cx, cy);
 
-    ctx.lineWidth = size * 0.04;
+    ctx.lineWidth = Math.max(1.1, size * 0.032);
     ctx.lineJoin = 'round';
-    ctx.strokeStyle = white ? 'rgba(48,54,66,0.85)' : 'rgba(0,0,0,0.95)';
-    ctx.strokeText(ch, cx, cyG);
+    ctx.strokeStyle = white ? 'rgba(58,64,76,0.9)' : 'rgba(6,9,14,0.95)';
+    ctx.strokeText(ch, cx, cy);
 
     ctx.save();
     ctx.beginPath();
-    ctx.rect(cx - size * 0.62, cyG - size * 0.62, size * 1.24, size * 0.4);
+    ctx.rect(cx - size * 0.6, cy - size * 0.58, size * 1.2, size * 0.32);
     ctx.clip();
-    ctx.fillStyle = white ? 'rgba(255,255,255,0.7)' : 'rgba(214,222,235,0.22)';
-    ctx.fillText(ch, cx, cyG - size * 0.014);
+    ctx.fillStyle = white ? 'rgba(255,255,255,0.5)' : 'rgba(208,216,228,0.14)';
+    ctx.fillText(ch, cx, cy);
     ctx.restore();
 
     ctx.restore();
@@ -1284,9 +1249,9 @@ export default function ChessGame({ locale }: { locale: Locale }) {
   };
 
   return (
-    <div className='relative flex min-h-[540px] w-full touch-none select-none flex-col gap-4 lg:h-full lg:flex-row lg:items-stretch'>
+    <div className='relative flex min-h-[520px] w-full touch-none select-none flex-col items-center gap-4 py-1 lg:h-full lg:flex-row lg:items-center lg:justify-center lg:gap-6'>
       {/* sidebar: mode + controls + moves */}
-      <div className='flex w-full shrink-0 flex-col gap-3 text-white lg:w-[300px]'>
+      <div className='flex w-full max-w-[min(92vw,520px)] shrink-0 flex-col gap-3 text-white lg:h-[min(74vh,600px)] lg:w-[300px]'>
         <div className='flex gap-1 rounded-full bg-white/[0.06] p-1 ring-1 ring-white/10'>
           {modes.map((m) => (
             <button
@@ -1589,73 +1554,65 @@ export default function ChessGame({ locale }: { locale: Locale }) {
         </div>
       </div>
 
-      {/* board area */}
-      <div
-        ref={fieldRef}
-        className='relative flex min-h-[320px] flex-1 items-center justify-center lg:order-first lg:min-h-0'
-      >
-        <div className='flex items-center gap-2'>
-          {showEvalBar && (
+      {/* board + eval bar */}
+      <div className='order-first flex shrink-0 items-stretch gap-2'>
+        {showEvalBar && (
+          <div className='relative w-3.5 shrink-0 overflow-hidden rounded-full bg-[#0b0d12] ring-1 ring-white/10'>
             <div
-              className='relative w-3.5 shrink-0 overflow-hidden rounded-full bg-[#0b0d12] ring-1 ring-white/10'
-              style={{ height: boardPx || '70%' }}
-            >
-              <div
-                className='absolute inset-x-0 bottom-0 bg-[#f4f6fa] transition-[height] duration-300 ease-out'
-                style={{ height: `${evalFrac * 100}%` }}
-              />
-              <div className='absolute inset-x-0 top-1/2 h-px bg-white/25' />
+              className='absolute inset-x-0 bottom-0 bg-[#f4f6fa] transition-[height] duration-300 ease-out'
+              style={{ height: `${evalFrac * 100}%` }}
+            />
+            <div className='absolute inset-x-0 top-1/2 h-px bg-white/25' />
+          </div>
+        )}
+
+        <div
+          ref={fieldRef}
+          className='relative aspect-square w-[min(90vw,520px)] shrink-0 lg:w-auto lg:h-[min(74vh,600px)]'
+          onPointerDown={onBoardPointer}
+        >
+          <canvas
+            ref={canvasRef}
+            className='absolute inset-0 block h-full w-full'
+          />
+
+          {promotion && (
+            <div className='absolute inset-0 z-20 flex items-center justify-center bg-black/45'>
+              <div className='ch-in flex gap-2 rounded-2xl bg-[#1a1e27] p-3 ring-1 ring-white/12'>
+                {['q', 'r', 'b', 'n'].map((p) => (
+                  <button
+                    key={p}
+                    type='button'
+                    onClick={() => choosePromotion(p)}
+                    className='flex h-16 w-16 items-center justify-center rounded-xl bg-white/8 text-[40px] leading-none text-white transition-colors hover:bg-white/18'
+                    style={{
+                      fontFamily:
+                        '"Segoe UI Symbol","Noto Sans Symbols 2",serif',
+                    }}
+                  >
+                    {GLYPH[p]}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
 
-          <div
-            className='relative shrink-0'
-            style={{
-              width: boardPx || undefined,
-              height: boardPx || undefined,
-            }}
-            onPointerDown={onBoardPointer}
-          >
-            <canvas ref={canvasRef} className='block' />
-
-            {promotion && (
-              <div className='absolute inset-0 z-20 flex items-center justify-center bg-black/45'>
-                <div className='ch-in flex gap-2 rounded-2xl bg-[#1a1e27] p-3 ring-1 ring-white/12'>
-                  {['q', 'r', 'b', 'n'].map((p) => (
-                    <button
-                      key={p}
-                      type='button'
-                      onClick={() => choosePromotion(p)}
-                      className='flex h-16 w-16 items-center justify-center rounded-xl bg-white/8 text-[40px] leading-none text-white transition-colors hover:bg-white/18'
-                      style={{
-                        fontFamily:
-                          '"Segoe UI Symbol","Noto Sans Symbols 2",serif',
-                      }}
-                    >
-                      {GLYPH[p]}
-                    </button>
-                  ))}
-                </div>
+          {phase === 'over' && (
+            <div className='pointer-events-none absolute inset-x-0 top-3 z-10 flex justify-center'>
+              <div className='ch-in pointer-events-auto flex items-center gap-3 rounded-2xl bg-black/55 px-6 py-3.5 text-center ring-1 ring-white/12 backdrop-blur-sm'>
+                <span className='text-[16px] font-bold text-white/90'>
+                  {result}
+                </span>
+                <button
+                  type='button'
+                  onClick={newGame}
+                  className='ch-btn rounded-full bg-white px-4 py-2 text-[13px] font-semibold text-[#121212]'
+                >
+                  {mode === 'spectate' ? tx.restart : tx.newGame}
+                </button>
               </div>
-            )}
-
-            {phase === 'over' && (
-              <div className='pointer-events-none absolute inset-x-0 top-3 z-10 flex justify-center'>
-                <div className='ch-in pointer-events-auto flex items-center gap-3 rounded-2xl bg-black/55 px-6 py-3.5 text-center ring-1 ring-white/12 backdrop-blur-sm'>
-                  <span className='text-[16px] font-bold text-white/90'>
-                    {result}
-                  </span>
-                  <button
-                    type='button'
-                    onClick={newGame}
-                    className='ch-btn rounded-full bg-white px-4 py-2 text-[13px] font-semibold text-[#121212]'
-                  >
-                    {mode === 'spectate' ? tx.restart : tx.newGame}
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
 
