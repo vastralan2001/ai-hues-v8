@@ -14,7 +14,6 @@ import type { Locale } from '@/lib/dict';
 const GRID = 30;
 const FIELD = 600;
 const CELL = FIELD / GRID;
-const HEADER_H = 64;
 
 const SPEEDS = { slow: 180, normal: 120, fast: 70 } as const;
 type Speed = keyof typeof SPEEDS;
@@ -562,10 +561,9 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
       const ch = rect.height;
       cv.width = Math.round(cw * dpr);
       cv.height = Math.round(ch * dpr);
-      const usableH = Math.max(120, ch - HEADER_H);
-      const scale = Math.min(cw / FIELD, usableH / FIELD);
+      const scale = Math.min(cw / FIELD, ch / FIELD);
       const offX = (cw - FIELD * scale) / 2;
-      const offY = HEADER_H + (usableH - FIELD * scale) / 2;
+      const offY = (ch - FIELD * scale) / 2;
       if (!gRef.current) {
         gRef.current = {
           dpr,
@@ -683,7 +681,7 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
       <canvas ref={canvasRef} className='absolute inset-0 h-full w-full' />
 
       {(phase === 'playing' || phase === 'over') && (
-        <div className='pointer-events-none absolute inset-x-0 top-0 mx-auto flex max-w-[680px] items-start justify-between p-5 text-white'>
+        <div className='pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between p-5 text-white'>
           <span
             key={score}
             className='sn-score inline-block text-[26px] font-bold leading-none text-white/90'
@@ -695,11 +693,16 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
               <button
                 type='button'
                 aria-label={tx.pause}
-                title={`${tx.pause} · Space`}
                 onClick={togglePause}
-                className='pointer-events-auto flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white/80 transition-colors hover:bg-white/20'
+                className='pointer-events-auto flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1.5 text-white/80 transition-colors hover:bg-white/20 sm:px-3'
               >
-                <Pause size={15} />
+                <Pause size={13} />
+                <span className='hidden text-[12px] font-semibold sm:inline'>
+                  {tx.pause}
+                </span>
+                <kbd className='hidden rounded bg-white/15 px-1.5 py-0.5 text-[10px] font-semibold text-white/55 sm:inline-block'>
+                  Space
+                </kbd>
               </button>
             ) : null}
             <span className='rounded-full bg-white/10 px-3 py-1 text-[13px] font-medium text-white/70'>
