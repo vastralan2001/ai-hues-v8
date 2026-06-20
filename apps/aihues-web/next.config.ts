@@ -7,7 +7,6 @@ const legacyHtmlPages = [
   'discover',
   'pricing',
   'ranking',
-  'showcase',
   'wishlist',
 ];
 

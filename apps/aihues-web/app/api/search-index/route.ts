@@ -23,7 +23,6 @@ export async function GET() {
     { id: 'games', title: 'Games', href: '/games', type: 'page' },
     { id: 'blog', title: 'Blog', href: '/blog', type: 'page' },
     { id: 'pricing', title: 'Pricing', href: '/pricing', type: 'page' },
-    { id: 'showcase', title: 'Showcase', href: '/showcase', type: 'page' },
     { id: 'discover', title: 'Discover', href: '/discover', type: 'page' },
     {
       id: 'collection',

@@ -16,7 +16,6 @@ export const dict: Record<Locale, Record<string, string>> = {
     'nav.wishlist': 'Wishlist',
     'nav.ranking': 'Ranking',
     'nav.discover': 'Discover',
-    'nav.showcase': 'Showcase',
     'nav.login': 'Login',
 
     // hero
@@ -804,7 +803,6 @@ export const dict: Record<Locale, Record<string, string>> = {
     'nav.wishlist': '许愿单',
     'nav.ranking': '排行榜',
     'nav.discover': '发现',
-    'nav.showcase': '案例',
     'nav.login': '登录',
 
     // hero
