@@ -9,6 +9,8 @@ import {
 } from 'react';
 import {
   ArrowLeftRight,
+  Eye,
+  EyeOff,
   Flag,
   Pause,
   Play,
@@ -196,6 +198,7 @@ const T = {
     newGame: 'New game',
     undo: 'Undo',
     flip: 'Flip',
+    evalToggle: 'Show evaluation',
     resign: 'Resign',
     pause: 'Pause',
     resume: 'Resume',
@@ -264,6 +267,7 @@ const T = {
     newGame: '再来一局',
     undo: '悔棋',
     flip: '翻转',
+    evalToggle: '显示局面分',
     resign: '认输',
     pause: '暂停',
     resume: '继续',
@@ -492,6 +496,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     from: string;
     to: string;
   } | null>(null);
+  const [playEval, setPlayEval] = useState(false);
 
   const movesEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -1723,7 +1728,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
   /* ── derived UI ── */
   const fenTrim = fenInput.trim();
   const fenBad = fenTrim.length > 0 && !isValidFen(fenTrim);
-  const showEvalNum = mode === 'eval' || mode === 'spectate';
+  const showEval = mode !== 'play' || playEval;
   const modes: Mode[] = ['play', 'spectate', 'eval'];
   const modeLabel: Record<Mode, string> = {
     play: tx.modePlay,
@@ -1770,10 +1775,25 @@ export default function ChessGame({ locale }: { locale: Locale }) {
             </span>
           )}
           <span className='flex-1' />
-          {showEvalNum && (
+          {showEval && (
             <span className='rounded-full bg-white/10 px-2 py-0.5 text-[12px] font-semibold tabular-nums text-white/70'>
               {evalText}
             </span>
+          )}
+          {mode === 'play' && (
+            <button
+              type='button'
+              onClick={() => setPlayEval((v) => !v)}
+              title={tx.evalToggle}
+              aria-label={tx.evalToggle}
+              className={`flex items-center rounded-full px-2.5 py-1.5 transition-colors ${
+                playEval
+                  ? 'bg-white/20 text-white'
+                  : 'bg-white/10 text-white/55 hover:bg-white/20'
+              }`}
+            >
+              {playEval ? <Eye size={15} /> : <EyeOff size={15} />}
+            </button>
           )}
           <button
             type='button'
@@ -2149,10 +2169,10 @@ export default function ChessGame({ locale }: { locale: Locale }) {
         <div className='relative w-[22px] shrink-0 overflow-hidden rounded-[5px] bg-[#0b0d12] ring-1 ring-white/10'>
           <div
             className='absolute inset-x-0 bottom-0 bg-[#f4f6fa] transition-[height] duration-300 ease-out'
-            style={{ height: `${evalFrac * 100}%` }}
+            style={{ height: `${showEval ? evalFrac * 100 : 0}%` }}
           />
           <div className='absolute inset-x-0 top-1/2 h-px bg-black/15' />
-          {showEvalNum && evalText !== '—' && (
+          {showEval && evalText !== '—' && (
             <span
               className={`absolute inset-x-0 text-center text-[9px] font-bold leading-none tabular-nums ${
                 evalFrac >= 0.5
