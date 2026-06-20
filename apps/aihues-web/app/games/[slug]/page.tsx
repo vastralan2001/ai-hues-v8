@@ -6,10 +6,11 @@ import BasketballGame from '@/components/games/BasketballGame';
 import DailyFortuneGame from '@/components/games/DailyFortuneGame';
 import DoodleJumpGame from '@/components/games/DoodleJumpGame';
 import SlotMachineGame from '@/components/games/SlotMachineGame';
+import SnakeGame from '@/components/games/SnakeGame';
 import { PageShell } from '@/components/SiteChrome';
 import type { Locale } from '@/lib/dict';
 
-type Theme = 'space' | 'gold' | 'vegas' | 'court';
+type Theme = 'space' | 'gold' | 'vegas' | 'court' | 'grid';
 
 interface PlayableGame {
   Component: React.ComponentType<{ locale: Locale }>;
@@ -53,6 +54,14 @@ const REACT_GAMES: Record<string, PlayableGame> = {
     descZh: '把握摆动的箭头瞄准入筐,限时 60 秒。',
     theme: 'court',
   },
+  snake: {
+    Component: SnakeGame,
+    title: 'Snake',
+    titleZh: '贪吃蛇',
+    desc: 'Glide, grow, and feast on glowing pellets — just don’t bite your tail.',
+    descZh: '滑行、变长、吃掉发光的食物——别咬到自己的尾巴。',
+    theme: 'grid',
+  },
 };
 
 const THEMES: Record<
@@ -78,6 +87,12 @@ const THEMES: Record<
     bg: 'radial-gradient(125% 95% at 50% 42%, #252c36 0%, #171c23 46%, #0c0e12 100%)',
     glow: '#5a6b82',
     eyebrow: 'text-white/45',
+    quiet: true,
+  },
+  grid: {
+    bg: 'radial-gradient(125% 95% at 50% 42%, #18211c 0%, #121815 46%, #0a0e0c 100%)',
+    glow: '#3ba776',
+    eyebrow: 'text-[#83d8ad]',
     quiet: true,
   },
 };

@@ -7,4 +7,5 @@ export const PUBLISHED_GAME_SLUGS: string[] = [
   'daily-luck',
   'slot-machine',
   'basketball',
+  'snake',
 ];

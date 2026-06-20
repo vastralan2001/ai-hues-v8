@@ -68,6 +68,7 @@ import {
   Users,
   Video,
   Wand2,
+  Worm,
   Wrench,
 } from 'lucide-react';
 
@@ -145,6 +146,7 @@ const TOOL_ICONS: Record<string, LucideIcon> = {
   'daily-luck': Sparkles,
   'slot-machine': Dices,
   basketball: Trophy,
+  snake: Worm,
 
   /* Tests */
   sbti: Drama,

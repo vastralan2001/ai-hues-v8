@@ -42,6 +42,19 @@ const LOCAL_GAMES: CatalogGame[] = [
     tags: [],
     creditCost: 0,
   },
+  {
+    id: 'snake',
+    slug: 'snake',
+    icon: 'SN',
+    name: 'Snake',
+    description: 'Glide, grow, and feast — don’t bite your own tail',
+    status: 'ITEM_STATUS_PUBLISHED',
+    sortOrder: 3,
+    priceTag: 'free',
+    externalUrl: '',
+    tags: [],
+    creditCost: 0,
+  },
 ];
 
 export async function GET(request: NextRequest) {

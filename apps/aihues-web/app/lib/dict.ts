@@ -78,6 +78,7 @@ export const dict: Record<Locale, Record<string, string>> = {
     'game.arcade': 'Arcade',
     'game.fortune': 'Fortune',
     'game.luck': 'Luck',
+    'game.classic': 'Classic',
     'game.jump': 'Jump →',
     'game.hoops': 'Hoops',
 
@@ -855,6 +856,7 @@ export const dict: Record<Locale, Record<string, string>> = {
     'game.arcade': '街机',
     'game.fortune': '运势',
     'game.luck': '幸运',
+    'game.classic': '经典',
     'game.jump': '跳跃 →',
     'game.hoops': '投篮',
 

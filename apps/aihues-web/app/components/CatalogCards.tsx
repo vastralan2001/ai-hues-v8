@@ -176,6 +176,7 @@ const GAME_BADGES: Record<string, string> = {
   'daily-luck': 'game.fortune',
   'slot-machine': 'game.luck',
   basketball: 'game.skill',
+  snake: 'game.classic',
 };
 
 const GAME_META: Record<string, string> = {
@@ -183,6 +184,7 @@ const GAME_META: Record<string, string> = {
   'daily-luck': '30 fortunes · +10 Credits · Streak bonus',
   'slot-machine': '3×3 reels · Lucky spins · +5~100 · Leaderboard',
   basketball: '60 seconds · Physics · +10~50/game · Leaderboard',
+  snake: 'Endless · 3 speeds · Arrows / WASD / swipe',
 };
 
 export function GameCard({
