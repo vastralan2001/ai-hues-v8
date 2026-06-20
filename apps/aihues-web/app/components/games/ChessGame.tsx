@@ -216,6 +216,13 @@ const T = {
     playFromHere: 'Play here',
     spectateFromHere: 'Spectate here',
     loadOpening: 'Load opening…',
+    analyze: 'Analyze',
+    importLabel: 'Import',
+    importHint: 'Paste PGN or FEN…',
+    importBad: 'Could not read that PGN / FEN',
+    exportPgn: 'PGN',
+    exportFen: 'FEN',
+    copied: 'Copied',
     evalHint:
       'Play makes moves by the rules. Use Move to drag pieces freely, or pick a piece to add; drag off the board to delete.',
     toMove: 'To move',
@@ -286,6 +293,13 @@ const T = {
     playFromHere: '从此对战',
     spectateFromHere: '从此观战',
     loadOpening: '载入开局…',
+    analyze: '分析',
+    importLabel: '导入',
+    importHint: '粘贴 PGN 或 FEN…',
+    importBad: '无法识别该 PGN / FEN',
+    exportPgn: 'PGN',
+    exportFen: 'FEN',
+    copied: '已复制',
     evalHint:
       '走棋按规则走子；移动可自由拖动棋子，点选棋子可添加，拖出棋盘即删除。',
     toMove: '走子方',
@@ -300,6 +314,63 @@ const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
 const rnd = () => Math.random();
 const nowMs = () => performance.now();
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+
+/* Move annotation — classify a move by how much it drops the side-to-move's
+   win probability (a logistic of the centipawn eval, so swings inside a
+   winning position don't read as blunders), with an opening-book and
+   only-move pass. Glyphs follow the familiar !!/!/!?/?!/?/?? plus → and 📕. */
+const ANNOTATE_DEPTH = 12;
+const ANNOTATE_MOVETIME = 240;
+const MATE_CP = 100000;
+
+function winProb(cp: number): number {
+  return 1 / (1 + Math.pow(10, -cp / 400));
+}
+
+function infoCp(info: EngineInfo | undefined): number | null {
+  if (!info) return null;
+  if (info.scoreMate != null)
+    return info.scoreMate > 0 ? MATE_CP : info.scoreMate < 0 ? -MATE_CP : 0;
+  return info.scoreCp;
+}
+
+const GLYPH_COLOR: Record<string, string> = {
+  '!!': 'text-[#1bb38a]',
+  '!': 'text-[#7cc46b]',
+  '!?': 'text-[#7aa2d6]',
+  '?!': 'text-[#e0b341]',
+  '?': 'text-[#e08a3c]',
+  '??': 'text-[#dd5b4e]',
+  '→': 'text-white/40',
+  '📕': '',
+};
+
+function materialOf(fen: string, color: Color): number {
+  let sum = 0;
+  for (const row of new Chess(fen).board() as (Piece | null)[][])
+    for (const pc of row)
+      if (pc && pc.color === color) sum += PIECE_VALUE[pc.type] || 0;
+  return sum;
+}
+
+function classifyMove(
+  lossWP: number,
+  gapWP: number,
+  isBook: boolean,
+  isForced: boolean,
+  playedIsBest: boolean,
+  isSacrifice: boolean
+): string {
+  if (isForced) return '→';
+  if (isBook) return '📕';
+  if (lossWP >= 0.3) return '??';
+  if (lossWP >= 0.18) return '?';
+  if (lossWP >= 0.1) return '?!';
+  if (playedIsBest && gapWP >= 0.18 && isSacrifice) return '!!';
+  if (playedIsBest && gapWP >= 0.15) return '!';
+  if (!playedIsBest && lossWP <= 0.03) return '!?';
+  return '';
+}
 
 function isValidFen(fen: string): boolean {
   try {
@@ -471,6 +542,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
   >('play');
   const editorTurnRef = useRef<Color>('w');
   const editorEditedRef = useRef(false);
+  const playEvalRef = useRef(false);
 
   const [mode, setMode] = useState<Mode>('play');
   const [phase, setPhase] = useState<Phase>('setup');
@@ -506,6 +578,13 @@ export default function ChessGame({ locale }: { locale: Locale }) {
   } | null>(null);
   const [playEval, setPlayEval] = useState(false);
   const [opening, setOpening] = useState<OpeningInfo | null>(null);
+  const [showImport, setShowImport] = useState(false);
+  const [importText, setImportText] = useState('');
+  const [importError, setImportError] = useState(false);
+  const [copied, setCopied] = useState('');
+  const [annotations, setAnnotations] = useState<Record<number, string>>({});
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analyzeProgress, setAnalyzeProgress] = useState(0);
 
   const movesEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -1085,6 +1164,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     setTurn(t);
     updateMaterial();
     updateOpening();
+    setAnnotations((a) => (Object.keys(a).length ? {} : a));
     if (modeRef.current !== 'eval') {
       if (chess.isGameOver()) return;
       setStatusText(t === 'w' ? tx.whiteMove : tx.blackMove);
@@ -1177,6 +1257,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     if (modeRef.current !== 'play') return;
     applyUci(res.bestmove);
     if (chess.isGameOver()) finishGame();
+    else if (playEvalRef.current) analyzePosition();
   }
 
   function hasBothKings() {
@@ -1198,7 +1279,9 @@ export default function ChessGame({ locale }: { locale: Locale }) {
   }
 
   async function analyzePosition() {
-    if (modeRef.current !== 'eval') return;
+    const mode = modeRef.current;
+    const want = mode === 'eval' || (mode === 'play' && playEvalRef.current);
+    if (!want) return;
     const g = gRef.current;
     if (!hasBothKings()) {
       setEvalText('—');
@@ -1206,17 +1289,19 @@ export default function ChessGame({ locale }: { locale: Locale }) {
       if (g) g.arrow = null;
       return;
     }
-    const t = editorTurnRef.current;
-    const fen = editorEditedRef.current ? editorFen() : chessRef.current!.fen();
-    setThinkingBoth(true);
+    const isEval = mode === 'eval';
+    const t = isEval ? editorTurnRef.current : chessRef.current!.turn();
+    const fen =
+      isEval && editorEditedRef.current ? editorFen() : chessRef.current!.fen();
+    if (isEval) setThinkingBoth(true);
     const res = await engineExclusive(() => {
       engineRef.current!.setSkill(20);
       return engineRef.current!.search(fen, { depth: EVAL_DEPTH }, (info) =>
         applyInfo(info, t)
       );
     });
-    setThinkingBoth(false);
-    if (res && modeRef.current === 'eval') applyResult(res, t);
+    if (isEval) setThinkingBoth(false);
+    if (res) applyResult(res, t);
   }
 
   async function spectateOneMove(force = false) {
@@ -1589,6 +1674,13 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     if (g) g.selected = null;
   }
 
+  function togglePlayEval() {
+    const v = !playEvalRef.current;
+    playEvalRef.current = v;
+    setPlayEval(v);
+    if (v) analyzePosition();
+  }
+
   function togglePause() {
     if (modeRef.current !== 'spectate' || phaseRef.current !== 'active') return;
     const v = !pausedRef.current;
@@ -1615,6 +1707,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
       }
       if (phaseRef.current === 'over') setPhaseBoth('active');
       refreshView();
+      analyzePosition();
     } else if (modeRef.current === 'eval') {
       if (chess.history().length > 0) chess.undo();
       syncEditorTurn();
@@ -1671,6 +1764,133 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     if (modeRef.current === 'eval') analyzePosition();
   }
 
+  function loadGameText(text: string) {
+    const t = text.trim();
+    if (!t) return;
+    setImportError(false);
+    if (isValidFen(t)) {
+      loadPosition(t);
+      setShowImport(false);
+      setImportText('');
+      return;
+    }
+    const chess = chessRef.current!;
+    try {
+      chess.loadPgn(t);
+    } catch {
+      setImportError(true);
+      return;
+    }
+    engineRef.current?.stop();
+    if (modeRef.current === 'eval') syncEditorTurn();
+    refreshView();
+    if (modeRef.current === 'eval') analyzePosition();
+    setShowImport(false);
+    setImportText('');
+  }
+
+  function copyText(label: string, s: string) {
+    if (!s || !navigator.clipboard) return;
+    navigator.clipboard
+      .writeText(s)
+      .then(() => {
+        setCopied(label);
+        window.setTimeout(() => setCopied(''), 1200);
+      })
+      .catch(() => {
+        /* ignore */
+      });
+  }
+
+  async function analyzePos(
+    fen: string
+  ): Promise<{ cp: number; cp2: number | null; bestUci: string | null }> {
+    const tmp = new Chess(fen);
+    if (tmp.isGameOver())
+      return { cp: tmp.isCheckmate() ? -MATE_CP : 0, cp2: null, bestUci: null };
+    const eng = engineRef.current;
+    if (!eng) return { cp: 0, cp2: null, bestUci: null };
+    const lines: Record<number, EngineInfo> = {};
+    const res = await engineExclusive(() =>
+      eng.search(
+        fen,
+        { depth: ANNOTATE_DEPTH, movetime: ANNOTATE_MOVETIME },
+        (info) => {
+          lines[info.multipv] = info;
+        }
+      )
+    );
+    const c1 = infoCp(lines[1]) ?? infoCp(res?.info ?? undefined) ?? 0;
+    return {
+      cp: c1,
+      cp2: infoCp(lines[2]),
+      bestUci: lines[1]?.pv?.[0] ?? res?.bestmove ?? null,
+    };
+  }
+
+  async function analyzeGame() {
+    const chess = chessRef.current!;
+    const hist = chess.history({ verbose: true }) as {
+      from: string;
+      to: string;
+      promotion?: string;
+      color: Color;
+    }[];
+    const eng = engineRef.current;
+    if (!hist.length || analyzing || !eng || !engineReadyRef.current) return;
+    setAnalyzing(true);
+    setAnalyzeProgress(0);
+    setAnnotations({});
+    const replay = new Chess();
+    const fens = [replay.fen()];
+    for (const m of hist) {
+      replay.move({ from: m.from, to: m.to, promotion: m.promotion });
+      fens.push(replay.fen());
+    }
+    const evals: { cp: number; cp2: number | null; bestUci: string | null }[] =
+      [];
+    eng.setOption('MultiPV', 2);
+    try {
+      for (let i = 0; i < fens.length; i++) {
+        evals.push(await analyzePos(fens[i]));
+        setAnalyzeProgress(Math.round(((i + 1) / fens.length) * 100));
+      }
+    } finally {
+      eng.setOption('MultiPV', 1);
+    }
+    const ann: Record<number, string> = {};
+    for (let i = 0; i < hist.length; i++) {
+      const before = evals[i];
+      const after = evals[i + 1];
+      const lossWP = Math.max(0, winProb(before.cp) - winProb(-after.cp));
+      const gapWP =
+        before.cp2 != null
+          ? Math.max(0, winProb(before.cp) - winProb(before.cp2))
+          : 0;
+      const playedUci = hist[i].from + hist[i].to + (hist[i].promotion || '');
+      const playedIsBest = !!before.bestUci && before.bestUci === playedUci;
+      const isForced = new Chess(fens[i]).moves().length === 1;
+      const isBook = !!openingForFen(fens[i + 1]);
+      let isSacrifice = false;
+      if (playedIsBest && i + 2 < fens.length) {
+        isSacrifice =
+          materialOf(fens[i + 2], hist[i].color) <=
+            materialOf(fens[i], hist[i].color) - 2 && winProb(before.cp) >= 0.5;
+      }
+      ann[i] = classifyMove(
+        lossWP,
+        gapWP,
+        isBook,
+        isForced,
+        playedIsBest,
+        isSacrifice
+      );
+    }
+    setAnnotations(ann);
+    setAnalyzing(false);
+    if (modeRef.current === 'eval') analyzePosition();
+  }
+
   function resolvedHumanColor(): Color {
     if (humanColor === 'random') return rnd() < 0.5 ? 'w' : 'b';
     return humanColor;
@@ -1693,6 +1913,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     if (modeRef.current === 'play') {
       if (!chess.isGameOver() && chess.turn() !== humanColorRef.current)
         playEngineMove();
+      else if (playEvalRef.current) analyzePosition();
     } else if (modeRef.current === 'spectate') {
       spectateLoop();
     }
@@ -1833,7 +2054,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
           {mode === 'play' && (
             <button
               type='button'
-              onClick={() => setPlayEval((v) => !v)}
+              onClick={() => togglePlayEval()}
               title={tx.evalToggle}
               aria-label={tx.evalToggle}
               className={`flex items-center rounded-full px-2.5 py-1.5 transition-colors ${
@@ -2202,11 +2423,42 @@ export default function ChessGame({ locale }: { locale: Locale }) {
         </div>
 
         <div className='hidden min-h-0 flex-1 flex-col lg:flex'>
-          <div className='mb-2 flex items-center justify-between'>
+          <div className='mb-2 flex items-center justify-between gap-2'>
             <span className='text-[11px] font-bold uppercase tracking-[0.16em] text-white/40'>
               {tx.moves}
             </span>
+            <button
+              type='button'
+              onClick={analyzeGame}
+              disabled={analyzing || moveList.length === 0 || !engineReady}
+              className='rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-semibold text-white/75 transition-colors hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-40'
+            >
+              {analyzing ? `${analyzeProgress}%` : tx.analyze}
+            </button>
           </div>
+          {showImport && (
+            <div className='mb-2'>
+              <textarea
+                value={importText}
+                onChange={(e) => setImportText(e.target.value)}
+                placeholder={tx.importHint}
+                rows={3}
+                className='w-full resize-none rounded-[10px] bg-white/[0.06] px-2.5 py-2 text-[12px] text-white/80 outline-none ring-1 ring-white/10 placeholder:text-white/30 focus:ring-white/25'
+              />
+              {importError && (
+                <div className='mt-1 text-[11px] text-[#dd5b4e]'>
+                  {tx.importBad}
+                </div>
+              )}
+              <button
+                type='button'
+                onClick={() => loadGameText(importText)}
+                className='mt-1.5 w-full rounded-full bg-white py-1.5 text-[12px] font-semibold text-[#121212]'
+              >
+                {tx.load}
+              </button>
+            </div>
+          )}
           <div
             ref={movesEndRef}
             className='min-h-0 flex-1 overflow-y-auto rounded-[14px] bg-white/[0.04] p-3 ring-1 ring-white/10'
@@ -2226,17 +2478,62 @@ export default function ChessGame({ locale }: { locale: Locale }) {
                       <span className='w-6 shrink-0 text-right text-white/35'>
                         {i + 1}.
                       </span>
-                      <span className='flex-1 font-medium text-white/80'>
+                      <span className='flex flex-1 items-center gap-1 font-medium text-white/80'>
                         {moveList[i * 2]}
+                        {annotations[i * 2] && (
+                          <span
+                            className={`text-[12px] font-bold ${GLYPH_COLOR[annotations[i * 2]] ?? ''}`}
+                          >
+                            {annotations[i * 2]}
+                          </span>
+                        )}
                       </span>
-                      <span className='flex-1 font-medium text-white/65'>
+                      <span className='flex flex-1 items-center gap-1 font-medium text-white/65'>
                         {moveList[i * 2 + 1] ?? ''}
+                        {moveList[i * 2 + 1] && annotations[i * 2 + 1] && (
+                          <span
+                            className={`text-[12px] font-bold ${GLYPH_COLOR[annotations[i * 2 + 1]] ?? ''}`}
+                          >
+                            {annotations[i * 2 + 1]}
+                          </span>
+                        )}
                       </span>
                     </li>
                   )
                 )}
               </ol>
             )}
+          </div>
+          <div className='mt-2 flex gap-1.5'>
+            <button
+              type='button'
+              onClick={() => {
+                setShowImport((v) => !v);
+                setImportError(false);
+              }}
+              className={`flex-1 rounded-full px-2 py-1.5 text-[11px] font-semibold transition-colors ${
+                showImport
+                  ? 'bg-white/20 text-white'
+                  : 'bg-white/10 text-white/70 hover:bg-white/20'
+              }`}
+            >
+              {tx.importLabel}
+            </button>
+            <button
+              type='button'
+              onClick={() => copyText('pgn', chessRef.current?.pgn() ?? '')}
+              disabled={moveList.length === 0}
+              className='flex-1 rounded-full bg-white/10 px-2 py-1.5 text-[11px] font-semibold text-white/70 transition-colors hover:bg-white/20 disabled:opacity-40'
+            >
+              {copied === 'pgn' ? tx.copied : tx.exportPgn}
+            </button>
+            <button
+              type='button'
+              onClick={() => copyText('fen', chessRef.current?.fen() ?? '')}
+              className='flex-1 rounded-full bg-white/10 px-2 py-1.5 text-[11px] font-semibold text-white/70 transition-colors hover:bg-white/20'
+            >
+              {copied === 'fen' ? tx.copied : tx.exportFen}
+            </button>
           </div>
         </div>
       </div>
