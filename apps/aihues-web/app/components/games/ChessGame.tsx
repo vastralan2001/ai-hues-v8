@@ -29,6 +29,7 @@ import {
 import {
   ensureOpenings,
   openingForFen,
+  searchOpenings,
   POPULAR_OPENINGS,
   type OpeningInfo,
 } from '@/lib/chess-openings';
@@ -215,8 +216,12 @@ const T = {
     best: 'Best',
     playFromHere: 'Play here',
     spectateFromHere: 'Spectate here',
-    loadOpening: 'Load opening…',
-    editBoard: 'Edit board',
+    gameTab: 'Game',
+    boardTab: 'Board',
+    openingsTab: 'Openings',
+    searchOpenings: 'Search openings…',
+    allCat: 'All',
+    noResults: 'No openings found',
     analyze: 'Analyze',
     importLabel: 'Import',
     importHint: 'Paste PGN or FEN…',
@@ -293,8 +298,12 @@ const T = {
     best: '推荐',
     playFromHere: '从此对战',
     spectateFromHere: '从此观战',
-    loadOpening: '载入开局…',
-    editBoard: '编辑棋盘',
+    gameTab: '对局',
+    boardTab: '棋盘',
+    openingsTab: '开局',
+    searchOpenings: '搜索开局…',
+    allCat: '全部',
+    noResults: '未找到开局',
     analyze: '分析',
     importLabel: '导入',
     importHint: '粘贴 PGN 或 FEN…',
@@ -587,7 +596,12 @@ export default function ChessGame({ locale }: { locale: Locale }) {
   const [annotations, setAnnotations] = useState<Record<number, string>>({});
   const [analyzing, setAnalyzing] = useState(false);
   const [analyzeProgress, setAnalyzeProgress] = useState(0);
-  const [showEditor, setShowEditor] = useState(false);
+  const [subTab, setSubTab] = useState<'control' | 'moves' | 'openings'>(
+    'control'
+  );
+  const [openingQuery, setOpeningQuery] = useState('');
+  const [openingCat, setOpeningCat] = useState('all');
+  const [openingsReady, setOpeningsReady] = useState(false);
 
   const movesEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -1684,12 +1698,6 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     if (v) analyzePosition();
   }
 
-  function toggleEditor() {
-    const nv = !showEditor;
-    setShowEditor(nv);
-    if (!nv) setBrush('play');
-  }
-
   function togglePause() {
     if (modeRef.current !== 'spectate' || phaseRef.current !== 'active') return;
     const v = !pausedRef.current;
@@ -1946,6 +1954,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     setThinkingBoth(false);
     setResult('');
     setBrush('play');
+    setSubTab(m === 'eval' ? 'moves' : 'control');
     modeRef.current = m;
     setMode(m);
     const g = gRef.current;
@@ -1975,6 +1984,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     let alive = true;
     ensureOpenings().then(() => {
       if (!alive) return;
+      setOpeningsReady(true);
       const chess = chessRef.current;
       if (!chess) return;
       const o = openingForFen(chess.fen());
@@ -2009,6 +2019,12 @@ export default function ChessGame({ locale }: { locale: Locale }) {
   const fenTrim = fenInput.trim();
   const fenBad = fenTrim.length > 0 && !isValidFen(fenTrim);
   const showEval = mode !== 'play' || playEval;
+  const showPopularOpenings =
+    openingQuery.trim() === '' && openingCat === 'all';
+  const openingResults =
+    subTab === 'openings' && openingsReady && !showPopularOpenings
+      ? searchOpenings(openingQuery, openingCat)
+      : [];
   const modes: Mode[] = ['play', 'spectate', 'eval'];
   const modeLabel: Record<Mode, string> = {
     play: tx.modePlay,
@@ -2115,217 +2131,230 @@ export default function ChessGame({ locale }: { locale: Locale }) {
           </div>
         )}
 
-        <div className='rounded-[16px] bg-white/[0.04] p-3.5 ring-1 ring-white/10'>
-          {mode === 'play' && phase === 'setup' && (
-            <div className='space-y-3'>
-              <div>
-                <div className='mb-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-white/40'>
-                  {tx.side}
-                </div>
-                <div className='flex gap-1'>
-                  {(['w', 'b', 'random'] as const).map((s) => (
-                    <Pill
-                      key={s}
-                      active={humanColor === s}
-                      onClick={() => setHumanColor(s)}
-                    >
-                      {s === 'w' ? tx.white : s === 'b' ? tx.black : tx.random}
-                    </Pill>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <div className='mb-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-white/40'>
-                  {tx.level} ·{' '}
-                  <span className='text-white/55'>
-                    {tx.levelNames[level - 1]}
-                  </span>
-                </div>
-                <LevelRow value={level} onChange={setLevel} />
-              </div>
-              <button
-                type='button'
-                onClick={startGame}
-                disabled={!engineReady}
-                className='ch-btn w-full rounded-full bg-white py-2 text-[13px] font-semibold text-[#121212] disabled:cursor-not-allowed disabled:opacity-50'
-              >
-                {engineError
-                  ? tx.engineFail
-                  : engineReady
-                    ? tx.start
-                    : tx.loading}
-              </button>
-              <p className='text-[12px] leading-relaxed text-white/40'>
-                {zh
-                  ? '或直接在棋盘上走一子开始'
-                  : 'or just move a piece to begin'}
-              </p>
-            </div>
-          )}
+        <div className='flex shrink-0 gap-1 rounded-full bg-white/[0.06] p-1 text-[12px] ring-1 ring-white/10'>
+          {(['control', 'moves', 'openings'] as const).map((tabKey) => (
+            <button
+              key={tabKey}
+              type='button'
+              onClick={() => setSubTab(tabKey)}
+              className={`flex-1 rounded-full px-2 py-1 font-semibold transition-colors ${
+                subTab === tabKey
+                  ? 'bg-white text-[#121212]'
+                  : 'text-white/60 hover:text-white'
+              }`}
+            >
+              {tabKey === 'control'
+                ? mode === 'eval'
+                  ? tx.boardTab
+                  : tx.gameTab
+                : tabKey === 'moves'
+                  ? tx.moves
+                  : tx.openingsTab}
+            </button>
+          ))}
+        </div>
 
-          {mode === 'play' && phase !== 'setup' && (
-            <div className='flex flex-wrap gap-2'>
-              <CtrlButton
-                label={tx.undo}
-                onClick={undo}
-                icon={<RotateCcw size={15} />}
-              />
-              {phase === 'active' && (
+        {subTab === 'control' && (
+          <div className='min-h-0 flex-1 overflow-y-auto rounded-[16px] bg-white/[0.04] p-3.5 ring-1 ring-white/10'>
+            {mode === 'play' && phase === 'setup' && (
+              <div className='space-y-3'>
+                <div>
+                  <div className='mb-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-white/40'>
+                    {tx.side}
+                  </div>
+                  <div className='flex gap-1'>
+                    {(['w', 'b', 'random'] as const).map((s) => (
+                      <Pill
+                        key={s}
+                        active={humanColor === s}
+                        onClick={() => setHumanColor(s)}
+                      >
+                        {s === 'w'
+                          ? tx.white
+                          : s === 'b'
+                            ? tx.black
+                            : tx.random}
+                      </Pill>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <div className='mb-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-white/40'>
+                    {tx.level} ·{' '}
+                    <span className='text-white/55'>
+                      {tx.levelNames[level - 1]}
+                    </span>
+                  </div>
+                  <LevelRow value={level} onChange={setLevel} />
+                </div>
+                <button
+                  type='button'
+                  onClick={startGame}
+                  disabled={!engineReady}
+                  className='ch-btn w-full rounded-full bg-white py-2 text-[13px] font-semibold text-[#121212] disabled:cursor-not-allowed disabled:opacity-50'
+                >
+                  {engineError
+                    ? tx.engineFail
+                    : engineReady
+                      ? tx.start
+                      : tx.loading}
+                </button>
+                <p className='text-[12px] leading-relaxed text-white/40'>
+                  {zh
+                    ? '或直接在棋盘上走一子开始'
+                    : 'or just move a piece to begin'}
+                </p>
+              </div>
+            )}
+
+            {mode === 'play' && phase !== 'setup' && (
+              <div className='flex flex-wrap gap-2'>
                 <CtrlButton
-                  label={tx.resign}
-                  onClick={resign}
-                  icon={<Flag size={15} />}
-                />
-              )}
-              <CtrlButton
-                label={tx.newGame}
-                onClick={newGame}
-                icon={<RefreshCw size={15} />}
-              />
-            </div>
-          )}
-
-          {mode === 'spectate' && phase === 'setup' && (
-            <div className='space-y-3'>
-              <div>
-                <div className='mb-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-white/40'>
-                  {tx.whiteEngine} ·{' '}
-                  <span className='text-white/55'>
-                    {tx.levelNames[wLevel - 1]}
-                  </span>
-                </div>
-                <LevelRow value={wLevel} onChange={setWLevel} />
-              </div>
-              <div>
-                <div className='mb-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-white/40'>
-                  {tx.blackEngine} ·{' '}
-                  <span className='text-white/55'>
-                    {tx.levelNames[bLevel - 1]}
-                  </span>
-                </div>
-                <LevelRow value={bLevel} onChange={setBLevel} />
-              </div>
-              <div>
-                <div className='mb-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-white/40'>
-                  {tx.startPos}
-                </div>
-                <div className='flex flex-wrap gap-1'>
-                  {PRESET_FENS.map((p) => (
-                    <Pill
-                      key={p.key}
-                      active={presetKey === p.key && !fenTrim}
-                      onClick={() => {
-                        setPresetKey(p.key);
-                        setFenInput('');
-                        loadPosition(p.fen);
-                      }}
-                    >
-                      {tx.presets[p.key as keyof typeof tx.presets]}
-                    </Pill>
-                  ))}
-                </div>
-                <div className='mt-2'>
-                  <FenLoader
-                    value={fenInput}
-                    bad={fenBad}
-                    tx={tx}
-                    onChange={setFenInput}
-                    onLoad={() => {
-                      if (!fenBad && fenTrim) loadPosition(fenTrim);
-                    }}
-                  />
-                </div>
-              </div>
-              <button
-                type='button'
-                onClick={startGame}
-                disabled={!engineReady}
-                className='ch-btn w-full rounded-full bg-white py-2 text-[13px] font-semibold text-[#121212] disabled:cursor-not-allowed disabled:opacity-50'
-              >
-                {engineError
-                  ? tx.engineFail
-                  : engineReady
-                    ? tx.start
-                    : tx.loading}
-              </button>
-            </div>
-          )}
-
-          {mode === 'spectate' && phase !== 'setup' && (
-            <div className='flex flex-wrap gap-2'>
-              <CtrlButton
-                label={paused ? tx.resume : tx.pause}
-                onClick={togglePause}
-                icon={paused ? <Play size={15} /> : <Pause size={15} />}
-              />
-              <CtrlButton
-                label={tx.step}
-                onClick={stepSpectate}
-                disabled={!paused}
-                icon={<SkipForward size={15} />}
-              />
-              <CtrlButton
-                label={tx.restart}
-                onClick={newGame}
-                icon={<RefreshCw size={15} />}
-              />
-            </div>
-          )}
-
-          {mode === 'eval' && (
-            <div className='space-y-2'>
-              <div className='flex items-center gap-2'>
-                <span className='text-[11px] font-bold uppercase tracking-[0.14em] text-white/40'>
-                  {tx.toMove}
-                </span>
-                <Pill
-                  active={editorTurn === 'w'}
-                  onClick={() => setEditorTurn('w')}
-                >
-                  {tx.white}
-                </Pill>
-                <Pill
-                  active={editorTurn === 'b'}
-                  onClick={() => setEditorTurn('b')}
-                >
-                  {tx.black}
-                </Pill>
-                <span className='flex-1' />
-                <button
-                  type='button'
-                  onClick={resetBoard}
-                  title={tx.reset}
-                  aria-label={tx.reset}
-                  className='flex h-7 w-7 items-center justify-center rounded-md bg-white/10 text-white/70 transition-colors hover:bg-white/20'
-                >
-                  <RefreshCw size={14} />
-                </button>
-                <button
-                  type='button'
+                  label={tx.undo}
                   onClick={undo}
-                  title={tx.undo}
-                  aria-label={tx.undo}
-                  className='flex h-7 w-7 items-center justify-center rounded-md bg-white/10 text-white/70 transition-colors hover:bg-white/20'
+                  icon={<RotateCcw size={15} />}
+                />
+                {phase === 'active' && (
+                  <CtrlButton
+                    label={tx.resign}
+                    onClick={resign}
+                    icon={<Flag size={15} />}
+                  />
+                )}
+                <CtrlButton
+                  label={tx.newGame}
+                  onClick={newGame}
+                  icon={<RefreshCw size={15} />}
+                />
+              </div>
+            )}
+
+            {mode === 'spectate' && phase === 'setup' && (
+              <div className='space-y-3'>
+                <div>
+                  <div className='mb-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-white/40'>
+                    {tx.whiteEngine} ·{' '}
+                    <span className='text-white/55'>
+                      {tx.levelNames[wLevel - 1]}
+                    </span>
+                  </div>
+                  <LevelRow value={wLevel} onChange={setWLevel} />
+                </div>
+                <div>
+                  <div className='mb-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-white/40'>
+                    {tx.blackEngine} ·{' '}
+                    <span className='text-white/55'>
+                      {tx.levelNames[bLevel - 1]}
+                    </span>
+                  </div>
+                  <LevelRow value={bLevel} onChange={setBLevel} />
+                </div>
+                <div>
+                  <div className='mb-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-white/40'>
+                    {tx.startPos}
+                  </div>
+                  <div className='flex flex-wrap gap-1'>
+                    {PRESET_FENS.map((p) => (
+                      <Pill
+                        key={p.key}
+                        active={presetKey === p.key && !fenTrim}
+                        onClick={() => {
+                          setPresetKey(p.key);
+                          setFenInput('');
+                          loadPosition(p.fen);
+                        }}
+                      >
+                        {tx.presets[p.key as keyof typeof tx.presets]}
+                      </Pill>
+                    ))}
+                  </div>
+                  <div className='mt-2'>
+                    <FenLoader
+                      value={fenInput}
+                      bad={fenBad}
+                      tx={tx}
+                      onChange={setFenInput}
+                      onLoad={() => {
+                        if (!fenBad && fenTrim) loadPosition(fenTrim);
+                      }}
+                    />
+                  </div>
+                </div>
+                <button
+                  type='button'
+                  onClick={startGame}
+                  disabled={!engineReady}
+                  className='ch-btn w-full rounded-full bg-white py-2 text-[13px] font-semibold text-[#121212] disabled:cursor-not-allowed disabled:opacity-50'
                 >
-                  <RotateCcw size={14} />
+                  {engineError
+                    ? tx.engineFail
+                    : engineReady
+                      ? tx.start
+                      : tx.loading}
                 </button>
               </div>
-              <button
-                type='button'
-                onClick={toggleEditor}
-                className={`flex w-full items-center justify-center gap-1.5 rounded-full px-2 py-1.5 text-[12px] font-semibold transition-colors ${
-                  showEditor
-                    ? 'bg-white/15 text-white/85'
-                    : 'bg-white/[0.06] text-white/55 hover:bg-white/15'
-                }`}
-              >
-                {tx.editBoard}
-                <span className='text-[9px] leading-none'>
-                  {showEditor ? '▲' : '▼'}
-                </span>
-              </button>
-              {showEditor && (
-                <div className='space-y-1.5 border-t border-white/10 pt-2'>
+            )}
+
+            {mode === 'spectate' && phase !== 'setup' && (
+              <div className='flex flex-wrap gap-2'>
+                <CtrlButton
+                  label={paused ? tx.resume : tx.pause}
+                  onClick={togglePause}
+                  icon={paused ? <Play size={15} /> : <Pause size={15} />}
+                />
+                <CtrlButton
+                  label={tx.step}
+                  onClick={stepSpectate}
+                  disabled={!paused}
+                  icon={<SkipForward size={15} />}
+                />
+                <CtrlButton
+                  label={tx.restart}
+                  onClick={newGame}
+                  icon={<RefreshCw size={15} />}
+                />
+              </div>
+            )}
+
+            {mode === 'eval' && (
+              <div className='space-y-2'>
+                <div className='flex items-center gap-2'>
+                  <span className='text-[11px] font-bold uppercase tracking-[0.14em] text-white/40'>
+                    {tx.toMove}
+                  </span>
+                  <Pill
+                    active={editorTurn === 'w'}
+                    onClick={() => setEditorTurn('w')}
+                  >
+                    {tx.white}
+                  </Pill>
+                  <Pill
+                    active={editorTurn === 'b'}
+                    onClick={() => setEditorTurn('b')}
+                  >
+                    {tx.black}
+                  </Pill>
+                  <span className='flex-1' />
+                  <button
+                    type='button'
+                    onClick={resetBoard}
+                    title={tx.reset}
+                    aria-label={tx.reset}
+                    className='flex h-7 w-7 items-center justify-center rounded-md bg-white/10 text-white/70 transition-colors hover:bg-white/20'
+                  >
+                    <RefreshCw size={14} />
+                  </button>
+                  <button
+                    type='button'
+                    onClick={undo}
+                    title={tx.undo}
+                    aria-label={tx.undo}
+                    className='flex h-7 w-7 items-center justify-center rounded-md bg-white/10 text-white/70 transition-colors hover:bg-white/20'
+                  >
+                    <RotateCcw size={14} />
+                  </button>
+                </div>
+                <div className='space-y-1.5'>
                   {(['w', 'b'] as const).map((col) => (
                     <div key={col} className='flex gap-1'>
                       {(['k', 'q', 'r', 'b', 'n', 'p'] as const).map((t) => {
@@ -2412,155 +2441,220 @@ export default function ChessGame({ locale }: { locale: Locale }) {
                     }}
                   />
                 </div>
-              )}
-              <select
-                value=''
-                onChange={(e) => {
-                  if (e.target.value) loadOpening(e.target.value);
-                }}
-                className='w-full rounded-lg bg-white/10 px-2.5 py-1.5 text-[12px] font-medium text-white/75 outline-none ring-1 ring-white/10 transition-colors hover:bg-white/15 focus:ring-white/25'
-              >
-                <option value=''>{tx.loadOpening}</option>
-                {POPULAR_OPENINGS.map((o) => (
-                  <option key={o.name} value={o.moves} className='bg-[#1a1e27]'>
-                    {o.name}
-                  </option>
-                ))}
-              </select>
-              <div className='grid grid-cols-2 gap-2 pt-0.5'>
-                <button
-                  type='button'
-                  onClick={() => switchMode('play')}
-                  className='ch-btn rounded-full bg-white px-2 py-1.5 text-[12px] font-semibold text-[#121212]'
-                >
-                  {tx.playFromHere}
-                </button>
-                <button
-                  type='button'
-                  onClick={() => switchMode('spectate')}
-                  className='rounded-full bg-white/12 px-2 py-1.5 text-[12px] font-semibold text-white/85 transition-colors hover:bg-white/20'
-                >
-                  {tx.spectateFromHere}
-                </button>
               </div>
-            </div>
-          )}
-        </div>
-
-        <div className='hidden min-h-0 flex-1 flex-col lg:flex'>
-          <div className='mb-2 flex items-center justify-between gap-2'>
-            <span className='text-[11px] font-bold uppercase tracking-[0.16em] text-white/40'>
-              {tx.moves}
-            </span>
-            <button
-              type='button'
-              onClick={analyzeGame}
-              disabled={analyzing || moveList.length === 0 || !engineReady}
-              className='rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-semibold text-white/75 transition-colors hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-40'
-            >
-              {analyzing ? `${analyzeProgress}%` : tx.analyze}
-            </button>
-          </div>
-          {showImport && (
-            <div className='mb-2'>
-              <textarea
-                value={importText}
-                onChange={(e) => setImportText(e.target.value)}
-                placeholder={tx.importHint}
-                rows={3}
-                className='w-full resize-none rounded-[10px] bg-white/[0.06] px-2.5 py-2 text-[12px] text-white/80 outline-none ring-1 ring-white/10 placeholder:text-white/30 focus:ring-white/25'
-              />
-              {importError && (
-                <div className='mt-1 text-[11px] text-[#dd5b4e]'>
-                  {tx.importBad}
-                </div>
-              )}
-              <button
-                type='button'
-                onClick={() => loadGameText(importText)}
-                className='mt-1.5 w-full rounded-full bg-white py-1.5 text-[12px] font-semibold text-[#121212]'
-              >
-                {tx.load}
-              </button>
-            </div>
-          )}
-          <div
-            ref={movesEndRef}
-            className='min-h-0 flex-1 overflow-y-auto rounded-[14px] bg-white/[0.04] p-3 ring-1 ring-white/10'
-          >
-            {moveList.length === 0 ? (
-              <div className='text-[13px] leading-relaxed text-white/30'>
-                {mode === 'eval' ? tx.evalHint : '—'}
-              </div>
-            ) : (
-              <ol className='space-y-0.5'>
-                {Array.from({ length: Math.ceil(moveList.length / 2) }).map(
-                  (_, i) => (
-                    <li
-                      key={i}
-                      className='flex items-center gap-2 rounded px-1.5 py-1 text-[13px] tabular-nums odd:bg-white/[0.03]'
-                    >
-                      <span className='w-6 shrink-0 text-right text-white/35'>
-                        {i + 1}.
-                      </span>
-                      <span className='flex flex-1 items-center gap-1 font-medium text-white/80'>
-                        {moveList[i * 2]}
-                        {annotations[i * 2] && (
-                          <span
-                            className={`text-[12px] font-bold ${GLYPH_COLOR[annotations[i * 2]] ?? ''}`}
-                          >
-                            {annotations[i * 2]}
-                          </span>
-                        )}
-                      </span>
-                      <span className='flex flex-1 items-center gap-1 font-medium text-white/65'>
-                        {moveList[i * 2 + 1] ?? ''}
-                        {moveList[i * 2 + 1] && annotations[i * 2 + 1] && (
-                          <span
-                            className={`text-[12px] font-bold ${GLYPH_COLOR[annotations[i * 2 + 1]] ?? ''}`}
-                          >
-                            {annotations[i * 2 + 1]}
-                          </span>
-                        )}
-                      </span>
-                    </li>
-                  )
-                )}
-              </ol>
             )}
           </div>
-          <div className='mt-2 flex gap-1.5'>
+        )}
+
+        {subTab === 'moves' && (
+          <div className='flex h-[340px] min-h-0 flex-col lg:h-auto lg:flex-1'>
+            <div className='mb-2 flex items-center justify-between gap-2'>
+              <span className='text-[11px] font-bold uppercase tracking-[0.16em] text-white/40'>
+                {tx.moves}
+              </span>
+              <button
+                type='button'
+                onClick={analyzeGame}
+                disabled={analyzing || moveList.length === 0 || !engineReady}
+                className='rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-semibold text-white/75 transition-colors hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-40'
+              >
+                {analyzing ? `${analyzeProgress}%` : tx.analyze}
+              </button>
+            </div>
+            {showImport && (
+              <div className='mb-2'>
+                <textarea
+                  value={importText}
+                  onChange={(e) => setImportText(e.target.value)}
+                  placeholder={tx.importHint}
+                  rows={3}
+                  className='w-full resize-none rounded-[10px] bg-white/[0.06] px-2.5 py-2 text-[12px] text-white/80 outline-none ring-1 ring-white/10 placeholder:text-white/30 focus:ring-white/25'
+                />
+                {importError && (
+                  <div className='mt-1 text-[11px] text-[#dd5b4e]'>
+                    {tx.importBad}
+                  </div>
+                )}
+                <button
+                  type='button'
+                  onClick={() => loadGameText(importText)}
+                  className='mt-1.5 w-full rounded-full bg-white py-1.5 text-[12px] font-semibold text-[#121212]'
+                >
+                  {tx.load}
+                </button>
+              </div>
+            )}
+            <div
+              ref={movesEndRef}
+              className='min-h-0 flex-1 overflow-y-auto rounded-[14px] bg-white/[0.04] p-3 ring-1 ring-white/10'
+            >
+              {moveList.length === 0 ? (
+                <div className='text-[13px] leading-relaxed text-white/30'>
+                  {mode === 'eval' ? tx.evalHint : '—'}
+                </div>
+              ) : (
+                <ol className='space-y-0.5'>
+                  {Array.from({ length: Math.ceil(moveList.length / 2) }).map(
+                    (_, i) => (
+                      <li
+                        key={i}
+                        className='flex items-center gap-2 rounded px-1.5 py-1 text-[13px] tabular-nums odd:bg-white/[0.03]'
+                      >
+                        <span className='w-6 shrink-0 text-right text-white/35'>
+                          {i + 1}.
+                        </span>
+                        <span className='flex flex-1 items-center gap-1 font-medium text-white/80'>
+                          {moveList[i * 2]}
+                          {annotations[i * 2] && (
+                            <span
+                              className={`text-[12px] font-bold ${GLYPH_COLOR[annotations[i * 2]] ?? ''}`}
+                            >
+                              {annotations[i * 2]}
+                            </span>
+                          )}
+                        </span>
+                        <span className='flex flex-1 items-center gap-1 font-medium text-white/65'>
+                          {moveList[i * 2 + 1] ?? ''}
+                          {moveList[i * 2 + 1] && annotations[i * 2 + 1] && (
+                            <span
+                              className={`text-[12px] font-bold ${GLYPH_COLOR[annotations[i * 2 + 1]] ?? ''}`}
+                            >
+                              {annotations[i * 2 + 1]}
+                            </span>
+                          )}
+                        </span>
+                      </li>
+                    )
+                  )}
+                </ol>
+              )}
+            </div>
+            <div className='mt-2 flex gap-1.5'>
+              <button
+                type='button'
+                onClick={() => {
+                  setShowImport((v) => !v);
+                  setImportError(false);
+                }}
+                className={`flex-1 rounded-full px-2 py-1.5 text-[11px] font-semibold transition-colors ${
+                  showImport
+                    ? 'bg-white/20 text-white'
+                    : 'bg-white/10 text-white/70 hover:bg-white/20'
+                }`}
+              >
+                {tx.importLabel}
+              </button>
+              <button
+                type='button'
+                onClick={() => copyText('pgn', chessRef.current?.pgn() ?? '')}
+                disabled={moveList.length === 0}
+                className='flex-1 rounded-full bg-white/10 px-2 py-1.5 text-[11px] font-semibold text-white/70 transition-colors hover:bg-white/20 disabled:opacity-40'
+              >
+                {copied === 'pgn' ? tx.copied : tx.exportPgn}
+              </button>
+              <button
+                type='button'
+                onClick={() => copyText('fen', chessRef.current?.fen() ?? '')}
+                className='flex-1 rounded-full bg-white/10 px-2 py-1.5 text-[11px] font-semibold text-white/70 transition-colors hover:bg-white/20'
+              >
+                {copied === 'fen' ? tx.copied : tx.exportFen}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {subTab === 'openings' && (
+          <div className='flex h-[340px] min-h-0 flex-col gap-2 lg:h-auto lg:flex-1'>
+            <input
+              type='text'
+              value={openingQuery}
+              onChange={(e) => setOpeningQuery(e.target.value)}
+              placeholder={tx.searchOpenings}
+              className='w-full shrink-0 rounded-lg bg-white/[0.06] px-2.5 py-1.5 text-[12px] text-white/80 outline-none ring-1 ring-white/10 placeholder:text-white/30 focus:ring-white/25'
+            />
+            <div className='flex shrink-0 flex-wrap gap-1'>
+              {(['all', 'A', 'B', 'C', 'D', 'E'] as const).map((c) => (
+                <button
+                  key={c}
+                  type='button'
+                  onClick={() => setOpeningCat(c)}
+                  className={`rounded-md px-2 py-0.5 text-[11px] font-semibold transition-colors ${
+                    openingCat === c
+                      ? 'bg-white text-[#121212]'
+                      : 'bg-white/10 text-white/60 hover:bg-white/20'
+                  }`}
+                >
+                  {c === 'all' ? tx.allCat : c}
+                </button>
+              ))}
+            </div>
+            <div className='min-h-0 flex-1 overflow-y-auto rounded-[14px] bg-white/[0.04] p-1.5 ring-1 ring-white/10'>
+              {!openingsReady ? (
+                <div className='p-2 text-[12px] text-white/30'>
+                  {tx.loading}
+                </div>
+              ) : showPopularOpenings ? (
+                <ul className='space-y-0.5'>
+                  {POPULAR_OPENINGS.map((o) => (
+                    <li key={o.name}>
+                      <button
+                        type='button'
+                        onClick={() => loadOpening(o.moves)}
+                        title={o.name}
+                        className='w-full truncate rounded-md px-2 py-1.5 text-left text-[12px] font-medium text-white/80 transition-colors hover:bg-white/10'
+                      >
+                        {o.name}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              ) : openingResults.length === 0 ? (
+                <div className='p-2 text-[12px] text-white/30'>
+                  {tx.noResults}
+                </div>
+              ) : (
+                <ul className='space-y-0.5'>
+                  {openingResults.map((o) => (
+                    <li key={o.eco + o.fen}>
+                      <button
+                        type='button'
+                        onClick={() => loadPosition(o.fen)}
+                        title={`${o.eco} ${o.name}`}
+                        className='flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left transition-colors hover:bg-white/10'
+                      >
+                        <span className='shrink-0 rounded bg-white/10 px-1 py-0.5 text-[10px] font-bold tabular-nums text-white/55'>
+                          {o.eco}
+                        </span>
+                        <span className='truncate text-[12px] font-medium text-white/80'>
+                          {o.name}
+                        </span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+        )}
+
+        {mode === 'eval' && (
+          <div className='grid shrink-0 grid-cols-2 gap-2'>
             <button
               type='button'
-              onClick={() => {
-                setShowImport((v) => !v);
-                setImportError(false);
-              }}
-              className={`flex-1 rounded-full px-2 py-1.5 text-[11px] font-semibold transition-colors ${
-                showImport
-                  ? 'bg-white/20 text-white'
-                  : 'bg-white/10 text-white/70 hover:bg-white/20'
-              }`}
+              onClick={() => switchMode('play')}
+              className='ch-btn rounded-full bg-white px-2 py-1.5 text-[12px] font-semibold text-[#121212]'
             >
-              {tx.importLabel}
+              {tx.playFromHere}
             </button>
             <button
               type='button'
-              onClick={() => copyText('pgn', chessRef.current?.pgn() ?? '')}
-              disabled={moveList.length === 0}
-              className='flex-1 rounded-full bg-white/10 px-2 py-1.5 text-[11px] font-semibold text-white/70 transition-colors hover:bg-white/20 disabled:opacity-40'
+              onClick={() => switchMode('spectate')}
+              className='rounded-full bg-white/12 px-2 py-1.5 text-[12px] font-semibold text-white/85 transition-colors hover:bg-white/20'
             >
-              {copied === 'pgn' ? tx.copied : tx.exportPgn}
-            </button>
-            <button
-              type='button'
-              onClick={() => copyText('fen', chessRef.current?.fen() ?? '')}
-              className='flex-1 rounded-full bg-white/10 px-2 py-1.5 text-[11px] font-semibold text-white/70 transition-colors hover:bg-white/20'
-            >
-              {copied === 'fen' ? tx.copied : tx.exportFen}
+              {tx.spectateFromHere}
             </button>
           </div>
-        </div>
+        )}
       </div>
 
       {/* board + eval bar */}

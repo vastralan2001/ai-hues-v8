@@ -9,10 +9,34 @@ export interface OpeningInfo {
   name: string;
 }
 
+export interface OpeningEntry {
+  eco: string;
+  name: string;
+  fen: string;
+}
+
 type OpeningMap = Record<string, string>;
 
 let MAP: OpeningMap | null = null;
+let LIST: OpeningEntry[] | null = null;
 let loadingPromise: Promise<OpeningMap | null> | null = null;
+
+function buildList(map: OpeningMap): OpeningEntry[] {
+  const arr: OpeningEntry[] = [];
+  for (const epd in map) {
+    const v = map[epd];
+    const i = v.indexOf('|');
+    arr.push({
+      eco: i < 0 ? '' : v.slice(0, i),
+      name: i < 0 ? v : v.slice(i + 1),
+      fen: `${epd} 0 1`,
+    });
+  }
+  arr.sort(
+    (a, b) => a.eco.localeCompare(b.eco) || a.name.localeCompare(b.name)
+  );
+  return arr;
+}
 
 export function ensureOpenings(): Promise<OpeningMap | null> {
   if (MAP) return Promise.resolve(MAP);
@@ -21,6 +45,7 @@ export function ensureOpenings(): Promise<OpeningMap | null> {
       .then((r) => (r.ok ? r.json() : null))
       .then((data: OpeningMap | null) => {
         MAP = data;
+        LIST = data ? buildList(data) : [];
         return MAP;
       })
       .catch(() => null);
@@ -40,6 +65,35 @@ export function openingForFen(fen: string): OpeningInfo | null {
   return i < 0
     ? { eco: '', name: v }
     : { eco: v.slice(0, i), name: v.slice(i + 1) };
+}
+
+export function openingsLoaded(): boolean {
+  return LIST != null;
+}
+
+/* Filter the full book by a name/ECO substring and an ECO family letter
+   ('all' or 'A'..'E'), capped to a sensible number for the browser list. */
+export function searchOpenings(
+  query: string,
+  category: string,
+  limit = 120
+): OpeningEntry[] {
+  if (!LIST) return [];
+  const q = query.trim().toLowerCase();
+  const cat = category && category !== 'all' ? category.toUpperCase() : '';
+  const out: OpeningEntry[] = [];
+  for (const e of LIST) {
+    if (cat && (e.eco[0] || '').toUpperCase() !== cat) continue;
+    if (
+      q &&
+      !e.name.toLowerCase().includes(q) &&
+      !e.eco.toLowerCase().includes(q)
+    )
+      continue;
+    out.push(e);
+    if (out.length >= limit) break;
+  }
+  return out;
 }
 
 /* A short, hand-picked list of well-known openings for the "start from an
