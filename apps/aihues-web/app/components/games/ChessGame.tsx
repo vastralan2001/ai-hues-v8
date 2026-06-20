@@ -94,19 +94,6 @@ const LEVELS = [
   { skill: 20, depth: 18, movetime: 1500 },
 ];
 
-const PRESET_FENS: { key: string; fen: string }[] = [
-  {
-    key: 'standard',
-    fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-  },
-  {
-    key: 'sicilian',
-    fen: 'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2',
-  },
-  { key: 'rookEnd', fen: '4k3/8/8/8/8/8/4P3/R3K2R w KQ - 0 1' },
-  { key: 'queenEnd', fen: '8/8/4k3/8/8/3K4/8/3Q4 w - - 0 1' },
-];
-
 interface Particle {
   x: number;
   y: number;
@@ -206,6 +193,7 @@ const T = {
     undo: 'Undo',
     flip: 'Flip',
     evalToggle: 'Show evaluation',
+    lockedHint: 'Finish or restart the game to switch',
     resign: 'Resign',
     pause: 'Pause',
     resume: 'Resume',
@@ -288,6 +276,7 @@ const T = {
     undo: '悔棋',
     flip: '翻转',
     evalToggle: '显示局面分',
+    lockedHint: '结束或重开对局后可切换',
     resign: '认输',
     pause: '暂停',
     resume: '继续',
@@ -566,7 +555,6 @@ export default function ChessGame({ locale }: { locale: Locale }) {
   const [engineReady, setEngineReady] = useState(false);
   const [engineError, setEngineError] = useState(false);
 
-  const [presetKey, setPresetKey] = useState('standard');
   const [fenInput, setFenInput] = useState('');
   const [moveList, setMoveList] = useState<string[]>([]);
   const [statusText, setStatusText] = useState('');
@@ -1757,7 +1745,6 @@ export default function ChessGame({ locale }: { locale: Locale }) {
 
   function resetBoard() {
     chessRef.current!.reset();
-    setPresetKey('standard');
     engineRef.current?.stop();
     if (modeRef.current === 'eval') syncEditorTurn();
     refreshView();
@@ -1938,11 +1925,11 @@ export default function ChessGame({ locale }: { locale: Locale }) {
 
   function newGame() {
     chessRef.current!.reset();
-    setPresetKey('standard');
     engineRef.current?.stop();
     setPausedBoth(false);
     setResult('');
     flippedRef.current = false;
+    setSubTab('control');
     setPhaseBoth('setup');
     refreshView();
   }
@@ -2019,6 +2006,10 @@ export default function ChessGame({ locale }: { locale: Locale }) {
   const fenTrim = fenInput.trim();
   const fenBad = fenTrim.length > 0 && !isValidFen(fenTrim);
   const showEval = mode !== 'play' || playEval;
+  const inGame = mode !== 'eval' && phase !== 'setup';
+  const subTabKeys: ('control' | 'moves' | 'openings')[] =
+    mode === 'eval' ? ['control', 'moves', 'openings'] : ['control', 'moves'];
+  const effSubTab = subTabKeys.includes(subTab) ? subTab : 'control';
   const showPopularOpenings =
     openingQuery.trim() === '' && openingCat === 'all';
   const openingResults =
@@ -2041,11 +2032,15 @@ export default function ChessGame({ locale }: { locale: Locale }) {
             <button
               key={m}
               type='button'
+              disabled={inGame && mode !== m}
               onClick={() => switchMode(m)}
+              title={inGame && mode !== m ? tx.lockedHint : undefined}
               className={`flex-1 rounded-full px-3 py-1.5 text-[13px] font-semibold transition-colors ${
                 mode === m
                   ? 'bg-white text-[#121212]'
-                  : 'text-white/65 hover:text-white'
+                  : inGame
+                    ? 'cursor-not-allowed text-white/25'
+                    : 'text-white/65 hover:text-white'
               }`}
             >
               {modeLabel[m]}
@@ -2131,31 +2126,37 @@ export default function ChessGame({ locale }: { locale: Locale }) {
           </div>
         )}
 
-        <div className='flex shrink-0 gap-1 rounded-full bg-white/[0.06] p-1 text-[12px] ring-1 ring-white/10'>
-          {(['control', 'moves', 'openings'] as const).map((tabKey) => (
-            <button
-              key={tabKey}
-              type='button'
-              onClick={() => setSubTab(tabKey)}
-              className={`flex-1 rounded-full px-2 py-1 font-semibold transition-colors ${
-                subTab === tabKey
-                  ? 'bg-white text-[#121212]'
-                  : 'text-white/60 hover:text-white'
-              }`}
-            >
-              {tabKey === 'control'
-                ? mode === 'eval'
-                  ? tx.boardTab
-                  : tx.gameTab
-                : tabKey === 'moves'
-                  ? tx.moves
-                  : tx.openingsTab}
-            </button>
-          ))}
-        </div>
+        {!inGame && (
+          <div className='flex shrink-0 gap-1 rounded-full bg-white/[0.06] p-1 text-[12px] ring-1 ring-white/10'>
+            {subTabKeys.map((tabKey) => (
+              <button
+                key={tabKey}
+                type='button'
+                onClick={() => setSubTab(tabKey)}
+                className={`flex-1 rounded-full px-2 py-1 font-semibold transition-colors ${
+                  effSubTab === tabKey
+                    ? 'bg-white text-[#121212]'
+                    : 'text-white/60 hover:text-white'
+                }`}
+              >
+                {tabKey === 'control'
+                  ? mode === 'eval'
+                    ? tx.boardTab
+                    : tx.gameTab
+                  : tabKey === 'moves'
+                    ? tx.moves
+                    : tx.openingsTab}
+              </button>
+            ))}
+          </div>
+        )}
 
-        {subTab === 'control' && (
-          <div className='min-h-0 flex-1 overflow-y-auto rounded-[16px] bg-white/[0.04] p-3.5 ring-1 ring-white/10'>
+        {((!inGame && effSubTab === 'control') || inGame) && (
+          <div
+            className={`rounded-[16px] bg-white/[0.04] p-3.5 ring-1 ring-white/10 ${
+              inGame ? 'shrink-0' : 'min-h-0 flex-1 overflow-y-auto'
+            }`}
+          >
             {mode === 'play' && phase === 'setup' && (
               <div className='space-y-3'>
                 <div>
@@ -2248,37 +2249,6 @@ export default function ChessGame({ locale }: { locale: Locale }) {
                     </span>
                   </div>
                   <LevelRow value={bLevel} onChange={setBLevel} />
-                </div>
-                <div>
-                  <div className='mb-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-white/40'>
-                    {tx.startPos}
-                  </div>
-                  <div className='flex flex-wrap gap-1'>
-                    {PRESET_FENS.map((p) => (
-                      <Pill
-                        key={p.key}
-                        active={presetKey === p.key && !fenTrim}
-                        onClick={() => {
-                          setPresetKey(p.key);
-                          setFenInput('');
-                          loadPosition(p.fen);
-                        }}
-                      >
-                        {tx.presets[p.key as keyof typeof tx.presets]}
-                      </Pill>
-                    ))}
-                  </div>
-                  <div className='mt-2'>
-                    <FenLoader
-                      value={fenInput}
-                      bad={fenBad}
-                      tx={tx}
-                      onChange={setFenInput}
-                      onLoad={() => {
-                        if (!fenBad && fenTrim) loadPosition(fenTrim);
-                      }}
-                    />
-                  </div>
                 </div>
                 <button
                   type='button'
@@ -2446,7 +2416,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
           </div>
         )}
 
-        {subTab === 'moves' && (
+        {((!inGame && effSubTab === 'moves') || inGame) && (
           <div className='flex h-[340px] min-h-0 flex-col lg:h-auto lg:flex-1'>
             <div className='mb-2 flex items-center justify-between gap-2'>
               <span className='text-[11px] font-bold uppercase tracking-[0.16em] text-white/40'>
@@ -2563,7 +2533,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
           </div>
         )}
 
-        {subTab === 'openings' && (
+        {!inGame && effSubTab === 'openings' && (
           <div className='flex h-[340px] min-h-0 flex-col gap-2 lg:h-auto lg:flex-1'>
             <input
               type='text'
