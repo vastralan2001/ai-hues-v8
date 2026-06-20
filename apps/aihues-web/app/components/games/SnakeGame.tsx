@@ -5,11 +5,12 @@ import { Pause, Play } from 'lucide-react';
 
 import type { Locale } from '@/lib/dict';
 
-/* Snake — native port of the speed-select snake, Kimi-styled and borderless.
-   A square grid letterboxes into the transparent stage and blends into the
-   themed background via a soft light pool + edge-fading dots (no frame). The
-   snake glides between cells (interpolated) as a glossy gradient body with a
-   head and eyes; food is a pulsing glow orb; eating sparks a +10 burst. */
+/* Snake — native port of the speed-select snake, Kimi-styled. The board only
+   renders while playing/over; a square grid letterboxes into the stage, blends
+   into the themed background via a soft light pool and grid, and is bounded by
+   a soft glowing edge that marks the walls without a hard frame. The snake
+   glides between cells (interpolated) as a glossy gradient body with a head and
+   eyes; food is a pulsing glow orb; eating sparks a +10 burst. */
 
 const GRID = 30;
 const FIELD = 600;
@@ -474,17 +475,23 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
     const { cw, ch, scale, offX, offY, dpr } = g;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, cw, ch);
+    if (phaseRef.current === 'idle') return;
     ctx.setTransform(scale * dpr, 0, 0, scale * dpr, offX * dpr, offY * dpr);
 
-    // soft light pool — defines the play area without a border
+    // — play area: a soft panel that blends into the bg yet shows its bounds —
     const cx = FIELD / 2;
-    const pool = ctx.createRadialGradient(cx, cx, 0, cx, cx, FIELD * 0.62);
+
+    // faint full-area lift so the board reads as a distinct region to its edges
+    ctx.fillStyle = 'rgba(255,255,255,0.035)';
+    ctx.fillRect(0, 0, FIELD, FIELD);
+
+    const pool = ctx.createRadialGradient(cx, cx, 0, cx, cx, FIELD * 0.72);
     pool.addColorStop(0, C.pool);
     pool.addColorStop(1, 'rgba(127,216,171,0)');
     ctx.fillStyle = pool;
     ctx.fillRect(0, 0, FIELD, FIELD);
 
-    // edge-fading grid dots
+    // grid texture — gentle fade so it fills the board up toward the edges
     ctx.fillStyle = '#ffffff';
     for (let i = 0; i <= GRID; i++) {
       for (let j = 0; j <= GRID; j++) {
@@ -492,7 +499,7 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
         const y = j * CELL;
         const dx = (x - cx) / (FIELD / 2);
         const dy = (y - cx) / (FIELD / 2);
-        const fade = 1 - Math.sqrt(dx * dx + dy * dy) * 0.96;
+        const fade = 1 - Math.sqrt(dx * dx + dy * dy) * 0.5;
         if (fade <= 0.04) continue;
         ctx.globalAlpha = 0.05 * fade;
         ctx.beginPath();
@@ -501,6 +508,15 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
       }
     }
     ctx.globalAlpha = 1;
+
+    // soft glowing boundary — marks the walls without a hard frame
+    ctx.save();
+    ctx.shadowColor = 'rgba(127,216,171,0.4)';
+    ctx.shadowBlur = 9;
+    ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(1, 1, FIELD - 2, FIELD - 2);
+    ctx.restore();
 
     drawFood(ctx, g);
     drawSnake(ctx, g);
