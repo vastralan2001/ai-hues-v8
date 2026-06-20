@@ -186,7 +186,7 @@ const GAME_META: Record<string, string> = {
   'slot-machine': '3×3 reels · Lucky spins · +5~100 · Leaderboard',
   basketball: '60 seconds · Physics · +10~50/game · Leaderboard',
   snake: 'Endless · 3 speeds · Arrows / WASD / swipe',
-  'color-hunt': 'Stages or Sprint · Spot the odd shade · ΔE2000',
+  'color-hunt': 'Stages & Sprint · ΔE2000',
 };
 
 export function GameCard({

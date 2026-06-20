@@ -60,7 +60,7 @@ const LOCAL_GAMES: CatalogGame[] = [
     slug: 'color-hunt',
     icon: 'CH',
     name: 'Color Hunt',
-    description: 'Spot the odd shade across 60 timed rounds',
+    description: 'Spot the tile with a different shade',
     status: 'ITEM_STATUS_PUBLISHED',
     sortOrder: 4,
     priceTag: 'free',

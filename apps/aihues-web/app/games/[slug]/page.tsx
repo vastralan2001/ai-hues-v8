@@ -67,8 +67,8 @@ const REACT_GAMES: Record<string, PlayableGame> = {
     Component: ColorHuntGame,
     title: 'Color Hunt',
     titleZh: '找色差',
-    desc: 'Spot the tile with a slightly different shade — 60 scored rounds or a 60-second sprint.',
-    descZh: '找出颜色略有不同的方块——60 关计分或 60 秒冲刺,两种模式。',
+    desc: 'Spot the one tile with a slightly different shade.',
+    descZh: '找出唯一一个颜色略有不同的方块。',
     theme: 'spectrum',
   },
 };

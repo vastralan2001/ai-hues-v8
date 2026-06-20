@@ -549,7 +549,7 @@ export default function ColorHuntGame({ locale }: { locale: Locale }) {
               </button>
             ))}
           </div>
-          <p className='max-w-[380px] text-[14px] leading-relaxed text-white/70'>
+          <p className='max-w-[540px] text-[14px] leading-relaxed text-white/70'>
             {sprint ? tx.subSprint : tx.subStages}
           </p>
           <div className='w-full max-w-[420px] rounded-[14px] bg-white/[0.05] px-5 py-4 text-left ring-1 ring-white/10'>
