@@ -14,6 +14,7 @@ import type { Locale } from '@/lib/dict';
 const GRID = 30;
 const FIELD = 600;
 const CELL = FIELD / GRID;
+const FX_INSET = 48;
 
 const SPEEDS = { slow: 180, normal: 120, fast: 70 } as const;
 type Speed = keyof typeof SPEEDS;
@@ -196,7 +197,7 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
   function burst(g: SGame, x: number, y: number, n: number, col: string) {
     for (let i = 0; i < n; i++) {
       const a = Math.random() * Math.PI * 2;
-      const s = Math.random() * 4;
+      const s = Math.random() * 3;
       g.particles.push({
         x,
         y,
@@ -265,8 +266,10 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
     const hitsSelf = g.snake.some((s) => s.x === nx && s.y === ny);
     if (nx < 0 || nx >= GRID || ny < 0 || ny >= GRID || hitsSelf) {
       const cc = center(head);
-      g.pulses.push({ x: cc.x, y: cc.y, t: 0 });
-      burst(g, cc.x, cc.y, 20, 'rgba(255,255,255,0.85)');
+      const cx = Math.max(FX_INSET, Math.min(FIELD - FX_INSET, cc.x));
+      const cy = Math.max(FX_INSET, Math.min(FIELD - FX_INSET, cc.y));
+      g.pulses.push({ x: cx, y: cy, t: 0 });
+      burst(g, cx, cy, 20, 'rgba(255,255,255,0.85)');
       endGame(g);
       return;
     }
@@ -277,9 +280,11 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
       g.score += 10;
       setScore(g.score);
       const fc = center(g.food);
-      g.pulses.push({ x: fc.x, y: fc.y, t: 0 });
-      g.floats.push({ x: fc.x, y: fc.y - 8, t: 0, text: '+10' });
-      burst(g, fc.x, fc.y, 16, C.fx);
+      const fx = Math.max(FX_INSET, Math.min(FIELD - FX_INSET, fc.x));
+      const fy = Math.max(FX_INSET, Math.min(FIELD - FX_INSET, fc.y));
+      g.pulses.push({ x: fx, y: fy, t: 0 });
+      g.floats.push({ x: fx, y: fy - 8, t: 0, text: '+10' });
+      burst(g, fx, fy, 16, C.fx);
       spawnFood(g);
     } else {
       g.grew = false;
@@ -294,8 +299,12 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
       const p = g.particles[i];
       p.vy += 0.12 * dt;
       p.x += p.vx * dt;
+      if (p.x < 2) p.x = 2;
+      else if (p.x > FIELD - 2) p.x = FIELD - 2;
       p.y += p.vy * dt;
-      p.life -= 0.022 * dt;
+      if (p.y < 2) p.y = 2;
+      else if (p.y > FIELD - 2) p.y = FIELD - 2;
+      p.life -= 0.03 * dt;
       if (p.life <= 0) g.particles.splice(i, 1);
     }
     for (let i = g.pulses.length - 1; i >= 0; i--) {
@@ -502,7 +511,7 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
       ctx.strokeStyle = C.fx;
       ctx.lineWidth = 2 + (1 - pl.t) * 2.5;
       ctx.beginPath();
-      ctx.arc(pl.x, pl.y, 8 + pl.t * 46, 0, Math.PI * 2);
+      ctx.arc(pl.x, pl.y, 6 + pl.t * 34, 0, Math.PI * 2);
       ctx.stroke();
     }
     ctx.globalAlpha = 1;
@@ -517,7 +526,7 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
     for (const f of g.floats) {
       const alpha = f.t < 0.15 ? f.t / 0.15 : 1 - (f.t - 0.15) / 0.85;
       ctx.save();
-      ctx.translate(f.x, f.y - f.t * 40);
+      ctx.translate(f.x, f.y - f.t * 30);
       ctx.globalAlpha = Math.max(0, alpha);
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
