@@ -308,12 +308,9 @@ export function EmptyState({
 }
 
 export function ApiNotice({ error }: { error: Error | null }) {
-  if (!error) return null;
-
-  return (
-    <div className='api-notice' role='status'>
-      <strong>Catalog API unavailable.</strong>
-      <span>{error.message}</span>
-    </div>
-  );
+  // The catalog falls back to the bundled tool list when the live API is
+  // absent (e.g. static deploys), so an "unavailable" banner just reads as
+  // broken even though the page works. Keep the prop, surface nothing.
+  void error;
+  return null;
 }

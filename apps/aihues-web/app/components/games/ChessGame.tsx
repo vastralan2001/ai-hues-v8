@@ -2625,8 +2625,8 @@ export default function ChessGame({ locale }: { locale: Locale }) {
                         <span className='shrink-0 rounded bg-white/10 px-1 py-0.5 text-[10px] font-bold tabular-nums text-white/55'>
                           {o.eco}
                         </span>
-                        <span className='truncate text-[12px] font-medium text-white/80'>
-                          {o.name}
+                        <span className='op-name flex-1 text-[12px] font-medium text-white/80'>
+                          <span>{o.name}</span>
                         </span>
                       </button>
                     </li>
@@ -2741,9 +2741,14 @@ export default function ChessGame({ locale }: { locale: Locale }) {
         .ch-think span:nth-child(2) { animation-delay: 0.2s; }
         .ch-think span:nth-child(3) { animation-delay: 0.4s; }
         @keyframes chBlink { 0%, 60%, 100% { opacity: 0.2; } 30% { opacity: 1; } }
+        .op-name { display: block; overflow: hidden; container-type: inline-size; }
+        .op-name > span { display: inline-block; max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; vertical-align: bottom; }
+        .op-name:hover > span { max-width: none; animation: opMarq 5.5s linear 0.6s infinite alternate; }
+        @keyframes opMarq { from { transform: translateX(0); } to { transform: translateX(min(0px, calc(100cqw - 100%))); } }
         @media (prefers-reduced-motion: reduce) {
           .ch-in, .ch-btn, .ch-think span { animation: none !important; transition: none !important; }
           .ch-btn:hover, .ch-btn:active { transform: none; }
+          .op-name:hover > span { animation: none; }
         }
       `}</style>
     </div>
