@@ -211,7 +211,7 @@ export default async function GamePage({
             </>
           )}
 
-          <div className='relative flex min-h-[calc(100vh-76px)] flex-col pt-8'>
+          <div className='relative flex min-h-[calc(100vh-76px)] flex-col pb-12 pt-8'>
             <div className='mx-auto w-full max-w-[1100px] px-6'>
               <Link
                 href='/games'
