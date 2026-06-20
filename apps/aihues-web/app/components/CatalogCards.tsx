@@ -178,6 +178,7 @@ const GAME_BADGES: Record<string, string> = {
   basketball: 'game.skill',
   snake: 'game.classic',
   'color-hunt': 'game.skill',
+  chess: 'game.strategy',
 };
 
 const GAME_META: Record<string, string> = {
@@ -187,6 +188,7 @@ const GAME_META: Record<string, string> = {
   basketball: '60 seconds · Physics · +10~50/game · Leaderboard',
   snake: 'Endless · 3 speeds · Arrows / WASD / swipe',
   'color-hunt': 'Stages & Sprint · ΔE2000',
+  chess: 'Stockfish 17 · Play / Spectate / Eval',
 };
 
 export function GameCard({

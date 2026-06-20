@@ -68,6 +68,19 @@ const LOCAL_GAMES: CatalogGame[] = [
     tags: [],
     creditCost: 0,
   },
+  {
+    id: 'chess',
+    slug: 'chess',
+    icon: 'CS',
+    name: 'Chess',
+    description: 'Play, spectate, or analyze with Stockfish 17',
+    status: 'ITEM_STATUS_PUBLISHED',
+    sortOrder: 5,
+    priceTag: 'free',
+    externalUrl: '',
+    tags: [],
+    creditCost: 0,
+  },
 ];
 
 export async function GET(request: NextRequest) {

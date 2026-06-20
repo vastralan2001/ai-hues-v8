@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import BasketballGame from '@/components/games/BasketballGame';
+import ChessGame from '@/components/games/ChessGame';
 import ColorHuntGame from '@/components/games/ColorHuntGame';
 import DailyFortuneGame from '@/components/games/DailyFortuneGame';
 import DoodleJumpGame from '@/components/games/DoodleJumpGame';
@@ -11,7 +12,14 @@ import SnakeGame from '@/components/games/SnakeGame';
 import { PageShell } from '@/components/SiteChrome';
 import type { Locale } from '@/lib/dict';
 
-type Theme = 'space' | 'gold' | 'vegas' | 'court' | 'grid' | 'spectrum';
+type Theme =
+  | 'space'
+  | 'gold'
+  | 'vegas'
+  | 'court'
+  | 'grid'
+  | 'spectrum'
+  | 'royal';
 
 interface PlayableGame {
   Component: React.ComponentType<{ locale: Locale }>;
@@ -71,6 +79,14 @@ const REACT_GAMES: Record<string, PlayableGame> = {
     descZh: '找出唯一一个颜色略有不同的方块。',
     theme: 'spectrum',
   },
+  chess: {
+    Component: ChessGame,
+    title: 'Chess',
+    titleZh: '国际象棋',
+    desc: 'Play Stockfish 17, watch engines battle, or read the live evaluation.',
+    descZh: '与 Stockfish 17 对弈、观看引擎对战，或查看实时局面评估。',
+    theme: 'royal',
+  },
 };
 
 const THEMES: Record<
@@ -108,6 +124,12 @@ const THEMES: Record<
     bg: 'radial-gradient(125% 95% at 50% 40%, #20242e 0%, #14171e 46%, #0b0d12 100%)',
     glow: '#6a86c0',
     eyebrow: 'text-[#9fb4dd]',
+    quiet: true,
+  },
+  royal: {
+    bg: 'radial-gradient(125% 95% at 50% 38%, #232233 0%, #16151f 46%, #0b0a10 100%)',
+    glow: '#8b7bd8',
+    eyebrow: 'text-[#b9aef0]',
     quiet: true,
   },
 };

@@ -15,6 +15,7 @@ import {
   Code,
   Code2,
   Copy,
+  Crown,
   Database,
   Dices,
   Drama,
@@ -149,6 +150,7 @@ const TOOL_ICONS: Record<string, LucideIcon> = {
   basketball: Trophy,
   snake: Worm,
   'color-hunt': Grid3x3,
+  chess: Crown,
 
   /* Tests */
   sbti: Drama,
