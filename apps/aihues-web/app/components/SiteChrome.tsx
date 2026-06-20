@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
-import { ArrowUpRight, Mail, Rss } from 'lucide-react';
+import { ArrowUpRight, Rss } from 'lucide-react';
 
 import HeaderBar from '@/components/HeaderBar';
 import { t, type Locale } from '@/lib/dict';
@@ -10,7 +10,6 @@ import {
   gameDetailHref,
   gamesHref,
   homeHref,
-  pricingHref,
   showcaseHref,
   testsHref,
   toolDetailHref,
@@ -129,10 +128,8 @@ export function SiteFooter({
   ];
   const company: Array<[string, string]> = [
     [t(locale, 'footer.about'), '/about'],
-    [t(locale, 'footer.pricing'), pricingHref],
     [t(locale, 'footer.terms'), '/terms'],
     [t(locale, 'footer.privacy'), '/privacy'],
-    [t(locale, 'footer.contact'), 'mailto:hello@aihues.com'],
   ];
 
   return (
@@ -150,12 +147,6 @@ export function SiteFooter({
             {t(locale, 'footer.tagline')}
           </p>
           <div className='mt-5 flex items-center gap-2'>
-            <FooterIcon
-              href='mailto:hello@aihues.com'
-              label={t(locale, 'footer.contact')}
-            >
-              <Mail size={16} />
-            </FooterIcon>
             <FooterIcon href='/blog/rss.xml' label='RSS'>
               <Rss size={16} />
             </FooterIcon>
@@ -194,9 +185,6 @@ export function SiteFooter({
             <FooterLink href='/terms'>{t(locale, 'footer.terms')}</FooterLink>
             <FooterLink href='/privacy'>
               {t(locale, 'footer.privacy')}
-            </FooterLink>
-            <FooterLink href='mailto:hello@aihues.com'>
-              {t(locale, 'footer.contact')}
             </FooterLink>
           </div>
         </div>

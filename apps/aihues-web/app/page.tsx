@@ -221,16 +221,6 @@ export default async function HomePage() {
     games: games.length,
   };
 
-  const stats = [
-    { num: String(tools.length || 0), label: t(locale, 'stats.aiTools') },
-    {
-      num: String(categoryCounts.developer || 0),
-      label: t(locale, 'stats.devTools'),
-    },
-    { num: String(games.length || 0), label: t(locale, 'stats.games') },
-    { num: String(TEST_META.length || 0), label: t(locale, 'stats.tests') },
-  ];
-
   const homeDevTools = HOME_DEVELOPER_SLUGS.map((slug) =>
     tools.find((tool) => tool.slug === slug)
   ).filter((tool) => tool != null);
@@ -303,8 +293,8 @@ export default async function HomePage() {
             {/* Subtitle */}
             <p className='mx-auto mb-9 max-w-[560px] text-[19px] leading-relaxed text-secondary lg:mx-0'>
               {locale === 'zh'
-                ? '58 款精选工具 + 3 个轻量小游戏，无需注册，打开即用。'
-                : '58 curated tools + 3 mini games. No signup, no paywall — just open and use.'}
+                ? '精选 AI 工具与轻量小游戏，无需注册，打开即用。'
+                : 'Curated AI tools and mini games — no signup, just open and use.'}
             </p>
 
             {/* Search box */}
@@ -393,32 +383,6 @@ export default async function HomePage() {
         </section>
 
         {/* ══════════════════════════════════════════════
-            STATS BAR
-            ══════════════════════════════════════════════ */}
-        <div className='relative overflow-hidden border-b border-t border-border bg-surface px-8 py-12'>
-          <div
-            aria-hidden='true'
-            className='pointer-events-none absolute inset-0 opacity-50'
-            style={{
-              backgroundImage:
-                'radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--color-accent) 6%, transparent) 0%, transparent 55%)',
-            }}
-          />
-          <div className='relative mx-auto grid max-w-[1100px] grid-cols-2 gap-8 sm:grid-cols-4'>
-            {stats.map((s) => (
-              <div key={s.label} className='text-center'>
-                <div className='text-[52px] font-extrabold leading-none tracking-[-0.03em] text-accent'>
-                  {s.num}
-                </div>
-                <div className='mt-2 text-[12px] font-semibold uppercase tracking-[0.18em] text-muted'>
-                  {s.label}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* ══════════════════════════════════════════════
             DEVELOPER TOOLS – FEATURED
             ══════════════════════════════════════════════ */}
         {homeDevTools.length > 0 && (
@@ -436,9 +400,6 @@ export default async function HomePage() {
                 </h2>
               </div>
               <div className='flex items-center gap-3'>
-                <span className='rounded-full border border-border bg-bg px-3.5 py-1.5 text-[14px] text-muted'>
-                  {categoryCounts.developer} {t(locale, 'section.tools')}
-                </span>
                 <Link
                   className='text-[13px] font-bold uppercase tracking-[0.12em] text-accent transition-colors hover:text-accent-light'
                   href={toolsCategoryHref('developer')}
@@ -471,9 +432,6 @@ export default async function HomePage() {
                 </h2>
               </div>
               <div className='flex items-center gap-3'>
-                <span className='rounded-full border border-border bg-bg px-3.5 py-1.5 text-[14px] text-muted'>
-                  {categoryCounts['ai-writing']} {t(locale, 'section.tools')}
-                </span>
                 <Link
                   className='text-[13px] font-bold uppercase tracking-[0.12em] text-accent transition-colors hover:text-accent-light'
                   href={toolsCategoryHref('ai-writing')}
@@ -512,8 +470,8 @@ export default async function HomePage() {
               </Link>
             </div>
 
-            <div className='grid grid-cols-3 gap-4 max-[760px]:grid-cols-1'>
-              {games.map((game) => (
+            <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4'>
+              {games.slice(0, 8).map((game) => (
                 <HomeGameCard game={game} key={game.id} locale={locale} />
               ))}
             </div>

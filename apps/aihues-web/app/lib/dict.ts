@@ -23,7 +23,7 @@ export const dict: Record<Locale, Record<string, string>> = {
     'hero.title': 'Find your',
     'hero.aiVibe': 'AI vibe',
     'hero.subtitle':
-      '58+ AI tools, mini games & utilities that just work. Tell us what you need.',
+      'AI tools, mini games & utilities that just work. Tell us what you need.',
     'hero.searchPlaceholder': "e.g. 'parse JWT'... (Press / to focus)",
     'hero.askAI': 'Ask AI',
 
@@ -61,7 +61,7 @@ export const dict: Record<Locale, Record<string, string>> = {
     'section.popularTools': 'Popular Tools',
     'section.dualEngine': 'Tools + Games Dual Engine',
     'section.dualEngineDesc':
-      'Use tools, then play a game to relax. 58 tools + 3 games = complete platform.',
+      'Use tools to get things done, then play a game to relax — all in one place.',
     'section.browseAll': 'Browse All Tools →',
     'section.wishlistTitle': "Can't find what you need?",
     'section.wishlistDesc': 'Submit your idea. Top requests get built first.',
@@ -767,7 +767,7 @@ export const dict: Record<Locale, Record<string, string>> = {
     'footer.colorHunt': 'Color Hunt',
     'footer.allGames': 'All games',
     'footer.copyright': '© 2026 AIHues · Find your AI vibe · Built on Kimi',
-    'footer.tagline': 'Find your AI vibe. 58 tools + 7 games that feel human.',
+    'footer.tagline': 'Find your AI vibe — tools and games that feel human.',
 
     // playbooks
     'playbooks.badge1': 'AI Vibe Navigator',
@@ -809,8 +809,7 @@ export const dict: Record<Locale, Record<string, string>> = {
     // hero
     'hero.title': '找到你的',
     'hero.aiVibe': 'AI vibe',
-    'hero.subtitle':
-      '58+ AI 工具、小游戏和实用工具，开箱即用。告诉我们你的需求。',
+    'hero.subtitle': 'AI 工具、小游戏与实用工具，开箱即用。告诉我们你的需求。',
     'hero.searchPlaceholder': "例如 '解析 JWT'... (按 / 聚焦)",
     'hero.askAI': '问 AI',
 
@@ -848,7 +847,7 @@ export const dict: Record<Locale, Record<string, string>> = {
     'section.popularTools': '热门工具',
     'section.dualEngine': '工具 + 游戏双引擎',
     'section.dualEngineDesc':
-      '用工具提高效率，再玩个小游戏放松。58 个工具 + 3 款游戏 = 完整平台。',
+      '用工具高效完成工作，再玩个小游戏放松——一站搞定。',
     'section.browseAll': '浏览全部工具 →',
     'section.wishlistTitle': '找不到你需要的？',
     'section.wishlistDesc': '提交你的想法。最受欢迎的请求优先开发。',
@@ -1253,7 +1252,7 @@ export const dict: Record<Locale, Record<string, string>> = {
     'footer.colorHunt': '找色差',
     'footer.allGames': '全部游戏',
     'footer.copyright': '© 2026 AIHues · 找到你的 AI vibe · 基于 Kimi 构建',
-    'footer.tagline': '找到你的 AI vibe。58 个工具 + 7 款游戏，自然流畅。',
+    'footer.tagline': '找到你的 AI vibe——自然流畅的工具与游戏。',
 
     // playbooks
     'playbooks.badge1': 'AI Vibe Navigator',
