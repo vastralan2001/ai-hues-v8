@@ -83,8 +83,8 @@ const REACT_GAMES: Record<string, PlayableGame> = {
     Component: ChessGame,
     title: 'Chess',
     titleZh: '国际象棋',
-    desc: 'Play Stockfish 17, watch engines battle, or read the live evaluation.',
-    descZh: '与 Stockfish 17 对弈、观看引擎对战，或查看实时局面评估。',
+    desc: 'Play the computer, watch engines battle, or read the live evaluation.',
+    descZh: '与电脑对弈、观看引擎对战，或查看实时局面评估。',
     theme: 'royal',
   },
 };

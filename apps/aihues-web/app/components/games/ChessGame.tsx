@@ -8,11 +8,11 @@ import {
   type ReactNode,
 } from 'react';
 import {
-  Activity,
   ArrowLeftRight,
   Flag,
   Pause,
   Play,
+  RefreshCw,
   RotateCcw,
   SkipForward,
 } from 'lucide-react';
@@ -20,26 +20,23 @@ import { Chess, type Square } from 'chess.js';
 
 import type { Locale } from '@/lib/dict';
 import {
-  StockfishEngine,
+  ChessEngine,
   type EngineInfo,
   type SearchResult,
 } from '@/lib/chess-engine';
 
-/* Chess — a Stockfish 17.1 (WASM) powered board, Kimi-styled and borderless to
-   match the other games. The square board letterboxes into the stage, blends
-   into the themed background via translucent squares and a soft glowing edge,
-   and renders vector-styled pieces with sliding moves, capture sparks and a
-   check glow. Three ways to play share one engine: Play (human vs engine,
-   pick a side and a level), Spectate (engine vs engine from any position) and
-   a live eval bar that scores the position. */
+/* Chess — a WASM-engine board, Kimi-styled and borderless to match the other
+   games. The square board blends into the themed background with translucent
+   squares and a soft glowing edge, and renders 3D-shaded pieces with sliding
+   moves, capture sparks and a check glow. Three modes share one engine: Play
+   (human vs engine), Spectate (engine vs engine from any position) and Eval (a
+   sandbox/analysis board with a live evaluation bar and best-move hint that can
+   hand the current position to Play or Spectate). */
 
 const CELL = 80;
 const BOARD = CELL * 8;
-const GUT = 26;
-const GAP = 16;
-const MARGIN = 18;
 const ANIM_MS = 175;
-const EVAL_DEPTH = 14;
+const EVAL_DEPTH = 15;
 const SPECTATE_MIN_MS = 650;
 
 const FILES = 'abcdefgh';
@@ -52,7 +49,8 @@ const GLYPH: Record<string, string> = {
   p: '♟',
 };
 
-type Mode = 'play' | 'spectate';
+type Mode = 'play' | 'spectate' | 'eval';
+type Phase = 'setup' | 'active' | 'over';
 type Color = 'w' | 'b';
 interface Piece {
   type: string;
@@ -109,29 +107,25 @@ interface CaptureFade {
 }
 interface ChessView {
   dpr: number;
-  cw: number;
-  ch: number;
   scale: number;
-  offX: number;
-  offY: number;
   board: (Piece | null)[][];
   lastFrom: string | null;
   lastTo: string | null;
   selected: string | null;
   targets: { to: string; capture: boolean }[];
   checkSq: string | null;
+  arrow: { from: string; to: string } | null;
   anim: Anim | null;
   captureFade: CaptureFade | null;
   particles: Particle[];
-  evalCur: number;
-  evalTarget: number;
   last: number;
 }
 
 const T = {
   en: {
-    play: 'Play',
-    spectate: 'Spectate',
+    modePlay: 'Play',
+    modeSpectate: 'Spectate',
+    modeEval: 'Eval',
     side: 'Your side',
     white: 'White',
     black: 'Black',
@@ -147,22 +141,21 @@ const T = {
       'Master',
       'Maximum',
     ],
-    whiteEngine: 'White engine',
-    blackEngine: 'Black engine',
-    startPos: 'Start position',
+    whiteEngine: 'White',
+    blackEngine: 'Black',
+    startPos: 'Position',
     presets: {
       standard: 'Standard',
       sicilian: 'Sicilian',
       rookEnd: 'Rook endgame',
       queenEnd: 'Queen endgame',
-      custom: 'Custom FEN',
     },
-    fenPlaceholder: 'Paste a FEN to start from any position',
-    fenInvalid: 'That FEN is not valid.',
-    evalBar: 'Eval bar',
+    fenPlaceholder: 'Paste a FEN…',
+    load: 'Load',
+    fenInvalid: 'Invalid FEN',
     start: 'Start',
-    loading: 'Loading engine…',
-    engineFail: 'Engine failed to load. Please refresh.',
+    loading: 'Loading…',
+    engineFail: 'Engine failed to load — please refresh.',
     whiteMove: 'White to move',
     blackMove: 'Black to move',
     thinking: 'Thinking',
@@ -177,7 +170,6 @@ const T = {
     draw: 'Draw',
     resigned: 'You resigned',
     newGame: 'New game',
-    setup: 'Change setup',
     undo: 'Undo',
     flip: 'Flip',
     resign: 'Resign',
@@ -185,19 +177,17 @@ const T = {
     resume: 'Resume',
     step: 'Step',
     restart: 'Restart',
+    reset: 'Reset',
     moves: 'Moves',
-    sub: 'Play Stockfish 17, watch two engines battle, or read the live evaluation.',
-    rulesTitle: 'How it works',
-    rules: [
-      'Play: pick your colour and a level, then move by tapping a piece and its target.',
-      'Spectate: set each engine’s level and a start position — even a custom FEN.',
-      'The eval bar scores the position live; white’s share rises as white takes over.',
-      'Powered by Stockfish 17.1 running entirely in your browser.',
-    ],
+    best: 'Best',
+    playFromHere: 'Play from here',
+    spectateFromHere: 'Spectate from here',
+    evalHint: 'Move either side freely; the bar reads the live evaluation.',
   },
   zh: {
-    play: '对战',
-    spectate: '观战',
+    modePlay: '对战',
+    modeSpectate: '观战',
+    modeEval: '评估',
     side: '你的执子',
     white: '白方',
     black: '黑方',
@@ -213,21 +203,20 @@ const T = {
       '大师',
       '满级',
     ],
-    whiteEngine: '白方引擎',
-    blackEngine: '黑方引擎',
-    startPos: '起始局面',
+    whiteEngine: '白方',
+    blackEngine: '黑方',
+    startPos: '局面',
     presets: {
-      standard: '标准开局',
+      standard: '标准',
       sicilian: '西西里',
       rookEnd: '车残局',
       queenEnd: '后残局',
-      custom: '自定义 FEN',
     },
-    fenPlaceholder: '粘贴 FEN，从任意局面开始',
-    fenInvalid: 'FEN 不合法。',
-    evalBar: '评估条',
+    fenPlaceholder: '粘贴 FEN…',
+    load: '加载',
+    fenInvalid: 'FEN 不合法',
     start: '开始',
-    loading: '正在加载引擎…',
+    loading: '加载中…',
     engineFail: '引擎加载失败，请刷新页面。',
     whiteMove: '白方走子',
     blackMove: '黑方走子',
@@ -243,7 +232,6 @@ const T = {
     draw: '和棋',
     resigned: '你认输了',
     newGame: '再来一局',
-    setup: '重新设置',
     undo: '悔棋',
     flip: '翻转',
     resign: '认输',
@@ -251,15 +239,12 @@ const T = {
     resume: '继续',
     step: '单步',
     restart: '重新开始',
+    reset: '重置',
     moves: '棋谱',
-    sub: '与 Stockfish 17 对弈、观看双引擎对战，或查看实时局面评估。',
-    rulesTitle: '玩法说明',
-    rules: [
-      '对战：选择执子与难度，点选棋子和目标格即可走子。',
-      '观战：分别设置双方引擎难度与起始局面，支持自定义 FEN。',
-      '评估条实时显示局面优势，白方占优时白色部分上升。',
-      '由完全在浏览器中运行的 Stockfish 17.1 驱动。',
-    ],
+    best: '推荐',
+    playFromHere: '从此局面对战',
+    spectateFromHere: '从此局面观战',
+    evalHint: '可自由移动双方棋子，评估条实时显示优势。',
   },
 } as const;
 
@@ -292,46 +277,47 @@ export default function ChessGame({ locale }: { locale: Locale }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const gRef = useRef<ChessView | null>(null);
   const rafRef = useRef<number>(0);
+  const boardPxRef = useRef(0);
 
   const chessRef = useRef<Chess | null>(null);
   if (chessRef.current == null) {
     chessRef.current = new Chess();
   }
-  const engineRef = useRef<StockfishEngine | null>(null);
+  const engineRef = useRef<ChessEngine | null>(null);
   const enginePendingRef = useRef<Promise<unknown>>(Promise.resolve());
 
-  const phaseRef = useRef<'idle' | 'playing' | 'over'>('idle');
   const modeRef = useRef<Mode>('play');
+  const phaseRef = useRef<Phase>('setup');
   const humanColorRef = useRef<Color>('w');
   const levelRef = useRef(3);
   const wLevelRef = useRef(5);
   const bLevelRef = useRef(5);
-  const evalOnRef = useRef(true);
-  const flippedRef = useRef(false);
   const pausedRef = useRef(false);
   const thinkingRef = useRef(false);
   const engineReadyRef = useRef(false);
+  const flippedRef = useRef(false);
 
-  const [phase, setPhase] = useState<'idle' | 'playing' | 'over'>('idle');
   const [mode, setMode] = useState<Mode>('play');
+  const [phase, setPhase] = useState<Phase>('setup');
   const [humanColor, setHumanColor] = useState<Color | 'random'>('w');
   const [level, setLevel] = useState(3);
   const [wLevel, setWLevel] = useState(5);
   const [bLevel, setBLevel] = useState(5);
-  const [evalOn, setEvalOn] = useState(true);
   const [paused, setPaused] = useState(false);
   const [thinking, setThinking] = useState(false);
   const [engineReady, setEngineReady] = useState(false);
   const [engineError, setEngineError] = useState(false);
 
   const [presetKey, setPresetKey] = useState('standard');
-  const [customFen, setCustomFen] = useState('');
+  const [fenInput, setFenInput] = useState('');
   const [moveList, setMoveList] = useState<string[]>([]);
   const [statusText, setStatusText] = useState('');
-  const [turn, setTurn] = useState<Color>('w');
   const [result, setResult] = useState('');
+  const [turn, setTurn] = useState<Color>('w');
+  const [evalFrac, setEvalFrac] = useState(0.5);
   const [evalText, setEvalText] = useState('0.0');
   const [evalDepth, setEvalDepth] = useState(0);
+  const [boardPx, setBoardPx] = useState(0);
   const [promotion, setPromotion] = useState<{
     from: string;
     to: string;
@@ -341,7 +327,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
 
   /* ── engine lifecycle ── */
   useEffect(() => {
-    const eng = new StockfishEngine();
+    const eng = new ChessEngine();
     engineRef.current = eng;
     let alive = true;
     eng
@@ -365,8 +351,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     if (v) v.scrollTop = v.scrollHeight;
   }, [moveList]);
 
-  /* ── ref/state sync helpers ── */
-  function setPhaseBoth(p: 'idle' | 'playing' | 'over') {
+  function setPhaseBoth(p: Phase) {
     phaseRef.current = p;
     setPhase(p);
   }
@@ -374,112 +359,80 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     thinkingRef.current = v;
     setThinking(v);
   }
+  function setPausedBoth(v: boolean) {
+    pausedRef.current = v;
+    setPaused(v);
+  }
 
-  /* ── geometry ── */
-  function makeView(
-    dpr: number,
-    cw: number,
-    ch: number,
-    scale: number,
-    offX: number,
-    offY: number
-  ): ChessView {
+  /* ── geometry (measured square board) ── */
+  function makeView(dpr: number, scale: number): ChessView {
     return {
       dpr,
-      cw,
-      ch,
       scale,
-      offX,
-      offY,
       board: chessRef.current!.board() as (Piece | null)[][],
       lastFrom: null,
       lastTo: null,
       selected: null,
       targets: [],
       checkSq: null,
+      arrow: null,
       anim: null,
       captureFade: null,
       particles: [],
-      evalCur: 0.5,
-      evalTarget: 0.5,
       last: 0,
     };
   }
 
   function sizeNow() {
-    const el = fieldRef.current;
+    const field = fieldRef.current;
     const cv = canvasRef.current;
-    if (!el || !cv) return;
-    const rect = el.getBoundingClientRect();
-    if (rect.width < 2 || rect.height < 2) return;
+    if (!field || !cv) return;
+    const r = field.getBoundingClientRect();
+    if (r.width < 2 || r.height < 2) return;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const cw = rect.width;
-    const ch = rect.height;
-    cv.width = Math.round(cw * dpr);
-    cv.height = Math.round(ch * dpr);
-    const ev = evalOnRef.current;
-    const leftLogical = ev ? -(GAP + GUT) : 0;
-    const contentW = (ev ? GUT + GAP : 0) + BOARD;
-    const scale = Math.min(
-      (cw - 2 * MARGIN) / contentW,
-      (ch - 2 * MARGIN) / BOARD
-    );
-    const offX = (cw - contentW * scale) / 2 - leftLogical * scale;
-    const offY = (ch - BOARD * scale) / 2;
-    if (!gRef.current) {
-      gRef.current = makeView(dpr, cw, ch, scale, offX, offY);
-    } else {
-      Object.assign(gRef.current, { dpr, cw, ch, scale, offX, offY });
+    const evalReserve = modeRef.current === 'eval' ? 22 : 0;
+    const availW = r.width - evalReserve;
+    const bp = Math.max(180, Math.floor(Math.min(availW, r.height) - 2));
+    cv.width = Math.round(bp * dpr);
+    cv.height = Math.round(bp * dpr);
+    cv.style.width = bp + 'px';
+    cv.style.height = bp + 'px';
+    if (bp !== boardPxRef.current) {
+      boardPxRef.current = bp;
+      setBoardPx(bp);
     }
+    const scale = bp / BOARD;
+    if (!gRef.current) gRef.current = makeView(dpr, scale);
+    else Object.assign(gRef.current, { dpr, scale });
   }
 
   function hitTest(clientX: number, clientY: number): string | null {
-    const g = gRef.current;
     const cv = canvasRef.current;
-    if (!g || !cv) return null;
-    const rect = cv.getBoundingClientRect();
-    const lx = (clientX - rect.left - g.offX) / g.scale;
-    const ly = (clientY - rect.top - g.offY) / g.scale;
-    if (lx < 0 || lx >= BOARD || ly < 0 || ly >= BOARD) return null;
-    const sc = Math.floor(lx / CELL);
-    const sr = Math.floor(ly / CELL);
+    if (!cv) return null;
+    const r = cv.getBoundingClientRect();
+    const cell = r.width / 8;
+    const sc = Math.floor((clientX - r.left) / cell);
+    const sr = Math.floor((clientY - r.top) / cell);
+    if (sc < 0 || sc > 7 || sr < 0 || sr > 7) return null;
     const c = flippedRef.current ? 7 - sc : sc;
-    const r = flippedRef.current ? 7 - sr : sr;
-    return FILES[c] + (8 - r);
+    const rr = flippedRef.current ? 7 - sr : sr;
+    return FILES[c] + (8 - rr);
   }
 
   function computeCheckSq(): string | null {
     const chess = chessRef.current!;
     if (!chess.isCheck()) return null;
-    const turn = chess.turn();
+    const t = chess.turn();
     const b = chess.board() as (Piece | null)[][];
     for (let r = 0; r < 8; r++)
       for (let c = 0; c < 8; c++) {
         const pc = b[r][c];
-        if (pc && pc.type === 'k' && pc.color === turn)
-          return FILES[c] + (8 - r);
+        if (pc && pc.type === 'k' && pc.color === t) return FILES[c] + (8 - r);
       }
     return null;
   }
 
   /* ── rendering ── */
-  function roundRect(
-    ctx: CanvasRenderingContext2D,
-    x: number,
-    y: number,
-    w: number,
-    h: number,
-    r: number
-  ) {
-    ctx.beginPath();
-    ctx.moveTo(x + r, y);
-    ctx.arcTo(x + w, y, x + w, y + h, r);
-    ctx.arcTo(x + w, y + h, x, y + h, r);
-    ctx.arcTo(x, y + h, x, y, r);
-    ctx.arcTo(x, y, x + w, y, r);
-    ctx.closePath();
-  }
-
   function drawPiece(
     ctx: CanvasRenderingContext2D,
     piece: Piece,
@@ -561,28 +514,6 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     return { x: sc * CELL, y: sr * CELL };
   }
 
-  function drawEvalBar(ctx: CanvasRenderingContext2D, g: ChessView) {
-    const x = -(GAP + GUT);
-    const w = GUT;
-    const h = BOARD;
-    roundRect(ctx, x, 0, w, h, 7);
-    ctx.fillStyle = 'rgba(10,12,17,0.6)';
-    ctx.fill();
-    const frac = Math.max(0, Math.min(1, g.evalCur));
-    ctx.save();
-    roundRect(ctx, x, 0, w, h, 7);
-    ctx.clip();
-    ctx.fillStyle = 'rgba(244,246,250,0.93)';
-    ctx.fillRect(x, h - h * frac, w, h * frac);
-    ctx.restore();
-    ctx.strokeStyle = 'rgba(255,255,255,0.22)';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(x, h / 2);
-    ctx.lineTo(x + w, h / 2);
-    ctx.stroke();
-  }
-
   function drawBoardBase(ctx: CanvasRenderingContext2D) {
     ctx.fillStyle = 'rgba(255,255,255,0.03)';
     ctx.fillRect(-3, -3, BOARD + 6, BOARD + 6);
@@ -618,6 +549,42 @@ export default function ChessGame({ locale }: { locale: Locale }) {
       ctx.fillStyle = lightL ? 'rgba(28,36,54,0.55)' : 'rgba(232,236,244,0.5)';
       ctx.fillText(String(rankIdx + 1), 3, i * CELL + 4);
     }
+  }
+
+  function drawArrow(ctx: CanvasRenderingContext2D, from: string, to: string) {
+    const a = sqXY(from);
+    const b = sqXY(to);
+    const x1 = a.x + CELL / 2;
+    const y1 = a.y + CELL / 2;
+    const x2 = b.x + CELL / 2;
+    const y2 = b.y + CELL / 2;
+    const ang = Math.atan2(y2 - y1, x2 - x1);
+    const head = 22;
+    const shorten = 26;
+    const ex = x2 - Math.cos(ang) * shorten;
+    const ey = y2 - Math.sin(ang) * shorten;
+    ctx.save();
+    ctx.strokeStyle = 'rgba(122,150,230,0.85)';
+    ctx.fillStyle = 'rgba(122,150,230,0.85)';
+    ctx.lineWidth = 11;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(ex, ey);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x2 - Math.cos(ang) * 4, y2 - Math.sin(ang) * 4);
+    ctx.lineTo(
+      ex - Math.cos(ang - Math.PI / 2) * head * 0.6,
+      ey - Math.sin(ang - Math.PI / 2) * head * 0.6
+    );
+    ctx.lineTo(
+      ex - Math.cos(ang + Math.PI / 2) * head * 0.6,
+      ey - Math.sin(ang + Math.PI / 2) * head * 0.6
+    );
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
   }
 
   function drawHighlights(ctx: CanvasRenderingContext2D, g: ChessView) {
@@ -702,15 +669,13 @@ export default function ChessGame({ locale }: { locale: Locale }) {
   }
 
   function render(g: ChessView, ctx: CanvasRenderingContext2D) {
-    const { dpr, cw, ch, scale, offX, offY } = g;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.clearRect(0, 0, cw, ch);
-    if (phaseRef.current === 'idle') return;
-    ctx.setTransform(scale * dpr, 0, 0, scale * dpr, offX * dpr, offY * dpr);
-    if (evalOnRef.current) drawEvalBar(ctx, g);
+    const { dpr, scale } = g;
+    ctx.setTransform(scale * dpr, 0, 0, scale * dpr, 0, 0);
+    ctx.clearRect(0, 0, BOARD, BOARD);
     drawBoardBase(ctx);
     drawHighlights(ctx, g);
     drawCoords(ctx);
+    if (g.arrow && !g.anim) drawArrow(ctx, g.arrow.from, g.arrow.to);
     drawPieces(ctx, g);
     for (const p of g.particles) {
       ctx.globalAlpha = Math.max(0, p.life);
@@ -740,7 +705,6 @@ export default function ChessGame({ locale }: { locale: Locale }) {
       p.life -= 0.02 * k;
       if (p.life <= 0) g.particles.splice(i, 1);
     }
-    g.evalCur += (g.evalTarget - g.evalCur) * Math.min(1, 0.12 * k);
   }
 
   function frame(ts: number) {
@@ -773,16 +737,16 @@ export default function ChessGame({ locale }: { locale: Locale }) {
   }, []);
 
   /* ── eval conversion ── */
-  function infoToWhite(info: EngineInfo, turn: Color) {
+  function infoToWhite(info: EngineInfo, t: Color) {
     if (info.scoreMate != null) {
-      const m = turn === 'w' ? info.scoreMate : -info.scoreMate;
+      const m = t === 'w' ? info.scoreMate : -info.scoreMate;
       return {
         prob: m > 0 ? 1 : m < 0 ? 0 : 0.5,
         text: (m >= 0 ? 'M' : '-M') + Math.abs(m),
       };
     }
     if (info.scoreCp != null) {
-      const cp = turn === 'w' ? info.scoreCp : -info.scoreCp;
+      const cp = t === 'w' ? info.scoreCp : -info.scoreCp;
       const v = cp / 100;
       return {
         prob: 1 / (1 + Math.pow(10, -cp / 400)),
@@ -792,19 +756,22 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     return { prob: 0.5, text: '0.0' };
   }
 
-  function applyInfo(info: EngineInfo, turn: Color) {
-    const w = infoToWhite(info, turn);
-    const g = gRef.current;
-    if (g) g.evalTarget = w.prob;
+  function applyInfo(info: EngineInfo, t: Color) {
+    const w = infoToWhite(info, t);
+    setEvalFrac(w.prob);
     setEvalText(w.text);
     setEvalDepth(info.depth);
+    if (modeRef.current === 'eval' && info.pv && info.pv[0]) {
+      const u = info.pv[0];
+      const g = gRef.current;
+      if (g) g.arrow = { from: u.slice(0, 2), to: u.slice(2, 4) };
+    }
   }
 
-  function applyResult(res: SearchResult, turn: Color) {
-    if (res.info) applyInfo(res.info, turn);
+  function applyResult(res: SearchResult, t: Color) {
+    if (res.info) applyInfo(res.info, t);
   }
 
-  /* ── engine serialization ── */
   async function engineExclusive(
     fn: () => Promise<SearchResult>
   ): Promise<SearchResult | null> {
@@ -879,6 +846,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
       g.lastTo = mv.to;
       g.selected = null;
       g.targets = [];
+      g.arrow = null;
       g.checkSq = computeCheckSq();
     }
     setMoveList(chessRef.current!.history());
@@ -890,6 +858,29 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     setTurn(chess.turn());
     if (chess.isGameOver()) return;
     setStatusText(chess.turn() === 'w' ? tx.whiteMove : tx.blackMove);
+  }
+
+  function refreshView() {
+    const chess = chessRef.current!;
+    const g = gRef.current;
+    if (g) {
+      g.board = chess.board() as (Piece | null)[][];
+      const h = chess.history({ verbose: true }) as {
+        from: string;
+        to: string;
+      }[];
+      const lm = h[h.length - 1];
+      g.lastFrom = lm ? lm.from : null;
+      g.lastTo = lm ? lm.to : null;
+      g.selected = null;
+      g.targets = [];
+      g.anim = null;
+      g.captureFade = null;
+      g.arrow = null;
+      g.checkSq = computeCheckSq();
+    }
+    setMoveList(chess.history());
+    setStatusFromGame();
   }
 
   function gameResultText() {
@@ -908,7 +899,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
   }
 
   function finishGame() {
-    if (phaseRef.current !== 'playing') return;
+    if (phaseRef.current !== 'active') return;
     setResult(gameResultText());
     setThinkingBoth(false);
     setPhaseBoth('over');
@@ -922,59 +913,118 @@ export default function ChessGame({ locale }: { locale: Locale }) {
       const mv = chessRef.current!.move({ from, to, promotion });
       if (mv) pushMove(mv as never);
     } catch {
-      /* illegal — ignore */
+      /* ignore */
     }
   }
 
-  /* ── play (human vs engine) ── */
-  async function startAnalysis() {
-    const chess = chessRef.current!;
-    if (phaseRef.current !== 'playing' || !evalOnRef.current) return;
-    const turn = chess.turn();
-    await engineExclusive(() => {
-      engineRef.current!.setSkill(20);
-      return engineRef.current!.search(
-        chess.fen(),
-        { depth: EVAL_DEPTH },
-        (info) => applyInfo(info, turn)
-      );
-    });
-  }
-
+  /* ── engine: play / spectate / analysis ── */
   async function playEngineMove() {
     const chess = chessRef.current!;
-    if (phaseRef.current !== 'playing' || chess.isGameOver()) return;
+    if (
+      phaseRef.current !== 'active' ||
+      modeRef.current !== 'play' ||
+      chess.isGameOver()
+    )
+      return;
     const lvl = LEVELS[levelRef.current - 1];
-    const turn = chess.turn();
+    const t = chess.turn();
     setThinkingBoth(true);
     const res = await engineExclusive(() => {
       engineRef.current!.setSkill(lvl.skill);
       return engineRef.current!.search(
         chess.fen(),
         { depth: lvl.depth, movetime: lvl.movetime },
-        (info) => applyInfo(info, turn)
+        (info) => applyInfo(info, t)
       );
     });
     setThinkingBoth(false);
-    if (!res || !res.bestmove || phaseRef.current !== 'playing') return;
+    if (!res || !res.bestmove || phaseRef.current !== 'active') return;
+    if (modeRef.current !== 'play') return;
     applyUci(res.bestmove);
-    applyResult(res, turn);
-    afterMove();
+    if (chess.isGameOver()) finishGame();
   }
 
-  function afterMove() {
+  async function analyzePosition() {
     const chess = chessRef.current!;
-    if (chess.isGameOver()) {
-      finishGame();
+    if (modeRef.current !== 'eval') return;
+    const t = chess.turn();
+    setThinkingBoth(true);
+    const res = await engineExclusive(() => {
+      engineRef.current!.setSkill(20);
+      return engineRef.current!.search(
+        chess.fen(),
+        { depth: EVAL_DEPTH },
+        (info) => applyInfo(info, t)
+      );
+    });
+    setThinkingBoth(false);
+    if (res && modeRef.current === 'eval') applyResult(res, t);
+  }
+
+  async function spectateOneMove(force = false) {
+    const chess = chessRef.current!;
+    if (
+      phaseRef.current !== 'active' ||
+      modeRef.current !== 'spectate' ||
+      chess.isGameOver()
+    )
       return;
+    const t = chess.turn();
+    const lvl = LEVELS[(t === 'w' ? wLevelRef.current : bLevelRef.current) - 1];
+    setThinkingBoth(true);
+    const t0 = nowMs();
+    const res = await engineExclusive(() => {
+      engineRef.current!.setSkill(lvl.skill);
+      return engineRef.current!.search(
+        chess.fen(),
+        { depth: lvl.depth, movetime: lvl.movetime },
+        (info) => applyInfo(info, t)
+      );
+    });
+    setThinkingBoth(false);
+    if (!res || !res.bestmove) return;
+    if (phaseRef.current !== 'active' || modeRef.current !== 'spectate') return;
+    const wait = SPECTATE_MIN_MS - (nowMs() - t0);
+    if (wait > 0) await sleep(wait);
+    if (!force && pausedRef.current) return;
+    if (phaseRef.current !== 'active' || modeRef.current !== 'spectate') return;
+    applyUci(res.bestmove);
+    applyResult(res, t);
+  }
+
+  async function spectateLoop() {
+    const chess = chessRef.current!;
+    while (
+      phaseRef.current === 'active' &&
+      modeRef.current === 'spectate' &&
+      !pausedRef.current &&
+      !chess.isGameOver()
+    ) {
+      await spectateOneMove();
     }
+    if (
+      phaseRef.current === 'active' &&
+      modeRef.current === 'spectate' &&
+      chess.isGameOver()
+    )
+      finishGame();
+  }
+
+  /* ── human interaction ── */
+  function movableColor(): Color | null {
+    const chess = chessRef.current!;
+    if (chess.isGameOver()) return null;
+    if (modeRef.current === 'eval') return chess.turn();
     if (modeRef.current === 'play') {
-      if (chess.turn() === humanColorRef.current) {
-        if (evalOnRef.current) startAnalysis();
-      } else {
-        playEngineMove();
-      }
+      if (phaseRef.current === 'setup') return chess.turn();
+      if (
+        phaseRef.current === 'active' &&
+        !thinkingRef.current &&
+        chess.turn() === humanColorRef.current
+      )
+        return humanColorRef.current;
     }
+    return null;
   }
 
   function selectSquare(sq: string) {
@@ -994,24 +1044,46 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     }));
   }
 
-  function doHumanMove(from: string, to: string, promotion?: string) {
-    try {
-      const mv = chessRef.current!.move({ from, to, promotion });
-      if (!mv) return;
-      pushMove(mv as never);
-      afterMove();
-    } catch {
-      /* ignore */
+  function afterHumanMove() {
+    const chess = chessRef.current!;
+    if (modeRef.current === 'play') {
+      if (chess.isGameOver()) finishGame();
+      else if (chess.turn() !== humanColorRef.current) playEngineMove();
+    } else if (modeRef.current === 'eval') {
+      analyzePosition();
     }
   }
 
-  function onBoardPointer(e: ReactPointerEvent) {
-    if (phaseRef.current !== 'playing' || modeRef.current !== 'play') return;
+  function doHumanMove(from: string, to: string, promotion?: string) {
     const chess = chessRef.current!;
-    if (chess.turn() !== humanColorRef.current || thinkingRef.current) return;
+    const autoStart =
+      modeRef.current === 'play' && phaseRef.current === 'setup';
+    const mover = chess.turn();
+    let mv;
+    try {
+      mv = chess.move({ from, to, promotion });
+    } catch {
+      return;
+    }
+    if (!mv) return;
+    if (autoStart) {
+      humanColorRef.current = mover;
+      flippedRef.current = mover === 'b';
+      engineRef.current?.newGame();
+      setResult('');
+      setPhaseBoth('active');
+    }
+    pushMove(mv as never);
+    afterHumanMove();
+  }
+
+  function onBoardPointer(e: ReactPointerEvent) {
+    const can = movableColor();
+    if (!can) return;
     const sq = hitTest(e.clientX, e.clientY);
     if (!sq) return;
     const g = gRef.current;
+    const chess = chessRef.current!;
     if (!g) return;
     const piece = chess.get(sq as Square) as Piece | undefined;
     if (g.selected) {
@@ -1027,12 +1099,12 @@ export default function ChessGame({ locale }: { locale: Locale }) {
         doHumanMove(g.selected, sq);
         return;
       }
-      if (piece && piece.color === humanColorRef.current) selectSquare(sq);
+      if (piece && piece.color === can) selectSquare(sq);
       else {
         g.selected = null;
         g.targets = [];
       }
-    } else if (piece && piece.color === humanColorRef.current) {
+    } else if (piece && piece.color === can) {
       selectSquare(sq);
     }
   }
@@ -1044,128 +1116,48 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     doHumanMove(from, to, piece);
   }
 
-  /* ── spectate (engine vs engine) ── */
-  async function spectateOneMove() {
-    const chess = chessRef.current!;
-    if (phaseRef.current !== 'playing' || chess.isGameOver()) return;
-    const turn = chess.turn();
-    const lvl =
-      LEVELS[(turn === 'w' ? wLevelRef.current : bLevelRef.current) - 1];
-    setThinkingBoth(true);
-    const t0 = nowMs();
-    const res = await engineExclusive(() => {
-      engineRef.current!.setSkill(lvl.skill);
-      return engineRef.current!.search(
-        chess.fen(),
-        { depth: lvl.depth, movetime: lvl.movetime },
-        (info) => applyInfo(info, turn)
-      );
-    });
-    setThinkingBoth(false);
-    if (!res || !res.bestmove) return;
-    if (phaseRef.current !== 'playing' || modeRef.current !== 'spectate')
-      return;
-    const wait = SPECTATE_MIN_MS - (nowMs() - t0);
-    if (wait > 0) await sleep(wait);
-    if (pausedRef.current || phaseRef.current !== 'playing') return;
-    applyUci(res.bestmove);
-    applyResult(res, turn);
-  }
-
-  async function spectateLoop() {
-    const chess = chessRef.current!;
-    while (
-      phaseRef.current === 'playing' &&
-      modeRef.current === 'spectate' &&
-      !pausedRef.current &&
-      !chess.isGameOver()
-    ) {
-      await spectateOneMove();
-    }
-    if (
-      phaseRef.current === 'playing' &&
-      chess.isGameOver() &&
-      modeRef.current === 'spectate'
-    )
-      finishGame();
-  }
-
   /* ── controls ── */
-  function toggleEval() {
-    const v = !evalOnRef.current;
-    evalOnRef.current = v;
-    setEvalOn(v);
-    sizeNow();
-    if (phaseRef.current === 'playing' && modeRef.current === 'play') {
-      const chess = chessRef.current!;
-      if (chess.turn() === humanColorRef.current) {
-        if (v) startAnalysis();
-        else engineRef.current?.stop();
-      }
-    }
-  }
-
   function toggleFlip() {
     flippedRef.current = !flippedRef.current;
+    const g = gRef.current;
+    if (g) g.selected = null;
   }
 
   function togglePause() {
-    if (modeRef.current !== 'spectate' || phaseRef.current !== 'playing')
-      return;
+    if (modeRef.current !== 'spectate' || phaseRef.current !== 'active') return;
     const v = !pausedRef.current;
-    pausedRef.current = v;
-    setPaused(v);
+    setPausedBoth(v);
     if (v) engineRef.current?.stop();
     else spectateLoop();
   }
 
   function stepSpectate() {
-    if (modeRef.current !== 'spectate' || phaseRef.current !== 'playing')
-      return;
+    if (modeRef.current !== 'spectate' || phaseRef.current !== 'active') return;
     if (!pausedRef.current) return;
-    spectateOneMove();
-  }
-
-  function refreshView() {
-    const chess = chessRef.current!;
-    const g = gRef.current;
-    if (g) {
-      g.board = chess.board() as (Piece | null)[][];
-      const h = chess.history({ verbose: true }) as {
-        from: string;
-        to: string;
-      }[];
-      const lm = h[h.length - 1];
-      g.lastFrom = lm ? lm.from : null;
-      g.lastTo = lm ? lm.to : null;
-      g.selected = null;
-      g.targets = [];
-      g.anim = null;
-      g.captureFade = null;
-      g.checkSq = computeCheckSq();
-    }
-    setMoveList(chess.history());
-    setStatusFromGame();
+    spectateOneMove(true);
   }
 
   function undo() {
-    if (modeRef.current !== 'play' || phaseRef.current === 'idle') return;
     const chess = chessRef.current!;
     engineRef.current?.stop();
-    let n = 0;
-    while (n < 2 && chess.history().length > 0) {
-      chess.undo();
-      n++;
-      if (chess.turn() === humanColorRef.current) break;
+    if (modeRef.current === 'play') {
+      let n = 0;
+      while (n < 2 && chess.history().length > 0) {
+        chess.undo();
+        n++;
+        if (chess.turn() === humanColorRef.current) break;
+      }
+      if (phaseRef.current === 'over') setPhaseBoth('active');
+      refreshView();
+    } else if (modeRef.current === 'eval') {
+      if (chess.history().length > 0) chess.undo();
+      refreshView();
+      analyzePosition();
     }
-    if (phaseRef.current === 'over') setPhaseBoth('playing');
-    refreshView();
-    if (evalOnRef.current && chess.turn() === humanColorRef.current)
-      startAnalysis();
   }
 
   function resign() {
-    if (modeRef.current !== 'play' || phaseRef.current !== 'playing') return;
+    if (modeRef.current !== 'play' || phaseRef.current !== 'active') return;
     engineRef.current?.stop();
     setResult(tx.youLose);
     setStatusText(tx.resigned);
@@ -1173,112 +1165,106 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     setPhaseBoth('over');
   }
 
-  /* ── start / lifecycle ── */
+  function loadPosition(fen: string) {
+    const chess = chessRef.current!;
+    try {
+      chess.load(fen);
+    } catch {
+      return;
+    }
+    engineRef.current?.stop();
+    refreshView();
+    if (modeRef.current === 'eval') analyzePosition();
+  }
+
+  function resetBoard() {
+    chessRef.current!.reset();
+    setPresetKey('standard');
+    engineRef.current?.stop();
+    refreshView();
+    if (modeRef.current === 'eval') analyzePosition();
+  }
+
   function resolvedHumanColor(): Color {
     if (humanColor === 'random') return rnd() < 0.5 ? 'w' : 'b';
     return humanColor;
   }
 
-  function activeFen(): string {
-    if (mode === 'spectate') {
-      const c = customFen.trim();
-      if (c && isValidFen(c)) return c;
-      return (
-        PRESET_FENS.find((p) => p.key === presetKey)?.fen ?? PRESET_FENS[0].fen
-      );
-    }
-    return PRESET_FENS[0].fen;
-  }
-
   function startGame() {
     if (!engineReadyRef.current) return;
     const chess = chessRef.current!;
-    try {
-      chess.load(activeFen());
-    } catch {
-      return;
-    }
     engineRef.current?.newGame();
-    modeRef.current = mode;
-    levelRef.current = level;
-    wLevelRef.current = wLevel;
-    bLevelRef.current = bLevel;
-    const hc = resolvedHumanColor();
-    humanColorRef.current = hc;
-    const flip = mode === 'play' ? hc === 'b' : false;
-    flippedRef.current = flip;
-    pausedRef.current = false;
-    setPaused(false);
-    setResult('');
-    setMoveList(chess.history());
-    const g = gRef.current;
-    if (g) {
-      g.board = chess.board() as (Piece | null)[][];
-      g.lastFrom = null;
-      g.lastTo = null;
-      g.selected = null;
-      g.targets = [];
-      g.anim = null;
-      g.captureFade = null;
-      g.particles = [];
-      g.checkSq = computeCheckSq();
-      g.evalCur = 0.5;
-      g.evalTarget = 0.5;
+    if (modeRef.current === 'play') {
+      const hc = resolvedHumanColor();
+      humanColorRef.current = hc;
+      flippedRef.current = hc === 'b';
     }
-    setEvalText('0.0');
-    setEvalDepth(0);
-    setPhaseBoth('playing');
-    setStatusFromGame();
+    setPausedBoth(false);
+    setResult('');
+    setPhaseBoth('active');
+    refreshView();
     requestAnimationFrame(() => sizeNow());
-    if (mode === 'play') {
-      if (chess.turn() === hc) {
-        if (evalOnRef.current) startAnalysis();
-      } else playEngineMove();
-    } else {
+    if (modeRef.current === 'play') {
+      if (!chess.isGameOver() && chess.turn() !== humanColorRef.current)
+        playEngineMove();
+    } else if (modeRef.current === 'spectate') {
       spectateLoop();
     }
   }
 
-  function backToSetup() {
+  function newGame() {
+    chessRef.current!.reset();
+    setPresetKey('standard');
     engineRef.current?.stop();
-    pausedRef.current = false;
-    setPaused(false);
+    setPausedBoth(false);
     setResult('');
-    setPhaseBoth('idle');
+    flippedRef.current = false;
+    setPhaseBoth('setup');
+    refreshView();
+  }
+
+  function switchMode(m: Mode) {
+    if (m === modeRef.current) return;
+    engineRef.current?.stop();
+    setPausedBoth(false);
+    setThinkingBoth(false);
+    setResult('');
+    modeRef.current = m;
+    setMode(m);
+    const g = gRef.current;
+    if (g) g.arrow = null;
+    if (m === 'eval') {
+      setPhaseBoth('active');
+      refreshView();
+      requestAnimationFrame(() => sizeNow());
+      analyzePosition();
+    } else {
+      setPhaseBoth('setup');
+      refreshView();
+      requestAnimationFrame(() => sizeNow());
+    }
   }
 
   /* ── keyboard ── */
   const handlersRef = useRef<Record<string, () => void>>({});
   useEffect(() => {
-    handlersRef.current = {
-      togglePause,
-      stepSpectate,
-      undo,
-      toggleFlip,
-      toggleEval,
-    };
+    handlersRef.current = { togglePause, stepSpectate, undo, toggleFlip };
   });
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (phaseRef.current === 'idle') return;
       const h = handlersRef.current;
       if (e.key === ' ' || e.key === 'p' || e.key === 'P') {
-        if (modeRef.current === 'spectate') {
+        if (modeRef.current === 'spectate' && phaseRef.current === 'active') {
           h.togglePause();
           e.preventDefault();
         }
       } else if (e.key === 'ArrowRight' && modeRef.current === 'spectate') {
         h.stepSpectate();
         e.preventDefault();
-      } else if (
-        (e.key === 'z' || e.key === 'Z') &&
-        modeRef.current === 'play'
-      ) {
+      } else if (e.key === 'z' || e.key === 'Z') {
         h.undo();
       } else if (e.key === 'f' || e.key === 'F') {
         h.toggleFlip();
-      } else if (e.key === 'e' || e.key === 'E') {
-        h.toggleEval();
       }
     };
     window.addEventListener('keydown', onKey);
@@ -1286,361 +1272,392 @@ export default function ChessGame({ locale }: { locale: Locale }) {
   }, []);
 
   /* ── derived UI ── */
-  const fenInvalid = customFen.trim().length > 0 && !isValidFen(customFen);
+  const fenTrim = fenInput.trim();
+  const fenBad = fenTrim.length > 0 && !isValidFen(fenTrim);
+  const showEvalBar = mode === 'eval';
+  const showEvalNum = mode === 'eval' || mode === 'spectate';
+  const modes: Mode[] = ['play', 'spectate', 'eval'];
+  const modeLabel: Record<Mode, string> = {
+    play: tx.modePlay,
+    spectate: tx.modeSpectate,
+    eval: tx.modeEval,
+  };
 
   return (
-    <div className='relative flex min-h-[480px] w-full flex-col touch-none select-none'>
-      {/* top bar: status + controls */}
-      <div className='mx-auto flex w-full max-w-[940px] shrink-0 flex-wrap items-center justify-between gap-2 px-1 py-2 text-white'>
-        <div className='flex items-center gap-2'>
-          {phase !== 'idle' && (
-            <>
-              <span
-                className={`inline-block h-2.5 w-2.5 rounded-full ${
-                  turn === 'w' ? 'bg-white' : 'bg-white/40'
-                } ring-1 ring-white/30`}
-              />
-              <span className='text-[14px] font-semibold text-white/85'>
-                {phase === 'over' ? result : statusText}
-              </span>
-              {thinking && phase === 'playing' && (
-                <span className='ch-think text-[12px] font-medium text-white/45'>
-                  {tx.thinking}
-                  <span>.</span>
-                  <span>.</span>
-                  <span>.</span>
-                </span>
-              )}
-              {evalOn && (
-                <span className='ml-1 rounded-full bg-white/10 px-2 py-0.5 text-[12px] font-semibold tabular-nums text-white/70'>
-                  {evalText}
-                  {evalDepth > 0 && (
-                    <span className='ml-1 text-white/35'>d{evalDepth}</span>
-                  )}
-                </span>
-              )}
-            </>
-          )}
+    <div className='relative flex min-h-[540px] w-full touch-none select-none flex-col gap-4 lg:h-full lg:flex-row lg:items-stretch'>
+      {/* sidebar: mode + controls + moves */}
+      <div className='flex w-full shrink-0 flex-col gap-3 text-white lg:w-[300px]'>
+        <div className='flex gap-1 rounded-full bg-white/[0.06] p-1 ring-1 ring-white/10'>
+          {modes.map((m) => (
+            <button
+              key={m}
+              type='button'
+              onClick={() => switchMode(m)}
+              className={`flex-1 rounded-full px-3 py-1.5 text-[13px] font-semibold transition-colors ${
+                mode === m
+                  ? 'bg-white text-[#121212]'
+                  : 'text-white/65 hover:text-white'
+              }`}
+            >
+              {modeLabel[m]}
+            </button>
+          ))}
         </div>
 
-        {phase !== 'idle' && (
-          <div className='flex items-center gap-1.5'>
-            <CtrlButton
-              active={evalOn}
-              label={tx.evalBar}
-              onClick={toggleEval}
-              icon={<Activity size={15} />}
-            />
-            <CtrlButton
-              label={tx.flip}
-              onClick={toggleFlip}
-              icon={<ArrowLeftRight size={15} />}
-            />
-            {mode === 'play' ? (
-              <>
+        <div className='flex items-center gap-2'>
+          <span
+            className={`inline-block h-2.5 w-2.5 rounded-full ${
+              turn === 'w' ? 'bg-white' : 'bg-white/40'
+            } ring-1 ring-white/30`}
+          />
+          <span className='text-[14px] font-semibold text-white/85'>
+            {phase === 'over' ? result : statusText}
+          </span>
+          {thinking && phase !== 'over' && (
+            <span className='ch-think text-[12px] font-medium text-white/45'>
+              {tx.thinking}
+              <span>.</span>
+              <span>.</span>
+              <span>.</span>
+            </span>
+          )}
+          <span className='flex-1' />
+          {showEvalNum && (
+            <span className='rounded-full bg-white/10 px-2 py-0.5 text-[12px] font-semibold tabular-nums text-white/70'>
+              {evalText}
+              {evalDepth > 0 && (
+                <span className='ml-1 text-white/35'>d{evalDepth}</span>
+              )}
+            </span>
+          )}
+          <button
+            type='button'
+            onClick={toggleFlip}
+            title={tx.flip}
+            aria-label={tx.flip}
+            className='flex items-center rounded-full bg-white/10 px-2.5 py-1.5 text-white/75 transition-colors hover:bg-white/20'
+          >
+            <ArrowLeftRight size={15} />
+          </button>
+        </div>
+
+        <div className='rounded-[16px] bg-white/[0.04] p-3.5 ring-1 ring-white/10'>
+          {mode === 'play' && phase === 'setup' && (
+            <div className='space-y-3'>
+              <div>
+                <div className='mb-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-white/40'>
+                  {tx.side}
+                </div>
+                <div className='flex gap-1'>
+                  {(['w', 'b', 'random'] as const).map((s) => (
+                    <Pill
+                      key={s}
+                      active={humanColor === s}
+                      onClick={() => setHumanColor(s)}
+                    >
+                      {s === 'w' ? tx.white : s === 'b' ? tx.black : tx.random}
+                    </Pill>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <div className='mb-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-white/40'>
+                  {tx.level} ·{' '}
+                  <span className='text-white/55'>
+                    {tx.levelNames[level - 1]}
+                  </span>
+                </div>
+                <LevelRow value={level} onChange={setLevel} />
+              </div>
+              <button
+                type='button'
+                onClick={startGame}
+                disabled={!engineReady}
+                className='ch-btn w-full rounded-full bg-white py-2 text-[13px] font-semibold text-[#121212] disabled:cursor-not-allowed disabled:opacity-50'
+              >
+                {engineError
+                  ? tx.engineFail
+                  : engineReady
+                    ? tx.start
+                    : tx.loading}
+              </button>
+              <p className='text-[12px] leading-relaxed text-white/40'>
+                {zh
+                  ? '或直接在棋盘上走一子开始'
+                  : 'or just move a piece to begin'}
+              </p>
+            </div>
+          )}
+
+          {mode === 'play' && phase !== 'setup' && (
+            <div className='flex flex-wrap gap-2'>
+              <CtrlButton
+                label={tx.undo}
+                onClick={undo}
+                icon={<RotateCcw size={15} />}
+              />
+              {phase === 'active' && (
+                <CtrlButton
+                  label={tx.resign}
+                  onClick={resign}
+                  icon={<Flag size={15} />}
+                />
+              )}
+              <CtrlButton
+                label={tx.newGame}
+                onClick={newGame}
+                icon={<RefreshCw size={15} />}
+              />
+            </div>
+          )}
+
+          {mode === 'spectate' && phase === 'setup' && (
+            <div className='space-y-3'>
+              <div>
+                <div className='mb-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-white/40'>
+                  {tx.whiteEngine} ·{' '}
+                  <span className='text-white/55'>
+                    {tx.levelNames[wLevel - 1]}
+                  </span>
+                </div>
+                <LevelRow value={wLevel} onChange={setWLevel} />
+              </div>
+              <div>
+                <div className='mb-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-white/40'>
+                  {tx.blackEngine} ·{' '}
+                  <span className='text-white/55'>
+                    {tx.levelNames[bLevel - 1]}
+                  </span>
+                </div>
+                <LevelRow value={bLevel} onChange={setBLevel} />
+              </div>
+              <div>
+                <div className='mb-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-white/40'>
+                  {tx.startPos}
+                </div>
+                <div className='flex flex-wrap gap-1'>
+                  {PRESET_FENS.map((p) => (
+                    <Pill
+                      key={p.key}
+                      active={presetKey === p.key && !fenTrim}
+                      onClick={() => {
+                        setPresetKey(p.key);
+                        setFenInput('');
+                        loadPosition(p.fen);
+                      }}
+                    >
+                      {tx.presets[p.key as keyof typeof tx.presets]}
+                    </Pill>
+                  ))}
+                </div>
+                <div className='mt-2'>
+                  <FenLoader
+                    value={fenInput}
+                    bad={fenBad}
+                    tx={tx}
+                    onChange={setFenInput}
+                    onLoad={() => {
+                      if (!fenBad && fenTrim) loadPosition(fenTrim);
+                    }}
+                  />
+                </div>
+              </div>
+              <button
+                type='button'
+                onClick={startGame}
+                disabled={!engineReady}
+                className='ch-btn w-full rounded-full bg-white py-2 text-[13px] font-semibold text-[#121212] disabled:cursor-not-allowed disabled:opacity-50'
+              >
+                {engineError
+                  ? tx.engineFail
+                  : engineReady
+                    ? tx.start
+                    : tx.loading}
+              </button>
+            </div>
+          )}
+
+          {mode === 'spectate' && phase !== 'setup' && (
+            <div className='flex flex-wrap gap-2'>
+              <CtrlButton
+                label={paused ? tx.resume : tx.pause}
+                onClick={togglePause}
+                icon={paused ? <Play size={15} /> : <Pause size={15} />}
+              />
+              <CtrlButton
+                label={tx.step}
+                onClick={stepSpectate}
+                disabled={!paused}
+                icon={<SkipForward size={15} />}
+              />
+              <CtrlButton
+                label={tx.restart}
+                onClick={newGame}
+                icon={<RefreshCw size={15} />}
+              />
+            </div>
+          )}
+
+          {mode === 'eval' && (
+            <div className='space-y-2.5'>
+              <div className='flex flex-wrap gap-2'>
+                <CtrlButton
+                  label={tx.reset}
+                  onClick={resetBoard}
+                  icon={<RefreshCw size={15} />}
+                />
                 <CtrlButton
                   label={tx.undo}
                   onClick={undo}
                   icon={<RotateCcw size={15} />}
                 />
-                {phase === 'playing' && (
-                  <CtrlButton
-                    label={tx.resign}
-                    onClick={resign}
-                    icon={<Flag size={15} />}
-                  />
-                )}
-              </>
-            ) : (
-              phase === 'playing' && (
-                <>
-                  <CtrlButton
-                    label={paused ? tx.resume : tx.pause}
-                    onClick={togglePause}
-                    icon={paused ? <Play size={15} /> : <Pause size={15} />}
-                  />
-                  <CtrlButton
-                    label={tx.step}
-                    onClick={stepSpectate}
-                    disabled={!paused}
-                    icon={<SkipForward size={15} />}
-                  />
-                </>
-              )
-            )}
-            <button
-              type='button'
-              onClick={backToSetup}
-              className='ml-0.5 rounded-full bg-white/10 px-3 py-1.5 text-[12px] font-semibold text-white/70 transition-colors hover:bg-white/20'
-            >
-              {tx.setup}
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* board + side panel */}
-      <div className='relative flex min-h-0 flex-1 gap-4'>
-        <div
-          ref={fieldRef}
-          className='relative min-h-0 flex-1'
-          onPointerDown={onBoardPointer}
-        >
-          <canvas ref={canvasRef} className='absolute inset-0 h-full w-full' />
-
-          {promotion && (
-            <div className='absolute inset-0 z-20 flex items-center justify-center bg-black/45'>
-              <div className='ch-in flex gap-2 rounded-2xl bg-[#1a1e27] p-3 ring-1 ring-white/12'>
-                {['q', 'r', 'b', 'n'].map((p) => (
-                  <button
-                    key={p}
-                    type='button'
-                    onClick={() => choosePromotion(p)}
-                    className='flex h-16 w-16 items-center justify-center rounded-xl bg-white/8 text-[40px] leading-none text-white transition-colors hover:bg-white/18'
-                    style={{
-                      fontFamily:
-                        '"Segoe UI Symbol","Noto Sans Symbols 2",serif',
-                    }}
-                  >
-                    {GLYPH[p]}
-                  </button>
-                ))}
               </div>
-            </div>
-          )}
-
-          {phase === 'over' && (
-            <div className='pointer-events-none absolute inset-x-0 top-3 z-10 flex justify-center'>
-              <div className='ch-in pointer-events-auto flex flex-col items-center gap-3 rounded-2xl bg-black/55 px-7 py-5 text-center ring-1 ring-white/12 backdrop-blur-sm'>
-                <div className='text-[20px] font-bold text-white/90'>
-                  {result}
-                </div>
-                <div className='flex gap-2'>
-                  <button
-                    type='button'
-                    onClick={startGame}
-                    className='ch-btn rounded-full bg-white px-6 py-2.5 text-[14px] font-semibold text-[#121212]'
-                  >
-                    {tx.newGame}
-                  </button>
-                  <button
-                    type='button'
-                    onClick={backToSetup}
-                    className='rounded-full bg-white/10 px-6 py-2.5 text-[14px] font-semibold text-white/80 transition-colors hover:bg-white/20'
-                  >
-                    {tx.setup}
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* moves panel (wide screens) */}
-        {phase !== 'idle' && (
-          <div className='hidden w-[210px] shrink-0 flex-col lg:flex'>
-            <div className='mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-white/40'>
-              {tx.moves}
-            </div>
-            <div
-              ref={movesEndRef}
-              className='min-h-0 flex-1 overflow-y-auto rounded-[14px] bg-white/[0.04] p-3 ring-1 ring-white/10'
-            >
-              {moveList.length === 0 ? (
-                <div className='text-[13px] text-white/30'>—</div>
-              ) : (
-                <ol className='space-y-0.5'>
-                  {Array.from({ length: Math.ceil(moveList.length / 2) }).map(
-                    (_, i) => (
-                      <li
-                        key={i}
-                        className='flex items-center gap-2 text-[13px] tabular-nums'
-                      >
-                        <span className='w-6 shrink-0 text-right text-white/35'>
-                          {i + 1}.
-                        </span>
-                        <span className='flex-1 font-medium text-white/80'>
-                          {moveList[i * 2]}
-                        </span>
-                        <span className='flex-1 font-medium text-white/65'>
-                          {moveList[i * 2 + 1] ?? ''}
-                        </span>
-                      </li>
-                    )
-                  )}
-                </ol>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* idle setup */}
-      {phase === 'idle' && (
-        <div className='ch-in absolute inset-0 flex flex-col items-center justify-center gap-5 overflow-y-auto px-6 py-6 text-center'>
-          <div className='flex gap-1.5 rounded-full bg-white/[0.06] p-1 ring-1 ring-white/10'>
-            {(['play', 'spectate'] as Mode[]).map((m) => (
-              <button
-                key={m}
-                type='button'
-                onClick={() => setMode(m)}
-                className={`rounded-full px-5 py-1.5 text-[13px] font-semibold transition-colors ${
-                  mode === m
-                    ? 'bg-white text-[#121212]'
-                    : 'text-white/65 hover:text-white'
-                }`}
-              >
-                {m === 'play' ? tx.play : tx.spectate}
-              </button>
-            ))}
-          </div>
-
-          <p className='max-w-[540px] text-[14px] leading-relaxed text-white/70'>
-            {tx.sub}
-          </p>
-
-          <div className='w-full max-w-[440px] space-y-4 rounded-[16px] bg-white/[0.05] px-5 py-5 text-left ring-1 ring-white/10'>
-            {mode === 'play' ? (
-              <>
-                <div>
-                  <div className='mb-2 text-[12px] font-semibold uppercase tracking-[0.14em] text-white/45'>
-                    {tx.side}
-                  </div>
-                  <div className='flex gap-1.5'>
-                    {(['w', 'b', 'random'] as const).map((s) => (
-                      <button
-                        key={s}
-                        type='button'
-                        onClick={() => setHumanColor(s)}
-                        className={`flex-1 rounded-lg px-3 py-2 text-[13px] font-semibold transition-colors ${
-                          humanColor === s
-                            ? 'bg-white text-[#121212]'
-                            : 'bg-white/10 text-white/65 hover:bg-white/20'
-                        }`}
-                      >
-                        {s === 'w'
-                          ? tx.white
-                          : s === 'b'
-                            ? tx.black
-                            : tx.random}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <div className='mb-2 flex items-baseline justify-between'>
-                    <span className='text-[12px] font-semibold uppercase tracking-[0.14em] text-white/45'>
-                      {tx.level}
-                    </span>
-                    <span className='text-[12px] font-medium text-white/55'>
-                      {tx.levelNames[level - 1]}
-                    </span>
-                  </div>
-                  <LevelRow value={level} onChange={setLevel} />
-                </div>
-              </>
-            ) : (
-              <>
-                <div>
-                  <div className='mb-2 flex items-baseline justify-between'>
-                    <span className='text-[12px] font-semibold uppercase tracking-[0.14em] text-white/45'>
-                      {tx.whiteEngine}
-                    </span>
-                    <span className='text-[12px] font-medium text-white/55'>
-                      {tx.levelNames[wLevel - 1]}
-                    </span>
-                  </div>
-                  <LevelRow value={wLevel} onChange={setWLevel} />
-                </div>
-                <div>
-                  <div className='mb-2 flex items-baseline justify-between'>
-                    <span className='text-[12px] font-semibold uppercase tracking-[0.14em] text-white/45'>
-                      {tx.blackEngine}
-                    </span>
-                    <span className='text-[12px] font-medium text-white/55'>
-                      {tx.levelNames[bLevel - 1]}
-                    </span>
-                  </div>
-                  <LevelRow value={bLevel} onChange={setBLevel} />
-                </div>
-                <div>
-                  <div className='mb-2 text-[12px] font-semibold uppercase tracking-[0.14em] text-white/45'>
-                    {tx.startPos}
-                  </div>
-                  <div className='flex flex-wrap gap-1.5'>
-                    {PRESET_FENS.map((p) => (
-                      <button
-                        key={p.key}
-                        type='button'
-                        onClick={() => {
-                          setPresetKey(p.key);
-                          setCustomFen('');
-                        }}
-                        className={`rounded-lg px-3 py-1.5 text-[12px] font-semibold transition-colors ${
-                          presetKey === p.key && !customFen.trim()
-                            ? 'bg-white text-[#121212]'
-                            : 'bg-white/10 text-white/65 hover:bg-white/20'
-                        }`}
-                      >
-                        {tx.presets[p.key as keyof typeof tx.presets]}
-                      </button>
-                    ))}
-                  </div>
-                  <input
-                    value={customFen}
-                    onChange={(e) => setCustomFen(e.target.value)}
-                    placeholder={tx.fenPlaceholder}
-                    spellCheck={false}
-                    className={`mt-2 w-full rounded-lg bg-black/25 px-3 py-2 text-[12px] text-white/85 outline-none ring-1 transition-colors placeholder:text-white/30 ${
-                      fenInvalid
-                        ? 'ring-[#ff6b70]/70'
-                        : 'ring-white/12 focus:ring-white/30'
-                    }`}
-                  />
-                  {fenInvalid && (
-                    <div className='mt-1 text-[11px] text-[#ff8a8e]'>
-                      {tx.fenInvalid}
-                    </div>
-                  )}
-                </div>
-              </>
-            )}
-
-            <label className='flex cursor-pointer items-center justify-between pt-1'>
-              <span className='text-[13px] font-medium text-white/70'>
-                {tx.evalBar}
-              </span>
-              <button
-                type='button'
-                role='switch'
-                aria-checked={evalOn}
-                onClick={() => {
-                  evalOnRef.current = !evalOnRef.current;
-                  setEvalOn(evalOnRef.current);
+              <FenLoader
+                value={fenInput}
+                bad={fenBad}
+                tx={tx}
+                onChange={setFenInput}
+                onLoad={() => {
+                  if (!fenBad && fenTrim) loadPosition(fenTrim);
                 }}
-                className={`relative h-6 w-11 rounded-full transition-colors ${
-                  evalOn ? 'bg-white' : 'bg-white/20'
-                }`}
-              >
-                <span
-                  className={`absolute top-0.5 h-5 w-5 rounded-full bg-[#121212] transition-transform ${
-                    evalOn ? 'translate-x-[22px]' : 'translate-x-0.5'
-                  }`}
-                />
-              </button>
-            </label>
-          </div>
-
-          <button
-            type='button'
-            onClick={startGame}
-            disabled={!engineReady || (mode === 'spectate' && fenInvalid)}
-            className='ch-btn inline-flex items-center gap-2 rounded-full bg-white px-9 py-3 text-[15px] font-semibold text-[#121212] disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#101319]'
-          >
-            {engineError ? tx.engineFail : engineReady ? tx.start : tx.loading}
-          </button>
+              />
+              <div className='flex flex-col gap-2 pt-0.5'>
+                <button
+                  type='button'
+                  onClick={() => switchMode('play')}
+                  className='ch-btn w-full rounded-full bg-white py-2 text-[13px] font-semibold text-[#121212]'
+                >
+                  {tx.playFromHere}
+                </button>
+                <button
+                  type='button'
+                  onClick={() => switchMode('spectate')}
+                  className='w-full rounded-full bg-white/12 py-2 text-[13px] font-semibold text-white/85 transition-colors hover:bg-white/20'
+                >
+                  {tx.spectateFromHere}
+                </button>
+              </div>
+              <p className='text-[12px] leading-relaxed text-white/40'>
+                {tx.evalHint}
+              </p>
+            </div>
+          )}
         </div>
-      )}
+
+        <div className='hidden min-h-0 flex-1 flex-col lg:flex'>
+          <div className='mb-2 flex items-center justify-between'>
+            <span className='text-[11px] font-bold uppercase tracking-[0.16em] text-white/40'>
+              {tx.moves}
+            </span>
+            {mode === 'eval' && evalDepth > 0 && (
+              <span className='text-[11px] font-medium text-white/45'>
+                {tx.best} · d{evalDepth}
+              </span>
+            )}
+          </div>
+          <div
+            ref={movesEndRef}
+            className='min-h-0 flex-1 overflow-y-auto rounded-[14px] bg-white/[0.04] p-3 ring-1 ring-white/10'
+          >
+            {moveList.length === 0 ? (
+              <div className='text-[13px] leading-relaxed text-white/30'>
+                {mode === 'eval' ? tx.evalHint : '—'}
+              </div>
+            ) : (
+              <ol className='space-y-0.5'>
+                {Array.from({ length: Math.ceil(moveList.length / 2) }).map(
+                  (_, i) => (
+                    <li
+                      key={i}
+                      className='flex items-center gap-2 text-[13px] tabular-nums'
+                    >
+                      <span className='w-6 shrink-0 text-right text-white/35'>
+                        {i + 1}.
+                      </span>
+                      <span className='flex-1 font-medium text-white/80'>
+                        {moveList[i * 2]}
+                      </span>
+                      <span className='flex-1 font-medium text-white/65'>
+                        {moveList[i * 2 + 1] ?? ''}
+                      </span>
+                    </li>
+                  )
+                )}
+              </ol>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* board area */}
+      <div
+        ref={fieldRef}
+        className='relative flex min-h-[320px] flex-1 items-center justify-center lg:min-h-0'
+      >
+        <div className='flex items-center gap-2'>
+          {showEvalBar && (
+            <div
+              className='relative w-3.5 shrink-0 overflow-hidden rounded-full bg-[#0b0d12] ring-1 ring-white/10'
+              style={{ height: boardPx || '70%' }}
+            >
+              <div
+                className='absolute inset-x-0 bottom-0 bg-[#f4f6fa] transition-[height] duration-300 ease-out'
+                style={{ height: `${evalFrac * 100}%` }}
+              />
+              <div className='absolute inset-x-0 top-1/2 h-px bg-white/25' />
+            </div>
+          )}
+
+          <div
+            className='relative shrink-0'
+            style={{
+              width: boardPx || undefined,
+              height: boardPx || undefined,
+            }}
+            onPointerDown={onBoardPointer}
+          >
+            <canvas ref={canvasRef} className='block' />
+
+            {promotion && (
+              <div className='absolute inset-0 z-20 flex items-center justify-center bg-black/45'>
+                <div className='ch-in flex gap-2 rounded-2xl bg-[#1a1e27] p-3 ring-1 ring-white/12'>
+                  {['q', 'r', 'b', 'n'].map((p) => (
+                    <button
+                      key={p}
+                      type='button'
+                      onClick={() => choosePromotion(p)}
+                      className='flex h-16 w-16 items-center justify-center rounded-xl bg-white/8 text-[40px] leading-none text-white transition-colors hover:bg-white/18'
+                      style={{
+                        fontFamily:
+                          '"Segoe UI Symbol","Noto Sans Symbols 2",serif',
+                      }}
+                    >
+                      {GLYPH[p]}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {phase === 'over' && (
+              <div className='pointer-events-none absolute inset-x-0 top-3 z-10 flex justify-center'>
+                <div className='ch-in pointer-events-auto flex items-center gap-3 rounded-2xl bg-black/55 px-6 py-3.5 text-center ring-1 ring-white/12 backdrop-blur-sm'>
+                  <span className='text-[16px] font-bold text-white/90'>
+                    {result}
+                  </span>
+                  <button
+                    type='button'
+                    onClick={newGame}
+                    className='ch-btn rounded-full bg-white px-4 py-2 text-[13px] font-semibold text-[#121212]'
+                  >
+                    {mode === 'spectate' ? tx.restart : tx.newGame}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
 
       <style>{`
         @keyframes chIn { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: scale(1); } }
@@ -1661,6 +1678,30 @@ export default function ChessGame({ locale }: { locale: Locale }) {
   );
 }
 
+function Pill({
+  active,
+  onClick,
+  children,
+}: {
+  active?: boolean;
+  onClick: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <button
+      type='button'
+      onClick={onClick}
+      className={`rounded-lg px-3 py-1.5 text-[13px] font-semibold transition-colors ${
+        active
+          ? 'bg-white text-[#121212]'
+          : 'bg-white/10 text-white/65 hover:bg-white/20'
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
+
 function LevelRow({
   value,
   onChange,
@@ -1669,13 +1710,13 @@ function LevelRow({
   onChange: (v: number) => void;
 }) {
   return (
-    <div className='flex flex-wrap gap-1.5'>
+    <div className='flex flex-wrap gap-1'>
       {[1, 2, 3, 4, 5, 6, 7, 8].map((l) => (
         <button
           key={l}
           type='button'
           onClick={() => onChange(l)}
-          className={`h-8 w-8 rounded-lg text-[13px] font-semibold transition-colors ${
+          className={`h-7 w-7 rounded-md text-[12px] font-semibold transition-colors ${
             value === l
               ? 'bg-white text-[#121212]'
               : 'bg-white/10 text-white/65 hover:bg-white/20'
@@ -1688,17 +1729,54 @@ function LevelRow({
   );
 }
 
+function FenLoader({
+  value,
+  bad,
+  tx,
+  onChange,
+  onLoad,
+}: {
+  value: string;
+  bad: boolean;
+  tx: { fenPlaceholder: string; load: string; fenInvalid: string };
+  onChange: (v: string) => void;
+  onLoad: () => void;
+}) {
+  return (
+    <span className='flex items-center gap-1'>
+      <input
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') onLoad();
+        }}
+        placeholder={bad ? tx.fenInvalid : tx.fenPlaceholder}
+        spellCheck={false}
+        className={`w-[150px] rounded-lg bg-black/25 px-2.5 py-1.5 text-[12px] text-white/85 outline-none ring-1 transition-colors placeholder:text-white/30 focus:w-[230px] ${
+          bad ? 'ring-[#ff6b70]/70' : 'ring-white/12 focus:ring-white/30'
+        }`}
+      />
+      <button
+        type='button'
+        onClick={onLoad}
+        disabled={bad || value.trim().length === 0}
+        className='rounded-lg bg-white/10 px-2.5 py-1.5 text-[12px] font-semibold text-white/75 transition-colors hover:bg-white/20 disabled:opacity-40'
+      >
+        {tx.load}
+      </button>
+    </span>
+  );
+}
+
 function CtrlButton({
   icon,
   label,
   onClick,
-  active,
   disabled,
 }: {
   icon: ReactNode;
   label: string;
   onClick: () => void;
-  active?: boolean;
   disabled?: boolean;
 }) {
   return (
@@ -1707,15 +1785,10 @@ function CtrlButton({
       onClick={onClick}
       disabled={disabled}
       title={label}
-      aria-label={label}
-      className={`flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[12px] font-semibold transition-colors disabled:opacity-40 ${
-        active
-          ? 'bg-white text-[#121212]'
-          : 'bg-white/10 text-white/75 hover:bg-white/20'
-      }`}
+      className='flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-[12px] font-semibold text-white/75 transition-colors hover:bg-white/20 disabled:opacity-40'
     >
       {icon}
-      <span className='hidden text-[12px] sm:inline'>{label}</span>
+      <span>{label}</span>
     </button>
   );
 }

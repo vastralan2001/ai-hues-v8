@@ -1,11 +1,11 @@
 'use client';
 
-/* Thin UCI wrapper around the vendored Stockfish 17.1 (lite, single-threaded)
-   WebAssembly build, run in a plain Web Worker — no cross-origin isolation
-   required. One instance drives both human-vs-engine and engine-vs-engine play
-   as well as the eval bar; skill level is reconfigured per search. */
+/* Thin UCI wrapper around the vendored chess engine (single-threaded
+   WebAssembly, run in a plain Web Worker — no cross-origin isolation
+   required). One instance drives human play, engine-vs-engine play and the
+   eval/analysis board; skill level is reconfigured per search. */
 
-export const ENGINE_URL = '/engine/stockfish-17.1-lite-single-03e3232.js';
+export const ENGINE_URL = '/engine/chess-engine.js';
 
 export interface EngineInfo {
   depth: number;
@@ -62,7 +62,7 @@ function parseInfo(line: string): EngineInfo | null {
   return info;
 }
 
-export class StockfishEngine {
+export class ChessEngine {
   private worker: Worker | null = null;
   private listeners = new Set<Listener>();
   private url: string;
@@ -118,7 +118,7 @@ export class StockfishEngine {
       };
       const to = setTimeout(() => {
         this.listeners.delete(fn);
-        reject(new Error('Stockfish timeout waiting for ' + token));
+        reject(new Error('Engine timeout waiting for ' + token));
       }, timeout);
       this.listeners.add(fn);
       trigger();

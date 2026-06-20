@@ -1,8 +1,8 @@
 # Stockfish 17.1 (WebAssembly)
 
-`stockfish-17.1-lite-single-03e3232.js` and its `.wasm` are the
-single-threaded "lite" WebAssembly build of Stockfish 17.1, taken
-unmodified from the Stockfish.js project.
+`chess-engine.js` and its `.wasm` are the single-threaded "lite"
+WebAssembly build of Stockfish 17.1, taken unmodified from the
+Stockfish.js project.
 
 - Stockfish.js — https://github.com/nmrugg/stockfish.js (© Chess.com, LLC)
 - Stockfish — https://github.com/official-stockfish/Stockfish

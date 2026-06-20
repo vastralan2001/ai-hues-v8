@@ -73,7 +73,7 @@ const LOCAL_GAMES: CatalogGame[] = [
     slug: 'chess',
     icon: 'CS',
     name: 'Chess',
-    description: 'Play, spectate, or analyze with Stockfish 17',
+    description: 'Play, spectate, or analyze the position',
     status: 'ITEM_STATUS_PUBLISHED',
     sortOrder: 5,
     priceTag: 'free',
