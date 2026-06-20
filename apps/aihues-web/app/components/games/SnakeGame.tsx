@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { Pause, Play } from 'lucide-react';
 
 import type { Locale } from '@/lib/dict';
 
@@ -84,6 +85,9 @@ const T = {
     start: 'Start',
     again: 'Play again',
     over: 'Game over',
+    paused: 'Paused',
+    resume: 'Resume',
+    pause: 'Pause',
     best: 'Best',
     speed: 'Speed',
     slow: 'Slow',
@@ -103,6 +107,9 @@ const T = {
     start: '开始',
     again: '再来一局',
     over: '游戏结束',
+    paused: '已暂停',
+    resume: '继续',
+    pause: '暂停',
     best: '最佳',
     speed: '速度',
     slow: '慢',
@@ -137,12 +144,14 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
   const phaseRef = useRef<'idle' | 'playing' | 'over'>('idle');
   const speedRef = useRef<Speed>('normal');
   const touchRef = useRef<{ x: number; y: number } | null>(null);
+  const pausedRef = useRef(false);
 
   const [phase, setPhase] = useState<'idle' | 'playing' | 'over'>('idle');
   const [score, setScore] = useState(0);
   const [best, setBest] = useState(0);
   const [speed, setSpeed] = useState<Speed>('normal');
   const [awaiting, setAwaiting] = useState(false);
+  const [paused, setPaused] = useState(false);
 
   useEffect(() => {
     const raf = requestAnimationFrame(() => {
@@ -160,6 +169,12 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
   function pickSpeed(s: Speed) {
     speedRef.current = s;
     setSpeed(s);
+  }
+
+  function togglePause() {
+    if (phaseRef.current !== 'playing') return;
+    pausedRef.current = !pausedRef.current;
+    setPaused(pausedRef.current);
   }
 
   function spawnFood(g: SGame) {
@@ -205,6 +220,8 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
     spawnFood(g);
     setScore(0);
     setAwaiting(true);
+    pausedRef.current = false;
+    setPaused(false);
     setPhaseBoth('playing');
   }
 
@@ -226,6 +243,8 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
     } else {
       setBest(stored);
     }
+    pausedRef.current = false;
+    setPaused(false);
     setPhaseBoth('over');
   }
 
@@ -282,6 +301,7 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
       if (g.floats[i].t >= 1) g.floats.splice(i, 1);
     }
     if (phaseRef.current !== 'playing') return;
+    if (pausedRef.current) return;
     if (g.dir.x === 0 && g.dir.y === 0 && g.queue.length === 0) {
       g.stepAcc = 0;
       return;
@@ -583,6 +603,7 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
   function changeDir(x: number, y: number) {
     const g = gRef.current;
     if (!g || phaseRef.current !== 'playing') return;
+    if (pausedRef.current) return;
     const nd = { x, y };
     const ref = g.queue.length ? g.queue[g.queue.length - 1] : g.dir;
     if (opp(nd, ref) || (nd.x === ref.x && nd.y === ref.y)) return;
@@ -616,6 +637,12 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
         case 'd':
         case 'D':
           changeDir(1, 0);
+          break;
+        case ' ':
+        case 'p':
+        case 'P':
+        case 'Escape':
+          togglePause();
           break;
         default:
           handled = false;
@@ -659,8 +686,20 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
           >
             {score}
           </span>
-          <span className='rounded-full bg-white/10 px-3 py-1 text-[13px] font-medium text-white/70'>
-            {tx.best} {best}
+          <span className='flex items-center gap-2'>
+            {phase === 'playing' && !paused ? (
+              <button
+                type='button'
+                aria-label={tx.pause}
+                onClick={togglePause}
+                className='pointer-events-auto flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white/80 transition-colors hover:bg-white/20'
+              >
+                <Pause size={15} />
+              </button>
+            ) : null}
+            <span className='rounded-full bg-white/10 px-3 py-1 text-[13px] font-medium text-white/70'>
+              {tx.best} {best}
+            </span>
           </span>
         </div>
       )}
@@ -709,6 +748,22 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
               →
             </button>
           </div>
+        </div>
+      )}
+
+      {phase === 'playing' && paused && (
+        <div className='sn-in absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-black/45 px-6 text-center'>
+          <div className='text-[15px] font-semibold uppercase tracking-[0.18em] text-white/70'>
+            {tx.paused}
+          </div>
+          <button
+            type='button'
+            onClick={togglePause}
+            className='sn-btn inline-flex items-center gap-2 rounded-full bg-white px-8 py-3 text-[15px] font-semibold text-[#121212] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#101512]'
+          >
+            <Play size={16} />
+            {tx.resume}
+          </button>
         </div>
       )}
 
