@@ -32,7 +32,7 @@ export default function PrivacyPage() {
             </li>
             <li>
               <strong>Tool inputs:</strong> Inputs you enter into AI writing
-              tools are sent to our AI provider (Kimi via a proxy) to generate
+              tools are sent to our AI provider via a proxy to generate
               responses. We do not store these inputs on our servers.
             </li>
             <li>

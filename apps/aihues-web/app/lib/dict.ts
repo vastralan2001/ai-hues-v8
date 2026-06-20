@@ -766,12 +766,12 @@ export const dict: Record<Locale, Record<string, string>> = {
     'footer.colorHunt': 'Color Hunt',
     'footer.allGames': 'All games',
     'footer.allTests': 'All tests',
-    'footer.copyright': '© 2026 AIHues · Find your AI vibe · Built on Kimi',
+    'footer.copyright': '© 2026 AIHues · Find your AI vibe',
     'footer.tagline': 'Find your AI vibe — tools and games that feel human.',
 
     // playbooks
     'playbooks.badge1': 'AI Vibe Navigator',
-    'playbooks.badge2': 'Built on Kimi',
+    'playbooks.badge2': 'No signup',
     'playbooks.title': 'AIHues Growth Stack + AI Tools',
     'blog.relatedTools': 'Related Tools',
     'blog.fromReview': 'From AIHues Reviews',
@@ -1251,12 +1251,12 @@ export const dict: Record<Locale, Record<string, string>> = {
     'footer.colorHunt': '找色差',
     'footer.allGames': '全部游戏',
     'footer.allTests': '全部测试',
-    'footer.copyright': '© 2026 AIHues · 找到你的 AI vibe · 基于 Kimi 构建',
+    'footer.copyright': '© 2026 AIHues · 找到你的 AI vibe',
     'footer.tagline': '找到你的 AI vibe——自然流畅的工具与游戏。',
 
     // playbooks
     'playbooks.badge1': 'AI Vibe Navigator',
-    'playbooks.badge2': '基于 Kimi 构建',
+    'playbooks.badge2': '无需注册',
     'playbooks.title': 'AIHues 出海增长 + AI 工具导航',
     'tool.seoTitle.title': 'SEO 标题优化器',
     'tool.seoTitle.desc': '检查并优化搜索引擎页面标题',

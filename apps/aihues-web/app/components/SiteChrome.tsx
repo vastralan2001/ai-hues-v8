@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
-import { ArrowUpRight, Rss } from 'lucide-react';
+import { Rss } from 'lucide-react';
 
 import HeaderBar from '@/components/HeaderBar';
 import { t, type Locale } from '@/lib/dict';
@@ -146,9 +146,6 @@ export function SiteFooter({
           <div className='mt-5 flex items-center gap-2'>
             <FooterIcon href='/blog/rss.xml' label='RSS'>
               <Rss size={16} />
-            </FooterIcon>
-            <FooterIcon href='https://kimi.com' label='Kimi' external>
-              <ArrowUpRight size={16} />
             </FooterIcon>
           </div>
         </div>
