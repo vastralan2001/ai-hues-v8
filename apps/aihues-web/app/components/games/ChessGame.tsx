@@ -207,8 +207,9 @@ const T = {
     playFromHere: 'Play from here',
     spectateFromHere: 'Spectate from here',
     evalHint:
-      'Drag pieces to rearrange; drag off the board to delete. Pick a piece to add.',
+      'Play makes moves by the rules. Use Move to drag pieces freely, or pick a piece to add; drag off the board to delete.',
     toMove: 'To move',
+    playTool: 'Play',
     move: 'Move',
     erase: 'Erase',
     clearBoard: 'Clear',
@@ -273,8 +274,10 @@ const T = {
     best: '推荐',
     playFromHere: '从此局面对战',
     spectateFromHere: '从此局面观战',
-    evalHint: '拖动棋子重新摆放；拖出棋盘即删除。点选棋子可添加。',
+    evalHint:
+      '走棋按规则走子；移动可自由拖动棋子，点选棋子可添加，拖出棋盘即删除。',
     toMove: '走子方',
+    playTool: '走棋',
     move: '移动',
     erase: '擦除',
     clearBoard: '清空',
@@ -451,10 +454,11 @@ export default function ChessGame({ locale }: { locale: Locale }) {
   const thinkingRef = useRef(false);
   const engineReadyRef = useRef(false);
   const flippedRef = useRef(false);
-  const brushRef = useRef<null | 'erase' | { type: string; color: Color }>(
-    null
-  );
+  const brushRef = useRef<
+    'play' | 'move' | 'erase' | { type: string; color: Color }
+  >('play');
   const editorTurnRef = useRef<Color>('w');
+  const editorEditedRef = useRef(false);
 
   const [mode, setMode] = useState<Mode>('play');
   const [phase, setPhase] = useState<Phase>('setup');
@@ -475,10 +479,9 @@ export default function ChessGame({ locale }: { locale: Locale }) {
   const [turn, setTurn] = useState<Color>('w');
   const [evalFrac, setEvalFrac] = useState(0.5);
   const [evalText, setEvalText] = useState('0.0');
-  const [evalDepth, setEvalDepth] = useState(0);
   const [brush, setBrushState] = useState<
-    null | 'erase' | { type: string; color: Color }
-  >(null);
+    'play' | 'move' | 'erase' | { type: string; color: Color }
+  >('play');
   const [editorTurn, setEditorTurnState] = useState<Color>('w');
   const [material, setMaterial] = useState<{
     capW: string[];
@@ -932,7 +935,6 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     const w = infoToWhite(info, t);
     setEvalFrac(w.prob);
     setEvalText(w.text);
-    setEvalDepth(info.depth);
     if (modeRef.current === 'eval' && info.pv && info.pv[0]) {
       const u = info.pv[0];
       const g = gRef.current;
@@ -1058,8 +1060,14 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     const t = modeRef.current === 'eval' ? editorTurnRef.current : chess.turn();
     setTurn(t);
     updateMaterial();
-    if (modeRef.current !== 'eval' && chess.isGameOver()) return;
-    setStatusText(t === 'w' ? tx.whiteMove : tx.blackMove);
+    if (modeRef.current !== 'eval') {
+      if (chess.isGameOver()) return;
+      setStatusText(t === 'w' ? tx.whiteMove : tx.blackMove);
+      return;
+    }
+    if (!editorEditedRef.current && chess.isGameOver())
+      setStatusText(gameResultText());
+    else setStatusText(t === 'w' ? tx.whiteMove : tx.blackMove);
   }
 
   function refreshView() {
@@ -1170,12 +1178,11 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     if (!hasBothKings()) {
       setEvalText('—');
       setEvalFrac(0.5);
-      setEvalDepth(0);
       if (g) g.arrow = null;
       return;
     }
     const t = editorTurnRef.current;
-    const fen = editorFen();
+    const fen = editorEditedRef.current ? editorFen() : chessRef.current!.fen();
     setThinkingBoth(true);
     const res = await engineExclusive(() => {
       engineRef.current!.setSkill(20);
@@ -1343,22 +1350,88 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     if (!promotion) return;
     const { from, to } = promotion;
     setPromotion(null);
-    doHumanMove(from, to, piece);
+    if (modeRef.current === 'eval') doLegalEditMove(from, to, piece);
+    else doHumanMove(from, to, piece);
   }
 
   /* ── eval position editor ── */
-  function setBrush(b: null | 'erase' | { type: string; color: Color }) {
+  function syncEditorTurn() {
+    editorTurnRef.current = chessRef.current!.turn();
+    setEditorTurnState(editorTurnRef.current);
+    editorEditedRef.current = false;
+  }
+
+  function doLegalEditMove(from: string, to: string, promotion?: string) {
+    const chess = chessRef.current!;
+    let mv;
+    try {
+      mv = chess.move({ from, to, promotion });
+    } catch {
+      return;
+    }
+    if (!mv) return;
+    syncEditorTurn();
+    pushMove(mv as never);
+    analyzePosition();
+  }
+
+  function onEvalLegalMove(sq: string | null) {
+    const g = gRef.current;
+    const chess = chessRef.current!;
+    if (!g) return;
+    if (!sq) {
+      g.selected = null;
+      g.targets = [];
+      return;
+    }
+    const piece = chess.get(sq as Square) as Piece | undefined;
+    const turn = chess.turn();
+    if (g.selected) {
+      const target = g.targets.find((t) => t.to === sq);
+      if (target) {
+        const moving = chess.get(g.selected as Square) as Piece | undefined;
+        const isPromo =
+          moving?.type === 'p' && (sq[1] === '8' || sq[1] === '1');
+        if (isPromo) {
+          setPromotion({ from: g.selected, to: sq });
+          g.selected = null;
+          g.targets = [];
+          return;
+        }
+        doLegalEditMove(g.selected, sq);
+        return;
+      }
+      if (piece && piece.color === turn) selectSquare(sq);
+      else {
+        g.selected = null;
+        g.targets = [];
+      }
+    } else if (piece && piece.color === turn) {
+      selectSquare(sq);
+    }
+  }
+
+  function setBrush(
+    b: 'play' | 'move' | 'erase' | { type: string; color: Color }
+  ) {
     brushRef.current = b;
     setBrushState(b);
+    const g = gRef.current;
+    if (g) {
+      g.selected = null;
+      g.targets = [];
+    }
   }
 
   function setEditorTurn(c: Color) {
     editorTurnRef.current = c;
     setEditorTurnState(c);
+    editorEditedRef.current = true;
     if (modeRef.current === 'eval') analyzePosition();
   }
 
   function afterEdit() {
+    editorEditedRef.current = true;
     engineRef.current?.stop();
     refreshView();
     analyzePosition();
@@ -1419,11 +1492,15 @@ export default function ChessGame({ locale }: { locale: Locale }) {
       if (sq) editPlace(sq, null);
       return;
     }
-    if (b) {
+    if (typeof b === 'object') {
       if (sq) editPlace(sq, b);
       return;
     }
-    // Move mode: click-to-move + deselect, with drag as a shortcut.
+    if (b === 'play') {
+      onEvalLegalMove(sq);
+      return;
+    }
+    // Move tool: free click-to-move + deselect, with drag as a shortcut.
     if (g.selected) {
       if (!sq || sq === g.selected) {
         g.selected = null;
@@ -1515,6 +1592,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
       refreshView();
     } else if (modeRef.current === 'eval') {
       if (chess.history().length > 0) chess.undo();
+      syncEditorTurn();
       refreshView();
       analyzePosition();
     }
@@ -1537,6 +1615,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
       return;
     }
     engineRef.current?.stop();
+    if (modeRef.current === 'eval') syncEditorTurn();
     refreshView();
     if (modeRef.current === 'eval') analyzePosition();
   }
@@ -1545,6 +1624,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     chessRef.current!.reset();
     setPresetKey('standard');
     engineRef.current?.stop();
+    if (modeRef.current === 'eval') syncEditorTurn();
     refreshView();
     if (modeRef.current === 'eval') analyzePosition();
   }
@@ -1593,7 +1673,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     setPausedBoth(false);
     setThinkingBoth(false);
     setResult('');
-    setBrush(null);
+    setBrush('play');
     modeRef.current = m;
     setMode(m);
     const g = gRef.current;
@@ -1602,8 +1682,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
       g.drag = null;
     }
     if (m === 'eval') {
-      editorTurnRef.current = chessRef.current!.turn();
-      setEditorTurnState(editorTurnRef.current);
+      syncEditorTurn();
       setPhaseBoth('active');
       refreshView();
       requestAnimationFrame(() => sizeNow());
@@ -1695,9 +1774,6 @@ export default function ChessGame({ locale }: { locale: Locale }) {
           {showEvalNum && (
             <span className='rounded-full bg-white/10 px-2 py-0.5 text-[12px] font-semibold tabular-nums text-white/70'>
               {evalText}
-              {evalDepth > 0 && (
-                <span className='ml-1 text-white/35'>d{evalDepth}</span>
-              )}
             </span>
           )}
           <button
@@ -1885,7 +1961,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
           )}
 
           {mode === 'eval' && (
-            <div className='space-y-2.5'>
+            <div className='space-y-2'>
               <div className='flex items-center gap-2'>
                 <span className='text-[11px] font-bold uppercase tracking-[0.14em] text-white/40'>
                   {tx.toMove}
@@ -1902,6 +1978,25 @@ export default function ChessGame({ locale }: { locale: Locale }) {
                 >
                   {tx.black}
                 </Pill>
+                <span className='flex-1' />
+                <button
+                  type='button'
+                  onClick={resetBoard}
+                  title={tx.reset}
+                  aria-label={tx.reset}
+                  className='flex h-7 w-7 items-center justify-center rounded-md bg-white/10 text-white/70 transition-colors hover:bg-white/20'
+                >
+                  <RefreshCw size={14} />
+                </button>
+                <button
+                  type='button'
+                  onClick={undo}
+                  title={tx.undo}
+                  aria-label={tx.undo}
+                  className='flex h-7 w-7 items-center justify-center rounded-md bg-white/10 text-white/70 transition-colors hover:bg-white/20'
+                >
+                  <RotateCcw size={14} />
+                </button>
               </div>
               <div className='space-y-1.5'>
                 {(['w', 'b'] as const).map((col) => (
@@ -1916,9 +2011,9 @@ export default function ChessGame({ locale }: { locale: Locale }) {
                           key={col + t}
                           type='button'
                           onClick={() =>
-                            setBrush(on ? null : { type: t, color: col })
+                            setBrush(on ? 'play' : { type: t, color: col })
                           }
-                          className={`flex h-8 flex-1 items-center justify-center rounded-md text-[19px] leading-none transition-colors ${
+                          className={`flex h-7 flex-1 items-center justify-center rounded-md text-[19px] leading-none transition-colors ${
                             on
                               ? 'bg-white text-[#121212]'
                               : col === 'w'
@@ -1939,9 +2034,20 @@ export default function ChessGame({ locale }: { locale: Locale }) {
                 <div className='flex gap-1'>
                   <button
                     type='button'
-                    onClick={() => setBrush(null)}
+                    onClick={() => setBrush('play')}
                     className={`flex-1 rounded-md py-1.5 text-[11px] font-semibold transition-colors ${
-                      brush === null
+                      brush === 'play'
+                        ? 'bg-white text-[#121212]'
+                        : 'bg-white/10 text-white/70 hover:bg-white/20'
+                    }`}
+                  >
+                    {tx.playTool}
+                  </button>
+                  <button
+                    type='button'
+                    onClick={() => setBrush('move')}
+                    className={`flex-1 rounded-md py-1.5 text-[11px] font-semibold transition-colors ${
+                      brush === 'move'
                         ? 'bg-white text-[#121212]'
                         : 'bg-white/10 text-white/70 hover:bg-white/20'
                     }`}
@@ -1950,7 +2056,9 @@ export default function ChessGame({ locale }: { locale: Locale }) {
                   </button>
                   <button
                     type='button'
-                    onClick={() => setBrush(brush === 'erase' ? null : 'erase')}
+                    onClick={() =>
+                      setBrush(brush === 'erase' ? 'play' : 'erase')
+                    }
                     className={`flex-1 rounded-md py-1.5 text-[11px] font-semibold transition-colors ${
                       brush === 'erase'
                         ? 'bg-white text-[#121212]'
@@ -1968,18 +2076,6 @@ export default function ChessGame({ locale }: { locale: Locale }) {
                   </button>
                 </div>
               </div>
-              <div className='flex flex-wrap gap-2'>
-                <CtrlButton
-                  label={tx.reset}
-                  onClick={resetBoard}
-                  icon={<RefreshCw size={15} />}
-                />
-                <CtrlButton
-                  label={tx.undo}
-                  onClick={undo}
-                  icon={<RotateCcw size={15} />}
-                />
-              </div>
               <FenLoader
                 value={fenInput}
                 bad={fenBad}
@@ -1989,25 +2085,22 @@ export default function ChessGame({ locale }: { locale: Locale }) {
                   if (!fenBad && fenTrim) loadPosition(fenTrim);
                 }}
               />
-              <div className='flex flex-col gap-2 pt-0.5'>
+              <div className='grid grid-cols-2 gap-2 pt-0.5'>
                 <button
                   type='button'
                   onClick={() => switchMode('play')}
-                  className='ch-btn w-full rounded-full bg-white py-2 text-[13px] font-semibold text-[#121212]'
+                  className='ch-btn rounded-full bg-white px-2 py-1.5 text-[12px] font-semibold text-[#121212]'
                 >
                   {tx.playFromHere}
                 </button>
                 <button
                   type='button'
                   onClick={() => switchMode('spectate')}
-                  className='w-full rounded-full bg-white/12 py-2 text-[13px] font-semibold text-white/85 transition-colors hover:bg-white/20'
+                  className='rounded-full bg-white/12 px-2 py-1.5 text-[12px] font-semibold text-white/85 transition-colors hover:bg-white/20'
                 >
                   {tx.spectateFromHere}
                 </button>
               </div>
-              <p className='text-[12px] leading-relaxed text-white/40'>
-                {tx.evalHint}
-              </p>
             </div>
           )}
         </div>
@@ -2017,11 +2110,6 @@ export default function ChessGame({ locale }: { locale: Locale }) {
             <span className='text-[11px] font-bold uppercase tracking-[0.16em] text-white/40'>
               {tx.moves}
             </span>
-            {mode === 'eval' && evalDepth > 0 && (
-              <span className='text-[11px] font-medium text-white/45'>
-                {tx.best} · d{evalDepth}
-              </span>
-            )}
           </div>
           <div
             ref={movesEndRef}
