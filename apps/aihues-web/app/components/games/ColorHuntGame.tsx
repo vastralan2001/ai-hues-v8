@@ -4,16 +4,20 @@ import { useEffect, useRef, useState } from 'react';
 
 import type { Locale } from '@/lib/dict';
 
-/* Color Hunt — native port of the 60-stage shade-spotting challenge, Kimi
-   styled and borderless. Each round every tile shares one colour except a
-   single odd one out (ΔE2000 between 1.8–6); tap it before the 5-second timer
-   ends. Source logic is preserved (stages, grid growth 2→8, scoring); the
-   tiles, feedback and reveal are the upgraded layer. */
+/* Color Hunt — native port of the shade-spotting challenge, Kimi styled and
+   borderless, in two modes: Stages (60 scored rounds, 5s each, ΔE 1.8–6) and
+   Sprint (one 60-second dash, count boards cleared, free wrong taps, ΔE 2–5).
+   Both keep the source logic; the tiles, feedback and reveal are the upgraded
+   layer. */
 
 const TOTAL_STAGE = 60;
 const TIME_PER = 5;
+const SPRINT_TIME = 60;
 const MAX_N = 8;
+const DE_STAGES = { min: 1.8, max: 6 };
+const DE_SPRINT = { min: 2.0, max: 5.0 };
 
+type Mode = 'stages' | 'sprint';
 type RGB = [number, number, number];
 
 function rgb2lab(rgb: RGB): [number, number, number] {
@@ -104,10 +108,14 @@ function rgbStr(c: RGB) {
   return `rgb(${c[0]},${c[1]},${c[2]})`;
 }
 
-function generatePair(base: RGB): { color: RGB; de: number } {
+function generatePair(
+  base: RGB,
+  minDE: number,
+  maxDE: number
+): { color: RGB; de: number } {
   let diff: RGB = [base[0], base[1], base[2]];
   let de = 0;
-  while (de < 1.8 || de > 6) {
+  while (de < minDE || de > maxDE) {
     diff = [base[0], base[1], base[2]];
     for (let i = 0; i < 3; i++) {
       diff[i] += Math.floor((Math.random() - 0.5) * 20);
@@ -136,37 +144,58 @@ const T = {
   en: {
     start: 'Start',
     again: 'Play again',
-    over: 'Challenge complete',
     best: 'Best',
     stage: 'Stage',
-    score: 'Score',
+    cleared: 'Cleared',
     miss: 'Miss',
     timeUp: 'Time',
-    sub: 'Spot the one tile with a slightly different shade — before the timer runs out.',
+    modeStages: 'Stages',
+    modeSprint: 'Sprint',
+    overStages: 'Challenge complete',
+    overSprint: "Time's up",
+    subStages:
+      'Spot the odd shade and beat the 5-second timer — 60 scored rounds.',
+    subSprint: 'Clear as many boards as you can in one 60-second dash.',
     rulesTitle: 'How to play',
-    rules: [
+    rulesStages: [
       'Every tile shares one colour — except a single odd one out.',
-      'Tap the tile that looks different before the 5-second timer ends.',
+      'Tap the odd tile before the 5-second timer ends.',
       'Subtler shades and bigger grids score more; answer fast for a bonus.',
       '60 rounds, and the grid keeps growing. How sharp is your eye?',
+    ],
+    rulesSprint: [
+      'Every tile shares one colour — except a single odd one out.',
+      'Tap the odd tile to clear the board. Wrong taps cost nothing.',
+      'No per-board timer — just race the single 60-second clock.',
+      'The grid keeps growing; clear as many boards as you can.',
     ],
   },
   zh: {
     start: '开始',
     again: '再来一次',
-    over: '挑战完成',
     best: '最佳',
     stage: '关卡',
-    score: '得分',
+    cleared: '通过',
     miss: '失误',
     timeUp: '超时',
-    sub: '在计时结束前,找出唯一颜色略有不同的方块。',
+    modeStages: '闯关',
+    modeSprint: '冲刺',
+    overStages: '挑战完成',
+    overSprint: '时间到',
+    subStages: '在 5 秒内找出不同色块——共 60 关计分。',
+    subSprint: '在 60 秒内尽可能多地通关。',
     rulesTitle: '玩法规则',
-    rules: [
+    rulesStages: [
       '每一关所有方块同色,只有一个略有差异。',
       '在 5 秒内点出那个不一样的方块。',
       '色差越小、格子越大得分越高,越快越有加成。',
       '共 60 关,格子会越来越多,考验你的眼力。',
+    ],
+    rulesSprint: [
+      '每一块所有方块同色,只有一个略有差异。',
+      '点出不同的方块即可通关,点错没有惩罚。',
+      '没有单关计时——只跟一个 60 秒总时钟赛跑。',
+      '格子会越来越多,看你能通过多少关。',
     ],
   },
 } as const;
@@ -177,27 +206,38 @@ export default function ColorHuntGame({ locale }: { locale: Locale }) {
 
   const areaRef = useRef<HTMLDivElement | null>(null);
   const timerRef = useRef<number>(0);
-  const timeLeftRef = useRef(TIME_PER);
+  const timeLeftRef = useRef(0);
   const dataRef = useRef<StageData | null>(null);
   const lockedRef = useRef(false);
   const phaseRef = useRef<'idle' | 'playing' | 'over'>('idle');
+  const modeRef = useRef<Mode>('stages');
   const scoreRef = useRef(0);
+  const clearedRef = useRef(0);
   const passRef = useRef(0);
 
+  const [mode, setModeState] = useState<Mode>('stages');
   const [phase, setPhase] = useState<'idle' | 'playing' | 'over'>('idle');
   const [data, setData] = useState<StageData | null>(null);
   const [score, setScore] = useState(0);
-  const [best, setBest] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(TIME_PER);
+  const [cleared, setCleared] = useState(0);
+  const [bestStages, setBestStages] = useState(0);
+  const [bestSprint, setBestSprint] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(0);
   const [reveal, setReveal] = useState(-1);
   const [locked, setLocked] = useState(false);
   const [fx, setFx] = useState<Fx | null>(null);
   const [gridPx, setGridPx] = useState(0);
 
+  const best = mode === 'sprint' ? bestSprint : bestStages;
+
   useEffect(() => {
     const raf = requestAnimationFrame(() => {
-      const v = Number(localStorage.getItem('aihues_colorhunt_best') || '0');
-      if (!Number.isNaN(v)) setBest(v);
+      const a = Number(localStorage.getItem('aihues_colorhunt_best') || '0');
+      const s = Number(
+        localStorage.getItem('aihues_colorhunt_sprint_best') || '0'
+      );
+      if (!Number.isNaN(a)) setBestStages(a);
+      if (!Number.isNaN(s)) setBestSprint(s);
     });
     return () => cancelAnimationFrame(raf);
   }, []);
@@ -236,59 +276,74 @@ export default function ColorHuntGame({ locale }: { locale: Locale }) {
     lockedRef.current = v;
     setLocked(v);
   }
+  function setMode(m: Mode) {
+    modeRef.current = m;
+    setModeState(m);
+  }
 
-  function startTimer() {
+  function startTimer(duration: number, onEnd: () => void) {
     clearInterval(timerRef.current);
-    timeLeftRef.current = TIME_PER;
-    setTimeLeft(TIME_PER);
+    timeLeftRef.current = duration;
+    setTimeLeft(duration);
     timerRef.current = window.setInterval(() => {
       if (lockedRef.current) return;
       timeLeftRef.current = Math.max(0, timeLeftRef.current - 0.06);
       setTimeLeft(timeLeftRef.current);
-      if (timeLeftRef.current <= 0) resolve(-1);
+      if (timeLeftRef.current <= 0) onEnd();
     }, 60);
   }
 
-  function buildStage(stage: number, n: number) {
+  function buildBoard(round: number, n: number) {
+    const range = modeRef.current === 'sprint' ? DE_SPRINT : DE_STAGES;
     const base = randColor();
-    const { color: diff, de } = generatePair(base);
+    const { color: diff, de } = generatePair(base, range.min, range.max);
     const diffIdx = randInt(n * n);
-    setDt({ stage, n, base, diff, diffIdx, de });
+    setDt({ stage: round, n, base, diff, diffIdx, de });
     setReveal(-1);
-    startTimer();
   }
 
-  function start() {
+  function start(m: Mode) {
+    setMode(m);
     passRef.current = 0;
     scoreRef.current = 0;
+    clearedRef.current = 0;
     setScore(0);
+    setCleared(0);
     setFx(null);
     setReveal(-1);
     setLk(false);
     setPh('playing');
-    buildStage(1, 2);
+    if (m === 'sprint') {
+      startTimer(SPRINT_TIME, endGame);
+      buildBoard(1, 2);
+    } else {
+      buildBoard(1, 2);
+      startTimer(TIME_PER, () => resolve(-1));
+    }
   }
 
   function endGame() {
     clearInterval(timerRef.current);
     setLk(false);
-    const s = scoreRef.current;
+    const sprint = modeRef.current === 'sprint';
+    const result = sprint ? clearedRef.current : scoreRef.current;
+    const key = sprint
+      ? 'aihues_colorhunt_sprint_best'
+      : 'aihues_colorhunt_best';
     let stored = 0;
     try {
-      stored =
-        Number(localStorage.getItem('aihues_colorhunt_best') || '0') || 0;
+      stored = Number(localStorage.getItem(key) || '0') || 0;
     } catch {
       stored = 0;
     }
-    if (s > stored) {
+    if (result > stored) {
       try {
-        localStorage.setItem('aihues_colorhunt_best', String(s));
+        localStorage.setItem(key, String(result));
       } catch {
         /* ignore */
       }
-      setBest(s);
-    } else {
-      setBest(stored);
+      if (sprint) setBestSprint(result);
+      else setBestStages(result);
     }
     setPh('over');
   }
@@ -332,12 +387,36 @@ export default function ColorHuntGame({ locale }: { locale: Locale }) {
         endGame();
         return;
       }
-      buildStage(nextStage, nextN);
+      buildBoard(nextStage, nextN);
+      startTimer(TIME_PER, () => resolve(-1));
     }, delay);
   }
 
-  const ratio = timeLeft / TIME_PER;
-  const low = timeLeft <= 1.5;
+  function sprintClick(clickedIdx: number) {
+    if (phaseRef.current !== 'playing') return;
+    const d = dataRef.current;
+    if (!d || clickedIdx !== d.diffIdx) return;
+    clearedRef.current += 1;
+    setCleared(clearedRef.current);
+    let nextN = d.n;
+    passRef.current += 1;
+    if (passRef.current === d.n - 1 && d.n < MAX_N) {
+      nextN = d.n + 1;
+      passRef.current = 0;
+    }
+    buildBoard(d.stage + 1, nextN);
+  }
+
+  function onCell(idx: number) {
+    if (modeRef.current === 'sprint') sprintClick(idx);
+    else resolve(idx);
+  }
+
+  const sprint = mode === 'sprint';
+  const duration = sprint ? SPRINT_TIME : TIME_PER;
+  const ratio = timeLeft / duration;
+  const low = sprint ? timeLeft <= 10 : timeLeft <= 1.5;
+  const modeOpts: Mode[] = ['stages', 'sprint'];
 
   return (
     <div className='relative flex min-h-[460px] w-full flex-col touch-none select-none'>
@@ -347,16 +426,26 @@ export default function ColorHuntGame({ locale }: { locale: Locale }) {
       >
         {data ? (
           <>
-            <span className='text-[13px] font-semibold uppercase tracking-[0.14em] text-white/55'>
-              {tx.stage} {data.stage}
-              <span className='text-white/30'>/{TOTAL_STAGE}</span>
-            </span>
+            {sprint ? (
+              <span
+                className={`text-[22px] font-bold leading-none tabular-nums ${
+                  low ? 'text-[#ff6b70]' : 'text-white/90'
+                }`}
+              >
+                {Math.ceil(timeLeft)}s
+              </span>
+            ) : (
+              <span className='text-[13px] font-semibold uppercase tracking-[0.14em] text-white/55'>
+                {tx.stage} {data.stage}
+                <span className='text-white/30'>/{TOTAL_STAGE}</span>
+              </span>
+            )}
             <span className='flex items-center gap-3'>
               <span
-                key={score}
+                key={sprint ? cleared : score}
                 className='ch-pop text-[24px] font-bold leading-none text-white/90'
               >
-                {score}
+                {sprint ? cleared : score}
               </span>
               <span className='rounded-full bg-white/10 px-2.5 py-1 text-[12px] font-medium text-white/60'>
                 {tx.best} {best}
@@ -403,7 +492,7 @@ export default function ColorHuntGame({ locale }: { locale: Locale }) {
                     type='button'
                     aria-label='tile'
                     disabled={locked}
-                    onClick={() => resolve(i)}
+                    onClick={() => onCell(i)}
                     className={`ch-cell ${reveal === i ? 'ch-reveal' : ''}`}
                     style={{
                       backgroundColor: rgbStr(isDiff ? data.diff : data.base),
@@ -444,15 +533,31 @@ export default function ColorHuntGame({ locale }: { locale: Locale }) {
 
       {phase === 'idle' && (
         <div className='ch-in absolute inset-0 flex flex-col items-center justify-center gap-5 px-6 text-center'>
+          <div className='flex gap-1.5 rounded-full bg-white/[0.06] p-1 ring-1 ring-white/10'>
+            {modeOpts.map((m) => (
+              <button
+                key={m}
+                type='button'
+                onClick={() => setMode(m)}
+                className={`rounded-full px-4 py-1.5 text-[13px] font-semibold transition-colors ${
+                  mode === m
+                    ? 'bg-white text-[#121212]'
+                    : 'text-white/65 hover:text-white'
+                }`}
+              >
+                {m === 'sprint' ? tx.modeSprint : tx.modeStages}
+              </button>
+            ))}
+          </div>
           <p className='max-w-[380px] text-[14px] leading-relaxed text-white/70'>
-            {tx.sub}
+            {sprint ? tx.subSprint : tx.subStages}
           </p>
           <div className='w-full max-w-[420px] rounded-[14px] bg-white/[0.05] px-5 py-4 text-left ring-1 ring-white/10'>
             <div className='mb-2.5 text-[11px] font-bold uppercase tracking-[0.16em] text-white/40'>
               {tx.rulesTitle}
             </div>
             <ul className='space-y-2'>
-              {tx.rules.map((r, i) => (
+              {(sprint ? tx.rulesSprint : tx.rulesStages).map((r, i) => (
                 <li
                   key={i}
                   className='flex items-start gap-2.5 text-[13px] leading-relaxed text-white/75'
@@ -468,7 +573,7 @@ export default function ColorHuntGame({ locale }: { locale: Locale }) {
           </div>
           <button
             type='button'
-            onClick={start}
+            onClick={() => start(mode)}
             className='ch-btn inline-flex items-center rounded-full bg-white px-9 py-3 text-[15px] font-semibold text-[#121212] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#101319]'
           >
             {tx.start}
@@ -479,17 +584,17 @@ export default function ColorHuntGame({ locale }: { locale: Locale }) {
       {phase === 'over' && (
         <div className='ch-in absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/40 px-6 text-center'>
           <div className='text-[14px] font-semibold text-white/70'>
-            {tx.over}
+            {sprint ? tx.overSprint : tx.overStages}
           </div>
           <div className='text-[44px] font-bold leading-none text-white/90'>
-            {score}
+            {sprint ? cleared : score}
           </div>
           <div className='mb-3 text-[13px] font-medium text-white/50'>
             {tx.best} · {best}
           </div>
           <button
             type='button'
-            onClick={start}
+            onClick={() => start(mode)}
             className='ch-btn inline-flex items-center rounded-full bg-white px-9 py-3 text-[15px] font-semibold text-[#121212] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/55 focus-visible:ring-offset-2 focus-visible:ring-offset-[#101319]'
           >
             {tx.again}
