@@ -773,8 +773,27 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
           <div className='text-[44px] font-bold leading-none text-white/90'>
             {score}
           </div>
-          <div className='mb-3 text-[13px] font-medium text-white/50'>
+          <div className='mb-2 text-[13px] font-medium text-white/50'>
             {tx.best} · {best}
+          </div>
+          <div className='mb-2 flex items-center gap-2'>
+            <span className='text-[12px] font-semibold uppercase tracking-[0.14em] text-white/40'>
+              {tx.speed}
+            </span>
+            {speedOpts.map((s) => (
+              <button
+                key={s}
+                type='button'
+                onClick={() => pickSpeed(s)}
+                className={`rounded-full px-3.5 py-1.5 text-[13px] font-semibold transition-colors ${
+                  speed === s
+                    ? 'bg-white text-[#121212]'
+                    : 'bg-white/10 text-white/70 hover:bg-white/20'
+                }`}
+              >
+                {tx[s]}
+              </button>
+            ))}
           </div>
           <button
             type='button'
