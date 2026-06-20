@@ -28,6 +28,7 @@ import {
   GitCompare,
   GitPullRequest,
   Globe,
+  Grid3x3,
   Hash,
   Heading,
   HelpCircle,
@@ -147,6 +148,7 @@ const TOOL_ICONS: Record<string, LucideIcon> = {
   'slot-machine': Dices,
   basketball: Trophy,
   snake: Worm,
+  'color-hunt': Grid3x3,
 
   /* Tests */
   sbti: Drama,

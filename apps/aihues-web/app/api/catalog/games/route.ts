@@ -55,6 +55,19 @@ const LOCAL_GAMES: CatalogGame[] = [
     tags: [],
     creditCost: 0,
   },
+  {
+    id: 'color-hunt',
+    slug: 'color-hunt',
+    icon: 'CH',
+    name: 'Color Hunt',
+    description: 'Spot the odd shade across 60 timed rounds',
+    status: 'ITEM_STATUS_PUBLISHED',
+    sortOrder: 4,
+    priceTag: 'free',
+    externalUrl: '',
+    tags: [],
+    creditCost: 0,
+  },
 ];
 
 export async function GET(request: NextRequest) {

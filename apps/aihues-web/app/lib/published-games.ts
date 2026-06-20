@@ -8,4 +8,5 @@ export const PUBLISHED_GAME_SLUGS: string[] = [
   'slot-machine',
   'basketball',
   'snake',
+  'color-hunt',
 ];

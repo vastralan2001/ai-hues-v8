@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import BasketballGame from '@/components/games/BasketballGame';
+import ColorHuntGame from '@/components/games/ColorHuntGame';
 import DailyFortuneGame from '@/components/games/DailyFortuneGame';
 import DoodleJumpGame from '@/components/games/DoodleJumpGame';
 import SlotMachineGame from '@/components/games/SlotMachineGame';
@@ -10,7 +11,7 @@ import SnakeGame from '@/components/games/SnakeGame';
 import { PageShell } from '@/components/SiteChrome';
 import type { Locale } from '@/lib/dict';
 
-type Theme = 'space' | 'gold' | 'vegas' | 'court' | 'grid';
+type Theme = 'space' | 'gold' | 'vegas' | 'court' | 'grid' | 'spectrum';
 
 interface PlayableGame {
   Component: React.ComponentType<{ locale: Locale }>;
@@ -62,6 +63,14 @@ const REACT_GAMES: Record<string, PlayableGame> = {
     descZh: '滑行、变长、吃掉发光的食物——别咬到自己的尾巴。',
     theme: 'grid',
   },
+  'color-hunt': {
+    Component: ColorHuntGame,
+    title: 'Color Hunt',
+    titleZh: '找色差',
+    desc: 'Spot the one tile with a slightly different shade — 60 rounds against the clock.',
+    descZh: '在限时内找出颜色略有不同的方块——共 60 关。',
+    theme: 'spectrum',
+  },
 };
 
 const THEMES: Record<
@@ -93,6 +102,12 @@ const THEMES: Record<
     bg: 'radial-gradient(125% 95% at 50% 42%, #18211c 0%, #121815 46%, #0a0e0c 100%)',
     glow: '#3ba776',
     eyebrow: 'text-[#83d8ad]',
+    quiet: true,
+  },
+  spectrum: {
+    bg: 'radial-gradient(125% 95% at 50% 40%, #20242e 0%, #14171e 46%, #0b0d12 100%)',
+    glow: '#6a86c0',
+    eyebrow: 'text-[#9fb4dd]',
     quiet: true,
   },
 };
