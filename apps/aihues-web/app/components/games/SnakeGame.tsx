@@ -14,6 +14,7 @@ import type { Locale } from '@/lib/dict';
 const GRID = 30;
 const FIELD = 600;
 const CELL = FIELD / GRID;
+const HEADER_H = 64;
 
 const SPEEDS = { slow: 180, normal: 120, fast: 70 } as const;
 type Speed = keyof typeof SPEEDS;
@@ -101,6 +102,7 @@ const T = {
       'Steer with the arrow keys, WASD, the on-screen pad, or a swipe.',
       'Avoid the walls and your own tail.',
       'Pick a speed — faster scores quicker, with less room to react.',
+      'Pause anytime with Space, P, or Esc.',
     ],
   },
   zh: {
@@ -123,6 +125,7 @@ const T = {
       '用方向键、WASD、屏幕按钮或滑动来转向。',
       '不要撞到边界或自己的身体。',
       '选择速度——越快得分越快,反应时间也越短。',
+      '随时按 Space、P 或 Esc 暂停。',
     ],
   },
 } as const;
@@ -283,6 +286,7 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
   }
 
   function update(g: SGame, dt: number, dtMs: number) {
+    if (phaseRef.current === 'playing' && pausedRef.current) return;
     g.foodPhase += dt * 0.11;
     for (let i = g.particles.length - 1; i >= 0; i--) {
       const p = g.particles[i];
@@ -301,7 +305,6 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
       if (g.floats[i].t >= 1) g.floats.splice(i, 1);
     }
     if (phaseRef.current !== 'playing') return;
-    if (pausedRef.current) return;
     if (g.dir.x === 0 && g.dir.y === 0 && g.queue.length === 0) {
       g.stepAcc = 0;
       return;
@@ -559,9 +562,10 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
       const ch = rect.height;
       cv.width = Math.round(cw * dpr);
       cv.height = Math.round(ch * dpr);
-      const scale = Math.min(cw / FIELD, ch / FIELD);
+      const usableH = Math.max(120, ch - HEADER_H);
+      const scale = Math.min(cw / FIELD, usableH / FIELD);
       const offX = (cw - FIELD * scale) / 2;
-      const offY = (ch - FIELD * scale) / 2;
+      const offY = HEADER_H + (usableH - FIELD * scale) / 2;
       if (!gRef.current) {
         gRef.current = {
           dpr,
@@ -691,6 +695,7 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
               <button
                 type='button'
                 aria-label={tx.pause}
+                title={`${tx.pause} · Space`}
                 onClick={togglePause}
                 className='pointer-events-auto flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white/80 transition-colors hover:bg-white/20'
               >
@@ -764,6 +769,9 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
             <Play size={16} />
             {tx.resume}
           </button>
+          <span className='text-[12px] font-medium text-white/40'>
+            Space · P · Esc
+          </span>
         </div>
       )}
 
