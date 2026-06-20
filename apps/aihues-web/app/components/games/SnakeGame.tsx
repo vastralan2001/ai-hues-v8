@@ -573,7 +573,8 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
       const ch = rect.height;
       cv.width = Math.round(cw * dpr);
       cv.height = Math.round(ch * dpr);
-      const scale = Math.min(cw / FIELD, ch / FIELD);
+      const M = 22;
+      const scale = Math.min((cw - 2 * M) / FIELD, (ch - 2 * M) / FIELD);
       const offX = (cw - FIELD * scale) / 2;
       const offY = (ch - FIELD * scale) / 2;
       const fp = Math.round(FIELD * scale);
