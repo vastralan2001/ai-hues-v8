@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
+import { PageMasthead } from '@/components/PageMasthead';
 import { PageShell } from '@/components/SiteChrome';
 import { ToolIcon } from '@/components/ToolIcon';
 import { type Locale } from '@/lib/dict';
@@ -18,19 +19,16 @@ export default function TestsPage() {
 
   return (
     <PageShell variant='tests' locale={locale}>
-      <section className='mx-auto max-w-[1100px] px-6 pb-6 pt-14 text-center'>
-        <div className='mb-2 text-[11px] font-extrabold uppercase tracking-[0.18em] text-accent'>
-          {locale === 'zh' ? '测评中心' : 'Assessment Center'}
-        </div>
-        <h1 className='text-[40px] font-extrabold tracking-[-0.02em] text-foreground'>
-          {locale === 'zh' ? '人格测评' : 'Personality Tests'}
-        </h1>
-        <p className='mx-auto mt-3 max-w-[520px] text-[16px] leading-relaxed text-secondary'>
-          {locale === 'zh'
-            ? `${TEST_META.length} 个轻量测评，打开即测，无需注册。`
-            : `${TEST_META.length} quick assessments. Open and take — no signup, no paywall.`}
-        </p>
-      </section>
+      <PageMasthead
+        eyebrow='Assessment Center'
+        title='Personality Tests'
+        subtitle={`${TEST_META.length} quick assessments. Open and take — no signup, no paywall.`}
+        stats={[
+          { num: `${TEST_META.length}`, label: 'Tests' },
+          { num: 'No', label: 'Signup' },
+          { num: 'Free', label: 'Forever' },
+        ]}
+      />
 
       <section className='mx-auto max-w-[1100px] px-6 pb-20'>
         <div className='mx-auto grid max-w-[760px] grid-cols-1 gap-5 sm:grid-cols-2'>
