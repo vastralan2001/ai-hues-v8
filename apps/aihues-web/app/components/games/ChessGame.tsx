@@ -1569,7 +1569,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
                   (_, i) => (
                     <li
                       key={i}
-                      className='flex items-center gap-2 text-[13px] tabular-nums'
+                      className='flex items-center gap-2 rounded px-1.5 py-1 text-[13px] tabular-nums odd:bg-white/[0.03]'
                     >
                       <span className='w-6 shrink-0 text-right text-white/35'>
                         {i + 1}.
@@ -1592,7 +1592,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
       {/* board area */}
       <div
         ref={fieldRef}
-        className='relative flex min-h-[320px] flex-1 items-center justify-center lg:min-h-0'
+        className='relative flex min-h-[320px] flex-1 items-center justify-center lg:order-first lg:min-h-0'
       >
         <div className='flex items-center gap-2'>
           {showEvalBar && (
