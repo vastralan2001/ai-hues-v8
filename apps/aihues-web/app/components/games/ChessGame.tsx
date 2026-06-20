@@ -1412,24 +1412,35 @@ export default function ChessGame({ locale }: { locale: Locale }) {
 
   function onEvalPointerDown(e: ReactPointerEvent) {
     const sq = hitTest(e.clientX, e.clientY);
-    if (!sq) return;
+    const g = gRef.current;
+    if (!g) return;
     const b = brushRef.current;
     if (b === 'erase') {
-      editPlace(sq, null);
+      if (sq) editPlace(sq, null);
       return;
     }
     if (b) {
-      editPlace(sq, b);
+      if (sq) editPlace(sq, b);
       return;
     }
+    // Move mode: click-to-move + deselect, with drag as a shortcut.
+    if (g.selected) {
+      if (!sq || sq === g.selected) {
+        g.selected = null;
+        g.targets = [];
+        return;
+      }
+      const from = g.selected;
+      g.selected = null;
+      g.targets = [];
+      editMove(from, sq);
+      return;
+    }
+    if (!sq) return;
     const pc = chessRef.current!.get(sq as Square) as Piece | undefined;
     if (!pc) return;
-    const g = gRef.current;
-    if (!g) return;
     const l = clientToLogical(e.clientX, e.clientY);
     g.drag = { type: pc.type, color: pc.color, from: sq, x: l.x, y: l.y };
-    g.selected = null;
-    g.targets = [];
     try {
       (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
     } catch {
@@ -1448,12 +1459,25 @@ export default function ChessGame({ locale }: { locale: Locale }) {
   function onBoardPointerUp(e: ReactPointerEvent) {
     const g = gRef.current;
     if (!g || !g.drag) return;
-    const drag = g.drag;
+    const from = g.drag.from;
     g.drag = null;
-    if (!drag.from) return;
+    if (!from) return;
     const sq = hitTest(e.clientX, e.clientY);
-    if (sq && sq !== drag.from) editMove(drag.from, sq);
-    else if (!sq) editRemove(drag.from);
+    if (!sq) {
+      editRemove(from);
+      return;
+    }
+    if (sq === from) {
+      g.selected = from;
+      g.targets = [];
+      return;
+    }
+    editMove(from, sq);
+  }
+
+  function onBoardPointerCancel() {
+    const g = gRef.current;
+    if (g) g.drag = null;
   }
 
   /* ── controls ── */
@@ -1891,7 +1915,9 @@ export default function ChessGame({ locale }: { locale: Locale }) {
                         <button
                           key={col + t}
                           type='button'
-                          onClick={() => setBrush({ type: t, color: col })}
+                          onClick={() =>
+                            setBrush(on ? null : { type: t, color: col })
+                          }
                           className={`flex h-8 flex-1 items-center justify-center rounded-md text-[19px] leading-none transition-colors ${
                             on
                               ? 'bg-white text-[#121212]'
@@ -1924,7 +1950,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
                   </button>
                   <button
                     type='button'
-                    onClick={() => setBrush('erase')}
+                    onClick={() => setBrush(brush === 'erase' ? null : 'erase')}
                     className={`flex-1 rounded-md py-1.5 text-[11px] font-semibold transition-colors ${
                       brush === 'erase'
                         ? 'bg-white text-[#121212]'
@@ -2060,6 +2086,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
           onPointerDown={onBoardPointer}
           onPointerMove={onBoardPointerMove}
           onPointerUp={onBoardPointerUp}
+          onPointerCancel={onBoardPointerCancel}
         >
           <canvas
             ref={canvasRef}
