@@ -1723,7 +1723,6 @@ export default function ChessGame({ locale }: { locale: Locale }) {
   /* ── derived UI ── */
   const fenTrim = fenInput.trim();
   const fenBad = fenTrim.length > 0 && !isValidFen(fenTrim);
-  const showEvalBar = mode !== 'play';
   const showEvalNum = mode === 'eval' || mode === 'spectate';
   const modes: Mode[] = ['play', 'spectate', 'eval'];
   const modeLabel: Record<Mode, string> = {
@@ -2147,26 +2146,24 @@ export default function ChessGame({ locale }: { locale: Locale }) {
 
       {/* board + eval bar */}
       <div className='order-first flex shrink-0 items-stretch gap-2'>
-        {showEvalBar && (
-          <div className='relative w-[22px] shrink-0 overflow-hidden rounded-[5px] bg-[#0b0d12] ring-1 ring-white/10'>
-            <div
-              className='absolute inset-x-0 bottom-0 bg-[#f4f6fa] transition-[height] duration-300 ease-out'
-              style={{ height: `${evalFrac * 100}%` }}
-            />
-            <div className='absolute inset-x-0 top-1/2 h-px bg-black/15' />
-            {evalText !== '—' && (
-              <span
-                className={`absolute inset-x-0 text-center text-[9px] font-bold leading-none tabular-nums ${
-                  evalFrac >= 0.5
-                    ? 'bottom-1 text-[#11141a]'
-                    : 'top-1 text-white/90'
-                }`}
-              >
-                {evalText.replace(/^[+-]/, '')}
-              </span>
-            )}
-          </div>
-        )}
+        <div className='relative w-[22px] shrink-0 overflow-hidden rounded-[5px] bg-[#0b0d12] ring-1 ring-white/10'>
+          <div
+            className='absolute inset-x-0 bottom-0 bg-[#f4f6fa] transition-[height] duration-300 ease-out'
+            style={{ height: `${evalFrac * 100}%` }}
+          />
+          <div className='absolute inset-x-0 top-1/2 h-px bg-black/15' />
+          {showEvalNum && evalText !== '—' && (
+            <span
+              className={`absolute inset-x-0 text-center text-[9px] font-bold leading-none tabular-nums ${
+                evalFrac >= 0.5
+                  ? 'bottom-1 text-[#11141a]'
+                  : 'top-1 text-white/90'
+              }`}
+            >
+              {evalText.replace(/^[+-]/, '')}
+            </span>
+          )}
+        </div>
 
         <div
           ref={fieldRef}
