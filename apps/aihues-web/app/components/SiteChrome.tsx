@@ -11,7 +11,6 @@ import {
   gamesHref,
   homeHref,
   pricingHref,
-  rankingHref,
   showcaseHref,
   testsHref,
   toolDetailHref,
@@ -127,7 +126,6 @@ export function SiteFooter({
     [t(locale, 'nav.blog'), blogHref],
     [t(locale, 'footer.comparisons'), '/comparisons'],
     [t(locale, 'nav.showcase'), showcaseHref],
-    [t(locale, 'nav.ranking'), rankingHref],
   ];
   const company: Array<[string, string]> = [
     [t(locale, 'footer.about'), '/about'],
