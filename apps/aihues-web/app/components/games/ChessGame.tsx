@@ -216,6 +216,7 @@ const T = {
     playFromHere: 'Play here',
     spectateFromHere: 'Spectate here',
     loadOpening: 'Load opening…',
+    editBoard: 'Edit board',
     analyze: 'Analyze',
     importLabel: 'Import',
     importHint: 'Paste PGN or FEN…',
@@ -293,6 +294,7 @@ const T = {
     playFromHere: '从此对战',
     spectateFromHere: '从此观战',
     loadOpening: '载入开局…',
+    editBoard: '编辑棋盘',
     analyze: '分析',
     importLabel: '导入',
     importHint: '粘贴 PGN 或 FEN…',
@@ -585,6 +587,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
   const [annotations, setAnnotations] = useState<Record<number, string>>({});
   const [analyzing, setAnalyzing] = useState(false);
   const [analyzeProgress, setAnalyzeProgress] = useState(0);
+  const [showEditor, setShowEditor] = useState(false);
 
   const movesEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -1681,6 +1684,12 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     if (v) analyzePosition();
   }
 
+  function toggleEditor() {
+    const nv = !showEditor;
+    setShowEditor(nv);
+    if (!nv) setBrush('play');
+  }
+
   function togglePause() {
     if (modeRef.current !== 'spectate' || phaseRef.current !== 'active') return;
     const v = !pausedRef.current;
@@ -2301,84 +2310,109 @@ export default function ChessGame({ locale }: { locale: Locale }) {
                   <RotateCcw size={14} />
                 </button>
               </div>
-              <div className='space-y-1.5'>
-                {(['w', 'b'] as const).map((col) => (
-                  <div key={col} className='flex gap-1'>
-                    {(['k', 'q', 'r', 'b', 'n', 'p'] as const).map((t) => {
-                      const on =
-                        typeof brush === 'object' &&
-                        brush?.color === col &&
-                        brush?.type === t;
-                      return (
-                        <button
-                          key={col + t}
-                          type='button'
-                          onClick={() =>
-                            setBrush(on ? 'play' : { type: t, color: col })
-                          }
-                          className={`flex h-7 flex-1 items-center justify-center rounded-md text-[19px] leading-none transition-colors ${
-                            on
-                              ? 'bg-white text-[#121212]'
-                              : col === 'w'
-                                ? 'bg-white/10 text-white hover:bg-white/20'
-                                : 'bg-white/10 text-white/45 hover:bg-white/20'
-                          }`}
-                          style={{
-                            fontFamily:
-                              '"Segoe UI Symbol","Noto Sans Symbols 2",serif',
-                          }}
-                        >
-                          {GLYPH[t]}
-                        </button>
-                      );
-                    })}
+              <button
+                type='button'
+                onClick={toggleEditor}
+                className={`flex w-full items-center justify-center gap-1.5 rounded-full px-2 py-1.5 text-[12px] font-semibold transition-colors ${
+                  showEditor
+                    ? 'bg-white/15 text-white/85'
+                    : 'bg-white/[0.06] text-white/55 hover:bg-white/15'
+                }`}
+              >
+                {tx.editBoard}
+                <span className='text-[9px] leading-none'>
+                  {showEditor ? '▲' : '▼'}
+                </span>
+              </button>
+              {showEditor && (
+                <div className='space-y-1.5 border-t border-white/10 pt-2'>
+                  {(['w', 'b'] as const).map((col) => (
+                    <div key={col} className='flex gap-1'>
+                      {(['k', 'q', 'r', 'b', 'n', 'p'] as const).map((t) => {
+                        const on =
+                          typeof brush === 'object' &&
+                          brush?.color === col &&
+                          brush?.type === t;
+                        return (
+                          <button
+                            key={col + t}
+                            type='button'
+                            onClick={() =>
+                              setBrush(on ? 'play' : { type: t, color: col })
+                            }
+                            className={`flex h-7 flex-1 items-center justify-center rounded-md text-[19px] leading-none transition-colors ${
+                              on
+                                ? 'bg-white text-[#121212]'
+                                : col === 'w'
+                                  ? 'bg-white/10 text-white hover:bg-white/20'
+                                  : 'bg-white/10 text-white/45 hover:bg-white/20'
+                            }`}
+                            style={{
+                              fontFamily:
+                                '"Segoe UI Symbol","Noto Sans Symbols 2",serif',
+                            }}
+                          >
+                            {GLYPH[t]}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ))}
+                  <div className='flex gap-1'>
+                    <button
+                      type='button'
+                      onClick={() => setBrush('play')}
+                      className={`flex-1 rounded-md py-1.5 text-[11px] font-semibold transition-colors ${
+                        brush === 'play'
+                          ? 'bg-white text-[#121212]'
+                          : 'bg-white/10 text-white/70 hover:bg-white/20'
+                      }`}
+                    >
+                      {tx.playTool}
+                    </button>
+                    <button
+                      type='button'
+                      onClick={() => setBrush('move')}
+                      className={`flex-1 rounded-md py-1.5 text-[11px] font-semibold transition-colors ${
+                        brush === 'move'
+                          ? 'bg-white text-[#121212]'
+                          : 'bg-white/10 text-white/70 hover:bg-white/20'
+                      }`}
+                    >
+                      {tx.move}
+                    </button>
+                    <button
+                      type='button'
+                      onClick={() =>
+                        setBrush(brush === 'erase' ? 'play' : 'erase')
+                      }
+                      className={`flex-1 rounded-md py-1.5 text-[11px] font-semibold transition-colors ${
+                        brush === 'erase'
+                          ? 'bg-white text-[#121212]'
+                          : 'bg-white/10 text-white/70 hover:bg-white/20'
+                      }`}
+                    >
+                      {tx.erase}
+                    </button>
+                    <button
+                      type='button'
+                      onClick={clearBoard}
+                      className='flex-1 rounded-md bg-white/10 py-1.5 text-[11px] font-semibold text-white/70 transition-colors hover:bg-white/20'
+                    >
+                      {tx.clearBoard}
+                    </button>
                   </div>
-                ))}
-                <div className='flex gap-1'>
-                  <button
-                    type='button'
-                    onClick={() => setBrush('play')}
-                    className={`flex-1 rounded-md py-1.5 text-[11px] font-semibold transition-colors ${
-                      brush === 'play'
-                        ? 'bg-white text-[#121212]'
-                        : 'bg-white/10 text-white/70 hover:bg-white/20'
-                    }`}
-                  >
-                    {tx.playTool}
-                  </button>
-                  <button
-                    type='button'
-                    onClick={() => setBrush('move')}
-                    className={`flex-1 rounded-md py-1.5 text-[11px] font-semibold transition-colors ${
-                      brush === 'move'
-                        ? 'bg-white text-[#121212]'
-                        : 'bg-white/10 text-white/70 hover:bg-white/20'
-                    }`}
-                  >
-                    {tx.move}
-                  </button>
-                  <button
-                    type='button'
-                    onClick={() =>
-                      setBrush(brush === 'erase' ? 'play' : 'erase')
-                    }
-                    className={`flex-1 rounded-md py-1.5 text-[11px] font-semibold transition-colors ${
-                      brush === 'erase'
-                        ? 'bg-white text-[#121212]'
-                        : 'bg-white/10 text-white/70 hover:bg-white/20'
-                    }`}
-                  >
-                    {tx.erase}
-                  </button>
-                  <button
-                    type='button'
-                    onClick={clearBoard}
-                    className='flex-1 rounded-md bg-white/10 py-1.5 text-[11px] font-semibold text-white/70 transition-colors hover:bg-white/20'
-                  >
-                    {tx.clearBoard}
-                  </button>
+                  <FenLoader
+                    value={fenInput}
+                    bad={fenBad}
+                    tx={tx}
+                    onChange={setFenInput}
+                    onLoad={() => {
+                      if (!fenBad && fenTrim) loadPosition(fenTrim);
+                    }}
+                  />
                 </div>
-              </div>
+              )}
               <select
                 value=''
                 onChange={(e) => {
@@ -2393,15 +2427,6 @@ export default function ChessGame({ locale }: { locale: Locale }) {
                   </option>
                 ))}
               </select>
-              <FenLoader
-                value={fenInput}
-                bad={fenBad}
-                tx={tx}
-                onChange={setFenInput}
-                onLoad={() => {
-                  if (!fenBad && fenTrim) loadPosition(fenTrim);
-                }}
-              />
               <div className='grid grid-cols-2 gap-2 pt-0.5'>
                 <button
                   type='button'
