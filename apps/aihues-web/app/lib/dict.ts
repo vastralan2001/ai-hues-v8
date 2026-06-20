@@ -766,6 +766,7 @@ export const dict: Record<Locale, Record<string, string>> = {
     'footer.chess': 'Chess',
     'footer.colorHunt': 'Color Hunt',
     'footer.allGames': 'All games',
+    'footer.allTests': 'All tests',
     'footer.copyright': '© 2026 AIHues · Find your AI vibe · Built on Kimi',
     'footer.tagline': 'Find your AI vibe — tools and games that feel human.',
 
@@ -1251,6 +1252,7 @@ export const dict: Record<Locale, Record<string, string>> = {
     'footer.chess': '国际象棋',
     'footer.colorHunt': '找色差',
     'footer.allGames': '全部游戏',
+    'footer.allTests': '全部测试',
     'footer.copyright': '© 2026 AIHues · 找到你的 AI vibe · 基于 Kimi 构建',
     'footer.tagline': '找到你的 AI vibe——自然流畅的工具与游戏。',
 

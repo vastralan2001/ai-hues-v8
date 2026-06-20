@@ -262,7 +262,13 @@ export default async function HomePage() {
                   <br />
                   <Typewriter
                     className='text-accent'
-                    phrases={['AI 工具箱', '开发利器', '写作工作室', '游戏厅']}
+                    phrases={[
+                      'AI 工具箱',
+                      '开发利器',
+                      '写作工作室',
+                      '测验厅',
+                      '游戏厅',
+                    ]}
                   />
                 </>
               ) : (
@@ -275,6 +281,7 @@ export default async function HomePage() {
                       'AI toolkit.',
                       'dev toolbox.',
                       'writing studio.',
+                      'test lab.',
                       'game arcade.',
                     ]}
                   />

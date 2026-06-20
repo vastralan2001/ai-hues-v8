@@ -10,9 +10,8 @@ import {
   gameDetailHref,
   gamesHref,
   homeHref,
-  showcaseHref,
+  testDetailHref,
   testsHref,
-  toolDetailHref,
   toolsHref,
   wishlistHref,
 } from '@/lib/routes';
@@ -108,10 +107,9 @@ export function SiteFooter({
 }) {
   const product: Array<[string, string]> = [
     [t(locale, 'nav.tools'), toolsHref],
-    [t(locale, 'categories.title'), toolsHref],
-    [t(locale, 'nav.tests'), testsHref],
-    [t(locale, 'nav.wishlist'), wishlistHref],
     [t(locale, 'nav.discover'), discoverHref],
+    [t(locale, 'nav.wishlist'), wishlistHref],
+    [t(locale, 'nav.blog'), blogHref],
   ];
   const games: Array<[string, string]> = [
     [t(locale, 'footer.chess'), gameDetailHref('chess')],
@@ -120,11 +118,10 @@ export function SiteFooter({
     [t(locale, 'footer.luckySlots'), gameDetailHref('slot-machine')],
     [t(locale, 'footer.allGames'), gamesHref],
   ];
-  const resources: Array<[string, string]> = [
-    [t(locale, 'footer.cheatSheet'), toolDetailHref('kimi-code')],
-    [t(locale, 'nav.blog'), blogHref],
-    [t(locale, 'footer.comparisons'), '/comparisons'],
-    [t(locale, 'nav.showcase'), showcaseHref],
+  const tests: Array<[string, string]> = [
+    ['MBTI', testDetailHref('mbti')],
+    ['SBTI', testDetailHref('sbti')],
+    [t(locale, 'footer.allTests'), testsHref],
   ];
   const company: Array<[string, string]> = [
     [t(locale, 'footer.about'), '/about'],
@@ -168,8 +165,8 @@ export function SiteFooter({
         />
         <FooterColumn
           className='lg:col-span-2'
-          heading={t(locale, 'footer.resources')}
-          links={resources}
+          heading={t(locale, 'nav.tests')}
+          links={tests}
         />
         <FooterColumn
           className='lg:col-span-2'
