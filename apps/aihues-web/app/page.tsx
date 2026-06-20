@@ -254,14 +254,6 @@ export default async function HomePage() {
         >
           {/* LEFT — pitch + search */}
           <div className='min-w-0 text-center lg:text-left'>
-            {/* Pill kicker */}
-            <div className='mb-7 inline-flex items-center gap-2 rounded-full border border-border bg-white/70 px-4 py-2 shadow-sm backdrop-blur-md'>
-              <span className='inline-block h-2 w-2 rounded-full bg-accent' />
-              <span className='text-[12px] font-semibold uppercase tracking-[0.18em] text-secondary'>
-                {locale === 'zh' ? '为创造者精选' : 'Curated for makers'}
-              </span>
-            </div>
-
             {/* Main headline */}
             <h1 className='hero-title mb-6 text-foreground'>
               {locale === 'zh' ? (
