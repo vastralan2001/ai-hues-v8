@@ -1,6 +1,13 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type PointerEvent as ReactPointerEvent,
+} from 'react';
+import { Maximize2, Minus, Plus } from 'lucide-react';
 
 import { t, type Locale } from '@/lib/dict';
 
@@ -135,6 +142,15 @@ export default function MermaidTool({ locale }: MermaidToolProps) {
   const [error, setError] = useState('');
   const [rendering, setRendering] = useState(false);
   const idRef = useRef(0);
+  const [view, setView] = useState({ scale: 1, tx: 0, ty: 0 });
+  const viewportRef = useRef<HTMLDivElement | null>(null);
+  const contentRef = useRef<HTMLDivElement | null>(null);
+  const dragRef = useRef<{
+    x: number;
+    y: number;
+    tx: number;
+    ty: number;
+  } | null>(null);
 
   useEffect(() => {
     let alive = true;
@@ -179,6 +195,102 @@ export default function MermaidTool({ locale }: MermaidToolProps) {
     a.download = 'diagram.svg';
     a.click();
     URL.revokeObjectURL(url);
+  }
+
+  // Reset to the default view: render the SVG at natural size, scaled to fit
+  // the viewport and centred.
+  const fitToView = useCallback(() => {
+    const cont = viewportRef.current;
+    const svgEl = contentRef.current?.querySelector('svg');
+    if (!cont || !svgEl) return;
+    const vb = svgEl.viewBox?.baseVal;
+    const rect = svgEl.getBoundingClientRect();
+    const sw = vb && vb.width ? vb.width : rect.width;
+    const sh = vb && vb.height ? vb.height : rect.height;
+    if (!sw || !sh) return;
+    svgEl.style.maxWidth = 'none';
+    svgEl.style.width = `${sw}px`;
+    svgEl.style.height = `${sh}px`;
+    const cw = cont.clientWidth;
+    const ch = cont.clientHeight;
+    const scale = Math.max(0.1, Math.min((cw - 24) / sw, (ch - 24) / sh, 1.5));
+    setView({ scale, tx: (cw - sw * scale) / 2, ty: (ch - sh * scale) / 2 });
+  }, []);
+
+  // Auto-fit whenever a new diagram renders.
+  useEffect(() => {
+    if (!svg) return;
+    const id = requestAnimationFrame(fitToView);
+    return () => cancelAnimationFrame(id);
+  }, [svg, fitToView]);
+
+  // Wheel zoom toward the cursor (native non-passive listener so it can
+  // preventDefault the page scroll).
+  useEffect(() => {
+    const el = viewportRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const rect = el.getBoundingClientRect();
+      const cx = e.clientX - rect.left;
+      const cy = e.clientY - rect.top;
+      setView((v) => {
+        const next = Math.min(
+          10,
+          Math.max(0.1, v.scale * (e.deltaY < 0 ? 1.12 : 1 / 1.12))
+        );
+        const k = next / v.scale;
+        return {
+          scale: next,
+          tx: cx - (cx - v.tx) * k,
+          ty: cy - (cy - v.ty) * k,
+        };
+      });
+    };
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => el.removeEventListener('wheel', onWheel);
+  }, []);
+
+  function zoomBy(factor: number) {
+    const el = viewportRef.current;
+    if (!el) return;
+    const cx = el.clientWidth / 2;
+    const cy = el.clientHeight / 2;
+    setView((v) => {
+      const next = Math.min(10, Math.max(0.1, v.scale * factor));
+      const k = next / v.scale;
+      return {
+        scale: next,
+        tx: cx - (cx - v.tx) * k,
+        ty: cy - (cy - v.ty) * k,
+      };
+    });
+  }
+
+  function onPointerDown(e: ReactPointerEvent<HTMLDivElement>) {
+    dragRef.current = { x: e.clientX, y: e.clientY, tx: view.tx, ty: view.ty };
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch {
+      /* ignore */
+    }
+  }
+  function onPointerMove(e: ReactPointerEvent<HTMLDivElement>) {
+    const d = dragRef.current;
+    if (!d) return;
+    setView((v) => ({
+      ...v,
+      tx: d.tx + (e.clientX - d.x),
+      ty: d.ty + (e.clientY - d.y),
+    }));
+  }
+  function onPointerUp(e: ReactPointerEvent<HTMLDivElement>) {
+    dragRef.current = null;
+    try {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    } catch {
+      /* ignore */
+    }
   }
 
   return (
@@ -242,26 +354,74 @@ export default function MermaidTool({ locale }: MermaidToolProps) {
             ) : null
           }
         >
-          <div className='flex min-h-[440px] flex-1 items-center justify-center overflow-auto p-4'>
+          <div
+            ref={viewportRef}
+            onPointerDown={svg ? onPointerDown : undefined}
+            onPointerMove={svg ? onPointerMove : undefined}
+            onPointerUp={onPointerUp}
+            onPointerLeave={onPointerUp}
+            className={`relative min-h-[440px] flex-1 touch-none overflow-hidden ${
+              svg ? 'cursor-grab active:cursor-grabbing' : ''
+            }`}
+          >
             {svg ? (
-              <div
-                className='mermaid-preview flex w-full items-center justify-center [&_svg]:h-auto [&_svg]:max-w-full'
-                dangerouslySetInnerHTML={{ __html: svg }}
-              />
+              <>
+                <div
+                  ref={contentRef}
+                  className='absolute left-0 top-0 origin-top-left will-change-transform [&_svg]:!max-w-none'
+                  style={{
+                    transform: `translate(${view.tx}px, ${view.ty}px) scale(${view.scale})`,
+                  }}
+                  dangerouslySetInnerHTML={{ __html: svg }}
+                />
+                <div className='absolute bottom-3 right-3 flex items-center gap-0.5 rounded-full border border-border bg-bg p-1'>
+                  <button
+                    type='button'
+                    onClick={() => zoomBy(1 / 1.2)}
+                    aria-label={zh ? '缩小' : 'Zoom out'}
+                    className='flex h-7 w-7 items-center justify-center rounded-full text-secondary transition-colors hover:bg-surface hover:text-accent'
+                  >
+                    <Minus size={15} />
+                  </button>
+                  <span className='min-w-[46px] text-center text-[12px] font-semibold tabular-nums text-secondary'>
+                    {Math.round(view.scale * 100)}%
+                  </span>
+                  <button
+                    type='button'
+                    onClick={() => zoomBy(1.2)}
+                    aria-label={zh ? '放大' : 'Zoom in'}
+                    className='flex h-7 w-7 items-center justify-center rounded-full text-secondary transition-colors hover:bg-surface hover:text-accent'
+                  >
+                    <Plus size={15} />
+                  </button>
+                  <span className='mx-0.5 h-4 w-px bg-border' />
+                  <button
+                    type='button'
+                    onClick={fitToView}
+                    title={zh ? '重置视图' : 'Reset view'}
+                    aria-label={zh ? '重置视图' : 'Reset view'}
+                    className='flex h-7 w-7 items-center justify-center rounded-full text-secondary transition-colors hover:bg-surface hover:text-accent'
+                  >
+                    <Maximize2 size={14} />
+                  </button>
+                </div>
+              </>
             ) : (
-              <span className='text-[13px] text-muted'>
-                {error
-                  ? zh
-                    ? '修正语法后即可渲染'
-                    : 'Fix the syntax to render'
-                  : rendering
+              <div className='flex h-full min-h-[440px] items-center justify-center p-4'>
+                <span className='text-[13px] text-muted'>
+                  {error
                     ? zh
-                      ? '渲染中…'
-                      : 'Rendering…'
-                    : zh
-                      ? '图表预览将显示在这里'
-                      : 'Your diagram appears here'}
-              </span>
+                      ? '修正语法后即可渲染'
+                      : 'Fix the syntax to render'
+                    : rendering
+                      ? zh
+                        ? '渲染中…'
+                        : 'Rendering…'
+                      : zh
+                        ? '图表预览将显示在这里'
+                        : 'Your diagram appears here'}
+                </span>
+              </div>
             )}
           </div>
         </Panel>
