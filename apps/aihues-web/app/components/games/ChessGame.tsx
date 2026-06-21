@@ -358,18 +358,24 @@ function materialOf(fen: string, color: Color): number {
 
 /* Move classification. Errors use Lichess-style win%-loss bands (Inaccuracy
    ≥10%, Mistake ≥20%, Blunder ≥30%) which self-scale with the position. The
-   good-move badges follow chess.com's intent: !! is a sound piece sacrifice
-   that stays favourable and isn't played from an already-won position; ! is the
-   critical only-good move (the alternatives are clearly worse); !? is a sound
-   move the engine didn't pick. Refs: lichess.org/page/accuracy and chess.com's
-   game-review categories. */
+   good-move badges follow traditional annotation rather than chess.com's
+   sacrifice-only "Brilliant": !! is the best move that is *hard to find* — a
+   sound piece sacrifice OR a quiet, counter-intuitive only-move (alternatives
+   clearly worse) — kept from an unwon position; ! is a strong only-good move
+   (but never an obvious capture/mate); !? is a sound-ish move the engine did
+   not pick that poses practical problems (the reply is a narrow only-move), i.e.
+   a trap likely to induce an error. Refs: en.wikipedia.org/wiki/
+   Chess_annotation_symbols, lichess.org/page/accuracy. */
 function classifyMove(p: {
   lossWP: number;
   gapWP: number;
+  oppGapWP: number;
   wpBefore: number;
   wpAfter: number;
   isBook: boolean;
   isForced: boolean;
+  isQuiet: boolean;
+  isMate: boolean;
   playedIsBest: boolean;
   isSacrifice: boolean;
 }): string {
@@ -378,10 +384,17 @@ function classifyMove(p: {
   if (p.lossWP >= 0.3) return '??';
   if (p.lossWP >= 0.2) return '?';
   if (p.lossWP >= 0.1) return '?!';
-  if (p.playedIsBest && p.isSacrifice && p.wpAfter >= 0.5 && p.wpBefore <= 0.95)
-    return '!!';
-  if (p.playedIsBest && p.gapWP >= 0.15) return '!';
-  if (!p.playedIsBest && p.lossWP <= 0.02) return '!?';
+  // Good / interesting moves (win%-loss < 10%).
+  const sound =
+    !p.isMate &&
+    p.playedIsBest &&
+    !p.isForced &&
+    p.wpAfter >= 0.5 &&
+    p.wpBefore <= 0.95;
+  if (sound && p.isSacrifice) return '!!';
+  if (sound && p.isQuiet && p.gapWP >= 0.25) return '!!';
+  if (!p.isMate && p.playedIsBest && p.gapWP >= 0.15) return '!';
+  if (!p.playedIsBest && p.oppGapWP >= 0.15) return '!?';
   return '';
 }
 
@@ -1880,6 +1893,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
       to: string;
       promotion?: string;
       color: Color;
+      san: string;
     }[];
     const eng = engineRef.current;
     if (!hist.length || analyzing || !eng || !engineReadyRef.current) return;
@@ -1922,6 +1936,13 @@ export default function ChessGame({ locale }: { locale: Locale }) {
       const playedIsBest = !!before.bestUci && before.bestUci === playedUci;
       const isForced = new Chess(fens[i]).moves().length === 1;
       const isBook = after.mate !== 0 && !!openingForFen(fens[i + 1]);
+      const san = hist[i].san;
+      const isQuiet = !/[x+#]/.test(san);
+      const isMate = after.mate === 0 || san.includes('#');
+      const oppGapWP =
+        after.cp2 != null
+          ? Math.max(0, winProb(after.cp) - winProb(after.cp2))
+          : 0;
       let isSacrifice = false;
       if (playedIsBest && i + 2 < fens.length) {
         isSacrifice =
@@ -1931,10 +1952,13 @@ export default function ChessGame({ locale }: { locale: Locale }) {
       ann[i] = classifyMove({
         lossWP,
         gapWP,
+        oppGapWP,
         wpBefore,
         wpAfter,
         isBook,
         isForced,
+        isQuiet,
+        isMate,
         playedIsBest,
         isSacrifice,
       });
