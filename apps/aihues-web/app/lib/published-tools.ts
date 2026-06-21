@@ -64,4 +64,5 @@ export const PUBLISHED_TOOL_SLUGS: string[] = [
   'cn-convert',
   'table-convert',
   'curl-to-code',
+  'mermaid',
 ];

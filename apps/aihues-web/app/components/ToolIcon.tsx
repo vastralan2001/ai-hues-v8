@@ -70,6 +70,7 @@ import {
   Users,
   Video,
   Wand2,
+  Workflow,
   Worm,
   Wrench,
 } from 'lucide-react';
@@ -109,6 +110,7 @@ const TOOL_ICONS: Record<string, LucideIcon> = {
   pomodoro: Timer,
   'chi-squared': Calculator,
   'kimi-code': BookOpen,
+  mermaid: Workflow,
 
   /* Utility */
   'word-count': Type,

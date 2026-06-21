@@ -708,6 +708,9 @@ export const dict: Record<Locale, Record<string, string>> = {
 
     'tool.qrcode.title': 'QR Code Generator',
     'tool.qrcode.desc': 'Generate QR codes for URLs, text, and contact info',
+    'tool.mermaid.title': 'Mermaid Diagrams',
+    'tool.mermaid.desc':
+      'Write Mermaid syntax and render flowcharts, sequence, class, state, ER, Gantt and pie diagrams live.',
     'tool.qrcode.input': 'Text or URL',
     'tool.qrcode.size': 'Size',
     'tool.qrcode.generate': 'Generate',
@@ -1499,6 +1502,9 @@ export const dict: Record<Locale, Record<string, string>> = {
 
     'tool.qrcode.title': 'QR 码生成器',
     'tool.qrcode.desc': '为 URL、文本和联系信息生成 QR 码',
+    'tool.mermaid.title': 'Mermaid 图表',
+    'tool.mermaid.desc':
+      '用 Mermaid 语法实时渲染流程图、时序图、类图、状态图、ER 图、甘特图和饼图。',
     'tool.qrcode.input': '文本或 URL',
     'tool.qrcode.size': '尺寸',
     'tool.qrcode.generate': '生成',
