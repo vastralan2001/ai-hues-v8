@@ -61,4 +61,8 @@ export const PUBLISHED_TOOL_SLUGS: string[] = [
   'qrcode',
   'chi-squared',
   'kimi-code',
+  'cn-convert',
+  'table-convert',
+  'curl-to-code',
+  'mermaid',
 ];

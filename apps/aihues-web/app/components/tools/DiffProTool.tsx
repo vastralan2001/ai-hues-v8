@@ -79,8 +79,8 @@ export default function DiffProTool({ locale }: DiffProToolProps) {
   };
 
   return (
-    <div className='mx-auto max-w-4xl px-6 py-12'>
-      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
+    <div className='max-w-[900px] py-10'>
+      <h1 className='mb-2 text-[clamp(28px,3.4vw,40px)] font-extrabold tracking-[-0.02em] text-foreground'>
         {t(locale, 'tool.diffPro.title')}
       </h1>
       <p className='mb-6 text-[15px] text-secondary'>
@@ -89,21 +89,21 @@ export default function DiffProTool({ locale }: DiffProToolProps) {
 
       <div className='grid gap-4 sm:grid-cols-2'>
         <div>
-          <label className='mb-2 block text-sm font-semibold text-foreground'>
+          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
             {t(locale, 'tool.diffPro.left')}
           </label>
           <textarea
-            className='h-[200px] w-full resize-none rounded-lg border border-border bg-surface p-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+            className='h-[200px] w-full resize-none rounded-[10px] border border-border bg-surface p-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
             onChange={(e) => setLeft(e.target.value)}
             value={left}
           />
         </div>
         <div>
-          <label className='mb-2 block text-sm font-semibold text-foreground'>
+          <label className='mb-1.5 block text-sm font-semibold text-foreground'>
             {t(locale, 'tool.diffPro.right')}
           </label>
           <textarea
-            className='h-[200px] w-full resize-none rounded-lg border border-border bg-surface p-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+            className='h-[200px] w-full resize-none rounded-[10px] border border-border bg-surface p-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
             onChange={(e) => setRight(e.target.value)}
             value={right}
           />
@@ -111,7 +111,7 @@ export default function DiffProTool({ locale }: DiffProToolProps) {
       </div>
 
       <button
-        className='mt-4 rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+        className='mt-4 rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
         onClick={handleCompare}
         type='button'
       >
@@ -132,7 +132,7 @@ export default function DiffProTool({ locale }: DiffProToolProps) {
             </span>
           </div>
 
-          <div className='rounded-2xl border border-border bg-surface overflow-hidden'>
+          <div className='rounded-[14px] border border-border bg-surface overflow-hidden'>
             <div className='grid grid-cols-[40px_40px_1fr] border-b border-border bg-gray-50 dark:bg-gray-900 text-xs font-semibold text-secondary'>
               <div className='px-2 py-2 text-right'>-</div>
               <div className='px-2 py-2 text-right'>+</div>

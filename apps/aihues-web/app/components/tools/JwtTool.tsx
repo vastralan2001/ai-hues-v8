@@ -1,20 +1,30 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { t, type Locale } from '@/lib/dict';
+
+import {
+  CopyButton,
+  JsonBlock,
+  Panel,
+  ToolGrid,
+  ToolHeader,
+  TOOL_WRAP,
+} from './_kit';
 
 interface JwtToolProps {
   locale: Locale;
 }
 
-interface JwtParts {
-  header: unknown;
-  payload: unknown;
-  signature: string;
-  rawHeader: string;
-  rawPayload: string;
-}
+const SEG = {
+  header: '#c2502e',
+  payload: '#7c5cbf',
+  signature: '#0991b6',
+};
+
+const SAMPLE =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkFsZXggQ2hlbiIsImFkbWluIjp0cnVlLCJpYXQiOjE3MTYyMzkwMjIsImV4cCI6MjA2MTU4ODYyMn0.lJ8mF3kK0c0wYy7m6P0r3qj2nQ0xq8r0Zs9vL4kK1mA';
 
 function base64UrlDecode(str: string): string {
   const padding = '='.repeat((4 - (str.length % 4)) % 4);
@@ -31,184 +41,177 @@ function base64UrlDecode(str: string): string {
   }
 }
 
+interface JwtParts {
+  header: unknown;
+  payload: unknown;
+  signature: string;
+}
+
 function parseJWT(token: string): JwtParts | null {
   const parts = token.trim().split('.');
-  if (parts.length !== 3) return null;
+  if (parts.length !== 3 || !parts[0] || !parts[1]) return null;
   try {
-    const header = JSON.parse(base64UrlDecode(parts[0]));
-    const payload = JSON.parse(base64UrlDecode(parts[1]));
     return {
-      header,
-      payload,
+      header: JSON.parse(base64UrlDecode(parts[0])),
+      payload: JSON.parse(base64UrlDecode(parts[1])),
       signature: parts[2],
-      rawHeader: parts[0],
-      rawPayload: parts[1],
     };
   } catch {
     return null;
   }
 }
 
-function formatJson(obj: unknown): string {
+function fmt(obj: unknown): string {
   return JSON.stringify(obj, null, 2);
 }
 
-function getExpiryStatus(payload: unknown): { expired: boolean; date?: Date } {
-  if (
-    payload &&
-    typeof payload === 'object' &&
-    'exp' in payload &&
-    typeof payload.exp === 'number'
-  ) {
-    const date = new Date(payload.exp * 1000);
-    return { expired: date.getTime() < Date.now(), date };
+function getExpiry(payload: unknown): {
+  exp?: Date;
+  iat?: Date;
+  expired?: boolean;
+} {
+  const out: { exp?: Date; iat?: Date; expired?: boolean } = {};
+  if (payload && typeof payload === 'object') {
+    const p = payload as Record<string, unknown>;
+    if (typeof p.exp === 'number') {
+      out.exp = new Date(p.exp * 1000);
+      out.expired = out.exp.getTime() < Date.now();
+    }
+    if (typeof p.iat === 'number') out.iat = new Date(p.iat * 1000);
   }
-  return { expired: false };
+  return out;
 }
 
 export default function JwtTool({ locale }: JwtToolProps) {
-  const [input, setInput] = useState('');
-  const [result, setResult] = useState<JwtParts | null>(null);
-  const [error, setError] = useState('');
+  const [input, setInput] = useState(SAMPLE);
 
-  const handleParse = () => {
-    setError('');
-    const parsed = parseJWT(input);
-    if (!parsed) {
-      setError('Invalid JWT format');
-      setResult(null);
-      return;
-    }
-    setResult(parsed);
-  };
-
-  const handleCopy = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-    } catch {
-      // ignore
-    }
-  };
-
-  const expiry = result ? getExpiryStatus(result.payload) : null;
+  const segments = input.trim().split('.');
+  const result = useMemo(() => parseJWT(input), [input]);
+  const invalid = input.trim().length > 0 && !result;
+  const expiry = result ? getExpiry(result.payload) : {};
 
   return (
-    <div className='mx-auto max-w-4xl px-6 py-12'>
-      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
-        {t(locale, 'tool.jwt.title')}
-      </h1>
-      <p className='mb-6 text-[15px] text-secondary'>
-        {t(locale, 'tool.jwt.desc')}
-      </p>
-
-      <textarea
-        className='h-[160px] w-full resize-none rounded-2xl border border-border bg-surface p-5 font-mono text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
-        onChange={(e) => setInput(e.target.value)}
-        placeholder={t(locale, 'tool.jwt.placeholder')}
-        value={input}
+    <div className={TOOL_WRAP}>
+      <ToolHeader
+        eyebrow={t(locale, 'cat.developer')}
+        title={t(locale, 'tool.jwt.title')}
+        desc={t(locale, 'tool.jwt.desc')}
       />
 
-      <div className='mt-4 flex gap-3'>
-        <button
-          className='rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
-          onClick={handleParse}
-          type='button'
-        >
-          {t(locale, 'tool.jwt.parse')}
-        </button>
-      </div>
-
-      {error && (
-        <p className='mt-3 rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'>
-          {error}
-        </p>
-      )}
-
-      {result && (
-        <div className='mt-6 flex flex-col gap-4'>
-          {/* Expiry badge */}
-          {expiry?.date && (
-            <div
-              className={`inline-flex w-fit items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold ${
-                expiry.expired
-                  ? 'border border-red-200 bg-red-50 text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'
-                  : 'border border-green-200 bg-green-50 text-green-600 dark:border-green-900 dark:bg-green-950 dark:text-green-400'
-              }`}
-            >
-              <span>{expiry.expired ? '❌' : '✅'}</span>
-              <span>
-                {expiry.expired
-                  ? t(locale, 'tool.jwt.expired')
-                  : t(locale, 'tool.jwt.valid')}
-                {' · '}
-                {t(locale, 'tool.jwt.expiresAt')}:{' '}
-                {expiry.date.toLocaleString()}
-              </span>
-            </div>
-          )}
-
-          {/* Header */}
-          <JwtSection
-            label={t(locale, 'tool.jwt.header')}
-            onCopy={() => handleCopy(formatJson(result.header))}
-            value={formatJson(result.header)}
-          />
-
-          {/* Payload */}
-          <JwtSection
-            label={t(locale, 'tool.jwt.payload')}
-            onCopy={() => handleCopy(formatJson(result.payload))}
-            value={formatJson(result.payload)}
-          />
-
-          {/* Signature */}
-          <div className='rounded-2xl border border-border bg-surface p-4'>
-            <div className='mb-2 flex items-center justify-between'>
-              <span className='text-sm font-semibold text-foreground'>
-                {t(locale, 'tool.jwt.signature')}
-              </span>
+      <ToolGrid>
+        {/* LEFT — encoded */}
+        <Panel
+          label={locale === 'zh' ? '编码 JWT' : 'Encoded'}
+          action={
+            <div className='flex gap-2'>
               <button
-                className='rounded-[8px] border border-border bg-bg px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
-                onClick={() => handleCopy(result.signature)}
                 type='button'
+                onClick={() => setInput(SAMPLE)}
+                className='h-8 rounded-[8px] border border-border bg-bg px-3 text-[12px] font-semibold text-secondary transition-colors hover:border-accent hover:text-accent'
               >
-                {t(locale, 'tool.wordCount.copy')}
+                {locale === 'zh' ? '示例' : 'Sample'}
               </button>
+              <CopyButton text={input} />
             </div>
-            <code className='block break-all font-mono text-xs text-secondary'>
-              {result.signature}
-            </code>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function JwtSection({
-  label,
-  value,
-  onCopy,
-}: {
-  label: string;
-  value: string;
-  onCopy: () => void;
-}) {
-  return (
-    <div className='rounded-2xl border border-border bg-surface'>
-      <div className='flex items-center justify-between border-b border-border px-4 py-3'>
-        <span className='text-sm font-semibold text-foreground'>{label}</span>
-        <button
-          className='rounded-[8px] border border-border bg-bg px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
-          onClick={onCopy}
-          type='button'
+          }
         >
-          Copy
-        </button>
-      </div>
-      <pre className='overflow-auto p-4 font-mono text-xs leading-relaxed text-secondary'>
-        {value}
-      </pre>
+          <textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            spellCheck={false}
+            placeholder={t(locale, 'tool.jwt.placeholder')}
+            className='min-h-[200px] w-full flex-1 resize-y border-0 bg-transparent p-4 font-mono text-[13px] leading-relaxed text-foreground outline-none placeholder:text-muted'
+          />
+          {/* Colored segment breakdown */}
+          {segments.length === 3 && input.trim() ? (
+            <div className='border-t border-border p-4'>
+              <div className='mb-2 break-all font-mono text-[13px] leading-relaxed'>
+                <span style={{ color: SEG.header }}>{segments[0]}</span>
+                <span className='text-muted'>.</span>
+                <span style={{ color: SEG.payload }}>{segments[1]}</span>
+                <span className='text-muted'>.</span>
+                <span style={{ color: SEG.signature }}>{segments[2]}</span>
+              </div>
+              <div className='flex flex-wrap gap-x-4 gap-y-1 text-[11px] font-semibold uppercase tracking-[0.1em]'>
+                <span style={{ color: SEG.header }}>
+                  ● {locale === 'zh' ? '头部' : 'Header'}
+                </span>
+                <span style={{ color: SEG.payload }}>
+                  ● {locale === 'zh' ? '载荷' : 'Payload'}
+                </span>
+                <span style={{ color: SEG.signature }}>
+                  ● {locale === 'zh' ? '签名' : 'Signature'}
+                </span>
+              </div>
+            </div>
+          ) : null}
+          {invalid ? (
+            <div className='border-t border-border px-4 py-3 text-[13px] font-medium text-[#ff3849]'>
+              {locale === 'zh'
+                ? '无效的 JWT 格式（应为 3 段，以 . 分隔）'
+                : 'Invalid JWT — expected 3 dot-separated segments'}
+            </div>
+          ) : null}
+        </Panel>
+
+        {/* RIGHT — decoded */}
+        <div className='flex flex-col gap-5'>
+          {expiry.exp ? (
+            <div
+              className='flex items-center gap-2 rounded-[12px] border px-4 py-3 text-[13px] font-semibold'
+              style={{
+                borderColor: expiry.expired
+                  ? 'rgba(255,56,73,0.3)'
+                  : 'rgba(22,196,86,0.3)',
+                background: expiry.expired
+                  ? 'rgba(255,56,73,0.08)'
+                  : 'rgba(22,196,86,0.08)',
+                color: expiry.expired ? '#d12a3a' : '#138a3e',
+              }}
+            >
+              {expiry.expired
+                ? `${t(locale, 'tool.jwt.expired')} · ${t(locale, 'tool.jwt.expiresAt')}: ${expiry.exp.toLocaleString()}`
+                : `${t(locale, 'tool.jwt.valid')} · ${t(locale, 'tool.jwt.expiresAt')}: ${expiry.exp.toLocaleString()}`}
+            </div>
+          ) : null}
+
+          <Panel
+            label={t(locale, 'tool.jwt.header')}
+            accent={SEG.header}
+            action={result ? <CopyButton text={fmt(result.header)} /> : null}
+          >
+            <div className='p-4'>
+              {result ? (
+                <JsonBlock json={fmt(result.header)} />
+              ) : (
+                <p className='font-mono text-[13px] text-muted'>—</p>
+              )}
+            </div>
+          </Panel>
+
+          <Panel
+            label={t(locale, 'tool.jwt.payload')}
+            accent={SEG.payload}
+            action={result ? <CopyButton text={fmt(result.payload)} /> : null}
+          >
+            <div className='p-4'>
+              {result ? (
+                <JsonBlock json={fmt(result.payload)} />
+              ) : (
+                <p className='font-mono text-[13px] text-muted'>—</p>
+              )}
+            </div>
+          </Panel>
+
+          <Panel label={t(locale, 'tool.jwt.signature')} accent={SEG.signature}>
+            <div className='p-4'>
+              <code className='block break-all font-mono text-[13px] text-secondary'>
+                {result ? result.signature || '(empty)' : '—'}
+              </code>
+            </div>
+          </Panel>
+        </div>
+      </ToolGrid>
     </div>
   );
 }

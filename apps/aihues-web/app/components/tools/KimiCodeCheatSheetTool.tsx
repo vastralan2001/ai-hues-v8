@@ -1,16 +1,22 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { Check, Copy, Search } from 'lucide-react';
 
 import { t, type Locale } from '@/lib/dict';
+import { Panel, ToolHeader, TOOL_WRAP } from './_kit';
 
 interface KimiCodeCheatSheetToolProps {
   locale: Locale;
 }
 
+type Approval = 'auto' | 'ask';
+
 interface CheatItem {
   cmd: string;
   desc: string;
+  alias?: string;
+  approval?: Approval;
 }
 
 interface CheatSection {
@@ -20,185 +26,351 @@ interface CheatSection {
 
 const CHEAT_SHEET: CheatSection[] = [
   {
-    title: '安装',
+    title: 'Quick start',
+    items: [
+      { cmd: 'cd your-project', desc: 'Move into your project, then launch' },
+      { cmd: 'kimi', desc: 'Start an interactive session in this directory' },
+      { cmd: '/login', desc: 'Sign in on first launch' },
+      { cmd: '/init', desc: 'Generate or refresh AGENTS.md' },
+      { cmd: '/plan on', desc: 'Plan before broad, risky, or unclear work' },
+      { cmd: '/help', desc: 'Discover commands and shortcuts' },
+      { cmd: '/compact', desc: 'Free up context when the chat gets long' },
+    ],
+  },
+  {
+    title: 'Install',
     items: [
       {
         cmd: 'curl -fsSL https://code.kimi.com/kimi-code/install.sh | bash',
-        desc: '脚本安装（macOS / Linux，推荐）',
+        desc: 'macOS / Linux script (recommended, no Node.js)',
       },
+      { cmd: 'brew install kimi-code', desc: 'Homebrew' },
       {
         cmd: 'irm https://code.kimi.com/kimi-code/install.ps1 | iex',
         desc: 'Windows PowerShell',
       },
       {
         cmd: 'npm install -g @moonshot-ai/kimi-code',
-        desc: 'npm 安装（需要 Node.js 24.15.0+）',
+        desc: 'npm (requires Node.js)',
+      },
+      { cmd: 'pnpm add -g @moonshot-ai/kimi-code', desc: 'pnpm' },
+      { cmd: 'kimi --version', desc: 'Verify the install in a new terminal' },
+    ],
+  },
+  {
+    title: 'Core CLI options',
+    items: [
+      {
+        cmd: 'kimi',
+        desc: 'Start an interactive session in the current directory',
       },
       {
-        cmd: 'pnpm add -g @moonshot-ai/kimi-code',
-        desc: 'pnpm 安装',
+        cmd: 'kimi --continue',
+        alias: '-C',
+        desc: 'Continue the most recent session here',
       },
-    ],
-  },
-  {
-    title: '快速开始',
-    items: [
-      { cmd: 'kimi', desc: '在当前仓库打开 Kimi Code' },
-      { cmd: 'kimi --continue', desc: '恢复此处最近的会话' },
-      { cmd: 'kimi --session', desc: '选择较早的会话恢复' },
-      { cmd: 'kimi -p "..."', desc: '运行一次非交互提示' },
-      { cmd: 'kimi --prompt "..."', desc: '长文本一次性提示' },
       {
-        cmd: 'kimi --output-format stream-json',
-        desc: '输出 JSONL，便于自动化',
+        cmd: 'kimi --session [id]',
+        alias: '-S',
+        desc: 'Resume a session by ID, or open the picker',
       },
-      { cmd: 'kimi --model <model>', desc: '使用指定模型启动' },
-    ],
-  },
-  {
-    title: '模式',
-    items: [
-      { cmd: 'kimi --plan', desc: '启动时开启 Plan Mode' },
-      { cmd: 'kimi --yolo', desc: '自动批准常规操作（仅可信仓库）' },
-      { cmd: 'kimi --auto', desc: '自动处理审批且不提问' },
-      { cmd: 'kimi --skills-dir <dir>', desc: '加载自定义 Skills' },
-    ],
-  },
-  {
-    title: 'CLI 自动化',
-    items: [
-      { cmd: 'kimi -p "..."', desc: '非交互提示' },
       {
-        cmd: 'kimi --output-format stream-json',
-        desc: '结构化输出 JSONL 事件',
+        cmd: 'kimi -p "..."',
+        alias: '--prompt',
+        desc: 'Run a single non-interactive prompt',
       },
-      { cmd: 'kimi --model <model>', desc: '为本次运行选择模型' },
-      { cmd: 'kimi --continue', desc: '恢复当前目录最近的会话' },
-      { cmd: 'kimi --session <id>', desc: '恢复指定会话' },
-      { cmd: 'kimi export [id]', desc: '导出会话包' },
-      { cmd: 'kimi login', desc: 'OAuth 设备码登录' },
-      { cmd: 'kimi acp', desc: 'IDE / ACP JSON-RPC 模式' },
-      { cmd: 'kimi doctor', desc: '校验配置文件' },
-      { cmd: 'kimi provider', desc: '从终端管理供应商' },
-      { cmd: 'kimi upgrade', desc: '检查并安装更新' },
-      { cmd: 'kimi migrate', desc: '迁移旧版数据' },
+      {
+        cmd: '--output-format stream-json',
+        desc: 'Emit JSONL events for scripting (with --prompt)',
+      },
+      {
+        cmd: 'kimi --model <model>',
+        alias: '-m',
+        desc: 'Start with a specific model alias',
+      },
+      { cmd: 'kimi --plan', desc: 'Start a new session in Plan Mode' },
+      {
+        cmd: 'kimi --yolo',
+        alias: '-y',
+        desc: 'Auto-approve regular tool calls (trusted dirs only)',
+      },
+      {
+        cmd: 'kimi --auto',
+        desc: 'Auto permission mode — approvals handled, no questions',
+      },
+      {
+        cmd: '--skills-dir <dir>',
+        desc: 'Load Skills from a specific directory',
+      },
     ],
   },
   {
-    title: '后台任务',
+    title: 'CLI subcommands',
     items: [
-      { cmd: '/tasks', desc: '打开后台任务列表' },
-      { cmd: 'TaskList', desc: '列出正在运行的后台任务' },
-      { cmd: 'TaskOutput', desc: '查看任务输出' },
-      { cmd: 'TaskStop', desc: '停止正在运行的任务' },
-      { cmd: 'CronCreate', desc: '安排未来触发的提示' },
-      { cmd: 'CronList', desc: '列出定时提示' },
-      { cmd: 'CronDelete', desc: '取消定时提示' },
+      { cmd: 'kimi login', desc: 'OAuth device-code login without the TUI' },
+      {
+        cmd: 'kimi acp',
+        desc: 'Run as an Agent Client Protocol server for IDEs',
+      },
+      {
+        cmd: 'kimi server',
+        desc: 'Run and manage the local REST / WebSocket service',
+      },
+      { cmd: 'kimi web', desc: "Open Kimi's browser UI" },
+      { cmd: 'kimi doctor', desc: 'Validate config.toml and tui.toml' },
+      { cmd: 'kimi export [id]', desc: 'Package a session into a ZIP archive' },
+      {
+        cmd: 'kimi migrate',
+        desc: 'Migrate data from a legacy kimi-cli install',
+      },
+      { cmd: 'kimi upgrade', desc: 'Check for and install the latest version' },
+      {
+        cmd: 'kimi vis [id]',
+        desc: 'Launch the session visualizer in your browser',
+      },
+      { cmd: 'kimi provider', desc: 'Manage providers from the terminal' },
     ],
   },
   {
-    title: '常用斜杠命令',
+    title: 'Slash commands · Account & config',
     items: [
-      { cmd: '/new', desc: '开启新会话' },
-      { cmd: '/clear', desc: '新建干净会话的别名' },
-      { cmd: '/sessions', desc: '恢复历史工作' },
-      { cmd: '/resume', desc: '会话浏览器别名' },
-      { cmd: '/fork', desc: '尝试不同方向' },
-      { cmd: '/title "..."', desc: '命名会话' },
-      { cmd: '/rename', desc: '标题重命名别名' },
-      { cmd: '/compact', desc: '压缩较长上下文' },
-      { cmd: '/model', desc: '切换模型' },
-      { cmd: '/provider', desc: '配置供应商和模型' },
-      { cmd: '/settings', desc: '打开设置' },
-      { cmd: '/config', desc: '设置别名' },
-      { cmd: '/experiments', desc: '打开实验功能' },
-      { cmd: '/permission', desc: '选择审批模式' },
-      { cmd: '/editor', desc: '设置 Ctrl-G 外部编辑器' },
-      { cmd: '/help', desc: '显示命令和快捷键' },
-      { cmd: '/usage', desc: '查看 Token 与额度' },
-      { cmd: '/status', desc: '查看版本、模型、目录、模式' },
-      { cmd: '/version', desc: '显示 CLI 版本' },
-      { cmd: '/feedback', desc: '发送产品反馈' },
-      { cmd: '/btw', desc: '打开旁路 Agent 对话' },
-      { cmd: '/exit', desc: '退出' },
+      { cmd: '/login', desc: 'Select an account or platform and log in' },
+      { cmd: '/logout', desc: 'Clear credentials for the current account' },
+      { cmd: '/provider', desc: 'View, add, and remove configured providers' },
+      { cmd: '/model', desc: 'Switch the model used in this session' },
+      { cmd: '/settings', alias: '/config', desc: 'Open the settings panel' },
+      {
+        cmd: '/experiments',
+        alias: '/experimental',
+        desc: 'Open the experimental feature panel',
+      },
+      { cmd: '/permission', desc: 'Select a permission mode' },
+      { cmd: '/editor', desc: 'Configure the Ctrl-G external editor' },
+      { cmd: '/theme', desc: 'Switch the terminal UI color theme' },
     ],
   },
   {
-    title: 'Skills 与扩展',
+    title: 'Slash commands · Sessions',
     items: [
-      { cmd: '/skill:name', desc: '运行已安装的 Skill' },
-      { cmd: '/name', desc: '无内置冲突时的快捷写法' },
-      { cmd: '/mcp', desc: '查看 MCP 服务状态' },
-      { cmd: '/mcp-config', desc: '配置 MCP 服务与 OAuth' },
-      { cmd: '/custom-theme', desc: '创建或编辑 TUI 主题' },
-      { cmd: '/update-config', desc: '编辑配置和 TUI 设置' },
+      {
+        cmd: '/new',
+        alias: '/clear',
+        desc: 'Start a fresh session, discarding context',
+      },
+      {
+        cmd: '/sessions',
+        alias: '/resume',
+        desc: 'Browse history and switch session',
+      },
+      {
+        cmd: '/tasks',
+        alias: '/task',
+        desc: 'Browse the background task list',
+      },
+      { cmd: '/fork', desc: 'Fork a new session from the current one' },
+      {
+        cmd: '/title [...]',
+        alias: '/rename',
+        desc: 'Show or set the session title',
+      },
+      { cmd: '/compact [...]', desc: 'Compact context; hint what to preserve' },
+      { cmd: '/undo [n]', desc: 'Undo recent prompts from the active context' },
+      { cmd: '/reload', desc: 'Reload the session and apply latest config' },
+      { cmd: '/init', desc: 'Analyze the codebase and generate AGENTS.md' },
+      {
+        cmd: '/export-md [...]',
+        alias: '/export',
+        desc: 'Export the session as Markdown',
+      },
+    ],
+  },
+  {
+    title: 'Slash commands · Modes & run control',
+    items: [
+      {
+        cmd: '/yolo [on|off]',
+        alias: '/yes',
+        desc: 'Toggle YOLO mode (skip approvals)',
+      },
+      { cmd: '/auto [on|off]', desc: 'Toggle auto permission mode' },
+      { cmd: '/plan [on|off]', desc: 'Toggle Plan Mode' },
+      { cmd: '/plan clear', desc: 'Clear the current plan' },
+      { cmd: '/swarm on|off', desc: 'Turn swarm mode on or off' },
+      { cmd: '/goal [...]', desc: 'Start or manage an autonomous goal' },
+    ],
+  },
+  {
+    title: 'Slash commands · Info & status',
+    items: [
+      {
+        cmd: '/help',
+        alias: '/h · /?',
+        desc: 'Show shortcuts and available commands',
+      },
+      {
+        cmd: '/btw [question]',
+        desc: 'Open a side chat in a forked sub-Agent',
+      },
+      { cmd: '/usage', desc: 'Show token usage, context, and quota' },
+      { cmd: '/status', desc: 'Show version, model, directory, and mode' },
+      { cmd: '/mcp', desc: 'List MCP servers and connection status' },
+      { cmd: '/plugins', desc: 'Open the plugin manager' },
+      { cmd: '/version', desc: 'Display the CLI version' },
+      { cmd: '/feedback', desc: 'Submit product feedback' },
+      { cmd: '/exit', alias: '/quit · /q', desc: 'Exit Kimi Code CLI' },
+    ],
+  },
+  {
+    title: 'Slash commands · Skills & extensions',
+    items: [
+      { cmd: '/mcp-config', desc: 'Configure MCP servers and OAuth login' },
+      { cmd: '/custom-theme [...]', desc: 'Create or edit a custom TUI theme' },
+      {
+        cmd: '/update-config',
+        desc: 'Inspect or edit config.toml and tui.toml',
+      },
       {
         cmd: '/import-from-cc-codex',
-        desc: '导入 instructions、skills 和 MCP',
+        desc: 'Import Claude Code / Codex instructions, Skills, MCP',
       },
-      { cmd: '/sub-skill', desc: '整理本地 skill 库' },
-      { cmd: '/plugins', desc: '管理插件' },
+      {
+        cmd: '/sub-skill',
+        desc: 'Discover and reorganize the local Skill inventory',
+      },
+      { cmd: '/skill:name', desc: 'Invoke an installed external Skill' },
+      {
+        cmd: '/name',
+        desc: 'Shortcut for a Skill with no system-command clash',
+      },
     ],
   },
   {
-    title: 'Plan Mode',
+    title: 'Built-in tools · Files, shell & web',
     items: [
-      { cmd: 'Shift + Tab', desc: '切换 Plan Mode' },
-      { cmd: '/plan on', desc: '进入 Plan Mode' },
-      { cmd: '/plan off', desc: '退出 Plan Mode' },
-      { cmd: '/plan clear', desc: '清空当前计划' },
-      { cmd: 'EnterPlanMode', desc: '工具进入 Plan Mode' },
-      { cmd: 'ExitPlanMode', desc: '计划审批后工具退出' },
+      { cmd: 'Read', approval: 'auto', desc: 'Read text files' },
+      { cmd: 'Write', approval: 'ask', desc: 'Create or overwrite files' },
+      { cmd: 'Edit', approval: 'ask', desc: 'Replace exact file content' },
+      {
+        cmd: 'Grep',
+        approval: 'auto',
+        desc: 'Search file contents with ripgrep',
+      },
+      { cmd: 'Glob', approval: 'auto', desc: 'Find files by glob pattern' },
+      {
+        cmd: 'ReadMediaFile',
+        approval: 'auto',
+        desc: 'Read an image or video file',
+      },
+      { cmd: 'Bash', approval: 'ask', desc: 'Execute shell commands' },
+      {
+        cmd: 'WebSearch',
+        approval: 'auto',
+        desc: 'Search the web when available',
+      },
+      { cmd: 'FetchURL', approval: 'auto', desc: 'Fetch the content of a URL' },
     ],
   },
   {
-    title: '权限',
+    title: 'Built-in tools · Planning & collaboration',
     items: [
-      { cmd: '/permission', desc: '选择权限模式' },
-      { cmd: '/yolo [on|off]', desc: '切换自动批准模式' },
-      { cmd: '/yesyolo', desc: 'yolo 别名' },
-      { cmd: '/auto [on|off]', desc: '自动处理工具审批' },
-      { cmd: '--yolo', desc: '仅用于可信工作区' },
+      { cmd: 'EnterPlanMode', approval: 'auto', desc: 'Enter Plan Mode' },
+      {
+        cmd: 'ExitPlanMode',
+        approval: 'ask',
+        desc: 'Exit Plan Mode and submit the plan',
+      },
+      { cmd: 'TodoList', approval: 'auto', desc: 'Manage a visible task list' },
+      {
+        cmd: 'Agent',
+        approval: 'auto',
+        desc: 'Spawn a sub-Agent for a focused subtask',
+      },
+      {
+        cmd: 'AgentSwarm',
+        approval: 'auto',
+        desc: 'Launch or resume item-based subagents',
+      },
+      {
+        cmd: 'AskUserQuestion',
+        approval: 'auto',
+        desc: 'Ask structured multiple-choice questions',
+      },
+      {
+        cmd: 'Skill',
+        approval: 'auto',
+        desc: 'Invoke a registered inline Skill',
+      },
     ],
   },
   {
-    title: '内置工具',
+    title: 'Built-in tools · Background & scheduled',
     items: [
-      { cmd: 'Read', desc: '读取文本文件' },
-      { cmd: 'Write', desc: '创建或覆盖文件' },
-      { cmd: 'Edit', desc: '替换精确文件内容' },
-      { cmd: 'Grep', desc: '搜索文件内容' },
-      { cmd: 'Glob', desc: '按模式查找文件' },
-      { cmd: 'Bash', desc: '运行终端命令' },
-      { cmd: 'WebSearch', desc: '搜索网页' },
-      { cmd: 'FetchURL', desc: '抓取 URL 内容' },
-      { cmd: 'ReadMediaFile', desc: '读取图片/视频文件' },
-      { cmd: 'TodoList', desc: '管理可见待办' },
-      { cmd: 'Agent', desc: '启动子代理' },
-      { cmd: 'AgentSwarm', desc: '运行或恢复多个子代理' },
-      { cmd: 'AskUserQuestion', desc: '提出结构化问题' },
-      { cmd: 'Skill', desc: '调用已注册 Skill' },
+      { cmd: 'TaskList', approval: 'auto', desc: 'List background tasks' },
+      {
+        cmd: 'TaskOutput',
+        approval: 'auto',
+        desc: "View a background task's output",
+      },
+      {
+        cmd: 'TaskStop',
+        approval: 'ask',
+        desc: 'Stop a running background task',
+      },
+      {
+        cmd: 'CronCreate',
+        approval: 'ask',
+        desc: 'Schedule a prompt to fire in the future',
+      },
+      { cmd: 'CronList', approval: 'auto', desc: 'List scheduled tasks' },
+      { cmd: 'CronDelete', approval: 'ask', desc: 'Cancel a scheduled task' },
     ],
   },
   {
-    title: '键盘快捷键',
+    title: 'Keyboard · General input',
     items: [
-      { cmd: 'Enter', desc: '提交提示' },
-      { cmd: 'Shift + Enter / Ctrl + J', desc: '换行' },
-      { cmd: 'Up / Down', desc: '输入历史' },
-      { cmd: 'Ctrl + G', desc: '用外部编辑器编辑' },
-      { cmd: 'Ctrl + V', desc: 'macOS/Linux 粘贴图片/视频' },
-      { cmd: 'Alt + V', desc: 'Windows 粘贴图片/视频' },
-      { cmd: 'Ctrl + S', desc: '引导正在生成的回复' },
-      { cmd: 'Esc', desc: '停止、取消或关闭弹窗' },
-      { cmd: 'Ctrl + C', desc: '中断输出或清空输入' },
-      { cmd: 'Ctrl + D', desc: '输入为空时退出' },
-      { cmd: 'Ctrl + O', desc: '展开/收起工具输出' },
-      { cmd: 'Ctrl + E', desc: '展开/收起计划或预览' },
-      { cmd: '1 - 9', desc: '审批面板按数字选择选项' },
+      { cmd: 'Enter', desc: 'Submit the current input' },
+      { cmd: 'Shift-Enter · Ctrl-J', desc: 'Insert a newline' },
+      { cmd: '↑ · ↓', desc: 'Browse input history' },
+      { cmd: 'Esc', desc: 'Close a popup or interrupt streaming' },
+      { cmd: 'Ctrl-C', desc: 'Interrupt output or clear the input' },
+      { cmd: 'Ctrl-D', desc: 'Exit when the input box is empty' },
+    ],
+  },
+  {
+    title: 'Keyboard · Modes & editing',
+    items: [
+      { cmd: 'Shift-Tab', desc: 'Toggle Plan Mode' },
+      { cmd: 'Ctrl-G', desc: 'Edit the current input in an external editor' },
+      { cmd: 'Ctrl-V', desc: 'Paste an image or video (Unix / macOS)' },
+      { cmd: 'Alt-V', desc: 'Paste an image or video (Windows)' },
+      { cmd: 'Ctrl--', desc: 'Undo input edit' },
+    ],
+  },
+  {
+    title: 'Keyboard · Streaming & approvals',
+    items: [
+      { cmd: 'Ctrl-S', desc: 'Steer: inject input into the running turn' },
+      { cmd: 'Ctrl-O', desc: 'Expand or collapse tool output' },
+      { cmd: '1 – 9', desc: 'Select an approval option by number' },
+      { cmd: 'Ctrl-E', desc: 'Expand / collapse diff or file preview' },
+      { cmd: 'PageUp · PageDown', desc: 'Scroll a popup 10 lines at a time' },
     ],
   },
 ];
+
+function ApprovalPill({ kind }: { kind: Approval }) {
+  return (
+    <span
+      className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
+        kind === 'auto'
+          ? 'bg-surface text-muted'
+          : 'border border-accent/30 text-accent'
+      }`}
+    >
+      {kind}
+    </span>
+  );
+}
 
 export default function KimiCodeCheatSheetTool({
   locale,
@@ -216,30 +388,34 @@ export default function KimiCodeCheatSheetTool({
         : section.items.filter(
             (item) =>
               item.cmd.toLowerCase().includes(q) ||
-              item.desc.toLowerCase().includes(q)
+              item.desc.toLowerCase().includes(q) ||
+              (item.alias?.toLowerCase().includes(q) ?? false)
           );
       return { ...section, items };
     }).filter((section) => section.items.length > 0);
   }, [query]);
 
   function copy(cmd: string) {
-    navigator.clipboard.writeText(cmd);
+    void navigator.clipboard?.writeText(cmd).catch(() => {});
     setCopied(cmd);
-    setTimeout(() => setCopied(null), 2000);
+    setTimeout(() => setCopied(null), 1600);
   }
 
   return (
-    <div className='mx-auto max-w-4xl px-6 py-12'>
-      <h1 className='hero-title mb-4 text-foreground'>
-        {t(locale, 'tool.kimiCode.title')}
-      </h1>
-      <p className='mb-8 text-base leading-relaxed text-secondary'>
-        {t(locale, 'tool.kimiCode.desc')}
-      </p>
+    <div className={TOOL_WRAP}>
+      <ToolHeader
+        eyebrow={t(locale, 'cat.developer')}
+        title={t(locale, 'tool.kimiCode.title')}
+        desc={t(locale, 'tool.kimiCode.desc')}
+      />
 
-      <div className='mb-8'>
+      <div className='relative mb-6'>
+        <Search
+          className='pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted'
+          size={16}
+        />
         <input
-          className='h-12 w-full rounded-lg border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+          className='h-11 w-full rounded-[12px] border border-border bg-surface pl-11 pr-4 text-[14px] text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
           onChange={(e) => setQuery(e.target.value)}
           placeholder={t(locale, 'tool.kimiCode.search')}
           type='text'
@@ -247,44 +423,55 @@ export default function KimiCodeCheatSheetTool({
         />
       </div>
 
-      <div className='space-y-8'>
+      <div className='space-y-5'>
         {filtered.map((section) => (
-          <section
-            key={section.title}
-            className='rounded-2xl border border-border bg-surface p-5'
-          >
-            <h2 className='mb-4 text-lg font-bold text-foreground'>
-              {section.title}
-            </h2>
-            <div className='space-y-3'>
-              {section.items.map((item, idx) => (
-                <div
-                  key={`${section.title}-${idx}`}
-                  className='grid items-start gap-4 md:grid-cols-[1fr_2fr]'
-                >
-                  <div className='flex items-start gap-2'>
-                    <code className='break-all rounded-lg bg-bg px-2 py-1 font-mono text-sm text-foreground'>
-                      {item.cmd}
-                    </code>
-                    <button
-                      className='shrink-0 rounded-lg border border-border bg-white px-2 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent dark:bg-gray-900'
-                      onClick={() => copy(item.cmd)}
-                      type='button'
-                    >
-                      {copied === item.cmd
-                        ? t(locale, 'tool.kimiCode.copied')
-                        : t(locale, 'tool.kimiCode.copy')}
-                    </button>
+          <Panel key={section.title} label={section.title}>
+            <div className='divide-y divide-border'>
+              {section.items.map((item, idx) => {
+                const isCopied = copied === item.cmd;
+                return (
+                  <div
+                    key={`${section.title}-${idx}`}
+                    className='group grid grid-cols-1 gap-x-6 gap-y-1.5 px-4 py-3 transition-colors hover:bg-surface/50 sm:grid-cols-2 sm:items-center'
+                  >
+                    <div className='flex flex-wrap items-center gap-2'>
+                      <button
+                        aria-label={`Copy ${item.cmd}`}
+                        className='inline-flex max-w-full items-center gap-2 rounded-[8px] border border-border bg-bg px-2.5 py-1 font-mono text-[13px] text-foreground transition-colors hover:border-accent/40 hover:bg-surface focus-visible:border-accent focus-visible:outline-none'
+                        onClick={() => copy(item.cmd)}
+                        type='button'
+                      >
+                        <span className='break-all text-left'>{item.cmd}</span>
+                        {isCopied ? (
+                          <Check className='shrink-0 text-accent' size={13} />
+                        ) : (
+                          <Copy
+                            className='shrink-0 text-muted opacity-0 transition-opacity group-hover:opacity-70'
+                            size={13}
+                          />
+                        )}
+                      </button>
+                      {item.alias ? (
+                        <span className='font-mono text-[12px] text-muted'>
+                          {item.alias}
+                        </span>
+                      ) : null}
+                      {item.approval ? (
+                        <ApprovalPill kind={item.approval} />
+                      ) : null}
+                    </div>
+                    <p className='text-[13px] leading-relaxed text-secondary'>
+                      {item.desc}
+                    </p>
                   </div>
-                  <p className='text-sm text-secondary'>{item.desc}</p>
-                </div>
-              ))}
+                );
+              })}
             </div>
-          </section>
+          </Panel>
         ))}
 
         {filtered.length === 0 && (
-          <p className='text-center text-sm text-muted'>
+          <p className='py-12 text-center text-[13px] text-muted'>
             {locale === 'zh'
               ? '没有找到匹配的命令。'
               : 'No matching commands found.'}

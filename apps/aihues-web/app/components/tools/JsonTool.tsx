@@ -4,157 +4,127 @@ import { useState } from 'react';
 
 import { t, type Locale } from '@/lib/dict';
 
+import {
+  CopyButton,
+  highlightJsonHtml,
+  Panel,
+  ToolGrid,
+  ToolHeader,
+  TOOL_WRAP,
+} from './_kit';
+
 interface JsonToolProps {
   locale: Locale;
-}
-
-function escapeHtml(str: string): string {
-  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
-
-function highlightJson(json: string): string {
-  const escaped = escapeHtml(json);
-  return escaped
-    .replace(
-      /("(?:\\u[a-fA-F0-9]{4}|\\[^u]|[^\\"])*"\s*:\s*)/g,
-      '<span class="json-key">$1</span>'
-    )
-    .replace(
-      /("(?:\\u[a-fA-F0-9]{4}|\\[^u]|[^\\"])*")/g,
-      '<span class="json-string">$1</span>'
-    )
-    .replace(/\b(true|false)\b/g, '<span class="json-boolean">$1</span>')
-    .replace(/\b(null)\b/g, '<span class="json-null">$1</span>')
-    .replace(
-      /\b(\d+\.?\d*(?:[eE][+-]?\d+)?)\b/g,
-      '<span class="json-number">$1</span>'
-    );
 }
 
 export default function JsonTool({ locale }: JsonToolProps) {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
+  const [plain, setPlain] = useState('');
   const [error, setError] = useState('');
 
-  const handleFormat = () => {
+  const run = (mode: 'format' | 'minify' | 'validate') => {
     try {
       setError('');
       const obj = JSON.parse(input);
-      const formatted = JSON.stringify(obj, null, 2);
-      setOutput(highlightJson(formatted));
+      if (mode === 'validate') {
+        setPlain('true');
+        setOutput('<span class="json-boolean">true</span> /* Valid JSON */');
+        return;
+      }
+      const text =
+        mode === 'minify' ? JSON.stringify(obj) : JSON.stringify(obj, null, 2);
+      setPlain(text);
+      setOutput(highlightJsonHtml(text));
     } catch (e) {
       setError(
         `${t(locale, 'tool.json.invalid')}: ${e instanceof Error ? e.message : ''}`
       );
       setOutput('');
+      setPlain('');
     }
   };
 
-  const handleMinify = () => {
-    try {
-      setError('');
-      const obj = JSON.parse(input);
-      const minified = JSON.stringify(obj);
-      setOutput(highlightJson(minified));
-    } catch (e) {
-      setError(
-        `${t(locale, 'tool.json.invalid')}: ${e instanceof Error ? e.message : ''}`
-      );
-      setOutput('');
-    }
-  };
-
-  const handleValidate = () => {
-    try {
-      setError('');
-      JSON.parse(input);
-      setOutput('<span class="json-boolean">true</span> /* Valid JSON */');
-    } catch (e) {
-      setError(
-        `${t(locale, 'tool.json.invalid')}: ${e instanceof Error ? e.message : ''}`
-      );
-      setOutput('');
-    }
-  };
-
-  const handleCopy = async () => {
-    try {
-      const text = output.replace(/<[^>]+>/g, '');
-      await navigator.clipboard.writeText(text);
-    } catch {
-      // ignore
-    }
-  };
+  const btn =
+    'h-8 rounded-[8px] px-3 text-[12px] font-semibold transition-colors';
 
   return (
-    <div className='mx-auto max-w-4xl px-6 py-12'>
-      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
-        {t(locale, 'tool.json.title')}
-      </h1>
-      <p className='mb-6 text-[15px] text-secondary'>
-        {t(locale, 'tool.json.desc')}
-      </p>
-
-      <textarea
-        className='h-[200px] w-full resize-none rounded-2xl border border-border bg-surface p-5 font-mono text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
-        data-testid='json-input'
-        onChange={(e) => setInput(e.target.value)}
-        placeholder={t(locale, 'tool.json.placeholder')}
-        value={input}
+    <div className={TOOL_WRAP}>
+      <ToolHeader
+        eyebrow={t(locale, 'cat.developer')}
+        title={t(locale, 'tool.json.title')}
+        desc={t(locale, 'tool.json.desc')}
       />
 
-      <div className='mt-4 flex flex-wrap gap-3'>
-        <button
-          className='rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
-          data-testid='json-format'
-          onClick={handleFormat}
-          type='button'
+      <ToolGrid>
+        {/* Input */}
+        <Panel
+          label={locale === 'zh' ? '输入' : 'Input'}
+          action={
+            <div className='flex gap-2'>
+              <button
+                type='button'
+                data-testid='json-format'
+                onClick={() => run('format')}
+                className={`${btn} bg-accent text-white hover:bg-accent-light`}
+              >
+                {t(locale, 'tool.json.format')}
+              </button>
+              <button
+                type='button'
+                onClick={() => run('minify')}
+                className={`${btn} border border-border bg-bg text-secondary hover:border-accent hover:text-accent`}
+              >
+                {t(locale, 'tool.json.minify')}
+              </button>
+              <button
+                type='button'
+                onClick={() => run('validate')}
+                className={`${btn} border border-border bg-bg text-secondary hover:border-accent hover:text-accent`}
+              >
+                {t(locale, 'tool.json.validate')}
+              </button>
+            </div>
+          }
         >
-          {t(locale, 'tool.json.format')}
-        </button>
-        <button
-          className='rounded-lg border border-border bg-surface px-5 py-3 text-sm font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
-          onClick={handleMinify}
-          type='button'
-        >
-          {t(locale, 'tool.json.minify')}
-        </button>
-        <button
-          className='rounded-lg border border-border bg-surface px-5 py-3 text-sm font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
-          onClick={handleValidate}
-          type='button'
-        >
-          {t(locale, 'tool.json.validate')}
-        </button>
-      </div>
-
-      {error && (
-        <p className='mt-3 rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'>
-          {error}
-        </p>
-      )}
-
-      {output && (
-        <div className='mt-5'>
-          <div className='mb-2 flex items-center justify-between'>
-            <span className='text-sm font-semibold text-foreground'>
-              {t(locale, 'tool.json.result')}
-            </span>
-            <button
-              className='rounded-[8px] border border-border bg-surface px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
-              onClick={handleCopy}
-              type='button'
-            >
-              {t(locale, 'tool.wordCount.copy')}
-            </button>
-          </div>
-          <pre
-            className='min-h-[120px] overflow-auto rounded-2xl border border-border bg-surface p-5 font-mono text-sm leading-relaxed'
-            data-testid='json-output'
-            dangerouslySetInnerHTML={{ __html: output }}
+          <textarea
+            className='min-h-[340px] w-full flex-1 resize-y border-0 bg-transparent p-4 font-mono text-[13px] leading-relaxed text-foreground outline-none placeholder:text-muted'
+            data-testid='json-input'
+            onChange={(e) => setInput(e.target.value)}
+            placeholder={t(locale, 'tool.json.placeholder')}
+            value={input}
+            spellCheck={false}
           />
-        </div>
-      )}
+          {error ? (
+            <div className='border-t border-border px-4 py-3 text-[13px] font-medium text-[#ff3849]'>
+              {error}
+            </div>
+          ) : null}
+        </Panel>
+
+        {/* Output */}
+        <Panel
+          label={t(locale, 'tool.json.result')}
+          action={plain ? <CopyButton text={plain} /> : null}
+        >
+          {output ? (
+            <pre
+              className='min-h-[340px] flex-1 overflow-auto whitespace-pre-wrap break-words p-4 font-mono text-[13px] leading-relaxed'
+              data-testid='json-output'
+              dangerouslySetInnerHTML={{ __html: output }}
+            />
+          ) : (
+            <div
+              className='flex min-h-[340px] flex-1 items-center justify-center p-4 text-[13px] text-muted'
+              data-testid='json-output'
+            >
+              {locale === 'zh'
+                ? '格式化结果将显示在这里'
+                : 'Formatted output appears here'}
+            </div>
+          )}
+        </Panel>
+      </ToolGrid>
     </div>
   );
 }

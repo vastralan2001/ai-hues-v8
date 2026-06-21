@@ -4,6 +4,8 @@ import { useState } from 'react';
 
 import { t, type Locale } from '@/lib/dict';
 
+import { CopyButton, Panel, ToolGrid, ToolHeader, TOOL_WRAP } from './_kit';
+
 interface TitleCaseToolProps {
   locale: Locale;
 }
@@ -89,34 +91,18 @@ export default function TitleCaseTool({ locale }: TitleCaseToolProps) {
     setOutput(convertCase(input, type));
   };
 
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(output);
-    } catch {
-      // ignore
-    }
-  };
-
   return (
-    <div className='mx-auto max-w-4xl px-6 py-12'>
-      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
-        {t(locale, 'tool.titleCase.title')}
-      </h1>
-      <p className='mb-6 text-[15px] text-secondary'>
-        {t(locale, 'tool.titleCase.desc')}
-      </p>
-
-      <textarea
-        className='h-[200px] w-full resize-none rounded-2xl border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
-        onChange={(e) => setInput(e.target.value)}
-        placeholder={t(locale, 'tool.titleCase.placeholder')}
-        value={input}
+    <div className={TOOL_WRAP}>
+      <ToolHeader
+        eyebrow={t(locale, 'cat.utility')}
+        title={t(locale, 'tool.titleCase.title')}
+        desc={t(locale, 'tool.titleCase.desc')}
       />
 
-      <div className='mt-4 flex flex-wrap gap-2'>
+      <div className='mb-5 flex flex-wrap gap-2'>
         {CASE_BUTTONS.map((btn) => (
           <button
-            className='rounded-lg border border-border bg-surface px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
+            className='rounded-[10px] border border-border bg-surface px-4 py-2 text-[13px] font-semibold text-secondary transition-colors hover:border-accent hover:text-accent'
             key={btn.key}
             onClick={() => handleConvert(btn.key)}
             type='button'
@@ -126,25 +112,35 @@ export default function TitleCaseTool({ locale }: TitleCaseToolProps) {
         ))}
       </div>
 
-      {output && (
-        <div className='mt-5'>
-          <div className='mb-2 flex items-center justify-between'>
-            <span className='text-sm font-semibold text-foreground'>
-              {t(locale, 'tool.titleCase.result')}
-            </span>
-            <button
-              className='rounded-[8px] border border-border bg-surface px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
-              onClick={handleCopy}
-              type='button'
-            >
-              {t(locale, 'tool.wordCount.copy')}
-            </button>
+      <ToolGrid>
+        <Panel label={locale === 'zh' ? '输入' : 'Input'}>
+          <textarea
+            className='min-h-[300px] w-full flex-1 resize-y border-0 bg-transparent p-4 text-[15px] leading-relaxed text-foreground outline-none placeholder:text-muted'
+            onChange={(e) => setInput(e.target.value)}
+            placeholder={t(locale, 'tool.titleCase.placeholder')}
+            value={input}
+          />
+        </Panel>
+
+        <Panel
+          label={t(locale, 'tool.titleCase.result')}
+          action={output ? <CopyButton text={output} /> : null}
+        >
+          <div className='min-h-[300px] flex-1 overflow-auto p-4'>
+            {output ? (
+              <pre className='whitespace-pre-wrap break-words text-[15px] leading-relaxed text-foreground'>
+                {output}
+              </pre>
+            ) : (
+              <span className='text-[13px] text-muted'>
+                {locale === 'zh'
+                  ? '选择上方格式转换'
+                  : 'Pick a case format above'}
+              </span>
+            )}
           </div>
-          <div className='min-h-[120px] w-full rounded-2xl border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground'>
-            {output}
-          </div>
-        </div>
-      )}
+        </Panel>
+      </ToolGrid>
     </div>
   );
 }

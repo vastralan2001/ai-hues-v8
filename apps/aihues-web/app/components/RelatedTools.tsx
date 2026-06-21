@@ -77,8 +77,8 @@ export default function RelatedTools({
   if (!related || related.length === 0) return null;
 
   return (
-    <div className='mx-auto max-w-[900px] px-6 pb-20 pt-10 md:px-7'>
-      <h3 className='mb-4 text-lg font-bold text-[#1c1917]'>
+    <div className='pb-20 pt-12'>
+      <h3 className='mb-4 text-[16px] font-bold text-foreground'>
         {locale === 'zh' ? '相关工具' : 'Related Tools'}
       </h3>
       <div className='grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3'>
@@ -92,9 +92,9 @@ export default function RelatedTools({
             <Link
               key={s}
               href={`/tools/${s}`}
-              className='rounded-[12px] border border-[#e8e2d9] bg-white px-5 py-4 transition-all hover:border-[#d97706] hover:shadow-[0_2px_8px_rgba(180,83,9,0.08)]'
+              className='card-lift rounded-[12px] border border-border bg-surface px-5 py-4 transition-all hover:border-accent'
             >
-              <p className='text-sm font-semibold text-[#1c1917]'>
+              <p className='text-[14px] font-semibold text-foreground'>
                 {isFallback ? s : title}
               </p>
             </Link>

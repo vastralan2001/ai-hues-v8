@@ -4,6 +4,8 @@ import { useState } from 'react';
 
 import { t, type Locale } from '@/lib/dict';
 
+import { CopyButton, Panel, ToolHeader, TOOL_WRAP } from './_kit';
+
 interface LoremIpsumToolProps {
   locale: Locale;
 }
@@ -114,28 +116,22 @@ export default function LoremIpsumTool({ locale }: LoremIpsumToolProps) {
     setOutput(generateLorem(paragraphs, sentences));
   };
 
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(output);
-    } catch {
-      // ignore
-    }
-  };
+  const numInput =
+    'h-10 w-20 rounded-[10px] border border-border bg-surface px-3 text-center text-[14px] text-foreground focus:border-accent focus:outline-none';
 
   return (
-    <div className='mx-auto max-w-4xl px-6 py-12'>
-      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
-        {t(locale, 'tool.lorem.title')}
-      </h1>
-      <p className='mb-6 text-[15px] text-secondary'>
-        {t(locale, 'tool.lorem.desc')}
-      </p>
+    <div className={TOOL_WRAP}>
+      <ToolHeader
+        eyebrow={t(locale, 'cat.developer')}
+        title={t(locale, 'tool.lorem.title')}
+        desc={t(locale, 'tool.lorem.desc')}
+      />
 
-      <div className='mb-4 flex flex-wrap items-center gap-6'>
-        <label className='flex items-center gap-3 text-sm text-foreground'>
+      <div className='mb-5 flex flex-wrap items-center gap-5'>
+        <label className='flex items-center gap-3 text-[14px] text-secondary'>
           <span>{t(locale, 'tool.lorem.paragraphs')}</span>
           <input
-            className='h-10 w-20 rounded-lg border border-border bg-surface px-3 text-center text-sm focus:border-accent focus:outline-none'
+            className={numInput}
             max={20}
             min={1}
             onChange={(e) => setParagraphs(Number(e.target.value))}
@@ -143,10 +139,10 @@ export default function LoremIpsumTool({ locale }: LoremIpsumToolProps) {
             value={paragraphs}
           />
         </label>
-        <label className='flex items-center gap-3 text-sm text-foreground'>
+        <label className='flex items-center gap-3 text-[14px] text-secondary'>
           <span>{t(locale, 'tool.lorem.sentences')}</span>
           <input
-            className='h-10 w-20 rounded-lg border border-border bg-surface px-3 text-center text-sm focus:border-accent focus:outline-none'
+            className={numInput}
             max={20}
             min={1}
             onChange={(e) => setSentences(Number(e.target.value))}
@@ -155,7 +151,7 @@ export default function LoremIpsumTool({ locale }: LoremIpsumToolProps) {
           />
         </label>
         <button
-          className='rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+          className='h-10 rounded-[10px] bg-accent px-5 text-[13px] font-bold uppercase tracking-[0.06em] text-white transition-all hover:bg-accent-light'
           onClick={handleGenerate}
           type='button'
         >
@@ -163,26 +159,26 @@ export default function LoremIpsumTool({ locale }: LoremIpsumToolProps) {
         </button>
       </div>
 
-      {output && (
-        <div className='mt-2'>
-          <div className='mb-2 flex items-center justify-end'>
-            <button
-              className='rounded-[8px] border border-border bg-surface px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
-              onClick={handleCopy}
-              type='button'
-            >
-              {t(locale, 'tool.wordCount.copy')}
-            </button>
-          </div>
-          <div className='min-h-[200px] w-full rounded-2xl border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground'>
-            {output.split('\n\n').map((p, i) => (
+      <Panel
+        label={locale === 'zh' ? '生成结果' : 'Output'}
+        action={output ? <CopyButton text={output} /> : null}
+      >
+        <div className='min-h-[260px] p-5 text-[15px] leading-relaxed text-foreground'>
+          {output ? (
+            output.split('\n\n').map((p, i) => (
               <p className='mb-4 last:mb-0' key={i}>
                 {p}
               </p>
-            ))}
-          </div>
+            ))
+          ) : (
+            <span className='text-[13px] text-muted'>
+              {locale === 'zh'
+                ? '点击生成按钮创建占位文本'
+                : 'Click generate to create placeholder text'}
+            </span>
+          )}
         </div>
-      )}
+      </Panel>
     </div>
   );
 }

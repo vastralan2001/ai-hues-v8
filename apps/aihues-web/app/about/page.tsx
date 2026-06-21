@@ -29,15 +29,15 @@ export default function AboutPage() {
           </h2>
           <ul className='list-disc space-y-2 pl-5'>
             <li>
-              <strong>58+ interactive tools</strong> — from JSON formatters to
-              AI copy generators, all free to use.
+              <strong>Interactive tools</strong> — from JSON formatters to AI
+              copy generators, all free to use.
             </li>
             <li>
-              <strong>3 mini-games</strong> — Daily Fortune, Lucky Slots, and
-              Hoops Challenge with credit rewards.
+              <strong>Mini-games</strong> — from Chess and Snake to Daily
+              Fortune and Lucky Slots.
             </li>
             <li>
-              <strong>86 growth articles</strong> — battle-tested strategies for
+              <strong>Growth articles</strong> — battle-tested strategies for
               SEO, content, Reddit marketing, and indie dev.
             </li>
             <li>

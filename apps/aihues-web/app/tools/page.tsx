@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 
+import { PageMasthead } from '@/components/PageMasthead';
 import { ToolSearchForm } from '@/components/SearchForm';
 import { PageShell } from '@/components/SiteChrome';
 import { ToolsInfiniteList } from '@/components/ToolsInfiniteList';
@@ -42,21 +43,26 @@ export default async function ToolsPage({
   });
 
   const categoryCounts = getToolCategoryCounts();
+  const catCount = Object.keys(categoryCounts).filter(
+    (k) => k !== 'all'
+  ).length;
   const totalLabel =
-    tools.length > 0
-      ? `${tools.length}${nextPageToken ? '+' : ''} tools covering development, writing, growth, and productivity`
-      : '58+ tools covering development, writing, growth, and productivity';
+    'Tools covering development, writing, growth, and productivity';
 
   return (
     <PageShell variant='tools'>
-      <section className='page-hero'>
-        <h1>
-          All&nbsp;
-          <span style={{ color: 'var(--color-accent)' }}>Tools</span>
-        </h1>
-        <p>{totalLabel}</p>
+      <PageMasthead
+        eyebrow='Tool Library'
+        title='All Tools'
+        subtitle={totalLabel}
+        stats={[
+          { num: `${categoryCounts.all}`, label: 'Tools' },
+          { num: `${catCount}`, label: 'Categories' },
+          { num: 'Free', label: 'Forever' },
+        ]}
+      >
         <ToolSearchForm category={category} q={q} />
-      </section>
+      </PageMasthead>
 
       <section className='section section--compact'>
         <ToolsInfiniteList

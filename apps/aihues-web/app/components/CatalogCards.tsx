@@ -118,11 +118,9 @@ function PriceBadge({
    ───────────────────────────────────────────── */
 export function ToolCardV2({
   tool,
-  showNew = false,
   locale = 'en',
 }: {
   tool: CatalogTool;
-  showNew?: boolean;
   locale?: Locale;
 }) {
   // Prefer API fields; fallback to front-end map while backend migrates
@@ -132,7 +130,7 @@ export function ToolCardV2({
 
   return (
     <Link
-      className='group relative block cursor-pointer rounded-[16px] border border-border bg-surface p-[22px] text-inherit no-underline transition-all duration-200 hover:border-border-strong'
+      className='card-lift group relative block cursor-pointer rounded-[16px] border border-border bg-surface p-[22px] text-inherit no-underline'
       href={toolDetailHref(tool.slug)}
       onClick={() => {
         event(GA_EVENTS.toolClick, {
@@ -142,14 +140,8 @@ export function ToolCardV2({
         });
       }}
     >
-      {showNew && (
-        <span className='absolute right-3 top-3 rounded-full bg-accent px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-white'>
-          NEW
-        </span>
-      )}
-
       {/* icon-wrap */}
-      <div className='mb-3 flex h-[42px] w-[42px] items-center justify-center rounded-[11px] border border-border bg-surface text-secondary'>
+      <div className='mb-3 flex h-[42px] w-[42px] items-center justify-center rounded-[11px] border border-border bg-surface text-secondary transition-colors duration-200 group-hover:border-accent/30 group-hover:bg-accent-bg group-hover:text-accent'>
         <ToolIcon slug={tool.slug} size={20} />
       </div>
 
@@ -173,21 +165,30 @@ export function ToolCardV2({
    large emoji, gradient play button
    ───────────────────────────────────────────── */
 const GAME_PLAY_LABELS: Record<string, string> = {
+  'doodle-jump': 'game.jump',
   'daily-luck': 'game.draw',
   'slot-machine': 'game.spin',
   basketball: 'game.play',
 };
 
 const GAME_BADGES: Record<string, string> = {
-  'daily-luck': 'game.daily',
-  'slot-machine': 'game.popular',
+  'doodle-jump': 'game.arcade',
+  'daily-luck': 'game.fortune',
+  'slot-machine': 'game.luck',
   basketball: 'game.skill',
+  snake: 'game.classic',
+  'color-hunt': 'game.skill',
+  chess: 'game.strategy',
 };
 
 const GAME_META: Record<string, string> = {
+  'doodle-jump': 'Endless · 3 difficulties · Arrows / tap',
   'daily-luck': '30 fortunes · +10 Credits · Streak bonus',
-  'slot-machine': '3×3 reels · 3 spins/day · +5~100/spin · Leaderboard',
+  'slot-machine': '3×3 reels · Lucky spins · +5~100 · Leaderboard',
   basketball: '60 seconds · Physics · +10~50/game · Leaderboard',
+  snake: 'Endless · 3 speeds · Arrows / WASD / swipe',
+  'color-hunt': 'Stages & Sprint · ΔE2000',
+  chess: 'Play vs engine · Spectate · Live eval',
 };
 
 export function GameCard({
@@ -203,7 +204,7 @@ export function GameCard({
 
   return (
     <Link
-      className='relative block cursor-pointer rounded-[16px] border border-border bg-surface px-7 py-7 text-center text-inherit no-underline transition-all duration-200 hover:border-border-strong'
+      className='card-lift relative flex cursor-pointer flex-col rounded-[16px] border border-border bg-surface px-7 py-7 text-center text-inherit no-underline'
       href={gameDetailHref(game.slug)}
       onClick={() => {
         event(GA_EVENTS.gamePlay, {
@@ -234,7 +235,7 @@ export function GameCard({
         <p className='mb-4 text-[12px] leading-relaxed text-muted'>{meta}</p>
       )}
 
-      <span className='inline-block rounded-[12px] bg-accent px-7 py-[11px] text-[14px] font-medium text-white transition-all hover:bg-accent-light'>
+      <span className='mt-auto self-center inline-block rounded-[12px] bg-accent px-7 py-[11px] text-[14px] font-medium text-white transition-all hover:bg-accent-light'>
         {t(locale, playLabelKey)}
       </span>
     </Link>
@@ -307,12 +308,9 @@ export function EmptyState({
 }
 
 export function ApiNotice({ error }: { error: Error | null }) {
-  if (!error) return null;
-
-  return (
-    <div className='api-notice' role='status'>
-      <strong>Catalog API unavailable.</strong>
-      <span>{error.message}</span>
-    </div>
-  );
+  // The catalog falls back to the bundled tool list when the live API is
+  // absent (e.g. static deploys), so an "unavailable" banner just reads as
+  // broken even though the page works. Keep the prop, surface nothing.
+  void error;
+  return null;
 }

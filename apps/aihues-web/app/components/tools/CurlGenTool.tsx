@@ -64,8 +64,8 @@ export default function CurlGenTool({ locale }: CurlGenToolProps) {
   };
 
   return (
-    <div className='mx-auto max-w-4xl px-6 py-12'>
-      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
+    <div className='max-w-[900px] py-10'>
+      <h1 className='mb-2 text-[clamp(28px,3.4vw,40px)] font-extrabold tracking-[-0.02em] text-foreground'>
         {t(locale, 'tool.curl.title')}
       </h1>
       <p className='mb-6 text-[15px] text-secondary'>
@@ -75,7 +75,7 @@ export default function CurlGenTool({ locale }: CurlGenToolProps) {
       {/* Method + URL */}
       <div className='mb-4 flex gap-3'>
         <select
-          className='h-12 rounded-lg border border-border bg-surface px-4 text-sm text-foreground focus:border-accent focus:outline-none'
+          className='h-11 rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground focus:border-accent focus:outline-none'
           onChange={(e) => setMethod(e.target.value)}
           value={method}
         >
@@ -86,7 +86,7 @@ export default function CurlGenTool({ locale }: CurlGenToolProps) {
           ))}
         </select>
         <input
-          className='h-12 flex-1 rounded-lg border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+          className='h-11 flex-1 rounded-[10px] border border-border bg-surface px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
           onChange={(e) => setUrl(e.target.value)}
           placeholder={t(locale, 'tool.curl.urlPlaceholder')}
           type='text'
@@ -127,7 +127,7 @@ export default function CurlGenTool({ locale }: CurlGenToolProps) {
           </div>
         ))}
         <button
-          className='rounded-[8px] border border-border bg-surface px-3 py-2 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
+          className='rounded-[8px] border border-border bg-surface px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
           onClick={addHeader}
           type='button'
         >
@@ -142,7 +142,7 @@ export default function CurlGenTool({ locale }: CurlGenToolProps) {
             {t(locale, 'tool.curl.body')}
           </label>
           <textarea
-            className='h-[120px] w-full resize-none rounded-lg border border-border bg-surface p-4 font-mono text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+            className='h-[120px] w-full resize-none rounded-[10px] border border-border bg-surface p-4 font-mono text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
             onChange={(e) => setBody(e.target.value)}
             placeholder={t(locale, 'tool.curl.bodyPlaceholder')}
             value={body}
@@ -151,7 +151,7 @@ export default function CurlGenTool({ locale }: CurlGenToolProps) {
       )}
 
       <button
-        className='rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+        className='rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
         onClick={handleGenerate}
         type='button'
       >
@@ -172,7 +172,7 @@ export default function CurlGenTool({ locale }: CurlGenToolProps) {
               {t(locale, 'tool.wordCount.copy')}
             </button>
           </div>
-          <pre className='min-h-[80px] overflow-auto rounded-2xl border border-border bg-surface p-5 font-mono text-sm text-foreground'>
+          <pre className='min-h-[80px] overflow-auto rounded-[14px] border border-border bg-surface p-5 font-mono text-sm text-foreground'>
             {output}
           </pre>
         </div>

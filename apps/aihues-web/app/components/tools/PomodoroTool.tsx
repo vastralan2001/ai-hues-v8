@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 
 import { t, type Locale } from '@/lib/dict';
 
+import { ToolHeader, TOOL_WRAP } from './_kit';
+
 interface PomodoroToolProps {
   locale: Locale;
 }
@@ -67,95 +69,96 @@ export default function PomodoroTool({ locale }: PomodoroToolProps) {
   const strokeDashoffset = circumference * progress;
 
   return (
-    <div className='mx-auto max-w-[600px] px-6 py-12 text-center'>
-      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
-        {t(locale, 'tool.pomodoro.title')}
-      </h1>
-      <p className='mb-8 text-[15px] text-secondary'>
-        {t(locale, 'tool.pomodoro.desc')}
-      </p>
+    <div className={TOOL_WRAP}>
+      <ToolHeader
+        eyebrow={locale === 'zh' ? '常用小工具' : 'Utility'}
+        title={t(locale, 'tool.pomodoro.title')}
+        desc={t(locale, 'tool.pomodoro.desc')}
+      />
 
-      {/* Duration selector */}
-      <div className='mb-8 flex justify-center gap-2'>
-        {DURATION_OPTIONS.map((min) => (
-          <button
-            className={`rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${
-              duration === min
-                ? 'bg-accent text-white'
-                : 'border border-border bg-surface text-foreground hover:border-accent'
-            }`}
-            key={min}
-            onClick={() => handleDurationChange(min)}
-            type='button'
-          >
-            {min} {t(locale, 'tool.pomodoro.minutes')}
-          </button>
-        ))}
-      </div>
-
-      {/* Timer circle */}
-      <div className='relative mx-auto mb-8 h-[280px] w-[280px]'>
-        <svg className='h-full w-full -rotate-90' viewBox='0 0 260 260'>
-          <circle
-            cx='130'
-            cy='130'
-            fill='none'
-            r='120'
-            stroke='var(--color-border)'
-            strokeWidth='8'
-          />
-          <circle
-            cx='130'
-            cy='130'
-            fill='none'
-            r='120'
-            stroke='var(--color-accent)'
-            strokeDasharray={circumference}
-            strokeDashoffset={strokeDashoffset}
-            strokeLinecap='round'
-            strokeWidth='8'
-            style={{ transition: 'stroke-dashoffset 1s linear' }}
-          />
-        </svg>
-        <div className='absolute inset-0 flex flex-col items-center justify-center'>
-          <span className='text-[56px] font-extrabold tabular-nums text-foreground'>
-            {String(minutes).padStart(2, '0')}:
-            {String(seconds).padStart(2, '0')}
-          </span>
-          {isDone && (
-            <span className='mt-2 text-lg font-semibold text-accent'>
-              {t(locale, 'tool.pomodoro.done')}
-            </span>
-          )}
+      <div className='mx-auto flex max-w-[460px] flex-col items-center text-center'>
+        {/* Duration selector */}
+        <div className='mb-8 flex justify-center gap-2'>
+          {DURATION_OPTIONS.map((min) => (
+            <button
+              className={`rounded-[10px] px-4 py-2 text-sm font-semibold transition-colors ${
+                duration === min
+                  ? 'bg-accent text-white'
+                  : 'border border-border bg-surface text-foreground hover:border-accent'
+              }`}
+              key={min}
+              onClick={() => handleDurationChange(min)}
+              type='button'
+            >
+              {min} {t(locale, 'tool.pomodoro.minutes')}
+            </button>
+          ))}
         </div>
-      </div>
 
-      {/* Controls */}
-      <div className='flex justify-center gap-3'>
-        {!isRunning ? (
+        {/* Timer circle */}
+        <div className='relative mx-auto mb-8 h-[280px] w-[280px]'>
+          <svg className='h-full w-full -rotate-90' viewBox='0 0 260 260'>
+            <circle
+              cx='130'
+              cy='130'
+              fill='none'
+              r='120'
+              stroke='var(--color-border)'
+              strokeWidth='8'
+            />
+            <circle
+              cx='130'
+              cy='130'
+              fill='none'
+              r='120'
+              stroke='var(--color-accent)'
+              strokeDasharray={circumference}
+              strokeDashoffset={strokeDashoffset}
+              strokeLinecap='round'
+              strokeWidth='8'
+              style={{ transition: 'stroke-dashoffset 1s linear' }}
+            />
+          </svg>
+          <div className='absolute inset-0 flex flex-col items-center justify-center'>
+            <span className='text-[56px] font-extrabold tabular-nums text-foreground'>
+              {String(minutes).padStart(2, '0')}:
+              {String(seconds).padStart(2, '0')}
+            </span>
+            {isDone && (
+              <span className='mt-2 text-lg font-semibold text-accent'>
+                {t(locale, 'tool.pomodoro.done')}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Controls */}
+        <div className='flex justify-center gap-3'>
+          {!isRunning ? (
+            <button
+              className='rounded-[10px] bg-accent px-6 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'
+              onClick={handleStart}
+              type='button'
+            >
+              {t(locale, 'tool.pomodoro.start')}
+            </button>
+          ) : (
+            <button
+              className='rounded-[10px] border border-border bg-surface px-6 py-2.5 text-sm font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
+              onClick={handlePause}
+              type='button'
+            >
+              {t(locale, 'tool.pomodoro.pause')}
+            </button>
+          )}
           <button
-            className='rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
-            onClick={handleStart}
+            className='rounded-[10px] border border-border bg-surface px-6 py-2.5 text-sm font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
+            onClick={handleReset}
             type='button'
           >
-            {t(locale, 'tool.pomodoro.start')}
+            {t(locale, 'tool.pomodoro.reset')}
           </button>
-        ) : (
-          <button
-            className='rounded-lg border border-border bg-surface px-6 py-3 text-sm font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
-            onClick={handlePause}
-            type='button'
-          >
-            {t(locale, 'tool.pomodoro.pause')}
-          </button>
-        )}
-        <button
-          className='rounded-lg border border-border bg-surface px-6 py-3 text-sm font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
-          onClick={handleReset}
-          type='button'
-        >
-          {t(locale, 'tool.pomodoro.reset')}
-        </button>
+        </div>
       </div>
     </div>
   );

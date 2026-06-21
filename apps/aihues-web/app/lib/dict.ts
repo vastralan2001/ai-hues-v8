@@ -11,18 +11,18 @@ export const dict: Record<Locale, Record<string, string>> = {
     'nav.home': 'Home',
     'nav.tools': 'Tools',
     'nav.games': 'Games',
+    'nav.tests': 'Tests',
     'nav.blog': 'Blog',
     'nav.wishlist': 'Wishlist',
     'nav.ranking': 'Ranking',
     'nav.discover': 'Discover',
-    'nav.showcase': 'Showcase',
     'nav.login': 'Login',
 
     // hero
     'hero.title': 'Find your',
     'hero.aiVibe': 'AI vibe',
     'hero.subtitle':
-      '58+ AI tools, mini games & utilities that just work. Tell us what you need.',
+      'AI tools, mini games & utilities that just work. Tell us what you need.',
     'hero.searchPlaceholder': "e.g. 'parse JWT'... (Press / to focus)",
     'hero.askAI': 'Ask AI',
 
@@ -37,11 +37,14 @@ export const dict: Record<Locale, Record<string, string>> = {
     'cat.developerDesc': 'JWT, JSON, Regex, Base64, UUID, QR Code, SHA256',
     'cat.aiWritingDesc': 'X Post, Blog Outline, SEO Title, Newsletter, PR Desc',
     'cat.gamesDesc': 'Daily Fortune, Slots, Hoops — free to play',
+    'cat.tests': 'Tests',
+    'cat.testsDesc': 'SBTI & MBTI — find your type, free',
 
     // stats
     'stats.aiTools': 'AI Tools',
     'stats.devTools': 'Dev Tools',
     'stats.games': 'Games',
+    'stats.tests': 'Tests',
     'stats.freeCredits': 'Free Credits',
     'stats.dayStreak': 'Day Streak',
 
@@ -57,7 +60,7 @@ export const dict: Record<Locale, Record<string, string>> = {
     'section.popularTools': 'Popular Tools',
     'section.dualEngine': 'Tools + Games Dual Engine',
     'section.dualEngineDesc':
-      'Use tools, then play a game to relax. 58 tools + 3 games = complete platform.',
+      'Use tools to get things done, then play a game to relax — all in one place.',
     'section.browseAll': 'Browse All Tools →',
     'section.wishlistTitle': "Can't find what you need?",
     'section.wishlistDesc': 'Submit your idea. Top requests get built first.',
@@ -70,8 +73,13 @@ export const dict: Record<Locale, Record<string, string>> = {
     'game.dailyLuckDesc': 'Daily draw for wisdom & Credit rewards',
     'game.slotMachineDesc': '3 free spins daily, win big prizes',
     'game.basketballDesc': '60 seconds to score maximum points',
-    'game.daily': 'DAILY',
-    'game.popular': 'POPULAR',
+    'game.skill': 'Skill',
+    'game.arcade': 'Arcade',
+    'game.strategy': 'Strategy',
+    'game.fortune': 'Fortune',
+    'game.luck': 'Luck',
+    'game.classic': 'Classic',
+    'game.jump': 'Jump →',
     'game.hoops': 'Hoops',
 
     // credit
@@ -240,7 +248,8 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.csvJson.result': 'Result',
 
     'tool.color.title': 'Color Converter',
-    'tool.color.desc': 'Convert between HEX, RGB, and HSL color formats',
+    'tool.color.desc':
+      'Convert between HEX, RGB, HSL, HSV, and CMYK color formats',
     'tool.color.placeholder': 'Enter HEX (e.g. #b45309) or rgb(...)...',
     'tool.color.convert': 'Convert',
     'tool.color.hex': 'HEX',
@@ -699,10 +708,25 @@ export const dict: Record<Locale, Record<string, string>> = {
 
     'tool.qrcode.title': 'QR Code Generator',
     'tool.qrcode.desc': 'Generate QR codes for URLs, text, and contact info',
+    'tool.mermaid.title': 'Mermaid Diagrams',
+    'tool.mermaid.desc':
+      'Write Mermaid syntax and render flowcharts, sequence, class, state, ER, Gantt and pie diagrams live.',
     'tool.qrcode.input': 'Text or URL',
     'tool.qrcode.size': 'Size',
     'tool.qrcode.generate': 'Generate',
     'tool.qrcode.download': 'Download',
+
+    'tool.cnConvert.title': 'Chinese Converter',
+    'tool.cnConvert.desc':
+      'Convert between Simplified and Traditional Chinese in real time, with phrase-level accuracy',
+
+    'tool.tableConvert.title': 'Table Converter',
+    'tool.tableConvert.desc':
+      'Convert CSV or Excel-pasted data into Markdown, HTML, or JSON',
+
+    'tool.curlToCode.title': 'cURL to Code',
+    'tool.curlToCode.desc':
+      'Paste a curl command and convert it to Python, JavaScript, Go, or PHP',
 
     'tool.chiSquared.title': 'Chi-Squared Calculator',
     'tool.chiSquared.desc':
@@ -736,12 +760,21 @@ export const dict: Record<Locale, Record<string, string>> = {
     'footer.terms': 'Terms',
     'footer.privacy': 'Privacy',
     'footer.contact': 'Contact',
-    'footer.copyright': '© 2026 AIHues · Find your AI vibe · Built on Kimi',
-    'footer.tagline': 'Find your AI vibe. 58 tools + 3 games that feel human.',
+    'footer.resources': 'Resources',
+    'footer.cheatSheet': 'Kimi Code Cheat Sheet',
+    'footer.comparisons': 'Comparisons',
+    'footer.pricing': 'Pricing',
+    'footer.snake': 'Snake',
+    'footer.chess': 'Chess',
+    'footer.colorHunt': 'Color Hunt',
+    'footer.allGames': 'All games',
+    'footer.allTests': 'All tests',
+    'footer.copyright': '© 2026 AIHues · Find your AI vibe',
+    'footer.tagline': 'Find your AI vibe — tools and games that feel human.',
 
     // playbooks
     'playbooks.badge1': 'AI Vibe Navigator',
-    'playbooks.badge2': 'Built on Kimi',
+    'playbooks.badge2': 'No signup',
     'playbooks.title': 'AIHues Growth Stack + AI Tools',
     'blog.relatedTools': 'Related Tools',
     'blog.fromReview': 'From AIHues Reviews',
@@ -768,18 +801,17 @@ export const dict: Record<Locale, Record<string, string>> = {
     'nav.home': '首页',
     'nav.tools': '工具',
     'nav.games': '游戏',
+    'nav.tests': '测评',
     'nav.blog': '博客',
     'nav.wishlist': '许愿单',
     'nav.ranking': '排行榜',
     'nav.discover': '发现',
-    'nav.showcase': '案例',
     'nav.login': '登录',
 
     // hero
     'hero.title': '找到你的',
     'hero.aiVibe': 'AI vibe',
-    'hero.subtitle':
-      '58+ AI 工具、小游戏和实用工具，开箱即用。告诉我们你的需求。',
+    'hero.subtitle': 'AI 工具、小游戏与实用工具，开箱即用。告诉我们你的需求。',
     'hero.searchPlaceholder': "例如 '解析 JWT'... (按 / 聚焦)",
     'hero.askAI': '问 AI',
 
@@ -794,11 +826,14 @@ export const dict: Record<Locale, Record<string, string>> = {
     'cat.developerDesc': 'JWT、JSON、正则、Base64、UUID、二维码、SHA256',
     'cat.aiWritingDesc': 'X 推文、博客大纲、SEO 标题、新闻稿、PR 描述',
     'cat.gamesDesc': '每日幸运签、老虎机、投篮挑战 — 免费畅玩',
+    'cat.tests': '测评',
+    'cat.testsDesc': 'SBTI 与 MBTI — 测出你的人格类型，免费',
 
     // stats
     'stats.aiTools': 'AI 工具',
     'stats.devTools': '开发工具',
     'stats.games': '小游戏',
+    'stats.tests': '测评',
     'stats.freeCredits': '免费积分',
     'stats.dayStreak': '连续签到',
 
@@ -814,7 +849,7 @@ export const dict: Record<Locale, Record<string, string>> = {
     'section.popularTools': '热门工具',
     'section.dualEngine': '工具 + 游戏双引擎',
     'section.dualEngineDesc':
-      '用工具提高效率，再玩个小游戏放松。58 个工具 + 3 款游戏 = 完整平台。',
+      '用工具高效完成工作，再玩个小游戏放松——一站搞定。',
     'section.browseAll': '浏览全部工具 →',
     'section.wishlistTitle': '找不到你需要的？',
     'section.wishlistDesc': '提交你的想法。最受欢迎的请求优先开发。',
@@ -827,8 +862,13 @@ export const dict: Record<Locale, Record<string, string>> = {
     'game.dailyLuckDesc': '每日抽签获取箴言和积分奖励',
     'game.slotMachineDesc': '每日 3 次免费旋转，赢取大奖',
     'game.basketballDesc': '60 秒内获得最高分',
-    'game.daily': '每日',
-    'game.popular': '热门',
+    'game.skill': '技巧',
+    'game.arcade': '街机',
+    'game.strategy': '策略',
+    'game.fortune': '运势',
+    'game.luck': '幸运',
+    'game.classic': '经典',
+    'game.jump': '跳跃 →',
     'game.hoops': '投篮',
 
     // credit
@@ -995,7 +1035,7 @@ export const dict: Record<Locale, Record<string, string>> = {
     'tool.csvJson.result': '结果',
 
     'tool.color.title': '颜色转换器',
-    'tool.color.desc': '在 HEX、RGB 和 HSL 颜色格式之间转换',
+    'tool.color.desc': '在 HEX、RGB、HSL、HSV、CMYK 颜色格式之间转换',
     'tool.color.placeholder': '输入 HEX (例如 #b45309) 或 rgb(...)...',
     'tool.color.convert': '转换',
     'tool.color.hex': 'HEX',
@@ -1205,12 +1245,21 @@ export const dict: Record<Locale, Record<string, string>> = {
     'footer.terms': '条款',
     'footer.privacy': '隐私',
     'footer.contact': '联系',
-    'footer.copyright': '© 2026 AIHues · 找到你的 AI vibe · 基于 Kimi 构建',
-    'footer.tagline': '找到你的 AI vibe。58 个工具 + 3 款游戏，自然流畅。',
+    'footer.resources': '资源',
+    'footer.cheatSheet': 'Kimi Code 速查表',
+    'footer.comparisons': '对比',
+    'footer.pricing': '定价',
+    'footer.snake': '贪吃蛇',
+    'footer.chess': '国际象棋',
+    'footer.colorHunt': '找色差',
+    'footer.allGames': '全部游戏',
+    'footer.allTests': '全部测试',
+    'footer.copyright': '© 2026 AIHues · 找到你的 AI vibe',
+    'footer.tagline': '找到你的 AI vibe——自然流畅的工具与游戏。',
 
     // playbooks
     'playbooks.badge1': 'AI Vibe Navigator',
-    'playbooks.badge2': '基于 Kimi 构建',
+    'playbooks.badge2': '无需注册',
     'playbooks.title': 'AIHues 出海增长 + AI 工具导航',
     'tool.seoTitle.title': 'SEO 标题优化器',
     'tool.seoTitle.desc': '检查并优化搜索引擎页面标题',
@@ -1453,10 +1502,24 @@ export const dict: Record<Locale, Record<string, string>> = {
 
     'tool.qrcode.title': 'QR 码生成器',
     'tool.qrcode.desc': '为 URL、文本和联系信息生成 QR 码',
+    'tool.mermaid.title': 'Mermaid 图表',
+    'tool.mermaid.desc':
+      '用 Mermaid 语法实时渲染流程图、时序图、类图、状态图、ER 图、甘特图和饼图。',
     'tool.qrcode.input': '文本或 URL',
     'tool.qrcode.size': '尺寸',
     'tool.qrcode.generate': '生成',
     'tool.qrcode.download': '下载',
+
+    'tool.cnConvert.title': '简繁转换',
+    'tool.cnConvert.desc': '中文简体与繁体实时互转，支持词组级精准转换',
+
+    'tool.tableConvert.title': '表格转换',
+    'tool.tableConvert.desc':
+      '把 CSV 或从 Excel 复制的表格转成 Markdown、HTML 或 JSON',
+
+    'tool.curlToCode.title': 'cURL 转代码',
+    'tool.curlToCode.desc':
+      '粘贴 curl 命令，转换成 Python、JavaScript、Go 或 PHP 代码',
 
     'tool.chiSquared.title': '卡方检验计算器',
     'tool.chiSquared.desc': '计算拟合优度检验的卡方统计量',

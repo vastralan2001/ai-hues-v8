@@ -1,9 +1,11 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 
 import { countWords } from '@/lib/word-count';
 import { t, type Locale } from '@/lib/dict';
+
+import { CopyButton, Panel, ToolHeader, TOOL_WRAP } from './_kit';
 
 interface WordCountToolProps {
   locale: Locale;
@@ -28,86 +30,88 @@ export default function WordCountTool({ locale }: WordCountToolProps) {
     };
   }, [text]);
 
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(text);
-    } catch {
-      // ignore
-    }
-  };
-
   return (
-    <div className='mx-auto max-w-4xl px-6 py-12'>
-      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
-        {t(locale, 'tool.wordCount.title')}
-      </h1>
-      <p className='mb-6 text-[15px] text-secondary'>
-        {t(locale, 'tool.wordCount.desc')}
-      </p>
-
-      <textarea
-        className='h-[320px] w-full resize-none rounded-2xl border border-border bg-surface p-5 text-[15px] leading-relaxed text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
-        data-testid='word-count-input'
-        onChange={(e) => setText(e.target.value)}
-        placeholder={t(locale, 'tool.wordCount.placeholder')}
-        value={text}
+    <div className={TOOL_WRAP}>
+      <ToolHeader
+        eyebrow={t(locale, 'cat.utility')}
+        title={t(locale, 'tool.wordCount.title')}
+        desc={t(locale, 'tool.wordCount.desc')}
       />
 
-      <div
-        className='mt-5 grid grid-cols-3 gap-3 sm:grid-cols-6'
-        data-testid='word-count-stats'
-      >
-        <StatCard
-          label={t(locale, 'tool.wordCount.chars')}
-          value={stats.chars}
-        />
-        <StatCard
-          label={t(locale, 'tool.wordCount.charsNoSpace')}
-          value={stats.charsNoSpace}
-        />
-        <StatCard
-          label={t(locale, 'tool.wordCount.words')}
-          value={stats.words}
-        />
-        <StatCard
-          label={t(locale, 'tool.wordCount.lines')}
-          value={stats.lines}
-        />
-        <StatCard
-          label={t(locale, 'tool.wordCount.paragraphs')}
-          value={stats.paragraphs}
-        />
-        <StatCard
-          label={t(locale, 'tool.wordCount.readTime')}
-          value={`${stats.readingTime} min`}
-        />
-      </div>
+      <ToolGridLike>
+        <Panel
+          label={locale === 'zh' ? '文本' : 'Text'}
+          action={
+            <div className='flex items-center gap-2'>
+              <button
+                type='button'
+                onClick={() => setText('')}
+                className='h-8 rounded-[8px] border border-border bg-bg px-3 text-[12px] font-semibold text-secondary transition-colors hover:border-accent hover:text-accent'
+              >
+                {t(locale, 'tool.wordCount.clear')}
+              </button>
+              <CopyButton
+                text={text}
+                label={t(locale, 'tool.wordCount.copy')}
+              />
+            </div>
+          }
+        >
+          <textarea
+            className='min-h-[360px] w-full flex-1 resize-y border-0 bg-transparent p-4 text-[15px] leading-relaxed text-foreground outline-none placeholder:text-muted'
+            data-testid='word-count-input'
+            onChange={(e) => setText(e.target.value)}
+            placeholder={t(locale, 'tool.wordCount.placeholder')}
+            value={text}
+          />
+        </Panel>
 
-      <div className='mt-5 flex gap-3'>
-        <button
-          className='rounded-lg border border-border bg-surface px-5 py-3 text-sm font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
-          onClick={() => setText('')}
-          type='button'
-        >
-          {t(locale, 'tool.wordCount.clear')}
-        </button>
-        <button
-          className='rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
-          onClick={handleCopy}
-          type='button'
-        >
-          {t(locale, 'tool.wordCount.copy')}
-        </button>
-      </div>
+        <div className='grid grid-cols-2 gap-3' data-testid='word-count-stats'>
+          <StatCard
+            label={t(locale, 'tool.wordCount.chars')}
+            value={stats.chars}
+          />
+          <StatCard
+            label={t(locale, 'tool.wordCount.charsNoSpace')}
+            value={stats.charsNoSpace}
+          />
+          <StatCard
+            label={t(locale, 'tool.wordCount.words')}
+            value={stats.words}
+          />
+          <StatCard
+            label={t(locale, 'tool.wordCount.lines')}
+            value={stats.lines}
+          />
+          <StatCard
+            label={t(locale, 'tool.wordCount.paragraphs')}
+            value={stats.paragraphs}
+          />
+          <StatCard
+            label={t(locale, 'tool.wordCount.readTime')}
+            value={`${stats.readingTime} min`}
+          />
+        </div>
+      </ToolGridLike>
+    </div>
+  );
+}
+
+function ToolGridLike({ children }: { children: ReactNode }) {
+  return (
+    <div className='grid grid-cols-1 items-start gap-5 lg:grid-cols-[1.4fr_1fr]'>
+      {children}
     </div>
   );
 }
 
 function StatCard({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className='rounded-2xl border border-border bg-surface p-4 text-center transition-colors'>
-      <div className='text-[22px] font-extrabold text-accent'>{value}</div>
-      <div className='mt-1 text-[11px] font-semibold uppercase tracking-wider text-secondary'>
+    <div className='card-lift rounded-[14px] border border-border bg-surface p-5 text-center'>
+      <div className='text-[28px] font-extrabold leading-none text-accent'>
+        {value}
+      </div>
+      <div className='mt-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-secondary'>
         {label}
       </div>
     </div>

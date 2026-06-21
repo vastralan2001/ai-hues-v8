@@ -3,11 +3,11 @@ import type { ToolCategoryKey } from '@/lib/catalog-api';
 export const homeHref = '/';
 export const toolsHref = '/tools';
 export const gamesHref = '/games';
+export const testsHref = '/tests';
 export const wishlistHref = '/wishlist';
 export const rankingHref = '/ranking';
 export const pricingHref = '/pricing';
 export const collectionHref = '/collection';
-export const showcaseHref = '/showcase';
 export const discoverHref = '/discover';
 export const blogHref = '/blog';
 
@@ -17,6 +17,10 @@ export function toolDetailHref(slug: string) {
 
 export function gameDetailHref(slug: string) {
   return `/games/${slug}`;
+}
+
+export function testDetailHref(slug: string) {
+  return `/tests/${slug}`;
 }
 
 export function toolsCategoryHref(category?: ToolCategoryKey, q?: string) {

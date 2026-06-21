@@ -1,38 +1,26 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { t, type Locale } from '@/lib/dict';
+
+import { CopyButton, Panel, ToolHeader, TOOL_WRAP } from './_kit';
 
 interface TimestampToolProps {
   locale: Locale;
 }
 
-interface TimestampResult {
-  local: string;
-  utc: string;
-  unixSeconds: number;
-  unixMs: number;
-  relative: string;
-}
-
 function parseInput(input: string): Date | null {
   const trimmed = input.trim();
   if (!trimmed) return null;
-
-  // Try Unix timestamp (seconds or milliseconds)
   const num = Number(trimmed);
   if (!Number.isNaN(num) && num > 0) {
-    // Heuristic: if > 1e12, treat as milliseconds
     const ms = num > 1e12 ? num : num * 1000;
     const date = new Date(ms);
     if (!Number.isNaN(date.getTime())) return date;
   }
-
-  // Try ISO string or other date formats
   const date = new Date(trimmed);
   if (!Number.isNaN(date.getTime())) return date;
-
   return null;
 }
 
@@ -48,116 +36,159 @@ function relativeTime(date: Date, locale: Locale): string {
       : locale === 'zh'
         ? '前'
         : 'ago';
-
   if (abs < 60) return `${abs}s ${suffix}`;
   if (abs < 3600) return `${Math.floor(abs / 60)}m ${suffix}`;
   if (abs < 86400) return `${Math.floor(abs / 3600)}h ${suffix}`;
   return `${Math.floor(abs / 86400)}d ${suffix}`;
 }
 
+/** Format a Date as the value a datetime-local input expects (local time). */
+function toLocalInput(date: Date): string {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+}
+
 export default function TimestampTool({ locale }: TimestampToolProps) {
+  const zh = locale === 'zh';
   const [input, setInput] = useState('');
-  const [result, setResult] = useState<TimestampResult | null>(null);
-  const [error, setError] = useState('');
+  const [now, setNow] = useState<number | null>(null);
 
-  const handleConvert = () => {
+  useEffect(() => {
+    const tick = () => setNow(Date.now());
+    const raf = requestAnimationFrame(tick);
+    const id = setInterval(tick, 1000);
+    return () => {
+      cancelAnimationFrame(raf);
+      clearInterval(id);
+    };
+  }, []);
+
+  const nowSeconds = now !== null ? Math.floor(now / 1000) : null;
+
+  const { rows, invalid } = useMemo(() => {
+    if (!input.trim()) return { rows: [], invalid: false };
     const date = parseInput(input);
-    if (!date) {
-      setError('Invalid date or timestamp');
-      setResult(null);
-      return;
-    }
-    setError('');
-    setResult({
-      local: date.toLocaleString(),
-      utc: date.toUTCString(),
-      unixSeconds: Math.floor(date.getTime() / 1000),
-      unixMs: date.getTime(),
-      relative: relativeTime(date, locale),
-    });
-  };
-
-  const handleCopy = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-    } catch {
-      // ignore
-    }
-  };
-
-  const statItems = result
-    ? [
-        { label: t(locale, 'tool.timestamp.local'), value: result.local },
-        { label: t(locale, 'tool.timestamp.utc'), value: result.utc },
+    if (!date) return { rows: [], invalid: true };
+    return {
+      invalid: false,
+      rows: [
+        {
+          label: t(locale, 'tool.timestamp.local'),
+          value: date.toLocaleString(),
+        },
+        { label: t(locale, 'tool.timestamp.utc'), value: date.toUTCString() },
+        { label: 'ISO 8601', value: date.toISOString() },
         {
           label: t(locale, 'tool.timestamp.unixSeconds'),
-          value: String(result.unixSeconds),
+          value: String(Math.floor(date.getTime() / 1000)),
         },
         {
           label: t(locale, 'tool.timestamp.unixMs'),
-          value: String(result.unixMs),
+          value: String(date.getTime()),
         },
-        { label: t(locale, 'tool.timestamp.relative'), value: result.relative },
-      ]
-    : [];
+        {
+          label: t(locale, 'tool.timestamp.relative'),
+          value: relativeTime(date, locale),
+        },
+      ],
+    };
+  }, [input, locale]);
 
   return (
-    <div className='mx-auto max-w-4xl px-6 py-12'>
-      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
-        {t(locale, 'tool.timestamp.title')}
-      </h1>
-      <p className='mb-6 text-[15px] text-secondary'>
-        {t(locale, 'tool.timestamp.desc')}
-      </p>
-
-      <input
-        className='h-12 w-full rounded-2xl border border-border bg-surface px-5 font-mono text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
-        onChange={(e) => setInput(e.target.value)}
-        placeholder={t(locale, 'tool.timestamp.placeholder')}
-        type='text'
-        value={input}
+    <div className={TOOL_WRAP}>
+      <ToolHeader
+        eyebrow={t(locale, 'cat.developer')}
+        title={t(locale, 'tool.timestamp.title')}
+        desc={t(locale, 'tool.timestamp.desc')}
       />
 
-      <div className='mt-4 flex gap-3'>
+      {/* Live current timestamp */}
+      <div className='mb-6 flex items-center justify-between gap-4 rounded-[16px] border border-border bg-surface px-5 py-4'>
+        <div className='min-w-0'>
+          <div className='text-[11px] font-bold uppercase tracking-[0.14em] text-secondary'>
+            {zh ? '当前 Unix 时间戳' : 'Current Unix time'}
+          </div>
+          <div className='mt-1 font-mono text-[30px] font-extrabold leading-none tabular-nums text-foreground'>
+            {nowSeconds !== null ? nowSeconds : '—'}
+          </div>
+          <div className='mt-1.5 h-4 font-mono text-[12px] text-muted'>
+            {now !== null
+              ? `${now} ms · ${new Date(now).toLocaleString()}`
+              : ''}
+          </div>
+        </div>
+        <div className='flex shrink-0 items-center gap-2'>
+          <CopyButton
+            text={nowSeconds !== null ? String(nowSeconds) : ''}
+            label={zh ? '复制秒' : 'Copy s'}
+          />
+          <button
+            type='button'
+            onClick={() =>
+              setInput(String(nowSeconds ?? Math.floor(Date.now() / 1000)))
+            }
+            className='inline-flex h-8 items-center rounded-[8px] bg-accent px-3 text-[12px] font-semibold text-white transition-colors hover:bg-accent-light'
+          >
+            {zh ? '用作输入' : 'Use'}
+          </button>
+        </div>
+      </div>
+
+      {/* Input row */}
+      <div className='mb-5 flex flex-wrap items-stretch gap-3'>
+        <input
+          className='h-12 min-w-0 flex-1 rounded-[12px] border border-border bg-surface px-4 font-mono text-[14px] text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+          onChange={(e) => setInput(e.target.value)}
+          placeholder={t(locale, 'tool.timestamp.placeholder')}
+          type='text'
+          value={input}
+        />
+        <input
+          aria-label={zh ? '选择日期时间' : 'Pick date & time'}
+          className='h-12 shrink-0 rounded-[12px] border border-border bg-surface px-4 font-mono text-[13px] text-secondary focus:border-accent focus:outline-none'
+          onChange={(e) => setInput(e.target.value ? e.target.value : '')}
+          step='1'
+          type='datetime-local'
+        />
         <button
-          className='rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'
-          onClick={handleConvert}
           type='button'
+          onClick={() => setInput(toLocalInput(new Date()))}
+          className='h-12 shrink-0 rounded-[12px] border border-border bg-bg px-4 text-[13px] font-semibold text-secondary transition-colors hover:border-accent hover:text-accent'
         >
-          {t(locale, 'tool.timestamp.convert')}
+          {zh ? '此刻' : 'Now'}
         </button>
       </div>
 
-      {error && (
-        <p className='mt-3 rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950 dark:text-red-400'>
-          {error}
-        </p>
-      )}
-
-      {result && (
-        <div className='mt-6 flex flex-col gap-3'>
-          {statItems.map((item) => (
-            <div
-              className='flex items-center justify-between rounded-lg border border-border bg-surface px-4 py-3'
-              key={item.label}
-            >
-              <div>
-                <p className='text-xs font-semibold uppercase tracking-wider text-secondary'>
-                  {item.label}
-                </p>
-                <p className='mt-0.5 font-mono text-sm text-foreground'>
-                  {item.value}
-                </p>
-              </div>
-              <button
-                className='ml-4 rounded-[8px] border border-border bg-bg px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
-                onClick={() => handleCopy(item.value)}
-                type='button'
+      {invalid ? (
+        <div className='rounded-[12px] border border-[rgba(255,56,73,0.3)] bg-[rgba(255,56,73,0.06)] px-4 py-3 text-[13px] font-medium text-[#d12a3a]'>
+          {zh ? '无效的日期或时间戳' : 'Invalid date or timestamp'}
+        </div>
+      ) : rows.length > 0 ? (
+        <Panel>
+          <div className='flex flex-col divide-y divide-[color:var(--border)]'>
+            {rows.map((row) => (
+              <div
+                key={row.label}
+                className='flex items-center justify-between gap-4 px-4 py-3.5'
               >
-                {t(locale, 'tool.wordCount.copy')}
-              </button>
-            </div>
-          ))}
+                <div className='min-w-0'>
+                  <div className='text-[11px] font-bold uppercase tracking-[0.12em] text-secondary'>
+                    {row.label}
+                  </div>
+                  <div className='mt-1 break-all font-mono text-[14px] text-foreground'>
+                    {row.value}
+                  </div>
+                </div>
+                <CopyButton text={row.value} />
+              </div>
+            ))}
+          </div>
+        </Panel>
+      ) : (
+        <div className='rounded-[16px] border border-dashed border-border bg-surface px-4 py-12 text-center text-[14px] text-muted'>
+          {zh
+            ? '输入 Unix 时间戳或日期，或点击上方“用作输入”'
+            : 'Enter a Unix timestamp or date, or click “Use” above'}
         </div>
       )}
     </div>

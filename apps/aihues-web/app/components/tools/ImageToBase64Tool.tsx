@@ -45,15 +45,15 @@ export default function ImageToBase64Tool({ locale }: ImageToBase64ToolProps) {
   };
 
   return (
-    <div className='mx-auto max-w-4xl px-6 py-12'>
-      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
+    <div className='max-w-[900px] py-10'>
+      <h1 className='mb-2 text-[clamp(28px,3.4vw,40px)] font-extrabold tracking-[-0.02em] text-foreground'>
         {t(locale, 'tool.imageBase64.title')}
       </h1>
       <p className='mb-6 text-[15px] text-secondary'>
         {t(locale, 'tool.imageBase64.desc')}
       </p>
 
-      <label className='inline-flex cursor-pointer items-center gap-2 rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light'>
+      <label className='inline-flex cursor-pointer items-center gap-2 rounded-[10px] bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent-light'>
         <input
           accept='image/*'
           className='hidden'
@@ -73,7 +73,7 @@ export default function ImageToBase64Tool({ locale }: ImageToBase64ToolProps) {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 alt='preview'
-                className='mt-2 max-h-[200px] rounded-lg border border-border'
+                className='mt-2 max-h-[200px] rounded-[10px] border border-border'
                 src={preview}
               />
             </div>
@@ -101,7 +101,7 @@ export default function ImageToBase64Tool({ locale }: ImageToBase64ToolProps) {
               {t(locale, 'tool.wordCount.copy')}
             </button>
           </div>
-          <pre className='max-h-[300px] overflow-auto rounded-2xl border border-border bg-surface p-4 font-mono text-xs text-foreground'>
+          <pre className='max-h-[300px] overflow-auto rounded-[14px] border border-border bg-surface p-4 font-mono text-xs text-foreground'>
             {output}
           </pre>
         </div>

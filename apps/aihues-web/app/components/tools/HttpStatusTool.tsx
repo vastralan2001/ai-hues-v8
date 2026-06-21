@@ -4,6 +4,8 @@ import { useMemo, useState } from 'react';
 
 import { t, type Locale } from '@/lib/dict';
 
+import { ToolHeader, TOOL_WRAP } from './_kit';
+
 interface HttpStatusToolProps {
   locale: Locale;
 }
@@ -136,36 +138,37 @@ export default function HttpStatusTool({ locale }: HttpStatusToolProps) {
   }, [query]);
 
   return (
-    <div className='mx-auto max-w-4xl px-6 py-12'>
-      <h1 className='mb-2 text-[32px] font-extrabold tracking-tight text-foreground'>
-        {t(locale, 'tool.httpStatus.title')}
-      </h1>
-      <p className='mb-6 text-[15px] text-secondary'>
-        {t(locale, 'tool.httpStatus.desc')}
-      </p>
+    <div className={TOOL_WRAP}>
+      <ToolHeader
+        eyebrow={t(locale, 'cat.developer')}
+        title={t(locale, 'tool.httpStatus.title')}
+        desc={t(locale, 'tool.httpStatus.desc')}
+      />
 
       <input
-        className='h-12 w-full rounded-2xl border border-border bg-surface px-5 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+        className='mb-6 h-12 w-full rounded-[12px] border border-border bg-surface px-5 text-[15px] text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
         onChange={(e) => setQuery(e.target.value)}
         placeholder={t(locale, 'tool.httpStatus.search')}
         type='text'
         value={query}
       />
 
-      <div className='mt-6 flex flex-col gap-2'>
+      <div className='grid grid-cols-1 gap-3 sm:grid-cols-2'>
         {filtered.map((status) => (
           <div
-            className={`flex items-start gap-4 rounded-lg border border-border p-4 ${getStatusBg(status.code)}`}
+            className='card-lift flex items-start gap-4 rounded-[14px] border border-border bg-surface p-4'
             key={status.code}
           >
             <span
-              className={`shrink-0 rounded-lg px-3 py-1 text-lg font-extrabold ${getStatusColor(status.code)}`}
+              className={`shrink-0 rounded-[10px] px-3 py-1.5 text-[18px] font-extrabold ${getStatusBg(status.code)} ${getStatusColor(status.code)}`}
             >
               {status.code}
             </span>
-            <div>
-              <p className='font-semibold text-foreground'>{status.name}</p>
-              <p className='mt-0.5 text-sm text-secondary'>{status.desc}</p>
+            <div className='min-w-0'>
+              <p className='font-bold text-foreground'>{status.name}</p>
+              <p className='mt-1 text-[13px] leading-relaxed text-secondary'>
+                {status.desc}
+              </p>
             </div>
           </div>
         ))}
