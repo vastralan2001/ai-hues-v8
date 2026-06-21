@@ -7,7 +7,7 @@ import {
   useState,
   type PointerEvent as ReactPointerEvent,
 } from 'react';
-import { Maximize2, Minus, Plus } from 'lucide-react';
+import { ChevronDown, Maximize2, Minus, Plus } from 'lucide-react';
 
 import { t, type Locale } from '@/lib/dict';
 
@@ -30,7 +30,9 @@ function loadMermaid() {
         startOnLoad: false,
         securityLevel: 'strict',
         theme: 'base',
-        fontFamily: 'inherit',
+        fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+        htmlLabels: false,
+        flowchart: { htmlLabels: false },
         themeVariables: {
           background: 'transparent',
           primaryColor: '#f3f1ea',
@@ -177,6 +179,7 @@ export default function MermaidTool({ locale }: MermaidToolProps) {
   const idRef = useRef(0);
   const [view, setView] = useState({ scale: 1, tx: 0, ty: 0 });
   const [dragging, setDragging] = useState(false);
+  const [showExport, setShowExport] = useState(false);
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
 
@@ -214,15 +217,56 @@ export default function MermaidTool({ locale }: MermaidToolProps) {
     };
   }, [code]);
 
-  function downloadSvg() {
-    if (!svg) return;
-    const blob = new Blob([svg], { type: 'image/svg+xml' });
+  function saveBlob(blob: Blob, filename: string) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'diagram.svg';
+    a.download = filename;
+    document.body.appendChild(a);
     a.click();
-    URL.revokeObjectURL(url);
+    window.setTimeout(() => {
+      a.remove();
+      URL.revokeObjectURL(url);
+    }, 1000);
+  }
+
+  function downloadSvg() {
+    if (!svg) return;
+    saveBlob(new Blob([svg], { type: 'image/svg+xml' }), 'diagram.svg');
+  }
+
+  // Rasterise the SVG to PNG/JPEG through a canvas (drawn up to 4× for sharp
+  // output; JPEG gets an opaque white backdrop since it has no alpha channel).
+  function downloadRaster(kind: 'png' | 'jpeg') {
+    const svgEl = contentRef.current?.querySelector<SVGSVGElement>('svg');
+    if (!svg || !svgEl) return;
+    const { w, h } = naturalSize(svgEl);
+    if (!w || !h) return;
+    const factor = Math.max(1, Math.min(4, 1600 / Math.max(w, h)));
+    const url = URL.createObjectURL(
+      new Blob([svg], { type: 'image/svg+xml;charset=utf-8' })
+    );
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(w * factor);
+      canvas.height = Math.round(h * factor);
+      const ctx = canvas.getContext('2d');
+      URL.revokeObjectURL(url);
+      if (!ctx) return;
+      if (kind === 'jpeg') {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob(
+        (b) => b && saveBlob(b, `diagram.${kind === 'jpeg' ? 'jpg' : 'png'}`),
+        kind === 'jpeg' ? 'image/jpeg' : 'image/png',
+        kind === 'jpeg' ? 0.92 : undefined
+      );
+    };
+    img.onerror = () => URL.revokeObjectURL(url);
+    img.src = url;
   }
 
   // Reset to the default view: scale the diagram to fill the viewport and centre
@@ -258,6 +302,21 @@ export default function MermaidTool({ locale }: MermaidToolProps) {
     window.addEventListener('resize', fitToView);
     return () => window.removeEventListener('resize', fitToView);
   }, [fitToView]);
+
+  // Close the export menu on an outside click or Escape.
+  useEffect(() => {
+    if (!showExport) return;
+    const onDown = () => setShowExport(false);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setShowExport(false);
+    };
+    window.addEventListener('pointerdown', onDown);
+    window.addEventListener('keydown', onKey);
+    return () => {
+      window.removeEventListener('pointerdown', onDown);
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [showExport]);
 
   // Wheel zoom toward the cursor (native non-passive listener so it can
   // preventDefault the page scroll).
@@ -390,13 +449,44 @@ export default function MermaidTool({ locale }: MermaidToolProps) {
             svg ? (
               <div className='flex gap-2'>
                 <CopyButton text={svg} label={zh ? '复制 SVG' : 'Copy SVG'} />
-                <button
-                  type='button'
-                  onClick={downloadSvg}
-                  className='inline-flex h-8 items-center gap-1.5 rounded-[8px] border border-border bg-bg px-3 text-[12px] font-semibold text-secondary transition-colors hover:border-accent hover:text-accent'
+                <div
+                  className='relative'
+                  onPointerDown={(e) => e.stopPropagation()}
                 >
-                  {zh ? '下载' : 'Download'}
-                </button>
+                  <button
+                    type='button'
+                    onClick={() => setShowExport((s) => !s)}
+                    aria-haspopup='menu'
+                    aria-expanded={showExport}
+                    className='inline-flex h-8 items-center gap-1 rounded-[8px] border border-border bg-bg pl-3 pr-2 text-[12px] font-semibold text-secondary transition-colors hover:border-accent hover:text-accent'
+                  >
+                    {zh ? '下载' : 'Download'}
+                    <ChevronDown size={14} />
+                  </button>
+                  {showExport ? (
+                    <div className='absolute right-0 top-full z-20 mt-1 min-w-[116px] overflow-hidden rounded-[10px] border border-border bg-bg py-1'>
+                      {(
+                        [
+                          ['SVG', () => downloadSvg()],
+                          ['PNG', () => downloadRaster('png')],
+                          ['JPG', () => downloadRaster('jpeg')],
+                        ] as const
+                      ).map(([label, run]) => (
+                        <button
+                          key={label}
+                          type='button'
+                          onClick={() => {
+                            run();
+                            setShowExport(false);
+                          }}
+                          className='block w-full px-3 py-1.5 text-left text-[13px] font-semibold text-secondary transition-colors hover:bg-surface hover:text-accent'
+                        >
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
               </div>
             ) : null
           }
