@@ -56,6 +56,19 @@ function loadMermaid() {
   return mermaidPromise;
 }
 
+/* Natural size of a rendered diagram in its own user units — from the viewBox,
+   falling back to the content bounding box. */
+function naturalSize(svgEl: SVGSVGElement): { w: number; h: number } {
+  const vb = svgEl.viewBox?.baseVal;
+  if (vb && vb.width && vb.height) return { w: vb.width, h: vb.height };
+  try {
+    const bb = svgEl.getBBox();
+    return { w: bb.width, h: bb.height };
+  } catch {
+    return { w: 0, h: 0 };
+  }
+}
+
 const TEMPLATES: {
   key: string;
   label: string;
@@ -197,32 +210,51 @@ export default function MermaidTool({ locale }: MermaidToolProps) {
     URL.revokeObjectURL(url);
   }
 
-  // Reset to the default view: render the SVG at natural size, scaled to fit
-  // the viewport and centred.
+  // Reset to the default view: scale the diagram to fill the viewport and centre
+  // it.
   const fitToView = useCallback(() => {
     const cont = viewportRef.current;
-    const svgEl = contentRef.current?.querySelector('svg');
+    const svgEl = contentRef.current?.querySelector<SVGSVGElement>('svg');
     if (!cont || !svgEl) return;
-    const vb = svgEl.viewBox?.baseVal;
-    const rect = svgEl.getBoundingClientRect();
-    const sw = vb && vb.width ? vb.width : rect.width;
-    const sh = vb && vb.height ? vb.height : rect.height;
+    const { w: sw, h: sh } = naturalSize(svgEl);
     if (!sw || !sh) return;
-    svgEl.style.maxWidth = 'none';
-    svgEl.style.width = `${sw}px`;
-    svgEl.style.height = `${sh}px`;
     const cw = cont.clientWidth;
     const ch = cont.clientHeight;
-    const scale = Math.max(0.1, Math.min((cw - 24) / sw, (ch - 24) / sh, 1.5));
+    const pad = 32;
+    const scale = Math.max(0.05, Math.min((cw - pad) / sw, (ch - pad) / sh, 3));
     setView({ scale, tx: (cw - sw * scale) / 2, ty: (ch - sh * scale) / 2 });
   }, []);
 
-  // Auto-fit whenever a new diagram renders.
+  // Scale the SVG by its own width/height (vector, stays crisp at any zoom)
+  // rather than a CSS transform, which rasterises and blurs the image.
+  useEffect(() => {
+    const svgEl = contentRef.current?.querySelector<SVGSVGElement>('svg');
+    if (!svgEl) return;
+    const { w, h } = naturalSize(svgEl);
+    if (!w || !h) return;
+    svgEl.style.maxWidth = 'none';
+    svgEl.style.width = `${w * view.scale}px`;
+    svgEl.style.height = `${h * view.scale}px`;
+  }, [view.scale, svg]);
+
+  // Auto-fit whenever a new diagram renders (double rAF so layout has settled).
   useEffect(() => {
     if (!svg) return;
-    const id = requestAnimationFrame(fitToView);
-    return () => cancelAnimationFrame(id);
+    let r2 = 0;
+    const r1 = requestAnimationFrame(() => {
+      r2 = requestAnimationFrame(fitToView);
+    });
+    return () => {
+      cancelAnimationFrame(r1);
+      cancelAnimationFrame(r2);
+    };
   }, [svg, fitToView]);
+
+  // Re-fit when the viewport is resized.
+  useEffect(() => {
+    window.addEventListener('resize', fitToView);
+    return () => window.removeEventListener('resize', fitToView);
+  }, [fitToView]);
 
   // Wheel zoom toward the cursor (native non-passive listener so it can
   // preventDefault the page scroll).
@@ -324,7 +356,7 @@ export default function MermaidTool({ locale }: MermaidToolProps) {
           action={<CopyButton text={code} />}
         >
           <textarea
-            className='min-h-[440px] w-full flex-1 resize-y border-0 bg-transparent p-4 font-mono text-[13px] leading-relaxed text-foreground outline-none placeholder:text-muted'
+            className='min-h-[560px] w-full flex-1 resize-y border-0 bg-transparent p-4 font-mono text-[13px] leading-relaxed text-foreground outline-none placeholder:text-muted'
             value={code}
             onChange={(e) => setCode(e.target.value)}
             placeholder={'flowchart TD\n  A --> B'}
@@ -360,7 +392,7 @@ export default function MermaidTool({ locale }: MermaidToolProps) {
             onPointerMove={svg ? onPointerMove : undefined}
             onPointerUp={onPointerUp}
             onPointerLeave={onPointerUp}
-            className={`relative min-h-[440px] flex-1 touch-none overflow-hidden ${
+            className={`relative min-h-[560px] flex-1 touch-none overflow-hidden ${
               svg ? 'cursor-grab active:cursor-grabbing' : ''
             }`}
           >
@@ -368,13 +400,16 @@ export default function MermaidTool({ locale }: MermaidToolProps) {
               <>
                 <div
                   ref={contentRef}
-                  className='absolute left-0 top-0 origin-top-left will-change-transform [&_svg]:!max-w-none'
+                  className='absolute left-0 top-0 [&_svg]:!max-w-none'
                   style={{
-                    transform: `translate(${view.tx}px, ${view.ty}px) scale(${view.scale})`,
+                    transform: `translate(${view.tx}px, ${view.ty}px)`,
                   }}
                   dangerouslySetInnerHTML={{ __html: svg }}
                 />
-                <div className='absolute bottom-3 right-3 flex items-center gap-0.5 rounded-full border border-border bg-bg p-1'>
+                <div
+                  onPointerDown={(e) => e.stopPropagation()}
+                  className='absolute bottom-3 right-3 flex items-center gap-0.5 rounded-full border border-border bg-bg p-1'
+                >
                   <button
                     type='button'
                     onClick={() => zoomBy(1 / 1.2)}
@@ -407,7 +442,7 @@ export default function MermaidTool({ locale }: MermaidToolProps) {
                 </div>
               </>
             ) : (
-              <div className='flex h-full min-h-[440px] items-center justify-center p-4'>
+              <div className='flex h-full min-h-[560px] items-center justify-center p-4'>
                 <span className='text-[13px] text-muted'>
                   {error
                     ? zh
