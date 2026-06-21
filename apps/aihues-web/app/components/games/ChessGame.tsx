@@ -323,8 +323,11 @@ const ANNOTATE_DEPTH = 12;
 const ANNOTATE_MOVETIME = 240;
 const MATE_CP = 100000;
 
+/* Win probability for the side to move, using Lichess's logistic mapping of
+   centipawns; classification is judged on the drop in this value, not raw cp,
+   so swings inside an already-decided position don't read as errors. */
 function winProb(cp: number): number {
-  return 1 / (1 + Math.pow(10, -cp / 400));
+  return 1 / (1 + Math.exp(-0.00368208 * cp));
 }
 
 function infoCp(info: EngineInfo | undefined): number | null {
@@ -353,23 +356,50 @@ function materialOf(fen: string, color: Color): number {
   return sum;
 }
 
-function classifyMove(
-  lossWP: number,
-  gapWP: number,
-  isBook: boolean,
-  isForced: boolean,
-  playedIsBest: boolean,
-  isSacrifice: boolean
-): string {
-  if (isForced) return '→';
-  if (isBook) return '📕';
-  if (lossWP >= 0.3) return '??';
-  if (lossWP >= 0.18) return '?';
-  if (lossWP >= 0.1) return '?!';
-  if (playedIsBest && gapWP >= 0.18 && isSacrifice) return '!!';
-  if (playedIsBest && gapWP >= 0.15) return '!';
-  if (!playedIsBest && lossWP <= 0.03) return '!?';
+/* Move classification. Errors use Lichess-style win%-loss bands (Inaccuracy
+   ≥10%, Mistake ≥20%, Blunder ≥30%) which self-scale with the position. The
+   good-move badges follow chess.com's intent: !! is a sound piece sacrifice
+   that stays favourable and isn't played from an already-won position; ! is the
+   critical only-good move (the alternatives are clearly worse); !? is a sound
+   move the engine didn't pick. Refs: lichess.org/page/accuracy and chess.com's
+   game-review categories. */
+function classifyMove(p: {
+  lossWP: number;
+  gapWP: number;
+  wpBefore: number;
+  wpAfter: number;
+  isBook: boolean;
+  isForced: boolean;
+  playedIsBest: boolean;
+  isSacrifice: boolean;
+}): string {
+  if (p.isForced) return '→';
+  if (p.isBook) return '📕';
+  if (p.lossWP >= 0.3) return '??';
+  if (p.lossWP >= 0.2) return '?';
+  if (p.lossWP >= 0.1) return '?!';
+  if (p.playedIsBest && p.isSacrifice && p.wpAfter >= 0.5 && p.wpBefore <= 0.95)
+    return '!!';
+  if (p.playedIsBest && p.gapWP >= 0.15) return '!';
+  if (!p.playedIsBest && p.lossWP <= 0.02) return '!?';
   return '';
+}
+
+/* Position score after a move, from White's perspective: a signed pawn value
+   (+0.4) or a mate count (M3 / -M2), or # when the move gives checkmate. */
+function formatEvalAt(
+  fen: string,
+  e: { cp: number; mate: number | null }
+): string {
+  const stm = fen.split(' ')[1];
+  if (e.mate != null) {
+    if (e.mate === 0) return '#';
+    const m = stm === 'w' ? e.mate : -e.mate;
+    return m > 0 ? `M${m}` : `-M${-m}`;
+  }
+  const cpW = stm === 'w' ? e.cp : -e.cp;
+  const v = cpW / 100;
+  return (v > 0 ? '+' : '') + v.toFixed(1);
 }
 
 function isValidFen(fen: string): boolean {
@@ -582,6 +612,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
   const [importError, setImportError] = useState(false);
   const [copied, setCopied] = useState('');
   const [annotations, setAnnotations] = useState<Record<number, string>>({});
+  const [moveEvals, setMoveEvals] = useState<Record<number, string>>({});
   const [analyzing, setAnalyzing] = useState(false);
   const [analyzeProgress, setAnalyzeProgress] = useState(0);
   const [subTab, setSubTab] = useState<'control' | 'moves' | 'openings'>(
@@ -1170,6 +1201,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     updateMaterial();
     updateOpening();
     setAnnotations((a) => (Object.keys(a).length ? {} : a));
+    setMoveEvals((a) => (Object.keys(a).length ? {} : a));
     if (modeRef.current !== 'eval') {
       if (chess.isGameOver()) return;
       setStatusText(t === 'w' ? tx.whiteMove : tx.blackMove);
@@ -1806,14 +1838,22 @@ export default function ChessGame({ locale }: { locale: Locale }) {
       });
   }
 
-  async function analyzePos(
-    fen: string
-  ): Promise<{ cp: number; cp2: number | null; bestUci: string | null }> {
+  async function analyzePos(fen: string): Promise<{
+    cp: number;
+    cp2: number | null;
+    bestUci: string | null;
+    mate: number | null;
+  }> {
     const tmp = new Chess(fen);
     if (tmp.isGameOver())
-      return { cp: tmp.isCheckmate() ? -MATE_CP : 0, cp2: null, bestUci: null };
+      return {
+        cp: tmp.isCheckmate() ? -MATE_CP : 0,
+        cp2: null,
+        bestUci: null,
+        mate: tmp.isCheckmate() ? 0 : null,
+      };
     const eng = engineRef.current;
-    if (!eng) return { cp: 0, cp2: null, bestUci: null };
+    if (!eng) return { cp: 0, cp2: null, bestUci: null, mate: null };
     const lines: Record<number, EngineInfo> = {};
     const res = await engineExclusive(() =>
       eng.search(
@@ -1829,6 +1869,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
       cp: c1,
       cp2: infoCp(lines[2]),
       bestUci: lines[1]?.pv?.[0] ?? res?.bestmove ?? null,
+      mate: lines[1]?.scoreMate ?? res?.info?.scoreMate ?? null,
     };
   }
 
@@ -1851,8 +1892,12 @@ export default function ChessGame({ locale }: { locale: Locale }) {
       replay.move({ from: m.from, to: m.to, promotion: m.promotion });
       fens.push(replay.fen());
     }
-    const evals: { cp: number; cp2: number | null; bestUci: string | null }[] =
-      [];
+    const evals: {
+      cp: number;
+      cp2: number | null;
+      bestUci: string | null;
+      mate: number | null;
+    }[] = [];
     eng.setOption('MultiPV', 2);
     try {
       for (let i = 0; i < fens.length; i++) {
@@ -1866,7 +1911,9 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     for (let i = 0; i < hist.length; i++) {
       const before = evals[i];
       const after = evals[i + 1];
-      const lossWP = Math.max(0, winProb(before.cp) - winProb(-after.cp));
+      const wpBefore = winProb(before.cp);
+      const wpAfter = winProb(-after.cp);
+      const lossWP = Math.max(0, wpBefore - wpAfter);
       const gapWP =
         before.cp2 != null
           ? Math.max(0, winProb(before.cp) - winProb(before.cp2))
@@ -1874,23 +1921,29 @@ export default function ChessGame({ locale }: { locale: Locale }) {
       const playedUci = hist[i].from + hist[i].to + (hist[i].promotion || '');
       const playedIsBest = !!before.bestUci && before.bestUci === playedUci;
       const isForced = new Chess(fens[i]).moves().length === 1;
-      const isBook = !!openingForFen(fens[i + 1]);
+      const isBook = after.mate !== 0 && !!openingForFen(fens[i + 1]);
       let isSacrifice = false;
       if (playedIsBest && i + 2 < fens.length) {
         isSacrifice =
           materialOf(fens[i + 2], hist[i].color) <=
-            materialOf(fens[i], hist[i].color) - 2 && winProb(before.cp) >= 0.5;
+          materialOf(fens[i], hist[i].color) - 2;
       }
-      ann[i] = classifyMove(
+      ann[i] = classifyMove({
         lossWP,
         gapWP,
+        wpBefore,
+        wpAfter,
         isBook,
         isForced,
         playedIsBest,
-        isSacrifice
-      );
+        isSacrifice,
+      });
     }
     setAnnotations(ann);
+    const me: Record<number, string> = {};
+    for (let i = 0; i < hist.length; i++)
+      me[i] = formatEvalAt(fens[i + 1], evals[i + 1]);
+    setMoveEvals(me);
     setAnalyzing(false);
     if (modeRef.current === 'eval') analyzePosition();
   }
@@ -2482,6 +2535,11 @@ export default function ChessGame({ locale }: { locale: Locale }) {
                               {annotations[i * 2]}
                             </span>
                           )}
+                          {moveEvals[i * 2] && (
+                            <span className='ml-auto pl-1 text-[10px] font-normal tabular-nums text-white/35'>
+                              {moveEvals[i * 2]}
+                            </span>
+                          )}
                         </span>
                         <span className='flex flex-1 items-center gap-1 font-medium text-white/65'>
                           {moveList[i * 2 + 1] ?? ''}
@@ -2490,6 +2548,11 @@ export default function ChessGame({ locale }: { locale: Locale }) {
                               className={`text-[12px] font-bold ${GLYPH_COLOR[annotations[i * 2 + 1]] ?? ''}`}
                             >
                               {annotations[i * 2 + 1]}
+                            </span>
+                          )}
+                          {moveList[i * 2 + 1] && moveEvals[i * 2 + 1] && (
+                            <span className='ml-auto pl-1 text-[10px] font-normal tabular-nums text-white/35'>
+                              {moveEvals[i * 2 + 1]}
                             </span>
                           )}
                         </span>
