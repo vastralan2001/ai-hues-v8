@@ -156,14 +156,9 @@ export default function MermaidTool({ locale }: MermaidToolProps) {
   const [rendering, setRendering] = useState(false);
   const idRef = useRef(0);
   const [view, setView] = useState({ scale: 1, tx: 0, ty: 0 });
+  const [dragging, setDragging] = useState(false);
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
-  const dragRef = useRef<{
-    x: number;
-    y: number;
-    tx: number;
-    ty: number;
-  } | null>(null);
 
   useEffect(() => {
     let alive = true;
@@ -272,16 +267,30 @@ export default function MermaidTool({ locale }: MermaidToolProps) {
           Math.max(0.1, v.scale * (e.deltaY < 0 ? 1.12 : 1 / 1.12))
         );
         const k = next / v.scale;
-        return {
-          scale: next,
-          tx: cx - (cx - v.tx) * k,
-          ty: cy - (cy - v.ty) * k,
-        };
+        const c = clampTxTy(cx - (cx - v.tx) * k, cy - (cy - v.ty) * k, next);
+        return { scale: next, tx: c.tx, ty: c.ty };
       });
     };
     el.addEventListener('wheel', onWheel, { passive: false });
     return () => el.removeEventListener('wheel', onWheel);
   }, []);
+
+  // Keep at least a sliver of the diagram inside the viewport so it can never
+  // be panned/zoomed completely out of sight.
+  function clampTxTy(tx: number, ty: number, scale: number) {
+    const cont = viewportRef.current;
+    const svgEl = contentRef.current?.querySelector<SVGSVGElement>('svg');
+    if (!cont || !svgEl) return { tx, ty };
+    const { w, h } = naturalSize(svgEl);
+    if (!w || !h) return { tx, ty };
+    const sw = w * scale;
+    const sh = h * scale;
+    const m = 64;
+    return {
+      tx: Math.min(cont.clientWidth - m, Math.max(m - sw, tx)),
+      ty: Math.min(cont.clientHeight - m, Math.max(m - sh, ty)),
+    };
+  }
 
   function zoomBy(factor: number) {
     const el = viewportRef.current;
@@ -291,38 +300,36 @@ export default function MermaidTool({ locale }: MermaidToolProps) {
     setView((v) => {
       const next = Math.min(10, Math.max(0.1, v.scale * factor));
       const k = next / v.scale;
-      return {
-        scale: next,
-        tx: cx - (cx - v.tx) * k,
-        ty: cy - (cy - v.ty) * k,
-      };
+      const c = clampTxTy(cx - (cx - v.tx) * k, cy - (cy - v.ty) * k, next);
+      return { scale: next, tx: c.tx, ty: c.ty };
     });
   }
 
+  // Drag to pan — handled via window listeners (not pointer capture, which is
+  // unreliable) so the gesture survives the pointer leaving the element.
   function onPointerDown(e: ReactPointerEvent<HTMLDivElement>) {
-    dragRef.current = { x: e.clientX, y: e.clientY, tx: view.tx, ty: view.ty };
-    try {
-      e.currentTarget.setPointerCapture(e.pointerId);
-    } catch {
-      /* ignore */
-    }
-  }
-  function onPointerMove(e: ReactPointerEvent<HTMLDivElement>) {
-    const d = dragRef.current;
-    if (!d) return;
-    setView((v) => ({
-      ...v,
-      tx: d.tx + (e.clientX - d.x),
-      ty: d.ty + (e.clientY - d.y),
-    }));
-  }
-  function onPointerUp(e: ReactPointerEvent<HTMLDivElement>) {
-    dragRef.current = null;
-    try {
-      e.currentTarget.releasePointerCapture(e.pointerId);
-    } catch {
-      /* ignore */
-    }
+    e.preventDefault();
+    const start = { x: e.clientX, y: e.clientY, tx: view.tx, ty: view.ty };
+    setDragging(true);
+    const move = (ev: PointerEvent) => {
+      setView((v) => {
+        const c = clampTxTy(
+          start.tx + (ev.clientX - start.x),
+          start.ty + (ev.clientY - start.y),
+          v.scale
+        );
+        return { ...v, tx: c.tx, ty: c.ty };
+      });
+    };
+    const up = () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+      window.removeEventListener('pointercancel', up);
+      setDragging(false);
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+    window.addEventListener('pointercancel', up);
   }
 
   return (
@@ -389,11 +396,9 @@ export default function MermaidTool({ locale }: MermaidToolProps) {
           <div
             ref={viewportRef}
             onPointerDown={svg ? onPointerDown : undefined}
-            onPointerMove={svg ? onPointerMove : undefined}
-            onPointerUp={onPointerUp}
-            onPointerLeave={onPointerUp}
-            className={`relative min-h-[560px] flex-1 touch-none overflow-hidden ${
-              svg ? 'cursor-grab active:cursor-grabbing' : ''
+            onDragStart={(e) => e.preventDefault()}
+            className={`relative min-h-[560px] flex-1 touch-none select-none overflow-hidden ${
+              svg ? (dragging ? 'cursor-grabbing' : 'cursor-grab') : ''
             }`}
           >
             {svg ? (
