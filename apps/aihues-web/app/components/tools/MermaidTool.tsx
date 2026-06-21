@@ -69,6 +69,26 @@ function naturalSize(svgEl: SVGSVGElement): { w: number; h: number } {
   }
 }
 
+/* Pin the rendered SVG to its natural (viewBox) pixel size and drop Mermaid's
+   max-width cap, so the diagram has a stable intrinsic size that the wrapper's
+   CSS transform can scale from — sizing lives in the markup (survives React
+   re-renders), zoom lives in the transform. */
+function bakeNatural(svgStr: string): string {
+  const vb = svgStr.match(/viewBox="([\d.eE+\- ]+)"/);
+  if (!vb) return svgStr;
+  const parts = vb[1].trim().split(/\s+/).map(Number);
+  const w = parts[2];
+  const h = parts[3];
+  if (!w || !h) return svgStr;
+  return svgStr.replace(/<svg\b([^>]*)>/, (_full, attrs: string) => {
+    const cleaned = attrs
+      .replace(/\swidth="[^"]*"/, '')
+      .replace(/\sheight="[^"]*"/, '')
+      .replace(/max-width:\s*[^;"]*;?/g, '');
+    return `<svg${cleaned} width="${w}" height="${h}">`;
+  });
+}
+
 const TEMPLATES: {
   key: string;
   label: string;
@@ -178,7 +198,7 @@ export default function MermaidTool({ locale }: MermaidToolProps) {
         idRef.current += 1;
         const { svg: out } = await mermaid.render(`mmd-${idRef.current}`, src);
         if (!alive) return;
-        setSvg(out);
+        setSvg(bakeNatural(out));
         setError('');
       } catch (e) {
         if (!alive) return;
@@ -219,18 +239,6 @@ export default function MermaidTool({ locale }: MermaidToolProps) {
     const scale = Math.max(0.05, Math.min((cw - pad) / sw, (ch - pad) / sh, 3));
     setView({ scale, tx: (cw - sw * scale) / 2, ty: (ch - sh * scale) / 2 });
   }, []);
-
-  // Scale the SVG by its own width/height (vector, stays crisp at any zoom)
-  // rather than a CSS transform, which rasterises and blurs the image.
-  useEffect(() => {
-    const svgEl = contentRef.current?.querySelector<SVGSVGElement>('svg');
-    if (!svgEl) return;
-    const { w, h } = naturalSize(svgEl);
-    if (!w || !h) return;
-    svgEl.style.maxWidth = 'none';
-    svgEl.style.width = `${w * view.scale}px`;
-    svgEl.style.height = `${h * view.scale}px`;
-  }, [view.scale, svg]);
 
   // Auto-fit whenever a new diagram renders (double rAF so layout has settled).
   useEffect(() => {
@@ -405,9 +413,9 @@ export default function MermaidTool({ locale }: MermaidToolProps) {
               <>
                 <div
                   ref={contentRef}
-                  className='absolute left-0 top-0 [&_svg]:!max-w-none'
+                  className='absolute left-0 top-0 origin-top-left [&_svg]:!max-w-none'
                   style={{
-                    transform: `translate(${view.tx}px, ${view.ty}px)`,
+                    transform: `translate(${view.tx}px, ${view.ty}px) scale(${view.scale})`,
                   }}
                   dangerouslySetInnerHTML={{ __html: svg }}
                 />
