@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-import { getAllPosts } from '@/lib/blog-data';
+import { getAllPosts } from '@/lib/resources-data';
 
 const BASE_URL = 'https://aihues.com';
 

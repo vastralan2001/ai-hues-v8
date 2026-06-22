@@ -776,8 +776,8 @@ export const dict: Record<Locale, Record<string, string>> = {
     'playbooks.badge1': 'AI Vibe Navigator',
     'playbooks.badge2': 'No signup',
     'playbooks.title': 'AIHues Growth Stack + AI Tools',
-    'blog.relatedTools': 'Related Tools',
-    'blog.fromReview': 'From AIHues Reviews',
+    'resources.relatedTools': 'Related Tools',
+    'resources.fromReview': 'From AIHues Reviews',
 
     'review.tool': 'Tool',
     'review.review': 'Review',
@@ -1564,8 +1564,8 @@ export const dict: Record<Locale, Record<string, string>> = {
     'comment.writeReply': '写下你的回复...',
     'comment.anonymous': '匿名用户',
 
-    'blog.relatedTools': '相关工具推荐',
-    'blog.fromReview': '来自 AIHues 评测',
+    'resources.relatedTools': '相关工具推荐',
+    'resources.fromReview': '来自 AIHues 评测',
 
     'playbooks.desc': '100+ 工具覆盖出海增长、AI 产品、开源追踪和设计领域。',
   },

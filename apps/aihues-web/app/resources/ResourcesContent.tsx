@@ -7,12 +7,12 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import NewsletterSubscribe from '@/components/NewsletterSubscribe';
 import CoverImage from '@/components/CoverImage';
 import { PageMasthead } from '@/components/PageMasthead';
-import type { BlogPost } from '@/lib/blog-data';
+import type { ResourcePost } from '@/lib/resources-data';
 
 const POSTS_PER_PAGE = 12;
 
 interface Props {
-  initialPosts: BlogPost[];
+  initialPosts: ResourcePost[];
 }
 
 export default function ResourcesContent({ initialPosts }: Props) {

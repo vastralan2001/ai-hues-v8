@@ -4,13 +4,13 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 
 import { PageShell } from '@/components/SiteChrome';
-import { getAllPosts } from '@/lib/blog-data';
+import { getAllPosts } from '@/lib/resources-data';
 import CoverImage from '@/components/CoverImage';
 import NewsletterSubscribe from '@/components/NewsletterSubscribe';
 import RelatedArticles from '@/components/RelatedArticles';
 import ArticleToc, { type TocItem } from '@/components/ArticleToc';
 import ShareButtons from '@/components/ShareButtons';
-import BlogToolRecommend from '@/components/reviews/BlogToolRecommend';
+import ResourceToolRecommend from '@/components/reviews/ResourceToolRecommend';
 import '../article.css';
 
 const BASE_URL = 'https://aihues.com';
@@ -228,7 +228,7 @@ export default async function ArticlePage({
           </aside>
         </div>
 
-        <BlogToolRecommend tag={meta.tag} />
+        <ResourceToolRecommend tag={meta.tag} />
         <NewsletterSubscribe />
         <RelatedArticles currentSlug={slug} locale='en' />
       </div>

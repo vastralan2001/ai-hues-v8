@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 
-import { getAllPosts } from '@/lib/blog-data';
+import { getAllPosts } from '@/lib/resources-data';
 import { PUBLISHED_GAME_SLUGS } from '@/lib/published-games';
 import { PUBLISHED_TOOL_SLUGS } from '@/lib/published-tools';
 import { TEST_META } from '@/lib/tests';
@@ -52,7 +52,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   const posts = getAllPosts();
-  const blogPages = posts.map((post) => ({
+  const resourcePages = posts.map((post) => ({
     url: `${BASE_URL}/resources/${post.slug}`,
     lastModified: new Date(post.date),
     changeFrequency: 'monthly' as const,
@@ -64,6 +64,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...toolPages,
     ...gamePages,
     ...testPages,
-    ...blogPages,
+    ...resourcePages,
   ];
 }

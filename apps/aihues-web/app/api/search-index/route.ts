@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-import { getAllPosts } from '@/lib/blog-data';
+import { getAllPosts } from '@/lib/resources-data';
 import { PUBLISHED_TOOL_SLUGS } from '@/lib/published-tools';
 import { ALL_TOOLS } from '@/lib/tool-data';
 
@@ -11,7 +11,7 @@ interface SearchItem {
   title: string;
   subtitle?: string;
   href: string;
-  type: 'tool' | 'blog' | 'page';
+  type: 'tool' | 'resource' | 'page';
 }
 
 export async function GET() {
@@ -47,7 +47,7 @@ export async function GET() {
       title: post.title,
       subtitle: post.tag,
       href: `/resources/${post.slug}`,
-      type: 'blog' as const,
+      type: 'resource' as const,
     })),
   ];
 

@@ -8,7 +8,7 @@ interface Item {
   title: string;
   subtitle?: string;
   href: string;
-  type: 'tool' | 'blog' | 'page';
+  type: 'tool' | 'resource' | 'page';
 }
 
 let globalItems: Item[] | null = null;
@@ -208,7 +208,7 @@ export default function CommandPalette() {
                 <span className='flex h-8 w-8 shrink-0 items-center justify-center rounded-[8px] bg-[#f5f0e8] text-sm'>
                   {item.type === 'tool'
                     ? '🔧'
-                    : item.type === 'blog'
+                    : item.type === 'resource'
                       ? '📝'
                       : '📄'}
                 </span>

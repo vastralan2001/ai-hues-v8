@@ -20,7 +20,7 @@ apps/aihues-web/public/games/*.html
 
 # Generated resource content
 apps/aihues-web/public/resources/*.html
-apps/aihues-web/content/blog/posts.json
+apps/aihues-web/content/resources/posts.json
 
 # Runtime wishlist data
 apps/aihues-web/data/wishes.json

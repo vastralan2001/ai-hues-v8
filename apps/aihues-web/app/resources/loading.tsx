@@ -1,4 +1,4 @@
-export default function BlogLoading() {
+export default function ResourcesLoading() {
   return (
     <div className='mx-auto max-w-[1200px] px-6 py-20 md:px-7'>
       <div className='mb-10 text-center'>

@@ -10,7 +10,7 @@ import { getToolBySlug } from '@/lib/tool-data';
 import { useI18n } from '@/lib/i18n';
 import { ToolIcon } from '@/components/ToolIcon';
 
-export default function BlogToolRecommend({ tag }: { tag: string }) {
+export default function ResourceToolRecommend({ tag }: { tag: string }) {
   const { t } = useI18n();
   const slugs = getRelatedToolSlugsByTag(tag).slice(0, 3);
   if (slugs.length === 0) return null;
@@ -30,10 +30,10 @@ export default function BlogToolRecommend({ tag }: { tag: string }) {
       <div className='mb-4 flex items-center gap-2'>
         <span className='text-[16px]'>🛠️</span>
         <h3 className='text-[15px] font-bold text-foreground'>
-          {t('blog.relatedTools')}
+          {t('resources.relatedTools')}
         </h3>
         <span className='ml-auto text-[11px] text-muted'>
-          {t('blog.fromReview')}
+          {t('resources.fromReview')}
         </span>
       </div>
 

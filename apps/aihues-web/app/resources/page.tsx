@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 import { PageShell } from '@/components/SiteChrome';
-import { getAllPosts } from '@/lib/blog-data';
+import { getAllPosts } from '@/lib/resources-data';
 import ResourcesContent from './ResourcesContent';
 
 export const metadata: Metadata = {

@@ -29,16 +29,6 @@ const nextConfig: NextConfig = {
   output: 'standalone',
   serverExternalPackages: ['@huggingface/transformers'],
   transpilePackages: ['@aiushtha/proto-es'],
-  async redirects() {
-    return [
-      { source: '/blog', destination: '/resources', permanent: true },
-      {
-        source: '/blog/:path*',
-        destination: '/resources/:path*',
-        permanent: true,
-      },
-    ];
-  },
   async rewrites() {
     const toolSlugs = staticHtmlSlugs('tools');
     const gameSlugs = staticHtmlSlugs('games');

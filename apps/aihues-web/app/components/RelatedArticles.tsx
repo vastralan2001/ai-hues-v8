@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { getAllPosts } from '@/lib/blog-data';
+import { getAllPosts } from '@/lib/resources-data';
 import CoverImage from './CoverImage';
 
 export default function RelatedArticles({

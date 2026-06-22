@@ -8,10 +8,10 @@ import {
   blocksToMarkdown,
   markdownToArticleHTML,
 } from '@/lib/feishu';
-import type { BlogPost } from '@/lib/blog-data';
+import type { ResourcePost } from '@/lib/resources-data';
 
-const POSTS_JSON = join(process.cwd(), 'content', 'blog', 'posts.json');
-const BLOG_DIR = join(process.cwd(), 'public', 'resources');
+const POSTS_JSON = join(process.cwd(), 'content', 'resources', 'posts.json');
+const RESOURCES_DIR = join(process.cwd(), 'public', 'resources');
 
 function slugify(title: string): string {
   return title
@@ -23,7 +23,7 @@ function slugify(title: string): string {
 
 /**
  * POST /api/feishu/sync
- * Trigger a manual sync from Feishu wiki to local blog posts.
+ * Trigger a manual sync from Feishu wiki to local resource posts.
  * Requires FEISHU_APP_ID and FEISHU_APP_SECRET env vars.
  * Optional: FEISHU_SYNC_SECRET — when set, requires Bearer or x-feishu-sync-secret header.
  * Query param: spaceId (Feishu wiki space ID)
@@ -65,7 +65,7 @@ export async function POST(request: Request) {
     }
 
     // 1. Read existing posts
-    let existingPosts: BlogPost[] = [];
+    let existingPosts: ResourcePost[] = [];
     try {
       existingPosts = JSON.parse(readFileSync(POSTS_JSON, 'utf-8'));
     } catch {
@@ -100,7 +100,7 @@ export async function POST(request: Request) {
       });
 
       // Write HTML file
-      writeFileSync(join(BLOG_DIR, `${slug}.html`), html, 'utf-8');
+      writeFileSync(join(RESOURCES_DIR, `${slug}.html`), html, 'utf-8');
 
       // Add to posts.json
       existingPosts.push({
