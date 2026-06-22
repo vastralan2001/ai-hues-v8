@@ -1396,12 +1396,7 @@ export function getAllReviews(): ToolReview[] {
   return SEED_REVIEWS;
 }
 
-export function getReviewsByCategory(): ToolReview[] {
-  // TODO: map slugs to categories via tool-data.ts
-  return SEED_REVIEWS;
-}
-
-/* ── Blog article → related tools mapping ── */
+/* ── Resource article → related tools mapping ── */
 
 export const TAG_TO_TOOL_SLUGS: Record<string, string[]> = {
   'AI Tools': [
