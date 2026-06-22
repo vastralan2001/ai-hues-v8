@@ -191,7 +191,15 @@ async function buildIndex(): Promise<Index> {
 }
 
 function getIndex(): Promise<Index> {
-  if (!indexPromise) indexPromise = buildIndex();
+  if (!indexPromise) {
+    // Don't cache a failed build: a transient model-fetch failure would
+    // otherwise leave the rejected promise cached, breaking every search
+    // (json included) until the server restarts. Reset so the next call retries.
+    indexPromise = buildIndex().catch((err) => {
+      indexPromise = null;
+      throw err;
+    });
+  }
   return indexPromise;
 }
 
