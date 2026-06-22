@@ -2,25 +2,25 @@ import type { Metadata } from 'next';
 
 import { PageShell } from '@/components/SiteChrome';
 import { getAllPosts } from '@/lib/blog-data';
-import BlogContent from './BlogContent';
+import ResourcesContent from './ResourcesContent';
 
 export const metadata: Metadata = {
-  title: 'Blog | AIHues',
+  title: 'Resources | AIHues',
   description:
     'Growth strategies, AI tool reviews, and indie dev battle-tested tips.',
   openGraph: {
-    title: 'AIHues Blog',
+    title: 'AIHues Resources',
     description:
       'Growth strategies, AI tool reviews, and indie dev battle-tested tips.',
     type: 'website',
   },
 };
 
-export default function BlogPage() {
+export default function ResourcesPage() {
   const posts = getAllPosts();
   return (
     <PageShell>
-      <BlogContent initialPosts={posts} />
+      <ResourcesContent initialPosts={posts} />
     </PageShell>
   );
 }

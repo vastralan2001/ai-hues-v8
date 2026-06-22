@@ -26,13 +26,13 @@ export default function BlogToolRecommend({ tag }: { tag: string }) {
   if (items.length === 0) return null;
 
   return (
-    <div className='mt-12 rounded-xl border border-[#e7e5e4] bg-[#fafaf9] p-5'>
+    <div className='mt-12 rounded-xl border border-border bg-surface p-5'>
       <div className='mb-4 flex items-center gap-2'>
         <span className='text-[16px]'>🛠️</span>
-        <h3 className='text-[15px] font-bold text-[#1c1917]'>
+        <h3 className='text-[15px] font-bold text-foreground'>
           {t('blog.relatedTools')}
         </h3>
-        <span className='ml-auto text-[11px] text-[#a8a29e]'>
+        <span className='ml-auto text-[11px] text-muted'>
           {t('blog.fromReview')}
         </span>
       </div>
@@ -40,7 +40,7 @@ export default function BlogToolRecommend({ tag }: { tag: string }) {
       <div className='grid grid-cols-1 gap-3 sm:grid-cols-3'>
         {items.map(({ tool, review, slug }) => (
           <Link
-            className='group block rounded-lg border border-[#e7e5e4] bg-white p-3 transition-all hover:border-[#b45309] hover:shadow-sm'
+            className='group block rounded-lg border border-border bg-bg p-3 transition-colors hover:border-accent'
             href={`/tools/${slug}`}
             key={slug}
           >
@@ -48,24 +48,20 @@ export default function BlogToolRecommend({ tag }: { tag: string }) {
               <span className='text-[18px]'>
                 <ToolIcon slug={tool.slug} size={18} />
               </span>
-              <span className='text-[13px] font-bold text-[#1c1917] group-hover:text-[#b45309]'>
+              <span className='text-[13px] font-bold text-foreground group-hover:text-accent'>
                 {tool.name}
               </span>
             </div>
-            <p className='mb-2 line-clamp-2 text-[11px] leading-snug text-[#78716c]'>
+            <p className='mb-2 line-clamp-2 text-[11px] leading-snug text-secondary'>
               {tool.description}
             </p>
             {review && (
               <div className='flex items-center gap-1 text-[11px]'>
-                <span className='font-bold text-[#b45309]'>
-                  {review.overall}
-                </span>
-                <span className='text-[#b45309]'>
+                <span className='font-bold text-accent'>{review.overall}</span>
+                <span className='text-accent'>
                   {starRating(review.overall)}
                 </span>
-                <span className='ml-auto text-[#a8a29e]'>
-                  {t('review.review')}
-                </span>
+                <span className='ml-auto text-muted'>{t('review.review')}</span>
               </div>
             )}
           </Link>

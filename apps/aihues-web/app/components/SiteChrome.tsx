@@ -5,7 +5,7 @@ import { Rss } from 'lucide-react';
 import HeaderBar from '@/components/HeaderBar';
 import { t, type Locale } from '@/lib/dict';
 import {
-  blogHref,
+  resourcesHref,
   discoverHref,
   gameDetailHref,
   gamesHref,
@@ -32,7 +32,7 @@ const mainLinks: Array<{ href: string; labelKey: string }> = [
   { href: toolsHref, labelKey: 'nav.tools' },
   { href: gamesHref, labelKey: 'nav.games' },
   { href: testsHref, labelKey: 'nav.tests' },
-  { href: blogHref, labelKey: 'nav.blog' },
+  { href: resourcesHref, labelKey: 'nav.resources' },
   { href: wishlistHref, labelKey: 'nav.wishlist' },
 ];
 
@@ -109,7 +109,7 @@ export function SiteFooter({
     [t(locale, 'nav.tools'), toolsHref],
     [t(locale, 'nav.discover'), discoverHref],
     [t(locale, 'nav.wishlist'), wishlistHref],
-    [t(locale, 'nav.blog'), blogHref],
+    [t(locale, 'nav.resources'), resourcesHref],
   ];
   const games: Array<[string, string]> = [
     [t(locale, 'footer.chess'), gameDetailHref('chess')],
@@ -144,7 +144,7 @@ export function SiteFooter({
             {t(locale, 'footer.tagline')}
           </p>
           <div className='mt-5 flex items-center gap-2'>
-            <FooterIcon href='/blog/rss.xml' label='RSS'>
+            <FooterIcon href='/resources/rss.xml' label='RSS'>
               <Rss size={16} />
             </FooterIcon>
           </div>

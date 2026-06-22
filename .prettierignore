@@ -18,8 +18,8 @@ next-env.d.ts
 apps/aihues-web/public/tools/*.html
 apps/aihues-web/public/games/*.html
 
-# Generated blog content
-apps/aihues-web/public/blog/*.html
+# Generated resource content
+apps/aihues-web/public/resources/*.html
 apps/aihues-web/content/blog/posts.json
 
 # Runtime wishlist data

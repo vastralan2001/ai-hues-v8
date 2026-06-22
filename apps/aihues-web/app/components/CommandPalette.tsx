@@ -178,7 +178,7 @@ export default function CommandPalette() {
             className='flex-1 bg-transparent text-[15px] text-[#1c1917] placeholder:text-[#a8a29e] focus:outline-none'
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={onInputKeyDown}
-            placeholder='Search tools, blog posts, pages...'
+            placeholder='Search tools, resources, pages...'
             type='text'
             value={query}
           />

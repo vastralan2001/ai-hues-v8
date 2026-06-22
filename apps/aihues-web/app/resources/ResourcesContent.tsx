@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import NewsletterSubscribe from '@/components/NewsletterSubscribe';
 import CoverImage from '@/components/CoverImage';
@@ -14,7 +15,7 @@ interface Props {
   initialPosts: BlogPost[];
 }
 
-export default function BlogContent({ initialPosts }: Props) {
+export default function ResourcesContent({ initialPosts }: Props) {
   const [query, setQuery] = useState('');
   const [activeTag, setActiveTag] = useState<string>('All');
   const [currentPage, setCurrentPage] = useState(1);
@@ -51,8 +52,8 @@ export default function BlogContent({ initialPosts }: Props) {
   return (
     <>
       <PageMasthead
-        eyebrow='Writing'
-        title='Blog & Guides'
+        eyebrow='Library'
+        title='Guides & Resources'
         subtitle='Growth strategies, AI tool reviews, and battle-tested indie-dev tips.'
         stats={[
           { num: `${initialPosts.length}`, label: 'Articles' },
@@ -61,8 +62,8 @@ export default function BlogContent({ initialPosts }: Props) {
       />
 
       <section className='mx-auto max-w-[1200px] px-6 pb-20 md:px-7'>
-        {/* Search + tag filters */}
-        <div className='mx-auto mb-10 max-w-[520px]'>
+        {/* Search */}
+        <div className='mx-auto mb-5 max-w-[760px]'>
           <div className='relative'>
             <svg
               className='absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted'
@@ -93,26 +94,27 @@ export default function BlogContent({ initialPosts }: Props) {
               {activeTag !== 'All' && ` in ${activeTag}`}
             </p>
           )}
+        </div>
 
-          <div className='mt-4 flex flex-wrap justify-center gap-2'>
-            {allTags.map((tag) => (
-              <button
-                key={tag}
-                className={`rounded-full border px-3 py-1 text-xs font-semibold transition-colors ${
-                  activeTag === tag
-                    ? 'border-accent bg-accent text-white'
-                    : 'border-border bg-surface text-secondary hover:border-accent hover:text-accent'
-                }`}
-                onClick={() => {
-                  setActiveTag(tag);
-                  setCurrentPage(1);
-                }}
-                type='button'
-              >
-                {tag}
-              </button>
-            ))}
-          </div>
+        {/* Tag filters */}
+        <div className='mx-auto mb-10 flex max-w-[1000px] flex-wrap justify-center gap-2'>
+          {allTags.map((tag) => (
+            <button
+              key={tag}
+              className={`rounded-full border px-3 py-1 text-xs font-semibold transition-colors ${
+                activeTag === tag
+                  ? 'border-accent bg-accent text-white'
+                  : 'border-border bg-surface text-secondary hover:border-accent hover:text-accent'
+              }`}
+              onClick={() => {
+                setActiveTag(tag);
+                setCurrentPage(1);
+              }}
+              type='button'
+            >
+              {tag}
+            </button>
+          ))}
         </div>
 
         {/* Posts grid */}
@@ -122,7 +124,7 @@ export default function BlogContent({ initialPosts }: Props) {
               {pagePosts.map((post) => (
                 <Link
                   key={post.slug}
-                  href={`/blog/${post.slug}`}
+                  href={`/resources/${post.slug}`}
                   className='card-lift group flex flex-col overflow-hidden rounded-[16px] border border-border bg-surface text-inherit no-underline'
                 >
                   <div className='relative h-[180px] overflow-hidden'>
@@ -154,27 +156,55 @@ export default function BlogContent({ initialPosts }: Props) {
             </div>
 
             {totalPages > 1 && (
-              <div className='mt-10 flex items-center justify-center gap-2'>
+              <nav
+                aria-label='Pagination'
+                className='mt-12 flex items-center justify-center gap-3'
+              >
                 <button
-                  className='rounded-[10px] border border-border bg-surface px-4 py-2 text-sm font-medium text-secondary transition-colors hover:border-accent hover:text-accent disabled:opacity-40'
+                  aria-label='Previous page'
+                  className='flex h-10 w-10 items-center justify-center rounded-full border border-border bg-surface text-secondary transition-colors hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-border disabled:hover:text-secondary'
                   disabled={currentPage === 1}
-                  onClick={() => setCurrentPage((p) => p - 1)}
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                   type='button'
                 >
-                  Previous
+                  <ChevronLeft size={18} />
                 </button>
-                <span className='px-3 text-sm text-muted'>
-                  Page {currentPage} of {totalPages}
-                </span>
+                <div className='flex items-center gap-2 text-sm text-secondary'>
+                  <span>Page</span>
+                  <input
+                    key={currentPage}
+                    aria-label='Go to page'
+                    className='h-10 w-14 rounded-[10px] border border-border bg-surface text-center text-sm font-semibold text-foreground outline-none transition-colors focus:border-accent'
+                    defaultValue={currentPage}
+                    max={totalPages}
+                    min={1}
+                    onBlur={(e) => {
+                      const n = Math.trunc(Number(e.currentTarget.value));
+                      if (Number.isFinite(n) && n >= 1 && n <= totalPages) {
+                        setCurrentPage(n);
+                      } else {
+                        e.currentTarget.value = String(currentPage);
+                      }
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') e.currentTarget.blur();
+                    }}
+                    type='number'
+                  />
+                  <span>of {totalPages}</span>
+                </div>
                 <button
-                  className='rounded-[10px] border border-border bg-surface px-4 py-2 text-sm font-medium text-secondary transition-colors hover:border-accent hover:text-accent disabled:opacity-40'
+                  aria-label='Next page'
+                  className='flex h-10 w-10 items-center justify-center rounded-full border border-border bg-surface text-secondary transition-colors hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-border disabled:hover:text-secondary'
                   disabled={currentPage === totalPages}
-                  onClick={() => setCurrentPage((p) => p + 1)}
+                  onClick={() =>
+                    setCurrentPage((p) => Math.min(totalPages, p + 1))
+                  }
                   type='button'
                 >
-                  Next
+                  <ChevronRight size={18} />
                 </button>
-              </div>
+              </nav>
             )}
           </>
         ) : (

@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
 
+import ShareButtons from '@/components/ShareButtons';
+
 /* Shared masthead for the Tools / Games / Tests listing pages — one consistent
    门头. Bold Radiance display title (Dota2 energy) on a calm warm-white band
    (kimi Quiet Utility): an eyebrow tag, the title with its last word accented,
@@ -63,6 +65,9 @@ export function PageMasthead({
             ))}
           </div>
         ) : null}
+        <div className='mt-7 flex justify-center'>
+          <ShareButtons />
+        </div>
       </div>
       <div
         aria-hidden='true'

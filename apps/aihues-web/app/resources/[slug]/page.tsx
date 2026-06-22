@@ -9,6 +9,7 @@ import CoverImage from '@/components/CoverImage';
 import NewsletterSubscribe from '@/components/NewsletterSubscribe';
 import RelatedArticles from '@/components/RelatedArticles';
 import ArticleToc, { type TocItem } from '@/components/ArticleToc';
+import ShareButtons from '@/components/ShareButtons';
 import BlogToolRecommend from '@/components/reviews/BlogToolRecommend';
 import '../article.css';
 
@@ -31,10 +32,10 @@ export async function generateMetadata({
     return { title: 'Not Found | AIHues' };
   }
   return {
-    title: `${post.title} | AIHues Blog`,
+    title: `${post.title} | AIHues Resources`,
     description: `${post.tag} · ${post.date} · ${post.readTime}`,
     alternates: {
-      canonical: `${BASE_URL}/blog/${slug}`,
+      canonical: `${BASE_URL}/resources/${slug}`,
     },
     openGraph: {
       title: post.title,
@@ -113,7 +114,7 @@ export default async function ArticlePage({
   let rawBody: string;
   try {
     const raw = readFileSync(
-      process.cwd() + `/public/blog/${slug}.html`,
+      process.cwd() + `/public/resources/${slug}.html`,
       'utf-8'
     );
     rawBody = extractBody(raw);
@@ -146,7 +147,7 @@ export default async function ArticlePage({
     },
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `${BASE_URL}/blog/${slug}`,
+      '@id': `${BASE_URL}/resources/${slug}`,
     },
   };
 
@@ -168,9 +169,9 @@ export default async function ArticlePage({
           <span aria-hidden='true'>/</span>
           <Link
             className='shrink-0 transition-colors hover:text-accent'
-            href='/blog'
+            href='/resources'
           >
-            Blog
+            Resources
           </Link>
           <span aria-hidden='true'>/</span>
           <span className='truncate text-secondary'>{meta.title}</span>
@@ -211,9 +212,15 @@ export default async function ArticlePage({
           <aside className='hidden lg:col-start-2 lg:row-start-2 lg:block'>
             <div className='sticky top-24 mt-10'>
               <ArticleToc items={toc} />
+              <div className='mt-6 border-t border-border pt-5'>
+                <p className='mb-3 text-[11px] font-bold uppercase tracking-[0.16em] text-muted'>
+                  Share
+                </p>
+                <ShareButtons title={meta.title} />
+              </div>
               <Link
                 className='mt-6 inline-flex items-center gap-1.5 text-[13px] font-semibold text-secondary transition-colors hover:text-accent'
-                href='/blog'
+                href='/resources'
               >
                 ← All articles
               </Link>

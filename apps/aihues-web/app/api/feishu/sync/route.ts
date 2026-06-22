@@ -11,7 +11,7 @@ import {
 import type { BlogPost } from '@/lib/blog-data';
 
 const POSTS_JSON = join(process.cwd(), 'content', 'blog', 'posts.json');
-const BLOG_DIR = join(process.cwd(), 'public', 'blog');
+const BLOG_DIR = join(process.cwd(), 'public', 'resources');
 
 function slugify(title: string): string {
   return title

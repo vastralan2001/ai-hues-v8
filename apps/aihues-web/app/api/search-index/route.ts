@@ -21,7 +21,7 @@ export async function GET() {
     { id: 'home', title: 'Home', href: '/', type: 'page' },
     { id: 'tools', title: 'Tools', href: '/tools', type: 'page' },
     { id: 'games', title: 'Games', href: '/games', type: 'page' },
-    { id: 'blog', title: 'Blog', href: '/blog', type: 'page' },
+    { id: 'resources', title: 'Resources', href: '/resources', type: 'page' },
     { id: 'pricing', title: 'Pricing', href: '/pricing', type: 'page' },
     { id: 'discover', title: 'Discover', href: '/discover', type: 'page' },
     {
@@ -46,7 +46,7 @@ export async function GET() {
       id: post.slug,
       title: post.title,
       subtitle: post.tag,
-      href: `/blog/${post.slug}`,
+      href: `/resources/${post.slug}`,
       type: 'blog' as const,
     })),
   ];
