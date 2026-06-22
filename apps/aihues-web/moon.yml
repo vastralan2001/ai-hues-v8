@@ -32,3 +32,33 @@ tasks:
     inputs:
       - 'app/**/*'
       - 'tsconfig.json'
+
+  format-check:
+    command:
+      - 'prettier'
+      - '--ignore-path'
+      - '.prettierignore'
+      - '--end-of-line'
+      - 'auto'
+      - '--check'
+      - '.'
+    inputs:
+      - '.prettierignore'
+    options:
+      mergeArgs: 'replace'
+    local: true
+
+  format:
+    command:
+      - 'prettier'
+      - '--ignore-path'
+      - '.prettierignore'
+      - '--end-of-line'
+      - 'auto'
+      - '--write'
+      - '.'
+    inputs:
+      - '.prettierignore'
+    options:
+      mergeArgs: 'replace'
+    local: true
