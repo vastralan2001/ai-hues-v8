@@ -9,6 +9,7 @@ import {
   type ToolCategoryKey,
 } from '@/lib/catalog-types';
 import { t, type Locale } from '@/lib/dict';
+import { GAME_CARD_COPY } from '@/lib/game-meta';
 import { event, GA_EVENTS } from '@/lib/gtag';
 import { ToolIcon } from './ToolIcon';
 import {
@@ -164,13 +165,6 @@ export function ToolCardV2({
    Game card — matches reference: centered,
    large emoji, gradient play button
    ───────────────────────────────────────────── */
-const GAME_PLAY_LABELS: Record<string, string> = {
-  'doodle-jump': 'game.jump',
-  'daily-luck': 'game.draw',
-  'slot-machine': 'game.spin',
-  basketball: 'game.play',
-};
-
 const GAME_BADGES: Record<string, string> = {
   'doodle-jump': 'game.arcade',
   'daily-luck': 'game.fortune',
@@ -195,30 +189,6 @@ const GAME_BADGES: Record<string, string> = {
   'game-of-life': 'game.sandbox',
 };
 
-const GAME_META: Record<string, string> = {
-  'doodle-jump': 'Endless · 3 difficulties · Arrows / tap',
-  'daily-luck': '30 fortunes · +10 Credits · Streak bonus',
-  'slot-machine': '3×3 reels · Lucky spins · +5~100 · Leaderboard',
-  basketball: '60 seconds · Physics · +10~50/game · Leaderboard',
-  snake: 'Endless · 3 speeds · Arrows / WASD / swipe',
-  'color-hunt': 'Stages & Sprint · ΔE2000',
-  chess: 'Play vs engine · Spectate · Live eval',
-  flappy: '4 difficulties · Tap / Space · Endless',
-  'block-drop': '7 pieces · Levels · Arrows / buttons',
-  'brick-breaker': '3 difficulties · Random maps · Drag / arrows',
-  'fruit-slash': 'Swipe to slice · Combos · Dodge bombs',
-  minesweeper: '3 sizes · Flag & dig · Best time',
-  sudoku: '4 difficulties · Notes · Best time',
-  'sky-strike': 'Waves & boss · Skills · Drag to fly',
-  'bullet-storm': 'Bullet hell · Survive · Best time',
-  'dodge-arena': 'Skills · HP · Rising difficulty',
-  'hundred-floors': 'Descend · Mind the ceiling · Best depth',
-  'depth-charge': 'Drop & sink · Timing · High score',
-  'combo-rush': 'Timed inputs · Chain combos · High score',
-  'radish-smash': 'Beat the clock · Combos · Avoid bombs',
-  'game-of-life': 'Conway · Draw cells · Play / pause',
-};
-
 export function GameCard({
   game,
   locale = 'en',
@@ -226,9 +196,9 @@ export function GameCard({
   game: CatalogGame;
   locale?: Locale;
 }) {
-  const playLabelKey = GAME_PLAY_LABELS[game.slug] ?? 'game.play';
   const badgeKey = GAME_BADGES[game.slug];
-  const meta = GAME_META[game.slug];
+  const copy = GAME_CARD_COPY[game.slug];
+  const zh = locale === 'zh';
 
   return (
     <Link
@@ -259,12 +229,14 @@ export function GameCard({
       </p>
 
       {/* Meta row */}
-      {meta && (
-        <p className='mb-4 text-[12px] leading-relaxed text-muted'>{meta}</p>
+      {copy && (
+        <p className='mb-4 text-[12px] leading-relaxed text-muted'>
+          {zh ? copy.metaZh : copy.meta}
+        </p>
       )}
 
       <span className='mt-auto self-center inline-block rounded-[12px] bg-accent px-7 py-[11px] text-[14px] font-medium text-white transition-all hover:bg-accent-light'>
-        {t(locale, playLabelKey)}
+        {copy ? (zh ? copy.ctaZh : copy.cta) : t(locale, 'game.play')}
       </span>
     </Link>
   );
