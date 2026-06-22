@@ -81,7 +81,7 @@ export default function TestsPage() {
           ))}
         </div>
 
-        <p className='mx-auto mt-8 max-w-[520px] text-center text-[12px] leading-relaxed text-muted'>
+        <p className='mx-auto mt-8 max-w-[760px] text-center text-[12px] leading-relaxed text-muted'>
           These tests are for entertainment and self-reflection only — they are
           not clinical instruments or scientific diagnoses.
         </p>

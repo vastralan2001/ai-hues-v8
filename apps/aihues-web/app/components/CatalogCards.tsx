@@ -179,6 +179,20 @@ const GAME_BADGES: Record<string, string> = {
   snake: 'game.classic',
   'color-hunt': 'game.skill',
   chess: 'game.strategy',
+  flappy: 'game.arcade',
+  'block-drop': 'game.puzzle',
+  'brick-breaker': 'game.arcade',
+  'fruit-slash': 'game.arcade',
+  minesweeper: 'game.puzzle',
+  sudoku: 'game.puzzle',
+  'sky-strike': 'game.action',
+  'bullet-storm': 'game.action',
+  'dodge-arena': 'game.action',
+  'hundred-floors': 'game.arcade',
+  'depth-charge': 'game.action',
+  'combo-rush': 'game.skill',
+  'radish-smash': 'game.skill',
+  'game-of-life': 'game.sandbox',
 };
 
 const GAME_META: Record<string, string> = {
@@ -189,6 +203,20 @@ const GAME_META: Record<string, string> = {
   snake: 'Endless · 3 speeds · Arrows / WASD / swipe',
   'color-hunt': 'Stages & Sprint · ΔE2000',
   chess: 'Play vs engine · Spectate · Live eval',
+  flappy: '4 difficulties · Tap / Space · Endless',
+  'block-drop': '7 pieces · Levels · Arrows / buttons',
+  'brick-breaker': '3 difficulties · Random maps · Drag / arrows',
+  'fruit-slash': 'Swipe to slice · Combos · Dodge bombs',
+  minesweeper: '3 sizes · Flag & dig · Best time',
+  sudoku: '4 difficulties · Notes · Best time',
+  'sky-strike': 'Waves & boss · Skills · Drag to fly',
+  'bullet-storm': 'Bullet hell · Survive · Best time',
+  'dodge-arena': 'Skills · HP · Rising difficulty',
+  'hundred-floors': 'Descend · Mind the ceiling · Best depth',
+  'depth-charge': 'Drop & sink · Timing · High score',
+  'combo-rush': 'Timed inputs · Chain combos · High score',
+  'radish-smash': 'Beat the clock · Combos · Avoid bombs',
+  'game-of-life': 'Conway · Draw cells · Play / pause',
 };
 
 export function GameCard({

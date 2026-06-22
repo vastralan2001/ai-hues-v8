@@ -7,6 +7,7 @@ import { getReviewBySlug, starRating } from '@/lib/reviews';
 import { getToolBySlug } from '@/lib/tool-data';
 import { useI18n } from '@/lib/i18n';
 
+import ShareButtons from '@/components/ShareButtons';
 import { ToolIcon } from '@/components/ToolIcon';
 
 function useTabs(locale: Locale) {
@@ -80,6 +81,9 @@ export default function ToolDetailTabs({
             <p className='mt-1 line-clamp-2 text-[14px] text-muted'>
               {tool.description}
             </p>
+            <div className='mt-3'>
+              <ShareButtons title={tool.name} />
+            </div>
           </div>
           {tool.isExternal && (
             <Link

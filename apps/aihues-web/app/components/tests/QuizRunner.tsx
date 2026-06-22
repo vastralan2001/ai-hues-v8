@@ -1,10 +1,13 @@
 'use client';
 
+import { ImageDown } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
 import { getTest } from '@/lib/tests';
+import { buildResultPoster, shareOrDownloadPoster } from '@/lib/tests/poster';
 import type { TestResult } from '@/lib/tests/types';
+import ShareButtons from '@/components/ShareButtons';
 import { ToolIcon } from '@/components/ToolIcon';
 import { testsHref } from '@/lib/routes';
 
@@ -18,7 +21,7 @@ export default function QuizRunner({ slug }: { slug: string }) {
   const [idx, setIdx] = useState(0);
   const [answers, setAnswers] = useState<number[]>(() => Array(total).fill(-1));
   const [result, setResult] = useState<TestResult | null>(null);
-  const [copied, setCopied] = useState(false);
+  const [posterBusy, setPosterBusy] = useState(false);
 
   if (!config) return null;
   const accent = config.accent;
@@ -27,7 +30,6 @@ export default function QuizRunner({ slug }: { slug: string }) {
     setAnswers(Array(total).fill(-1));
     setIdx(0);
     setResult(null);
-    setCopied(false);
     setPhase('quiz');
   }
 
@@ -53,15 +55,20 @@ export default function QuizRunner({ slug }: { slug: string }) {
     start();
   }
 
-  async function share() {
-    if (!result || !config) return;
-    const text = `My ${config.name.replace(' Personality Test', '')} result: ${result.code} — ${result.title}. ${result.blurb} · via AIHues`;
+  async function savePoster() {
+    if (!result || !config || posterBusy) return;
+    setPosterBusy(true);
     try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 2000);
-    } catch {
-      /* clipboard unavailable */
+      const blob = await buildResultPoster(config, result);
+      const safe = result.code.replace(/[^a-z0-9]+/gi, '-').toLowerCase();
+      const text = `My ${config.name} result: ${result.code} — ${result.title} · via AIHues`;
+      await shareOrDownloadPoster(
+        blob,
+        `aihues-${config.slug}-${safe}.png`,
+        text
+      );
+    } finally {
+      setPosterBusy(false);
     }
   }
 
@@ -322,28 +329,40 @@ export default function QuizRunner({ slug }: { slug: string }) {
             )}
 
             {/* actions */}
-            <div className='mt-8 flex flex-wrap items-center gap-3'>
-              <button
-                type='button'
-                onClick={retake}
-                className='inline-flex items-center rounded-[12px] px-7 py-2.5 text-[14px] font-semibold text-white transition-transform hover:-translate-y-0.5'
-                style={{ background: racc }}
-              >
-                Retake
-              </button>
-              <button
-                type='button'
-                onClick={share}
-                className='inline-flex items-center rounded-[12px] border border-border bg-surface px-7 py-2.5 text-[14px] font-semibold text-foreground transition-colors hover:border-border-strong'
-              >
-                {copied ? 'Copied!' : 'Share result'}
-              </button>
-              <Link
-                href={testsHref}
-                className='ml-auto text-[13px] font-semibold text-muted transition-colors hover:text-foreground'
-              >
-                All tests →
-              </Link>
+            <div className='mt-8 space-y-4'>
+              <div className='flex flex-wrap items-center gap-3'>
+                <button
+                  type='button'
+                  onClick={retake}
+                  className='inline-flex items-center rounded-[12px] px-7 py-2.5 text-[14px] font-semibold text-white transition-transform hover:-translate-y-0.5'
+                  style={{ background: racc }}
+                >
+                  Retake
+                </button>
+                <button
+                  type='button'
+                  onClick={savePoster}
+                  disabled={posterBusy}
+                  className='inline-flex items-center gap-2 rounded-[12px] border border-border bg-surface px-7 py-2.5 text-[14px] font-semibold text-foreground transition-colors hover:border-border-strong disabled:opacity-60'
+                >
+                  <ImageDown size={16} />
+                  {posterBusy ? 'Preparing…' : 'Save poster'}
+                </button>
+                <Link
+                  href={testsHref}
+                  className='ml-auto text-[13px] font-semibold text-muted transition-colors hover:text-foreground'
+                >
+                  All tests →
+                </Link>
+              </div>
+              <div className='flex items-center gap-3 border-t border-border pt-4'>
+                <span className='text-[12px] font-semibold uppercase tracking-[0.14em] text-muted'>
+                  Share
+                </span>
+                <ShareButtons
+                  title={`${result.code} — ${result.title} · ${config.name}`}
+                />
+              </div>
             </div>
           </div>
         </div>

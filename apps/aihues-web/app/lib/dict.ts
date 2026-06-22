@@ -81,6 +81,9 @@ export const dict: Record<Locale, Record<string, string>> = {
     'game.classic': 'Classic',
     'game.jump': 'Jump →',
     'game.hoops': 'Hoops',
+    'game.puzzle': 'Puzzle',
+    'game.action': 'Action',
+    'game.sandbox': 'Sandbox',
 
     // credit
     'credit.title': 'Credit Rules',
@@ -870,6 +873,9 @@ export const dict: Record<Locale, Record<string, string>> = {
     'game.classic': '经典',
     'game.jump': '跳跃 →',
     'game.hoops': '投篮',
+    'game.puzzle': '解谜',
+    'game.action': '动作',
+    'game.sandbox': '沙盒',
 
     // credit
     'credit.title': '积分规则',
