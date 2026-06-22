@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import BasketballGame from '@/components/games/BasketballGame';
@@ -23,6 +22,7 @@ import SkyStrikeGame from '@/components/games/SkyStrikeGame';
 import SlotMachineGame from '@/components/games/SlotMachineGame';
 import SnakeGame from '@/components/games/SnakeGame';
 import SudokuGame from '@/components/games/SudokuGame';
+import Breadcrumb from '@/components/Breadcrumb';
 import ShareButtons from '@/components/ShareButtons';
 import { PageShell } from '@/components/SiteChrome';
 import type { Locale } from '@/lib/dict';
@@ -340,12 +340,24 @@ export default async function GamePage({
 
           <div className='relative flex min-h-[calc(100vh-76px)] flex-col pb-12 pt-8'>
             <div className='mx-auto w-full max-w-[1100px] px-6'>
-              <Link
-                href='/games'
-                className='mb-4 inline-flex items-center gap-1.5 self-start text-[13px] font-semibold text-white/55 transition-colors hover:text-white'
-              >
-                ← {locale === 'zh' ? '返回游戏中心' : 'Back to Games'}
-              </Link>
+              <div className='mb-6 flex items-center justify-between gap-4'>
+                <Breadcrumb
+                  variant='dark'
+                  items={[
+                    { label: locale === 'zh' ? '首页' : 'Home', href: '/' },
+                    {
+                      label: locale === 'zh' ? '游戏' : 'Games',
+                      href: '/games',
+                    },
+                    { label: locale === 'zh' ? game.titleZh : game.title },
+                  ]}
+                />
+                <ShareButtons
+                  className='shrink-0'
+                  title={locale === 'zh' ? game.titleZh : game.title}
+                  variant='dark'
+                />
+              </div>
               <div className='mb-6 text-center'>
                 <div
                   className={`mb-2 text-[11px] font-extrabold uppercase tracking-[0.18em] ${theme.eyebrow}`}
@@ -358,12 +370,6 @@ export default async function GamePage({
                 <p className='mx-auto mt-3 max-w-[520px] text-[15px] leading-relaxed text-white/55'>
                   {locale === 'zh' ? game.descZh : game.desc}
                 </p>
-                <div className='mt-5 flex justify-center'>
-                  <ShareButtons
-                    title={locale === 'zh' ? game.titleZh : game.title}
-                    variant='dark'
-                  />
-                </div>
               </div>
             </div>
             <div
@@ -375,12 +381,19 @@ export default async function GamePage({
         </section>
       ) : (
         <div className='mx-auto max-w-[1100px] px-6 py-10'>
-          <Link
-            href='/games'
-            className='mb-6 inline-flex items-center gap-1.5 text-[13px] font-semibold text-secondary transition-colors hover:text-accent'
-          >
-            ← {locale === 'zh' ? '返回游戏中心' : 'Back to Games'}
-          </Link>
+          <div className='mb-6 flex items-center justify-between gap-4'>
+            <Breadcrumb
+              items={[
+                { label: locale === 'zh' ? '首页' : 'Home', href: '/' },
+                { label: locale === 'zh' ? '游戏' : 'Games', href: '/games' },
+                { label: locale === 'zh' ? game.titleZh : game.title },
+              ]}
+            />
+            <ShareButtons
+              className='shrink-0'
+              title={locale === 'zh' ? game.titleZh : game.title}
+            />
+          </div>
           <div className='mb-8 text-center'>
             <div className='mb-2 text-[11px] font-extrabold uppercase tracking-[0.18em] text-accent'>
               {locale === 'zh' ? '小游戏' : 'Mini Game'}
@@ -391,11 +404,6 @@ export default async function GamePage({
             <p className='mx-auto mt-3 max-w-[520px] text-[15px] leading-relaxed text-secondary'>
               {locale === 'zh' ? game.descZh : game.desc}
             </p>
-            <div className='mt-5 flex justify-center'>
-              <ShareButtons
-                title={locale === 'zh' ? game.titleZh : game.title}
-              />
-            </div>
           </div>
           <Game locale={locale} />
         </div>

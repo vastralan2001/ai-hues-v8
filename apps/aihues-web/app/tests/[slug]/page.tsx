@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import QuizRunner from '@/components/tests/QuizRunner';
+import Breadcrumb from '@/components/Breadcrumb';
+import ShareButtons from '@/components/ShareButtons';
 import { PageShell } from '@/components/SiteChrome';
 import { type Locale } from '@/lib/dict';
 import { testsHref } from '@/lib/routes';
@@ -37,12 +38,16 @@ export default async function TestPage({
   return (
     <PageShell variant='tests' locale={locale}>
       <section className='mx-auto max-w-[1100px] px-6 py-10'>
-        <Link
-          href={testsHref}
-          className='mb-8 inline-flex items-center gap-1.5 text-[13px] font-semibold text-secondary transition-colors hover:text-accent'
-        >
-          ← {locale === 'zh' ? '返回测评' : 'All tests'}
-        </Link>
+        <div className='mb-8 flex items-center justify-between gap-4'>
+          <Breadcrumb
+            items={[
+              { label: locale === 'zh' ? '首页' : 'Home', href: '/' },
+              { label: locale === 'zh' ? '测评' : 'Tests', href: testsHref },
+              { label: meta.name },
+            ]}
+          />
+          <ShareButtons className='shrink-0' title={meta.name} />
+        </div>
         <QuizRunner slug={slug} />
       </section>
     </PageShell>

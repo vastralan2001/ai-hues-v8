@@ -7,7 +7,6 @@ import { useState } from 'react';
 import { getTest } from '@/lib/tests';
 import { buildResultPoster, shareOrDownloadPoster } from '@/lib/tests/poster';
 import type { TestResult } from '@/lib/tests/types';
-import ShareButtons from '@/components/ShareButtons';
 import { ToolIcon } from '@/components/ToolIcon';
 import { testsHref } from '@/lib/routes';
 
@@ -329,40 +328,30 @@ export default function QuizRunner({ slug }: { slug: string }) {
             )}
 
             {/* actions */}
-            <div className='mt-8 space-y-4'>
-              <div className='flex flex-wrap items-center gap-3'>
-                <button
-                  type='button'
-                  onClick={retake}
-                  className='inline-flex items-center rounded-[12px] px-7 py-2.5 text-[14px] font-semibold text-white transition-transform hover:-translate-y-0.5'
-                  style={{ background: racc }}
-                >
-                  Retake
-                </button>
-                <button
-                  type='button'
-                  onClick={savePoster}
-                  disabled={posterBusy}
-                  className='inline-flex items-center gap-2 rounded-[12px] border border-border bg-surface px-7 py-2.5 text-[14px] font-semibold text-foreground transition-colors hover:border-border-strong disabled:opacity-60'
-                >
-                  <ImageDown size={16} />
-                  {posterBusy ? 'Preparing…' : 'Save poster'}
-                </button>
-                <Link
-                  href={testsHref}
-                  className='ml-auto text-[13px] font-semibold text-muted transition-colors hover:text-foreground'
-                >
-                  All tests →
-                </Link>
-              </div>
-              <div className='flex items-center gap-3 border-t border-border pt-4'>
-                <span className='text-[12px] font-semibold uppercase tracking-[0.14em] text-muted'>
-                  Share
-                </span>
-                <ShareButtons
-                  title={`${result.code} — ${result.title} · ${config.name}`}
-                />
-              </div>
+            <div className='mt-8 flex flex-wrap items-center gap-3'>
+              <button
+                type='button'
+                onClick={retake}
+                className='inline-flex items-center rounded-[12px] px-7 py-2.5 text-[14px] font-semibold text-white transition-transform hover:-translate-y-0.5'
+                style={{ background: racc }}
+              >
+                Retake
+              </button>
+              <button
+                type='button'
+                onClick={savePoster}
+                disabled={posterBusy}
+                className='inline-flex items-center gap-2 rounded-[12px] border border-border bg-surface px-7 py-2.5 text-[14px] font-semibold text-foreground transition-colors hover:border-border-strong disabled:opacity-60'
+              >
+                <ImageDown size={16} />
+                {posterBusy ? 'Preparing…' : 'Save poster'}
+              </button>
+              <Link
+                href={testsHref}
+                className='ml-auto text-[13px] font-semibold text-muted transition-colors hover:text-foreground'
+              >
+                All tests →
+              </Link>
             </div>
           </div>
         </div>

@@ -7,6 +7,7 @@ import { getReviewBySlug, starRating } from '@/lib/reviews';
 import { getToolBySlug } from '@/lib/tool-data';
 import { useI18n } from '@/lib/i18n';
 
+import Breadcrumb from '@/components/Breadcrumb';
 import ShareButtons from '@/components/ShareButtons';
 import { ToolIcon } from '@/components/ToolIcon';
 
@@ -46,6 +47,16 @@ export default function ToolDetailTabs({
 
   return (
     <div className='mx-auto max-w-[1300px] px-8 py-8'>
+      <div className='mb-6 flex items-center justify-between gap-4'>
+        <Breadcrumb
+          items={[
+            { label: locale === 'zh' ? '首页' : 'Home', href: '/' },
+            { label: locale === 'zh' ? '工具' : 'Tools', href: '/tools' },
+            { label: tool?.name ?? slug },
+          ]}
+        />
+        <ShareButtons className='shrink-0' title={tool?.name ?? slug} />
+      </div>
       {/* Tool header */}
       {tool && (
         <div className='mb-8 flex items-center gap-4 rounded-[20px] border border-border bg-surface p-4 sm:gap-5 sm:p-6'>
@@ -81,9 +92,6 @@ export default function ToolDetailTabs({
             <p className='mt-1 line-clamp-2 text-[14px] text-muted'>
               {tool.description}
             </p>
-            <div className='mt-3'>
-              <ShareButtons title={tool.name} />
-            </div>
           </div>
           {tool.isExternal && (
             <Link
