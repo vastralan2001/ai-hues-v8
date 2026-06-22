@@ -3,11 +3,8 @@ import Link from 'next/link';
 
 import { ApiNotice, EmptyState, ToolCardV2 } from '@/components/CatalogCards';
 import { PageShell } from '@/components/SiteChrome';
-import {
-  safeListGames,
-  safeListTools,
-  toolCategories,
-} from '@/lib/catalog-api';
+import { safeListGames, safeListTools } from '@/lib/catalog-api';
+import { toolCategories } from '@/lib/catalog-types';
 import { gameDetailHref, toolsCategoryHref, toolsHref } from '@/lib/routes';
 import { ToolIcon } from '@/components/ToolIcon';
 

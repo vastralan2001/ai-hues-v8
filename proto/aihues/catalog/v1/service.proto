@@ -23,8 +23,8 @@ message ListToolsRequest {
 }
 
 message ListToolsResponse {
-  repeated Tool tools       = 1;
-  string next_page_token    = 2;
+  repeated Tool tools = 1;
+  string next_page_token = 2;
 }
 
 message ListGamesRequest {
@@ -35,6 +35,6 @@ message ListGamesRequest {
 }
 
 message ListGamesResponse {
-  repeated Game games       = 1;
-  string next_page_token    = 2;
+  repeated Game games = 1;
+  string next_page_token = 2;
 }
