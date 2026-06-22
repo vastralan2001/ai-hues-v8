@@ -2,12 +2,12 @@
 
 import Link from 'next/link';
 
-import type {
-  CatalogGame,
-  CatalogTool,
-  ToolCategoryKey,
-} from '@/lib/catalog-api';
-import { toolCategories } from '@/lib/catalog-api';
+import {
+  toolCategories,
+  type CatalogGame,
+  type CatalogTool,
+  type ToolCategoryKey,
+} from '@/lib/catalog-types';
 import { t, type Locale } from '@/lib/dict';
 import { event, GA_EVENTS } from '@/lib/gtag';
 import { ToolIcon } from './ToolIcon';

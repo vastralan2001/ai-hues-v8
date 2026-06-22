@@ -8,12 +8,12 @@ import {
   getToolPricing,
   ToolCardV2,
 } from '@/components/CatalogCards';
-import type {
-  CatalogTool,
-  PriceTagKey,
-  ToolCategoryKey,
-} from '@/lib/catalog-api';
-import { toolCategories } from '@/lib/catalog-api';
+import {
+  toolCategories,
+  type CatalogTool,
+  type PriceTagKey,
+  type ToolCategoryKey,
+} from '@/lib/catalog-types';
 import { toolDetailHref } from '@/lib/routes';
 import { event, GA_EVENTS } from '@/lib/gtag';
 import { ToolIcon } from './ToolIcon';

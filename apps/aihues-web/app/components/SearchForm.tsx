@@ -1,6 +1,6 @@
 'use client';
 
-import type { ToolCategoryKey } from '@/lib/catalog-api';
+import type { ToolCategoryKey } from '@/lib/catalog-types';
 import { toolsHref } from '@/lib/routes';
 import { event, GA_EVENTS } from '@/lib/gtag';
 
