@@ -1,5 +1,8 @@
+'use client';
+
 import type { ToolCategoryKey } from '@/lib/catalog-types';
 import { toolsHref } from '@/lib/routes';
+import { event, GA_EVENTS } from '@/lib/gtag';
 
 export function ToolSearchForm({
   q,
@@ -9,7 +12,18 @@ export function ToolSearchForm({
   category: ToolCategoryKey;
 }) {
   return (
-    <form action={toolsHref} className='search-form'>
+    <form
+      action={toolsHref}
+      className='search-form'
+      onSubmit={(e) => {
+        const form = e.currentTarget;
+        const input = form.querySelector<HTMLInputElement>('input[name="q"]');
+        const term = input?.value?.trim();
+        if (term) {
+          event(GA_EVENTS.search, { term, category });
+        }
+      }}
+    >
       <label className='sr-only' htmlFor='tool-search'>
         Search tools
       </label>
@@ -17,7 +31,7 @@ export function ToolSearchForm({
         defaultValue={q}
         id='tool-search'
         name='q'
-        placeholder='Search 57 tools...'
+        placeholder='Search tools...'
         type='search'
       />
       {category !== 'all' ? (

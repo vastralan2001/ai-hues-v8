@@ -19,6 +19,14 @@ web:
       value: '1'
     - name: AIHUES_API_BASE_URL
       value: http://aihues-api.marci-dev.svc.cluster.local:80
+    - name: NEXT_PUBLIC_GA_ID
+      value: ''
+    - name: KIMI_API_KEY
+      value: 'sk-qeZNEFZjIC3qabra8Qgn50DKZiVTihlqe7NulsylJrn26Ha5'
+    - name: KIMI_API_BASE_URL
+      value: 'https://openai.app.msh.team/v1/chat/completions'
+    - name: KIMI_API_MODEL
+      value: 'gpt-4.1'
 
   replicaCount: 1
 
@@ -58,6 +66,14 @@ web:
     nginx.ingress.kubernetes.io/proxy-buffering: 'off'
     nginx.ingress.kubernetes.io/proxy-read-timeout: '300'
     nginx.ingress.kubernetes.io/proxy-body-size: 100m
+
+  volumes:
+    - name: aihues-data
+      persistentVolumeClaim:
+        claimName: aihues-web-data
+  volumeMounts:
+    - name: aihues-data
+      mountPath: /data
 
   resources:
     requests:

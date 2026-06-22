@@ -27,6 +27,8 @@ export const toolCategories = [
 
 export type ToolCategoryKey = (typeof toolCategories)[number]['key'];
 
+export type PriceTagKey = 'unspecified' | 'free' | 'freemium' | 'paid';
+
 export interface CatalogTool {
   id: string;
   slug: string;
@@ -34,8 +36,12 @@ export interface CatalogTool {
   name: string;
   description: string;
   category: ToolCategoryKey;
-  status: number;
+  status: number | string;
   sortOrder: number;
+  priceTag: PriceTagKey;
+  externalUrl: string;
+  tags: string[];
+  creditCost: number;
 }
 
 export interface CatalogGame {
@@ -44,8 +50,12 @@ export interface CatalogGame {
   icon: string;
   name: string;
   description: string;
-  status: number;
+  status: number | string;
   sortOrder: number;
+  priceTag: PriceTagKey;
+  externalUrl: string;
+  tags: string[];
+  creditCost: number;
 }
 
 export interface ListToolsOptions {

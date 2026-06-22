@@ -1,0 +1,186 @@
+'use client';
+
+import { useState } from 'react';
+
+import { aiGenerate } from '@/lib/ai-generate-client';
+import { t, type Locale } from '@/lib/dict';
+
+interface FaqToolProps {
+  locale: Locale;
+}
+
+interface QAPair {
+  id: number;
+  question: string;
+  answer: string;
+}
+
+export default function FaqTool({ locale }: FaqToolProps) {
+  const [pairs, setPairs] = useState<QAPair[]>([
+    { id: 1, question: '', answer: '' },
+  ]);
+  const [format, setFormat] = useState<'html' | 'jsonld'>('html');
+  const [result, setResult] = useState('');
+  const [copied, setCopied] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  let nextId = 2;
+
+  function addPair() {
+    setPairs([...pairs, { id: nextId++, question: '', answer: '' }]);
+  }
+
+  function removePair(id: number) {
+    setPairs(pairs.filter((p) => p.id !== id));
+  }
+
+  function updatePair(id: number, field: 'question' | 'answer', value: string) {
+    setPairs(pairs.map((p) => (p.id === id ? { ...p, [field]: value } : p)));
+  }
+
+  async function generate() {
+    setLoading(true);
+    setError('');
+    try {
+      const output = await aiGenerate({
+        tool: 'faq',
+        locale,
+        inputs: {
+          product: pairs[0]?.question.trim() || 'Product',
+          questions:
+            pairs
+              .map((p) => p.question)
+              .filter((q) => q.trim())
+              .join('\n') || 'General questions',
+        },
+      });
+      setResult(output);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to generate');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function copy() {
+    if (!result) return;
+    navigator.clipboard.writeText(result);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  return (
+    <div className='max-w-[800px] py-10'>
+      <h1 className='mb-2 text-[clamp(28px,3.4vw,40px)] font-extrabold tracking-[-0.02em] text-foreground'>
+        {t(locale, 'tool.faq.title')}
+      </h1>
+      <p className='mb-6 text-[15px] text-secondary'>
+        {t(locale, 'tool.faq.desc')}
+      </p>
+
+      <div className='space-y-4'>
+        {pairs.map((pair) => (
+          <div
+            key={pair.id}
+            className='rounded-2xl border border-border bg-surface p-4 space-y-3'
+          >
+            <div>
+              <label className='mb-2 block text-sm font-semibold text-foreground'>
+                {t(locale, 'tool.faq.question')}
+              </label>
+              <input
+                className='h-12 w-full rounded-lg border border-border bg-white dark:bg-gray-900 px-4 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+                onChange={(e) =>
+                  updatePair(pair.id, 'question', e.target.value)
+                }
+                type='text'
+                value={pair.question}
+              />
+            </div>
+            <div>
+              <label className='mb-2 block text-sm font-semibold text-foreground'>
+                {t(locale, 'tool.faq.answer')}
+              </label>
+              <textarea
+                className='h-[100px] w-full resize-none rounded-lg border border-border bg-white dark:bg-gray-900 px-4 py-3 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none'
+                onChange={(e) => updatePair(pair.id, 'answer', e.target.value)}
+                value={pair.answer}
+              />
+            </div>
+            {pairs.length > 1 && (
+              <button
+                className='text-sm text-red-500 hover:text-red-600'
+                onClick={() => removePair(pair.id)}
+                type='button'
+              >
+                {t(locale, 'tool.faq.remove')}
+              </button>
+            )}
+          </div>
+        ))}
+
+        <button
+          className='rounded-lg border border-border bg-surface px-5 py-3 text-sm font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
+          onClick={addPair}
+          type='button'
+        >
+          {t(locale, 'tool.faq.add')}
+        </button>
+
+        <div className='flex flex-wrap gap-2'>
+          {(['html', 'jsonld'] as const).map((f) => (
+            <button
+              key={f}
+              className={`rounded-lg border px-4 py-2 text-sm font-medium transition-all ${
+                format === f
+                  ? 'border-accent bg-accent text-white'
+                  : 'border-border bg-surface text-foreground hover:border-accent'
+              }`}
+              onClick={() => setFormat(f)}
+              type='button'
+            >
+              {f === 'html'
+                ? t(locale, 'tool.faq.html')
+                : t(locale, 'tool.faq.jsonLd')}
+            </button>
+          ))}
+        </div>
+
+        {error && <p className='text-sm text-red-500'>{error}</p>}
+
+        <button
+          className={`rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-light ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          disabled={loading}
+          onClick={generate}
+          type='button'
+        >
+          {t(locale, 'tool.faq.format')}
+        </button>
+
+        {result && (
+          <div className='mt-2'>
+            <div className='mb-2 flex items-center justify-between'>
+              <span className='text-sm font-semibold text-foreground'>
+                {t(locale, 'tool.faq.result')}
+              </span>
+              <button
+                className='rounded-[8px] border border-border bg-surface px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent'
+                onClick={copy}
+                type='button'
+              >
+                {copied
+                  ? t(locale, 'tool.copy.copied')
+                  : t(locale, 'tool.wordCount.copy')}
+              </button>
+            </div>
+            <div className='min-h-[120px] w-full rounded-2xl border border-border bg-surface p-5'>
+              <pre className='whitespace-pre-wrap break-all font-mono text-sm text-foreground'>
+                {result}
+              </pre>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

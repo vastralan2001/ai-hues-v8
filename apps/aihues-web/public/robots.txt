@@ -1,7 +1,0 @@
-User-agent: *
-Allow: /
-Allow: /tools/
-Allow: /games/
-Disallow: /js/
-
-Sitemap: https://nptmdmptvfdmm.ok.kimi.link/sitemap.xml

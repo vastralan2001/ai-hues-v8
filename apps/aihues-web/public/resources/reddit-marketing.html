@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Reddit Marketing Playbook: How to Acquire Users Gracefully in Redditor
+      Territory | AIHues
+    </title>
+    <meta
+      name="description"
+      content="Reddit is one of the largest community platforms with 800M+ monthly active users. This guide shares practical strategies for building brand trust, avoiding bans, and acquiring users efficiently."
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --bg: #faf9f6;
+        --surface: #ffffff;
+        --surface-hover: #f5f0e8;
+        --border: #e8e2d9;
+        --border-hover: #d4c8b8;
+        --text: #1c1917;
+        --text-secondary: #78716c;
+        --text-muted: #a8a29e;
+        --accent: #b45309;
+        --accent-light: #d97706;
+        --accent-gradient: linear-gradient(135deg, #b45309, #d97706);
+        --green: #059669;
+        --green-bg: #ecfdf5;
+        --radius: 14px;
+        --radius-sm: 10px;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.04);
+        --shadow-hover:
+          0 4px 12px rgba(180, 83, 9, 0.12), 0 8px 32px rgba(0, 0, 0, 0.08);
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      .topbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 200;
+        height: 52px;
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px;
+      }
+      .topbar-logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 16px;
+        font-weight: 800;
+        color: var(--text);
+      }
+      .topbar-logo-mark {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        background: var(--accent-gradient);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+      .topbar-nav {
+        display: flex;
+        gap: 16px;
+      }
+      .topbar-nav a {
+        font-size: 13px;
+        color: #3d3d3d;
+        font-weight: 500;
+      }
+      .topbar-nav a:hover {
+        color: var(--accent);
+      }
+
+      .article {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 80px 28px 40px;
+      }
+      .article-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+      .article-tag {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+        background: rgba(180, 83, 9, 0.08);
+        color: var(--accent);
+        margin-bottom: 16px;
+      }
+      .article h1 {
+        font-size: 32px;
+        font-weight: 800;
+        line-height: 1.15;
+        letter-spacing: -1px;
+        margin-bottom: 12px;
+      }
+      .article-header p {
+        color: #3d3d3d;
+        font-size: 15px;
+      }
+      .article-meta {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-top: 16px;
+      }
+
+      .article h2 {
+        font-size: 28px;
+        font-weight: 700;
+        line-height: 1.2;
+        letter-spacing: -0.5px;
+        margin: 48px 0 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #e5e5e5;
+        color: #1c1917;
+      }
+      .article h3 {
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 1.3;
+        letter-spacing: -0.3px;
+        margin: 32px 0 12px;
+        color: #1c1917;
+      }
+      .article p {
+        margin-bottom: 16px;
+        color: #3d3d3d;
+        font-size: 16px;
+        line-height: 1.75;
+      }
+      .article ul,
+      .article ol {
+        margin: 0 0 16px 24px;
+        color: #3d3d3d;
+        font-size: 15px;
+      }
+      .article li {
+        margin-bottom: 8px;
+        line-height: 1.75;
+      }
+      .article strong {
+        color: #1c1917;
+        font-weight: 600;
+      }
+
+      .tip {
+        background: var(--green-bg);
+        border-left: 4px solid var(--green);
+        padding: 12px 16px;
+        margin: 20px 0;
+        border-radius: 0 8px 8px 0;
+        color: #3d3d3d;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .warning {
+        background: #fef2f2;
+        border-left: 4px solid #dc2626;
+        padding: 12px 16px;
+        margin: 20px 0;
+        border-radius: 0 8px 8px 0;
+        color: #3d3d3d;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .cta-box {
+        background: var(--accent-gradient);
+        color: #fff;
+        padding: 28px;
+        border-radius: var(--radius);
+        margin: 36px 0;
+        text-align: center;
+      }
+      .cta-box h3 {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+      .cta-box p {
+        opacity: 0.9;
+        margin-bottom: 16px;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+      .cta-btn {
+        display: inline-block;
+        padding: 10px 24px;
+        border-radius: 10px;
+        background: #fff;
+        color: var(--accent);
+        font-size: 14px;
+        line-height: 1.6;
+        font-weight: 600;
+      }
+
+      .footer {
+        text-align: center;
+        padding: 40px 28px;
+        border-top: 1px solid var(--border);
+        color: var(--text-muted);
+        font-size: 12px;
+        margin-top: 40px;
+      }
+
+      @media (max-width: 768px) {
+        .article {
+          padding: 70px 16px 32px;
+        }
+        .article h1 {
+          font-size: 24px;
+        }
+        .article h2 {
+          font-size: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="topbar">
+      <a href="/" class="topbar-logo"
+        ><span class="topbar-logo-mark">🎨</span><span>AIHues</span></a
+      >
+      <nav class="topbar-nav">
+        <a href="../index.html">Home</a>
+        <a href="../blog.html">Blog</a>
+        <a href="../games.html">Games</a>
+      </nav>
+    </div>
+
+    <article class="article">
+      <div class="article-header">
+        <span class="article-tag">Reddit Marketing</span>
+        <h1>Reddit Marketing Playbook</h1>
+        <p>
+          7 tools + battle-tested strategies, from Subreddit selection to
+          soft-sell posting
+        </p>
+        <div class="article-meta">
+          <span>2026-05-20</span>
+          <span>6 min read</span>
+          <span>AIHues Team</span>
+        </div>
+      </div>
+
+      <p>
+        Reddit is one of the largest forum platforms globally, with over
+        <strong>50 million daily active users</strong>. For overseas products,
+        Reddit is one of the highest-ROI promotion channels — especially for
+        developer tools, AI apps, and open-source projects. But Reddit
+        communities have strict rules, and direct advertising will get you
+        banned. This article shares a proven Reddit promotion methodology.
+      </p>
+
+      <h2>Why Reddit Is the Golden Channel for Going Global</h2>
+      <ul>
+        <li>
+          <strong>Extremely high developer density</strong> — r/MachineLearning,
+          r/LocalLLaMA, r/selfhosted and other communities gather the world's
+          most active technical users
+        </li>
+        <li>
+          <strong>Transparent rules</strong> — Every Subreddit has clear
+          self-promotion rules; follow them and you won't get banned
+        </li>
+        <li>
+          <strong>Strong long-tail effect</strong> — Good posts get indexed by
+          search engines and bring traffic continuously
+        </li>
+        <li>
+          <strong>Direct feedback</strong> — User comments are very authentic,
+          allowing quick product direction validation
+        </li>
+      </ul>
+
+      <h2>Finding the Right Subreddit</h2>
+      <p>
+        Not every community is suitable for your product. Here are recommended
+        communities by product type:
+      </p>
+
+      <h3>Developer Tools / Open Source Projects</h3>
+      <ul>
+        <li>
+          <strong>r/SideProject</strong> — Indie project showcase, developer
+          hangout, relaxed rules
+        </li>
+        <li>
+          <strong>r/selfhosted</strong> — Self-hosted tools community, great OSS
+          product exposure
+        </li>
+        <li>
+          <strong>r/startups</strong> — Startup community, you can share product
+          stories
+        </li>
+      </ul>
+
+      <h3>AI / ML Products</h3>
+      <ul>
+        <li>
+          <strong>r/MachineLearning</strong> — Main ML academic & industry
+          discussion community, great for deep-tech products
+        </li>
+        <li>
+          <strong>r/LocalLLaMA</strong> — Most active local LLM deployment
+          community, great for inference tools
+        </li>
+        <li>
+          <strong>r/datascience</strong> — Data science discussions from
+          beginner to advanced
+        </li>
+      </ul>
+
+      <div class="tip">
+        Use <strong>Reddit List</strong> (free tool) to quickly browse
+        high-quality community directories and find niche Subreddits you've
+        never heard of.
+      </div>
+
+      <h2>The Golden Rules of Reddit Content Publishing</h2>
+      <p>
+        Reddit users hate hard-sell ads. Here are proven content strategies:
+      </p>
+
+      <h3>1. Lead with Value</h3>
+      <p>
+        Don't start by introducing your product. First share a valuable story,
+        tutorial, or data insight. Naturally mention at the end how your tool
+        solves this problem.
+      </p>
+
+      <h3>2. Transparent Disclosure</h3>
+      <p>
+        If you're affiliated with the product, you must declare it in the post.
+        Reddit communities highly value honesty, and hiding your identity will
+        get you banned.
+      </p>
+
+      <div class="warning">
+        If a Subreddit's sidebar explicitly prohibits self-promotion, don't try.
+        Look for communities that allow "Showoff Saturday" or "Feedback Friday".
+      </div>
+
+      <h3>3. Engage in Discussions, Don't Just Drop Links</h3>
+      <p>
+        Be active in the community for 1-2 weeks before posting, commenting on
+        others' posts. Build account credibility before sharing your own
+        content.
+      </p>
+
+      <h2>AI Agent Automation Tools</h2>
+      <p>
+        Leapility offers a suite of AI Agents specifically for Reddit marketing:
+      </p>
+      <ul>
+        <li>
+          <strong>Reddit Marketing Strategist</strong> — Automatically analyzes
+          your product, recommends the best Subreddits, and generates
+          rule-compliant posting strategies
+        </li>
+        <li>
+          <strong>Agent Launch Strategy</strong> — Plans long-term content
+          strategies to avoid being forgotten by the community after a one-time
+          post
+        </li>
+        <li>
+          <strong>Reddit Soft-Sell Agent</strong> — Rewrites your hard-sell copy
+          into Reddit-style soft-sell content, removing the marketing tone
+        </li>
+        <li>
+          <strong>Reddit User Pain Points</strong> — Scrapes target Subreddits'
+          hot posts, analyzes user pain points, and helps you find product entry
+          points
+        </li>
+      </ul>
+
+      <h2>Data Tracking & Optimization</h2>
+      <p>After publishing, continuously track performance:</p>
+      <ul>
+        <li>
+          Use <strong>Juicebox</strong> to generate short links with UTM
+          parameters, tracking traffic quality from Reddit
+        </li>
+        <li>
+          Use <strong>PostHog</strong> to analyze conversion funnels for Reddit
+          users
+        </li>
+        <li>
+          Pay attention to comment feedback and adjust product direction
+          accordingly
+        </li>
+      </ul>
+
+      <h2>Real-World Timeline</h2>
+      <p>A typical Reddit promotion rhythm:</p>
+      <ol>
+        <li>
+          <strong>Week 1</strong> — Register account, participate in target
+          community discussions, build Karma
+        </li>
+        <li>
+          <strong>Week 2</strong> — Publish first value-based content (tutorial
+          / data / story), don't mention the product
+        </li>
+        <li>
+          <strong>Week 3</strong> — Naturally mention your tool in comments,
+          answer user questions
+        </li>
+        <li>
+          <strong>Week 4</strong> — Publish official "Show HN" or "I built X"
+          post
+        </li>
+        <li>
+          <strong>Ongoing</strong> — Participate in community discussions
+          weekly, keep the account active
+        </li>
+      </ol>
+
+      <div class="cta-box">
+        <h3>Explore More Growth Tools</h3>
+        <p>
+          The AIHues directory lists 70+ growth tools with category and price
+          filtering
+        </p>
+        <a href="../index.html" class="cta-btn">View All Tools →</a>
+      </div>
+    </article>
+
+    <footer class="footer">© 2026 AIHues · Built with Kimi</footer>
+  </body>
+</html>

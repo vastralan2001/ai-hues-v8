@@ -160,70 +160,70 @@
   /* ---------- Tool → category map (derived from index.html TOOLS array) ---------- */
   var TOOL_CATEGORIES = {
     /* Developer */
-    'tools/json.html': 'Developer',
-    'tools/jwt.html': 'Developer',
-    'tools/regex.html': 'Developer',
-    'tools/uuid.html': 'Developer',
-    'tools/timestamp.html': 'Developer',
-    'tools/sha256.html': 'Developer',
-    'tools/base64.html': 'Developer',
-    'tools/url-encode.html': 'Developer',
-    'tools/base-convert.html': 'Developer',
-    'tools/password-gen.html': 'Developer',
-    'tools/http-status.html': 'Developer',
-    'tools/html-entity.html': 'Developer',
-    'tools/cron-parser.html': 'Developer',
-    'tools/image-to-base64.html': 'Developer',
-    'tools/css-gradient.html': 'Developer',
-    'tools/color-convert.html': 'Developer',
-    'tools/csv-json.html': 'Developer',
-    'tools/ip-lookup.html': 'Developer',
-    'tools/curl-gen.html': 'Developer',
-    'tools/diff-pro.html': 'Developer',
-    'tools/unit-convert.html': 'Developer',
-    'tools/code-explain.html': 'Developer',
-    'tools/code-review.html': 'Developer',
-    'tools/shell.html': 'Developer',
-    'tools/sql.html': 'Developer',
-    'tools/git-commit.html': 'Developer',
+    'tools/json': 'Developer',
+    'tools/jwt': 'Developer',
+    'tools/regex': 'Developer',
+    'tools/uuid': 'Developer',
+    'tools/timestamp': 'Developer',
+    'tools/sha256': 'Developer',
+    'tools/base64': 'Developer',
+    'tools/url-encode': 'Developer',
+    'tools/base-convert': 'Developer',
+    'tools/password-gen': 'Developer',
+    'tools/http-status': 'Developer',
+    'tools/html-entity': 'Developer',
+    'tools/cron-parser': 'Developer',
+    'tools/image-to-base64': 'Developer',
+    'tools/css-gradient': 'Developer',
+    'tools/color-convert': 'Developer',
+    'tools/csv-json': 'Developer',
+    'tools/ip-lookup': 'Developer',
+    'tools/curl-gen': 'Developer',
+    'tools/diff-pro': 'Developer',
+    'tools/unit-convert': 'Developer',
+    'tools/code-explain': 'Developer',
+    'tools/code-review': 'Developer',
+    'tools/shell': 'Developer',
+    'tools/sql': 'Developer',
+    'tools/git-commit': 'Developer',
     /* Writing */
-    'tools/markdown.html': 'Writing',
-    'tools/fullwidth.html': 'Writing',
-    'tools/word-count.html': 'Writing',
-    'tools/diff.html': 'Writing',
-    'tools/title-case.html': 'Writing',
-    'tools/lorem-ipsum.html': 'Writing',
-    'tools/readability.html': 'Writing',
-    'tools/blog-outline.html': 'Writing',
-    'tools/changelog.html': 'Writing',
-    'tools/docs.html': 'Writing',
-    'tools/faq.html': 'Writing',
-    'tools/newsletter.html': 'Writing',
-    'tools/tagline.html': 'Writing',
-    'tools/tldr.html': 'Writing',
-    'tools/yt-script.html': 'Writing',
-    'tools/pr-desc.html': 'Writing',
-    'tools/linkedin.html': 'Writing',
-    'tools/lp-hero.html': 'Writing',
-    'tools/meta.html': 'Writing',
-    'tools/ad-copy.html': 'Writing',
-    'tools/alt-text.html': 'Writing',
-    'tools/cold-email.html': 'Writing',
-    'tools/push.html': 'Writing',
-    'tools/video-title.html': 'Writing',
-    'tools/humanize.html': 'Writing',
-    'tools/seo-title.html': 'Writing',
-    'tools/x-post.html': 'Writing',
-    'tools/pseudo.html': 'Writing',
+    'tools/markdown': 'Writing',
+    'tools/fullwidth': 'Writing',
+    'tools/word-count': 'Writing',
+    'tools/diff': 'Writing',
+    'tools/title-case': 'Writing',
+    'tools/lorem-ipsum': 'Writing',
+    'tools/readability': 'Writing',
+    'tools/blog-outline': 'Writing',
+    'tools/changelog': 'Writing',
+    'tools/docs': 'Writing',
+    'tools/faq': 'Writing',
+    'tools/newsletter': 'Writing',
+    'tools/tagline': 'Writing',
+    'tools/tldr': 'Writing',
+    'tools/yt-script': 'Writing',
+    'tools/pr-desc': 'Writing',
+    'tools/linkedin': 'Writing',
+    'tools/lp-hero': 'Writing',
+    'tools/meta': 'Writing',
+    'tools/ad-copy': 'Writing',
+    'tools/alt-text': 'Writing',
+    'tools/cold-email': 'Writing',
+    'tools/push': 'Writing',
+    'tools/video-title': 'Writing',
+    'tools/humanize': 'Writing',
+    'tools/seo-title': 'Writing',
+    'tools/x-post': 'Writing',
+    'tools/pseudo': 'Writing',
     /* Growth */
-    'tools/qrcode.html': 'Growth',
-    'tools/chi-squared.html': 'Growth',
+    'tools/qrcode': 'Growth',
+    'tools/chi-squared': 'Growth',
     /* Productivity */
-    'tools/pomodoro.html': 'Productivity',
+    'tools/pomodoro': 'Productivity',
     /* Games */
-    'games/basketball.html': 'Game',
-    'games/daily-luck.html': 'Game',
-    'games/slot-machine.html': 'Game',
+    'games/basketball': 'Game',
+    'games/daily-luck': 'Game',
+    'games/slot-machine': 'Game',
   };
 
   /* ============================================================
@@ -648,7 +648,7 @@
     toast.style.cssText = [
       'background:#fff',
       'border:1px solid #e8ecf1',
-      'border-left:4px solid #6d28d9',
+      'border-left:4px solid #b45309',
       'border-radius:12px',
       'padding:14px 18px',
       'display:flex',
@@ -691,7 +691,7 @@
       '<div style="font-weight:700;color:#0f172a;font-size:13px;margin-bottom:2px;">' +
       t('Achievement Unlocked!') +
       '</div>' +
-      '<div style="font-weight:600;color:#6d28d9;font-size:14px;">' +
+      '<div style="font-weight:600;color:#b45309;font-size:14px;">' +
       escapeHtml(name) +
       '</div>' +
       '<div style="font-size:12px;color:#475569;margin-top:2px;">' +
@@ -839,7 +839,7 @@
             '<div style="height:4px;background:#e8ecf1;border-radius:2px;overflow:hidden;">' +
             '<div style="height:100%;width:' +
             progressPct +
-            '%;background:linear-gradient(90deg,#6d28d9,#8b5cf6);border-radius:2px;transition:width 0.6s ease;"></div>' +
+            '%;background:linear-gradient(90deg,#b45309,#d97706);border-radius:2px;transition:width 0.6s ease;"></div>' +
             '</div>' +
             '<div style="font-size:11px;color:#94a3b8;margin-top:2px;">' +
             ach.progress +
@@ -909,7 +909,7 @@
     trackVisit();
 
     // Detect if this is a tool page
-    var toolMatch = path.match(/\/tools\/([^\/]+\.html)$/);
+    var toolMatch = path.match(/\/tools\/([^\/]+)$/);
     if (toolMatch || href.indexOf('/tools/') > -1) {
       var toolFile = path.split('/tools/')[1];
       if (toolFile) {
@@ -921,7 +921,7 @@
     }
 
     // Detect if this is a game page
-    var gameMatch = path.match(/\/games\/([^\/]+\.html)$/);
+    var gameMatch = path.match(/\/games\/([^\/]+)$/);
     if (gameMatch || href.indexOf('/games/') > -1) {
       var gameFile = path.split('/games/')[1];
       if (gameFile) {

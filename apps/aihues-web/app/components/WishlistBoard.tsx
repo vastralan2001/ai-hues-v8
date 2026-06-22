@@ -1,141 +1,100 @@
 'use client';
 
-import Link from 'next/link';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
-import { rankingHref } from '@/lib/routes';
+import { useI18n } from '@/lib/i18n';
+import {
+  addWish,
+  loadWishes,
+  saveWishes,
+  voteWish,
+} from '@/lib/wishlist-local';
+import { event, GA_EVENTS } from '@/lib/gtag';
 
-type WishStatus = 'PLANNED' | 'IN PROGRESS' | 'DONE';
+import type { Wish, WishStatus } from '@/lib/wishes';
+
 type WishFilter = 'ALL' | WishStatus;
 
-const WISHLIST_ITEMS = [
-  {
-    rank: 1,
-    title: 'AI PDF Summarizer',
-    description:
-      'Upload long PDFs and get a concise outline, key quotes, and action items.',
-    category: 'AI Writing',
-    status: 'IN PROGRESS',
-    votes: 248,
-    date: '2026-05-20',
-  },
-  {
-    rank: 2,
-    title: 'Image Background Remover',
-    description:
-      'Remove backgrounds from product images and avatars with one click.',
-    category: 'Utility',
-    status: 'PLANNED',
-    votes: 197,
-    date: '2026-05-18',
-  },
-  {
-    rank: 3,
-    title: 'API Mock Server',
-    description:
-      'Paste OpenAPI or JSON examples and generate a temporary mock endpoint.',
-    category: 'Developer',
-    status: 'PLANNED',
-    votes: 176,
-    date: '2026-05-16',
-  },
-  {
-    rank: 4,
-    title: 'Resume Bullet Rewriter',
-    description:
-      'Turn rough work notes into quantified resume bullets in multiple tones.',
-    category: 'AI Writing',
-    status: 'DONE',
-    votes: 142,
-    date: '2026-05-12',
-  },
-  {
-    rank: 5,
-    title: 'SQL Schema Visualizer',
-    description:
-      'Convert CREATE TABLE statements into a clean relationship diagram.',
-    category: 'Developer',
-    status: 'IN PROGRESS',
-    votes: 121,
-    date: '2026-05-10',
-  },
-  {
-    rank: 6,
-    title: 'Meeting Notes Cleaner',
-    description:
-      'Paste messy meeting notes and receive decisions, owners, and next steps.',
-    category: 'Utility',
-    status: 'PLANNED',
-    votes: 108,
-    date: '2026-05-08',
-  },
-  {
-    rank: 7,
-    title: 'Prompt Version Diff',
-    description:
-      'Compare two prompt versions and highlight instruction, tone, and output changes.',
-    category: 'Developer',
-    status: 'PLANNED',
-    votes: 96,
-    date: '2026-05-06',
-  },
-  {
-    rank: 8,
-    title: 'Product Hunt Launch Kit',
-    description:
-      'Generate tagline, maker comment, launch checklist, and social copy.',
-    category: 'Growth',
-    status: 'DONE',
-    votes: 83,
-    date: '2026-05-03',
-  },
-  {
-    rank: 9,
-    title: 'Invoice OCR Checker',
-    description:
-      'Extract invoice fields and flag missing tax IDs, totals, and dates.',
-    category: 'Utility',
-    status: 'PLANNED',
-    votes: 71,
-    date: '2026-05-01',
-  },
-  {
-    rank: 10,
-    title: 'CSS Clamp Generator',
-    description:
-      'Generate responsive clamp() font sizes and spacing scales from min/max values.',
-    category: 'Developer',
-    status: 'DONE',
-    votes: 64,
-    date: '2026-04-29',
-  },
-] satisfies Array<{
-  rank: number;
-  title: string;
-  description: string;
-  category: string;
-  status: WishStatus;
-  votes: number;
-  date: string;
-}>;
-
-const filterLabels: Record<WishFilter, string> = {
+const filterLabelsEn: Record<WishFilter, string> = {
   ALL: 'All',
   'IN PROGRESS': 'In Progress',
   DONE: 'Done',
   PLANNED: 'Planned',
 };
 
+const filterLabelsZh: Record<WishFilter, string> = {
+  ALL: '全部',
+  'IN PROGRESS': '进行中',
+  DONE: '已完成',
+  PLANNED: '计划中',
+};
+
+function getAnonymousId(): string {
+  if (typeof window === 'undefined') return '';
+  let id = localStorage.getItem('aihues-anon-id');
+  if (!id) {
+    id = `anon-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    localStorage.setItem('aihues-anon-id', id);
+  }
+  return id;
+}
+
+function validateEmail(email: string): boolean {
+  if (!email) return true;
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
 export function WishlistBoard() {
+  const { locale } = useI18n();
+  const filterLabels = locale === 'zh' ? filterLabelsZh : filterLabelsEn;
+
+  const [wishes, setWishes] = useState<Wish[]>([]);
+  const [loading, setLoading] = useState(true);
+
   const [filter, setFilter] = useState<WishFilter>('ALL');
   const [sort, setSort] = useState<'popular' | 'newest' | 'status'>('popular');
-  const [votedIds, setVotedIds] = useState<Set<string>>(new Set());
+
+  // Form state
+  const [formTitle, setFormTitle] = useState('');
+  const [formDesc, setFormDesc] = useState('');
+  const [formEmail, setFormEmail] = useState('');
+  const [formCategory, setFormCategory] = useState('Developer');
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  const anonymousId = useMemo(() => getAnonymousId(), []);
+
+  // Load from localStorage first (instant), then sync with server (source of truth)
+  useEffect(() => {
+    queueMicrotask(() => {
+      const data = loadWishes();
+      setWishes(data);
+      setLoading(false);
+    });
+
+    syncWithServer();
+  }, []);
+
+  async function syncWithServer() {
+    try {
+      const res = await fetch('/api/wishes');
+      if (!res.ok) return;
+      const data = (await res.json()) as { wishes?: Wish[] };
+      if (data.wishes) {
+        saveWishes(data.wishes);
+        queueMicrotask(() => setWishes(data.wishes ?? []));
+      }
+    } catch {
+      // API unavailable — localStorage data already loaded
+    }
+  }
 
   const visibleWishes = useMemo(() => {
     const filtered =
       filter === 'ALL'
-        ? WISHLIST_ITEMS
-        : WISHLIST_ITEMS.filter((wish) => wish.status === filter);
+        ? wishes
+        : wishes.filter((wish) => wish.status === filter);
 
     return [...filtered].sort((first, second) => {
       if (sort === 'status') {
@@ -146,53 +105,226 @@ export function WishlistBoard() {
       }
       return second.votes - first.votes;
     });
-  }, [filter, sort]);
+  }, [filter, sort, wishes]);
 
-  function toggleVote(title: string) {
-    setVotedIds((current) => {
-      const next = new Set(current);
-      if (next.has(title)) {
-        next.delete(title);
-      } else {
-        next.add(title);
+  const topFive = useMemo(() => {
+    return [...wishes].sort((a, b) => b.votes - a.votes).slice(0, 5);
+  }, [wishes]);
+
+  async function handleSubmit() {
+    if (!formTitle.trim() || !formDesc.trim()) return;
+
+    const title = formTitle.trim();
+    const desc = formDesc.trim();
+    const email = formEmail.trim();
+
+    if (email && !validateEmail(email)) {
+      setSubmitError(
+        locale === 'zh'
+          ? '请输入有效的邮箱地址'
+          : 'Please enter a valid email address'
+      );
+      return;
+    }
+
+    setSubmitting(true);
+    setSubmitError('');
+    setSubmitSuccess(false);
+
+    // Optimistic local update for instant feedback
+    let optimisticWish: Wish | null = null;
+    try {
+      optimisticWish = addWish({
+        title,
+        description: desc,
+        category: formCategory,
+        email,
+      });
+    } catch {
+      optimisticWish = null;
+    }
+    if (optimisticWish) {
+      setWishes((prev) => [...prev, optimisticWish]);
+    }
+
+    try {
+      // Sync to server (source of truth)
+      const res = await fetch('/api/wishes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title,
+          description: desc,
+          category: formCategory,
+          email,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error('Server rejected the wish');
       }
-      return next;
-    });
+
+      // Refresh from server to get canonical state (including generated id/votes)
+      await syncWithServer();
+
+      setFormTitle('');
+      setFormDesc('');
+      setFormEmail('');
+      setSubmitSuccess(true);
+      event(GA_EVENTS.wishlistSubmit, {
+        category: formCategory,
+        has_email: !!email,
+      });
+      setTimeout(() => setSubmitSuccess(false), 3000);
+    } catch (err) {
+      // Keep optimistic local wish if server failed so user data is not lost
+      setSubmitError(
+        err instanceof Error
+          ? err.message
+          : locale === 'zh'
+            ? '提交失败'
+            : 'Submit failed'
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  async function toggleVote(wishId: string) {
+    const wish = wishes.find((w) => w.id === wishId);
+    if (!wish) return;
+
+    const hasVoted = wish.voters.includes(anonymousId);
+    const action = hasVoted ? 'down' : 'up';
+
+    // Snapshot current state for rollback
+    const previousWishes = [...wishes];
+
+    // Optimistic UI + localStorage update
+    setWishes((prev) =>
+      prev.map((w) => {
+        if (w.id !== wishId) return w;
+        const voted = w.voters.includes(anonymousId);
+        return {
+          ...w,
+          votes: voted ? Math.max(0, w.votes - 1) : w.votes + 1,
+          voters: voted
+            ? w.voters.filter((v) => v !== anonymousId)
+            : [...w.voters, anonymousId],
+        };
+      })
+    );
+    voteWish(wishId, anonymousId, action);
+    event(GA_EVENTS.wishlistVote, { wishId, action });
+
+    // Sync to server (source of truth)
+    try {
+      const res = await fetch('/api/wishes/vote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ wishId, anonymousId, action }),
+      });
+
+      if (!res.ok) {
+        throw new Error('Server rejected the vote');
+      }
+
+      await syncWithServer();
+    } catch {
+      // Rollback to previous state on failure
+      setWishes(previousWishes);
+      saveWishes(previousWishes);
+    }
   }
 
   return (
     <>
       <div className='wish-form'>
-        <input maxLength={60} placeholder='Tool name...' />
-        <textarea placeholder='Describe what it does...' />
+        <input
+          maxLength={60}
+          placeholder={locale === 'zh' ? '工具名称...' : 'Tool name...'}
+          value={formTitle}
+          onChange={(e) => setFormTitle(e.target.value)}
+        />
+        <textarea
+          placeholder={
+            locale === 'zh' ? '描述它的功能...' : 'Describe what it does...'
+          }
+          rows={3}
+          value={formDesc}
+          onChange={(e) => setFormDesc(e.target.value)}
+        />
+        <input
+          maxLength={80}
+          placeholder={
+            locale === 'zh'
+              ? '你的邮箱（可选，上线后通知你）'
+              : 'Your email (optional, get notified when built)'
+          }
+          type='email'
+          value={formEmail}
+          onChange={(e) => setFormEmail(e.target.value)}
+        />
         <div className='wish-form__row'>
-          <select defaultValue='Developer'>
+          <select
+            value={formCategory}
+            onChange={(e) => setFormCategory(e.target.value)}
+          >
             <option>Developer</option>
             <option>Writing</option>
             <option>Growth</option>
             <option>Other</option>
           </select>
-          <button className='button button--primary' type='button'>
-            Submit
+          <button
+            className='button button--primary'
+            disabled={submitting || !formTitle.trim() || !formDesc.trim()}
+            onClick={handleSubmit}
+            type='button'
+          >
+            {submitting
+              ? locale === 'zh'
+                ? '提交中...'
+                : 'Submitting...'
+              : locale === 'zh'
+                ? '提交'
+                : 'Submit'}
           </button>
         </div>
-        <p className='wish-hint'>Everyone can see and vote after submission</p>
+        {submitSuccess && (
+          <p className='wish-hint' style={{ color: '#22c55e' }}>
+            {locale === 'zh' ? '提交成功！' : 'Submitted successfully!'}
+          </p>
+        )}
+        {submitError && (
+          <p className='wish-hint' style={{ color: '#ef4444' }}>
+            {submitError}
+          </p>
+        )}
+        {!submitSuccess && !submitError && (
+          <p className='wish-hint'>
+            {locale === 'zh'
+              ? '所有人都可以看到并投票'
+              : 'Everyone can see and vote after submission'}
+          </p>
+        )}
       </div>
 
       <section className='wishlist-top'>
         <div className='wishlist-top__header'>
           <div>
             <span>🏆</span>
-            <strong>Top 5 Requests</strong>
+            <strong>{locale === 'zh' ? 'Top 5 需求' : 'Top 5 Requests'}</strong>
           </div>
-          <Link href={rankingHref}>Full Leaderboard →</Link>
+          {/* Phase 1: Full Leaderboard hidden - ranking page removed */}
         </div>
         <div className='wishlist-top__list'>
-          {WISHLIST_ITEMS.slice(0, 5).map((wish) => (
-            <div className='wishlist-top__item' key={wish.title}>
-              <strong>{wish.rank}</strong>
+          {topFive.map((wish, idx) => (
+            <div className='wishlist-top__item' key={wish.id}>
+              <strong>{idx + 1}</strong>
               <span>{wish.title}</span>
-              <small>{wish.votes} votes</small>
+              <small>
+                {wish.votes} {locale === 'zh' ? '票' : 'votes'}
+              </small>
             </div>
           ))}
         </div>
@@ -216,44 +348,59 @@ export function WishlistBoard() {
             onChange={(event) => setSort(event.target.value as typeof sort)}
             value={sort}
           >
-            <option value='popular'>Popular (by votes)</option>
-            <option value='newest'>Newest (by time)</option>
-            <option value='status'>By Status</option>
+            <option value='popular'>
+              {locale === 'zh' ? '最热（按票数）' : 'Popular (by votes)'}
+            </option>
+            <option value='newest'>
+              {locale === 'zh' ? '最新（按时间）' : 'Newest (by time)'}
+            </option>
+            <option value='status'>
+              {locale === 'zh' ? '按状态' : 'By Status'}
+            </option>
           </select>
         </label>
       </section>
 
-      <p className='wishlist-count'>{visibleWishes.length} items</p>
+      <p className='wishlist-count'>
+        {visibleWishes.length} {locale === 'zh' ? '条' : 'items'}
+      </p>
 
-      <div className='wish-list'>
-        {visibleWishes.map((wish) => {
-          const hasVoted = votedIds.has(wish.title);
-          const votes = wish.votes + (hasVoted ? 1 : 0);
+      {loading && (
+        <p style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>
+          {locale === 'zh' ? '加载中...' : 'Loading...'}
+        </p>
+      )}
 
-          return (
-            <article className='wish-card' key={wish.title}>
-              <button
-                aria-pressed={hasVoted}
-                className='vote-button'
-                onClick={() => toggleVote(wish.title)}
-                type='button'
-              >
-                <span aria-hidden='true'>👍</span>
-                <strong>{votes}</strong>
-              </button>
-              <div>
-                <h2>{wish.title}</h2>
-                <div className='tag-row'>
-                  <span>{wish.category}</span>
-                  <span>{wish.status}</span>
+      {!loading && (
+        <div className='wish-list'>
+          {visibleWishes.map((wish) => {
+            const hasVoted = wish.voters.includes(anonymousId);
+
+            return (
+              <article className='wish-card' key={wish.id}>
+                <button
+                  aria-pressed={hasVoted}
+                  className='vote-button'
+                  onClick={() => toggleVote(wish.id)}
+                  type='button'
+                >
+                  <span aria-hidden='true'>👍</span>
+                  <strong>{wish.votes}</strong>
+                </button>
+                <div>
+                  <h2>{wish.title}</h2>
+                  <div className='tag-row'>
+                    <span>{wish.category}</span>
+                    <span>{wish.status}</span>
+                  </div>
+                  <p>{wish.description}</p>
+                  <small>{wish.date}</small>
                 </div>
-                <p>{wish.description}</p>
-                <small>{wish.date}</small>
-              </div>
-            </article>
-          );
-        })}
-      </div>
+              </article>
+            );
+          })}
+        </div>
+      )}
     </>
   );
 }

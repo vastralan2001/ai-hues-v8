@@ -1,0 +1,5 @@
+# Override proto plugins to use vendored local WASM files,
+# avoiding GitHub downloads in network-restricted CI environments.
+[plugins.tools]
+node = "file://./.moon/plugins/toolchains/node_tool.wasm"
+pnpm = "file://./.moon/plugins/toolchains/node_depman_tool.wasm"

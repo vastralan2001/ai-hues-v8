@@ -11,3 +11,11 @@ vcs:
   manager: git
   provider: gitlab
   defaultBranch: master
+
+# Include vendored WASM plugins and .prototools in the Docker workspace skeleton,
+# so that CI Docker builds do not need to download them from GitHub.
+docker:
+  scaffold:
+    include:
+      - '.prototools'
+      - '.moon/plugins/toolchains/*.wasm'

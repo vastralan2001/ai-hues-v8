@@ -1,13 +1,14 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import { ApiNotice, EmptyState, ToolCard } from '@/components/CatalogCards';
+import { ApiNotice, EmptyState, ToolCardV2 } from '@/components/CatalogCards';
 import { PageShell } from '@/components/SiteChrome';
 import { safeListGames, safeListTools } from '@/lib/catalog-api';
 import { toolCategories } from '@/lib/catalog-types';
 import { gameDetailHref, toolsCategoryHref, toolsHref } from '@/lib/routes';
+import { ToolIcon } from '@/components/ToolIcon';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: 'Discover',
@@ -48,7 +49,7 @@ export default async function DiscoverPage() {
         {trendingTools.length > 0 ? (
           <div className='catalog-grid'>
             {trendingTools.map((tool) => (
-              <ToolCard key={tool.id} tool={tool} />
+              <ToolCardV2 key={tool.id} locale='en' tool={tool} />
             ))}
           </div>
         ) : (
@@ -70,7 +71,7 @@ export default async function DiscoverPage() {
         {newTools.length > 0 ? (
           <div className='catalog-grid'>
             {newTools.map((tool) => (
-              <ToolCard key={tool.id} tool={tool} />
+              <ToolCardV2 key={tool.id} locale='en' tool={tool} />
             ))}
           </div>
         ) : (
@@ -108,7 +109,9 @@ export default async function DiscoverPage() {
               href={gameDetailHref(game.slug)}
               key={game.id}
             >
-              <span className='feature-card__icon'>{game.icon}</span>
+              <span className='feature-card__icon'>
+                <ToolIcon slug={game.slug} size={20} />
+              </span>
               <h3>{game.name}</h3>
               <p>{game.description}</p>
             </Link>

@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The 2026 AI Productivity Stack | AIHues</title>
+    <meta
+      name="description"
+      content="I cut my tool stack from 23 apps to 7. Here is what actually moved the needle — and what I deleted."
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --bg: #faf9f6;
+        --surface: #ffffff;
+        --surface-hover: #f5f0e8;
+        --border: #e8e2d9;
+        --border-hover: #d4c8b8;
+        --text: #1c1917;
+        --text-secondary: #78716c;
+        --text-muted: #a8a29e;
+        --accent: #b45309;
+        --accent-light: #d97706;
+        --accent-gradient: linear-gradient(135deg, #b45309, #d97706);
+        --green: #059669;
+        --blue: #2563eb;
+        --orange: #ea580c;
+        --radius: 14px;
+        --radius-sm: 10px;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.04);
+        --shadow-lg: 0 8px 32px rgba(180, 83, 9, 0.18);
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      .article {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 80px 28px 40px;
+      }
+      .article-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+      .article-tag {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+        background: rgba(180, 83, 9, 0.08);
+        color: var(--accent);
+        margin-bottom: 16px;
+      }
+      .article h1 {
+        font-size: 32px;
+        font-weight: 800;
+        line-height: 1.15;
+        letter-spacing: -1px;
+        margin-bottom: 12px;
+      }
+      .article-header p {
+        color: #3d3d3d;
+        font-size: 15px;
+      }
+      .article-meta {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-top: 16px;
+      }
+      .article h2 {
+        font-size: 28px;
+        font-weight: 700;
+        line-height: 1.2;
+        letter-spacing: -0.5px;
+        margin: 48px 0 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #e5e5e5;
+        color: #1c1917;
+      }
+      .article h3 {
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 1.3;
+        letter-spacing: -0.3px;
+        margin: 32px 0 12px;
+        color: #1c1917;
+      }
+      .article p {
+        margin-bottom: 16px;
+        color: #3d3d3d;
+        font-size: 16px;
+        line-height: 1.75;
+      }
+      .article ul,
+      .article ol {
+        margin: 0 0 16px 24px;
+        color: #3d3d3d;
+        font-size: 15px;
+      }
+      .article li {
+        margin-bottom: 8px;
+        line-height: 1.75;
+      }
+      .article strong {
+        color: #1c1917;
+        font-weight: 600;
+      }
+      .cta-box {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 28px;
+        margin: 40px 0;
+        text-align: center;
+      }
+      .cta-box h3 {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+      .cta-box p {
+        color: var(--text-secondary);
+        margin-bottom: 16px;
+      }
+      .cta-btn {
+        display: inline-block;
+        padding: 12px 24px;
+        border-radius: var(--radius-sm);
+        background: var(--accent-gradient);
+        color: #fff;
+        font-weight: 600;
+        font-size: 14px;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      .cta-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-lg);
+      }
+      .quote-box {
+        border-left: 3px solid var(--accent);
+        padding-left: 20px;
+        margin: 24px 0;
+        font-style: italic;
+        color: var(--text-secondary);
+      }
+      .footer {
+        text-align: center;
+        padding: 40px 28px;
+        font-size: 13px;
+        color: var(--text-muted);
+        border-top: 1px solid var(--border);
+      }
+    </style>
+  </head>
+  <body>
+    <article class="article">
+      <div class="article-header">
+        <span class="article-tag">Productivity</span>
+        <h1>The 2026 AI Productivity Stack</h1>
+        <p>
+          I cut my tool stack from 23 apps to 7. Here is what actually moved the
+          needle — and what I deleted.
+        </p>
+        <div class="article-meta">
+          <span>2026-05-10</span><span>5 min read</span><span>AIHues Team</span>
+        </div>
+      </div>
+
+      <p>
+        Last year, I had 23 productivity apps. Twenty-three. I spent more time
+        managing my tools than doing actual work. Every Monday morning was a
+        ritual of checking dashboards, syncing integrations, and wondering why
+        nothing felt productive.
+      </p>
+
+      <p>
+        So I did something drastic. I deleted everything and started over with
+        one rule: <strong>one tool per job.</strong> No exceptions. No "but this
+        one has a slightly better feature." One tool. Use it properly.
+      </p>
+
+      <p>Here is what survived the purge.</p>
+
+      <h2>Notion: The Central Nervous System</h2>
+
+      <p>
+        I had tried Obsidian, Craft, Capacities, and about six others. They were
+        all great. But Notion won because my team already used it. The switching
+        cost of moving everyone was higher than any feature gap.
+      </p>
+
+      <p>
+        I use Notion for documents, project plans, meeting notes, and my
+        personal wiki. The AI features are hit-or-miss, but they are good enough
+        for summarizing long docs and extracting action items. I do not use it
+        for writing — just organizing.
+      </p>
+
+      <p>
+        One trick that saved me hours: I have a template for every recurring
+        meeting. Agenda, notes, action items. No more blank-page syndrome.
+      </p>
+
+      <h2>Slack + Claude: The Communication Hack</h2>
+
+      <p>
+        Slack is fine. It is just chat. But here is my secret weapon: I feed
+        Claude my Slack threads from the day and ask it to extract decisions,
+        unresolved questions, and action items.
+      </p>
+
+      <p>
+        It sounds ridiculous. It works ridiculously well. I went from spending
+        45 minutes reading threads to 5 minutes reviewing Claude's summary. The
+        40 minutes I save? I use that for deep work.
+      </p>
+
+      <div class="quote-box">
+        "The best productivity hack is not doing more. It is removing the stuff
+        that feels like work but is not."
+      </div>
+
+      <h2>Cursor: The Only IDE I Need</h2>
+
+      <p>
+        I switched from VS Code to Cursor six months ago. I have not looked
+        back. The AI autocomplete is good. The command-K inline editing is
+        great. But the real killer feature? Tab-complete that actually
+        understands my codebase.
+      </p>
+
+      <p>
+        I used to context-switch between my editor and ChatGPT constantly. Now I
+        barely leave Cursor. It is not perfect — sometimes it suggests code that
+        looks right but breaks things. But it is right often enough that I am
+        easily 2x faster than before.
+      </p>
+
+      <h2>Figma: Design Without the Designer</h2>
+
+      <p>
+        I am not a designer. But Figma's AI features let me fake it
+        convincingly. I can describe a landing page and get a decent first
+        draft. I can remove backgrounds from photos in one click. I can generate
+        icon variations.
+      </p>
+
+      <p>
+        Is it as good as hiring a designer? No. Is it good enough for MVP-stage
+        products? Absolutely. I have shipped three landing pages this year
+        without touching a design tool beyond Figma.
+      </p>
+
+      <h2>Make: The Glue</h2>
+
+      <p>
+        Every repetitive task in my business is automated. New blog post?
+        Auto-share to Twitter, LinkedIn, and newsletter. New user signs up?
+        Welcome email, Slack notification, Airtable update. All of it runs
+        without me.
+      </p>
+
+      <p>
+        I have 14 active automations. They run about 200 times per week. Total
+        time I spend on them per month? Maybe 30 minutes of maintenance.
+      </p>
+
+      <p>
+        The rule is simple: if I do it more than twice, I automate it. No
+        exceptions.
+      </p>
+
+      <h2>What I Deleted</h2>
+
+      <p>
+        Second brain apps. I had three. Now I have one page in Notion. Simpler
+        is better.
+      </p>
+
+      <p>
+        Time trackers. I tracked every minute for a month. Learned nothing
+        useful. Deleted them all.
+      </p>
+
+      <p>
+        Multiple note apps. Apple Notes, Bear, Drafts. I was spreading my
+        thoughts across five apps and could never find anything. One app. One
+        inbox. Done.
+      </p>
+
+      <h2>The Philosophy</h2>
+
+      <p>
+        Here is what I learned from cutting 23 apps to 7: productivity is not
+        about having the best tools. It is about having
+        <em>few enough</em> tools that you actually know how to use them.
+      </p>
+
+      <p>
+        Every app you add creates friction. Context switching. Forgotten
+        passwords. Sync conflicts. The goal is not optimization. It is
+        elimination.
+      </p>
+
+      <p>Pick your stack. Learn it deeply. Ignore everything else.</p>
+
+      <div class="cta-box">
+        <h3>Build Your Stack</h3>
+        <p>Discover 100+ productivity tools in the AIHues directory</p>
+        <a href="../index.html" class="cta-btn">Browse All Tools →</a>
+      </div>
+    </article>
+    <footer class="footer">© 2026 AIHues · Built with Kimi</footer>
+  </body>
+</html>

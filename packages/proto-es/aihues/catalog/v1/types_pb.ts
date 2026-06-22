@@ -12,7 +12,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file aihues/catalog/v1/types.proto.
  */
 export const file_aihues_catalog_v1_types: GenFile = /*@__PURE__*/
-  fileDesc("Ch1haWh1ZXMvY2F0YWxvZy92MS90eXBlcy5wcm90bxIRYWlodWVzLmNhdGFsb2cudjEiqQIKBFRvb2wSCgoCaWQYASABKAkSDAoEc2x1ZxgCIAEoCRIMCgRpY29uGAMgASgJEgwKBG5hbWUYBCABKAkSEwoLZGVzY3JpcHRpb24YBSABKAkSMQoIY2F0ZWdvcnkYBiABKA4yHy5haWh1ZXMuY2F0YWxvZy52MS5JdGVtQ2F0ZWdvcnkSLQoGc3RhdHVzGAcgASgOMh0uYWlodWVzLmNhdGFsb2cudjEuSXRlbVN0YXR1cxISCgpzb3J0X29yZGVyGAggASgFEi8KC2NyZWF0ZV90aW1lGAkgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIvCgt1cGRhdGVfdGltZRgKIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAi9gEKBEdhbWUSCgoCaWQYASABKAkSDAoEc2x1ZxgCIAEoCRIMCgRpY29uGAMgASgJEgwKBG5hbWUYBCABKAkSEwoLZGVzY3JpcHRpb24YBSABKAkSLQoGc3RhdHVzGAYgASgOMh0uYWlodWVzLmNhdGFsb2cudjEuSXRlbVN0YXR1cxISCgpzb3J0X29yZGVyGAcgASgFEi8KC2NyZWF0ZV90aW1lGAggASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIvCgt1cGRhdGVfdGltZRgJIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAqTQoISXRlbUtpbmQSGQoVSVRFTV9LSU5EX1VOU1BFQ0lGSUVEEAASEgoOSVRFTV9LSU5EX1RPT0wQARISCg5JVEVNX0tJTkRfR0FNRRACKnUKCkl0ZW1TdGF0dXMSGwoXSVRFTV9TVEFUVVNfVU5TUEVDSUZJRUQQABIVChFJVEVNX1NUQVRVU19EUkFGVBABEhkKFUlURU1fU1RBVFVTX1BVQkxJU0hFRBACEhgKFElURU1fU1RBVFVTX0FSQ0hJVkVEEAMqgwEKDEl0ZW1DYXRlZ29yeRIdChlJVEVNX0NBVEVHT1JZX1VOU1BFQ0lGSUVEEAASGwoXSVRFTV9DQVRFR09SWV9ERVZFTE9QRVIQARIZChVJVEVNX0NBVEVHT1JZX1VUSUxJVFkQAhIcChhJVEVNX0NBVEVHT1JZX0FJX1dSSVRJTkcQA0JKWkhnaXRodWIuY29tL2FpaHVlcy9haXVzaHRoYS9wYWNrYWdlcy9wcm90by1nby9haWh1ZXMvY2F0YWxvZy92MTtjYXRhbG9ndjFiBnByb3RvMw", [file_google_protobuf_timestamp]);
+  fileDesc("Ch1haWh1ZXMvY2F0YWxvZy92MS90eXBlcy5wcm90bxIRYWlodWVzLmNhdGFsb2cudjEikgMKBFRvb2wSCgoCaWQYASABKAkSDAoEc2x1ZxgCIAEoCRIMCgRpY29uGAMgASgJEgwKBG5hbWUYBCABKAkSEwoLZGVzY3JpcHRpb24YBSABKAkSMQoIY2F0ZWdvcnkYBiABKA4yHy5haWh1ZXMuY2F0YWxvZy52MS5JdGVtQ2F0ZWdvcnkSLQoGc3RhdHVzGAcgASgOMh0uYWlodWVzLmNhdGFsb2cudjEuSXRlbVN0YXR1cxISCgpzb3J0X29yZGVyGAggASgFEi8KC2NyZWF0ZV90aW1lGAkgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIvCgt1cGRhdGVfdGltZRgKIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASLgoJcHJpY2VfdGFnGAsgASgOMhsuYWlodWVzLmNhdGFsb2cudjEuUHJpY2VUYWcSFAoMZXh0ZXJuYWxfdXJsGAwgASgJEgwKBHRhZ3MYDSADKAkSEwoLY3JlZGl0X2Nvc3QYDiABKAUi3wIKBEdhbWUSCgoCaWQYASABKAkSDAoEc2x1ZxgCIAEoCRIMCgRpY29uGAMgASgJEgwKBG5hbWUYBCABKAkSEwoLZGVzY3JpcHRpb24YBSABKAkSLQoGc3RhdHVzGAYgASgOMh0uYWlodWVzLmNhdGFsb2cudjEuSXRlbVN0YXR1cxISCgpzb3J0X29yZGVyGAcgASgFEi8KC2NyZWF0ZV90aW1lGAggASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIvCgt1cGRhdGVfdGltZRgJIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASLgoJcHJpY2VfdGFnGAogASgOMhsuYWlodWVzLmNhdGFsb2cudjEuUHJpY2VUYWcSFAoMZXh0ZXJuYWxfdXJsGAsgASgJEgwKBHRhZ3MYDCADKAkSEwoLY3JlZGl0X2Nvc3QYDSABKAUqTQoISXRlbUtpbmQSGQoVSVRFTV9LSU5EX1VOU1BFQ0lGSUVEEAASEgoOSVRFTV9LSU5EX1RPT0wQARISCg5JVEVNX0tJTkRfR0FNRRACKnUKCkl0ZW1TdGF0dXMSGwoXSVRFTV9TVEFUVVNfVU5TUEVDSUZJRUQQABIVChFJVEVNX1NUQVRVU19EUkFGVBABEhkKFUlURU1fU1RBVFVTX1BVQkxJU0hFRBACEhgKFElURU1fU1RBVFVTX0FSQ0hJVkVEEAMqgwEKDEl0ZW1DYXRlZ29yeRIdChlJVEVNX0NBVEVHT1JZX1VOU1BFQ0lGSUVEEAASGwoXSVRFTV9DQVRFR09SWV9ERVZFTE9QRVIQARIZChVJVEVNX0NBVEVHT1JZX1VUSUxJVFkQAhIcChhJVEVNX0NBVEVHT1JZX0FJX1dSSVRJTkcQAyplCghQcmljZVRhZxIZChVQUklDRV9UQUdfVU5TUEVDSUZJRUQQABISCg5QUklDRV9UQUdfRlJFRRABEhYKElBSSUNFX1RBR19GUkVFTUlVTRACEhIKDlBSSUNFX1RBR19QQUlEEANCSlpIZ2l0aHViLmNvbS9haWh1ZXMvYWl1c2h0aGEvcGFja2FnZXMvcHJvdG8tZ28vYWlodWVzL2NhdGFsb2cvdjE7Y2F0YWxvZ3YxYgZwcm90bzM", [file_google_protobuf_timestamp]);
 
 /**
  * 工具元数据
@@ -69,6 +69,36 @@ export type Tool = Message<"aihues.catalog.v1.Tool"> & {
    * @generated from field: google.protobuf.Timestamp update_time = 10;
    */
   updateTime?: Timestamp;
+
+  /**
+   * ── 新增字段 ──
+   *
+   * 价格标签
+   *
+   * @generated from field: aihues.catalog.v1.PriceTag price_tag = 11;
+   */
+  priceTag: PriceTag;
+
+  /**
+   * 外链地址
+   *
+   * @generated from field: string external_url = 12;
+   */
+  externalUrl: string;
+
+  /**
+   * 关键词标签
+   *
+   * @generated from field: repeated string tags = 13;
+   */
+  tags: string[];
+
+  /**
+   * 积分消耗（0 = 免费）
+   *
+   * @generated from field: int32 credit_cost = 14;
+   */
+  creditCost: number;
 };
 
 /**
@@ -128,6 +158,36 @@ export type Game = Message<"aihues.catalog.v1.Game"> & {
    * @generated from field: google.protobuf.Timestamp update_time = 9;
    */
   updateTime?: Timestamp;
+
+  /**
+   * ── 新增字段 ──
+   *
+   * 价格标签
+   *
+   * @generated from field: aihues.catalog.v1.PriceTag price_tag = 10;
+   */
+  priceTag: PriceTag;
+
+  /**
+   * 外链地址
+   *
+   * @generated from field: string external_url = 11;
+   */
+  externalUrl: string;
+
+  /**
+   * 关键词标签
+   *
+   * @generated from field: repeated string tags = 12;
+   */
+  tags: string[];
+
+  /**
+   * 积分消耗
+   *
+   * @generated from field: int32 credit_cost = 13;
+   */
+  creditCost: number;
 };
 
 /**
@@ -230,4 +290,37 @@ export enum ItemCategory {
  */
 export const ItemCategorySchema: GenEnum<ItemCategory> = /*@__PURE__*/
   enumDesc(file_aihues_catalog_v1_types, 2);
+
+/**
+ * 价格标签
+ *
+ * @generated from enum aihues.catalog.v1.PriceTag
+ */
+export enum PriceTag {
+  /**
+   * @generated from enum value: PRICE_TAG_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: PRICE_TAG_FREE = 1;
+   */
+  FREE = 1,
+
+  /**
+   * @generated from enum value: PRICE_TAG_FREEMIUM = 2;
+   */
+  FREEMIUM = 2,
+
+  /**
+   * @generated from enum value: PRICE_TAG_PAID = 3;
+   */
+  PAID = 3,
+}
+
+/**
+ * Describes the enum aihues.catalog.v1.PriceTag.
+ */
+export const PriceTagSchema: GenEnum<PriceTag> = /*@__PURE__*/
+  enumDesc(file_aihues_catalog_v1_types, 3);
 

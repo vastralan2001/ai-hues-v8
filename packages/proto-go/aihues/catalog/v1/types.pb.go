@@ -178,19 +178,77 @@ func (ItemCategory) EnumDescriptor() ([]byte, []int) {
 	return file_aihues_catalog_v1_types_proto_rawDescGZIP(), []int{2}
 }
 
+// 价格标签
+type PriceTag int32
+
+const (
+	PriceTag_PRICE_TAG_UNSPECIFIED PriceTag = 0
+	PriceTag_PRICE_TAG_FREE        PriceTag = 1
+	PriceTag_PRICE_TAG_FREEMIUM    PriceTag = 2
+	PriceTag_PRICE_TAG_PAID        PriceTag = 3
+)
+
+// Enum value maps for PriceTag.
+var (
+	PriceTag_name = map[int32]string{
+		0: "PRICE_TAG_UNSPECIFIED",
+		1: "PRICE_TAG_FREE",
+		2: "PRICE_TAG_FREEMIUM",
+		3: "PRICE_TAG_PAID",
+	}
+	PriceTag_value = map[string]int32{
+		"PRICE_TAG_UNSPECIFIED": 0,
+		"PRICE_TAG_FREE":        1,
+		"PRICE_TAG_FREEMIUM":    2,
+		"PRICE_TAG_PAID":        3,
+	}
+)
+
+func (x PriceTag) Enum() *PriceTag {
+	p := new(PriceTag)
+	*p = x
+	return p
+}
+
+func (x PriceTag) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (PriceTag) Descriptor() protoreflect.EnumDescriptor {
+	return file_aihues_catalog_v1_types_proto_enumTypes[3].Descriptor()
+}
+
+func (PriceTag) Type() protoreflect.EnumType {
+	return &file_aihues_catalog_v1_types_proto_enumTypes[3]
+}
+
+func (x PriceTag) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use PriceTag.Descriptor instead.
+func (PriceTag) EnumDescriptor() ([]byte, []int) {
+	return file_aihues_catalog_v1_types_proto_rawDescGZIP(), []int{3}
+}
+
 // 工具元数据
 type Tool struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Slug          string                 `protobuf:"bytes,2,opt,name=slug,proto3" json:"slug,omitempty"`
-	Icon          string                 `protobuf:"bytes,3,opt,name=icon,proto3" json:"icon,omitempty"`
-	Name          string                 `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
-	Description   string                 `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"`
-	Category      ItemCategory           `protobuf:"varint,6,opt,name=category,proto3,enum=aihues.catalog.v1.ItemCategory" json:"category,omitempty"`
-	Status        ItemStatus             `protobuf:"varint,7,opt,name=status,proto3,enum=aihues.catalog.v1.ItemStatus" json:"status,omitempty"`
-	SortOrder     int32                  `protobuf:"varint,8,opt,name=sort_order,json=sortOrder,proto3" json:"sort_order,omitempty"`
-	CreateTime    *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
-	UpdateTime    *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
+	state       protoimpl.MessageState `protogen:"open.v1"`
+	Id          string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Slug        string                 `protobuf:"bytes,2,opt,name=slug,proto3" json:"slug,omitempty"`
+	Icon        string                 `protobuf:"bytes,3,opt,name=icon,proto3" json:"icon,omitempty"`
+	Name        string                 `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
+	Description string                 `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"`
+	Category    ItemCategory           `protobuf:"varint,6,opt,name=category,proto3,enum=aihues.catalog.v1.ItemCategory" json:"category,omitempty"`
+	Status      ItemStatus             `protobuf:"varint,7,opt,name=status,proto3,enum=aihues.catalog.v1.ItemStatus" json:"status,omitempty"`
+	SortOrder   int32                  `protobuf:"varint,8,opt,name=sort_order,json=sortOrder,proto3" json:"sort_order,omitempty"`
+	CreateTime  *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
+	UpdateTime  *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
+	// ── 新增字段 ──
+	PriceTag      PriceTag `protobuf:"varint,11,opt,name=price_tag,json=priceTag,proto3,enum=aihues.catalog.v1.PriceTag" json:"price_tag,omitempty"` // 价格标签
+	ExternalUrl   string   `protobuf:"bytes,12,opt,name=external_url,json=externalUrl,proto3" json:"external_url,omitempty"`                         // 外链地址
+	Tags          []string `protobuf:"bytes,13,rep,name=tags,proto3" json:"tags,omitempty"`                                                          // 关键词标签
+	CreditCost    int32    `protobuf:"varint,14,opt,name=credit_cost,json=creditCost,proto3" json:"credit_cost,omitempty"`                           // 积分消耗（0 = 免费）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -295,18 +353,51 @@ func (x *Tool) GetUpdateTime() *timestamppb.Timestamp {
 	return nil
 }
 
+func (x *Tool) GetPriceTag() PriceTag {
+	if x != nil {
+		return x.PriceTag
+	}
+	return PriceTag_PRICE_TAG_UNSPECIFIED
+}
+
+func (x *Tool) GetExternalUrl() string {
+	if x != nil {
+		return x.ExternalUrl
+	}
+	return ""
+}
+
+func (x *Tool) GetTags() []string {
+	if x != nil {
+		return x.Tags
+	}
+	return nil
+}
+
+func (x *Tool) GetCreditCost() int32 {
+	if x != nil {
+		return x.CreditCost
+	}
+	return 0
+}
+
 // 游戏元数据
 type Game struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Slug          string                 `protobuf:"bytes,2,opt,name=slug,proto3" json:"slug,omitempty"`
-	Icon          string                 `protobuf:"bytes,3,opt,name=icon,proto3" json:"icon,omitempty"`
-	Name          string                 `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
-	Description   string                 `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"`
-	Status        ItemStatus             `protobuf:"varint,6,opt,name=status,proto3,enum=aihues.catalog.v1.ItemStatus" json:"status,omitempty"`
-	SortOrder     int32                  `protobuf:"varint,7,opt,name=sort_order,json=sortOrder,proto3" json:"sort_order,omitempty"`
-	CreateTime    *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
-	UpdateTime    *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
+	state       protoimpl.MessageState `protogen:"open.v1"`
+	Id          string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Slug        string                 `protobuf:"bytes,2,opt,name=slug,proto3" json:"slug,omitempty"`
+	Icon        string                 `protobuf:"bytes,3,opt,name=icon,proto3" json:"icon,omitempty"`
+	Name        string                 `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
+	Description string                 `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"`
+	Status      ItemStatus             `protobuf:"varint,6,opt,name=status,proto3,enum=aihues.catalog.v1.ItemStatus" json:"status,omitempty"`
+	SortOrder   int32                  `protobuf:"varint,7,opt,name=sort_order,json=sortOrder,proto3" json:"sort_order,omitempty"`
+	CreateTime  *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
+	UpdateTime  *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
+	// ── 新增字段 ──
+	PriceTag      PriceTag `protobuf:"varint,10,opt,name=price_tag,json=priceTag,proto3,enum=aihues.catalog.v1.PriceTag" json:"price_tag,omitempty"` // 价格标签
+	ExternalUrl   string   `protobuf:"bytes,11,opt,name=external_url,json=externalUrl,proto3" json:"external_url,omitempty"`                         // 外链地址
+	Tags          []string `protobuf:"bytes,12,rep,name=tags,proto3" json:"tags,omitempty"`                                                          // 关键词标签
+	CreditCost    int32    `protobuf:"varint,13,opt,name=credit_cost,json=creditCost,proto3" json:"credit_cost,omitempty"`                           // 积分消耗
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -404,11 +495,39 @@ func (x *Game) GetUpdateTime() *timestamppb.Timestamp {
 	return nil
 }
 
+func (x *Game) GetPriceTag() PriceTag {
+	if x != nil {
+		return x.PriceTag
+	}
+	return PriceTag_PRICE_TAG_UNSPECIFIED
+}
+
+func (x *Game) GetExternalUrl() string {
+	if x != nil {
+		return x.ExternalUrl
+	}
+	return ""
+}
+
+func (x *Game) GetTags() []string {
+	if x != nil {
+		return x.Tags
+	}
+	return nil
+}
+
+func (x *Game) GetCreditCost() int32 {
+	if x != nil {
+		return x.CreditCost
+	}
+	return 0
+}
+
 var File_aihues_catalog_v1_types_proto protoreflect.FileDescriptor
 
 const file_aihues_catalog_v1_types_proto_rawDesc = "" +
 	"\n" +
-	"\x1daihues/catalog/v1/types.proto\x12\x11aihues.catalog.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\x81\x03\n" +
+	"\x1daihues/catalog/v1/types.proto\x12\x11aihues.catalog.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\x93\x04\n" +
 	"\x04Tool\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04slug\x18\x02 \x01(\tR\x04slug\x12\x12\n" +
@@ -423,7 +542,12 @@ const file_aihues_catalog_v1_types_proto_rawDesc = "" +
 	"createTime\x12;\n" +
 	"\vupdate_time\x18\n" +
 	" \x01(\v2\x1a.google.protobuf.TimestampR\n" +
-	"updateTime\"\xc4\x02\n" +
+	"updateTime\x128\n" +
+	"\tprice_tag\x18\v \x01(\x0e2\x1b.aihues.catalog.v1.PriceTagR\bpriceTag\x12!\n" +
+	"\fexternal_url\x18\f \x01(\tR\vexternalUrl\x12\x12\n" +
+	"\x04tags\x18\r \x03(\tR\x04tags\x12\x1f\n" +
+	"\vcredit_cost\x18\x0e \x01(\x05R\n" +
+	"creditCost\"\xd6\x03\n" +
 	"\x04Game\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04slug\x18\x02 \x01(\tR\x04slug\x12\x12\n" +
@@ -436,7 +560,13 @@ const file_aihues_catalog_v1_types_proto_rawDesc = "" +
 	"\vcreate_time\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\n" +
 	"createTime\x12;\n" +
 	"\vupdate_time\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\n" +
-	"updateTime*M\n" +
+	"updateTime\x128\n" +
+	"\tprice_tag\x18\n" +
+	" \x01(\x0e2\x1b.aihues.catalog.v1.PriceTagR\bpriceTag\x12!\n" +
+	"\fexternal_url\x18\v \x01(\tR\vexternalUrl\x12\x12\n" +
+	"\x04tags\x18\f \x03(\tR\x04tags\x12\x1f\n" +
+	"\vcredit_cost\x18\r \x01(\x05R\n" +
+	"creditCost*M\n" +
 	"\bItemKind\x12\x19\n" +
 	"\x15ITEM_KIND_UNSPECIFIED\x10\x00\x12\x12\n" +
 	"\x0eITEM_KIND_TOOL\x10\x01\x12\x12\n" +
@@ -451,7 +581,12 @@ const file_aihues_catalog_v1_types_proto_rawDesc = "" +
 	"\x19ITEM_CATEGORY_UNSPECIFIED\x10\x00\x12\x1b\n" +
 	"\x17ITEM_CATEGORY_DEVELOPER\x10\x01\x12\x19\n" +
 	"\x15ITEM_CATEGORY_UTILITY\x10\x02\x12\x1c\n" +
-	"\x18ITEM_CATEGORY_AI_WRITING\x10\x03BJZHgithub.com/aihues/aiushtha/packages/proto-go/aihues/catalog/v1;catalogv1b\x06proto3"
+	"\x18ITEM_CATEGORY_AI_WRITING\x10\x03*e\n" +
+	"\bPriceTag\x12\x19\n" +
+	"\x15PRICE_TAG_UNSPECIFIED\x10\x00\x12\x12\n" +
+	"\x0ePRICE_TAG_FREE\x10\x01\x12\x16\n" +
+	"\x12PRICE_TAG_FREEMIUM\x10\x02\x12\x12\n" +
+	"\x0ePRICE_TAG_PAID\x10\x03BJZHgithub.com/aihues/aiushtha/packages/proto-go/aihues/catalog/v1;catalogv1b\x06proto3"
 
 var (
 	file_aihues_catalog_v1_types_proto_rawDescOnce sync.Once
@@ -465,29 +600,32 @@ func file_aihues_catalog_v1_types_proto_rawDescGZIP() []byte {
 	return file_aihues_catalog_v1_types_proto_rawDescData
 }
 
-var file_aihues_catalog_v1_types_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
+var file_aihues_catalog_v1_types_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
 var file_aihues_catalog_v1_types_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_aihues_catalog_v1_types_proto_goTypes = []any{
 	(ItemKind)(0),                 // 0: aihues.catalog.v1.ItemKind
 	(ItemStatus)(0),               // 1: aihues.catalog.v1.ItemStatus
 	(ItemCategory)(0),             // 2: aihues.catalog.v1.ItemCategory
-	(*Tool)(nil),                  // 3: aihues.catalog.v1.Tool
-	(*Game)(nil),                  // 4: aihues.catalog.v1.Game
-	(*timestamppb.Timestamp)(nil), // 5: google.protobuf.Timestamp
+	(PriceTag)(0),                 // 3: aihues.catalog.v1.PriceTag
+	(*Tool)(nil),                  // 4: aihues.catalog.v1.Tool
+	(*Game)(nil),                  // 5: aihues.catalog.v1.Game
+	(*timestamppb.Timestamp)(nil), // 6: google.protobuf.Timestamp
 }
 var file_aihues_catalog_v1_types_proto_depIdxs = []int32{
 	2, // 0: aihues.catalog.v1.Tool.category:type_name -> aihues.catalog.v1.ItemCategory
 	1, // 1: aihues.catalog.v1.Tool.status:type_name -> aihues.catalog.v1.ItemStatus
-	5, // 2: aihues.catalog.v1.Tool.create_time:type_name -> google.protobuf.Timestamp
-	5, // 3: aihues.catalog.v1.Tool.update_time:type_name -> google.protobuf.Timestamp
-	1, // 4: aihues.catalog.v1.Game.status:type_name -> aihues.catalog.v1.ItemStatus
-	5, // 5: aihues.catalog.v1.Game.create_time:type_name -> google.protobuf.Timestamp
-	5, // 6: aihues.catalog.v1.Game.update_time:type_name -> google.protobuf.Timestamp
-	7, // [7:7] is the sub-list for method output_type
-	7, // [7:7] is the sub-list for method input_type
-	7, // [7:7] is the sub-list for extension type_name
-	7, // [7:7] is the sub-list for extension extendee
-	0, // [0:7] is the sub-list for field type_name
+	6, // 2: aihues.catalog.v1.Tool.create_time:type_name -> google.protobuf.Timestamp
+	6, // 3: aihues.catalog.v1.Tool.update_time:type_name -> google.protobuf.Timestamp
+	3, // 4: aihues.catalog.v1.Tool.price_tag:type_name -> aihues.catalog.v1.PriceTag
+	1, // 5: aihues.catalog.v1.Game.status:type_name -> aihues.catalog.v1.ItemStatus
+	6, // 6: aihues.catalog.v1.Game.create_time:type_name -> google.protobuf.Timestamp
+	6, // 7: aihues.catalog.v1.Game.update_time:type_name -> google.protobuf.Timestamp
+	3, // 8: aihues.catalog.v1.Game.price_tag:type_name -> aihues.catalog.v1.PriceTag
+	9, // [9:9] is the sub-list for method output_type
+	9, // [9:9] is the sub-list for method input_type
+	9, // [9:9] is the sub-list for extension type_name
+	9, // [9:9] is the sub-list for extension extendee
+	0, // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_aihues_catalog_v1_types_proto_init() }
@@ -500,7 +638,7 @@ func file_aihues_catalog_v1_types_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_aihues_catalog_v1_types_proto_rawDesc), len(file_aihues_catalog_v1_types_proto_rawDesc)),
-			NumEnums:      3,
+			NumEnums:      4,
 			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,

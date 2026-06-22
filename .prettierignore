@@ -18,6 +18,21 @@ next-env.d.ts
 apps/aihues-web/public/tools/*.html
 apps/aihues-web/public/games/*.html
 
+# Generated resource content
+apps/aihues-web/public/resources/*.html
+apps/aihues-web/content/resources/posts.json
+
+# Runtime wishlist data
+apps/aihues-web/data/wishes.json
+apps/aihues-web/data/wishes.e2e.json
+
+# Vendored Stockfish WASM engine
+apps/aihues-web/public/engine/
+
+# Generated chess opening book (EPD -> ECO|name map)
+apps/aihues-web/public/chess-openings.json
+
 # moonrepo cache
 .moon/cache
 .moon/docker
+test-results/

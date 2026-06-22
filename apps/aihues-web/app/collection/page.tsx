@@ -1,16 +1,17 @@
 import type { Metadata } from 'next';
 
-import { ApiNotice, EmptyState, ToolCard } from '@/components/CatalogCards';
+import { ApiNotice, EmptyState, ToolCardV2 } from '@/components/CatalogCards';
 import { PageShell } from '@/components/SiteChrome';
 import { safeListTools } from '@/lib/catalog-api';
 import { toolCategories } from '@/lib/catalog-types';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: 'Collection',
 };
 
+// Milestone rewards (static config until gamification API is ready)
 const milestones = [
   { target: 5, reward: '50 credits' },
   { target: 10, reward: '100 credits' },
@@ -89,7 +90,7 @@ export default async function CollectionPage() {
         {tools.length > 0 ? (
           <div className='catalog-grid'>
             {tools.map((tool) => (
-              <ToolCard key={tool.id} tool={tool} />
+              <ToolCardV2 key={tool.id} locale='en' tool={tool} />
             ))}
           </div>
         ) : (
@@ -126,6 +127,14 @@ export default async function CollectionPage() {
             <p className='kicker'>Community</p>
             <h2>Top Collectors</h2>
           </div>
+        </div>
+        <div
+          className='coming-soon'
+          style={{ textAlign: 'center', padding: '40px 20px' }}
+        >
+          <p style={{ fontSize: '14px', color: '#78716c' }}>
+            Leaderboard coming soon. Start collecting to be the first!
+          </p>
         </div>
       </section>
     </PageShell>

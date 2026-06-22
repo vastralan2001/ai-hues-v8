@@ -21,6 +21,10 @@ node:
 
 # Configures how moon integrates with TypeScript.
 typescript:
+  # Use the vendored TypeScript toolchain WASM plugin to avoid downloading
+  # from GitHub in network-restricted environments (e.g., CI Docker build).
+  plugin: 'file://.moon/plugins/toolchains/typescript-d6d44beed4017f734336af29cb6c759cb1f014001f7283e314a03b363adedcfb.wasm'
+
   # When `syncProjectReferences` is enabled and a dependent project reference
   # *does not* have a `tsconfig.json`, automatically create one.
   createMissingConfig: true
