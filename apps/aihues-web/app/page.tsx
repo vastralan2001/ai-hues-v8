@@ -478,12 +478,12 @@ export default async function HomePage() {
         </section>
 
         {/* ══════════════════════════════════════════════
-            PERSONALITY TESTS
+            TESTS
             ══════════════════════════════════════════════ */}
         <section className='mx-auto max-w-[1300px] px-8 py-20'>
           <div className='mb-6 flex items-center justify-between'>
             <h2 className='text-[34px] font-extrabold tracking-[-0.02em]'>
-              {locale === 'zh' ? '人格测评' : 'Personality Tests'}
+              {locale === 'zh' ? '测评' : 'Tests'}
             </h2>
             <Link
               className='text-[13px] font-bold uppercase tracking-[0.12em] text-accent transition-colors hover:text-accent-light'

@@ -9,9 +9,9 @@ import { testDetailHref } from '@/lib/routes';
 import { TEST_META } from '@/lib/tests';
 
 export const metadata: Metadata = {
-  title: 'Personality Tests',
+  title: 'Tests',
   description:
-    'Quick, free personality tests — find your MBTI type or scan your soul with the satirical SBTI. No signup.',
+    'Quick, free tests and quizzes — take the MBTI, the satirical SBTI, and more. No signup, no paywall.',
 };
 
 export default function TestsPage() {
@@ -21,7 +21,7 @@ export default function TestsPage() {
     <PageShell variant='tests' locale={locale}>
       <PageMasthead
         eyebrow='Assessment Center'
-        title='Personality Tests'
+        title='Quick Tests'
         subtitle={`${TEST_META.length} quick assessments. Open and take — no signup, no paywall.`}
         stats={[
           { num: `${TEST_META.length}`, label: 'Tests' },

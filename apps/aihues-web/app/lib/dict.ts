@@ -827,7 +827,7 @@ export const dict: Record<Locale, Record<string, string>> = {
     'cat.aiWritingDesc': 'X 推文、博客大纲、SEO 标题、新闻稿、PR 描述',
     'cat.gamesDesc': '每日幸运签、老虎机、投篮挑战 — 免费畅玩',
     'cat.tests': '测评',
-    'cat.testsDesc': 'SBTI 与 MBTI — 测出你的人格类型，免费',
+    'cat.testsDesc': 'SBTI 与 MBTI — 测出你的类型，免费',
 
     // stats
     'stats.aiTools': 'AI 工具',
