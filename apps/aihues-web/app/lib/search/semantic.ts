@@ -34,6 +34,7 @@ interface Doc {
   slug: string;
   title: string;
   subtitle: string;
+  desc: string;
   href: string;
   type: 'tool' | 'game' | 'test';
   text: string;
@@ -85,39 +86,161 @@ const TOOL_KEYWORDS: Record<string, string> = {
   'cron-parser': 'cron schedule crontab expression',
 };
 
-const GAMES: { slug: string; title: string; desc: string }[] = [
+interface CorpusEntry {
+  slug: string;
+  title: string;
+  blurb: string;
+  keywords: string;
+}
+
+const GAMES: CorpusEntry[] = [
   {
     slug: 'doodle-jump',
     title: 'Doodle Jump',
-    desc: 'endless arcade jumping platformer, hop ledge to ledge, climb high score',
+    blurb: 'Hop from ledge to ledge across a starry night sky.',
+    keywords:
+      'endless arcade jumping platformer hop ledge climb vertical high score',
   },
   {
     slug: 'daily-luck',
     title: 'Daily Fortune',
-    desc: 'draw a daily fortune stick, omikuji, luck wisdom and credit rewards',
+    blurb: 'Draw your fortune for the day.',
+    keywords: 'daily fortune stick omikuji luck wisdom credit reward draw',
   },
   {
     slug: 'slot-machine',
     title: 'Lucky Slots',
-    desc: 'spin the slot machine reels, match symbols, casino luck jackpot',
+    blurb: 'Spin the reels and match three to win.',
+    keywords:
+      'slot machine reels casino luck jackpot spin match symbols paylines',
   },
   {
     slug: 'basketball',
     title: 'Basketball Shootout',
-    desc: 'flick the ball into the hoop, timed shooting arcade sports game',
+    blurb: 'Time the arrow and sink the shot.',
+    keywords: 'basketball hoop shooting timed arcade sports flick ball',
+  },
+  {
+    slug: 'snake',
+    title: 'Snake',
+    blurb: 'Glide, grow, and feast — don’t bite your tail.',
+    keywords: 'classic snake glide grow eat pellets food arcade tail worm',
+  },
+  {
+    slug: 'color-hunt',
+    title: 'Color Hunt',
+    blurb: 'Spot the tile with a slightly different shade.',
+    keywords: 'color colour difference odd tile shade perception eye spot find',
+  },
+  {
+    slug: 'chess',
+    title: 'Chess',
+    blurb: 'Play the computer, spectate, or read the live evaluation.',
+    keywords:
+      'chess board game engine computer play spectate analysis strategy checkmate',
+  },
+  {
+    slug: 'flappy',
+    title: 'Flappy',
+    blurb: 'Flap through the gaps and chase your best.',
+    keywords: 'flappy bird flap pipe gap tap timing arcade endless',
+  },
+  {
+    slug: 'block-drop',
+    title: 'Block Drop',
+    blurb: 'Rotate and stack falling blocks, clear lines.',
+    keywords: 'tetris falling blocks tetromino stack rotate clear lines puzzle',
+  },
+  {
+    slug: 'brick-breaker',
+    title: 'Brick Breaker',
+    blurb: 'Bounce the ball and smash every brick.',
+    keywords: 'breakout brick breaker bounce ball paddle arcade',
+  },
+  {
+    slug: 'fruit-slash',
+    title: 'Fruit Slash',
+    blurb: 'Swipe to slice the fruit, dodge the bombs.',
+    keywords: 'fruit ninja swipe slice combo dodge bomb arcade blade',
+  },
+  {
+    slug: 'minesweeper',
+    title: 'Minesweeper',
+    blurb: 'Clear every safe tile without hitting a mine.',
+    keywords: 'minesweeper mines flag logic puzzle grid sweep bomb',
+  },
+  {
+    slug: 'sudoku',
+    title: 'Sudoku',
+    blurb: 'Fill every row, column and box with 1–9.',
+    keywords: 'sudoku number grid logic puzzle nine',
+  },
+  {
+    slug: 'sky-strike',
+    title: 'Sky Strike',
+    blurb: 'Blast through enemy waves to the boss.',
+    keywords:
+      'shoot em up shmup vertical shooter blast enemy boss space plane bullets',
+  },
+  {
+    slug: 'bullet-storm',
+    title: 'Bullet Storm',
+    blurb: 'Weave through the bullet hell and survive.',
+    keywords: 'bullet hell dodge bullets survival space danmaku',
+  },
+  {
+    slug: 'dodge-arena',
+    title: 'Dodge Arena',
+    blurb: 'Dodge the barrage, trigger skills, stay alive.',
+    keywords: 'dodgeball dodge balls skill survival arena reaction',
+  },
+  {
+    slug: 'hundred-floors',
+    title: 'Hundred Floors',
+    blurb: 'Drop floor by floor — mind the ceiling.',
+    keywords: 'fall down descend floors dodge spike ceiling platformer',
+  },
+  {
+    slug: 'depth-charge',
+    title: 'Depth Charge',
+    blurb: 'Time your charges and sink the targets.',
+    keywords: 'depth charge bomb sink submarine target timing underwater',
+  },
+  {
+    slug: 'combo-rush',
+    title: 'Combo Rush',
+    blurb: 'Nail the timed inputs and chain combos.',
+    keywords: 'qte combo timed input chain rhythm reaction fighting',
+  },
+  {
+    slug: 'radish-smash',
+    title: 'Radish Smash',
+    blurb: 'Whack the radishes as they pop up.',
+    keywords: 'whack a mole smash radish hammer reaction timing',
+  },
+  {
+    slug: 'game-of-life',
+    title: 'Game of Life',
+    blurb: 'Seed cells and watch Conway’s colony evolve.',
+    keywords:
+      'conway game of life cellular automaton simulation cells evolve grid',
   },
 ];
 
-const TESTS: { slug: string; title: string; desc: string }[] = [
+const TESTS: CorpusEntry[] = [
   {
     slug: 'sbti',
     title: 'SBTI',
-    desc: 'satirical personality test, soul scan quiz, internet archetype — goblin doomer gigachad, sb type indicator, mbti parody, who are you',
+    blurb: 'A satirical soul-scan that types you as an internet archetype.',
+    keywords:
+      'satirical personality test soul scan quiz internet archetype goblin doomer gigachad sb type indicator mbti parody who are you',
   },
   {
     slug: 'mbti',
     title: 'MBTI',
-    desc: 'personality test, 16 personalities, myers briggs type indicator, four letter type, introvert extrovert intuitive thinking, intj enfp quiz assessment',
+    blurb: 'The 16-personalities test — find your four-letter type.',
+    keywords:
+      'personality test 16 personalities myers briggs type indicator four letter introvert extrovert intuitive thinking intj enfp quiz assessment',
   },
 ];
 
@@ -131,6 +254,7 @@ function buildCorpus(): Doc[] {
         slug: t.slug,
         title: t.name,
         subtitle: t.category,
+        desc: t.description,
         href: t.url,
         type: 'tool' as const,
         text,
@@ -139,11 +263,12 @@ function buildCorpus(): Doc[] {
     }
   );
   const games: Doc[] = GAMES.map((g) => {
-    const text = `${g.title}. ${g.desc}. mini game play arcade fun`;
+    const text = `${g.title}. ${g.blurb}. ${g.keywords}. mini game play arcade fun`;
     return {
       slug: g.slug,
       title: g.title,
       subtitle: 'game',
+      desc: g.blurb,
       href: `/games/${g.slug}`,
       type: 'game' as const,
       text,
@@ -151,11 +276,12 @@ function buildCorpus(): Doc[] {
     };
   });
   const tests: Doc[] = TESTS.map((t) => {
-    const text = `${t.title}. ${t.desc}. personality test quiz assessment`;
+    const text = `${t.title}. ${t.blurb}. ${t.keywords}. personality test quiz assessment`;
     return {
       slug: t.slug,
       title: t.title,
       subtitle: 'test',
+      desc: t.blurb,
       href: `/tests/${t.slug}`,
       type: 'test' as const,
       text,
@@ -249,4 +375,62 @@ export async function semanticSearch(
       type: s.d.type,
       score: Math.round(Math.min(1, s.score) * 1000) / 1000,
     }));
+}
+
+export interface RelatedItem {
+  slug: string;
+  title: string;
+  desc: string;
+  subtitle: string;
+  href: string;
+  type: 'tool' | 'game' | 'test';
+}
+
+function topRelated(
+  qv: Float32Array,
+  vecs: Float32Array[],
+  docs: Doc[],
+  type: RelatedItem['type'],
+  k: number,
+  skipIndex: number
+): RelatedItem[] {
+  const scored = docs.map((d, i) => ({
+    d,
+    score: i === skipIndex || d.type !== type ? -1 : dot(qv, vecs[i]),
+  }));
+  scored.sort((a, b) => b.score - a.score);
+  return scored
+    .filter((s) => s.score > 0)
+    .slice(0, k)
+    .map((s) => ({
+      slug: s.d.slug,
+      title: s.d.title,
+      desc: s.d.desc,
+      subtitle: s.d.subtitle,
+      href: s.d.href,
+      type: s.d.type,
+    }));
+}
+
+/** Nearest same-type catalog items to a given entry (by its embedding). */
+export async function relatedBySlug(
+  slug: string,
+  type: RelatedItem['type'],
+  k = 6
+): Promise<RelatedItem[]> {
+  const { vecs, docs } = await getIndex();
+  const i = docs.findIndex((d) => d.slug === slug && d.type === type);
+  if (i < 0) return [];
+  return topRelated(vecs[i], vecs, docs, type, k, i);
+}
+
+/** Nearest same-type items to a free-text query (for off-corpus pages). */
+export async function relatedByQuery(
+  query: string,
+  type: RelatedItem['type'],
+  k = 6
+): Promise<RelatedItem[]> {
+  const { extract, vecs, docs } = await getIndex();
+  const qv = await extract(query);
+  return topRelated(qv, vecs, docs, type, k, -1);
 }

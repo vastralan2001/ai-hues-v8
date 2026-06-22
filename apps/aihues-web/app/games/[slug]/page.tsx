@@ -23,6 +23,7 @@ import SlotMachineGame from '@/components/games/SlotMachineGame';
 import SnakeGame from '@/components/games/SnakeGame';
 import SudokuGame from '@/components/games/SudokuGame';
 import Breadcrumb from '@/components/Breadcrumb';
+import RelatedItems from '@/components/RelatedItems';
 import ShareButtons from '@/components/ShareButtons';
 import { PageShell } from '@/components/SiteChrome';
 import type { Locale } from '@/lib/dict';
@@ -377,6 +378,14 @@ export default async function GamePage({
             >
               <Game locale={locale} />
             </div>
+            <div className='mx-auto mt-12 w-full max-w-[1100px] px-6'>
+              <RelatedItems
+                type='game'
+                slug={slug}
+                locale={locale}
+                variant='dark'
+              />
+            </div>
           </div>
         </section>
       ) : (
@@ -406,6 +415,12 @@ export default async function GamePage({
             </p>
           </div>
           <Game locale={locale} />
+          <RelatedItems
+            type='game'
+            slug={slug}
+            locale={locale}
+            className='mt-12'
+          />
         </div>
       )}
     </PageShell>
