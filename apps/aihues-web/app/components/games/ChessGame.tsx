@@ -46,6 +46,7 @@ const CELL = 80;
 const BOARD = CELL * 8;
 const ANIM_MS = 175;
 const EVAL_DEPTH = 15;
+const MULTIPV_EVAL = 5;
 const SPECTATE_MIN_MS = 650;
 
 const FILES = 'abcdefgh';
@@ -76,6 +77,39 @@ const START_COUNT: Record<string, number> = {
 const PIECE_FONT = '"Segoe UI Symbol","Noto Sans Symbols 2",serif';
 
 type Mode = 'play' | 'spectate' | 'eval';
+
+interface EvalLine {
+  uci: string;
+  san: string;
+  pv: string;
+  score: string;
+  neg: boolean;
+}
+
+/** Replay a UCI principal variation into SAN moves on a position. */
+function pvToSan(fen: string, pv: string[], max: number): string[] {
+  const out: string[] = [];
+  let c: Chess;
+  try {
+    c = new Chess(fen);
+  } catch {
+    return out;
+  }
+  for (const u of pv.slice(0, max)) {
+    try {
+      const mv = c.move({
+        from: u.slice(0, 2) as Square,
+        to: u.slice(2, 4) as Square,
+        promotion: u.length > 4 ? u.slice(4, 5) : undefined,
+      });
+      if (!mv) break;
+      out.push(mv.san);
+    } catch {
+      break;
+    }
+  }
+  return out;
+}
 type Phase = 'setup' | 'active' | 'over';
 type Color = 'w' | 'b';
 interface Piece {
@@ -219,6 +253,8 @@ const T = {
     copied: 'Copied',
     evalHint:
       'Play makes moves by the rules. Use Move to drag pieces freely, or pick a piece to add; drag off the board to delete.',
+    topMoves: 'Top moves',
+    depthLabel: 'Depth',
     toMove: 'To move',
     playTool: 'Play',
     move: 'Move',
@@ -302,6 +338,8 @@ const T = {
     copied: '已复制',
     evalHint:
       '走棋按规则走子；移动可自由拖动棋子，点选棋子可添加，拖出棋盘即删除。',
+    topMoves: '最佳走法',
+    depthLabel: '深度',
     toMove: '走子方',
     playTool: '走棋',
     move: '移动',
@@ -605,6 +643,8 @@ export default function ChessGame({ locale }: { locale: Locale }) {
   const [turn, setTurn] = useState<Color>('w');
   const [evalFrac, setEvalFrac] = useState(0.5);
   const [evalText, setEvalText] = useState('0.0');
+  const [evalLines, setEvalLines] = useState<EvalLine[]>([]);
+  const [evalDepth, setEvalDepth] = useState(0);
   const [brush, setBrushState] = useState<
     'play' | 'move' | 'erase' | { type: string; color: Color }
   >('play');
@@ -1328,6 +1368,53 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     return `${board} ${editorTurnRef.current} - - 0 1`;
   }
 
+  function publishEvalLines(
+    lines: Record<number, EngineInfo>,
+    t: Color,
+    fen: string
+  ) {
+    const arr: EvalLine[] = [];
+    let maxDepth = 0;
+    for (let i = 1; i <= MULTIPV_EVAL; i++) {
+      const info = lines[i];
+      if (!info || info.pv.length === 0) continue;
+      const sans = pvToSan(fen, info.pv, 8);
+      if (sans.length === 0) continue;
+      maxDepth = Math.max(maxDepth, info.depth);
+      const w = infoToWhite(info, t);
+      arr.push({
+        uci: info.pv[0],
+        san: sans[0],
+        pv: sans.slice(1).join(' '),
+        score: w.text,
+        neg: w.text.startsWith('-'),
+      });
+    }
+    if (arr.length > 0) {
+      setEvalLines(arr);
+      setEvalDepth(maxDepth);
+    }
+  }
+
+  /** Play one of the suggested engine moves on the eval board. */
+  function playSuggestion(uci: string) {
+    if (modeRef.current !== 'eval' || !uci) return;
+    const cur = editorEditedRef.current ? editorFen() : chessRef.current!.fen();
+    try {
+      const c = new Chess(cur);
+      const mv = c.move({
+        from: uci.slice(0, 2) as Square,
+        to: uci.slice(2, 4) as Square,
+        promotion: uci.length > 4 ? uci.slice(4, 5) : undefined,
+      });
+      if (!mv) return;
+      editorEditedRef.current = false;
+      loadPosition(c.fen());
+    } catch {
+      /* ignore */
+    }
+  }
+
   async function analyzePosition() {
     const mode = modeRef.current;
     const want = mode === 'eval' || (mode === 'play' && playEvalRef.current);
@@ -1336,6 +1423,8 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     if (!hasBothKings()) {
       setEvalText('—');
       setEvalFrac(0.5);
+      setEvalLines([]);
+      setEvalDepth(0);
       if (g) g.arrow = null;
       return;
     }
@@ -1343,16 +1432,35 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     const t = isEval ? editorTurnRef.current : chessRef.current!.turn();
     const fen =
       isEval && editorEditedRef.current ? editorFen() : chessRef.current!.fen();
-    if (isEval) setThinkingBoth(true);
+    if (isEval) {
+      setThinkingBoth(true);
+      setEvalLines([]);
+      setEvalDepth(0);
+    }
+    const lines: Record<number, EngineInfo> = {};
     const res = await engineExclusive(() => {
-      engineRef.current!.setSkill(20);
-      return engineRef.current!.search(fen, { depth: EVAL_DEPTH }, (info) =>
-        applyInfo(info, t)
-      );
+      const eng = engineRef.current!;
+      eng.setSkill(20);
+      if (isEval) eng.setOption('MultiPV', MULTIPV_EVAL);
+      return eng.search(fen, { depth: EVAL_DEPTH }, (info) => {
+        if (info.multipv <= 1) applyInfo(info, t);
+        if (isEval) {
+          lines[info.multipv] = info;
+          publishEvalLines(lines, t, fen);
+        }
+      });
     });
-    if (isEval) setThinkingBoth(false);
+    if (isEval) {
+      engineRef.current?.setOption('MultiPV', 1);
+      setThinkingBoth(false);
+    }
     if (res) applyResult(res, t);
   }
+
+  useEffect(() => {
+    if (engineReady && modeRef.current === 'eval') analyzePosition();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [engineReady]);
 
   async function spectateOneMove(force = false) {
     const chess = chessRef.current!;
@@ -2223,6 +2331,42 @@ export default function ChessGame({ locale }: { locale: Locale }) {
                   : tabKey === 'moves'
                     ? tx.moves
                     : tx.openingsTab}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {mode === 'eval' && evalLines.length > 0 && (
+          <div className='shrink-0 space-y-1 rounded-[14px] bg-white/[0.04] p-2.5 ring-1 ring-white/10'>
+            <div className='mb-1 flex items-center justify-between'>
+              <span className='text-[11px] font-bold uppercase tracking-[0.16em] text-white/40'>
+                {tx.topMoves}
+              </span>
+              <span className='text-[10px] tabular-nums text-white/35'>
+                {tx.depthLabel} {evalDepth}
+              </span>
+            </div>
+            {evalLines.map((line, i) => (
+              <button
+                key={`${line.uci}-${i}`}
+                type='button'
+                onClick={() => playSuggestion(line.uci)}
+                title={line.pv}
+                className='flex w-full items-center gap-2 rounded-md px-1.5 py-1 text-left transition-colors hover:bg-white/10'
+              >
+                <span
+                  className={`w-11 shrink-0 rounded bg-white/[0.06] py-0.5 text-center text-[12px] font-bold tabular-nums ${
+                    line.neg ? 'text-[#e08a7d]' : 'text-[#83d8ad]'
+                  }`}
+                >
+                  {line.score}
+                </span>
+                <span className='shrink-0 text-[13px] font-bold text-white'>
+                  {line.san}
+                </span>
+                <span className='min-w-0 flex-1 truncate text-[11px] text-white/45'>
+                  {line.pv}
+                </span>
               </button>
             ))}
           </div>
