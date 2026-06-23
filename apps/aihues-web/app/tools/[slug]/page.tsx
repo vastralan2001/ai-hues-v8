@@ -5,7 +5,7 @@ import type { Locale } from '@/lib/dict';
 import { t } from '@/lib/dict';
 import { PUBLISHED_TOOL_SLUGS } from '@/lib/published-tools';
 import { PageShell } from '@/components/SiteChrome';
-import RelatedTools from '@/components/RelatedTools';
+import RelatedItems from '@/components/RelatedItems';
 import ToolDetailTabs from '@/components/reviews/ToolDetailTabs';
 import { UsageTracker } from '@/components/UsageTracker';
 import WordCountTool from '@/components/tools/WordCountTool';
@@ -196,7 +196,12 @@ export default async function ToolPage({
           toolElement={
             <>
               <ReactTool locale={locale} />
-              <RelatedTools slug={slug} locale={locale} />
+              <RelatedItems
+                type='tool'
+                slug={slug}
+                locale={locale}
+                className='pb-20 pt-12'
+              />
             </>
           }
         />

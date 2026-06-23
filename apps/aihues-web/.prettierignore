@@ -1,5 +1,27 @@
 .next
+node_modules
+out
+build
 test-results/
+
+# Next.js auto-generated types
+next-env.d.ts
+
+# Demo static tool/game pages stay byte-for-byte with the supplied demo
+public/tools/*.html
+public/games/*.html
+
+# Generated resource content
+public/resources/*.html
+content/resources/posts.json
+
+# Runtime wishlist data
 data/wishes.json
 data/wishes.e2e.json
+
+# Vendored Stockfish WASM engine
+public/engine/
+
+# Generated chess opening book
+public/chess-openings.json
 

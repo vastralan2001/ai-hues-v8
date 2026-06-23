@@ -10,6 +10,7 @@ import Typewriter from '@/components/Typewriter';
 import type { CatalogGame } from '@/lib/catalog-api';
 import { safeListGames, safeListTools } from '@/lib/catalog-api';
 import { t, type Locale } from '@/lib/dict';
+import { GAME_CARD_COPY } from '@/lib/game-meta';
 import { TEST_META } from '@/lib/tests';
 import {
   gameDetailHref,
@@ -29,7 +30,6 @@ export const revalidate = 60;
 const HOME_CATEGORIES = (locale: Locale) => [
   {
     key: 'utility',
-    letter: 'U',
     label: t(locale, 'cat.utility'),
     count: 0,
     desc: t(locale, 'cat.utilityDesc'),
@@ -38,7 +38,6 @@ const HOME_CATEGORIES = (locale: Locale) => [
   },
   {
     key: 'developer',
-    letter: 'D',
     label: t(locale, 'cat.developer'),
     count: 0,
     desc: t(locale, 'cat.developerDesc'),
@@ -47,7 +46,6 @@ const HOME_CATEGORIES = (locale: Locale) => [
   },
   {
     key: 'ai-writing',
-    letter: 'A',
     label: t(locale, 'cat.aiWriting'),
     count: 0,
     desc: t(locale, 'cat.aiWritingDesc'),
@@ -56,7 +54,6 @@ const HOME_CATEGORIES = (locale: Locale) => [
   },
   {
     key: 'games',
-    letter: 'G',
     label: t(locale, 'cat.games'),
     count: 0,
     desc: t(locale, 'cat.gamesDesc'),
@@ -65,7 +62,6 @@ const HOME_CATEGORIES = (locale: Locale) => [
   },
   {
     key: 'tests',
-    letter: 'T',
     label: t(locale, 'cat.tests'),
     count: TEST_META.length,
     desc: t(locale, 'cat.testsDesc'),
@@ -133,24 +129,6 @@ const POPULAR_HIGHLIGHTS = (locale: Locale) => [
   },
 ];
 
-const HOME_GAME_ACTIONS: Record<string, string> = {
-  'daily-luck': 'game.draw',
-  'slot-machine': 'game.spin',
-  basketball: 'game.play',
-};
-
-const HOME_GAME_DESCRIPTIONS: Record<string, string> = {
-  'daily-luck': 'game.dailyLuckDesc',
-  'slot-machine': 'game.slotMachineDesc',
-  basketball: 'game.basketballDesc',
-};
-
-const HOME_GAME_META: Record<string, string> = {
-  'daily-luck': '30 fortunes · Daily draw · Streak bonus',
-  'slot-machine': '3×3 reels · 3 spins/day · Leaderboard',
-  basketball: '60 seconds · Physics · Leaderboard',
-};
-
 const HOME_DEVELOPER_SLUGS = [
   'jwt',
   'json',
@@ -172,12 +150,12 @@ const HOME_WRITING_SLUGS = [
 ];
 
 function HomeGameCard({ game, locale }: { game: CatalogGame; locale: Locale }) {
-  const playLabelKey = HOME_GAME_ACTIONS[game.slug] ?? 'game.play';
-  const meta = HOME_GAME_META[game.slug];
+  const zh = locale === 'zh';
+  const copy = GAME_CARD_COPY[game.slug];
 
   return (
     <Link
-      className='card-lift group relative block cursor-pointer rounded-[16px] border border-border bg-surface px-6 py-6 text-center text-inherit no-underline'
+      className='card-lift group relative flex h-full cursor-pointer flex-col rounded-[16px] border border-border bg-surface px-6 py-6 text-center text-inherit no-underline'
       href={gameDetailHref(game.slug)}
     >
       <span className='mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-xl bg-accent-bg text-accent'>
@@ -186,15 +164,19 @@ function HomeGameCard({ game, locale }: { game: CatalogGame; locale: Locale }) {
       <h3 className='mb-2 text-[18px] font-bold text-foreground'>
         {game.name}
       </h3>
-      <p className='mb-4 text-[13px] leading-relaxed text-secondary'>
-        {t(locale, HOME_GAME_DESCRIPTIONS[game.slug]) ?? game.description}
+      <p className='mb-3 text-[13px] leading-relaxed text-secondary'>
+        {game.description}
       </p>
 
-      {meta && (
-        <p className='mb-4 text-[12px] leading-relaxed text-muted'>{meta}</p>
+      {copy && (
+        <p className='mb-4 text-[12px] leading-relaxed text-muted'>
+          {zh ? copy.metaZh : copy.meta}
+        </p>
       )}
 
-      <span className='btn-cta btn-cta--sm'>{t(locale, playLabelKey)}</span>
+      <span className='btn-cta btn-cta--sm mt-auto self-center'>
+        {copy ? (zh ? copy.ctaZh : copy.cta) : t(locale, 'game.play')}
+      </span>
     </Link>
   );
 }
@@ -348,7 +330,7 @@ export default async function HomePage() {
                         color: theme.fg,
                       }}
                     >
-                      {cat.letter}
+                      <ToolIcon slug={cat.key} size={18} />
                     </span>
                     <span className='flex-1 text-[16px] font-bold text-foreground'>
                       {cat.label}

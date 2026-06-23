@@ -10,7 +10,7 @@ import NewsletterSubscribe from '@/components/NewsletterSubscribe';
 import RelatedArticles from '@/components/RelatedArticles';
 import ArticleToc, { type TocItem } from '@/components/ArticleToc';
 import ShareButtons from '@/components/ShareButtons';
-import ResourceToolRecommend from '@/components/reviews/ResourceToolRecommend';
+import RelatedItems from '@/components/RelatedItems';
 import '../article.css';
 
 const BASE_URL = 'https://aihues.com';
@@ -228,7 +228,12 @@ export default async function ArticlePage({
           </aside>
         </div>
 
-        <ResourceToolRecommend tag={meta.tag} />
+        <RelatedItems
+          type='tool'
+          query={`${meta.title} ${meta.tag}`}
+          locale='en'
+          className='mt-12'
+        />
         <NewsletterSubscribe />
         <RelatedArticles currentSlug={slug} locale='en' />
       </div>

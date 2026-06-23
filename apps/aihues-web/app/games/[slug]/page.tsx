@@ -1,14 +1,30 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import BasketballGame from '@/components/games/BasketballGame';
+import BlockDropGame from '@/components/games/BlockDropGame';
+import BrickBreakerGame from '@/components/games/BrickBreakerGame';
+import BulletStormGame from '@/components/games/BulletStormGame';
 import ChessGame from '@/components/games/ChessGame';
 import ColorHuntGame from '@/components/games/ColorHuntGame';
+import ComboRushGame from '@/components/games/ComboRushGame';
 import DailyFortuneGame from '@/components/games/DailyFortuneGame';
+import DepthChargeGame from '@/components/games/DepthChargeGame';
+import DodgeArenaGame from '@/components/games/DodgeArenaGame';
 import DoodleJumpGame from '@/components/games/DoodleJumpGame';
+import FlappyGame from '@/components/games/FlappyGame';
+import FruitSlashGame from '@/components/games/FruitSlashGame';
+import GameOfLifeGame from '@/components/games/GameOfLifeGame';
+import HundredFloorsGame from '@/components/games/HundredFloorsGame';
+import MinesweeperGame from '@/components/games/MinesweeperGame';
+import RadishSmashGame from '@/components/games/RadishSmashGame';
+import SkyStrikeGame from '@/components/games/SkyStrikeGame';
 import SlotMachineGame from '@/components/games/SlotMachineGame';
 import SnakeGame from '@/components/games/SnakeGame';
+import SudokuGame from '@/components/games/SudokuGame';
+import Breadcrumb from '@/components/Breadcrumb';
+import RelatedItems from '@/components/RelatedItems';
+import ShareButtons from '@/components/ShareButtons';
 import { PageShell } from '@/components/SiteChrome';
 import type { Locale } from '@/lib/dict';
 
@@ -86,6 +102,118 @@ const REACT_GAMES: Record<string, PlayableGame> = {
     desc: 'Play the computer, watch engines battle, or read the live evaluation.',
     descZh: '与电脑对弈、观看引擎对战，或查看实时局面评估。',
     theme: 'royal',
+  },
+  flappy: {
+    Component: FlappyGame,
+    title: 'Flappy',
+    titleZh: '飞翔小鸟',
+    desc: 'Flap through the gaps without crashing — pick a difficulty and chase your best.',
+    descZh: '拍翅穿过缝隙别撞管——选个难度，刷新你的最高分。',
+    theme: 'space',
+  },
+  'block-drop': {
+    Component: BlockDropGame,
+    title: 'Block Drop',
+    titleZh: '方块坠落',
+    desc: 'Rotate and stack the falling pieces, clear lines, and climb the levels.',
+    descZh: '旋转、堆叠坠落的方块，消除整行，挑战更高等级。',
+    theme: 'grid',
+  },
+  'brick-breaker': {
+    Component: BrickBreakerGame,
+    title: 'Brick Breaker',
+    titleZh: '打砖块',
+    desc: 'Bounce the ball, smash every brick, and clear the board across rising difficulty.',
+    descZh: '弹起小球击碎每一块砖，在不断升级的难度中清空全场。',
+    theme: 'spectrum',
+  },
+  'fruit-slash': {
+    Component: FruitSlashGame,
+    title: 'Fruit Slash',
+    titleZh: '水果忍者',
+    desc: 'Swipe to slice the flying fruit, chain combos, and dodge the bombs.',
+    descZh: '挥刀切开飞起的水果、串联连击，别切到炸弹。',
+    theme: 'spectrum',
+  },
+  minesweeper: {
+    Component: MinesweeperGame,
+    title: 'Minesweeper',
+    titleZh: '扫雷',
+    desc: 'Clear every safe tile without setting off a mine — flag the ones you fear.',
+    descZh: '翻开所有安全格子别踩到地雷——给可疑的格子插上旗。',
+    theme: 'grid',
+  },
+  sudoku: {
+    Component: SudokuGame,
+    title: 'Sudoku',
+    titleZh: '数独',
+    desc: 'Fill every row, column and box with 1–9 — pick a difficulty and beat your time.',
+    descZh: '让每行、每列、每个九宫格都填满 1–9——选个难度，刷新你的用时。',
+    theme: 'grid',
+  },
+  'sky-strike': {
+    Component: SkyStrikeGame,
+    title: 'Sky Strike',
+    titleZh: '雷霆战机',
+    desc: 'Fly, fire, and blast through enemy waves to the boss — drag to dodge.',
+    descZh: '驾机开火，杀穿一波波敌人直面 BOSS——拖动闪避。',
+    theme: 'space',
+  },
+  'bullet-storm': {
+    Component: BulletStormGame,
+    title: 'Bullet Storm',
+    titleZh: '弹幕风暴',
+    desc: 'Weave through a storm of bullets and survive as long as you can.',
+    descZh: '在漫天弹幕中穿梭，活得越久越好。',
+    theme: 'space',
+  },
+  'dodge-arena': {
+    Component: DodgeArenaGame,
+    title: 'Dodge Arena',
+    titleZh: '躲避球',
+    desc: 'Dodge a relentless barrage, trigger skills, and outlast rising difficulty.',
+    descZh: '躲开无尽弹球、释放技能，在不断升级的难度中坚持到底。',
+    theme: 'court',
+  },
+  'hundred-floors': {
+    Component: HundredFloorsGame,
+    title: 'Hundred Floors',
+    titleZh: '是男人就下一百层',
+    desc: 'Drop floor by floor, dodge the spikes, and mind the closing ceiling.',
+    descZh: '一层层往下跳，躲开尖刺，小心步步逼近的天花板。',
+    theme: 'space',
+  },
+  'depth-charge': {
+    Component: DepthChargeGame,
+    title: 'Depth Charge',
+    titleZh: '深水炸弹',
+    desc: 'Time your charges and sink the targets lurking in the deep.',
+    descZh: '把握时机投下炸弹，击沉潜伏深海的目标。',
+    theme: 'space',
+  },
+  'combo-rush': {
+    Component: ComboRushGame,
+    title: 'Combo Rush',
+    titleZh: '连招大师',
+    desc: 'Nail the timed inputs and chain the longest combo you can.',
+    descZh: '精准命中限时指令，串起尽可能长的连招。',
+    theme: 'royal',
+  },
+  'radish-smash': {
+    Component: RadishSmashGame,
+    title: 'Radish Smash',
+    titleZh: '打萝卜',
+    desc: 'Whack the radishes as they pop up — rack up combos before time runs out.',
+    descZh: '萝卜冒头就敲——在时间耗尽前打出连击。',
+    theme: 'grid',
+  },
+  'game-of-life': {
+    Component: GameOfLifeGame,
+    title: 'Game of Life',
+    titleZh: '生命游戏',
+    desc: 'Seed cells, press play, and watch Conway’s colony breathe and evolve.',
+    descZh: '画下细胞、点击开始，看康威的细胞群呼吸、演化。',
+    theme: 'grid',
   },
 };
 
@@ -213,12 +341,24 @@ export default async function GamePage({
 
           <div className='relative flex min-h-[calc(100vh-76px)] flex-col pb-12 pt-8'>
             <div className='mx-auto w-full max-w-[1100px] px-6'>
-              <Link
-                href='/games'
-                className='mb-4 inline-flex items-center gap-1.5 self-start text-[13px] font-semibold text-white/55 transition-colors hover:text-white'
-              >
-                ← {locale === 'zh' ? '返回游戏中心' : 'Back to Games'}
-              </Link>
+              <div className='mb-6 flex items-center justify-between gap-4'>
+                <Breadcrumb
+                  variant='dark'
+                  items={[
+                    { label: locale === 'zh' ? '首页' : 'Home', href: '/' },
+                    {
+                      label: locale === 'zh' ? '游戏' : 'Games',
+                      href: '/games',
+                    },
+                    { label: locale === 'zh' ? game.titleZh : game.title },
+                  ]}
+                />
+                <ShareButtons
+                  className='shrink-0'
+                  title={locale === 'zh' ? game.titleZh : game.title}
+                  variant='dark'
+                />
+              </div>
               <div className='mb-6 text-center'>
                 <div
                   className={`mb-2 text-[11px] font-extrabold uppercase tracking-[0.18em] ${theme.eyebrow}`}
@@ -238,16 +378,31 @@ export default async function GamePage({
             >
               <Game locale={locale} />
             </div>
+            <div className='mx-auto mt-12 w-full max-w-[1100px] px-6'>
+              <RelatedItems
+                type='game'
+                slug={slug}
+                locale={locale}
+                variant='dark'
+              />
+            </div>
           </div>
         </section>
       ) : (
         <div className='mx-auto max-w-[1100px] px-6 py-10'>
-          <Link
-            href='/games'
-            className='mb-6 inline-flex items-center gap-1.5 text-[13px] font-semibold text-secondary transition-colors hover:text-accent'
-          >
-            ← {locale === 'zh' ? '返回游戏中心' : 'Back to Games'}
-          </Link>
+          <div className='mb-6 flex items-center justify-between gap-4'>
+            <Breadcrumb
+              items={[
+                { label: locale === 'zh' ? '首页' : 'Home', href: '/' },
+                { label: locale === 'zh' ? '游戏' : 'Games', href: '/games' },
+                { label: locale === 'zh' ? game.titleZh : game.title },
+              ]}
+            />
+            <ShareButtons
+              className='shrink-0'
+              title={locale === 'zh' ? game.titleZh : game.title}
+            />
+          </div>
           <div className='mb-8 text-center'>
             <div className='mb-2 text-[11px] font-extrabold uppercase tracking-[0.18em] text-accent'>
               {locale === 'zh' ? '小游戏' : 'Mini Game'}
@@ -260,6 +415,12 @@ export default async function GamePage({
             </p>
           </div>
           <Game locale={locale} />
+          <RelatedItems
+            type='game'
+            slug={slug}
+            locale={locale}
+            className='mt-12'
+          />
         </div>
       )}
     </PageShell>

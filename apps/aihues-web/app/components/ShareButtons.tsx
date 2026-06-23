@@ -49,9 +49,11 @@ const PLATFORMS: Platform[] = [
 export default function ShareButtons({
   title,
   className = '',
+  variant = 'light',
 }: {
   title?: string;
   className?: string;
+  variant?: 'light' | 'dark';
 }) {
   const [copied, setCopied] = useState(false);
 
@@ -73,7 +75,9 @@ export default function ShareButtons({
   }
 
   const btn =
-    'flex h-9 w-9 items-center justify-center rounded-full border border-border bg-bg text-secondary transition-colors hover:border-accent hover:text-accent';
+    variant === 'dark'
+      ? 'flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/70 transition-colors hover:border-white hover:text-white'
+      : 'flex h-9 w-9 items-center justify-center rounded-full border border-border bg-bg text-secondary transition-colors hover:border-accent hover:text-accent';
 
   return (
     <div className={`flex items-center gap-2 ${className}`}>
