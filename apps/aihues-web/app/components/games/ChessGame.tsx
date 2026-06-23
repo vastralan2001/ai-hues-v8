@@ -2273,6 +2273,18 @@ export default function ChessGame({ locale }: { locale: Locale }) {
           {analyzing ? `${analyzeProgress}%` : tx.analyze}
         </button>
       </div>
+      {opening && (
+        <div className='mb-2 flex items-center gap-1.5 text-[11px] leading-tight text-white/45'>
+          {opening.eco && (
+            <span className='shrink-0 rounded bg-white/10 px-1.5 py-0.5 font-bold text-white/60'>
+              {opening.eco}
+            </span>
+          )}
+          <span className='truncate' title={opening.name}>
+            {opening.name}
+          </span>
+        </div>
+      )}
       {showImport && (
         <div className='mb-2'>
           <textarea
@@ -2458,19 +2470,6 @@ export default function ChessGame({ locale }: { locale: Locale }) {
             <ArrowLeftRight size={15} />
           </button>
         </div>
-
-        {opening && (
-          <div className='-mt-1 flex items-center gap-1.5 text-[11px] leading-tight text-white/45'>
-            {opening.eco && (
-              <span className='shrink-0 rounded bg-white/10 px-1.5 py-0.5 font-bold text-white/60'>
-                {opening.eco}
-              </span>
-            )}
-            <span className='truncate' title={opening.name}>
-              {opening.name}
-            </span>
-          </div>
-        )}
 
         {(material.capW.length > 0 ||
           material.capB.length > 0 ||

@@ -30,7 +30,6 @@ export const revalidate = 60;
 const HOME_CATEGORIES = (locale: Locale) => [
   {
     key: 'utility',
-    letter: 'U',
     label: t(locale, 'cat.utility'),
     count: 0,
     desc: t(locale, 'cat.utilityDesc'),
@@ -39,7 +38,6 @@ const HOME_CATEGORIES = (locale: Locale) => [
   },
   {
     key: 'developer',
-    letter: 'D',
     label: t(locale, 'cat.developer'),
     count: 0,
     desc: t(locale, 'cat.developerDesc'),
@@ -48,7 +46,6 @@ const HOME_CATEGORIES = (locale: Locale) => [
   },
   {
     key: 'ai-writing',
-    letter: 'A',
     label: t(locale, 'cat.aiWriting'),
     count: 0,
     desc: t(locale, 'cat.aiWritingDesc'),
@@ -57,7 +54,6 @@ const HOME_CATEGORIES = (locale: Locale) => [
   },
   {
     key: 'games',
-    letter: 'G',
     label: t(locale, 'cat.games'),
     count: 0,
     desc: t(locale, 'cat.gamesDesc'),
@@ -66,7 +62,6 @@ const HOME_CATEGORIES = (locale: Locale) => [
   },
   {
     key: 'tests',
-    letter: 'T',
     label: t(locale, 'cat.tests'),
     count: TEST_META.length,
     desc: t(locale, 'cat.testsDesc'),
@@ -335,7 +330,7 @@ export default async function HomePage() {
                         color: theme.fg,
                       }}
                     >
-                      {cat.letter}
+                      <ToolIcon slug={cat.key} size={18} />
                     </span>
                     <span className='flex-1 text-[16px] font-bold text-foreground'>
                       {cat.label}
