@@ -1,40 +1,23 @@
-/* AIHues brand mark — a designer's swatch fan. Five rounded blades pivot
-   from a single point and sweep a warm-to-cool hue range
-   (accent → amber → olive → teal → violet), making "hues" the whole idea. */
-const BLADES: { angle: number; fill: string }[] = [
-  { angle: -36, fill: '#c2502e' },
-  { angle: -18, fill: '#d68a3e' },
-  { angle: 0, fill: '#7f8c5d' },
-  { angle: 18, fill: '#3f7d8c' },
-  { angle: 36, fill: '#785aa6' },
+/* AIHues logotype — the wordmark IS the mark. "AI" stays solid; each letter
+   of "Hues" is dyed a distinct vivid hue, so the name itself shows its hues.
+   Sizing/weight come from the parent link. */
+// Colors come straight from the design tokens (warm → cool), not hand-picked.
+const HUES: { ch: string; color: string }[] = [
+  { ch: 'H', color: 'var(--color-accent)' },
+  { ch: 'U', color: 'var(--color-accent-light)' },
+  { ch: 'E', color: 'var(--color-green)' },
+  { ch: 'S', color: 'var(--color-blue)' },
 ];
 
-const PIVOT_X = 60;
-const PIVOT_Y = 92;
-
-export function Logo({ size = 28 }: { size?: number }) {
+export function Wordmark() {
   return (
-    <svg
-      aria-hidden='true'
-      height={size}
-      viewBox='0 0 120 120'
-      width={size}
-      xmlns='http://www.w3.org/2000/svg'
-    >
-      {BLADES.map((b) => (
-        <rect
-          key={b.angle}
-          fill={b.fill}
-          height='62'
-          rx='7'
-          transform={`rotate(${b.angle} ${PIVOT_X} ${PIVOT_Y})`}
-          width='14'
-          x={PIVOT_X - 7}
-          y={PIVOT_Y - 60}
-        />
+    <span className='uppercase tracking-[0.12em]'>
+      <span className='text-foreground'>AI</span>
+      {HUES.map((h) => (
+        <span key={h.ch} style={{ color: h.color }}>
+          {h.ch}
+        </span>
       ))}
-      <circle cx={PIVOT_X} cy={PIVOT_Y} fill='#1a1a19' r='7' />
-      <circle cx={PIVOT_X} cy={PIVOT_Y} fill='#faf9f5' r='2.5' />
-    </svg>
+    </span>
   );
 }

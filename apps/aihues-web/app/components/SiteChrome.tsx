@@ -15,7 +15,7 @@ import {
   toolsHref,
   wishlistHref,
 } from '@/lib/routes';
-import { Logo } from './Logo';
+import { Wordmark } from './Logo';
 import { BookmarkButton } from './BookmarkButton';
 
 type ChromeVariant =
@@ -65,14 +65,10 @@ export function SiteHeader({
           {/* Logo */}
           <Link
             aria-label='AIHues home'
-            className='flex shrink-0 items-center gap-2 text-lg font-extrabold text-foreground md:gap-2.5 md:text-xl'
+            className='shrink-0 text-lg font-extrabold md:text-xl'
             href={homeHref}
           >
-            <Logo size={28} />
-            <span className='hidden uppercase tracking-[0.12em] md:inline'>
-              <span className='text-foreground'>AI</span>
-              <span className='brand-hues'>Hues</span>
-            </span>
+            <Wordmark />
           </Link>
 
           {/* Nav links — scrollable on mobile */}
@@ -141,13 +137,9 @@ export function SiteFooter({
           <div className='lg:col-span-4'>
             <Link
               href={homeHref}
-              className='inline-flex items-center gap-2.5 text-xl font-extrabold text-foreground'
+              className='inline-block text-xl font-extrabold'
             >
-              <Logo size={30} />
-              <span className='uppercase tracking-[0.12em]'>
-                <span className='text-foreground'>AI</span>
-                <span className='brand-hues'>Hues</span>
-              </span>
+              <Wordmark />
             </Link>
             <p className='mt-3 max-w-[280px] text-[14px] leading-relaxed text-muted'>
               {t(locale, 'footer.tagline')}
