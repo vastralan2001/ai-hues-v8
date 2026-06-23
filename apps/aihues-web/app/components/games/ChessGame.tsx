@@ -645,6 +645,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
   const [evalText, setEvalText] = useState('0.0');
   const [evalLines, setEvalLines] = useState<EvalLine[]>([]);
   const [evalDepth, setEvalDepth] = useState(0);
+  const [hoverLineIdx, setHoverLineIdx] = useState<number | null>(null);
   const [brush, setBrushState] = useState<
     'play' | 'move' | 'erase' | { type: string; color: Color }
   >('play');
@@ -1117,11 +1118,6 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     const w = infoToWhite(info, t);
     setEvalFrac(w.prob);
     setEvalText(w.text);
-    if (modeRef.current === 'eval' && info.pv && info.pv[0]) {
-      const u = info.pv[0];
-      const g = gRef.current;
-      if (g) g.arrow = { from: u.slice(0, 2), to: u.slice(2, 4) };
-    }
   }
 
   function applyResult(res: SearchResult, t: Color) {
@@ -1461,6 +1457,17 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     if (engineReady && modeRef.current === 'eval') analyzePosition();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [engineReady]);
+
+  useEffect(() => {
+    const g = gRef.current;
+    if (!g || mode !== 'eval') return;
+    const idx =
+      hoverLineIdx != null && evalLines[hoverLineIdx] ? hoverLineIdx : 0;
+    const line = evalLines[idx];
+    g.arrow = line
+      ? { from: line.uci.slice(0, 2), to: line.uci.slice(2, 4) }
+      : null;
+  }, [evalLines, hoverLineIdx, mode]);
 
   async function spectateOneMove(force = false) {
     const chess = chessRef.current!;
@@ -2351,8 +2358,14 @@ export default function ChessGame({ locale }: { locale: Locale }) {
                 key={`${line.uci}-${i}`}
                 type='button'
                 onClick={() => playSuggestion(line.uci)}
+                onMouseEnter={() => setHoverLineIdx(i)}
+                onMouseLeave={() => setHoverLineIdx(null)}
                 title={line.pv}
-                className='flex w-full items-center gap-2 rounded-md px-1.5 py-1 text-left transition-colors hover:bg-white/10'
+                className={`flex w-full items-center gap-2 rounded-md px-1.5 py-1 text-left transition-colors ${
+                  (hoverLineIdx == null && i === 0) || hoverLineIdx === i
+                    ? 'bg-white/10'
+                    : 'hover:bg-white/[0.06]'
+                }`}
               >
                 <span
                   className={`w-11 shrink-0 rounded bg-white/[0.06] py-0.5 text-center text-[12px] font-bold tabular-nums ${
