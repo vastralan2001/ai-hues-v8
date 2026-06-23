@@ -266,7 +266,8 @@ export default function QuizRunner({ slug }: { slug: string }) {
 
             {/* breakdown */}
             <div className='mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-muted'>
-              {isSbti ? 'Soul dimensions' : 'Your breakdown'}
+              {config.breakdownLabel ??
+                (isSbti ? 'Soul dimensions' : 'Your breakdown')}
             </div>
 
             {isSbti ? (

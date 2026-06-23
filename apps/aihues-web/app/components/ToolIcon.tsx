@@ -37,6 +37,7 @@ import {
   FileCode2,
   Fingerprint,
   Gamepad2,
+  Gauge,
   GitCommit,
   GitCompare,
   GitPullRequest,
@@ -64,6 +65,7 @@ import {
   Paintbrush,
   Palette,
   PenTool,
+  Puzzle,
   QrCode,
   Rocket,
   Ruler,
@@ -183,6 +185,8 @@ const TOOL_ICONS: Record<string, LucideIcon> = {
   /* Tests */
   sbti: Drama,
   mbti: Brain,
+  mensa: Puzzle,
+  sbinet: Gauge,
   tests: ClipboardList,
 
   /* Categories */
