@@ -60,40 +60,42 @@ export function SiteHeader({
 
   return (
     <HeaderBar>
-      <div className='mx-auto flex h-[76px] max-w-[1760px] items-center justify-between px-[clamp(1.5rem,5vw,7rem)]'>
-        {/* Logo */}
-        <Link
-          aria-label='AIHues home'
-          className='flex shrink-0 items-center gap-2 text-lg font-extrabold text-foreground md:gap-2.5 md:text-xl'
-          href={homeHref}
-        >
-          <Logo size={28} />
-          <span className='hidden uppercase tracking-[0.12em] md:inline'>
-            <span className='text-foreground'>AI</span>
-            <span className='brand-hues'>Hues</span>
-          </span>
-        </Link>
+      <div className='w-full px-[clamp(1.5rem,5vw,7rem)]'>
+        <div className='mx-auto flex h-[76px] max-w-[1760px] items-center justify-between'>
+          {/* Logo */}
+          <Link
+            aria-label='AIHues home'
+            className='flex shrink-0 items-center gap-2 text-lg font-extrabold text-foreground md:gap-2.5 md:text-xl'
+            href={homeHref}
+          >
+            <Logo size={28} />
+            <span className='hidden uppercase tracking-[0.12em] md:inline'>
+              <span className='text-foreground'>AI</span>
+              <span className='brand-hues'>Hues</span>
+            </span>
+          </Link>
 
-        {/* Nav links — scrollable on mobile */}
-        <nav
-          aria-label='Primary navigation'
-          className='mx-3 flex flex-1 items-center justify-start gap-5 overflow-x-auto whitespace-nowrap py-2 md:mx-6 md:justify-center md:gap-9'
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-        >
-          {links.map(({ href, labelKey }) => (
-            <Link
-              key={labelKey}
-              className='text-[13px] font-bold uppercase tracking-[0.14em] text-secondary transition-colors duration-150 hover:text-accent md:text-[15px]'
-              href={href}
-            >
-              {t(locale, labelKey)}
-            </Link>
-          ))}
-        </nav>
+          {/* Nav links — scrollable on mobile */}
+          <nav
+            aria-label='Primary navigation'
+            className='mx-3 flex flex-1 items-center justify-start gap-5 overflow-x-auto whitespace-nowrap py-2 md:mx-6 md:justify-center md:gap-9'
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {links.map(({ href, labelKey }) => (
+              <Link
+                key={labelKey}
+                className='text-[13px] font-bold uppercase tracking-[0.14em] text-secondary transition-colors duration-150 hover:text-accent md:text-[15px]'
+                href={href}
+              >
+                {t(locale, labelKey)}
+              </Link>
+            ))}
+          </nav>
 
-        {/* Right side: bookmark button */}
-        <div className='shrink-0'>
-          <BookmarkButton />
+          {/* Right side: bookmark button */}
+          <div className='shrink-0'>
+            <BookmarkButton />
+          </div>
         </div>
       </div>
     </HeaderBar>
@@ -134,58 +136,62 @@ export function SiteFooter({
 
   return (
     <footer className='border-t border-border bg-surface'>
-      <div className='mx-auto grid max-w-[1760px] gap-10 px-[clamp(1.5rem,5vw,7rem)] py-14 sm:grid-cols-2 lg:grid-cols-12'>
-        <div className='lg:col-span-4'>
-          <Link
-            href={homeHref}
-            className='inline-flex items-center gap-2.5 text-xl font-extrabold text-foreground'
-          >
-            <Logo size={30} />
-            <span className='uppercase tracking-[0.12em]'>
-              <span className='text-foreground'>AI</span>
-              <span className='brand-hues'>Hues</span>
-            </span>
-          </Link>
-          <p className='mt-3 max-w-[280px] text-[14px] leading-relaxed text-muted'>
-            {t(locale, 'footer.tagline')}
-          </p>
-          <div className='mt-5 flex items-center gap-2'>
-            <FooterIcon href='/resources/rss.xml' label='RSS'>
-              <Rss size={16} />
-            </FooterIcon>
+      <div className='w-full px-[clamp(1.5rem,5vw,7rem)]'>
+        <div className='mx-auto grid max-w-[1760px] gap-10 py-14 sm:grid-cols-2 lg:grid-cols-12'>
+          <div className='lg:col-span-4'>
+            <Link
+              href={homeHref}
+              className='inline-flex items-center gap-2.5 text-xl font-extrabold text-foreground'
+            >
+              <Logo size={30} />
+              <span className='uppercase tracking-[0.12em]'>
+                <span className='text-foreground'>AI</span>
+                <span className='brand-hues'>Hues</span>
+              </span>
+            </Link>
+            <p className='mt-3 max-w-[280px] text-[14px] leading-relaxed text-muted'>
+              {t(locale, 'footer.tagline')}
+            </p>
+            <div className='mt-5 flex items-center gap-2'>
+              <FooterIcon href='/resources/rss.xml' label='RSS'>
+                <Rss size={16} />
+              </FooterIcon>
+            </div>
           </div>
-        </div>
 
-        <FooterColumn
-          className='lg:col-span-2'
-          heading={t(locale, 'footer.product')}
-          links={product}
-        />
-        <FooterColumn
-          className='lg:col-span-2'
-          heading={t(locale, 'footer.games')}
-          links={games}
-        />
-        <FooterColumn
-          className='lg:col-span-2'
-          heading={t(locale, 'nav.tests')}
-          links={tests}
-        />
-        <FooterColumn
-          className='lg:col-span-2'
-          heading={t(locale, 'footer.company')}
-          links={company}
-        />
+          <FooterColumn
+            className='lg:col-span-2'
+            heading={t(locale, 'footer.product')}
+            links={product}
+          />
+          <FooterColumn
+            className='lg:col-span-2'
+            heading={t(locale, 'footer.games')}
+            links={games}
+          />
+          <FooterColumn
+            className='lg:col-span-2'
+            heading={t(locale, 'nav.tests')}
+            links={tests}
+          />
+          <FooterColumn
+            className='lg:col-span-2'
+            heading={t(locale, 'footer.company')}
+            links={company}
+          />
+        </div>
       </div>
 
       <div className='border-t border-border'>
-        <div className='mx-auto flex max-w-[1300px] flex-col items-center justify-between gap-3 px-6 py-5 text-[13px] text-muted sm:flex-row md:px-8'>
-          <span>{t(locale, 'footer.copyright')}</span>
-          <div className='flex items-center gap-5'>
-            <FooterLink href='/terms'>{t(locale, 'footer.terms')}</FooterLink>
-            <FooterLink href='/privacy'>
-              {t(locale, 'footer.privacy')}
-            </FooterLink>
+        <div className='w-full px-[clamp(1.5rem,5vw,7rem)]'>
+          <div className='mx-auto flex max-w-[1760px] flex-col items-center justify-between gap-3 py-5 text-[13px] text-muted sm:flex-row'>
+            <span>{t(locale, 'footer.copyright')}</span>
+            <div className='flex items-center gap-5'>
+              <FooterLink href='/terms'>{t(locale, 'footer.terms')}</FooterLink>
+              <FooterLink href='/privacy'>
+                {t(locale, 'footer.privacy')}
+              </FooterLink>
+            </div>
           </div>
         </div>
       </div>

@@ -95,18 +95,10 @@ const CATEGORY_GROUPS = (
   },
 ];
 
-const HOME_TOOL_SLUGS = [
-  'jwt',
-  'json',
-  'regex',
-  'base64',
-  'uuid',
-  'timestamp',
-  'word-count',
-  'readability',
-  'humanize',
-  'x-post',
-];
+// Keep in sync with the demo registries in HomeDemos (client module — its
+// exported slug arrays can't be read from this server component).
+const HOME_TOOL_SLUGS = ['jwt', 'json', 'base64', 'uuid'];
+const GAME_DEMO_SLUGS = ['slot-machine', 'flappy', 'daily-luck'];
 
 /* ── Slide builders — feed the polished SpotlightCarousel per section ── */
 function toolSlides(tools: CatalogTool[], locale: Locale): SpotlightSlide[] {
@@ -192,39 +184,17 @@ function CategoryGroups({
   );
 }
 
-function TestsVisual({ locale }: { locale: Locale }) {
-  return (
-    <div className='flex flex-col gap-3'>
-      {TEST_META.map((tm) => (
-        <Link
-          key={tm.slug}
-          className='card-lift relative flex items-start gap-4 rounded-[16px] border border-border bg-surface p-5 text-inherit no-underline'
-          href={testDetailHref(tm.slug)}
-        >
-          <span className='flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] bg-accent-bg text-accent'>
-            <ToolIcon size={24} slug={tm.slug} />
-          </span>
-          <div className='min-w-0'>
-            <div className='flex items-center gap-2'>
-              <h3 className='text-[17px] font-bold text-foreground'>
-                {tm.name}
-              </h3>
-              <span className='rounded-full bg-accent-bg px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-accent'>
-                {tm.badge}
-              </span>
-            </div>
-            <p className='mt-1 line-clamp-2 text-[13px] leading-relaxed text-secondary'>
-              {tm.description}
-            </p>
-            <p className='mt-1.5 text-[12px] font-medium text-muted'>
-              {tm.questionCount} {locale === 'zh' ? '题' : 'questions'} · ~
-              {tm.durationMin} min
-            </p>
-          </div>
-        </Link>
-      ))}
-    </div>
-  );
+function testSlides(locale: Locale): SpotlightSlide[] {
+  const zh = locale === 'zh';
+  return TEST_META.map((tm) => ({
+    slug: tm.slug,
+    eyebrow: tm.badge,
+    title: tm.name,
+    description: tm.description,
+    metrics: `${tm.questionCount} ${zh ? '题' : 'questions'} · ~${tm.durationMin} min`,
+    href: testDetailHref(tm.slug),
+    cta: zh ? '开始测试 →' : 'Take test →',
+  }));
 }
 
 export default async function HomePage() {
@@ -247,6 +217,10 @@ export default async function HomePage() {
   const homeTools = HOME_TOOL_SLUGS.map((slug) =>
     tools.find((tool) => tool.slug === slug)
   ).filter((tool): tool is CatalogTool => tool != null);
+
+  const demoGames = GAME_DEMO_SLUGS.map((slug) =>
+    games.find((game) => game.slug === slug)
+  ).filter((game): game is CatalogGame => game != null);
 
   const groups = CATEGORY_GROUPS(locale, {
     tools: tools.length,
@@ -379,7 +353,10 @@ export default async function HomePage() {
           title='Tools that do one thing well'
           tone={2}
           visual={
-            <SpotlightCarousel compact slides={toolSlides(homeTools, locale)} />
+            <SpotlightCarousel
+              demo='tool'
+              slides={toolSlides(homeTools, locale)}
+            />
           }
         />
 
@@ -402,8 +379,8 @@ export default async function HomePage() {
           tone={3}
           visual={
             <SpotlightCarousel
-              compact
-              slides={gameSlides(games.slice(0, 8), locale)}
+              demo='game'
+              slides={gameSlides(demoGames, locale)}
             />
           }
         />
@@ -422,7 +399,7 @@ export default async function HomePage() {
           }))}
           title='Tests worth taking'
           tone={4}
-          visual={<TestsVisual locale={locale} />}
+          visual={<SpotlightCarousel compact slides={testSlides(locale)} />}
         />
 
         {/* ══════════════════════════════════════════════
