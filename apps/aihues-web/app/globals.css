@@ -256,11 +256,62 @@ select:focus-visible {
   animation: demo-flip 3.8s ease-in-out infinite;
   transform-style: preserve-3d;
 }
+@keyframes demo-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes demo-slide {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(230px);
+  }
+}
+@keyframes demo-fall {
+  from {
+    transform: translateY(-50%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes demo-hop {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-22px);
+  }
+}
+.demo-grow {
+  transform-origin: left center;
+  animation: demo-grow 1.1s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+.demo-slide {
+  animation: demo-slide 3.4s ease-in-out infinite;
+}
+.demo-fall {
+  animation: demo-fall 2.3s linear infinite;
+}
+.demo-hop {
+  animation: demo-hop 0.95s ease-in-out infinite;
+}
 @media (prefers-reduced-motion: reduce) {
   .demo-reel,
   .demo-bird,
   .demo-pipes,
-  .demo-flip {
+  .demo-flip,
+  .demo-grow,
+  .demo-slide,
+  .demo-fall,
+  .demo-hop {
     animation: none !important;
   }
 }

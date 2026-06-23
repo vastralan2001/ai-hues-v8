@@ -3,8 +3,11 @@
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { GameDemo, ToolDemo } from '@/components/HomeDemos';
+import { GameDemo } from '@/components/games/GameDemos';
+import { ResourceCover } from '@/components/resources/ResourceCover';
+import { TestDemo } from '@/components/tests/TestDemos';
 import { ToolIcon } from '@/components/ToolIcon';
+import { ToolDemo } from '@/components/tools/ToolDemos';
 
 export type SpotlightSlide = {
   slug: string;
@@ -61,7 +64,7 @@ export default function SpotlightCarousel({
   slides: SpotlightSlide[];
   compact?: boolean;
   onIndexChange?: (i: number) => void;
-  demo?: 'tool' | 'game';
+  demo?: 'tool' | 'game' | 'test' | 'resource';
 }) {
   const count = slides.length;
 
@@ -165,6 +168,14 @@ export default function SpotlightCarousel({
                   <div className='order-1 min-w-0 md:order-2'>
                     {demo === 'game' ? (
                       <GameDemo slug={s.slug} />
+                    ) : demo === 'test' ? (
+                      <TestDemo slug={s.slug} />
+                    ) : demo === 'resource' ? (
+                      <ResourceCover
+                        readTime={s.metrics}
+                        tag={s.eyebrow}
+                        title={s.title}
+                      />
                     ) : (
                       <ToolDemo slug={s.slug} />
                     )}

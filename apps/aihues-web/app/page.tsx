@@ -7,7 +7,6 @@ import { PageShell } from '@/components/SiteChrome';
 import SpotlightCarousel, {
   type SpotlightSlide,
 } from '@/components/SpotlightCarousel';
-import { ToolIcon } from '@/components/ToolIcon';
 import ToolMarquee, { type MarqueeItem } from '@/components/ToolMarquee';
 import Typewriter from '@/components/Typewriter';
 import type { CatalogGame, CatalogTool } from '@/lib/catalog-api';
@@ -41,64 +40,17 @@ const catLabel = (locale: Locale, category: string) =>
       ? t(locale, 'cat.developer')
       : t(locale, 'cat.utility');
 
-/* ── Three top-level families, each with second-level entries ── */
-const CATEGORY_GROUPS = (
-  locale: Locale,
-  counts: { tools: number; play: number; resources: number }
-) => [
-  {
-    key: 'tools',
-    label: locale === 'zh' ? '工具' : 'Tools',
-    count: counts.tools,
-    desc:
-      locale === 'zh'
-        ? '开发与写作利器 — 解码、格式化、生成。'
-        : 'Developer & writing utilities — decode, format, generate.',
-    children: [
-      { label: t(locale, 'cat.utility'), href: toolsCategoryHref('utility') },
-      {
-        label: t(locale, 'cat.developer'),
-        href: toolsCategoryHref('developer'),
-      },
-      {
-        label: t(locale, 'cat.aiWriting'),
-        href: toolsCategoryHref('ai-writing'),
-      },
-    ],
-  },
-  {
-    key: 'play',
-    label: locale === 'zh' ? '游戏 & 测评' : 'Games & Tests',
-    count: counts.play,
-    desc:
-      locale === 'zh'
-        ? '轻量小游戏与自我探索测验，放松又走心。'
-        : 'Mini-games and self-discovery quizzes to unwind and reflect.',
-    children: [
-      { label: t(locale, 'cat.games'), href: gamesHref },
-      { label: t(locale, 'cat.tests'), href: testsHref },
-    ],
-  },
-  {
-    key: 'resources',
-    label: locale === 'zh' ? '资源' : 'Resources',
-    count: counts.resources,
-    desc:
-      locale === 'zh'
-        ? '关于 AI、增长、SEO 与独立开发的实战指南。'
-        : 'Guides on AI, growth, SEO, and indie development.',
-    children: [
-      { label: 'AI Tools', href: resourceTagHref('AI Tools') },
-      { label: 'Growth', href: resourceTagHref('Growth') },
-      { label: 'Development', href: resourceTagHref('Development') },
-    ],
-  },
+// Ordered by international popularity; mixed across categories (not all dev).
+// Each slug must have a demo in the per-domain ToolDemos / GameDemos files.
+const HOME_TOOL_SLUGS = [
+  'json',
+  'jwt',
+  'word-count',
+  'base64',
+  'x-post',
+  'uuid',
 ];
-
-// Keep in sync with the demo registries in HomeDemos (client module — its
-// exported slug arrays can't be read from this server component).
-const HOME_TOOL_SLUGS = ['jwt', 'json', 'base64', 'uuid'];
-const GAME_DEMO_SLUGS = ['slot-machine', 'flappy', 'daily-luck'];
+const GAME_DEMO_SLUGS = ['snake', 'doodle-jump', 'slot-machine', 'daily-luck'];
 
 /* ── Slide builders — feed the polished SpotlightCarousel per section ── */
 function toolSlides(tools: CatalogTool[], locale: Locale): SpotlightSlide[] {
@@ -140,50 +92,6 @@ function postSlides(posts: ResourcePost[], locale: Locale): SpotlightSlide[] {
   }));
 }
 
-/* ── Static visual columns ── */
-function CategoryGroups({
-  groups,
-}: {
-  groups: ReturnType<typeof CATEGORY_GROUPS>;
-}) {
-  return (
-    <div className='flex flex-col gap-3'>
-      {groups.map((g) => (
-        <div
-          key={g.key}
-          className='rounded-[18px] border border-border bg-white p-5 transition-colors hover:border-border-strong'
-        >
-          <div className='mb-2 flex items-center gap-3'>
-            <span className='flex h-10 w-10 items-center justify-center rounded-[12px] bg-accent-bg text-accent'>
-              <ToolIcon size={20} slug={g.key} />
-            </span>
-            <span className='flex-1 text-[17px] font-bold text-foreground'>
-              {g.label}
-            </span>
-            <span className='rounded-full bg-surface px-2.5 py-1 text-[11px] font-semibold text-muted'>
-              {g.count}
-            </span>
-          </div>
-          <p className='mb-3 text-[13px] leading-relaxed text-foreground/70'>
-            {g.desc}
-          </p>
-          <div className='flex flex-wrap gap-1.5'>
-            {g.children.map((c) => (
-              <Link
-                key={c.label}
-                className='rounded-[8px] border border-border bg-surface px-2.5 py-1 text-[12px] font-medium text-secondary no-underline transition-colors hover:border-accent hover:text-accent'
-                href={c.href}
-              >
-                {c.label}
-              </Link>
-            ))}
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
 function testSlides(locale: Locale): SpotlightSlide[] {
   const zh = locale === 'zh';
   return TEST_META.map((tm) => ({
@@ -221,12 +129,6 @@ export default async function HomePage() {
   const demoGames = GAME_DEMO_SLUGS.map((slug) =>
     games.find((game) => game.slug === slug)
   ).filter((game): game is CatalogGame => game != null);
-
-  const groups = CATEGORY_GROUPS(locale, {
-    tools: tools.length,
-    play: games.length + TEST_META.length,
-    resources: posts.length,
-  });
 
   const marqueeRows: MarqueeItem[][] = [[], [], []];
   tools.forEach((tool, i) => {
@@ -309,26 +211,6 @@ export default async function HomePage() {
         </HeroStage>
 
         {/* ══════════════════════════════════════════════
-            BROWSE BY CATEGORY
-            ══════════════════════════════════════════════ */}
-        <FeatureBand
-          cta={{ href: toolsHref, label: 'Explore all' }}
-          description='Three families — tools, games and tests, and reading. Pick a lane and dive straight in. No signup, no clutter.'
-          eyebrow='Explore'
-          id='categories'
-          links={[
-            { label: 'Tools', href: '#tools' },
-            { label: 'Games', href: '#games' },
-            { label: 'Tests', href: '#tests' },
-            { label: 'Resources', href: '#resources' },
-          ]}
-          reverse
-          title='Browse by category'
-          tone={1}
-          visual={<CategoryGroups groups={groups} />}
-        />
-
-        {/* ══════════════════════════════════════════════
             TOOLS
             ══════════════════════════════════════════════ */}
         <FeatureBand
@@ -399,7 +281,7 @@ export default async function HomePage() {
           }))}
           title='Tests worth taking'
           tone={4}
-          visual={<SpotlightCarousel compact slides={testSlides(locale)} />}
+          visual={<SpotlightCarousel demo='test' slides={testSlides(locale)} />}
         />
 
         {/* ══════════════════════════════════════════════
@@ -421,8 +303,8 @@ export default async function HomePage() {
           tone={0}
           visual={
             <SpotlightCarousel
-              compact
-              slides={postSlides(posts.slice(0, 8), locale)}
+              demo='resource'
+              slides={postSlides(posts.slice(0, 6), locale)}
             />
           }
         />
