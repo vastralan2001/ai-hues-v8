@@ -2570,7 +2570,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
             )}
 
             {mode === 'play' && phase !== 'setup' && (
-              <div className='flex flex-wrap gap-2'>
+              <div className='flex flex-col gap-2'>
                 <CtrlButton
                   label={tx.undo}
                   onClick={undo}
@@ -2627,7 +2627,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
             )}
 
             {mode === 'spectate' && phase !== 'setup' && (
-              <div className='flex flex-wrap gap-2'>
+              <div className='flex flex-col gap-2'>
                 <CtrlButton
                   label={paused ? tx.resume : tx.pause}
                   onClick={togglePause}
@@ -3114,7 +3114,7 @@ function CtrlButton({
       onClick={onClick}
       disabled={disabled}
       title={label}
-      className='flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-[12px] font-semibold text-white/75 transition-colors hover:bg-white/20 disabled:opacity-40'
+      className='flex w-full items-center justify-center gap-1.5 rounded-full bg-white/10 px-3 py-2 text-[12px] font-semibold text-white/75 transition-colors hover:bg-white/20 disabled:opacity-40'
     >
       {icon}
       <span>{label}</span>
