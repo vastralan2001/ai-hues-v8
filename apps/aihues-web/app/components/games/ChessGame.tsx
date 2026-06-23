@@ -2133,7 +2133,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     setThinkingBoth(false);
     setResult('');
     setBrush('play');
-    setSubTab(m === 'eval' ? 'moves' : 'control');
+    setSubTab('control');
     modeRef.current = m;
     setMode(m);
     const g = gRef.current;
@@ -2200,7 +2200,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
   const showEval = mode !== 'play' || playEval;
   const inGame = mode !== 'eval' && phase !== 'setup';
   const subTabKeys: ('control' | 'moves' | 'openings')[] =
-    mode === 'eval' ? ['control', 'moves', 'openings'] : ['control', 'moves'];
+    mode === 'eval' ? ['control', 'openings'] : ['control'];
   const effSubTab = subTabKeys.includes(subTab) ? subTab : 'control';
   const showPopularOpenings =
     openingQuery.trim() === '' && openingCat === 'all';
@@ -2215,10 +2215,180 @@ export default function ChessGame({ locale }: { locale: Locale }) {
     eval: tx.modeEval,
   };
 
+  const topMovesPanel =
+    mode === 'eval' && evalLines.length > 0 ? (
+      <div className='shrink-0 space-y-1 rounded-[14px] bg-white/[0.04] p-2.5 ring-1 ring-white/10'>
+        <div className='mb-1 flex items-center justify-between'>
+          <span className='text-[11px] font-bold uppercase tracking-[0.16em] text-white/40'>
+            {tx.topMoves}
+          </span>
+          <span className='text-[10px] tabular-nums text-white/35'>
+            {tx.depthLabel} {evalDepth}
+          </span>
+        </div>
+        {evalLines.map((line, i) => (
+          <button
+            key={`${line.uci}-${i}`}
+            type='button'
+            onClick={() => playSuggestion(line.uci)}
+            onMouseEnter={() => setHoverLineIdx(i)}
+            onMouseLeave={() => setHoverLineIdx(null)}
+            title={line.pv}
+            className={`flex w-full items-center gap-2 rounded-md px-1.5 py-1 text-left transition-colors ${
+              (hoverLineIdx == null && i === 0) || hoverLineIdx === i
+                ? 'bg-white/10'
+                : 'hover:bg-white/[0.06]'
+            }`}
+          >
+            <span
+              className={`w-11 shrink-0 rounded bg-white/[0.06] py-0.5 text-center text-[12px] font-bold tabular-nums ${
+                line.neg ? 'text-[#e08a7d]' : 'text-[#83d8ad]'
+              }`}
+            >
+              {line.score}
+            </span>
+            <span className='shrink-0 text-[13px] font-bold text-white'>
+              {line.san}
+            </span>
+            <span className='min-w-0 flex-1 truncate text-[11px] text-white/45'>
+              {line.pv}
+            </span>
+          </button>
+        ))}
+      </div>
+    ) : null;
+
+  const movesPanel = (
+    <div className='flex h-[300px] min-h-0 flex-col xl:h-auto xl:flex-1'>
+      <div className='mb-2 flex items-center justify-between gap-2'>
+        <span className='text-[11px] font-bold uppercase tracking-[0.16em] text-white/40'>
+          {tx.moves}
+        </span>
+        <button
+          type='button'
+          onClick={analyzeGame}
+          disabled={analyzing || moveList.length === 0 || !engineReady}
+          className='rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-semibold text-white/75 transition-colors hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-40'
+        >
+          {analyzing ? `${analyzeProgress}%` : tx.analyze}
+        </button>
+      </div>
+      {showImport && (
+        <div className='mb-2'>
+          <textarea
+            value={importText}
+            onChange={(e) => setImportText(e.target.value)}
+            placeholder={tx.importHint}
+            rows={3}
+            className='w-full resize-none rounded-[10px] bg-white/[0.06] px-2.5 py-2 text-[12px] text-white/80 outline-none ring-1 ring-white/10 placeholder:text-white/30 focus:ring-white/25'
+          />
+          {importError && (
+            <div className='mt-1 text-[11px] text-[#dd5b4e]'>
+              {tx.importBad}
+            </div>
+          )}
+          <button
+            type='button'
+            onClick={() => loadGameText(importText)}
+            className='mt-1.5 w-full rounded-full bg-white py-1.5 text-[12px] font-semibold text-[#121212]'
+          >
+            {tx.load}
+          </button>
+        </div>
+      )}
+      <div
+        ref={movesEndRef}
+        className='min-h-0 flex-1 overflow-y-auto rounded-[14px] bg-white/[0.04] p-3 ring-1 ring-white/10'
+      >
+        {moveList.length === 0 ? (
+          <div className='text-[13px] leading-relaxed text-white/30'>
+            {mode === 'eval' ? tx.evalHint : '—'}
+          </div>
+        ) : (
+          <ol className='space-y-0.5'>
+            {Array.from({ length: Math.ceil(moveList.length / 2) }).map(
+              (_, i) => (
+                <li
+                  key={i}
+                  className='flex items-center gap-2 rounded px-1.5 py-1 text-[13px] tabular-nums odd:bg-white/[0.03]'
+                >
+                  <span className='w-6 shrink-0 text-right text-white/35'>
+                    {i + 1}.
+                  </span>
+                  <span className='flex flex-1 items-center gap-1 font-medium text-white/80'>
+                    {moveList[i * 2]}
+                    {annotations[i * 2] && (
+                      <span
+                        className={`text-[12px] font-bold ${GLYPH_COLOR[annotations[i * 2]] ?? ''}`}
+                      >
+                        {annotations[i * 2]}
+                      </span>
+                    )}
+                    {moveEvals[i * 2] && (
+                      <span className='ml-auto pl-1 text-[10px] font-normal tabular-nums text-white/35'>
+                        {moveEvals[i * 2]}
+                      </span>
+                    )}
+                  </span>
+                  <span className='flex flex-1 items-center gap-1 font-medium text-white/65'>
+                    {moveList[i * 2 + 1] ?? ''}
+                    {moveList[i * 2 + 1] && annotations[i * 2 + 1] && (
+                      <span
+                        className={`text-[12px] font-bold ${GLYPH_COLOR[annotations[i * 2 + 1]] ?? ''}`}
+                      >
+                        {annotations[i * 2 + 1]}
+                      </span>
+                    )}
+                    {moveList[i * 2 + 1] && moveEvals[i * 2 + 1] && (
+                      <span className='ml-auto pl-1 text-[10px] font-normal tabular-nums text-white/35'>
+                        {moveEvals[i * 2 + 1]}
+                      </span>
+                    )}
+                  </span>
+                </li>
+              )
+            )}
+          </ol>
+        )}
+      </div>
+      <div className='mt-2 flex gap-1.5'>
+        <button
+          type='button'
+          onClick={() => {
+            setShowImport((v) => !v);
+            setImportError(false);
+          }}
+          className={`flex-1 rounded-full px-2 py-1.5 text-[11px] font-semibold transition-colors ${
+            showImport
+              ? 'bg-white/20 text-white'
+              : 'bg-white/10 text-white/70 hover:bg-white/20'
+          }`}
+        >
+          {tx.importLabel}
+        </button>
+        <button
+          type='button'
+          onClick={() => copyText('pgn', chessRef.current?.pgn() ?? '')}
+          disabled={moveList.length === 0}
+          className='flex-1 rounded-full bg-white/10 px-2 py-1.5 text-[11px] font-semibold text-white/70 transition-colors hover:bg-white/20 disabled:opacity-40'
+        >
+          {copied === 'pgn' ? tx.copied : tx.exportPgn}
+        </button>
+        <button
+          type='button'
+          onClick={() => copyText('fen', chessRef.current?.fen() ?? '')}
+          className='flex-1 rounded-full bg-white/10 px-2 py-1.5 text-[11px] font-semibold text-white/70 transition-colors hover:bg-white/20'
+        >
+          {copied === 'fen' ? tx.copied : tx.exportFen}
+        </button>
+      </div>
+    </div>
+  );
+
   return (
-    <div className='relative flex min-h-[520px] w-full touch-none select-none flex-col items-center gap-4 py-1 lg:h-full lg:flex-row lg:items-center lg:justify-center lg:gap-6'>
-      {/* sidebar: mode + controls + moves */}
-      <div className='flex w-full max-w-[min(92vw,520px)] shrink-0 flex-col gap-3 text-white lg:h-[min(74vh,600px)] lg:w-[300px]'>
+    <div className='relative flex min-h-[520px] w-full touch-none select-none flex-col items-center gap-4 py-1 xl:h-full xl:flex-row xl:items-center xl:justify-center xl:gap-4'>
+      {/* LEFT: mode + controls */}
+      <div className='flex w-full max-w-[min(92vw,520px)] shrink-0 flex-col gap-3 text-white xl:h-[min(74vh,620px)] xl:w-[294px] xl:max-w-none'>
         <div className='flex gap-1 rounded-full bg-white/[0.06] p-1 ring-1 ring-white/10'>
           {modes.map((m) => (
             <button
@@ -2318,7 +2488,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
           </div>
         )}
 
-        {!inGame && (
+        {!inGame && subTabKeys.length > 1 && (
           <div className='flex shrink-0 gap-1 rounded-full bg-white/[0.06] p-1 text-[12px] ring-1 ring-white/10'>
             {subTabKeys.map((tabKey) => (
               <button
@@ -2338,48 +2508,6 @@ export default function ChessGame({ locale }: { locale: Locale }) {
                   : tabKey === 'moves'
                     ? tx.moves
                     : tx.openingsTab}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {mode === 'eval' && evalLines.length > 0 && (
-          <div className='shrink-0 space-y-1 rounded-[14px] bg-white/[0.04] p-2.5 ring-1 ring-white/10'>
-            <div className='mb-1 flex items-center justify-between'>
-              <span className='text-[11px] font-bold uppercase tracking-[0.16em] text-white/40'>
-                {tx.topMoves}
-              </span>
-              <span className='text-[10px] tabular-nums text-white/35'>
-                {tx.depthLabel} {evalDepth}
-              </span>
-            </div>
-            {evalLines.map((line, i) => (
-              <button
-                key={`${line.uci}-${i}`}
-                type='button'
-                onClick={() => playSuggestion(line.uci)}
-                onMouseEnter={() => setHoverLineIdx(i)}
-                onMouseLeave={() => setHoverLineIdx(null)}
-                title={line.pv}
-                className={`flex w-full items-center gap-2 rounded-md px-1.5 py-1 text-left transition-colors ${
-                  (hoverLineIdx == null && i === 0) || hoverLineIdx === i
-                    ? 'bg-white/10'
-                    : 'hover:bg-white/[0.06]'
-                }`}
-              >
-                <span
-                  className={`w-11 shrink-0 rounded bg-white/[0.06] py-0.5 text-center text-[12px] font-bold tabular-nums ${
-                    line.neg ? 'text-[#e08a7d]' : 'text-[#83d8ad]'
-                  }`}
-                >
-                  {line.score}
-                </span>
-                <span className='shrink-0 text-[13px] font-bold text-white'>
-                  {line.san}
-                </span>
-                <span className='min-w-0 flex-1 truncate text-[11px] text-white/45'>
-                  {line.pv}
-                </span>
               </button>
             ))}
           </div>
@@ -2650,133 +2778,6 @@ export default function ChessGame({ locale }: { locale: Locale }) {
           </div>
         )}
 
-        {((!inGame && effSubTab === 'moves') || inGame) && (
-          <div className='flex h-[340px] min-h-0 flex-col lg:h-auto lg:flex-1'>
-            <div className='mb-2 flex items-center justify-between gap-2'>
-              <span className='text-[11px] font-bold uppercase tracking-[0.16em] text-white/40'>
-                {tx.moves}
-              </span>
-              <button
-                type='button'
-                onClick={analyzeGame}
-                disabled={analyzing || moveList.length === 0 || !engineReady}
-                className='rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-semibold text-white/75 transition-colors hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-40'
-              >
-                {analyzing ? `${analyzeProgress}%` : tx.analyze}
-              </button>
-            </div>
-            {showImport && (
-              <div className='mb-2'>
-                <textarea
-                  value={importText}
-                  onChange={(e) => setImportText(e.target.value)}
-                  placeholder={tx.importHint}
-                  rows={3}
-                  className='w-full resize-none rounded-[10px] bg-white/[0.06] px-2.5 py-2 text-[12px] text-white/80 outline-none ring-1 ring-white/10 placeholder:text-white/30 focus:ring-white/25'
-                />
-                {importError && (
-                  <div className='mt-1 text-[11px] text-[#dd5b4e]'>
-                    {tx.importBad}
-                  </div>
-                )}
-                <button
-                  type='button'
-                  onClick={() => loadGameText(importText)}
-                  className='mt-1.5 w-full rounded-full bg-white py-1.5 text-[12px] font-semibold text-[#121212]'
-                >
-                  {tx.load}
-                </button>
-              </div>
-            )}
-            <div
-              ref={movesEndRef}
-              className='min-h-0 flex-1 overflow-y-auto rounded-[14px] bg-white/[0.04] p-3 ring-1 ring-white/10'
-            >
-              {moveList.length === 0 ? (
-                <div className='text-[13px] leading-relaxed text-white/30'>
-                  {mode === 'eval' ? tx.evalHint : '—'}
-                </div>
-              ) : (
-                <ol className='space-y-0.5'>
-                  {Array.from({ length: Math.ceil(moveList.length / 2) }).map(
-                    (_, i) => (
-                      <li
-                        key={i}
-                        className='flex items-center gap-2 rounded px-1.5 py-1 text-[13px] tabular-nums odd:bg-white/[0.03]'
-                      >
-                        <span className='w-6 shrink-0 text-right text-white/35'>
-                          {i + 1}.
-                        </span>
-                        <span className='flex flex-1 items-center gap-1 font-medium text-white/80'>
-                          {moveList[i * 2]}
-                          {annotations[i * 2] && (
-                            <span
-                              className={`text-[12px] font-bold ${GLYPH_COLOR[annotations[i * 2]] ?? ''}`}
-                            >
-                              {annotations[i * 2]}
-                            </span>
-                          )}
-                          {moveEvals[i * 2] && (
-                            <span className='ml-auto pl-1 text-[10px] font-normal tabular-nums text-white/35'>
-                              {moveEvals[i * 2]}
-                            </span>
-                          )}
-                        </span>
-                        <span className='flex flex-1 items-center gap-1 font-medium text-white/65'>
-                          {moveList[i * 2 + 1] ?? ''}
-                          {moveList[i * 2 + 1] && annotations[i * 2 + 1] && (
-                            <span
-                              className={`text-[12px] font-bold ${GLYPH_COLOR[annotations[i * 2 + 1]] ?? ''}`}
-                            >
-                              {annotations[i * 2 + 1]}
-                            </span>
-                          )}
-                          {moveList[i * 2 + 1] && moveEvals[i * 2 + 1] && (
-                            <span className='ml-auto pl-1 text-[10px] font-normal tabular-nums text-white/35'>
-                              {moveEvals[i * 2 + 1]}
-                            </span>
-                          )}
-                        </span>
-                      </li>
-                    )
-                  )}
-                </ol>
-              )}
-            </div>
-            <div className='mt-2 flex gap-1.5'>
-              <button
-                type='button'
-                onClick={() => {
-                  setShowImport((v) => !v);
-                  setImportError(false);
-                }}
-                className={`flex-1 rounded-full px-2 py-1.5 text-[11px] font-semibold transition-colors ${
-                  showImport
-                    ? 'bg-white/20 text-white'
-                    : 'bg-white/10 text-white/70 hover:bg-white/20'
-                }`}
-              >
-                {tx.importLabel}
-              </button>
-              <button
-                type='button'
-                onClick={() => copyText('pgn', chessRef.current?.pgn() ?? '')}
-                disabled={moveList.length === 0}
-                className='flex-1 rounded-full bg-white/10 px-2 py-1.5 text-[11px] font-semibold text-white/70 transition-colors hover:bg-white/20 disabled:opacity-40'
-              >
-                {copied === 'pgn' ? tx.copied : tx.exportPgn}
-              </button>
-              <button
-                type='button'
-                onClick={() => copyText('fen', chessRef.current?.fen() ?? '')}
-                className='flex-1 rounded-full bg-white/10 px-2 py-1.5 text-[11px] font-semibold text-white/70 transition-colors hover:bg-white/20'
-              >
-                {copied === 'fen' ? tx.copied : tx.exportFen}
-              </button>
-            </div>
-          </div>
-        )}
-
         {!inGame && effSubTab === 'openings' && (
           <div className='flex h-[340px] min-h-0 flex-col gap-2 lg:h-auto lg:flex-1'>
             <input
@@ -2871,8 +2872,8 @@ export default function ChessGame({ locale }: { locale: Locale }) {
         )}
       </div>
 
-      {/* board + eval bar */}
-      <div className='order-first flex shrink-0 items-stretch gap-2'>
+      {/* CENTER: board + eval bar */}
+      <div className='order-first flex shrink-0 items-stretch gap-2 xl:order-none'>
         <div className='relative w-[22px] shrink-0 overflow-hidden rounded-[5px] bg-[#0b0d12] ring-1 ring-white/10'>
           <div
             className='absolute inset-x-0 bottom-0 bg-[#f4f6fa] transition-[height] duration-300 ease-out'
@@ -2894,7 +2895,7 @@ export default function ChessGame({ locale }: { locale: Locale }) {
 
         <div
           ref={fieldRef}
-          className='relative aspect-square w-[min(90vw,520px)] shrink-0 lg:w-auto lg:h-[min(74vh,600px)]'
+          className='relative aspect-square w-[min(90vw,520px)] shrink-0 xl:h-[min(74vh,620px)] xl:w-auto'
           onPointerDown={onBoardPointer}
           onPointerMove={onBoardPointerMove}
           onPointerUp={onBoardPointerUp}
@@ -2943,6 +2944,12 @@ export default function ChessGame({ locale }: { locale: Locale }) {
             </div>
           )}
         </div>
+      </div>
+
+      {/* RIGHT: analysis + move list */}
+      <div className='flex w-full max-w-[min(92vw,520px)] shrink-0 flex-col gap-3 text-white xl:h-[min(74vh,620px)] xl:w-[294px] xl:max-w-none'>
+        {topMovesPanel}
+        {movesPanel}
       </div>
 
       <style>{`
