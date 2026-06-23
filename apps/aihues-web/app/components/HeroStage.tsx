@@ -64,15 +64,11 @@ export default function HeroStage({
 
       {/* Upper — full-width two-column stage */}
       <div className='w-full px-[clamp(1.5rem,5vw,7rem)]'>
-        <div className='mx-auto grid w-full max-w-[1760px] items-center gap-12 lg:grid-cols-[minmax(0,1.2fr)_minmax(340px,440px)] lg:gap-14'>
+        <div className='mx-auto grid w-full max-w-[1760px] items-center gap-12 lg:grid-cols-2 lg:gap-16'>
           {children}
           {slides.length > 0 ? (
-            <div className='mx-auto w-full min-w-0 max-w-[460px] lg:mx-0 lg:max-w-none'>
-              <SpotlightCarousel
-                slides={slides}
-                compact
-                onIndexChange={setActive}
-              />
+            <div className='w-full min-w-0'>
+              <SpotlightCarousel slides={slides} onIndexChange={setActive} />
             </div>
           ) : null}
         </div>

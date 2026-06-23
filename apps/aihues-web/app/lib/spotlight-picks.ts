@@ -91,15 +91,20 @@ export const CATEGORY_PICKS: CategoryPick[] = [
 ];
 
 export function slidesFromPicks(): SpotlightSlide[] {
-  return CATEGORY_PICKS.map(({ label, item }) => ({
-    slug: item.slug,
-    eyebrow: label,
-    title: item.title,
-    description: item.description,
-    metrics: item.metrics,
-    href: item.href,
-    cta: item.cta,
-  }));
+  return CATEGORY_PICKS.map(({ key, label, item }) => {
+    const kind: SpotlightSlide['kind'] =
+      key === 'tests' ? 'test' : key === 'games' ? 'game' : 'tool';
+    return {
+      slug: item.slug,
+      eyebrow: label,
+      title: item.title,
+      description: item.description,
+      metrics: item.metrics,
+      href: item.href,
+      cta: item.cta,
+      kind,
+    };
+  });
 }
 
 export function examplesFromPicks(): string[] {

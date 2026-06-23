@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { GameDemo } from '@/components/games/GameDemos';
-import { ResourceCover } from '@/components/resources/ResourceCover';
 import { TestDemo } from '@/components/tests/TestDemos';
 import { ToolIcon } from '@/components/ToolIcon';
 import { ToolDemo } from '@/components/tools/ToolDemos';
@@ -17,6 +16,8 @@ export type SpotlightSlide = {
   metrics?: string;
   href: string;
   cta: string;
+  /** Per-slide demo type — overrides the carousel-level `demo` prop. */
+  kind?: 'tool' | 'game' | 'test';
 };
 
 const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
@@ -60,11 +61,13 @@ export default function SpotlightCarousel({
   compact = false,
   onIndexChange,
   demo,
+  stack = false,
 }: {
   slides: SpotlightSlide[];
   compact?: boolean;
   onIndexChange?: (i: number) => void;
-  demo?: 'tool' | 'game' | 'test' | 'resource';
+  demo?: 'tool' | 'game' | 'test';
+  stack?: boolean;
 }) {
   const count = slides.length;
 
@@ -124,12 +127,20 @@ export default function SpotlightCarousel({
 
   if (count === 0) return null;
 
-  const hasDemo = !!demo;
-  const boxH = hasDemo
-    ? 'min-h-[300px]'
-    : compact
-      ? 'min-h-[300px]'
-      : 'min-h-[420px]';
+  const hasDemo = !!demo || slides.some((s) => s.kind);
+  const boxH =
+    hasDemo && stack
+      ? 'min-h-[460px]'
+      : hasDemo || compact
+        ? 'min-h-[300px]'
+        : 'min-h-[420px]';
+
+  const renderDemo = (s: SpotlightSlide, active: boolean) => {
+    const k = s.kind ?? demo;
+    if (k === 'game') return <GameDemo active={active} slug={s.slug} />;
+    if (k === 'test') return <TestDemo slug={s.slug} />;
+    return <ToolDemo slug={s.slug} />;
+  };
 
   return (
     <div
@@ -161,29 +172,26 @@ export default function SpotlightCarousel({
               }}
             >
               {hasDemo ? (
-                <div className='grid h-full items-center gap-7 md:grid-cols-2'>
-                  <div className='order-2 min-w-0 md:order-1'>
+                stack ? (
+                  <div className='flex h-full flex-col justify-center gap-4'>
                     <SlideText full={false} s={s} />
+                    {renderDemo(s, isActive)}
                   </div>
-                  <div className='order-1 min-w-0 md:order-2'>
-                    {demo === 'game' ? (
-                      <GameDemo slug={s.slug} />
-                    ) : demo === 'test' ? (
-                      <TestDemo slug={s.slug} />
-                    ) : demo === 'resource' ? (
-                      <ResourceCover
-                        readTime={s.metrics}
-                        tag={s.eyebrow}
-                        title={s.title}
-                      />
-                    ) : (
-                      <ToolDemo slug={s.slug} />
-                    )}
+                ) : (
+                  <div className='grid h-full items-center gap-7 md:grid-cols-2'>
+                    <div className='order-2 min-w-0 md:order-1'>
+                      <SlideText full={false} s={s} />
+                    </div>
+                    <div className='order-1 min-w-0 md:order-2'>
+                      {renderDemo(s, isActive)}
+                    </div>
                   </div>
-                </div>
+                )
               ) : (
-                <div className='mx-auto flex h-full max-w-[460px] flex-col justify-center px-1'>
-                  <SlideText full s={s} />
+                <div className='flex h-full flex-col justify-center'>
+                  <div className='max-w-[620px]'>
+                    <SlideText full s={s} />
+                  </div>
                 </div>
               )}
             </div>

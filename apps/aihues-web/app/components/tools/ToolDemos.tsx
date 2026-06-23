@@ -236,12 +236,87 @@ function XPostDemo() {
   );
 }
 
+function TldrDemo() {
+  return (
+    <Frames
+      frames={[
+        <div key='a'>
+          <Label>Long article</Label>
+          <p className='line-clamp-5 rounded-[8px] border border-border bg-surface p-2.5 text-[11px] leading-relaxed text-secondary'>
+            The release notes span twelve pages of incremental changes,
+            deprecations and migration steps across the API, the CLI and the
+            SDK, with extended commentary on rollout timelines, backwards
+            compatibility windows and recommended upgrade ordering for large
+            teams…
+          </p>
+        </div>,
+        <div key='b'>
+          <Label>TL;DR</Label>
+          <ul className='space-y-1.5 text-[12px] text-foreground'>
+            {[
+              'API v3 ships next month — v2 deprecated in 90 days.',
+              'CLI flags renamed; run the codemod to migrate.',
+              'Upgrade the SDK before the CLI to avoid breaks.',
+            ].map((l) => (
+              <li
+                key={l}
+                className='flex gap-1.5 rounded-[7px] border border-border bg-surface px-2.5 py-1.5'
+              >
+                <span className='text-accent'>•</span>
+                {l}
+              </li>
+            ))}
+          </ul>
+        </div>,
+      ]}
+    />
+  );
+}
+
+function BlogOutlineDemo() {
+  return (
+    <Frames
+      frames={[
+        <div key='a' className='flex h-full flex-col'>
+          <Label>Topic</Label>
+          <div className='rounded-[8px] border border-border bg-surface p-2.5 text-[13px] text-foreground'>
+            Shipping your first indie app
+          </div>
+          <div className='mt-auto inline-flex w-fit items-center gap-1.5 rounded-full bg-accent px-3 py-1.5 text-[12px] font-semibold text-white'>
+            ✶ Outline
+          </div>
+        </div>,
+        <div key='b'>
+          <Label>Generated outline</Label>
+          <div className='space-y-1.5 text-[12px] text-foreground'>
+            {[
+              '1 · Validate the idea in a weekend',
+              '2 · Build the smallest useful version',
+              '3 · Launch where your users already are',
+              '4 · Turn early feedback into v2',
+            ].map((l) => (
+              <div
+                key={l}
+                className='rounded-[7px] border border-border bg-surface px-2.5 py-1.5'
+              >
+                {l}
+              </div>
+            ))}
+          </div>
+        </div>,
+      ]}
+    />
+  );
+}
+
 const TOOL_DEMOS: Record<string, () => ReactNode> = {
   json: JsonDemo,
-  jwt: JwtDemo,
-  'word-count': WordCountDemo,
-  base64: Base64Demo,
   'x-post': XPostDemo,
+  jwt: JwtDemo,
+  tldr: TldrDemo,
+  base64: Base64Demo,
+  'blog-outline': BlogOutlineDemo,
+  'word-count': WordCountDemo,
   uuid: UuidDemo,
 };
 

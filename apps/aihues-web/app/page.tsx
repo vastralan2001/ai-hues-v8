@@ -40,15 +40,15 @@ const catLabel = (locale: Locale, category: string) =>
       ? t(locale, 'cat.developer')
       : t(locale, 'cat.utility');
 
-// Ordered by international popularity; mixed across categories (not all dev).
+// Dev and writing tools interleaved 50/50, by international popularity.
 // Each slug must have a demo in the per-domain ToolDemos / GameDemos files.
 const HOME_TOOL_SLUGS = [
-  'json',
-  'jwt',
-  'word-count',
-  'base64',
-  'x-post',
-  'uuid',
+  'json', // dev
+  'x-post', // writing
+  'jwt', // dev
+  'tldr', // writing
+  'base64', // dev
+  'blog-outline', // writing
 ];
 const GAME_DEMO_SLUGS = ['snake', 'doodle-jump', 'slot-machine', 'daily-luck'];
 
@@ -303,7 +303,7 @@ export default async function HomePage() {
           tone={0}
           visual={
             <SpotlightCarousel
-              demo='resource'
+              compact
               slides={postSlides(posts.slice(0, 6), locale)}
             />
           }
