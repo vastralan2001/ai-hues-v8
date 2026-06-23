@@ -16,11 +16,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ResourcesPage() {
+export default async function ResourcesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ tag?: string }>;
+}) {
   const posts = getAllPosts();
+  const { tag } = await searchParams;
   return (
     <PageShell>
-      <ResourcesContent initialPosts={posts} />
+      <ResourcesContent initialPosts={posts} initialTag={tag} />
     </PageShell>
   );
 }

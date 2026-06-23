@@ -235,7 +235,7 @@ export function GameCard({
         </p>
       )}
 
-      <span className='mt-auto self-center inline-block rounded-[12px] bg-accent px-7 py-[11px] text-[14px] font-medium text-white transition-all hover:bg-accent-light'>
+      <span className='btn-cta btn-cta--sm mt-auto self-center'>
         {copy ? (zh ? copy.ctaZh : copy.cta) : t(locale, 'game.play')}
       </span>
     </Link>

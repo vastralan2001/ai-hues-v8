@@ -1,23 +1,25 @@
 import Link from 'next/link';
 
 import { ToolCardV2 } from '@/components/CatalogCards';
+import FeatureBand from '@/components/FeatureBand';
 import HeroSearch from '@/components/HeroSearch';
 import HeroStage from '@/components/HeroStage';
 import { PageShell } from '@/components/SiteChrome';
 import { ToolIcon } from '@/components/ToolIcon';
 import ToolMarquee, { type MarqueeItem } from '@/components/ToolMarquee';
 import Typewriter from '@/components/Typewriter';
-import type { CatalogGame } from '@/lib/catalog-api';
+import type { CatalogGame, CatalogTool } from '@/lib/catalog-api';
 import { safeListGames, safeListTools } from '@/lib/catalog-api';
 import { t, type Locale } from '@/lib/dict';
 import { GAME_CARD_COPY } from '@/lib/game-meta';
+import { getAllPosts, type ResourcePost } from '@/lib/resources-data';
 import { TEST_META } from '@/lib/tests';
 import {
   gameDetailHref,
   gamesHref,
+  resourcesHref,
   testDetailHref,
   testsHref,
-  toolDetailHref,
   toolsCategoryHref,
   toolsHref,
   wishlistHref,
@@ -26,128 +28,137 @@ import {
 // Revalidate every 60s so the catalog stays fresh without forcing SSR on every hit.
 export const revalidate = 60;
 
-/* ── Static category data with icons & sample tags ── */
-const HOME_CATEGORIES = (locale: Locale) => [
+const resourceTagHref = (tag: string) =>
+  `${resourcesHref}?tag=${encodeURIComponent(tag)}`;
+
+/* ── Three top-level families, each with second-level entries ── */
+const CATEGORY_GROUPS = (
+  locale: Locale,
+  counts: { tools: number; play: number; resources: number }
+) => [
   {
-    key: 'utility',
-    label: t(locale, 'cat.utility'),
-    count: 0,
-    desc: t(locale, 'cat.utilityDesc'),
-    tags: ['Word Count', 'Fullwidth', 'Readability'],
-    href: toolsCategoryHref('utility'),
+    key: 'tools',
+    label: locale === 'zh' ? '工具' : 'Tools',
+    count: counts.tools,
+    desc:
+      locale === 'zh'
+        ? '开发与写作利器 — 解码、格式化、生成。'
+        : 'Developer & writing utilities — decode, format, generate.',
+    href: toolsHref,
+    children: [
+      { label: t(locale, 'cat.utility'), href: toolsCategoryHref('utility') },
+      {
+        label: t(locale, 'cat.developer'),
+        href: toolsCategoryHref('developer'),
+      },
+      {
+        label: t(locale, 'cat.aiWriting'),
+        href: toolsCategoryHref('ai-writing'),
+      },
+    ],
   },
   {
-    key: 'developer',
-    label: t(locale, 'cat.developer'),
-    count: 0,
-    desc: t(locale, 'cat.developerDesc'),
-    tags: ['JWT', 'JSON', 'Regex', 'QR Code'],
-    href: toolsCategoryHref('developer'),
-  },
-  {
-    key: 'ai-writing',
-    label: t(locale, 'cat.aiWriting'),
-    count: 0,
-    desc: t(locale, 'cat.aiWritingDesc'),
-    tags: ['X Post', 'Blog', 'SEO', 'TL;DR'],
-    href: toolsCategoryHref('ai-writing'),
-  },
-  {
-    key: 'games',
-    label: t(locale, 'cat.games'),
-    count: 0,
-    desc: t(locale, 'cat.gamesDesc'),
-    tags: ['Fortune', 'Slots', 'Hoops'],
+    key: 'play',
+    label: locale === 'zh' ? '游戏 & 测评' : 'Games & Tests',
+    count: counts.play,
+    desc:
+      locale === 'zh'
+        ? '轻量小游戏与自我探索测验，放松又走心。'
+        : 'Mini-games and self-discovery quizzes to unwind and reflect.',
     href: gamesHref,
+    children: [
+      { label: t(locale, 'cat.games'), href: gamesHref },
+      { label: t(locale, 'cat.tests'), href: testsHref },
+    ],
   },
   {
-    key: 'tests',
-    label: t(locale, 'cat.tests'),
-    count: TEST_META.length,
-    desc: t(locale, 'cat.testsDesc'),
-    tags: ['SBTI', 'MBTI'],
-    href: testsHref,
+    key: 'resources',
+    label: locale === 'zh' ? '资源' : 'Resources',
+    count: counts.resources,
+    desc:
+      locale === 'zh'
+        ? '关于 AI、增长、SEO 与独立开发的实战指南。'
+        : 'Guides on AI, growth, SEO, and indie development.',
+    href: resourcesHref,
+    children: [
+      { label: 'AI Tools', href: resourceTagHref('AI Tools') },
+      { label: 'Growth', href: resourceTagHref('Growth') },
+      { label: 'Development', href: resourceTagHref('Development') },
+    ],
   },
 ];
 
-/* ── Category card themes ── */
-const CATEGORY_THEMES: Record<
-  string,
-  { gradient: string; bg: string; fg: string }
-> = {
-  utility: {
-    gradient: 'var(--color-accent)',
-    bg: 'rgba(26, 26, 25, 0.05)',
-    fg: 'rgba(26, 26, 25, 0.7)',
-  },
-  developer: {
-    gradient: 'var(--color-accent)',
-    bg: 'rgba(26, 26, 25, 0.05)',
-    fg: 'rgba(26, 26, 25, 0.7)',
-  },
-  'ai-writing': {
-    gradient: 'var(--color-accent)',
-    bg: 'color-mix(in srgb, var(--color-accent) 10%, transparent)',
-    fg: '#b1502f',
-  },
-  games: {
-    gradient: 'var(--color-accent)',
-    bg: 'rgba(26, 26, 25, 0.05)',
-    fg: 'rgba(26, 26, 25, 0.7)',
-  },
-  tests: {
-    gradient: 'var(--color-accent)',
-    bg: 'color-mix(in srgb, var(--color-accent) 10%, transparent)',
-    fg: '#b1502f',
-  },
-};
-
-/* ── Featured highlights (editor-curated until analytics API provides rankings) ── */
-const POPULAR_HIGHLIGHTS = (locale: Locale) => [
-  {
-    href: toolDetailHref('jwt'),
-    kicker: `${t(locale, 'cat.developer')}`,
-    title: 'JWT Parser — Dev Essential',
-    description:
-      'One-click JWT decode with expiry detection & JSON highlighting',
-    metrics: 'Decode · Verify · Expiry',
-  },
-  {
-    href: toolDetailHref('json'),
-    kicker: `${t(locale, 'cat.developer')}`,
-    title: 'JSON Formatter — Most Elegant',
-    description:
-      'Dark theme highlighting, collapsible tree, precise error locating',
-    metrics: 'Format · Validate · Highlight',
-  },
-  {
-    href: gameDetailHref('daily-luck'),
-    kicker: `${t(locale, 'cat.games')}`,
-    title: 'Daily Fortune — Retention King',
-    description: '30 wisdom quotes, 3D card flip, streak rewards & confetti',
-    metrics: 'Fortune · Streak · Rewards',
-  },
-];
-
-const HOME_DEVELOPER_SLUGS = [
+const HOME_TOOL_SLUGS = [
   'jwt',
   'json',
   'regex',
-  'uuid',
-  'timestamp',
-  'markdown',
-  'qrcode',
+  'word-count',
+  'readability',
+  'x-post',
 ];
 
-const HOME_WRITING_SLUGS = [
-  'word-count',
-  'diff',
-  'fullwidth',
-  'readability',
-  'humanize',
-  'x-post',
-  'seo-title',
-];
+/* ── Visual columns for the feature bands ── */
+function CategoryGroups({
+  groups,
+}: {
+  groups: ReturnType<typeof CATEGORY_GROUPS>;
+}) {
+  return (
+    <div className='flex flex-col gap-3'>
+      {groups.map((g) => (
+        <div
+          key={g.key}
+          className='rounded-[18px] border border-border bg-white p-5 transition-colors hover:border-border-strong'
+        >
+          <div className='mb-2 flex items-center gap-3'>
+            <span className='flex h-10 w-10 items-center justify-center rounded-[12px] bg-accent-bg text-accent'>
+              <ToolIcon size={20} slug={g.key} />
+            </span>
+            <Link
+              className='flex-1 text-[17px] font-bold text-foreground no-underline transition-colors hover:text-accent'
+              href={g.href}
+            >
+              {g.label}
+            </Link>
+            <span className='rounded-full bg-surface px-2.5 py-1 text-[11px] font-semibold text-muted'>
+              {g.count}
+            </span>
+          </div>
+          <p className='mb-3 text-[13px] leading-relaxed text-foreground/70'>
+            {g.desc}
+          </p>
+          <div className='flex flex-wrap gap-1.5'>
+            {g.children.map((c) => (
+              <Link
+                key={c.label}
+                className='rounded-[8px] border border-border bg-surface px-2.5 py-1 text-[12px] font-medium text-secondary no-underline transition-colors hover:border-accent hover:text-accent'
+                href={c.href}
+              >
+                {c.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function ToolsVisual({
+  tools,
+  locale,
+}: {
+  tools: CatalogTool[];
+  locale: Locale;
+}) {
+  return (
+    <div className='grid grid-cols-2 gap-3'>
+      {tools.map((tool) => (
+        <ToolCardV2 key={tool.id} locale={locale} tool={tool} />
+      ))}
+    </div>
+  );
+}
 
 function HomeGameCard({ game, locale }: { game: CatalogGame; locale: Locale }) {
   const zh = locale === 'zh';
@@ -159,7 +170,7 @@ function HomeGameCard({ game, locale }: { game: CatalogGame; locale: Locale }) {
       href={gameDetailHref(game.slug)}
     >
       <span className='mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-xl bg-accent-bg text-accent'>
-        <ToolIcon slug={game.slug} size={24} />
+        <ToolIcon size={24} slug={game.slug} />
       </span>
       <h3 className='mb-2 text-[18px] font-bold text-foreground'>
         {game.name}
@@ -181,6 +192,74 @@ function HomeGameCard({ game, locale }: { game: CatalogGame; locale: Locale }) {
   );
 }
 
+function TestsVisual({ locale }: { locale: Locale }) {
+  return (
+    <div className='flex flex-col gap-3'>
+      {TEST_META.map((tm) => (
+        <Link
+          key={tm.slug}
+          className='card-lift relative flex items-start gap-4 rounded-[16px] border border-border bg-surface p-5 text-inherit no-underline'
+          href={testDetailHref(tm.slug)}
+        >
+          <span
+            className='flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] text-white'
+            style={{ background: tm.accent }}
+          >
+            <ToolIcon className='text-white' size={24} slug={tm.slug} />
+          </span>
+          <div className='min-w-0'>
+            <div className='flex items-center gap-2'>
+              <h3 className='text-[17px] font-bold text-foreground'>
+                {tm.name}
+              </h3>
+              <span
+                className='rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white'
+                style={{ background: tm.accent }}
+              >
+                {tm.badge}
+              </span>
+            </div>
+            <p className='mt-1 text-[13px] leading-relaxed text-secondary'>
+              {tm.description}
+            </p>
+            <p className='mt-1.5 text-[12px] font-medium text-muted'>
+              {tm.questionCount} {locale === 'zh' ? '题' : 'questions'} · ~
+              {tm.durationMin} min
+            </p>
+          </div>
+        </Link>
+      ))}
+    </div>
+  );
+}
+
+function ResourcesVisual({ posts }: { posts: ResourcePost[] }) {
+  return (
+    <div className='flex flex-col gap-3'>
+      {posts.map((post) => (
+        <Link
+          key={post.slug}
+          className='card-lift flex flex-col gap-1.5 rounded-[16px] border border-border bg-surface p-5 text-inherit no-underline'
+          href={`/resources/${post.slug}`}
+        >
+          <div className='flex items-center gap-2'>
+            <span className='rounded-full bg-accent-bg px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-accent'>
+              {post.tag}
+            </span>
+            <span className='text-[11px] text-muted'>{post.readTime}</span>
+          </div>
+          <h3 className='text-[16px] font-bold leading-snug text-foreground'>
+            {post.title}
+          </h3>
+          <p className='line-clamp-2 text-[13px] leading-relaxed text-secondary'>
+            {post.excerpt}
+          </p>
+        </Link>
+      ))}
+    </div>
+  );
+}
+
 export default async function HomePage() {
   const locale = 'en' as Locale;
 
@@ -196,23 +275,17 @@ export default async function HomePage() {
     safeListGames({ pageSize: 20 }),
   ]);
 
-  const categoryCounts = {
-    utility: tools.filter((tool) => tool.category === 'utility').length,
-    developer: tools.filter((tool) => tool.category === 'developer').length,
-    'ai-writing': tools.filter((tool) => tool.category === 'ai-writing').length,
-    games: games.length,
-  };
+  const posts = getAllPosts();
 
-  const homeDevTools = HOME_DEVELOPER_SLUGS.map((slug) =>
+  const homeTools = HOME_TOOL_SLUGS.map((slug) =>
     tools.find((tool) => tool.slug === slug)
-  ).filter((tool) => tool != null);
+  ).filter((tool): tool is CatalogTool => tool != null);
 
-  const homeWritingTools = HOME_WRITING_SLUGS.map((slug) =>
-    tools.find((tool) => tool.slug === slug)
-  ).filter((tool) => tool != null);
-
-  const categories = HOME_CATEGORIES(locale);
-  const popularHighlights = POPULAR_HIGHLIGHTS(locale);
+  const groups = CATEGORY_GROUPS(locale, {
+    tools: tools.length,
+    play: games.length + TEST_META.length,
+    resources: posts.length,
+  });
 
   const marqueeRows: MarqueeItem[][] = [[], [], []];
   tools.forEach((tool, i) => {
@@ -221,7 +294,18 @@ export default async function HomePage() {
 
   return (
     <PageShell variant='home' locale={locale}>
-      <div>
+      <div className='relative'>
+        {/* Continuous wash that drifts hue down the page so band-to-band
+            gradient transitions stay seamless. */}
+        <div
+          aria-hidden='true'
+          className='pointer-events-none absolute inset-0 -z-20'
+          style={{
+            background:
+              'linear-gradient(180deg, transparent 14%, rgba(199,150,66,0.05) 30%, rgba(176,72,96,0.05) 52%, rgba(120,90,166,0.05) 74%, rgba(194,80,46,0.05) 90%, transparent)',
+          }}
+        />
+
         {/* ══════════════════════════════════════════════
             HERO
             ══════════════════════════════════════════════ */}
@@ -236,7 +320,6 @@ export default async function HomePage() {
         >
           {/* LEFT — pitch + search */}
           <div className='min-w-0 text-center lg:text-left'>
-            {/* Main headline */}
             <h1 className='hero-title mb-6 text-foreground'>
               {locale === 'zh' ? (
                 <>
@@ -271,17 +354,15 @@ export default async function HomePage() {
               )}
             </h1>
 
-            {/* Subtitle */}
             <p className='mx-auto mb-9 max-w-[560px] text-[19px] leading-relaxed text-secondary lg:mx-0'>
               {locale === 'zh'
                 ? '精选 AI 工具与轻量小游戏，无需注册，打开即用。'
                 : 'Curated AI tools and mini games — no signup, just open and use.'}
             </p>
 
-            {/* Search box */}
             <HeroSearch
-              searchPlaceholder={t(locale, 'hero.searchPlaceholder')}
               askAILabel={t(locale, 'hero.askAI')}
+              searchPlaceholder={t(locale, 'hero.searchPlaceholder')}
             />
           </div>
         </HeroStage>
@@ -289,273 +370,81 @@ export default async function HomePage() {
         {/* ══════════════════════════════════════════════
             BROWSE BY CATEGORY
             ══════════════════════════════════════════════ */}
-        <section
-          className='mx-auto max-w-[1300px] px-8 pb-20 pt-14'
+        <FeatureBand
+          cta={{ href: toolsHref, label: 'Explore all' }}
+          description='Three families — tools, games and tests, and reading. Pick a lane and dive straight in. No signup, no clutter.'
+          eyebrow='Explore'
           id='categories'
-        >
-          <div className='mb-6 flex items-center justify-between'>
-            <h2 className='text-[34px] font-extrabold tracking-[-0.02em]'>
-              {t(locale, 'categories.title')}
-            </h2>
-            <Link
-              className='text-[13px] font-bold uppercase tracking-[0.12em] text-accent transition-colors hover:text-accent-light'
-              href={toolsHref}
-            >
-              {t(locale, 'categories.seeAll')}
-            </Link>
-          </div>
-
-          <div className='grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5'>
-            {categories.map((cat) => {
-              const theme = CATEGORY_THEMES[cat.key];
-              return (
-                <Link
-                  key={cat.key}
-                  className='card-lift group relative block cursor-pointer overflow-hidden rounded-[20px] border border-border bg-white p-4 text-inherit no-underline'
-                  href={cat.href}
-                >
-                  {/* Decorative top accent */}
-                  <div
-                    aria-hidden='true'
-                    className='absolute inset-x-0 top-0 h-1 opacity-60 transition-opacity group-hover:opacity-100'
-                    style={{ background: theme.gradient }}
-                  />
-
-                  {/* Header row */}
-                  <div className='mb-3 flex items-center gap-3'>
-                    <span
-                      className='flex h-9 w-9 items-center justify-center rounded-[10px] text-[13px] font-bold transition-transform duration-300 group-hover:scale-110'
-                      style={{
-                        background: theme.bg,
-                        color: theme.fg,
-                      }}
-                    >
-                      <ToolIcon slug={cat.key} size={18} />
-                    </span>
-                    <span className='flex-1 text-[16px] font-bold text-foreground'>
-                      {cat.label}
-                    </span>
-                    <span className='rounded-full bg-surface px-2.5 py-1 text-[11px] font-semibold text-muted'>
-                      {categoryCounts[cat.key as keyof typeof categoryCounts] ||
-                        cat.count}
-                    </span>
-                  </div>
-
-                  {/* Description */}
-                  <p className='mb-4 text-[13px] leading-relaxed text-foreground/70'>
-                    {cat.desc}
-                  </p>
-
-                  {/* Sample tags */}
-                  <div className='flex flex-wrap gap-1'>
-                    {cat.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className='rounded-[6px] border border-border bg-surface px-2 py-0.5 text-[11px] text-muted transition-colors group-hover:border-border-strong group-hover:text-secondary'
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </section>
+          reverse
+          title='Browse by category'
+          tone={1}
+          visual={<CategoryGroups groups={groups} />}
+        />
 
         {/* ══════════════════════════════════════════════
-            DEVELOPER TOOLS – FEATURED
+            TOOLS
             ══════════════════════════════════════════════ */}
-        {homeDevTools.length > 0 && (
-          <section
-            className='mx-auto max-w-[1300px] px-8 py-20'
-            id='featured-dev-tools'
-          >
-            <div className='mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between'>
-              <div>
-                <div className='mb-2 text-[11px] font-extrabold uppercase tracking-wider text-accent'>
-                  {t(locale, 'section.featured')}
-                </div>
-                <h2 className='text-[34px] font-extrabold tracking-[-0.02em]'>
-                  {t(locale, 'section.devTools')}
-                </h2>
-              </div>
-              <div className='flex items-center gap-3'>
-                <Link
-                  className='text-[13px] font-bold uppercase tracking-[0.12em] text-accent transition-colors hover:text-accent-light'
-                  href={toolsCategoryHref('developer')}
-                >
-                  {t(locale, 'section.allTools')}
-                </Link>
-              </div>
-            </div>
-
-            <div className='grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-3'>
-              {homeDevTools.map((tool) => (
-                <ToolCardV2 key={tool.id} locale={locale} tool={tool} />
-              ))}
-            </div>
-          </section>
-        )}
+        <FeatureBand
+          cta={{ href: toolsHref, label: 'Browse tools' }}
+          description='Decode a JWT, format messy JSON, count words, rewrite a tweet — fast, single-purpose utilities that load instantly and never get in your way.'
+          eyebrow='Dev + Writing'
+          id='tools'
+          title='Tools that do one thing well'
+          tone={2}
+          visual={<ToolsVisual locale={locale} tools={homeTools} />}
+        />
 
         {/* ══════════════════════════════════════════════
-            WRITING TOOLS – FEATURED
+            GAMES
             ══════════════════════════════════════════════ */}
-        {homeWritingTools.length > 0 && (
-          <section className='mx-auto max-w-[1300px] px-8 pb-20'>
-            <div className='mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between'>
-              <div>
-                <div className='mb-2 text-[11px] font-extrabold uppercase tracking-wider text-accent'>
-                  {t(locale, 'section.featured')}
-                </div>
-                <h2 className='text-[34px] font-extrabold tracking-[-0.02em]'>
-                  {t(locale, 'section.writingTools')}
-                </h2>
-              </div>
-              <div className='flex items-center gap-3'>
-                <Link
-                  className='text-[13px] font-bold uppercase tracking-[0.12em] text-accent transition-colors hover:text-accent-light'
-                  href={toolsCategoryHref('ai-writing')}
-                >
-                  {t(locale, 'section.allTools')}
-                </Link>
-              </div>
-            </div>
-
-            <div className='grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-3'>
-              {homeWritingTools.map((tool) => (
-                <ToolCardV2 key={tool.id} locale={locale} tool={tool} />
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* ══════════════════════════════════════════════
-            GAME CENTER
-            ══════════════════════════════════════════════ */}
-        <section
-          className='border-t border-border py-20'
+        <FeatureBand
+          cta={{ href: gamesHref, label: 'Enter arcade' }}
+          description="21 hand-built mini-games — chess with a real engine, classic arcade, daily fortune. Open a tab, kill five minutes, close it. That's the whole pitch."
+          eyebrow='Game Center'
           id='games'
-          style={{ background: 'var(--color-surface)' }}
-        >
-          <div className='mx-auto max-w-[1300px] px-8'>
-            <div className='mb-6 flex items-center justify-between'>
-              <h2 className='text-[34px] font-extrabold tracking-[-0.02em]'>
-                {t(locale, 'section.gameCenter')}
-              </h2>
-              <Link
-                className='text-[13px] font-bold uppercase tracking-[0.12em] text-accent transition-colors hover:text-accent-light'
-                href={gamesHref}
-              >
-                {t(locale, 'section.viewAll')}
-              </Link>
-            </div>
-
-            <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4'>
-              {games.slice(0, 8).map((game) => (
+          reverse
+          title='Quick play, zero install'
+          tone={3}
+          visual={
+            <div className='grid grid-cols-2 gap-3'>
+              {games.slice(0, 4).map((game) => (
                 <HomeGameCard game={game} key={game.id} locale={locale} />
               ))}
             </div>
-          </div>
-        </section>
+          }
+        />
 
         {/* ══════════════════════════════════════════════
             TESTS
             ══════════════════════════════════════════════ */}
-        <section className='mx-auto max-w-[1300px] px-8 py-20'>
-          <div className='mb-6 flex items-center justify-between'>
-            <h2 className='text-[34px] font-extrabold tracking-[-0.02em]'>
-              {locale === 'zh' ? '测评' : 'Tests'}
-            </h2>
-            <Link
-              className='text-[13px] font-bold uppercase tracking-[0.12em] text-accent transition-colors hover:text-accent-light'
-              href={testsHref}
-            >
-              {t(locale, 'section.viewAll')}
-            </Link>
-          </div>
-
-          <div className='grid grid-cols-2 gap-4 max-[640px]:grid-cols-1'>
-            {TEST_META.map((tm) => (
-              <Link
-                key={tm.slug}
-                href={testDetailHref(tm.slug)}
-                className='card-lift relative flex items-start gap-4 rounded-[16px] border border-border bg-surface p-6 text-inherit no-underline'
-              >
-                <span
-                  className='flex h-14 w-14 shrink-0 items-center justify-center rounded-[14px] text-white'
-                  style={{ background: tm.accent }}
-                >
-                  <ToolIcon slug={tm.slug} size={26} className='text-white' />
-                </span>
-                <div className='min-w-0'>
-                  <div className='flex items-center gap-2'>
-                    <h3 className='text-[18px] font-bold text-foreground'>
-                      {tm.name}
-                    </h3>
-                    <span
-                      className='rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white'
-                      style={{ background: tm.accent }}
-                    >
-                      {tm.badge}
-                    </span>
-                  </div>
-                  <p className='mt-1 text-[13px] leading-relaxed text-secondary'>
-                    {tm.description}
-                  </p>
-                  <p className='mt-2 text-[12px] font-medium text-muted'>
-                    {tm.questionCount} questions · ~{tm.durationMin} min
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
+        <FeatureBand
+          cta={{ href: testsHref, label: 'Take a test' }}
+          description='Personality, intelligence and temperament quizzes with real question banks and shareable result posters. For reflection and fun — not clinical diagnosis.'
+          eyebrow='Know Yourself'
+          id='tests'
+          title='Tests worth taking'
+          tone={4}
+          visual={<TestsVisual locale={locale} />}
+        />
 
         {/* ══════════════════════════════════════════════
-            POPULAR TOOLS  (first 3 across all categories)
+            RESOURCES
             ══════════════════════════════════════════════ */}
-        <section className='mx-auto max-w-[1300px] px-8 py-20'>
-          <div className='mb-6 flex items-end justify-between'>
-            <h2 className='text-[34px] font-extrabold tracking-[-0.02em]'>
-              {t(locale, 'section.popularTools')}
-            </h2>
-            <Link
-              className='text-[13px] font-bold uppercase tracking-[0.12em] text-accent transition-colors hover:text-accent-light'
-              href={toolsHref}
-            >
-              {t(locale, 'section.viewAll')}
-            </Link>
-          </div>
-
-          <div className='grid grid-cols-3 gap-4 max-[760px]:grid-cols-1'>
-            {popularHighlights.map((item) => (
-              <Link
-                key={item.href}
-                className='card-lift flex cursor-pointer flex-col gap-2 rounded-[16px] border border-border bg-surface p-5 text-inherit no-underline'
-                href={item.href}
-              >
-                <div className='text-[11px] font-extrabold uppercase tracking-wider text-accent'>
-                  {item.kicker}
-                </div>
-                <div className='text-[15px] font-bold text-foreground'>
-                  {item.title}
-                </div>
-                <p className='m-0 text-[13px] text-secondary'>
-                  {item.description}
-                </p>
-                <p className='m-0 text-[12px] font-semibold text-muted'>
-                  {item.metrics}
-                </p>
-              </Link>
-            ))}
-          </div>
-        </section>
+        <FeatureBand
+          cta={{ href: resourcesHref, label: 'Read the blog' }}
+          description="Essays on AI, growth, SEO and indie development — what's actually working in 2026, written for people shipping real products."
+          eyebrow='Resources'
+          id='resources'
+          reverse
+          title='Field notes for builders'
+          tone={0}
+          visual={<ResourcesVisual posts={posts.slice(0, 3)} />}
+        />
 
         {/* ══════════════════════════════════════════════
             DUAL ENGINE CTA BANNER
             ══════════════════════════════════════════════ */}
-        <section className='mx-auto max-w-[1300px] px-8 pb-20'>
+        <section className='mx-auto max-w-[1300px] px-8 py-16'>
           <div className='flex flex-wrap items-center justify-between gap-4 rounded-[16px] border border-border bg-surface px-8 py-6'>
             <div>
               <div className='mb-1 flex flex-wrap gap-2'>

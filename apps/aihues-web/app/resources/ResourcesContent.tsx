@@ -13,11 +13,16 @@ const POSTS_PER_PAGE = 12;
 
 interface Props {
   initialPosts: ResourcePost[];
+  initialTag?: string;
 }
 
-export default function ResourcesContent({ initialPosts }: Props) {
+export default function ResourcesContent({ initialPosts, initialTag }: Props) {
   const [query, setQuery] = useState('');
-  const [activeTag, setActiveTag] = useState<string>('All');
+  const [activeTag, setActiveTag] = useState<string>(
+    initialTag && initialPosts.some((p) => p.tag === initialTag)
+      ? initialTag
+      : 'All'
+  );
   const [currentPage, setCurrentPage] = useState(1);
 
   const allTags = useMemo(() => {

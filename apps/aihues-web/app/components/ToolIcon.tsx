@@ -196,6 +196,11 @@ const TOOL_ICONS: Record<string, LucideIcon> = {
   analytics: BarChart3,
   content: PenTool,
   games: Gamepad2,
+
+  /* Top-level groups */
+  tools: Boxes,
+  play: Dices,
+  resources: BookOpen,
 };
 
 export function ToolIcon({
