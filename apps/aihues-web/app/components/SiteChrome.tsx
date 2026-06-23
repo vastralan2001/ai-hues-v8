@@ -122,6 +122,8 @@ export function SiteFooter({
   const tests: Array<[string, string]> = [
     ['MBTI', testDetailHref('mbti')],
     ['SBTI', testDetailHref('sbti')],
+    ['Mensa', testDetailHref('mensa')],
+    ['Stanford–Binet', testDetailHref('sbinet')],
     [t(locale, 'footer.allTests'), testsHref],
   ];
   const company: Array<[string, string]> = [
