@@ -243,18 +243,6 @@ select:focus-visible {
     transform: rotateY(180deg);
   }
 }
-@keyframes demo-fade {
-  0%,
-  8% {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  20%,
-  100% {
-    opacity: 1;
-    transform: none;
-  }
-}
 .demo-reel {
   animation: demo-reel 1.2s linear infinite;
 }
@@ -268,15 +256,11 @@ select:focus-visible {
   animation: demo-flip 3.8s ease-in-out infinite;
   transform-style: preserve-3d;
 }
-.demo-fade {
-  animation: demo-fade 0.45s ease both;
-}
 @media (prefers-reduced-motion: reduce) {
   .demo-reel,
   .demo-bird,
   .demo-pipes,
-  .demo-flip,
-  .demo-fade {
+  .demo-flip {
     animation: none !important;
   }
 }

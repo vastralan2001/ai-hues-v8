@@ -23,7 +23,7 @@ function DemoFrame({ children }: { children: ReactNode }) {
 /* Cross-fades through a list of frames on a timer (cheap — no canvas). */
 function Frames({
   frames,
-  interval = 2100,
+  interval = 2600,
 }: {
   frames: ReactNode[];
   interval?: number;
@@ -33,9 +33,23 @@ function Frames({
     const t = setInterval(() => setI((p) => (p + 1) % frames.length), interval);
     return () => clearInterval(t);
   }, [frames.length, interval]);
+  // All frames are stacked and cross-faded on opacity only — a gentle
+  // dissolve rather than a remount-and-slide, which reads as flicker.
   return (
-    <div className='h-full' key={i}>
-      <div className='demo-fade h-full'>{frames[i]}</div>
+    <div className='relative h-full'>
+      {frames.map((f, n) => (
+        <div
+          key={n}
+          className='absolute inset-0'
+          style={{
+            opacity: n === i ? 1 : 0,
+            transition: 'opacity 650ms ease',
+            pointerEvents: n === i ? 'auto' : 'none',
+          }}
+        >
+          {f}
+        </div>
+      ))}
     </div>
   );
 }
@@ -184,7 +198,7 @@ function UuidDemo() {
   ];
   return (
     <Frames
-      interval={1500}
+      interval={2200}
       frames={ids.map((id, n) => (
         <div key={n}>
           <Label>uuid v4 · generated</Label>
