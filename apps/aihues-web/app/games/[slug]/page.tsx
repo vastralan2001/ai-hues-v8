@@ -217,6 +217,86 @@ const REACT_GAMES: Record<string, PlayableGame> = {
   },
 };
 
+/* Short how-to-play instructions per game, shown in a panel under the board. */
+// Only games that don't already surface their own in-game instructions.
+const GAME_HOWTO: Record<string, string[]> = {
+  'doodle-jump': [
+    'Move left / right with the arrow keys or by tapping the screen sides',
+    'You bounce off every platform automatically — never stop climbing',
+    'Goal: climb as high as you can without falling off the bottom',
+  ],
+  'daily-luck': [
+    'Tap the card to draw your fortune for the day',
+    'One free draw per day — come back tomorrow for the next',
+    'Keep a daily streak going for bonus credits',
+  ],
+  'slot-machine': [
+    'Press Spin to roll the 3×3 reels',
+    'Match three symbols on any payline to win',
+    '3 free spins a day — climb the leaderboard',
+  ],
+  flappy: [
+    'Tap or press Space to flap upward',
+    'Thread the gaps between pipes without touching them',
+    'Pick a difficulty and chase your best score',
+  ],
+  'fruit-slash': [
+    'Swipe across the flying fruit to slice it',
+    'Slice several in one swipe for combo bonuses',
+    'Never cut the bombs — you have three lives',
+  ],
+  'bullet-storm': [
+    'Move with the arrow keys or by dragging',
+    'Weave through the bullet patterns',
+    'Survive as long as you can',
+  ],
+  'depth-charge': [
+    'Move your ship left / right with the arrow keys',
+    'Drop charges to hit the targets lurking below',
+    'Time each drop carefully — sink targets for points',
+  ],
+};
+
+function HowToPlay({
+  items,
+  dark = false,
+}: {
+  items: string[];
+  dark?: boolean;
+}) {
+  return (
+    <div className='mx-auto mt-12 w-full max-w-[1100px] px-6'>
+      <div
+        className={
+          dark
+            ? 'rounded-[18px] border border-white/[0.12] bg-white/[0.05] p-6'
+            : 'rounded-[18px] border border-border bg-surface p-6'
+        }
+      >
+        <div
+          className={`mb-3 text-[11px] font-extrabold uppercase tracking-[0.18em] ${dark ? 'text-white/45' : 'text-accent'}`}
+        >
+          How to play
+        </div>
+        <ul className='grid gap-2.5 sm:grid-cols-2'>
+          {items.map((it) => (
+            <li
+              key={it}
+              className={`flex items-start gap-2.5 text-[14px] leading-relaxed ${dark ? 'text-white/70' : 'text-secondary'}`}
+            >
+              <span
+                aria-hidden='true'
+                className={`mt-[8px] h-1.5 w-1.5 shrink-0 rounded-full ${dark ? 'bg-white/40' : 'bg-accent'}`}
+              />
+              <span>{it}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
 const THEMES: Record<
   Theme,
   { bg: string; glow: string; eyebrow: string; quiet?: boolean }
@@ -287,6 +367,7 @@ export default async function GamePage({
   if (!game) notFound();
   const locale = 'en' as Locale;
   const Game = game.Component;
+  const howTo = GAME_HOWTO[slug];
   const theme = game.theme ? THEMES[game.theme] : null;
 
   return (
@@ -378,6 +459,7 @@ export default async function GamePage({
             >
               <Game locale={locale} />
             </div>
+            {howTo ? <HowToPlay dark items={howTo} /> : null}
             <div className='mx-auto mt-12 w-full max-w-[1100px] px-6'>
               <RelatedItems
                 type='game'
@@ -415,6 +497,7 @@ export default async function GamePage({
             </p>
           </div>
           <Game locale={locale} />
+          {howTo ? <HowToPlay items={howTo} /> : null}
           <RelatedItems
             type='game'
             slug={slug}
