@@ -1,10 +1,12 @@
 import Link from 'next/link';
 
-import { ToolCardV2 } from '@/components/CatalogCards';
 import FeatureBand from '@/components/FeatureBand';
 import HeroSearch from '@/components/HeroSearch';
 import HeroStage from '@/components/HeroStage';
 import { PageShell } from '@/components/SiteChrome';
+import SpotlightCarousel, {
+  type SpotlightSlide,
+} from '@/components/SpotlightCarousel';
 import { ToolIcon } from '@/components/ToolIcon';
 import ToolMarquee, { type MarqueeItem } from '@/components/ToolMarquee';
 import Typewriter from '@/components/Typewriter';
@@ -20,6 +22,7 @@ import {
   resourcesHref,
   testDetailHref,
   testsHref,
+  toolDetailHref,
   toolsCategoryHref,
   toolsHref,
   wishlistHref,
@@ -30,6 +33,13 @@ export const revalidate = 60;
 
 const resourceTagHref = (tag: string) =>
   `${resourcesHref}?tag=${encodeURIComponent(tag)}`;
+
+const catLabel = (locale: Locale, category: string) =>
+  category === 'ai-writing'
+    ? t(locale, 'cat.aiWriting')
+    : category === 'developer'
+      ? t(locale, 'cat.developer')
+      : t(locale, 'cat.utility');
 
 /* ── Three top-level families, each with second-level entries ── */
 const CATEGORY_GROUPS = (
@@ -44,7 +54,6 @@ const CATEGORY_GROUPS = (
       locale === 'zh'
         ? '开发与写作利器 — 解码、格式化、生成。'
         : 'Developer & writing utilities — decode, format, generate.',
-    href: toolsHref,
     children: [
       { label: t(locale, 'cat.utility'), href: toolsCategoryHref('utility') },
       {
@@ -65,7 +74,6 @@ const CATEGORY_GROUPS = (
       locale === 'zh'
         ? '轻量小游戏与自我探索测验，放松又走心。'
         : 'Mini-games and self-discovery quizzes to unwind and reflect.',
-    href: gamesHref,
     children: [
       { label: t(locale, 'cat.games'), href: gamesHref },
       { label: t(locale, 'cat.tests'), href: testsHref },
@@ -79,7 +87,6 @@ const CATEGORY_GROUPS = (
       locale === 'zh'
         ? '关于 AI、增长、SEO 与独立开发的实战指南。'
         : 'Guides on AI, growth, SEO, and indie development.',
-    href: resourcesHref,
     children: [
       { label: 'AI Tools', href: resourceTagHref('AI Tools') },
       { label: 'Growth', href: resourceTagHref('Growth') },
@@ -92,12 +99,56 @@ const HOME_TOOL_SLUGS = [
   'jwt',
   'json',
   'regex',
+  'base64',
+  'uuid',
+  'timestamp',
   'word-count',
   'readability',
+  'humanize',
   'x-post',
 ];
 
-/* ── Visual columns for the feature bands ── */
+/* ── Slide builders — feed the polished SpotlightCarousel per section ── */
+function toolSlides(tools: CatalogTool[], locale: Locale): SpotlightSlide[] {
+  return tools.map((tool) => ({
+    slug: tool.slug,
+    eyebrow: catLabel(locale, tool.category),
+    title: tool.name,
+    description: tool.description,
+    href: toolDetailHref(tool.slug),
+    cta: locale === 'zh' ? '打开工具 →' : 'Open tool →',
+  }));
+}
+
+function gameSlides(games: CatalogGame[], locale: Locale): SpotlightSlide[] {
+  const zh = locale === 'zh';
+  return games.map((game) => {
+    const copy = GAME_CARD_COPY[game.slug];
+    return {
+      slug: game.slug,
+      eyebrow: zh ? '小游戏' : 'Mini Game',
+      title: game.name,
+      description: game.description,
+      metrics: copy ? (zh ? copy.metaZh : copy.meta) : undefined,
+      href: gameDetailHref(game.slug),
+      cta: copy ? (zh ? copy.ctaZh : copy.cta) : t(locale, 'game.play'),
+    };
+  });
+}
+
+function postSlides(posts: ResourcePost[], locale: Locale): SpotlightSlide[] {
+  return posts.map((post) => ({
+    slug: 'resources',
+    eyebrow: post.tag,
+    title: post.title,
+    description: post.excerpt,
+    metrics: post.readTime,
+    href: `/resources/${post.slug}`,
+    cta: locale === 'zh' ? '阅读全文 →' : 'Read post →',
+  }));
+}
+
+/* ── Static visual columns ── */
 function CategoryGroups({
   groups,
 }: {
@@ -114,12 +165,9 @@ function CategoryGroups({
             <span className='flex h-10 w-10 items-center justify-center rounded-[12px] bg-accent-bg text-accent'>
               <ToolIcon size={20} slug={g.key} />
             </span>
-            <Link
-              className='flex-1 text-[17px] font-bold text-foreground no-underline transition-colors hover:text-accent'
-              href={g.href}
-            >
+            <span className='flex-1 text-[17px] font-bold text-foreground'>
               {g.label}
-            </Link>
+            </span>
             <span className='rounded-full bg-surface px-2.5 py-1 text-[11px] font-semibold text-muted'>
               {g.count}
             </span>
@@ -144,54 +192,6 @@ function CategoryGroups({
   );
 }
 
-function ToolsVisual({
-  tools,
-  locale,
-}: {
-  tools: CatalogTool[];
-  locale: Locale;
-}) {
-  return (
-    <div className='grid grid-cols-2 gap-3'>
-      {tools.map((tool) => (
-        <ToolCardV2 key={tool.id} locale={locale} tool={tool} />
-      ))}
-    </div>
-  );
-}
-
-function HomeGameCard({ game, locale }: { game: CatalogGame; locale: Locale }) {
-  const zh = locale === 'zh';
-  const copy = GAME_CARD_COPY[game.slug];
-
-  return (
-    <Link
-      className='card-lift group relative flex h-full cursor-pointer flex-col rounded-[16px] border border-border bg-surface px-6 py-6 text-center text-inherit no-underline'
-      href={gameDetailHref(game.slug)}
-    >
-      <span className='mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-xl bg-accent-bg text-accent'>
-        <ToolIcon size={24} slug={game.slug} />
-      </span>
-      <h3 className='mb-2 text-[18px] font-bold text-foreground'>
-        {game.name}
-      </h3>
-      <p className='mb-3 text-[13px] leading-relaxed text-secondary'>
-        {game.description}
-      </p>
-
-      {copy && (
-        <p className='mb-4 text-[12px] leading-relaxed text-muted'>
-          {zh ? copy.metaZh : copy.meta}
-        </p>
-      )}
-
-      <span className='btn-cta btn-cta--sm mt-auto self-center'>
-        {copy ? (zh ? copy.ctaZh : copy.cta) : t(locale, 'game.play')}
-      </span>
-    </Link>
-  );
-}
-
 function TestsVisual({ locale }: { locale: Locale }) {
   return (
     <div className='flex flex-col gap-3'>
@@ -201,25 +201,19 @@ function TestsVisual({ locale }: { locale: Locale }) {
           className='card-lift relative flex items-start gap-4 rounded-[16px] border border-border bg-surface p-5 text-inherit no-underline'
           href={testDetailHref(tm.slug)}
         >
-          <span
-            className='flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] text-white'
-            style={{ background: tm.accent }}
-          >
-            <ToolIcon className='text-white' size={24} slug={tm.slug} />
+          <span className='flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] bg-accent-bg text-accent'>
+            <ToolIcon size={24} slug={tm.slug} />
           </span>
           <div className='min-w-0'>
             <div className='flex items-center gap-2'>
               <h3 className='text-[17px] font-bold text-foreground'>
                 {tm.name}
               </h3>
-              <span
-                className='rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white'
-                style={{ background: tm.accent }}
-              >
+              <span className='rounded-full bg-accent-bg px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-accent'>
                 {tm.badge}
               </span>
             </div>
-            <p className='mt-1 text-[13px] leading-relaxed text-secondary'>
+            <p className='mt-1 line-clamp-2 text-[13px] leading-relaxed text-secondary'>
               {tm.description}
             </p>
             <p className='mt-1.5 text-[12px] font-medium text-muted'>
@@ -227,33 +221,6 @@ function TestsVisual({ locale }: { locale: Locale }) {
               {tm.durationMin} min
             </p>
           </div>
-        </Link>
-      ))}
-    </div>
-  );
-}
-
-function ResourcesVisual({ posts }: { posts: ResourcePost[] }) {
-  return (
-    <div className='flex flex-col gap-3'>
-      {posts.map((post) => (
-        <Link
-          key={post.slug}
-          className='card-lift flex flex-col gap-1.5 rounded-[16px] border border-border bg-surface p-5 text-inherit no-underline'
-          href={`/resources/${post.slug}`}
-        >
-          <div className='flex items-center gap-2'>
-            <span className='rounded-full bg-accent-bg px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-accent'>
-              {post.tag}
-            </span>
-            <span className='text-[11px] text-muted'>{post.readTime}</span>
-          </div>
-          <h3 className='text-[16px] font-bold leading-snug text-foreground'>
-            {post.title}
-          </h3>
-          <p className='line-clamp-2 text-[13px] leading-relaxed text-secondary'>
-            {post.excerpt}
-          </p>
         </Link>
       ))}
     </div>
@@ -375,6 +342,12 @@ export default async function HomePage() {
           description='Three families — tools, games and tests, and reading. Pick a lane and dive straight in. No signup, no clutter.'
           eyebrow='Explore'
           id='categories'
+          links={[
+            { label: 'Tools', href: '#tools' },
+            { label: 'Games', href: '#games' },
+            { label: 'Tests', href: '#tests' },
+            { label: 'Resources', href: '#resources' },
+          ]}
           reverse
           title='Browse by category'
           tone={1}
@@ -389,9 +362,25 @@ export default async function HomePage() {
           description='Decode a JWT, format messy JSON, count words, rewrite a tweet — fast, single-purpose utilities that load instantly and never get in your way.'
           eyebrow='Dev + Writing'
           id='tools'
+          links={[
+            {
+              label: t(locale, 'cat.utility'),
+              href: toolsCategoryHref('utility'),
+            },
+            {
+              label: t(locale, 'cat.developer'),
+              href: toolsCategoryHref('developer'),
+            },
+            {
+              label: t(locale, 'cat.aiWriting'),
+              href: toolsCategoryHref('ai-writing'),
+            },
+          ]}
           title='Tools that do one thing well'
           tone={2}
-          visual={<ToolsVisual locale={locale} tools={homeTools} />}
+          visual={
+            <SpotlightCarousel compact slides={toolSlides(homeTools, locale)} />
+          }
         />
 
         {/* ══════════════════════════════════════════════
@@ -402,15 +391,20 @@ export default async function HomePage() {
           description="21 hand-built mini-games — chess with a real engine, classic arcade, daily fortune. Open a tab, kill five minutes, close it. That's the whole pitch."
           eyebrow='Game Center'
           id='games'
+          links={[
+            { label: 'Chess', href: gameDetailHref('chess') },
+            { label: 'Snake', href: gameDetailHref('snake') },
+            { label: 'Tetris', href: gameDetailHref('block-drop') },
+            { label: 'Minesweeper', href: gameDetailHref('minesweeper') },
+          ]}
           reverse
           title='Quick play, zero install'
           tone={3}
           visual={
-            <div className='grid grid-cols-2 gap-3'>
-              {games.slice(0, 4).map((game) => (
-                <HomeGameCard game={game} key={game.id} locale={locale} />
-              ))}
-            </div>
+            <SpotlightCarousel
+              compact
+              slides={gameSlides(games.slice(0, 8), locale)}
+            />
           }
         />
 
@@ -422,6 +416,10 @@ export default async function HomePage() {
           description='Personality, intelligence and temperament quizzes with real question banks and shareable result posters. For reflection and fun — not clinical diagnosis.'
           eyebrow='Know Yourself'
           id='tests'
+          links={TEST_META.map((tm) => ({
+            label: tm.name,
+            href: testDetailHref(tm.slug),
+          }))}
           title='Tests worth taking'
           tone={4}
           visual={<TestsVisual locale={locale} />}
@@ -435,41 +433,22 @@ export default async function HomePage() {
           description="Essays on AI, growth, SEO and indie development — what's actually working in 2026, written for people shipping real products."
           eyebrow='Resources'
           id='resources'
+          links={[
+            { label: 'AI Tools', href: resourceTagHref('AI Tools') },
+            { label: 'Growth', href: resourceTagHref('Growth') },
+            { label: 'Development', href: resourceTagHref('Development') },
+            { label: 'Productivity', href: resourceTagHref('Productivity') },
+          ]}
           reverse
           title='Field notes for builders'
           tone={0}
-          visual={<ResourcesVisual posts={posts.slice(0, 3)} />}
+          visual={
+            <SpotlightCarousel
+              compact
+              slides={postSlides(posts.slice(0, 8), locale)}
+            />
+          }
         />
-
-        {/* ══════════════════════════════════════════════
-            DUAL ENGINE CTA BANNER
-            ══════════════════════════════════════════════ */}
-        <section className='mx-auto max-w-[1300px] px-8 py-16'>
-          <div className='flex flex-wrap items-center justify-between gap-4 rounded-[16px] border border-border bg-surface px-8 py-6'>
-            <div>
-              <div className='mb-1 flex flex-wrap gap-2'>
-                <span className='rounded-full bg-bg px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-muted'>
-                  DEV
-                </span>
-                <span className='rounded-full bg-bg px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-muted'>
-                  GAMES
-                </span>
-                <span className='rounded-full bg-bg px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-muted'>
-                  TESTS
-                </span>
-              </div>
-              <h3 className='mb-1 text-[20px] font-semibold text-foreground'>
-                {t(locale, 'section.dualEngine')}
-              </h3>
-              <p className='m-0 text-[14px] text-muted'>
-                {t(locale, 'section.dualEngineDesc')}
-              </p>
-            </div>
-            <Link className='btn-cta' href={toolsHref}>
-              {t(locale, 'section.browseAll')}
-            </Link>
-          </div>
-        </section>
 
         {/* ══════════════════════════════════════════════
             WISHLIST CTA

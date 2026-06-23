@@ -60,7 +60,7 @@ export function SiteHeader({
 
   return (
     <HeaderBar>
-      <div className='mx-auto flex h-[76px] max-w-[1300px] items-center justify-between px-4 md:px-8'>
+      <div className='mx-auto flex h-[76px] max-w-[1760px] items-center justify-between px-[clamp(1.5rem,5vw,7rem)]'>
         {/* Logo */}
         <Link
           aria-label='AIHues home'
@@ -134,7 +134,7 @@ export function SiteFooter({
 
   return (
     <footer className='border-t border-border bg-surface'>
-      <div className='mx-auto grid max-w-[1300px] gap-10 px-6 py-14 sm:grid-cols-2 md:px-8 lg:grid-cols-12'>
+      <div className='mx-auto grid max-w-[1760px] gap-10 px-[clamp(1.5rem,5vw,7rem)] py-14 sm:grid-cols-2 lg:grid-cols-12'>
         <div className='lg:col-span-4'>
           <Link
             href={homeHref}

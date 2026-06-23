@@ -18,6 +18,7 @@ export default function FeatureBand({
   description,
   cta,
   meta,
+  links,
   visual,
 }: {
   id?: string;
@@ -28,6 +29,7 @@ export default function FeatureBand({
   description: string;
   cta?: { href: string; label: string };
   meta?: ReactNode;
+  links?: { href: string; label: string }[];
   visual: ReactNode;
 }) {
   const glow = BAND_GLOWS[tone % BAND_GLOWS.length];
@@ -56,12 +58,25 @@ export default function FeatureBand({
             <h2 className='mb-5 text-[clamp(30px,3.6vw,46px)] font-extrabold leading-[1.05] tracking-[-0.02em] text-foreground'>
               {title}
             </h2>
-            <p className='mx-auto mb-7 max-w-[520px] text-[17px] leading-relaxed text-secondary lg:mx-0'>
+            <p className='mx-auto mb-6 max-w-[520px] text-[17px] leading-relaxed text-secondary lg:mx-0'>
               {description}
             </p>
             {meta}
+            {links && links.length > 0 && (
+              <div className='mb-8 flex flex-wrap justify-center gap-2 lg:justify-start'>
+                {links.map((l) => (
+                  <Link
+                    className='rounded-full border border-border bg-surface px-3.5 py-1.5 text-[13px] font-semibold text-secondary no-underline transition-colors hover:border-accent hover:text-accent'
+                    href={l.href}
+                    key={l.label}
+                  >
+                    {l.label}
+                  </Link>
+                ))}
+              </div>
+            )}
             {cta && (
-              <Link className='btn-cta mt-2' href={cta.href}>
+              <Link className='btn-cta' href={cta.href}>
                 {cta.label}
               </Link>
             )}

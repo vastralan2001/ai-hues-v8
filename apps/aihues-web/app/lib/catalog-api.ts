@@ -415,9 +415,9 @@ const LOCAL_FALLBACK_GAMES: CatalogGame[] = [
   {
     id: 'block-drop',
     slug: 'block-drop',
-    icon: 'BD',
-    name: 'Block Drop',
-    description: 'Stack and clear lines in this falling-blocks classic',
+    icon: 'T',
+    name: 'Tetris',
+    description: 'Rotate and stack the falling tetrominoes to clear lines',
     status: 'ITEM_STATUS_PUBLISHED',
     sortOrder: 7,
     priceTag: 'free',

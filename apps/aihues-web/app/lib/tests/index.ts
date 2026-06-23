@@ -48,7 +48,7 @@ export const TEST_META: TestMeta[] = [
     tagline: 'Are you top 2%?',
     description:
       "25 reasoning puzzles modeled on Mensa's own Online Workout — series, analogies and lateral-thinking traps. Get an estimated IQ band and percentile.",
-    accent: '#785aa6',
+    accent: 'var(--color-accent)',
     durationMin: 12,
     questionCount: mensaConfig.questions.length,
     badge: 'IQ',
@@ -59,7 +59,7 @@ export const TEST_META: TestMeta[] = [
     tagline: 'Five-factor cognitive profile',
     description:
       "A 25-item run structured after the Stanford-Binet's five cognitive factors — fluid reasoning, knowledge, quantitative, visual-spatial and working memory.",
-    accent: '#2f6f7a',
+    accent: 'var(--color-accent)',
     durationMin: 12,
     questionCount: sbinetConfig.questions.length,
     badge: 'Cognitive',

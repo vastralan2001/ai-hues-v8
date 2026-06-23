@@ -113,9 +113,9 @@ const REACT_GAMES: Record<string, PlayableGame> = {
   },
   'block-drop': {
     Component: BlockDropGame,
-    title: 'Block Drop',
-    titleZh: '方块坠落',
-    desc: 'Rotate and stack the falling pieces, clear lines, and climb the levels.',
+    title: 'Tetris',
+    titleZh: '俄罗斯方块',
+    desc: 'Rotate and stack the falling tetrominoes, clear lines, and climb the levels.',
     descZh: '旋转、堆叠坠落的方块，消除整行，挑战更高等级。',
     theme: 'grid',
   },

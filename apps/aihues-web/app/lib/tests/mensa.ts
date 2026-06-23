@@ -6,7 +6,7 @@
 import { scoreIq, type IqBand, type IqFactor } from './iq';
 import type { TestConfig, TestQuestion } from './types';
 
-const ACCENT = '#785aa6';
+const ACCENT = '#c2502e';
 
 const FACTORS: IqFactor[] = [
   { key: 'num', label: 'Numerical' },

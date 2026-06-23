@@ -147,9 +147,10 @@ const GAMES: CorpusEntry[] = [
   },
   {
     slug: 'block-drop',
-    title: 'Block Drop',
-    blurb: 'Rotate and stack falling blocks, clear lines.',
-    keywords: 'tetris falling blocks tetromino stack rotate clear lines puzzle',
+    title: 'Tetris',
+    blurb: 'Rotate and stack falling tetrominoes, clear lines.',
+    keywords:
+      'tetris falling blocks tetromino stack rotate clear lines puzzle block drop',
   },
   {
     slug: 'brick-breaker',

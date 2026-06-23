@@ -7,7 +7,7 @@
 import { scoreIq, type IqBand, type IqFactor } from './iq';
 import type { TestConfig, TestQuestion } from './types';
 
-const ACCENT = '#2f6f7a';
+const ACCENT = '#c2502e';
 
 const FACTORS: IqFactor[] = [
   { key: 'fr', label: 'Fluid' },

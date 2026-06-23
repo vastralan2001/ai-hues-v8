@@ -131,7 +131,7 @@ export function ToolCardV2({
 
   return (
     <Link
-      className='card-lift group relative block cursor-pointer rounded-[16px] border border-border bg-surface p-[22px] text-inherit no-underline'
+      className='card-lift group relative flex h-full cursor-pointer flex-col rounded-[16px] border border-border bg-surface p-[22px] text-inherit no-underline'
       href={toolDetailHref(tool.slug)}
       onClick={() => {
         event(GA_EVENTS.toolClick, {
@@ -146,15 +146,15 @@ export function ToolCardV2({
         <ToolIcon slug={tool.slug} size={20} />
       </div>
 
-      <h3 className='mb-1 text-[15px] font-semibold leading-tight text-foreground'>
+      <h3 className='mb-1 line-clamp-1 text-[15px] font-semibold leading-tight text-foreground'>
         {tool.name}
       </h3>
-      <p className='m-0 text-[12px] leading-[1.45] text-secondary'>
+      <p className='m-0 line-clamp-2 text-[12px] leading-[1.45] text-secondary'>
         {tool.description}
       </p>
 
       {/* Price row */}
-      <div className='mt-3 flex items-center gap-2'>
+      <div className='mt-auto flex items-center gap-2 pt-3'>
         <PriceBadge price={price} locale={locale} />
       </div>
     </Link>
@@ -202,7 +202,7 @@ export function GameCard({
 
   return (
     <Link
-      className='card-lift relative flex cursor-pointer flex-col rounded-[16px] border border-border bg-surface px-7 py-7 text-center text-inherit no-underline'
+      className='card-lift relative flex h-full cursor-pointer flex-col rounded-[16px] border border-border bg-surface px-7 py-7 text-center text-inherit no-underline'
       href={gameDetailHref(game.slug)}
       onClick={() => {
         event(GA_EVENTS.gamePlay, {
@@ -221,16 +221,16 @@ export function GameCard({
       <span className='mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-xl bg-accent-bg text-accent'>
         <ToolIcon slug={game.slug} size={24} />
       </span>
-      <h3 className='mb-1.5 text-[18px] font-bold text-foreground'>
+      <h3 className='mb-1.5 line-clamp-1 text-[18px] font-bold text-foreground'>
         {game.name}
       </h3>
-      <p className='mb-4 text-[13px] leading-relaxed text-secondary'>
+      <p className='mb-4 line-clamp-2 text-[13px] leading-relaxed text-secondary'>
         {game.description}
       </p>
 
       {/* Meta row */}
       {copy && (
-        <p className='mb-4 text-[12px] leading-relaxed text-muted'>
+        <p className='mb-4 line-clamp-1 text-[12px] leading-relaxed text-muted'>
           {zh ? copy.metaZh : copy.meta}
         </p>
       )}

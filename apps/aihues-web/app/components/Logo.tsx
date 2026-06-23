@@ -1,5 +1,5 @@
 /* AIHues brand mark — a designer's swatch fan. Five rounded blades pivot
-   from a single point and sweep through the site's own section hues
+   from a single point and sweep a warm-to-cool hue range
    (accent → amber → olive → teal → violet), making "hues" the whole idea. */
 const BLADES: { angle: number; fill: string }[] = [
   { angle: -36, fill: '#c2502e' },
