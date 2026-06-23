@@ -69,7 +69,8 @@ export function SiteHeader({
         >
           <Logo size={28} />
           <span className='hidden uppercase tracking-[0.12em] md:inline'>
-            AIHues
+            <span className='text-foreground'>AI</span>
+            <span className='brand-hues'>Hues</span>
           </span>
         </Link>
 
@@ -138,7 +139,10 @@ export function SiteFooter({
             className='inline-flex items-center gap-2.5 text-xl font-extrabold text-foreground'
           >
             <Logo size={30} />
-            <span className='uppercase tracking-[0.12em]'>AIHues</span>
+            <span className='uppercase tracking-[0.12em]'>
+              <span className='text-foreground'>AI</span>
+              <span className='brand-hues'>Hues</span>
+            </span>
           </Link>
           <p className='mt-3 max-w-[280px] text-[14px] leading-relaxed text-muted'>
             {t(locale, 'footer.tagline')}

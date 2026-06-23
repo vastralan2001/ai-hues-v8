@@ -192,6 +192,21 @@ select:focus-visible {
   }
 }
 
+/* Brand wordmark — "Hues" rendered as the site's hue sweep */
+.brand-hues {
+  background: linear-gradient(
+    90deg,
+    #c2502e 0%,
+    #d68a3e 26%,
+    #7f8c5d 52%,
+    #3f7d8c 76%,
+    #785aa6 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
 /* Card lift — surface-over-stroke hover for repeated cards */
 .card-lift {
   transition:
