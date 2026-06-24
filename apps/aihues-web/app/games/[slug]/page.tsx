@@ -23,6 +23,7 @@ import SlotMachineGame from '@/components/games/SlotMachineGame';
 import SnakeGame from '@/components/games/SnakeGame';
 import SudokuGame from '@/components/games/SudokuGame';
 import Breadcrumb from '@/components/Breadcrumb';
+import { JsonLd } from '@/components/JsonLd';
 import RelatedItems from '@/components/RelatedItems';
 import ShareButtons from '@/components/ShareButtons';
 import { PageShell } from '@/components/SiteChrome';
@@ -372,6 +373,44 @@ export default async function GamePage({
 
   return (
     <PageShell variant='games' locale={locale}>
+      <JsonLd
+        data={[
+          {
+            '@context': 'https://schema.org',
+            '@type': 'VideoGame',
+            name: game.title,
+            description: game.desc,
+            url: `https://aihues.com/games/${slug}`,
+            applicationCategory: 'Game',
+            operatingSystem: 'Web',
+            offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+          },
+          {
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              {
+                '@type': 'ListItem',
+                position: 1,
+                name: 'Home',
+                item: 'https://aihues.com',
+              },
+              {
+                '@type': 'ListItem',
+                position: 2,
+                name: 'Games',
+                item: 'https://aihues.com/games',
+              },
+              {
+                '@type': 'ListItem',
+                position: 3,
+                name: game.title,
+                item: `https://aihues.com/games/${slug}`,
+              },
+            ],
+          },
+        ]}
+      />
       {theme ? (
         <section
           className='relative w-full overflow-hidden'

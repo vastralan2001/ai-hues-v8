@@ -4,6 +4,8 @@ import type { Metadata } from 'next';
 import type { Locale } from '@/lib/dict';
 import { t } from '@/lib/dict';
 import { PUBLISHED_TOOL_SLUGS } from '@/lib/published-tools';
+import { ALL_TOOLS } from '@/lib/tool-data';
+import { JsonLd } from '@/components/JsonLd';
 import { PageShell } from '@/components/SiteChrome';
 import RelatedItems from '@/components/RelatedItems';
 import ToolDetailTabs from '@/components/reviews/ToolDetailTabs';
@@ -197,8 +199,48 @@ export default async function ToolPage({
   }
   const ReactTool = REACT_TOOLS[slug];
   if (ReactTool) {
+    const tm = ALL_TOOLS.find((x) => x.slug === slug);
+    const url = `https://aihues.com/tools/${slug}`;
     return (
       <PageShell variant='tools' locale={locale}>
+        <JsonLd
+          data={[
+            {
+              '@context': 'https://schema.org',
+              '@type': 'SoftwareApplication',
+              name: tm?.name ?? slug,
+              description: tm?.description,
+              applicationCategory: 'UtilitiesApplication',
+              operatingSystem: 'Web',
+              url,
+              offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+            },
+            {
+              '@context': 'https://schema.org',
+              '@type': 'BreadcrumbList',
+              itemListElement: [
+                {
+                  '@type': 'ListItem',
+                  position: 1,
+                  name: 'Home',
+                  item: 'https://aihues.com',
+                },
+                {
+                  '@type': 'ListItem',
+                  position: 2,
+                  name: 'Tools',
+                  item: 'https://aihues.com/tools',
+                },
+                {
+                  '@type': 'ListItem',
+                  position: 3,
+                  name: tm?.name ?? slug,
+                  item: url,
+                },
+              ],
+            },
+          ]}
+        />
         <UsageTracker slug={slug} />
         <ToolDetailTabs
           locale={locale}
