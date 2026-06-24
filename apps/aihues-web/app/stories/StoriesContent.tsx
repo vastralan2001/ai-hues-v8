@@ -8,6 +8,7 @@ import NewsletterSubscribe from '@/components/NewsletterSubscribe';
 import CoverImage from '@/components/CoverImage';
 import { FilterPills } from '@/components/FilterPills';
 import { PageMasthead } from '@/components/PageMasthead';
+import { SearchBox } from '@/components/SearchBox';
 import type { ResourcePost } from '@/lib/resources-data';
 
 const POSTS_PER_PAGE = 12;
@@ -63,47 +64,23 @@ export default function StoriesContent({ initialPosts, initialTag }: Props) {
         title='Stories'
         subtitle='Growth strategies, AI tool reviews, and battle-tested indie-dev tips.'
         features={['AI & growth', 'Indie dev', 'Practical playbooks']}
-      />
+      >
+        <SearchBox
+          ariaLabel='Search articles'
+          onChange={(v) => {
+            setQuery(v);
+            setCurrentPage(1);
+          }}
+          placeholder='Search articles by title, topic, or keyword...'
+          value={query}
+        />
+      </PageMasthead>
 
       <section className='mx-auto max-w-[1180px] px-6 pb-20 md:px-7'>
-        {/* Search */}
-        <div className='mx-auto mb-5 max-w-[760px]'>
-          <div className='relative'>
-            <svg
-              className='absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted'
-              fill='none'
-              stroke='currentColor'
-              strokeWidth='2'
-              viewBox='0 0 24 24'
-            >
-              <circle cx='11' cy='11' r='8' />
-              <path d='m21 21-4.35-4.35' />
-            </svg>
-            <input
-              className='h-12 w-full rounded-[12px] border border-border bg-surface pl-11 pr-4 text-sm text-foreground transition-colors placeholder:text-muted focus:border-accent focus:outline-none'
-              onChange={(e) => {
-                setQuery(e.target.value);
-                setCurrentPage(1);
-              }}
-              placeholder='Search articles by title, topic, or keyword...'
-              type='text'
-              value={query}
-            />
-          </div>
-          {(query || activeTag !== 'All') && (
-            <p className='mt-2 text-center text-xs text-muted'>
-              {filteredPosts.length} result
-              {filteredPosts.length !== 1 ? 's' : ''}
-              {query && ` for "${query}"`}
-              {activeTag !== 'All' && ` in ${activeTag}`}
-            </p>
-          )}
-        </div>
-
-        {/* Tag filters */}
+        {/* Tag filters — left-aligned, matching the other listing pages */}
         <FilterPills
           ariaLabel='Article topics'
-          className='mx-auto mb-10 max-w-[1000px] justify-center'
+          className='mb-6'
           activeKey={activeTag}
           onSelect={(tag) => {
             setActiveTag(tag);
@@ -111,6 +88,16 @@ export default function StoriesContent({ initialPosts, initialTag }: Props) {
           }}
           items={allTags.map((tag) => ({ key: tag, label: tag }))}
         />
+        {query || activeTag !== 'All' ? (
+          <div className='list-meta'>
+            <span>
+              {filteredPosts.length} result
+              {filteredPosts.length !== 1 ? 's' : ''}
+              {query && ` for "${query}"`}
+              {activeTag !== 'All' && ` in ${activeTag}`}
+            </span>
+          </div>
+        ) : null}
 
         {/* Posts grid */}
         {pagePosts.length > 0 ? (
