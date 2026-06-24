@@ -12,7 +12,7 @@ const STATIC_PATHS = [
   '/tools',
   '/games',
   '/tests',
-  '/resources',
+  '/stories',
   '/pricing',
   '/discover',
   '/collection',
@@ -53,7 +53,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const posts = getAllPosts();
   const resourcePages = posts.map((post) => ({
-    url: `${BASE_URL}/resources/${post.slug}`,
+    url: `${BASE_URL}/stories/${post.slug}`,
     lastModified: new Date(post.date),
     changeFrequency: 'monthly' as const,
     priority: 0.6,

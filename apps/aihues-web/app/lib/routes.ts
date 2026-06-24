@@ -9,7 +9,7 @@ export const rankingHref = '/ranking';
 export const pricingHref = '/pricing';
 export const collectionHref = '/collection';
 export const discoverHref = '/discover';
-export const resourcesHref = '/resources';
+export const storiesHref = '/stories';
 
 export function toolDetailHref(slug: string) {
   return `/tools/${slug}`;

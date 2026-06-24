@@ -5,7 +5,7 @@ import { Rss } from 'lucide-react';
 import HeaderBar from '@/components/HeaderBar';
 import { t, type Locale } from '@/lib/dict';
 import {
-  resourcesHref,
+  storiesHref,
   discoverHref,
   gameDetailHref,
   gamesHref,
@@ -17,12 +17,14 @@ import {
 } from '@/lib/routes';
 import { Wordmark } from './Logo';
 import { BookmarkButton } from './BookmarkButton';
+import { type BrandCategory, categoryThemeStyle } from '@/lib/category-brand';
 
 type ChromeVariant =
   | 'home'
   | 'tools'
   | 'games'
   | 'tests'
+  | 'stories'
   | 'wishlist'
   | 'ranking'
   | 'default';
@@ -32,7 +34,7 @@ const mainLinks: Array<{ href: string; labelKey: string }> = [
   { href: toolsHref, labelKey: 'nav.tools' },
   { href: gamesHref, labelKey: 'nav.games' },
   { href: testsHref, labelKey: 'nav.tests' },
-  { href: resourcesHref, labelKey: 'nav.resources' },
+  { href: storiesHref, labelKey: 'nav.resources' },
   { href: wishlistHref, labelKey: 'nav.wishlist' },
 ];
 
@@ -44,6 +46,7 @@ const headerLinks: Record<
   tools: mainLinks,
   games: mainLinks,
   tests: mainLinks,
+  stories: mainLinks,
   wishlist: mainLinks,
   ranking: mainLinks,
   default: mainLinks,
@@ -108,7 +111,7 @@ export function SiteFooter({
     [t(locale, 'nav.tools'), toolsHref],
     [t(locale, 'nav.discover'), discoverHref],
     [t(locale, 'nav.wishlist'), wishlistHref],
-    [t(locale, 'nav.resources'), resourcesHref],
+    [t(locale, 'nav.resources'), storiesHref],
   ];
   const games: Array<[string, string]> = [
     [t(locale, 'footer.chess'), gameDetailHref('chess')],
@@ -145,7 +148,7 @@ export function SiteFooter({
               {t(locale, 'footer.tagline')}
             </p>
             <div className='mt-5 flex items-center gap-2'>
-              <FooterIcon href='/resources/rss.xml' label='RSS'>
+              <FooterIcon href='/stories/rss.xml' label='RSS'>
                 <Rss size={16} />
               </FooterIcon>
             </div>
@@ -270,10 +273,17 @@ export function PageShell({
   variant?: ChromeVariant;
   locale?: Locale;
 }) {
+  const themed: Partial<Record<ChromeVariant, BrandCategory>> = {
+    tools: 'tools',
+    games: 'games',
+    tests: 'tests',
+    stories: 'stories',
+  };
+  const cat = themed[variant];
   return (
     <>
       <SiteHeader variant={variant} locale={locale} />
-      <main>{children}</main>
+      <main style={cat ? categoryThemeStyle(cat) : undefined}>{children}</main>
       <SiteFooter variant={variant} locale={locale} />
     </>
   );

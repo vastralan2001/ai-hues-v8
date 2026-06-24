@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 
+import { BrandWord } from '@/components/Logo';
 import { PageShell } from '@/components/SiteChrome';
+import { HERO_SLOGAN_LINES } from '@/lib/category-brand';
 
 export const metadata: Metadata = {
   title: 'About',
@@ -15,6 +17,17 @@ export default function AboutPage() {
         <h1 className='mb-6 text-[36px] font-extrabold tracking-[-1px] text-[#1c1917]'>
           About AIHues
         </h1>
+
+        <div className='mb-10 space-y-1.5'>
+          {HERO_SLOGAN_LINES.map((line) => (
+            <p
+              key={line.cat}
+              className='text-[17px] font-medium leading-snug text-[#57534e]'
+            >
+              <BrandWord>{line.en}</BrandWord>
+            </p>
+          ))}
+        </div>
 
         <div className='space-y-6 text-[16px] leading-relaxed text-[#57534e]'>
           <p>

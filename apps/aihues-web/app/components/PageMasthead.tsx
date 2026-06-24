@@ -1,23 +1,34 @@
 import type { ReactNode } from 'react';
 
-/* Shared masthead for the Tools / Games / Tests listing pages — one consistent
-   门头. Bold Radiance display title (Dota2 energy) on a calm warm-white band
-   (kimi Quiet Utility): an eyebrow tag, the title with its last word accented,
-   a subtitle, an optional actions slot, and a structured stat bar. */
+import { BrandWord } from '@/components/Logo';
+import { type BrandCategory, CATEGORY_SLOGAN } from '@/lib/category-brand';
+import type { Locale } from '@/lib/dict';
+
+/* Shared masthead for the Tools / Games / Tests / Stories listing pages — one
+   consistent 门头. Bold Radiance display title (Dota2 energy) on a calm
+   warm-white band (kimi Quiet Utility): an eyebrow tag, the title with its
+   last word accented, the category slogan, a subtitle, an optional actions
+   slot, and a structured stat bar. Accent colours come from the themed
+   <main> wrapper, so the whole band picks up the category hue. */
 
 export function PageMasthead({
+  category,
+  locale = 'en',
   eyebrow,
   title,
   subtitle,
   stats,
   children,
 }: {
+  category?: BrandCategory;
+  locale?: Locale;
   eyebrow: string;
   title: string;
   subtitle: string;
   stats?: { num: string; label: string }[];
   children?: ReactNode;
 }) {
+  const slogan = category ? CATEGORY_SLOGAN[category] : null;
   const words = title.trim().split(' ');
   const lead = words.slice(0, -1).join(' ');
   const tail = words[words.length - 1];
@@ -40,6 +51,14 @@ export function PageMasthead({
           {lead ? `${lead} ` : null}
           <span className='text-accent'>{tail}</span>
         </h1>
+        {slogan ? (
+          <p className='mx-auto mt-5 max-w-[680px] text-[19px] font-semibold leading-snug text-foreground'>
+            <BrandWord>{slogan.primary[locale]}</BrandWord>{' '}
+            <span className='font-medium text-secondary'>
+              {slogan.secondary[locale]}
+            </span>
+          </p>
+        ) : null}
         <p className='mx-auto mt-4 max-w-[560px] text-[16px] leading-relaxed text-secondary'>
           {subtitle}
         </p>

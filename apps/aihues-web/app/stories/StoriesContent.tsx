@@ -16,7 +16,7 @@ interface Props {
   initialTag?: string;
 }
 
-export default function ResourcesContent({ initialPosts, initialTag }: Props) {
+export default function StoriesContent({ initialPosts, initialTag }: Props) {
   const [query, setQuery] = useState('');
   const [activeTag, setActiveTag] = useState<string>(
     initialTag && initialPosts.some((p) => p.tag === initialTag)
@@ -57,8 +57,9 @@ export default function ResourcesContent({ initialPosts, initialTag }: Props) {
   return (
     <>
       <PageMasthead
+        category='stories'
         eyebrow='Library'
-        title='Guides & Resources'
+        title='Stories'
         subtitle='Growth strategies, AI tool reviews, and battle-tested indie-dev tips.'
         stats={[
           { num: `${initialPosts.length}`, label: 'Articles' },
@@ -129,7 +130,7 @@ export default function ResourcesContent({ initialPosts, initialTag }: Props) {
               {pagePosts.map((post) => (
                 <Link
                   key={post.slug}
-                  href={`/resources/${post.slug}`}
+                  href={`/stories/${post.slug}`}
                   className='card-lift group flex flex-col overflow-hidden rounded-[16px] border border-border bg-surface text-inherit no-underline'
                 >
                   <div className='relative h-[180px] overflow-hidden'>

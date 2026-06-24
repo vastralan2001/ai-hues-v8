@@ -22,6 +22,7 @@ export default async function GamesPage() {
   return (
     <PageShell variant='games' locale={locale}>
       <PageMasthead
+        category='games'
         eyebrow='Game Center'
         title='Mini Games'
         subtitle={`${games.length} mini games. Open and play.`}

@@ -52,6 +52,7 @@ export default async function ToolsPage({
   return (
     <PageShell variant='tools'>
       <PageMasthead
+        category='tools'
         eyebrow='Tool Library'
         title='All Tools'
         subtitle={totalLabel}

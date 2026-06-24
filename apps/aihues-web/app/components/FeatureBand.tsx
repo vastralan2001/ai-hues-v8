@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { type ReactNode } from 'react';
 
+import { type BrandCategory, categoryThemeStyle } from '@/lib/category-brand';
+
 const BAND_GLOWS = [
   'rgba(194, 80, 46, 0.16)',
   'rgba(199, 150, 66, 0.18)',
@@ -13,8 +15,10 @@ export default function FeatureBand({
   id,
   tone = 0,
   reverse = false,
+  category,
   eyebrow,
   title,
+  tagline,
   description,
   cta,
   meta,
@@ -24,21 +28,28 @@ export default function FeatureBand({
   id?: string;
   tone?: number;
   reverse?: boolean;
+  category?: BrandCategory;
   eyebrow: string;
   title: ReactNode;
+  tagline?: ReactNode;
   description: string;
   cta?: { href: string; label: string };
   meta?: ReactNode;
   links?: { href: string; label: string }[];
   visual: ReactNode;
 }) {
-  const glow = BAND_GLOWS[tone % BAND_GLOWS.length];
+  // A themed band recolours its whole subtree (eyebrow, links, CTA, carousel
+  // dots) through --color-accent; the glow follows the same hue.
+  const glow = category
+    ? 'color-mix(in srgb, var(--color-accent) 18%, transparent)'
+    : BAND_GLOWS[tone % BAND_GLOWS.length];
   const glowX = reverse ? '82%' : '18%';
 
   return (
     <section
       className='relative isolate overflow-x-clip py-16 lg:py-24'
       id={id}
+      style={category ? categoryThemeStyle(category) : undefined}
     >
       <div
         aria-hidden='true'
@@ -55,9 +66,14 @@ export default function FeatureBand({
             <div className='mb-3 text-[12px] font-extrabold uppercase tracking-[0.16em] text-accent'>
               {eyebrow}
             </div>
-            <h2 className='mb-5 text-[clamp(30px,3.6vw,46px)] font-extrabold leading-[1.05] tracking-[-0.02em] text-foreground'>
+            <h2 className='mb-3 text-[clamp(30px,3.6vw,46px)] font-extrabold leading-[1.05] tracking-[-0.02em] text-foreground'>
               {title}
             </h2>
+            {tagline ? (
+              <p className='mx-auto mb-4 max-w-[520px] text-[18px] font-semibold leading-snug text-foreground/70 lg:mx-0'>
+                {tagline}
+              </p>
+            ) : null}
             <p className='mx-auto mb-6 max-w-[520px] text-[17px] leading-relaxed text-secondary lg:mx-0'>
               {description}
             </p>

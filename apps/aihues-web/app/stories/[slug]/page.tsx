@@ -32,10 +32,10 @@ export async function generateMetadata({
     return { title: 'Not Found | AIHues' };
   }
   return {
-    title: `${post.title} | AIHues Resources`,
+    title: `${post.title} | AIHues Stories`,
     description: `${post.tag} · ${post.date} · ${post.readTime}`,
     alternates: {
-      canonical: `${BASE_URL}/resources/${slug}`,
+      canonical: `${BASE_URL}/stories/${slug}`,
     },
     openGraph: {
       title: post.title,
@@ -147,12 +147,12 @@ export default async function ArticlePage({
     },
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `${BASE_URL}/resources/${slug}`,
+      '@id': `${BASE_URL}/stories/${slug}`,
     },
   };
 
   return (
-    <PageShell>
+    <PageShell variant='stories'>
       <script
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         type='application/ld+json'
@@ -169,9 +169,9 @@ export default async function ArticlePage({
           <span aria-hidden='true'>/</span>
           <Link
             className='shrink-0 transition-colors hover:text-accent'
-            href='/resources'
+            href='/stories'
           >
-            Resources
+            Stories
           </Link>
           <span aria-hidden='true'>/</span>
           <span className='truncate text-secondary'>{meta.title}</span>
@@ -220,7 +220,7 @@ export default async function ArticlePage({
               </div>
               <Link
                 className='mt-6 inline-flex items-center gap-1.5 text-[13px] font-semibold text-secondary transition-colors hover:text-accent'
-                href='/resources'
+                href='/stories'
               >
                 ← All articles
               </Link>

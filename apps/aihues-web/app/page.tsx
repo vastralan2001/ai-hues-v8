@@ -19,7 +19,7 @@ import { TEST_META } from '@/lib/tests';
 import {
   gameDetailHref,
   gamesHref,
-  resourcesHref,
+  storiesHref,
   testDetailHref,
   testsHref,
   toolDetailHref,
@@ -27,12 +27,13 @@ import {
   toolsHref,
   wishlistHref,
 } from '@/lib/routes';
+import { CATEGORY_SLOGAN, HERO_SLOGAN_LINES } from '@/lib/category-brand';
 
 // Revalidate every 60s so the catalog stays fresh without forcing SSR on every hit.
 export const revalidate = 60;
 
-const resourceTagHref = (tag: string) =>
-  `${resourcesHref}?tag=${encodeURIComponent(tag)}`;
+const storyTagHref = (tag: string) =>
+  `${storiesHref}?tag=${encodeURIComponent(tag)}`;
 
 const catLabel = (locale: Locale, category: string) =>
   category === 'ai-writing'
@@ -88,7 +89,7 @@ function postSlides(posts: ResourcePost[], locale: Locale): SpotlightSlide[] {
     title: post.title,
     description: post.excerpt,
     metrics: post.readTime,
-    href: `/resources/${post.slug}`,
+    href: `/stories/${post.slug}`,
     cta: locale === 'zh' ? '阅读全文 →' : 'Read post →',
   }));
 }
@@ -198,16 +199,16 @@ export default async function HomePage() {
               )}
             </h1>
 
-            <p className='mx-auto mb-9 max-w-[600px] text-[19px] leading-relaxed text-secondary lg:mx-0'>
-              <span className='font-semibold text-foreground'>
-                <BrandWord>Helpers</BrandWord>, <BrandWord>Unwinds</BrandWord>,{' '}
-                <BrandWord>Evaluations</BrandWord> &amp;{' '}
-                <BrandWord>Stories</BrandWord>
-              </span>
-              {locale === 'zh'
-                ? ' —— 你的日常 AI 四种色彩，无需注册，打开即用。'
-                : ' — the four hues of your everyday AI. No signup, just open and use.'}
-            </p>
+            <div className='mx-auto mb-9 max-w-[600px] space-y-1.5 lg:mx-0'>
+              {HERO_SLOGAN_LINES.map((line) => (
+                <p
+                  key={line.cat}
+                  className='text-[17px] font-medium leading-snug text-secondary'
+                >
+                  <BrandWord>{locale === 'zh' ? line.zh : line.en}</BrandWord>
+                </p>
+              ))}
+            </div>
 
             <HeroSearch
               askAILabel={t(locale, 'hero.askAI')}
@@ -220,6 +221,7 @@ export default async function HomePage() {
             TOOLS
             ══════════════════════════════════════════════ */}
         <FeatureBand
+          category='tools'
           cta={{ href: toolsHref, label: 'Browse tools' }}
           description='Decode a JWT, format messy JSON, count words, rewrite a tweet — fast, single-purpose utilities that load instantly and never get in your way.'
           eyebrow='Dev + Writing'
@@ -238,11 +240,8 @@ export default async function HomePage() {
               href: toolsCategoryHref('ai-writing'),
             },
           ]}
-          title={
-            <>
-              <BrandWord>Helpers</BrandWord> that do one thing well
-            </>
-          }
+          tagline={CATEGORY_SLOGAN.tools.secondary[locale]}
+          title={<BrandWord>{CATEGORY_SLOGAN.tools.primary[locale]}</BrandWord>}
           tone={2}
           visual={
             <SpotlightCarousel
@@ -256,6 +255,7 @@ export default async function HomePage() {
             GAMES
             ══════════════════════════════════════════════ */}
         <FeatureBand
+          category='games'
           cta={{ href: gamesHref, label: 'Enter arcade' }}
           description="21 hand-built mini-games — chess with a real engine, classic arcade, daily fortune. Open a tab, kill five minutes, close it. That's the whole pitch."
           eyebrow='Game Center'
@@ -267,11 +267,8 @@ export default async function HomePage() {
             { label: 'Minesweeper', href: gameDetailHref('minesweeper') },
           ]}
           reverse
-          title={
-            <>
-              <BrandWord>Unwinds</BrandWord> for a five-minute break
-            </>
-          }
+          tagline={CATEGORY_SLOGAN.games.secondary[locale]}
+          title={<BrandWord>{CATEGORY_SLOGAN.games.primary[locale]}</BrandWord>}
           tone={3}
           visual={
             <SpotlightCarousel
@@ -285,6 +282,7 @@ export default async function HomePage() {
             TESTS
             ══════════════════════════════════════════════ */}
         <FeatureBand
+          category='tests'
           cta={{ href: testsHref, label: 'Take a test' }}
           description='Personality, intelligence and temperament quizzes with real question banks and shareable result posters. For reflection and fun — not clinical diagnosis.'
           eyebrow='Know Yourself'
@@ -293,34 +291,31 @@ export default async function HomePage() {
             label: tm.name,
             href: testDetailHref(tm.slug),
           }))}
-          title={
-            <>
-              <BrandWord>Evaluations</BrandWord> worth taking
-            </>
-          }
+          tagline={CATEGORY_SLOGAN.tests.secondary[locale]}
+          title={<BrandWord>{CATEGORY_SLOGAN.tests.primary[locale]}</BrandWord>}
           tone={4}
           visual={<SpotlightCarousel demo='test' slides={testSlides(locale)} />}
         />
 
         {/* ══════════════════════════════════════════════
-            RESOURCES
+            STORIES
             ══════════════════════════════════════════════ */}
         <FeatureBand
-          cta={{ href: resourcesHref, label: 'Read the stories' }}
+          category='stories'
+          cta={{ href: storiesHref, label: 'Read the stories' }}
           description="Essays on AI, growth, SEO and indie development — what's actually working in 2026, written for people shipping real products."
           eyebrow='Stories'
           id='stories'
           links={[
-            { label: 'AI Tools', href: resourceTagHref('AI Tools') },
-            { label: 'Growth', href: resourceTagHref('Growth') },
-            { label: 'Development', href: resourceTagHref('Development') },
-            { label: 'Productivity', href: resourceTagHref('Productivity') },
+            { label: 'AI Tools', href: storyTagHref('AI Tools') },
+            { label: 'Growth', href: storyTagHref('Growth') },
+            { label: 'Development', href: storyTagHref('Development') },
+            { label: 'Productivity', href: storyTagHref('Productivity') },
           ]}
           reverse
+          tagline={CATEGORY_SLOGAN.stories.secondary[locale]}
           title={
-            <>
-              <BrandWord>Stories</BrandWord> for people who build
-            </>
+            <BrandWord>{CATEGORY_SLOGAN.stories.primary[locale]}</BrandWord>
           }
           tone={0}
           visual={

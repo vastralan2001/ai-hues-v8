@@ -20,6 +20,7 @@ export default function TestsPage() {
   return (
     <PageShell variant='tests' locale={locale}>
       <PageMasthead
+        category='tests'
         eyebrow='Assessment Center'
         title='Quick Tests'
         subtitle={`${TEST_META.length} quick assessments. Open and take — no signup, no paywall.`}

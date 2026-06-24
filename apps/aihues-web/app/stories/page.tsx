@@ -2,21 +2,21 @@ import type { Metadata } from 'next';
 
 import { PageShell } from '@/components/SiteChrome';
 import { getAllPosts } from '@/lib/resources-data';
-import ResourcesContent from './ResourcesContent';
+import StoriesContent from './StoriesContent';
 
 export const metadata: Metadata = {
-  title: 'Resources | AIHues',
+  title: 'Stories | AIHues',
   description:
     'Growth strategies, AI tool reviews, and indie dev battle-tested tips.',
   openGraph: {
-    title: 'AIHues Resources',
+    title: 'AIHues Stories',
     description:
       'Growth strategies, AI tool reviews, and indie dev battle-tested tips.',
     type: 'website',
   },
 };
 
-export default async function ResourcesPage({
+export default async function StoriesPage({
   searchParams,
 }: {
   searchParams: Promise<{ tag?: string }>;
@@ -24,8 +24,8 @@ export default async function ResourcesPage({
   const posts = getAllPosts();
   const { tag } = await searchParams;
   return (
-    <PageShell>
-      <ResourcesContent initialPosts={posts} initialTag={tag} />
+    <PageShell variant='stories'>
+      <StoriesContent initialPosts={posts} initialTag={tag} />
     </PageShell>
   );
 }

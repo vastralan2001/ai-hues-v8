@@ -275,7 +275,6 @@ function DoodleJumpDemo({ active }: { active: boolean }) {
     const G = 0.38;
     const JUMP = 9.6;
     const SPRING_MULT = 1.4;
-    const STEER = 0.12;
     const MAXVX = 3.9;
     const PW = 46;
     const PH = 9;
@@ -405,12 +404,13 @@ function DoodleJumpDemo({ active }: { active: boolean }) {
           p.vx *= -1;
         }
       }
-      // Commit to a target at take-off and steer toward it the whole arc, so
-      // direction is set on launch (not at the apex).
+      // Commit to a target at take-off, then size the horizontal velocity to the
+      // parabolic flight time (dx / framesToTarget) so the ballistic arc lands on
+      // the platform instead of merely drifting toward it.
       if (!target || target.dead) target = pickTarget();
       if (target) {
         const dx = centerX(target) - ch.x;
-        ch.x += Math.max(-MAXVX, Math.min(MAXVX, dx * STEER));
+        ch.x += Math.max(-MAXVX, Math.min(MAXVX, dx / timeTo(target.y)));
       }
       ch.vy += G;
       ch.y += ch.vy;

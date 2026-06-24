@@ -33,7 +33,7 @@ export default function RelatedArticles({
         {related.map((article) => (
           <Link
             key={article.slug}
-            href={`/resources/${article.slug}`}
+            href={`/stories/${article.slug}`}
             className='card-lift group flex flex-col overflow-hidden rounded-[12px] border border-border bg-surface text-inherit no-underline'
           >
             <CoverImage
