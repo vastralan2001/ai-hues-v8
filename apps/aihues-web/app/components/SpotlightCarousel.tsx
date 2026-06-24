@@ -17,7 +17,7 @@ export type SpotlightSlide = {
   href: string;
   cta: string;
   /** Per-slide demo type — overrides the carousel-level `demo` prop. */
-  kind?: 'tool' | 'game' | 'test';
+  kind?: 'tool' | 'game' | 'test' | 'story';
 };
 
 const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
@@ -62,12 +62,18 @@ export default function SpotlightCarousel({
   onIndexChange,
   demo,
   stack = false,
+  controlledIndex,
+  controls = true,
 }: {
   slides: SpotlightSlide[];
   compact?: boolean;
   onIndexChange?: (i: number) => void;
   demo?: 'tool' | 'game' | 'test';
   stack?: boolean;
+  /** When set, the carousel is driven externally (no auto-advance). */
+  controlledIndex?: number;
+  /** Show the dots + prev/next arrows (default true). */
+  controls?: boolean;
 }) {
   const count = slides.length;
 
@@ -110,20 +116,24 @@ export default function SpotlightCarousel({
     () => go((index + 1) % count, 1),
     [go, index, count]
   );
-  const back = useCallback(
-    () => go((index - 1 + count) % count, -1),
-    [go, index, count]
-  );
+
+  // Externally-driven mode: follow the controlled index, no auto-advance.
+  useEffect(() => {
+    if (controlledIndex == null) return;
+    if (controlledIndex !== index) {
+      go(controlledIndex, controlledIndex >= index ? 1 : -1);
+    }
+  }, [controlledIndex, index, go]);
 
   useEffect(() => {
-    if (paused || count <= 1) return;
+    if (controlledIndex != null || paused || count <= 1) return;
     const reduce =
       typeof window !== 'undefined' &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduce) return;
     const t = setInterval(() => next(), 5600);
     return () => clearInterval(t);
-  }, [paused, count, next]);
+  }, [controlledIndex, paused, count, next]);
 
   if (count === 0) return null;
 
@@ -140,6 +150,14 @@ export default function SpotlightCarousel({
     if (k === 'game') return <GameDemo active={active} slug={s.slug} />;
     if (k === 'test') return <TestDemo slug={s.slug} />;
     return <ToolDemo slug={s.slug} />;
+  };
+
+  // A slide shows its demo panel only if it has a real demo kind; story / plain
+  // slides fall back to the shared full-width text card (icon + badge included),
+  // the same card the home Stories band uses.
+  const slideHasDemo = (s: SpotlightSlide) => {
+    const k = s.kind ?? demo;
+    return !!k && k !== 'story';
   };
 
   return (
@@ -159,6 +177,7 @@ export default function SpotlightCarousel({
             : isPrev
               ? `opacity ${FADE_OUT}ms ease`
               : 'none';
+          const showDemo = slideHasDemo(s);
           return (
             <div
               key={s.slug + i}
@@ -171,7 +190,7 @@ export default function SpotlightCarousel({
                 pointerEvents: isActive ? 'auto' : 'none',
               }}
             >
-              {hasDemo ? (
+              {showDemo ? (
                 stack ? (
                   <div className='flex h-full flex-col justify-center gap-4'>
                     <SlideText full={false} s={s} />
@@ -199,56 +218,28 @@ export default function SpotlightCarousel({
         })}
       </div>
 
-      {/* Controls */}
-      <div className='mt-4 flex items-center justify-between'>
-        <div className='flex gap-2'>
-          {slides.map((s, i) => (
-            <button
-              key={'dot' + s.slug + i}
-              aria-label={`Go to slide ${i + 1}`}
-              onClick={() => go(i, i >= index ? 1 : -1)}
-              className='h-2 rounded-full transition-all duration-300'
-              style={{
-                width: i === index ? 28 : 8,
-                background:
-                  i === index ? 'var(--accent)' : 'var(--color-border-strong)',
-              }}
-            />
-          ))}
-        </div>
-        <div className='flex gap-2'>
-          <button
-            aria-label='Previous'
-            onClick={back}
-            className='flex h-11 w-11 items-center justify-center rounded-full border border-border bg-white text-foreground transition-all duration-200 hover:-translate-y-0.5 hover:border-border-strong hover:shadow-md active:scale-95'
-          >
-            <svg width='18' height='18' viewBox='0 0 24 24' fill='none'>
-              <path
-                d='M15 18l-6-6 6-6'
-                stroke='currentColor'
-                strokeWidth='2'
-                strokeLinecap='round'
-                strokeLinejoin='round'
+      {/* Controls — goto dots only (cleaner, matches the kimi aesthetic) */}
+      {controls ? (
+        <div className='mt-4 flex items-center justify-start'>
+          <div className='flex gap-2'>
+            {slides.map((s, i) => (
+              <button
+                key={'dot' + s.slug + i}
+                aria-label={`Go to slide ${i + 1}`}
+                onClick={() => go(i, i >= index ? 1 : -1)}
+                className='h-2 rounded-full transition-all duration-300'
+                style={{
+                  width: i === index ? 28 : 8,
+                  background:
+                    i === index
+                      ? 'var(--accent)'
+                      : 'var(--color-border-strong)',
+                }}
               />
-            </svg>
-          </button>
-          <button
-            aria-label='Next'
-            onClick={next}
-            className='flex h-11 w-11 items-center justify-center rounded-full border border-border bg-white text-foreground transition-all duration-200 hover:-translate-y-0.5 hover:border-border-strong hover:shadow-md active:scale-95'
-          >
-            <svg width='18' height='18' viewBox='0 0 24 24' fill='none'>
-              <path
-                d='M9 6l6 6-6 6'
-                stroke='currentColor'
-                strokeWidth='2'
-                strokeLinecap='round'
-                strokeLinejoin='round'
-              />
-            </svg>
-          </button>
+            ))}
+          </div>
         </div>
-      </div>
+      ) : null}
     </div>
   );
 }

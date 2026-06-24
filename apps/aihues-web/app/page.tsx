@@ -1,7 +1,6 @@
 import Link from 'next/link';
 
 import FeatureBand from '@/components/FeatureBand';
-import HeroSearch from '@/components/HeroSearch';
 import HeroStage from '@/components/HeroStage';
 import { BrandWord } from '@/components/Logo';
 import { PageShell } from '@/components/SiteChrome';
@@ -9,7 +8,6 @@ import SpotlightCarousel, {
   type SpotlightSlide,
 } from '@/components/SpotlightCarousel';
 import ToolMarquee, { type MarqueeItem } from '@/components/ToolMarquee';
-import Typewriter from '@/components/Typewriter';
 import type { CatalogGame, CatalogTool } from '@/lib/catalog-api';
 import { safeListGames, safeListTools } from '@/lib/catalog-api';
 import { t, type Locale } from '@/lib/dict';
@@ -27,7 +25,8 @@ import {
   toolsHref,
   wishlistHref,
 } from '@/lib/routes';
-import { CATEGORY_SLOGAN, HERO_SLOGAN_LINES } from '@/lib/category-brand';
+import { CATEGORY_SLOGAN } from '@/lib/category-brand';
+import { CATEGORY_PICKS, type HeroScene } from '@/lib/spotlight-picks';
 
 // Revalidate every 60s so the catalog stays fresh without forcing SSR on every hit.
 export const revalidate = 60;
@@ -48,11 +47,31 @@ const HOME_TOOL_SLUGS = [
   'json', // dev
   'x-post', // writing
   'jwt', // dev
-  'tldr', // writing
+  'word-count', // writing
   'base64', // dev
   'blog-outline', // writing
 ];
-const GAME_DEMO_SLUGS = ['snake', 'doodle-jump', 'slot-machine', 'daily-luck'];
+const GAME_DEMO_SLUGS = [
+  'snake',
+  'block-drop',
+  'minesweeper',
+  'chess',
+  'slot-machine',
+  'daily-luck',
+];
+
+const HOME_TOOL_BLURB: Record<string, string> = {
+  json: "Paste any mangled, minified, or broken JSON — get it formatted, syntax-highlighted, and validated in one click, with clear error markers when something's off.",
+  'x-post':
+    'Describe what you want to say and the AI drafts a punchy, on-brand post for X. Thread mode, hooks, hashtags — ready to copy in seconds.',
+  jwt: 'Drop in a JWT and instantly see its decoded header, payload, and expiry without firing up a terminal. Works on any HS256/RS256 token.',
+  'word-count':
+    'Paste an essay, email, or script and get instant word, character, sentence, and reading-time stats — updated live as you type.',
+  base64:
+    'Encode plain text or raw bytes to Base64 and decode back again in a single field. Handles standard and URL-safe alphabets.',
+  'blog-outline':
+    'Drop in a topic and the AI returns a structured outline with H2s, H3s, and intro hooks — a solid skeleton to write from, not a wall of lorem ipsum.',
+};
 
 /* ── Slide builders — feed the polished SpotlightCarousel per section ── */
 function toolSlides(tools: CatalogTool[], locale: Locale): SpotlightSlide[] {
@@ -60,11 +79,26 @@ function toolSlides(tools: CatalogTool[], locale: Locale): SpotlightSlide[] {
     slug: tool.slug,
     eyebrow: catLabel(locale, tool.category),
     title: tool.name,
-    description: tool.description,
+    description: HOME_TOOL_BLURB[tool.slug] ?? tool.description,
     href: toolDetailHref(tool.slug),
     cta: locale === 'zh' ? '打开工具 →' : 'Open tool →',
   }));
 }
+
+const HOME_GAME_BLURB: Record<string, string> = {
+  snake:
+    'Guide a hungry serpent around the board with a greedy pathing brain, growing one segment per pellet — the longer it gets, the tighter the squeeze.',
+  'block-drop':
+    'The classic seven tetrominoes fall faster as you go; rotate, slot and clear lines, with a heuristic auto-player showing off tidy stacking.',
+  minesweeper:
+    'Flag the mines and flood-reveal the safe squares from the number clues — the demo solves it the same way you would, one deduction at a time.',
+  chess:
+    'A real engine plays both sides with legal moves and live evaluation — watch the pieces think, then jump in and take the board yourself.',
+  'slot-machine':
+    'Three reels spin and lock one by one; line up three symbols for the jackpot. Daily free spins, eight paylines, real Vegas drama.',
+  'daily-luck':
+    'Draw one fortune a day for a wisdom line, lucky colour and lucky number — keep a streak going for bonus credits.',
+};
 
 function gameSlides(games: CatalogGame[], locale: Locale): SpotlightSlide[] {
   const zh = locale === 'zh';
@@ -74,7 +108,7 @@ function gameSlides(games: CatalogGame[], locale: Locale): SpotlightSlide[] {
       slug: game.slug,
       eyebrow: zh ? '小游戏' : 'Mini Game',
       title: game.name,
-      description: game.description,
+      description: HOME_GAME_BLURB[game.slug] ?? game.description,
       metrics: copy ? (zh ? copy.metaZh : copy.meta) : undefined,
       href: gameDetailHref(game.slug),
       cta: copy ? (zh ? copy.ctaZh : copy.cta) : t(locale, 'game.play'),
@@ -137,6 +171,40 @@ export default async function HomePage() {
     marqueeRows[i % 3].push({ slug: tool.slug, name: tool.name });
   });
 
+  // Hero scenes — built from the SAME catalog/posts the home bands use, so a
+  // given id renders identical content + badge in the hero and its band.
+  const heroScenes: HeroScene[] = CATEGORY_PICKS.map((pick) => {
+    let slide: SpotlightSlide;
+    if (pick.cat === 'games') {
+      const g = games.find((x) => x.slug === pick.slug);
+      slide = {
+        ...gameSlides(g ? [g] : demoGames.slice(0, 1), locale)[0],
+        kind: 'game',
+      };
+    } else if (pick.cat === 'tests') {
+      slide = {
+        ...(testSlides(locale).find((s) => s.slug === pick.slug) ??
+          testSlides(locale)[0]),
+        kind: 'test',
+      };
+    } else if (pick.cat === 'stories') {
+      slide = { ...postSlides(posts.slice(0, 1), locale)[0], kind: 'story' };
+    } else {
+      const tl = tools.find((x) => x.slug === pick.slug);
+      slide = {
+        ...toolSlides(tl ? [tl] : homeTools.slice(0, 1), locale)[0],
+        kind: 'tool',
+      };
+    }
+    return {
+      cat: pick.cat,
+      typeword: pick.typeword,
+      slogan: pick.slogan,
+      query: pick.query,
+      slide,
+    };
+  });
+
   return (
     <PageShell variant='home' locale={locale}>
       <div className='relative'>
@@ -155,67 +223,16 @@ export default async function HomePage() {
             HERO
             ══════════════════════════════════════════════ */}
         <HeroStage
+          scenes={heroScenes}
+          locale={locale}
+          askAILabel={t(locale, 'hero.askAI')}
+          searchPlaceholder={t(locale, 'hero.searchPlaceholder')}
           marquee={
             marqueeRows.some((r) => r.length > 0) ? (
-              <div className='w-full'>
-                <ToolMarquee rows={marqueeRows.slice(0, 2)} />
-              </div>
+              <ToolMarquee rows={marqueeRows.slice(0, 2)} />
             ) : null
           }
-        >
-          {/* LEFT — pitch + search */}
-          <div className='min-w-0 text-center lg:text-left'>
-            <h1 className='hero-title mb-6 text-foreground'>
-              {locale === 'zh' ? (
-                <>
-                  你的全能
-                  <br />
-                  <Typewriter
-                    className='text-accent'
-                    phrases={[
-                      'AI 工具箱',
-                      '开发利器',
-                      '写作工作室',
-                      '测验厅',
-                      '游戏厅',
-                    ]}
-                  />
-                </>
-              ) : (
-                <>
-                  Your all-in-one
-                  <br />
-                  <Typewriter
-                    className='text-accent'
-                    phrases={[
-                      'AI toolkit.',
-                      'dev toolbox.',
-                      'writing studio.',
-                      'test lab.',
-                      'game arcade.',
-                    ]}
-                  />
-                </>
-              )}
-            </h1>
-
-            <div className='mx-auto mb-9 max-w-[600px] space-y-1.5 lg:mx-0'>
-              {HERO_SLOGAN_LINES.map((line) => (
-                <p
-                  key={line.cat}
-                  className='text-[17px] font-medium leading-snug text-secondary'
-                >
-                  <BrandWord>{locale === 'zh' ? line.zh : line.en}</BrandWord>
-                </p>
-              ))}
-            </div>
-
-            <HeroSearch
-              askAILabel={t(locale, 'hero.askAI')}
-              searchPlaceholder={t(locale, 'hero.searchPlaceholder')}
-            />
-          </div>
-        </HeroStage>
+        />
 
         {/* ══════════════════════════════════════════════
             TOOLS
@@ -224,7 +241,7 @@ export default async function HomePage() {
           category='tools'
           cta={{ href: toolsHref, label: 'Browse tools' }}
           description='Decode a JWT, format messy JSON, count words, rewrite a tweet — fast, single-purpose utilities that load instantly and never get in your way.'
-          eyebrow='Dev + Writing'
+          eyebrow='Toolbox'
           id='tools'
           links={[
             {
@@ -240,7 +257,8 @@ export default async function HomePage() {
               href: toolsCategoryHref('ai-writing'),
             },
           ]}
-          tagline={CATEGORY_SLOGAN.tools.secondary[locale]}
+          reverse
+          tagline={undefined}
           title={<BrandWord>{CATEGORY_SLOGAN.tools.primary[locale]}</BrandWord>}
           tone={2}
           visual={
@@ -266,8 +284,7 @@ export default async function HomePage() {
             { label: 'Tetris', href: gameDetailHref('block-drop') },
             { label: 'Minesweeper', href: gameDetailHref('minesweeper') },
           ]}
-          reverse
-          tagline={CATEGORY_SLOGAN.games.secondary[locale]}
+          tagline={undefined}
           title={<BrandWord>{CATEGORY_SLOGAN.games.primary[locale]}</BrandWord>}
           tone={3}
           visual={
@@ -291,7 +308,8 @@ export default async function HomePage() {
             label: tm.name,
             href: testDetailHref(tm.slug),
           }))}
-          tagline={CATEGORY_SLOGAN.tests.secondary[locale]}
+          reverse
+          tagline={undefined}
           title={<BrandWord>{CATEGORY_SLOGAN.tests.primary[locale]}</BrandWord>}
           tone={4}
           visual={<SpotlightCarousel demo='test' slides={testSlides(locale)} />}
@@ -312,8 +330,7 @@ export default async function HomePage() {
             { label: 'Development', href: storyTagHref('Development') },
             { label: 'Productivity', href: storyTagHref('Productivity') },
           ]}
-          reverse
-          tagline={CATEGORY_SLOGAN.stories.secondary[locale]}
+          tagline={undefined}
           title={
             <BrandWord>{CATEGORY_SLOGAN.stories.primary[locale]}</BrandWord>
           }

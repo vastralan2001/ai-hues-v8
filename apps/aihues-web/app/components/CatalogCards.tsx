@@ -2,120 +2,15 @@
 
 import Link from 'next/link';
 
-import {
-  toolCategories,
-  type CatalogGame,
-  type CatalogTool,
-  type ToolCategoryKey,
-} from '@/lib/catalog-types';
+import { type CatalogGame, type CatalogTool } from '@/lib/catalog-types';
 import { t, type Locale } from '@/lib/dict';
-import { GAME_CARD_COPY } from '@/lib/game-meta';
+import { GAME_CARD_COPY, gameGenre } from '@/lib/game-meta';
 import { event, GA_EVENTS } from '@/lib/gtag';
 import { ToolIcon } from './ToolIcon';
-import {
-  gameDetailHref,
-  toolDetailHref,
-  toolsCategoryHref,
-} from '@/lib/routes';
-
-/* ── Front-end pricing map (fallback when API omits price_tag) ── */
-export type PriceTag = 'free' | 'freemium' | 'paid';
-
-export const TOOL_PRICING: Record<
-  string,
-  { price: PriceTag; credit?: number }
-> = {
-  // Developer tools
-  jwt: { price: 'free' },
-  json: { price: 'free' },
-  regex: { price: 'free' },
-  uuid: { price: 'free' },
-  timestamp: { price: 'free' },
-  markdown: { price: 'free' },
-  qrcode: { price: 'free' },
-  base64: { price: 'free' },
-  'url-encode': { price: 'free' },
-  sha256: { price: 'free' },
-  'html-entity': { price: 'free' },
-  diff: { price: 'free' },
-  'csv-json': { price: 'free' },
-  'lorem-ipsum': { price: 'free' },
-  'cron-parser': { price: 'free' },
-  'http-status': { price: 'free' },
-  'unit-convert': { price: 'free' },
-  'git-commit': { price: 'free' },
-  'code-review': { price: 'freemium', credit: 15 },
-  'blog-outline': { price: 'free' },
-  linkedin: { price: 'freemium', credit: 10 },
-  'seo-title': { price: 'free' },
-  meta: { price: 'free' },
-  faq: { price: 'free' },
-  newsletter: { price: 'freemium', credit: 15 },
-  'cold-email': { price: 'freemium', credit: 10 },
-  tagline: { price: 'free' },
-  'ad-copy': { price: 'freemium', credit: 15 },
-  'yt-script': { price: 'freemium', credit: 20 },
-  'video-title': { price: 'free' },
-  readability: { price: 'free' },
-  'title-case': { price: 'free' },
-  fullwidth: { price: 'free' },
-  pseudo: { price: 'free' },
-  sql: { price: 'free' },
-  shell: { price: 'free' },
-  'curl-gen': { price: 'free' },
-  'code-explain': { price: 'free' },
-  docs: { price: 'free' },
-  'pr-desc': { price: 'free' },
-  changelog: { price: 'free' },
-  push: { price: 'free' },
-  tldr: { price: 'free' },
-  humanize: { price: 'freemium', credit: 10 },
-  'alt-text': { price: 'free' },
-  'lp-hero': { price: 'freemium', credit: 20 },
-  'image-to-base64': { price: 'free' },
-  'diff-pro': { price: 'freemium', credit: 10 },
-  'base-convert': { price: 'free' },
-  pomodoro: { price: 'free' },
-};
-
-export function getToolPricing(slug: string): {
-  price: PriceTag;
-  credit?: number;
-} {
-  return TOOL_PRICING[slug] ?? { price: 'free' };
-}
-
-function PriceBadge({
-  price,
-  locale = 'en',
-}: {
-  price: PriceTag;
-  locale?: Locale;
-}) {
-  const styles: Record<PriceTag, string> = {
-    free: 'text-[#5a7a4a] bg-[#f5f3ee] border-[#e8e6dc] dark:text-[#8aaa6d] dark:bg-[#2d2d2a] dark:border-[#3a3a35]',
-    freemium:
-      'text-[#9a6a4a] bg-[#f5f3ee] border-[#e8e6dc] dark:text-[#d4a070] dark:bg-[#2d2d2a] dark:border-[#3a3a35]',
-    paid: 'text-[#8a5a5a] bg-[#f5f3ee] border-[#e8e6dc] dark:text-[#c48888] dark:bg-[#2d2d2a] dark:border-[#3a3a35]',
-  };
-
-  const labels: Record<PriceTag, Record<Locale, string>> = {
-    free: { en: 'Free', zh: '免费' },
-    freemium: { en: 'Freemium', zh: '免费增值' },
-    paid: { en: 'Paid', zh: '付费' },
-  };
-
-  return (
-    <span
-      className={`rounded-md border px-2 py-px text-[11px] font-bold ${styles[price]}`}
-    >
-      {labels[price][locale]}
-    </span>
-  );
-}
+import { gameDetailHref, toolDetailHref } from '@/lib/routes';
 
 /* ─────────────────────────────────────────────
-   Tool card — icon, NEW badge, and price tag
+   Tool card — icon + name + description
    ───────────────────────────────────────────── */
 export function ToolCardV2({
   tool,
@@ -124,11 +19,7 @@ export function ToolCardV2({
   tool: CatalogTool;
   locale?: Locale;
 }) {
-  // Prefer API fields; fallback to front-end map while backend migrates
-  const fallback = getToolPricing(tool.slug);
-  const price =
-    tool.priceTag !== 'unspecified' ? tool.priceTag : fallback.price;
-
+  void locale;
   return (
     <Link
       className='card-lift group relative flex h-full cursor-pointer flex-col rounded-[16px] border border-border bg-surface p-[22px] text-inherit no-underline'
@@ -152,11 +43,6 @@ export function ToolCardV2({
       <p className='m-0 line-clamp-2 text-[12px] leading-[1.45] text-secondary'>
         {tool.description}
       </p>
-
-      {/* Price row */}
-      <div className='mt-auto flex items-center gap-2 pt-3'>
-        <PriceBadge price={price} locale={locale} />
-      </div>
     </Link>
   );
 }
@@ -165,30 +51,6 @@ export function ToolCardV2({
    Game card — matches reference: centered,
    large emoji, gradient play button
    ───────────────────────────────────────────── */
-const GAME_BADGES: Record<string, string> = {
-  'doodle-jump': 'game.arcade',
-  'daily-luck': 'game.fortune',
-  'slot-machine': 'game.luck',
-  basketball: 'game.skill',
-  snake: 'game.classic',
-  'color-hunt': 'game.skill',
-  chess: 'game.strategy',
-  flappy: 'game.arcade',
-  'block-drop': 'game.puzzle',
-  'brick-breaker': 'game.arcade',
-  'fruit-slash': 'game.arcade',
-  minesweeper: 'game.puzzle',
-  sudoku: 'game.puzzle',
-  'sky-strike': 'game.action',
-  'bullet-storm': 'game.action',
-  'dodge-arena': 'game.action',
-  'hundred-floors': 'game.arcade',
-  'depth-charge': 'game.action',
-  'combo-rush': 'game.skill',
-  'radish-smash': 'game.skill',
-  'game-of-life': 'game.sandbox',
-};
-
 export function GameCard({
   game,
   locale = 'en',
@@ -196,7 +58,7 @@ export function GameCard({
   game: CatalogGame;
   locale?: Locale;
 }) {
-  const badgeKey = GAME_BADGES[game.slug];
+  const genre = gameGenre(game.slug);
   const copy = GAME_CARD_COPY[game.slug];
   const zh = locale === 'zh';
 
@@ -211,12 +73,10 @@ export function GameCard({
         });
       }}
     >
-      {/* Badge */}
-      {badgeKey && (
-        <span className='absolute right-4 top-4 rounded-full bg-accent px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-white'>
-          {t(locale, badgeKey)}
-        </span>
-      )}
+      {/* Badge — same genre taxonomy as the Game Center filter */}
+      <span className='absolute right-4 top-4 rounded-full bg-accent px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-white'>
+        {genre}
+      </span>
 
       <span className='mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-xl bg-accent-bg text-accent'>
         <ToolIcon slug={game.slug} size={24} />
@@ -239,53 +99,6 @@ export function GameCard({
         {copy ? (zh ? copy.ctaZh : copy.cta) : t(locale, 'game.play')}
       </span>
     </Link>
-  );
-}
-
-/* ─────────────────────────────────────────────
-   Category pills (tools page filter bar)
-   ───────────────────────────────────────────── */
-export function CategoryPills({
-  active,
-  q,
-  counts,
-}: {
-  active: ToolCategoryKey;
-  q?: string;
-  counts?: Record<ToolCategoryKey, number>;
-}) {
-  const labels: Record<ToolCategoryKey, string> = {
-    all: 'All',
-    developer: 'Dev',
-    utility: 'Utility',
-    'ai-writing': 'AI Writing',
-  };
-
-  return (
-    <div className='category-pills' aria-label='Tool categories'>
-      {toolCategories.map((category) => {
-        const href = toolsCategoryHref(category.key, q);
-        const count = counts?.[category.key];
-
-        return (
-          <Link
-            aria-current={active === category.key ? 'page' : undefined}
-            className='category-pill'
-            href={href}
-            key={category.key}
-          >
-            <span>
-              {labels[category.key]}
-              {count != null && count > 0 ? (
-                <strong style={{ marginLeft: 6, color: 'var(--color-accent)' }}>
-                  {count}
-                </strong>
-              ) : null}
-            </span>
-          </Link>
-        );
-      })}
-    </div>
   );
 }
 

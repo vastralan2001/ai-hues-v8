@@ -18,11 +18,21 @@ export const CATEGORY_HUE: Record<BrandCategory, 'H' | 'U' | 'E' | 'S'> = {
 export const categoryColor = (c: BrandCategory): string =>
   HUE_COLOR[CATEGORY_HUE[c]];
 
+/* Resolved hex values for each category — used only when we need to override
+   --color-accent itself (a CSS var cannot reference itself). These must stay
+   in sync with the @theme tokens in globals.css. */
+const CATEGORY_ACCENT_HEX: Record<BrandCategory, string> = {
+  tools: '#c2502e',
+  games: '#d97757',
+  tests: '#788c5d',
+  stories: '#6a9bcc',
+};
+
 /* Inline style applied to a category root. Overriding --color-accent and its
    relatives recolours the whole subtree — Tailwind's text-accent/bg-accent
    utilities and the .btn-cta / dot / badge rules all resolve through it. */
 export function categoryThemeStyle(c: BrandCategory): CSSProperties {
-  const base = categoryColor(c);
+  const base = CATEGORY_ACCENT_HEX[c];
   return {
     '--color-accent': base,
     '--accent': base,
@@ -50,8 +60,8 @@ export const CATEGORY_SLOGAN: Record<BrandCategory, SloganPair> = {
   },
   games: {
     primary: {
-      en: 'Unwinds for the overworked and under-rested.',
-      zh: '给过劳缺觉的人。',
+      en: 'Unwinds for the overworked.',
+      zh: '给过劳者的喘息。',
     },
     secondary: {
       en: 'Guilt-free breaks for busy minds.',
@@ -60,7 +70,7 @@ export const CATEGORY_SLOGAN: Record<BrandCategory, SloganPair> = {
   },
   tests: {
     primary: {
-      en: 'Evaluations that reveal the person behind the pay grade.',
+      en: 'Evaluations that see past the pay grade.',
       zh: '看见工资等级背后的人。',
     },
     secondary: {
@@ -70,8 +80,8 @@ export const CATEGORY_SLOGAN: Record<BrandCategory, SloganPair> = {
   },
   stories: {
     primary: {
-      en: 'Stories that break down the tech, the trends, and the noise.',
-      zh: '拆解技术、趋势和噪声的解读。',
+      en: 'Stories that cut through the noise.',
+      zh: '拆解技术、趋势和噪声。',
     },
     secondary: {
       en: 'Real insights, not just information.',

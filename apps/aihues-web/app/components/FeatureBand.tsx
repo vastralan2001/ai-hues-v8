@@ -58,6 +58,22 @@ export default function FeatureBand({
           background: `radial-gradient(58% 72% at ${glowX} 42%, ${glow}, transparent 72%)`,
         }}
       />
+      {/* Top + bottom fades to page bg so adjacent bands blend seamlessly */}
+      <div
+        aria-hidden='true'
+        className='pointer-events-none absolute inset-x-0 top-0 -z-10 h-20'
+        style={{
+          background:
+            'linear-gradient(to bottom, var(--color-bg), transparent)',
+        }}
+      />
+      <div
+        aria-hidden='true'
+        className='pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-20'
+        style={{
+          background: 'linear-gradient(to top, var(--color-bg), transparent)',
+        }}
+      />
       <div className='w-full px-[clamp(1.5rem,5vw,7rem)]'>
         <div className='mx-auto grid w-full max-w-[1760px] items-center gap-12 lg:grid-cols-2 lg:gap-16'>
           <div

@@ -30,7 +30,6 @@ type ChromeVariant =
   | 'default';
 
 const mainLinks: Array<{ href: string; labelKey: string }> = [
-  { href: homeHref, labelKey: 'nav.home' },
   { href: toolsHref, labelKey: 'nav.tools' },
   { href: gamesHref, labelKey: 'nav.games' },
   { href: testsHref, labelKey: 'nav.tests' },

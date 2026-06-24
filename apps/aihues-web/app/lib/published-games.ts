@@ -10,4 +10,6 @@ export const PUBLISHED_GAME_SLUGS: string[] = [
   'snake',
   'color-hunt',
   'chess',
+  'minesweeper',
+  'block-drop',
 ];

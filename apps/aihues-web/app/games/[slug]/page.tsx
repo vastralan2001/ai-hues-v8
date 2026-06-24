@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import BasketballGame from '@/components/games/BasketballGame';
-import BlockDropGame from '@/components/games/BlockDropGame';
+import TetrisGame from '@/components/games/TetrisGame';
 import BrickBreakerGame from '@/components/games/BrickBreakerGame';
 import BulletStormGame from '@/components/games/BulletStormGame';
 import ChessGame from '@/components/games/ChessGame';
@@ -112,7 +112,7 @@ const REACT_GAMES: Record<string, PlayableGame> = {
     theme: 'space',
   },
   'block-drop': {
-    Component: BlockDropGame,
+    Component: TetrisGame,
     title: 'Tetris',
     titleZh: '俄罗斯方块',
     desc: 'Rotate and stack the falling tetrominoes, clear lines, and climb the levels.',

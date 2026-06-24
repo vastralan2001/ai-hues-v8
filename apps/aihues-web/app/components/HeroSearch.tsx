@@ -6,13 +6,14 @@ import { useEffect, useRef, useState } from 'react';
 import { Loader2, Search, Sparkles } from 'lucide-react';
 
 import { ToolIcon } from '@/components/ToolIcon';
-import { examplesFromPicks } from '@/lib/spotlight-picks';
-
-const EXAMPLES = examplesFromPicks();
 
 interface HeroSearchProps {
   searchPlaceholder: string;
   askAILabel: string;
+  /** Synced brand hue for the Ask-AI button. */
+  accent?: string;
+  /** Synced placeholder hint (the current scene's example query). */
+  hint?: string;
 }
 
 interface Hit {
@@ -27,6 +28,8 @@ interface Hit {
 export default function HeroSearch({
   searchPlaceholder,
   askAILabel,
+  accent,
+  hint,
 }: HeroSearchProps) {
   const router = useRouter();
   const [query, setQuery] = useState('');
@@ -34,25 +37,6 @@ export default function HeroSearch({
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const blurTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const [phIdx, setPhIdx] = useState(0);
-  const [phShown, setPhShown] = useState(true);
-
-  useEffect(() => {
-    if (EXAMPLES.length <= 1) return;
-    const reduce =
-      typeof window !== 'undefined' &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce) return;
-    const iv = setInterval(() => {
-      setPhShown(false);
-      window.setTimeout(() => {
-        setPhIdx((i) => (i + 1) % EXAMPLES.length);
-        setPhShown(true);
-      }, 320);
-    }, 3000);
-    return () => clearInterval(iv);
-  }, []);
 
   async function runSearch(term: string) {
     const q = term.trim();
@@ -88,8 +72,11 @@ export default function HeroSearch({
 
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (results.length > 0) go(results[0].href);
-    else if (query.trim()) router.push(`/tools?q=${encodeURIComponent(query)}`);
+    // Empty box → search the current placeholder hint (synced to the scene).
+    const term = query.trim() || hint || '';
+    if (!term) return;
+    if (query.trim() && results.length > 0) go(results[0].href);
+    else router.push(`/tools?q=${encodeURIComponent(term)}`);
   }
 
   const showPanel = open && query.trim().length >= 2;
@@ -119,25 +106,23 @@ export default function HeroSearch({
                 blurTimer.current = setTimeout(() => setOpen(false), 160);
               }}
             />
-            {query === '' && EXAMPLES.length > 0 ? (
+            {query === '' && hint ? (
               <span
                 aria-hidden='true'
                 className='pointer-events-none absolute inset-y-0 left-2 right-2 flex items-center'
               >
                 <span
-                  className='truncate text-[16px] text-muted'
-                  style={{
-                    opacity: phShown ? 1 : 0,
-                    transition: 'opacity 300ms ease',
-                  }}
+                  key={hint}
+                  className='hero-slogan-in truncate text-[16px] text-muted'
                 >
-                  {EXAMPLES[phIdx]}
+                  {hint}
                 </span>
               </span>
             ) : null}
           </div>
           <button
-            className='inline-flex items-center gap-1.5 rounded-[14px] bg-accent px-6 py-2.5 text-[14px] font-semibold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-accent-light hover:shadow-md active:translate-y-0'
+            className='inline-flex items-center gap-1.5 rounded-[14px] px-6 py-2.5 text-[14px] font-semibold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md active:translate-y-0'
+            style={{ background: accent ?? 'var(--color-accent)' }}
             type='submit'
           >
             <Sparkles size={15} strokeWidth={2.2} />

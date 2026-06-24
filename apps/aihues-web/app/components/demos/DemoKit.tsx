@@ -24,6 +24,24 @@ export function Label({ children }: { children: ReactNode }) {
   );
 }
 
+/* Full-bleed dark stage for the per-game auto-play demos. */
+export function GameStage({
+  bg,
+  children,
+}: {
+  bg: string;
+  children: ReactNode;
+}) {
+  return (
+    <div
+      className='relative h-[244px] w-full overflow-hidden rounded-[16px] border border-white/10 shadow-sm'
+      style={{ background: bg }}
+    >
+      {children}
+    </div>
+  );
+}
+
 /* A little browser-chrome window the demo content sits inside. */
 export function DemoFrame({ children }: { children: ReactNode }) {
   return (

@@ -144,3 +144,40 @@ export const GAME_CARD_COPY: Record<string, GameCardCopy> = {
 export function gameCardCopy(slug: string): GameCardCopy | undefined {
   return GAME_CARD_COPY[slug];
 }
+
+/* Single genre taxonomy — the same value powers a game's card badge AND the
+   Game Center filter, so a card's badge always matches its filter bucket. */
+export const GAME_GENRES = ['Arcade', 'Action', 'Strategy', 'Luck'] as const;
+export type GameGenre = (typeof GAME_GENRES)[number];
+
+export const GAME_GENRE: Record<string, GameGenre> = {
+  // Arcade — casual, reflex & skill pick-ups
+  'doodle-jump': 'Arcade',
+  snake: 'Arcade',
+  flappy: 'Arcade',
+  'brick-breaker': 'Arcade',
+  'fruit-slash': 'Arcade',
+  'hundred-floors': 'Arcade',
+  basketball: 'Arcade',
+  'color-hunt': 'Arcade',
+  'radish-smash': 'Arcade',
+  'combo-rush': 'Arcade',
+  // Action — shooters & bullet hell
+  'sky-strike': 'Action',
+  'bullet-storm': 'Action',
+  'dodge-arena': 'Action',
+  'depth-charge': 'Action',
+  // Strategy — brain & puzzle
+  chess: 'Strategy',
+  'block-drop': 'Strategy',
+  minesweeper: 'Strategy',
+  sudoku: 'Strategy',
+  'game-of-life': 'Strategy',
+  // Luck — draws & spins
+  'daily-luck': 'Luck',
+  'slot-machine': 'Luck',
+};
+
+export function gameGenre(slug: string): GameGenre {
+  return GAME_GENRE[slug] ?? 'Arcade';
+}

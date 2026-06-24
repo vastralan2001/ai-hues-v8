@@ -11,7 +11,7 @@ import { TEST_META } from '@/lib/tests';
 export const metadata: Metadata = {
   title: 'Tests',
   description:
-    'Quick, free tests and quizzes — take the MBTI, the satirical SBTI, and more. No signup, no paywall.',
+    'Quick, free tests and quizzes — take the MBTI, the satirical SBTI, and more.',
 };
 
 export default function TestsPage() {
@@ -23,15 +23,11 @@ export default function TestsPage() {
         category='tests'
         eyebrow='Assessment Center'
         title='Quick Tests'
-        subtitle={`${TEST_META.length} quick assessments. Open and take — no signup, no paywall.`}
-        stats={[
-          { num: `${TEST_META.length}`, label: 'Tests' },
-          { num: 'No', label: 'Signup' },
-          { num: 'Free', label: 'Forever' },
-        ]}
+        subtitle='Quick self-reflection quizzes with real question banks and shareable results.'
+        features={['Real question banks', 'Shareable results', 'Just for fun']}
       />
 
-      <section className='mx-auto max-w-[1100px] px-6 pb-20'>
+      <section className='mx-auto max-w-[1180px] px-6 pb-20 pt-8'>
         <div className='mx-auto grid max-w-[760px] grid-cols-1 gap-5 sm:grid-cols-2'>
           {TEST_META.map((tm) => (
             <Link

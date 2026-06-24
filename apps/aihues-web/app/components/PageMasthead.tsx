@@ -8,7 +8,7 @@ import type { Locale } from '@/lib/dict';
    consistent 门头. Bold Radiance display title (Dota2 energy) on a calm
    warm-white band (kimi Quiet Utility): an eyebrow tag, the title with its
    last word accented, the category slogan, a subtitle, an optional actions
-   slot, and a structured stat bar. Accent colours come from the themed
+   slot, and a row of feature chips. Accent colours come from the themed
    <main> wrapper, so the whole band picks up the category hue. */
 
 export function PageMasthead({
@@ -17,7 +17,7 @@ export function PageMasthead({
   eyebrow,
   title,
   subtitle,
-  stats,
+  features,
   children,
 }: {
   category?: BrandCategory;
@@ -25,7 +25,7 @@ export function PageMasthead({
   eyebrow: string;
   title: string;
   subtitle: string;
-  stats?: { num: string; label: string }[];
+  features?: string[];
   children?: ReactNode;
 }) {
   const slogan = category ? CATEGORY_SLOGAN[category] : null;
@@ -43,7 +43,7 @@ export function PageMasthead({
             'radial-gradient(58% 100% at 50% 0%, color-mix(in srgb, var(--color-accent) 11%, transparent), transparent 72%)',
         }}
       />
-      <div className='mx-auto max-w-[860px]'>
+      <div className='mx-auto max-w-[1100px]'>
         <span className='inline-flex items-center rounded-full border border-border bg-white/70 px-3.5 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.2em] text-accent backdrop-blur-sm'>
           {eyebrow}
         </span>
@@ -52,11 +52,8 @@ export function PageMasthead({
           <span className='text-accent'>{tail}</span>
         </h1>
         {slogan ? (
-          <p className='mx-auto mt-5 max-w-[680px] text-[19px] font-semibold leading-snug text-foreground'>
-            <BrandWord>{slogan.primary[locale]}</BrandWord>{' '}
-            <span className='font-medium text-secondary'>
-              {slogan.secondary[locale]}
-            </span>
+          <p className='mx-auto mt-5 max-w-[880px] text-[19px] font-semibold leading-snug text-foreground'>
+            <BrandWord>{slogan.primary[locale]}</BrandWord>
           </p>
         ) : null}
         <p className='mx-auto mt-4 max-w-[560px] text-[16px] leading-relaxed text-secondary'>
@@ -65,20 +62,19 @@ export function PageMasthead({
         {children ? (
           <div className='mx-auto mt-7 w-full max-w-[620px]'>{children}</div>
         ) : null}
-        {stats && stats.length > 0 ? (
-          <div className='mt-9 inline-flex items-stretch divide-x divide-border overflow-hidden rounded-[14px] border border-border bg-white/55 backdrop-blur-sm'>
-            {stats.map((s) => (
-              <div
-                key={s.label}
-                className='flex flex-col items-center px-6 py-3 sm:px-8'
+        {features && features.length > 0 ? (
+          <div className='mt-8 flex flex-wrap items-center justify-center gap-2'>
+            {features.map((f) => (
+              <span
+                key={f}
+                className='inline-flex items-center gap-1.5 rounded-full border border-border bg-white/55 px-3.5 py-1.5 text-[12px] font-semibold text-secondary backdrop-blur-sm'
               >
-                <span className='text-[26px] font-extrabold leading-none tracking-[-0.02em] text-foreground sm:text-[30px]'>
-                  {s.num}
-                </span>
-                <span className='mt-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted'>
-                  {s.label}
-                </span>
-              </div>
+                <span
+                  aria-hidden='true'
+                  className='h-1.5 w-1.5 rounded-full bg-accent'
+                />
+                {f}
+              </span>
             ))}
           </div>
         ) : null}

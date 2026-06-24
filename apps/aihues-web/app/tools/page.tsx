@@ -43,9 +43,6 @@ export default async function ToolsPage({
   });
 
   const categoryCounts = getToolCategoryCounts();
-  const catCount = Object.keys(categoryCounts).filter(
-    (k) => k !== 'all'
-  ).length;
   const totalLabel =
     'Tools covering development, writing, growth, and productivity';
 
@@ -56,16 +53,16 @@ export default async function ToolsPage({
         eyebrow='Tool Library'
         title='All Tools'
         subtitle={totalLabel}
-        stats={[
-          { num: `${categoryCounts.all}`, label: 'Tools' },
-          { num: `${catCount}`, label: 'Categories' },
-          { num: 'Free', label: 'Forever' },
+        features={[
+          'Instant results',
+          'Runs in your browser',
+          'Copy-paste ready',
         ]}
       >
         <ToolSearchForm category={category} q={q} />
       </PageMasthead>
 
-      <section className='section section--compact'>
+      <section className='mx-auto w-full max-w-[1180px] px-6 pt-8'>
         <ToolsInfiniteList
           activeCategory={category}
           categoryCounts={categoryCounts}

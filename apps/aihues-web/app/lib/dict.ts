@@ -777,7 +777,7 @@ export const dict: Record<Locale, Record<string, string>> = {
 
     // playbooks
     'playbooks.badge1': 'AI Vibe Navigator',
-    'playbooks.badge2': 'No signup',
+    'playbooks.badge2': 'Battle-tested',
     'playbooks.title': 'AIHues Growth Stack + AI Tools',
     'resources.relatedTools': 'Related Tools',
     'resources.fromReview': 'From AIHues Reviews',
@@ -1265,7 +1265,7 @@ export const dict: Record<Locale, Record<string, string>> = {
 
     // playbooks
     'playbooks.badge1': 'AI Vibe Navigator',
-    'playbooks.badge2': '无需注册',
+    'playbooks.badge2': '实战验证',
     'playbooks.title': 'AIHues 出海增长 + AI 工具导航',
     'tool.seoTitle.title': 'SEO 标题优化器',
     'tool.seoTitle.desc': '检查并优化搜索引擎页面标题',

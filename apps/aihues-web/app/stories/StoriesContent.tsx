@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import NewsletterSubscribe from '@/components/NewsletterSubscribe';
 import CoverImage from '@/components/CoverImage';
+import { FilterPills } from '@/components/FilterPills';
 import { PageMasthead } from '@/components/PageMasthead';
 import type { ResourcePost } from '@/lib/resources-data';
 
@@ -58,16 +59,13 @@ export default function StoriesContent({ initialPosts, initialTag }: Props) {
     <>
       <PageMasthead
         category='stories'
-        eyebrow='Library'
+        eyebrow='Reading Room'
         title='Stories'
         subtitle='Growth strategies, AI tool reviews, and battle-tested indie-dev tips.'
-        stats={[
-          { num: `${initialPosts.length}`, label: 'Articles' },
-          { num: `${allTags.length - 1}`, label: 'Topics' },
-        ]}
+        features={['AI & growth', 'Indie dev', 'Practical playbooks']}
       />
 
-      <section className='mx-auto max-w-[1200px] px-6 pb-20 md:px-7'>
+      <section className='mx-auto max-w-[1180px] px-6 pb-20 md:px-7'>
         {/* Search */}
         <div className='mx-auto mb-5 max-w-[760px]'>
           <div className='relative'>
@@ -103,25 +101,16 @@ export default function StoriesContent({ initialPosts, initialTag }: Props) {
         </div>
 
         {/* Tag filters */}
-        <div className='mx-auto mb-10 flex max-w-[1000px] flex-wrap justify-center gap-2'>
-          {allTags.map((tag) => (
-            <button
-              key={tag}
-              className={`rounded-full border px-3 py-1 text-xs font-semibold transition-colors ${
-                activeTag === tag
-                  ? 'border-accent bg-accent text-white'
-                  : 'border-border bg-surface text-secondary hover:border-accent hover:text-accent'
-              }`}
-              onClick={() => {
-                setActiveTag(tag);
-                setCurrentPage(1);
-              }}
-              type='button'
-            >
-              {tag}
-            </button>
-          ))}
-        </div>
+        <FilterPills
+          ariaLabel='Article topics'
+          className='mx-auto mb-10 max-w-[1000px] justify-center'
+          activeKey={activeTag}
+          onSelect={(tag) => {
+            setActiveTag(tag);
+            setCurrentPage(1);
+          }}
+          items={allTags.map((tag) => ({ key: tag, label: tag }))}
+        />
 
         {/* Posts grid */}
         {pagePosts.length > 0 ? (

@@ -3,54 +3,19 @@
 import { useEffect, useRef, useState } from 'react';
 
 import type { Locale } from '@/lib/dict';
+import {
+  COLORS,
+  COLS,
+  rotateCW as rotateShape,
+  ROWS,
+  SHAPES,
+} from '@/lib/tetris';
 
-/* Block Drop — ported from kimi.com/share/d1p9t3051tqdukda9ns0. Core logic kept; visuals upgraded to the aihues aesthetic. */
+/* Tetris — ported from kimi.com/share/d1p9t3051tqdukda9ns0. Core logic kept; visuals upgraded to the aihues aesthetic. The tetromino set, colours and rotation now come from the shared @/lib/tetris core, used by the home demo too. */
 
 type Phase = 'idle' | 'playing' | 'over';
 
-const COLS = 10;
-const ROWS = 20;
 const BEST_KEY = 'aihues_block-drop_best';
-
-// 7 tetromino shapes (I, O, T, S, Z, J, L) — exactly as the source.
-const SHAPES: number[][][] = [
-  [[1, 1, 1, 1]], // I
-  [
-    [1, 1],
-    [1, 1],
-  ], // O
-  [
-    [0, 1, 0],
-    [1, 1, 1],
-  ], // T
-  [
-    [0, 1, 1],
-    [1, 1, 0],
-  ], // S
-  [
-    [1, 1, 0],
-    [0, 1, 1],
-  ], // Z
-  [
-    [1, 0, 0],
-    [1, 1, 1],
-  ], // J
-  [
-    [0, 0, 1],
-    [1, 1, 1],
-  ], // L
-];
-
-// Per-tetromino colours (index 1..7 stored on the board).
-const COLORS = [
-  '#22d3ee', // I — cyan
-  '#facc15', // O — amber
-  '#c084fc', // T — violet
-  '#4ade80', // S — green
-  '#fb7185', // Z — rose
-  '#60a5fa', // J — blue
-  '#fb923c', // L — orange
-];
 
 // Line-clear scoring per cleared count (× level), exactly as the source.
 const LINE_SCORE = [0, 100, 300, 500, 800];
@@ -87,6 +52,20 @@ interface BGame {
 
 type Action = 'left' | 'right' | 'rotate' | 'soft' | 'hard';
 
+type Difficulty = 'easy' | 'normal' | 'hard';
+// Base gravity interval (ms) per difficulty; the current speed is the easiest.
+const DIFF_BASE: Record<Difficulty, number> = {
+  easy: 1000,
+  normal: 640,
+  hard: 380,
+};
+const DIFF_ORDER: Difficulty[] = ['easy', 'normal', 'hard'];
+const DIFF_DOT: Record<Difficulty, string> = {
+  easy: '#5cb85c',
+  normal: '#e0a32e',
+  hard: '#d9534f',
+};
+
 const T = {
   en: {
     best: 'Best',
@@ -104,6 +83,9 @@ const T = {
     rotate: 'Rotate',
     soft: 'Soft drop',
     hard: 'Hard drop',
+    easy: 'Easy',
+    normal: 'Normal',
+    hardLevel: 'Hard',
   },
   zh: {
     best: '最高',
@@ -121,20 +103,11 @@ const T = {
     rotate: '旋转',
     soft: '下移',
     hard: '速降',
+    easy: '简单',
+    normal: '中等',
+    hardLevel: '困难',
   },
 } as const;
-
-// Rotate a shape clockwise — the exact transpose+reverse the source uses.
-function rotateShape(shape: number[][]): number[][] {
-  const rotated: number[][] = [];
-  for (let i = 0; i < shape[0].length; i++) {
-    rotated[i] = [];
-    for (let j = shape.length - 1; j >= 0; j--) {
-      rotated[i][shape.length - 1 - j] = shape[j][i];
-    }
-  }
-  return rotated;
-}
 
 function Stat({ label, value }: { label: string; value: number }) {
   return (
@@ -149,7 +122,7 @@ function Stat({ label, value }: { label: string; value: number }) {
   );
 }
 
-export default function BlockDropGame({ locale }: { locale: Locale }) {
+export default function TetrisGame({ locale }: { locale: Locale }) {
   const zh = locale === 'zh';
   const tx = T[zh ? 'zh' : 'en'];
 
@@ -163,6 +136,7 @@ export default function BlockDropGame({ locale }: { locale: Locale }) {
   const startRef = useRef<() => void>(() => {});
   const actRef = useRef<(a: Action) => void>(() => {});
   const nextTypeRef = useRef(0); // index into SHAPES for the upcoming piece
+  const diffRef = useRef<Difficulty>('easy');
 
   const [phase, setPhase] = useState<Phase>('idle');
   const [score, setScore] = useState(0);
@@ -170,6 +144,7 @@ export default function BlockDropGame({ locale }: { locale: Locale }) {
   const [level, setLevel] = useState(1);
   const [lines, setLines] = useState(0);
   const [nextType, setNextType] = useState(0);
+  const [diff, setDiff] = useState<Difficulty>('easy');
 
   useEffect(() => {
     const raf = requestAnimationFrame(() => {
@@ -332,7 +307,10 @@ export default function BlockDropGame({ locale }: { locale: Locale }) {
         g.score += LINE_SCORE[cleared] * g.level;
         g.level = Math.floor(g.lines / 10) + 1;
         // Speed ramp folds the source's default slider (5) into the base.
-        g.dropInterval = Math.max(80, 1000 - (g.level - 1) * 90);
+        g.dropInterval = Math.max(
+          80,
+          DIFF_BASE[diffRef.current] - (g.level - 1) * 90
+        );
         setScore(g.score);
         setLines(g.lines);
         setLevel(g.level);
@@ -403,7 +381,7 @@ export default function BlockDropGame({ locale }: { locale: Locale }) {
         score: 0,
         level: 1,
         lines: 0,
-        dropInterval: 1000,
+        dropInterval: DIFF_BASE[diffRef.current],
         acc: 0,
         flash: 0,
         t: 0,
@@ -565,7 +543,11 @@ export default function BlockDropGame({ locale }: { locale: Locale }) {
         ctx.restore();
       }
 
-      // Particles.
+      // Particles — clipped to the well so bursts never scatter colour into
+      // the letterbox around the playfield.
+      ctx.save();
+      roundRect(ox, oy, wellW, wellH, 14);
+      ctx.clip();
       for (const pt of g.particles) {
         ctx.globalAlpha = Math.max(0, pt.life);
         ctx.fillStyle = pt.color;
@@ -574,6 +556,7 @@ export default function BlockDropGame({ locale }: { locale: Locale }) {
         ctx.fill();
       }
       ctx.globalAlpha = 1;
+      ctx.restore();
 
       // Well border.
       ctx.strokeStyle = 'rgba(255,255,255,0.12)';
@@ -744,6 +727,33 @@ export default function BlockDropGame({ locale }: { locale: Locale }) {
             <p className='text-[12px] font-bold uppercase tracking-[0.18em] text-white/55'>
               {tx.tagline}
             </p>
+            <div className='flex flex-wrap items-center justify-center gap-2'>
+              {DIFF_ORDER.map((d) => (
+                <button
+                  key={d}
+                  type='button'
+                  onClick={() => {
+                    diffRef.current = d;
+                    setDiff(d);
+                  }}
+                  className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-[13px] font-bold transition-colors ${
+                    diff === d
+                      ? 'bg-white text-[#121212]'
+                      : 'bg-white/10 text-white/80 hover:bg-white/20'
+                  }`}
+                >
+                  <span
+                    className='h-2.5 w-2.5 rounded-full'
+                    style={{ background: DIFF_DOT[d] }}
+                  />
+                  {d === 'easy'
+                    ? tx.easy
+                    : d === 'normal'
+                      ? tx.normal
+                      : tx.hardLevel}
+                </button>
+              ))}
+            </div>
             <button
               type='button'
               onClick={() => startRef.current()}
@@ -766,6 +776,33 @@ export default function BlockDropGame({ locale }: { locale: Locale }) {
             <span className='rounded-full bg-white/10 px-4 py-1 text-[13px] font-medium text-white/70'>
               {tx.best} {best}
             </span>
+            <div className='flex flex-wrap items-center justify-center gap-2'>
+              {DIFF_ORDER.map((d) => (
+                <button
+                  key={d}
+                  type='button'
+                  onClick={() => {
+                    diffRef.current = d;
+                    setDiff(d);
+                  }}
+                  className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-[13px] font-bold transition-colors ${
+                    diff === d
+                      ? 'bg-white text-[#121212]'
+                      : 'bg-white/10 text-white/80 hover:bg-white/20'
+                  }`}
+                >
+                  <span
+                    className='h-2.5 w-2.5 rounded-full'
+                    style={{ background: DIFF_DOT[d] }}
+                  />
+                  {d === 'easy'
+                    ? tx.easy
+                    : d === 'normal'
+                      ? tx.normal
+                      : tx.hardLevel}
+                </button>
+              ))}
+            </div>
             <button
               type='button'
               onClick={() => startRef.current()}

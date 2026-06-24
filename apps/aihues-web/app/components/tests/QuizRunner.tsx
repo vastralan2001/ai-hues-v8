@@ -121,7 +121,7 @@ export default function QuizRunner({ slug }: { slug: string }) {
             Start test
           </button>
           <p className='mt-4 text-[12px] text-muted'>
-            {total} questions · ~{config.durationMin} min · no signup
+            {total} questions · ~{config.durationMin} min · instant results
           </p>
         </div>
       </div>

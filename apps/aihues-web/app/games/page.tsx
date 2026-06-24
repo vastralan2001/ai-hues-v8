@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import { GameCard } from '@/components/CatalogCards';
+import GamesBrowser from '@/components/GamesBrowser';
 import { PageMasthead } from '@/components/PageMasthead';
 import { PageShell } from '@/components/SiteChrome';
 import { safeListGames } from '@/lib/catalog-api';
@@ -25,20 +25,11 @@ export default async function GamesPage() {
         category='games'
         eyebrow='Game Center'
         title='Mini Games'
-        subtitle={`${games.length} mini games. Open and play.`}
-        stats={[
-          { num: `${games.length}`, label: 'Games' },
-          { num: '∞', label: 'Free play' },
-        ]}
+        subtitle='Open a tab, play a minute, close it. No install, just play.'
+        features={['Play in one tap', 'No install', 'Quick breaks']}
       />
 
-      <section className='section section--compact'>
-        <div className='games-grid'>
-          {games.map((game) => (
-            <GameCard game={game} key={game.id} locale={locale} />
-          ))}
-        </div>
-      </section>
+      <GamesBrowser games={games} locale={locale} />
     </PageShell>
   );
 }

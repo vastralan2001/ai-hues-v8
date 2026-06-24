@@ -4,6 +4,12 @@ import { useEffect, useRef, useState } from 'react';
 import { Pause, Play } from 'lucide-react';
 
 import type { Locale } from '@/lib/dict';
+import {
+  drawFoodOrb,
+  drawSnakeBody,
+  drawSnakeField,
+  SNAKE_C as C,
+} from '@/lib/snake-render';
 
 /* Snake — native port of the speed-select snake, Kimi-styled. The board only
    renders while playing/over; a square grid letterboxes into the stage, blends
@@ -19,24 +25,6 @@ const FX_INSET = 48;
 
 const SPEEDS = { slow: 180, normal: 120, fast: 70 } as const;
 type Speed = keyof typeof SPEEDS;
-
-// Kimi dark tokens + game-entity colors (snake green, food amber)
-const C = {
-  pool: 'rgba(127,216,171,0.06)',
-  headA: '#46e89a',
-  headB: '#27bd76',
-  tail: '#1b7a4c',
-  gloss: 'rgba(255,255,255,0.34)',
-  glow: 'rgba(62,224,143,0.5)',
-  eye: '#0a0f0c',
-  eyeWhite: 'rgba(255,255,255,0.95)',
-  foodCore: '#ffe7b3',
-  foodMid: '#ffb24a',
-  foodEdge: '#ff8a1f',
-  foodGlow: 'rgba(255,178,74,0.55)',
-  fx: '#ffd24a',
-  fxGlow: 'rgba(255,205,80,0.85)',
-};
 
 type Cell = { x: number; y: number };
 interface Particle {
@@ -355,120 +343,13 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
     return pts;
   }
 
-  function strokeSpine(
-    ctx: CanvasRenderingContext2D,
-    pts: Cell[],
-    width: number,
-    style: string | CanvasGradient
-  ) {
-    ctx.lineWidth = width;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.strokeStyle = style;
-    if (pts.length === 1) {
-      ctx.fillStyle = style;
-      ctx.beginPath();
-      ctx.arc(pts[0].x, pts[0].y, width / 2, 0, Math.PI * 2);
-      ctx.fill();
-      return;
-    }
-    ctx.beginPath();
-    ctx.moveTo(pts[0].x, pts[0].y);
-    for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
-    ctx.stroke();
-  }
-
   function drawSnake(ctx: CanvasRenderingContext2D, g: SGame) {
-    const pts = spinePoints(g);
-    if (!pts.length) return;
-    const head = pts[0];
-    const tail = pts[pts.length - 1];
-
-    ctx.save();
-    ctx.shadowColor = C.glow;
-    ctx.shadowBlur = 16;
-    strokeSpine(ctx, pts, CELL * 0.8, C.headB);
-    ctx.restore();
-
-    const grad = ctx.createLinearGradient(head.x, head.y, tail.x, tail.y);
-    grad.addColorStop(0, C.headA);
-    grad.addColorStop(1, C.tail);
-    strokeSpine(ctx, pts, CELL * 0.8, grad);
-    strokeSpine(ctx, pts, CELL * 0.3, C.gloss);
-
-    // head + eyes
-    const r = CELL * 0.46;
-    const hg = ctx.createRadialGradient(
-      head.x - r * 0.3,
-      head.y - r * 0.3,
-      1,
-      head.x,
-      head.y,
-      r
-    );
-    hg.addColorStop(0, C.headA);
-    hg.addColorStop(1, C.headB);
-    ctx.fillStyle = hg;
-    ctx.beginPath();
-    ctx.arc(head.x, head.y, r, 0, Math.PI * 2);
-    ctx.fill();
-    const d = g.dir.x === 0 && g.dir.y === 0 ? { x: 1, y: 0 } : g.dir;
-    const perp = { x: -d.y, y: d.x };
-    for (const sgn of [1, -1]) {
-      const ex = head.x + d.x * r * 0.32 + perp.x * r * 0.42 * sgn;
-      const ey = head.y + d.y * r * 0.32 + perp.y * r * 0.42 * sgn;
-      ctx.fillStyle = C.eyeWhite;
-      ctx.beginPath();
-      ctx.arc(ex, ey, r * 0.26, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = C.eye;
-      ctx.beginPath();
-      ctx.arc(
-        ex + d.x * r * 0.09,
-        ey + d.y * r * 0.09,
-        r * 0.13,
-        0,
-        Math.PI * 2
-      );
-      ctx.fill();
-    }
+    drawSnakeBody(ctx, spinePoints(g), CELL, g.dir);
   }
 
   function drawFood(ctx: CanvasRenderingContext2D, g: SGame) {
     const c = center(g.food);
-    const pulse = 1 + Math.sin(g.foodPhase) * 0.12;
-    const R = CELL * 0.34 * pulse;
-    const ring = Math.sin(g.foodPhase) * 0.5 + 0.5;
-    ctx.globalAlpha = 0.22 * ring;
-    ctx.strokeStyle = C.foodMid;
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.arc(c.x, c.y, R + 6 + ring * 5, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.globalAlpha = 1;
-    ctx.save();
-    ctx.shadowColor = C.foodGlow;
-    ctx.shadowBlur = 18;
-    const g2 = ctx.createRadialGradient(
-      c.x - R * 0.3,
-      c.y - R * 0.3,
-      1,
-      c.x,
-      c.y,
-      R
-    );
-    g2.addColorStop(0, C.foodCore);
-    g2.addColorStop(0.6, C.foodMid);
-    g2.addColorStop(1, C.foodEdge);
-    ctx.fillStyle = g2;
-    ctx.beginPath();
-    ctx.arc(c.x, c.y, R, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-    ctx.fillStyle = 'rgba(255,255,255,0.55)';
-    ctx.beginPath();
-    ctx.arc(c.x - R * 0.32, c.y - R * 0.32, R * 0.2, 0, Math.PI * 2);
-    ctx.fill();
+    drawFoodOrb(ctx, c.x, c.y, CELL, g.foodPhase);
   }
 
   function render(g: SGame, ctx: CanvasRenderingContext2D) {
@@ -478,45 +359,7 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
     if (phaseRef.current === 'idle') return;
     ctx.setTransform(scale * dpr, 0, 0, scale * dpr, offX * dpr, offY * dpr);
 
-    // — play area: a soft panel that blends into the bg yet shows its bounds —
-    const cx = FIELD / 2;
-
-    // faint full-area lift so the board reads as a distinct region to its edges
-    ctx.fillStyle = 'rgba(255,255,255,0.035)';
-    ctx.fillRect(0, 0, FIELD, FIELD);
-
-    const pool = ctx.createRadialGradient(cx, cx, 0, cx, cx, FIELD * 0.72);
-    pool.addColorStop(0, C.pool);
-    pool.addColorStop(1, 'rgba(127,216,171,0)');
-    ctx.fillStyle = pool;
-    ctx.fillRect(0, 0, FIELD, FIELD);
-
-    // grid texture — gentle fade so it fills the board up toward the edges
-    ctx.fillStyle = '#ffffff';
-    for (let i = 0; i <= GRID; i++) {
-      for (let j = 0; j <= GRID; j++) {
-        const x = i * CELL;
-        const y = j * CELL;
-        const dx = (x - cx) / (FIELD / 2);
-        const dy = (y - cx) / (FIELD / 2);
-        const fade = 1 - Math.sqrt(dx * dx + dy * dy) * 0.5;
-        if (fade <= 0.04) continue;
-        ctx.globalAlpha = 0.05 * fade;
-        ctx.beginPath();
-        ctx.arc(x, y, 1.25, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-    ctx.globalAlpha = 1;
-
-    // soft glowing boundary — marks the walls without a hard frame
-    ctx.save();
-    ctx.shadowColor = 'rgba(127,216,171,0.4)';
-    ctx.shadowBlur = 9;
-    ctx.strokeStyle = 'rgba(255,255,255,0.18)';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(1, 1, FIELD - 2, FIELD - 2);
-    ctx.restore();
+    drawSnakeField(ctx, FIELD, FIELD, CELL);
 
     drawFood(ctx, g);
     drawSnake(ctx, g);
