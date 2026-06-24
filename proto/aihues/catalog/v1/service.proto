@@ -10,6 +10,50 @@ option go_package = "github.com/aihues/aiushtha/packages/proto-go/aihues/catalog
 service CatalogService {
   rpc ListTools(ListToolsRequest) returns (ListToolsResponse);
   rpc ListGames(ListGamesRequest) returns (ListGamesResponse);
+  // 语义搜索（全站工具/游戏/测试），由 FAISS + 句向量驱动
+  rpc SearchCatalog(SearchCatalogRequest) returns (SearchCatalogResponse);
+  // 相关推荐（按 slug 或自由文本，限定同类型）
+  rpc RelatedItems(RelatedItemsRequest) returns (RelatedItemsResponse);
+}
+
+// 语义命中
+message SearchHit {
+  string slug = 1;
+  string title = 2;
+  string subtitle = 3;
+  string href = 4;
+  string type = 5; // tool | game | test
+  float score = 6;
+}
+
+message SearchCatalogRequest {
+  string q = 1; // 查询词
+  int32 k = 2;  // 取前 k 条，默认 8
+}
+
+message SearchCatalogResponse {
+  repeated SearchHit hits = 1;
+}
+
+// 相关条目
+message RelatedItem {
+  string slug = 1;
+  string title = 2;
+  string desc = 3;
+  string subtitle = 4;
+  string href = 5;
+  string type = 6; // tool | game | test
+}
+
+message RelatedItemsRequest {
+  string type = 1; // tool | game | test
+  string slug = 2; // 按条目 slug 找相邻（与 q 二选一）
+  string q = 3;    // 按自由文本找相邻
+  int32 k = 4;     // 取前 k 条，默认 6
+}
+
+message RelatedItemsResponse {
+  repeated RelatedItem items = 1;
 }
 
 message ListToolsRequest {

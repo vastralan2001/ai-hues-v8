@@ -12,7 +12,199 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file aihues/catalog/v1/service.proto.
  */
 export const file_aihues_catalog_v1_service: GenFile = /*@__PURE__*/
-  fileDesc("Ch9haWh1ZXMvY2F0YWxvZy92MS9zZXJ2aWNlLnByb3RvEhFhaWh1ZXMuY2F0YWxvZy52MSJ3ChBMaXN0VG9vbHNSZXF1ZXN0EgkKAXEYASABKAkSEQoJcGFnZV9zaXplGAIgASgFEhIKCnBhZ2VfdG9rZW4YAyABKAkSMQoIY2F0ZWdvcnkYBCABKA4yHy5haWh1ZXMuY2F0YWxvZy52MS5JdGVtQ2F0ZWdvcnkiVAoRTGlzdFRvb2xzUmVzcG9uc2USJgoFdG9vbHMYASADKAsyFy5haWh1ZXMuY2F0YWxvZy52MS5Ub29sEhcKD25leHRfcGFnZV90b2tlbhgCIAEoCSI5ChBMaXN0R2FtZXNSZXF1ZXN0EhEKCXBhZ2Vfc2l6ZRgBIAEoBRISCgpwYWdlX3Rva2VuGAIgASgJIlQKEUxpc3RHYW1lc1Jlc3BvbnNlEiYKBWdhbWVzGAEgAygLMhcuYWlodWVzLmNhdGFsb2cudjEuR2FtZRIXCg9uZXh0X3BhZ2VfdG9rZW4YAiABKAkywAEKDkNhdGFsb2dTZXJ2aWNlElYKCUxpc3RUb29scxIjLmFpaHVlcy5jYXRhbG9nLnYxLkxpc3RUb29sc1JlcXVlc3QaJC5haWh1ZXMuY2F0YWxvZy52MS5MaXN0VG9vbHNSZXNwb25zZRJWCglMaXN0R2FtZXMSIy5haWh1ZXMuY2F0YWxvZy52MS5MaXN0R2FtZXNSZXF1ZXN0GiQuYWlodWVzLmNhdGFsb2cudjEuTGlzdEdhbWVzUmVzcG9uc2VCSlpIZ2l0aHViLmNvbS9haWh1ZXMvYWl1c2h0aGEvcGFja2FnZXMvcHJvdG8tZ28vYWlodWVzL2NhdGFsb2cvdjE7Y2F0YWxvZ3YxYgZwcm90bzM", [file_aihues_catalog_v1_types]);
+  fileDesc("Ch9haWh1ZXMvY2F0YWxvZy92MS9zZXJ2aWNlLnByb3RvEhFhaWh1ZXMuY2F0YWxvZy52MSJlCglTZWFyY2hIaXQSDAoEc2x1ZxgBIAEoCRINCgV0aXRsZRgCIAEoCRIQCghzdWJ0aXRsZRgDIAEoCRIMCgRocmVmGAQgASgJEgwKBHR5cGUYBSABKAkSDQoFc2NvcmUYBiABKAIiLAoUU2VhcmNoQ2F0YWxvZ1JlcXVlc3QSCQoBcRgBIAEoCRIJCgFrGAIgASgFIkMKFVNlYXJjaENhdGFsb2dSZXNwb25zZRIqCgRoaXRzGAEgAygLMhwuYWlodWVzLmNhdGFsb2cudjEuU2VhcmNoSGl0ImYKC1JlbGF0ZWRJdGVtEgwKBHNsdWcYASABKAkSDQoFdGl0bGUYAiABKAkSDAoEZGVzYxgDIAEoCRIQCghzdWJ0aXRsZRgEIAEoCRIMCgRocmVmGAUgASgJEgwKBHR5cGUYBiABKAkiRwoTUmVsYXRlZEl0ZW1zUmVxdWVzdBIMCgR0eXBlGAEgASgJEgwKBHNsdWcYAiABKAkSCQoBcRgDIAEoCRIJCgFrGAQgASgFIkUKFFJlbGF0ZWRJdGVtc1Jlc3BvbnNlEi0KBWl0ZW1zGAEgAygLMh4uYWlodWVzLmNhdGFsb2cudjEuUmVsYXRlZEl0ZW0idwoQTGlzdFRvb2xzUmVxdWVzdBIJCgFxGAEgASgJEhEKCXBhZ2Vfc2l6ZRgCIAEoBRISCgpwYWdlX3Rva2VuGAMgASgJEjEKCGNhdGVnb3J5GAQgASgOMh8uYWlodWVzLmNhdGFsb2cudjEuSXRlbUNhdGVnb3J5IlQKEUxpc3RUb29sc1Jlc3BvbnNlEiYKBXRvb2xzGAEgAygLMhcuYWlodWVzLmNhdGFsb2cudjEuVG9vbBIXCg9uZXh0X3BhZ2VfdG9rZW4YAiABKAkiOQoQTGlzdEdhbWVzUmVxdWVzdBIRCglwYWdlX3NpemUYASABKAUSEgoKcGFnZV90b2tlbhgCIAEoCSJUChFMaXN0R2FtZXNSZXNwb25zZRImCgVnYW1lcxgBIAMoCzIXLmFpaHVlcy5jYXRhbG9nLnYxLkdhbWUSFwoPbmV4dF9wYWdlX3Rva2VuGAIgASgJMoUDCg5DYXRhbG9nU2VydmljZRJWCglMaXN0VG9vbHMSIy5haWh1ZXMuY2F0YWxvZy52MS5MaXN0VG9vbHNSZXF1ZXN0GiQuYWlodWVzLmNhdGFsb2cudjEuTGlzdFRvb2xzUmVzcG9uc2USVgoJTGlzdEdhbWVzEiMuYWlodWVzLmNhdGFsb2cudjEuTGlzdEdhbWVzUmVxdWVzdBokLmFpaHVlcy5jYXRhbG9nLnYxLkxpc3RHYW1lc1Jlc3BvbnNlEmIKDVNlYXJjaENhdGFsb2cSJy5haWh1ZXMuY2F0YWxvZy52MS5TZWFyY2hDYXRhbG9nUmVxdWVzdBooLmFpaHVlcy5jYXRhbG9nLnYxLlNlYXJjaENhdGFsb2dSZXNwb25zZRJfCgxSZWxhdGVkSXRlbXMSJi5haWh1ZXMuY2F0YWxvZy52MS5SZWxhdGVkSXRlbXNSZXF1ZXN0GicuYWlodWVzLmNhdGFsb2cudjEuUmVsYXRlZEl0ZW1zUmVzcG9uc2VCSlpIZ2l0aHViLmNvbS9haWh1ZXMvYWl1c2h0aGEvcGFja2FnZXMvcHJvdG8tZ28vYWlodWVzL2NhdGFsb2cvdjE7Y2F0YWxvZ3YxYgZwcm90bzM", [file_aihues_catalog_v1_types]);
+
+/**
+ * 语义命中
+ *
+ * @generated from message aihues.catalog.v1.SearchHit
+ */
+export type SearchHit = Message<"aihues.catalog.v1.SearchHit"> & {
+  /**
+   * @generated from field: string slug = 1;
+   */
+  slug: string;
+
+  /**
+   * @generated from field: string title = 2;
+   */
+  title: string;
+
+  /**
+   * @generated from field: string subtitle = 3;
+   */
+  subtitle: string;
+
+  /**
+   * @generated from field: string href = 4;
+   */
+  href: string;
+
+  /**
+   * tool | game | test
+   *
+   * @generated from field: string type = 5;
+   */
+  type: string;
+
+  /**
+   * @generated from field: float score = 6;
+   */
+  score: number;
+};
+
+/**
+ * Describes the message aihues.catalog.v1.SearchHit.
+ * Use `create(SearchHitSchema)` to create a new message.
+ */
+export const SearchHitSchema: GenMessage<SearchHit> = /*@__PURE__*/
+  messageDesc(file_aihues_catalog_v1_service, 0);
+
+/**
+ * @generated from message aihues.catalog.v1.SearchCatalogRequest
+ */
+export type SearchCatalogRequest = Message<"aihues.catalog.v1.SearchCatalogRequest"> & {
+  /**
+   * 查询词
+   *
+   * @generated from field: string q = 1;
+   */
+  q: string;
+
+  /**
+   * 取前 k 条，默认 8
+   *
+   * @generated from field: int32 k = 2;
+   */
+  k: number;
+};
+
+/**
+ * Describes the message aihues.catalog.v1.SearchCatalogRequest.
+ * Use `create(SearchCatalogRequestSchema)` to create a new message.
+ */
+export const SearchCatalogRequestSchema: GenMessage<SearchCatalogRequest> = /*@__PURE__*/
+  messageDesc(file_aihues_catalog_v1_service, 1);
+
+/**
+ * @generated from message aihues.catalog.v1.SearchCatalogResponse
+ */
+export type SearchCatalogResponse = Message<"aihues.catalog.v1.SearchCatalogResponse"> & {
+  /**
+   * @generated from field: repeated aihues.catalog.v1.SearchHit hits = 1;
+   */
+  hits: SearchHit[];
+};
+
+/**
+ * Describes the message aihues.catalog.v1.SearchCatalogResponse.
+ * Use `create(SearchCatalogResponseSchema)` to create a new message.
+ */
+export const SearchCatalogResponseSchema: GenMessage<SearchCatalogResponse> = /*@__PURE__*/
+  messageDesc(file_aihues_catalog_v1_service, 2);
+
+/**
+ * 相关条目
+ *
+ * @generated from message aihues.catalog.v1.RelatedItem
+ */
+export type RelatedItem = Message<"aihues.catalog.v1.RelatedItem"> & {
+  /**
+   * @generated from field: string slug = 1;
+   */
+  slug: string;
+
+  /**
+   * @generated from field: string title = 2;
+   */
+  title: string;
+
+  /**
+   * @generated from field: string desc = 3;
+   */
+  desc: string;
+
+  /**
+   * @generated from field: string subtitle = 4;
+   */
+  subtitle: string;
+
+  /**
+   * @generated from field: string href = 5;
+   */
+  href: string;
+
+  /**
+   * tool | game | test
+   *
+   * @generated from field: string type = 6;
+   */
+  type: string;
+};
+
+/**
+ * Describes the message aihues.catalog.v1.RelatedItem.
+ * Use `create(RelatedItemSchema)` to create a new message.
+ */
+export const RelatedItemSchema: GenMessage<RelatedItem> = /*@__PURE__*/
+  messageDesc(file_aihues_catalog_v1_service, 3);
+
+/**
+ * @generated from message aihues.catalog.v1.RelatedItemsRequest
+ */
+export type RelatedItemsRequest = Message<"aihues.catalog.v1.RelatedItemsRequest"> & {
+  /**
+   * tool | game | test
+   *
+   * @generated from field: string type = 1;
+   */
+  type: string;
+
+  /**
+   * 按条目 slug 找相邻（与 q 二选一）
+   *
+   * @generated from field: string slug = 2;
+   */
+  slug: string;
+
+  /**
+   * 按自由文本找相邻
+   *
+   * @generated from field: string q = 3;
+   */
+  q: string;
+
+  /**
+   * 取前 k 条，默认 6
+   *
+   * @generated from field: int32 k = 4;
+   */
+  k: number;
+};
+
+/**
+ * Describes the message aihues.catalog.v1.RelatedItemsRequest.
+ * Use `create(RelatedItemsRequestSchema)` to create a new message.
+ */
+export const RelatedItemsRequestSchema: GenMessage<RelatedItemsRequest> = /*@__PURE__*/
+  messageDesc(file_aihues_catalog_v1_service, 4);
+
+/**
+ * @generated from message aihues.catalog.v1.RelatedItemsResponse
+ */
+export type RelatedItemsResponse = Message<"aihues.catalog.v1.RelatedItemsResponse"> & {
+  /**
+   * @generated from field: repeated aihues.catalog.v1.RelatedItem items = 1;
+   */
+  items: RelatedItem[];
+};
+
+/**
+ * Describes the message aihues.catalog.v1.RelatedItemsResponse.
+ * Use `create(RelatedItemsResponseSchema)` to create a new message.
+ */
+export const RelatedItemsResponseSchema: GenMessage<RelatedItemsResponse> = /*@__PURE__*/
+  messageDesc(file_aihues_catalog_v1_service, 5);
 
 /**
  * @generated from message aihues.catalog.v1.ListToolsRequest
@@ -52,7 +244,7 @@ export type ListToolsRequest = Message<"aihues.catalog.v1.ListToolsRequest"> & {
  * Use `create(ListToolsRequestSchema)` to create a new message.
  */
 export const ListToolsRequestSchema: GenMessage<ListToolsRequest> = /*@__PURE__*/
-  messageDesc(file_aihues_catalog_v1_service, 0);
+  messageDesc(file_aihues_catalog_v1_service, 6);
 
 /**
  * @generated from message aihues.catalog.v1.ListToolsResponse
@@ -74,7 +266,7 @@ export type ListToolsResponse = Message<"aihues.catalog.v1.ListToolsResponse"> &
  * Use `create(ListToolsResponseSchema)` to create a new message.
  */
 export const ListToolsResponseSchema: GenMessage<ListToolsResponse> = /*@__PURE__*/
-  messageDesc(file_aihues_catalog_v1_service, 1);
+  messageDesc(file_aihues_catalog_v1_service, 7);
 
 /**
  * @generated from message aihues.catalog.v1.ListGamesRequest
@@ -100,7 +292,7 @@ export type ListGamesRequest = Message<"aihues.catalog.v1.ListGamesRequest"> & {
  * Use `create(ListGamesRequestSchema)` to create a new message.
  */
 export const ListGamesRequestSchema: GenMessage<ListGamesRequest> = /*@__PURE__*/
-  messageDesc(file_aihues_catalog_v1_service, 2);
+  messageDesc(file_aihues_catalog_v1_service, 8);
 
 /**
  * @generated from message aihues.catalog.v1.ListGamesResponse
@@ -122,7 +314,7 @@ export type ListGamesResponse = Message<"aihues.catalog.v1.ListGamesResponse"> &
  * Use `create(ListGamesResponseSchema)` to create a new message.
  */
 export const ListGamesResponseSchema: GenMessage<ListGamesResponse> = /*@__PURE__*/
-  messageDesc(file_aihues_catalog_v1_service, 3);
+  messageDesc(file_aihues_catalog_v1_service, 9);
 
 /**
  * 公开读服务
@@ -145,6 +337,26 @@ export const CatalogService: GenService<{
     methodKind: "unary";
     input: typeof ListGamesRequestSchema;
     output: typeof ListGamesResponseSchema;
+  },
+  /**
+   * 语义搜索（全站工具/游戏/测试），由 FAISS + 句向量驱动
+   *
+   * @generated from rpc aihues.catalog.v1.CatalogService.SearchCatalog
+   */
+  searchCatalog: {
+    methodKind: "unary";
+    input: typeof SearchCatalogRequestSchema;
+    output: typeof SearchCatalogResponseSchema;
+  },
+  /**
+   * 相关推荐（按 slug 或自由文本，限定同类型）
+   *
+   * @generated from rpc aihues.catalog.v1.CatalogService.RelatedItems
+   */
+  relatedItems: {
+    methodKind: "unary";
+    input: typeof RelatedItemsRequestSchema;
+    output: typeof RelatedItemsResponseSchema;
   },
 }> = /*@__PURE__*/
   serviceDesc(file_aihues_catalog_v1_service, 0);
