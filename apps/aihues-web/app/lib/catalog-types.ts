@@ -23,6 +23,13 @@ export const toolCategories = [
     badge: 'Draft',
     description: 'Prompts and copy generators for marketing and docs.',
   },
+  {
+    key: 'image',
+    label: 'Image',
+    badge: 'Pixels',
+    description:
+      'Compress, convert, resize, crop and inspect images — all in your browser.',
+  },
 ] as const;
 
 export type ToolCategoryKey = (typeof toolCategories)[number]['key'];
@@ -81,7 +88,12 @@ export interface ListGamesResult {
 }
 
 export function normalizeCategory(value?: string): ToolCategoryKey {
-  if (value === 'developer' || value === 'utility' || value === 'ai-writing') {
+  if (
+    value === 'developer' ||
+    value === 'utility' ||
+    value === 'ai-writing' ||
+    value === 'image'
+  ) {
     return value;
   }
   return 'all';

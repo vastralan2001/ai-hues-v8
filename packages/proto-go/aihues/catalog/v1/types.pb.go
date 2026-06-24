@@ -133,6 +133,7 @@ const (
 	ItemCategory_ITEM_CATEGORY_DEVELOPER   ItemCategory = 1
 	ItemCategory_ITEM_CATEGORY_UTILITY     ItemCategory = 2
 	ItemCategory_ITEM_CATEGORY_AI_WRITING  ItemCategory = 3
+	ItemCategory_ITEM_CATEGORY_IMAGE       ItemCategory = 4
 )
 
 // Enum value maps for ItemCategory.
@@ -142,12 +143,14 @@ var (
 		1: "ITEM_CATEGORY_DEVELOPER",
 		2: "ITEM_CATEGORY_UTILITY",
 		3: "ITEM_CATEGORY_AI_WRITING",
+		4: "ITEM_CATEGORY_IMAGE",
 	}
 	ItemCategory_value = map[string]int32{
 		"ITEM_CATEGORY_UNSPECIFIED": 0,
 		"ITEM_CATEGORY_DEVELOPER":   1,
 		"ITEM_CATEGORY_UTILITY":     2,
 		"ITEM_CATEGORY_AI_WRITING":  3,
+		"ITEM_CATEGORY_IMAGE":       4,
 	}
 )
 
@@ -576,12 +579,13 @@ const file_aihues_catalog_v1_types_proto_rawDesc = "" +
 	"\x17ITEM_STATUS_UNSPECIFIED\x10\x00\x12\x15\n" +
 	"\x11ITEM_STATUS_DRAFT\x10\x01\x12\x19\n" +
 	"\x15ITEM_STATUS_PUBLISHED\x10\x02\x12\x18\n" +
-	"\x14ITEM_STATUS_ARCHIVED\x10\x03*\x83\x01\n" +
+	"\x14ITEM_STATUS_ARCHIVED\x10\x03*\x9c\x01\n" +
 	"\fItemCategory\x12\x1d\n" +
 	"\x19ITEM_CATEGORY_UNSPECIFIED\x10\x00\x12\x1b\n" +
 	"\x17ITEM_CATEGORY_DEVELOPER\x10\x01\x12\x19\n" +
 	"\x15ITEM_CATEGORY_UTILITY\x10\x02\x12\x1c\n" +
-	"\x18ITEM_CATEGORY_AI_WRITING\x10\x03*e\n" +
+	"\x18ITEM_CATEGORY_AI_WRITING\x10\x03\x12\x17\n" +
+	"\x13ITEM_CATEGORY_IMAGE\x10\x04*e\n" +
 	"\bPriceTag\x12\x19\n" +
 	"\x15PRICE_TAG_UNSPECIFIED\x10\x00\x12\x12\n" +
 	"\x0ePRICE_TAG_FREE\x10\x01\x12\x16\n" +

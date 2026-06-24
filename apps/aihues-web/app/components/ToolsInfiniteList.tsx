@@ -19,12 +19,14 @@ const CAT_LABEL: Record<ToolCategoryKey, string> = {
   developer: 'Dev',
   utility: 'Utility',
   'ai-writing': 'AI Writing',
+  image: 'Image',
 };
 
 const CATEGORY_META: Record<string, { icon: string; label: string }> = {
   developer: { icon: '', label: 'Developer Tools' },
   utility: { icon: '', label: 'Writing Tools' },
   'ai-writing': { icon: '', label: 'AI Text Tools' },
+  image: { icon: '', label: 'Image Tools' },
 };
 
 interface ListToolsResponse {
@@ -149,6 +151,7 @@ export function ToolsInfiniteList({
         'ai-writing': initialTools.filter(
           (tool) => tool.category === 'ai-writing'
         ).length,
+        image: initialTools.filter((tool) => tool.category === 'image').length,
       },
     [categoryCounts, initialTools]
   );

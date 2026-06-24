@@ -57,6 +57,8 @@ function categoryToProto(category?: ToolCategoryKey): ItemCategory {
       return ItemCategory.UTILITY;
     case 'ai-writing':
       return ItemCategory.AI_WRITING;
+    case 'image':
+      return ItemCategory.IMAGE;
     default:
       return ItemCategory.UNSPECIFIED;
   }
@@ -70,6 +72,8 @@ function protoToCategory(category: ItemCategory): ToolCategoryKey {
       return 'utility';
     case ItemCategory.AI_WRITING:
       return 'ai-writing';
+    case ItemCategory.IMAGE:
+      return 'image';
     default:
       return 'all';
   }
@@ -214,11 +218,13 @@ export function getToolCategoryCounts(): Record<ToolCategoryKey, number> {
     developer: 0,
     utility: 0,
     'ai-writing': 0,
+    image: 0,
   };
   for (const tool of internal) {
     if (tool.category === 'developer') counts.developer++;
     if (tool.category === 'utility') counts.utility++;
     if (tool.category === 'ai-writing') counts['ai-writing']++;
+    if (tool.category === 'image') counts.image++;
   }
   return counts;
 }

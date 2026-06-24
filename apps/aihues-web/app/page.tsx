@@ -257,6 +257,10 @@ export default async function HomePage() {
               label: t(locale, 'cat.aiWriting'),
               href: toolsCategoryHref('ai-writing'),
             },
+            {
+              label: t(locale, 'cat.image'),
+              href: toolsCategoryHref('image'),
+            },
           ]}
           reverse
           tagline={undefined}

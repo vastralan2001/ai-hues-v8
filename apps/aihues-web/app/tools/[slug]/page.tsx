@@ -70,6 +70,11 @@ import CnConvertTool from '@/components/tools/CnConvertTool';
 import TableConvertTool from '@/components/tools/TableConvertTool';
 import CurlToCodeTool from '@/components/tools/CurlToCodeTool';
 import MermaidTool from '@/components/tools/MermaidTool';
+import ImageCompressTool from '@/components/tools/ImageCompressTool';
+import ImageConvertTool from '@/components/tools/ImageConvertTool';
+import ImageResizeTool from '@/components/tools/ImageResizeTool';
+import ImageCropTool from '@/components/tools/ImageCropTool';
+import ExifViewerTool from '@/components/tools/ExifViewerTool';
 
 const SLUG_TO_DICT_KEY: Record<string, string> = {
   'lorem-ipsum': 'lorem',
@@ -132,6 +137,11 @@ const REACT_TOOLS: Record<string, React.ComponentType<{ locale: Locale }>> = {
   meta: MetaTagTool,
   tldr: TldrTool,
   'image-to-base64': ImageToBase64Tool,
+  'image-compress': ImageCompressTool,
+  'image-convert': ImageConvertTool,
+  'image-resize': ImageResizeTool,
+  'image-crop': ImageCropTool,
+  'exif-viewer': ExifViewerTool,
   'pr-desc': PrDescTool,
   'code-review': CodeReviewTool,
   changelog: ChangelogTool,
