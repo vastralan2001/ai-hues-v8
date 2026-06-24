@@ -1968,6 +1968,759 @@ const SCENES: Record<string, StoryScene> = {
       },
     ],
   },
+  // SEO — content clusters: a pillar hub linked to cluster pages, ×2 traffic.
+  'content-clusters-the-strategy-that-doubled-our-organic-traff': {
+    bg: ['#10211c', '#08120e'],
+    el: [
+      ...(
+        [
+          [0.16, 0.3],
+          [0.66, 0.26],
+          [0.72, 0.64],
+          [0.22, 0.76],
+        ] as [number, number][]
+      ).map(
+        (p): El => ({
+          t: 'ln',
+          a: [0.42, 0.5],
+          b: p,
+          stroke: '#2bb6a3',
+          lw: 1.4,
+          dash: [4, 5],
+          anim: { k: 'dash', spd: 1.4 },
+        })
+      ),
+      { t: 'c', x: 0.16, y: 0.3, rad: 0.04, fill: '#7af0e0' },
+      { t: 'c', x: 0.66, y: 0.26, rad: 0.04, fill: '#7af0e0' },
+      { t: 'c', x: 0.72, y: 0.64, rad: 0.04, fill: '#7af0e0' },
+      { t: 'c', x: 0.22, y: 0.76, rad: 0.04, fill: '#7af0e0' },
+      {
+        t: 'c',
+        x: 0.42,
+        y: 0.5,
+        rad: 0.08,
+        fill: '#2bb6a3',
+        glow: '#2bb6a3',
+        anim: { k: 'pulse', amp: 0.08, spd: 1.3 },
+      },
+      {
+        t: 'tx',
+        x: 0.82,
+        y: 0.32,
+        s: '×2',
+        size: 0.1,
+        fill: '#7af0e0',
+        w: 900,
+      },
+    ],
+  },
+
+  // AI Tools — build an AI SaaS in 48h: stacking blocks, a 48h clock, a spark.
+  'how-to-build-an-ai-saas-in-48-hours-step-by-step': {
+    bg: ['#1c1530', '#0e0a1a'],
+    el: [
+      { t: 'r', x: 0.16, y: 0.6, w: 0.22, h: 0.08, rad: 4, fill: '#46c7c7' },
+      { t: 'r', x: 0.16, y: 0.5, w: 0.22, h: 0.08, rad: 4, fill: '#7d9bf0' },
+      {
+        t: 'r',
+        x: 0.16,
+        y: 0.4,
+        w: 0.22,
+        h: 0.08,
+        rad: 4,
+        fill: '#a07bf0',
+        anim: { k: 'pulse', amp: 0.04, spd: 1.6 },
+      },
+      {
+        t: 'tx',
+        x: 0.66,
+        y: 0.46,
+        s: '48h',
+        size: 0.16,
+        fill: '#c9b3ff',
+        w: 900,
+        glow: '#a07bf0',
+      },
+      {
+        t: 'tx',
+        x: 0.82,
+        y: 0.24,
+        s: '✦',
+        size: 0.07,
+        fill: '#c9b3ff',
+        glow: '#a07bf0',
+        anim: { k: 'pulse', amp: 0.2, spd: 2 },
+      },
+    ],
+  },
+
+  // Growth — landing page CV: a page with a funnel and a fixed upward arrow.
+  'why-your-landing-page-is-not-converting-and-how-to-fix-it': {
+    bg: ['#241a0c', '#130d05'],
+    el: [
+      {
+        t: 'r',
+        x: 0.18,
+        y: 0.2,
+        w: 0.64,
+        h: 0.5,
+        rad: 10,
+        fill: 'rgba(255,255,255,0.05)',
+        stroke: '#f0b429',
+        lw: 1.4,
+      },
+      {
+        t: 'pl',
+        pts: [
+          [0.32, 0.3],
+          [0.68, 0.3],
+          [0.58, 0.52],
+          [0.42, 0.52],
+        ],
+        close: true,
+        fill: 'rgba(240,180,41,0.3)',
+        stroke: '#f0b429',
+        lw: 1.2,
+      },
+      {
+        t: 'c',
+        x: 0.5,
+        y: 0.62,
+        rad: 0.022,
+        fill: '#e2693f',
+        anim: { k: 'bob', amp: 0.03, spd: 1.6 },
+      },
+      {
+        t: 'pl',
+        pts: [
+          [0.84, 0.7],
+          [0.9, 0.5],
+          [0.96, 0.7],
+        ],
+        stroke: '#46e8a0',
+        lw: 3,
+        glow: '#46e8a0',
+        anim: { k: 'bob', amp: 0.03, spd: 1.4 },
+      },
+      {
+        t: 'ln',
+        a: [0.9, 0.52],
+        b: [0.9, 0.74],
+        stroke: '#46e8a0',
+        lw: 3,
+        anim: { k: 'bob', amp: 0.03, spd: 1.4 },
+      },
+    ],
+  },
+
+  // Productivity — context switching: tangled red jumps vs one focused green line.
+  'context-switching-is-killing-your-output-here-is-the-fix': {
+    bg: ['#241a0c', '#120d04'],
+    el: [
+      {
+        t: 'ln',
+        a: [0.16, 0.3],
+        b: [0.6, 0.7],
+        stroke: '#ff6b6b',
+        lw: 1.6,
+        op: 0.7,
+      },
+      {
+        t: 'ln',
+        a: [0.7, 0.28],
+        b: [0.24, 0.66],
+        stroke: '#ff6b6b',
+        lw: 1.6,
+        op: 0.7,
+      },
+      {
+        t: 'ln',
+        a: [0.3, 0.74],
+        b: [0.78, 0.36],
+        stroke: '#ff6b6b',
+        lw: 1.6,
+        op: 0.7,
+      },
+      {
+        t: 'ln',
+        a: [0.12, 0.5],
+        b: [0.86, 0.52],
+        stroke: '#46e8a0',
+        lw: 3.4,
+        glow: '#46e8a0',
+      },
+      {
+        t: 'pl',
+        pts: [
+          [0.8, 0.48],
+          [0.88, 0.52],
+          [0.8, 0.56],
+        ],
+        stroke: '#46e8a0',
+        lw: 3,
+      },
+    ],
+  },
+
+  // Development — web performance: a speedometer with a fast green sweep.
+  'web-performance-in-2026-core-web-vitals-and-beyond': {
+    bg: ['#141a2e', '#0a0e18'],
+    el: [
+      {
+        t: 'ar',
+        x: 0.5,
+        y: 0.66,
+        rad: 0.32,
+        a0: Math.PI,
+        a1: 2 * Math.PI,
+        stroke: 'rgba(255,255,255,0.14)',
+        lw: 6,
+      },
+      {
+        t: 'ar',
+        x: 0.5,
+        y: 0.66,
+        rad: 0.32,
+        a0: Math.PI,
+        a1: 1.7 * Math.PI,
+        stroke: '#46e8a0',
+        lw: 6,
+        glow: '#46e8a0',
+      },
+      {
+        t: 'ln',
+        a: [0.5, 0.66],
+        b: [0.72, 0.44],
+        stroke: '#fff',
+        lw: 3,
+        anim: { k: 'bob', amp: 0.02, spd: 1.5 },
+      },
+      { t: 'c', x: 0.5, y: 0.66, rad: 0.03, fill: '#7cc0ee' },
+    ],
+  },
+
+  // Social Media — Twitter/X growth: an X badge and a rising follower curve to 10K.
+  'twitter-growth': {
+    bg: ['#0d1b2a', '#070f18'],
+    el: [
+      {
+        t: 'ln',
+        a: [0.1, 0.82],
+        b: [0.9, 0.82],
+        stroke: 'rgba(255,255,255,0.18)',
+        lw: 1.2,
+      },
+      {
+        t: 'pl',
+        pts: [
+          [0.1, 0.78],
+          [0.34, 0.66],
+          [0.56, 0.5],
+          [0.74, 0.32],
+          [0.9, 0.2],
+        ],
+        stroke: '#2a8fe0',
+        lw: 3,
+        glow: '#2a8fe0',
+      },
+      { t: 'r', x: 0.14, y: 0.18, w: 0.14, h: 0.14, rad: 6, fill: '#2a8fe0' },
+      { t: 'tx', x: 0.21, y: 0.26, s: '𝕏', size: 0.1, fill: '#fff', w: 900 },
+      {
+        t: 'tx',
+        x: 0.78,
+        y: 0.3,
+        s: '10K',
+        size: 0.09,
+        fill: '#cfe6fb',
+        w: 900,
+      },
+    ],
+  },
+
+  // Growth — affiliate marketing: a hub paying out to referral nodes.
+  'the-complete-guide-to-affiliate-marketing-for-saas': {
+    bg: ['#241a0c', '#130d05'],
+    el: [
+      ...(
+        [
+          [0.74, 0.24],
+          [0.8, 0.5],
+          [0.74, 0.76],
+        ] as [number, number][]
+      ).map(
+        (p): El => ({
+          t: 'ln',
+          a: [0.3, 0.5],
+          b: p,
+          stroke: '#f0b429',
+          lw: 1.6,
+          dash: [4, 5],
+          anim: { k: 'dash', spd: 1.5 },
+        })
+      ),
+      { t: 'c', x: 0.3, y: 0.5, rad: 0.09, fill: '#f0b429', glow: '#f0b429' },
+      { t: 'tx', x: 0.3, y: 0.5, s: '$', size: 0.08, fill: '#2a1d05', w: 900 },
+      { t: 'c', x: 0.74, y: 0.24, rad: 0.05, fill: '#83d8ad' },
+      { t: 'c', x: 0.8, y: 0.5, rad: 0.05, fill: '#83d8ad' },
+      { t: 'c', x: 0.74, y: 0.76, rad: 0.05, fill: '#83d8ad' },
+    ],
+  },
+
+  // Indie Dev — 4-hour workweek reality check: a 4h clock with a reality cross.
+  'the-4-hour-workweek-for-developers-reality-check': {
+    bg: ['#12211c', '#0a0e0c'],
+    el: [
+      { t: 'c', x: 0.42, y: 0.48, rad: 0.22, stroke: '#83d8ad', lw: 3 },
+      { t: 'ln', a: [0.42, 0.48], b: [0.42, 0.34], stroke: '#9ff0c6', lw: 3 },
+      { t: 'ln', a: [0.42, 0.48], b: [0.54, 0.54], stroke: '#9ff0c6', lw: 3 },
+      {
+        t: 'tx',
+        x: 0.42,
+        y: 0.72,
+        s: '4h',
+        size: 0.08,
+        fill: '#9ff0c6',
+        w: 900,
+      },
+      {
+        t: 'ln',
+        a: [0.64, 0.3],
+        b: [0.86, 0.58],
+        stroke: '#ff6b6b',
+        lw: 4,
+        glow: '#ff6b6b',
+        anim: { k: 'blink', spd: 2 },
+      },
+      {
+        t: 'ln',
+        a: [0.86, 0.3],
+        b: [0.64, 0.58],
+        stroke: '#ff6b6b',
+        lw: 4,
+        glow: '#ff6b6b',
+        anim: { k: 'blink', spd: 2 },
+      },
+    ],
+  },
+
+  // SEO — link building for B2B: two interlocking chain links between nodes.
+  'link-building-for-boring-b2b-products': {
+    bg: ['#10211c', '#08120e'],
+    el: [
+      {
+        t: 'r',
+        x: 0.12,
+        y: 0.42,
+        w: 0.12,
+        h: 0.12,
+        rad: 3,
+        fill: 'rgba(255,255,255,0.12)',
+        stroke: '#2bb6a3',
+        lw: 1.2,
+      },
+      {
+        t: 'r',
+        x: 0.76,
+        y: 0.42,
+        w: 0.12,
+        h: 0.12,
+        rad: 3,
+        fill: 'rgba(255,255,255,0.12)',
+        stroke: '#2bb6a3',
+        lw: 1.2,
+      },
+      {
+        t: 'c',
+        x: 0.42,
+        y: 0.48,
+        rad: 0.1,
+        stroke: '#7af0e0',
+        lw: 4,
+        glow: '#2bb6a3',
+      },
+      {
+        t: 'c',
+        x: 0.56,
+        y: 0.48,
+        rad: 0.1,
+        stroke: '#7af0e0',
+        lw: 4,
+        glow: '#2bb6a3',
+      },
+      { t: 'ln', a: [0.24, 0.48], b: [0.34, 0.48], stroke: '#7af0e0', lw: 3 },
+      { t: 'ln', a: [0.64, 0.48], b: [0.76, 0.48], stroke: '#7af0e0', lw: 3 },
+    ],
+  },
+
+  // AI Tools — prompt engineering reborn: a prompt caret inside a renewal loop.
+  'prompt-engineering-is-dead-long-live-prompt-engineering': {
+    bg: ['#1c1530', '#0e0a1a'],
+    el: [
+      {
+        t: 'ar',
+        x: 0.5,
+        y: 0.48,
+        rad: 0.26,
+        a0: 0.4,
+        a1: 5.9,
+        stroke: '#a07bf0',
+        lw: 4,
+        glow: '#a07bf0',
+        anim: { k: 'rot', spd: 0.8 },
+      },
+      {
+        t: 'pl',
+        pts: [
+          [0.66, 0.26],
+          [0.74, 0.22],
+          [0.72, 0.32],
+        ],
+        close: true,
+        fill: '#a07bf0',
+        anim: { k: 'rot', spd: 0.8 },
+      },
+      {
+        t: 'tx',
+        x: 0.5,
+        y: 0.48,
+        s: '>_',
+        size: 0.12,
+        fill: '#c9b3ff',
+        w: 800,
+      },
+    ],
+  },
+
+  // Growth — building in public: a broadcasting node over a live chart.
+  'building-in-public-a-strategy-not-a-stunt': {
+    bg: ['#241a0c', '#130d05'],
+    el: [
+      {
+        t: 'c',
+        x: 0.5,
+        y: 0.42,
+        rad: 0.16,
+        stroke: '#f0b429',
+        lw: 2,
+        op: 0.4,
+        anim: { k: 'pulse', amp: 0.18, spd: 1.3, ph: 0 },
+      },
+      {
+        t: 'c',
+        x: 0.5,
+        y: 0.42,
+        rad: 0.1,
+        stroke: '#f0b429',
+        lw: 2,
+        op: 0.6,
+        anim: { k: 'pulse', amp: 0.14, spd: 1.3, ph: 1 },
+      },
+      { t: 'c', x: 0.5, y: 0.42, rad: 0.05, fill: '#f0b429', glow: '#f0b429' },
+      {
+        t: 'pl',
+        pts: [
+          [0.18, 0.78],
+          [0.36, 0.7],
+          [0.52, 0.74],
+          [0.7, 0.64],
+          [0.86, 0.68],
+        ],
+        stroke: '#83d8ad',
+        lw: 2.4,
+      },
+    ],
+  },
+
+  // Productivity — 1:1s: two facing avatars with a 1:1 label.
+  'how-to-run-effective-1-1s-even-if-you-hate-meetings': {
+    bg: ['#241a0c', '#120d04'],
+    el: [
+      { t: 'c', x: 0.28, y: 0.46, rad: 0.1, fill: '#7cc0ee', glow: '#7cc0ee' },
+      { t: 'c', x: 0.72, y: 0.46, rad: 0.1, fill: '#f0b429', glow: '#f0b429' },
+      {
+        t: 'r',
+        x: 0.2,
+        y: 0.66,
+        w: 0.16,
+        h: 0.05,
+        rad: 12,
+        fill: 'rgba(124,192,238,0.5)',
+      },
+      {
+        t: 'r',
+        x: 0.64,
+        y: 0.66,
+        w: 0.16,
+        h: 0.05,
+        rad: 12,
+        fill: 'rgba(240,180,41,0.5)',
+      },
+      {
+        t: 'tx',
+        x: 0.5,
+        y: 0.46,
+        s: '1:1',
+        size: 0.1,
+        fill: '#fff',
+        w: 900,
+        anim: { k: 'pulse', amp: 0.06, spd: 1.4 },
+      },
+    ],
+  },
+
+  // Development — monorepos: one repo box holding nested package boxes.
+  'monorepos-in-2026-turborepo-nx-or-just-pnpm': {
+    bg: ['#141a2e', '#0a0e18'],
+    el: [
+      {
+        t: 'r',
+        x: 0.16,
+        y: 0.22,
+        w: 0.68,
+        h: 0.56,
+        rad: 10,
+        fill: 'rgba(255,255,255,0.04)',
+        stroke: '#7cc0ee',
+        lw: 1.4,
+      },
+      {
+        t: 'r',
+        x: 0.22,
+        y: 0.32,
+        w: 0.24,
+        h: 0.16,
+        rad: 6,
+        fill: 'rgba(124,192,238,0.18)',
+        stroke: '#5a8cd6',
+        lw: 1,
+      },
+      {
+        t: 'r',
+        x: 0.54,
+        y: 0.32,
+        w: 0.24,
+        h: 0.16,
+        rad: 6,
+        fill: 'rgba(124,192,238,0.18)',
+        stroke: '#5a8cd6',
+        lw: 1,
+      },
+      {
+        t: 'r',
+        x: 0.22,
+        y: 0.54,
+        w: 0.24,
+        h: 0.16,
+        rad: 6,
+        fill: 'rgba(124,192,238,0.18)',
+        stroke: '#5a8cd6',
+        lw: 1,
+      },
+      {
+        t: 'r',
+        x: 0.54,
+        y: 0.54,
+        w: 0.24,
+        h: 0.16,
+        rad: 6,
+        fill: 'rgba(70,232,160,0.2)',
+        stroke: '#46e8a0',
+        lw: 1,
+        anim: { k: 'pulse', amp: 0.03, spd: 1.5 },
+      },
+    ],
+  },
+
+  // AI Tools — voice cloning: a mic with an animated waveform.
+  'ai-voice-cloning-use-cases-ethics-and-the-tools-that-get-it-': {
+    bg: ['#1c1530', '#0e0a1a'],
+    el: [
+      {
+        t: 'r',
+        x: 0.16,
+        y: 0.34,
+        w: 0.1,
+        h: 0.22,
+        rad: 20,
+        fill: '#a07bf0',
+        glow: '#a07bf0',
+      },
+      { t: 'ln', a: [0.21, 0.58], b: [0.21, 0.66], stroke: '#a07bf0', lw: 2 },
+      { t: 'ln', a: [0.16, 0.66], b: [0.26, 0.66], stroke: '#a07bf0', lw: 2 },
+      ...Array.from(
+        { length: 7 },
+        (_, i): El => ({
+          t: 'r',
+          x: 0.4 + i * 0.07,
+          y: 0.46,
+          w: 0.03,
+          h: 0.06,
+          rad: 2,
+          fill: '#46c7c7',
+          glow: '#46c7c7',
+          anim: { k: 'pulse', amp: 0.6, spd: 2.2, ph: i * 0.7 },
+        })
+      ),
+    ],
+  },
+
+  // Indie Dev — employee to founder: a cog becomes a launching star.
+  'from-employee-to-founder-the-mental-shift': {
+    bg: ['#12211c', '#0a0e0c'],
+    el: [
+      {
+        t: 'tx',
+        x: 0.22,
+        y: 0.48,
+        s: '⚙',
+        size: 0.16,
+        fill: 'rgba(255,255,255,0.5)',
+        anim: { k: 'rot', spd: 0.4 },
+      },
+      {
+        t: 'ln',
+        a: [0.38, 0.48],
+        b: [0.6, 0.48],
+        stroke: '#46e8a0',
+        lw: 2.6,
+        dash: [5, 5],
+        anim: { k: 'dash', spd: 1.8 },
+      },
+      {
+        t: 'pl',
+        pts: [
+          [0.56, 0.44],
+          [0.61, 0.48],
+          [0.56, 0.52],
+        ],
+        stroke: '#46e8a0',
+        lw: 2.6,
+      },
+      {
+        t: 'tx',
+        x: 0.78,
+        y: 0.46,
+        s: '★',
+        size: 0.18,
+        fill: '#9ff0c6',
+        glow: '#46e8a0',
+        anim: { k: 'pulse', amp: 0.12, spd: 1.4 },
+      },
+    ],
+  },
+
+  // SEO — future of search: a query bar dissolving into an AI answer orb.
+  'the-future-of-search-what-happens-when-ai-answers-everything': {
+    bg: ['#10211c', '#08120e'],
+    el: [
+      {
+        t: 'r',
+        x: 0.12,
+        y: 0.42,
+        w: 0.34,
+        h: 0.12,
+        rad: 24,
+        fill: 'rgba(255,255,255,0.06)',
+        stroke: '#2bb6a3',
+        lw: 1.4,
+      },
+      { t: 'c', x: 0.2, y: 0.48, rad: 0.04, stroke: '#7af0e0', lw: 2 },
+      { t: 'ln', a: [0.23, 0.51], b: [0.27, 0.55], stroke: '#7af0e0', lw: 2 },
+      {
+        t: 'ln',
+        a: [0.5, 0.48],
+        b: [0.6, 0.48],
+        stroke: '#7af0e0',
+        lw: 2,
+        dash: [4, 4],
+        anim: { k: 'dash', spd: 1.6 },
+      },
+      {
+        t: 'c',
+        x: 0.74,
+        y: 0.48,
+        rad: 0.14,
+        fill: '#2bb6a3',
+        glow: '#2bb6a3',
+        anim: { k: 'pulse', amp: 0.08, spd: 1.4 },
+      },
+      { t: 'tx', x: 0.74, y: 0.48, s: '✦', size: 0.1, fill: '#08120e', w: 900 },
+    ],
+  },
+
+  // KOL Marketing — a creator hub broadcasting to followers, starred.
+  'kol-marketing': {
+    bg: ['#2a1020', '#140710'],
+    el: [
+      {
+        t: 'c',
+        x: 0.36,
+        y: 0.48,
+        rad: 0.18,
+        stroke: '#ff5a9e',
+        lw: 2,
+        op: 0.4,
+        anim: { k: 'pulse', amp: 0.16, spd: 1.3, ph: 0 },
+      },
+      {
+        t: 'c',
+        x: 0.36,
+        y: 0.48,
+        rad: 0.11,
+        stroke: '#ff5a9e',
+        lw: 2,
+        op: 0.6,
+        anim: { k: 'pulse', amp: 0.12, spd: 1.3, ph: 1 },
+      },
+      { t: 'c', x: 0.36, y: 0.48, rad: 0.06, fill: '#ff5a9e', glow: '#ff5a9e' },
+      { t: 'tx', x: 0.36, y: 0.48, s: '★', size: 0.06, fill: '#fff', w: 900 },
+      ...(
+        [
+          [0.72, 0.26],
+          [0.82, 0.5],
+          [0.7, 0.74],
+        ] as [number, number][]
+      ).map(
+        (p): El => ({ t: 'c', x: p[0], y: p[1], rad: 0.035, fill: '#ff8ab4' })
+      ),
+    ],
+  },
+
+  // Growth — state of indie marketing: a montage grid of channel motifs.
+  'the-state-of-indie-hacker-marketing-in-2026': {
+    bg: ['#241a0c', '#130d05'],
+    el: [
+      ...Array.from({ length: 6 }, (_, i): El => {
+        const c = i % 3;
+        const r = Math.floor(i / 3);
+        return {
+          t: 'r',
+          x: 0.14 + c * 0.26,
+          y: 0.28 + r * 0.28,
+          w: 0.2,
+          h: 0.2,
+          rad: 8,
+          fill: 'rgba(255,255,255,0.05)',
+          stroke: 'rgba(255,255,255,0.14)',
+          lw: 1,
+        };
+      }),
+      { t: 'tx', x: 0.24, y: 0.38, s: '𝕏', size: 0.08, fill: '#7cc0ee' },
+      { t: 'tx', x: 0.5, y: 0.38, s: '✉', size: 0.08, fill: '#f0b429' },
+      { t: 'tx', x: 0.76, y: 0.38, s: '★', size: 0.08, fill: '#ff8ab4' },
+      { t: 'tx', x: 0.24, y: 0.66, s: '#', size: 0.08, fill: '#83d8ad' },
+      { t: 'tx', x: 0.5, y: 0.66, s: '$', size: 0.08, fill: '#e2693f' },
+      {
+        t: 'tx',
+        x: 0.76,
+        y: 0.66,
+        s: '▲',
+        size: 0.07,
+        fill: '#46e8a0',
+        anim: { k: 'bob', amp: 0.03, spd: 1.5 },
+      },
+    ],
+  },
 };
 
 const TAG_HUE: Record<string, number> = {
