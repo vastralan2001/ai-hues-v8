@@ -2721,6 +2721,797 @@ const SCENES: Record<string, StoryScene> = {
       },
     ],
   },
+  // Productivity — note-taking apps: a note card with bullets and a pen.
+  'the-best-note-taking-apps-for-developers-in-2026': {
+    bg: ['#241a0c', '#120d04'],
+    el: [
+      {
+        t: 'r',
+        x: 0.26,
+        y: 0.18,
+        w: 0.48,
+        h: 0.64,
+        rad: 8,
+        fill: 'rgba(255,255,255,0.06)',
+        stroke: 'rgba(255,255,255,0.16)',
+        lw: 1,
+      },
+      ...Array.from(
+        { length: 4 },
+        (_, i): El => ({
+          t: 'c',
+          x: 0.33,
+          y: 0.32 + i * 0.13,
+          rad: 0.012,
+          fill: '#f0b429',
+        })
+      ),
+      ...Array.from(
+        { length: 4 },
+        (_, i): El => ({
+          t: 'r',
+          x: 0.38,
+          y: 0.31 + i * 0.13,
+          w: 0.28 - i * 0.03,
+          h: 0.025,
+          rad: 2,
+          fill: 'rgba(255,255,255,0.3)',
+        })
+      ),
+      {
+        t: 'tx',
+        x: 0.7,
+        y: 0.74,
+        s: '✎',
+        size: 0.12,
+        fill: '#f0b429',
+        glow: '#f0b429',
+        anim: { k: 'bob', amp: 0.03, spd: 1.4 },
+      },
+    ],
+  },
+
+  // Development — passwordless auth: a key, a lock, a magic-link spark.
+  'authentication-without-the-pain-oauth-passkeys-and-magic-lin': {
+    bg: ['#141a2e', '#0a0e18'],
+    el: [
+      {
+        t: 'c',
+        x: 0.3,
+        y: 0.42,
+        rad: 0.09,
+        stroke: '#7cc0ee',
+        lw: 3.4,
+        glow: '#7cc0ee',
+      },
+      { t: 'ln', a: [0.37, 0.49], b: [0.52, 0.64], stroke: '#7cc0ee', lw: 3.4 },
+      { t: 'ln', a: [0.46, 0.58], b: [0.52, 0.52], stroke: '#7cc0ee', lw: 3 },
+      { t: 'r', x: 0.6, y: 0.46, w: 0.18, h: 0.16, rad: 4, fill: '#5a8cd6' },
+      {
+        t: 'ar',
+        x: 0.69,
+        y: 0.46,
+        rad: 0.06,
+        a0: Math.PI,
+        a1: 2 * Math.PI,
+        stroke: '#5a8cd6',
+        lw: 3,
+      },
+      {
+        t: 'tx',
+        x: 0.82,
+        y: 0.28,
+        s: '✦',
+        size: 0.08,
+        fill: '#cfe6fb',
+        glow: '#7cc0ee',
+        anim: { k: 'pulse', amp: 0.2, spd: 2 },
+      },
+    ],
+  },
+
+  // AI Tools — generic content #1: a row of samey blocks, one breaks out.
+  'why-your-ai-generated-content-sounds-generic-and-how-to-fix-it': {
+    bg: ['#1c1530', '#0e0a1a'],
+    el: [
+      ...Array.from(
+        { length: 5 },
+        (_, i): El =>
+          i === 3
+            ? {
+                t: 'r',
+                x: 0.12 + i * 0.16,
+                y: 0.34,
+                w: 0.12,
+                h: 0.28,
+                rad: 6,
+                fill: '#a07bf0',
+                glow: '#a07bf0',
+                anim: { k: 'pulse', amp: 0.05, spd: 1.6 },
+              }
+            : {
+                t: 'r',
+                x: 0.12 + i * 0.16,
+                y: 0.4,
+                w: 0.12,
+                h: 0.2,
+                rad: 6,
+                fill: 'rgba(255,255,255,0.14)',
+              }
+      ),
+    ],
+  },
+
+  // AI Tools — generic content #2: unique fingerprint ridges among the noise.
+  'why-your-ai-generated-content-sounds-generic-and-how-to-fix-': {
+    bg: ['#1a1330', '#0c0918'],
+    el: [
+      {
+        t: 'ar',
+        x: 0.5,
+        y: 0.48,
+        rad: 0.1,
+        a0: 0.2,
+        a1: 2.9,
+        stroke: '#c9b3ff',
+        lw: 2.4,
+        glow: '#a07bf0',
+      },
+      {
+        t: 'ar',
+        x: 0.5,
+        y: 0.48,
+        rad: 0.16,
+        a0: 0.5,
+        a1: 3.4,
+        stroke: '#a07bf0',
+        lw: 2.4,
+      },
+      {
+        t: 'ar',
+        x: 0.5,
+        y: 0.48,
+        rad: 0.22,
+        a0: 0.1,
+        a1: 2.6,
+        stroke: '#7d6bd0',
+        lw: 2.4,
+      },
+      {
+        t: 'ar',
+        x: 0.5,
+        y: 0.48,
+        rad: 0.28,
+        a0: 0.7,
+        a1: 3.2,
+        stroke: '#5a4d9e',
+        lw: 2.4,
+      },
+      {
+        t: 'c',
+        x: 0.5,
+        y: 0.48,
+        rad: 0.03,
+        fill: '#c9b3ff',
+        glow: '#a07bf0',
+        anim: { k: 'pulse', amp: 0.15, spd: 1.5 },
+      },
+    ],
+  },
+
+  // Growth — viral tool: a tool node spreading across a share network.
+  'how-to-create-a-viral-tool-that-markets-your-product': {
+    bg: ['#241a0c', '#130d05'],
+    el: [
+      ...(
+        [
+          [0.7, 0.22],
+          [0.82, 0.46],
+          [0.72, 0.72],
+          [0.5, 0.8],
+        ] as [number, number][]
+      ).map(
+        (p): El => ({
+          t: 'ln',
+          a: [0.32, 0.46],
+          b: p,
+          stroke: '#f0b429',
+          lw: 1.4,
+          dash: [4, 5],
+          anim: { k: 'dash', spd: 1.6 },
+        })
+      ),
+      {
+        t: 'tx',
+        x: 0.32,
+        y: 0.46,
+        s: '⚙',
+        size: 0.16,
+        fill: '#f0b429',
+        glow: '#f0b429',
+      },
+      { t: 'c', x: 0.7, y: 0.22, rad: 0.04, fill: '#83d8ad' },
+      { t: 'c', x: 0.82, y: 0.46, rad: 0.04, fill: '#83d8ad' },
+      { t: 'c', x: 0.72, y: 0.72, rad: 0.04, fill: '#83d8ad' },
+      { t: 'c', x: 0.5, y: 0.8, rad: 0.04, fill: '#83d8ad' },
+    ],
+  },
+
+  // Indie Dev — validate in a weekend: an idea bulb with a verdict check.
+  'how-to-validate-your-saas-idea-in-one-weekend': {
+    bg: ['#12211c', '#0a0e0c'],
+    el: [
+      {
+        t: 'c',
+        x: 0.42,
+        y: 0.42,
+        rad: 0.13,
+        fill: '#e0b34a',
+        glow: '#e0b34a',
+        anim: { k: 'pulse', amp: 0.06, spd: 1.4 },
+      },
+      { t: 'r', x: 0.38, y: 0.55, w: 0.08, h: 0.06, rad: 2, fill: '#b88f2e' },
+      {
+        t: 'pl',
+        pts: [
+          [0.66, 0.46],
+          [0.72, 0.54],
+          [0.86, 0.34],
+        ],
+        stroke: '#46e8a0',
+        lw: 4,
+        glow: '#46e8a0',
+        anim: { k: 'bob', amp: 0.02, spd: 1.4 },
+      },
+      {
+        t: 'tx',
+        x: 0.42,
+        y: 0.78,
+        s: '48h',
+        size: 0.07,
+        fill: '#9ff0c6',
+        w: 900,
+      },
+    ],
+  },
+
+  // SEO — schema markup: structured tags nudging a ranking needle up.
+  'schema-markup-that-actually-moves-the-needle': {
+    bg: ['#10211c', '#08120e'],
+    el: [
+      {
+        t: 'tx',
+        x: 0.28,
+        y: 0.46,
+        s: '{ }',
+        size: 0.16,
+        fill: '#7af0e0',
+        w: 700,
+      },
+      {
+        t: 'r',
+        x: 0.18,
+        y: 0.62,
+        w: 0.24,
+        h: 0.04,
+        rad: 2,
+        fill: 'rgba(255,255,255,0.25)',
+      },
+      {
+        t: 'ar',
+        x: 0.72,
+        y: 0.62,
+        rad: 0.22,
+        a0: Math.PI,
+        a1: 2 * Math.PI,
+        stroke: 'rgba(255,255,255,0.14)',
+        lw: 5,
+      },
+      {
+        t: 'ar',
+        x: 0.72,
+        y: 0.62,
+        rad: 0.22,
+        a0: Math.PI,
+        a1: 1.65 * Math.PI,
+        stroke: '#2bb6a3',
+        lw: 5,
+        glow: '#2bb6a3',
+      },
+      {
+        t: 'ln',
+        a: [0.72, 0.62],
+        b: [0.86, 0.46],
+        stroke: '#fff',
+        lw: 2.6,
+        anim: { k: 'bob', amp: 0.02, spd: 1.5 },
+      },
+    ],
+  },
+
+  // AI Tools — AutoGPT vs agentic: a spinning loop vs a directed chain.
+  'autogpt-vs-agentic-workflows-what-actually-works-in-producti': {
+    bg: ['#1c1530', '#0e0a1a'],
+    el: [
+      {
+        t: 'ar',
+        x: 0.3,
+        y: 0.48,
+        rad: 0.16,
+        a0: 0.4,
+        a1: 5.9,
+        stroke: '#ff8ab4',
+        lw: 3.4,
+        glow: '#ff5a9e',
+        anim: { k: 'rot', spd: 1 },
+      },
+      { t: 'tx', x: 0.3, y: 0.74, s: '?', size: 0.08, fill: '#ff8ab4', w: 900 },
+      { t: 'c', x: 0.58, y: 0.48, rad: 0.04, fill: '#46c7c7', glow: '#46c7c7' },
+      { t: 'c', x: 0.72, y: 0.48, rad: 0.04, fill: '#46c7c7', glow: '#46c7c7' },
+      { t: 'c', x: 0.86, y: 0.48, rad: 0.04, fill: '#46c7c7', glow: '#46c7c7' },
+      {
+        t: 'ln',
+        a: [0.62, 0.48],
+        b: [0.68, 0.48],
+        stroke: '#7af0e0',
+        lw: 2.4,
+        dash: [3, 4],
+        anim: { k: 'dash', spd: 2 },
+      },
+      {
+        t: 'ln',
+        a: [0.76, 0.48],
+        b: [0.82, 0.48],
+        stroke: '#7af0e0',
+        lw: 2.4,
+        dash: [3, 4],
+        anim: { k: 'dash', spd: 2 },
+      },
+    ],
+  },
+
+  // Indie Dev — tech stack to $1M: ascending layers crowned with the goal.
+  'the-tech-stack-that-scales-from-0-to-1m-arr': {
+    bg: ['#12211c', '#0a0e0c'],
+    el: [
+      {
+        t: 'r',
+        x: 0.26,
+        y: 0.66,
+        w: 0.48,
+        h: 0.12,
+        rad: 4,
+        fill: 'rgba(255,255,255,0.08)',
+        stroke: '#3ba776',
+        lw: 1,
+      },
+      {
+        t: 'r',
+        x: 0.3,
+        y: 0.52,
+        w: 0.4,
+        h: 0.12,
+        rad: 4,
+        fill: 'rgba(70,232,160,0.18)',
+        stroke: '#46e8a0',
+        lw: 1,
+      },
+      {
+        t: 'r',
+        x: 0.34,
+        y: 0.38,
+        w: 0.32,
+        h: 0.12,
+        rad: 4,
+        fill: 'rgba(70,232,160,0.3)',
+        stroke: '#46e8a0',
+        lw: 1,
+      },
+      {
+        t: 'tx',
+        x: 0.5,
+        y: 0.24,
+        s: '$1M',
+        size: 0.11,
+        fill: '#9ff0c6',
+        w: 900,
+        glow: '#46e8a0',
+        anim: { k: 'pulse', amp: 0.06, spd: 1.4 },
+      },
+    ],
+  },
+
+  // Productivity — energy vs time: a battery beside a clock.
+  'energy-management-vs-time-management': {
+    bg: ['#241a0c', '#120d04'],
+    el: [
+      {
+        t: 'r',
+        x: 0.14,
+        y: 0.4,
+        w: 0.26,
+        h: 0.2,
+        rad: 4,
+        stroke: '#f0b429',
+        lw: 2,
+      },
+      { t: 'r', x: 0.4, y: 0.45, w: 0.02, h: 0.1, fill: '#f0b429' },
+      { t: 'r', x: 0.17, y: 0.44, w: 0.05, h: 0.12, rad: 2, fill: '#f0b429' },
+      {
+        t: 'r',
+        x: 0.24,
+        y: 0.44,
+        w: 0.05,
+        h: 0.12,
+        rad: 2,
+        fill: '#f0b429',
+        anim: { k: 'blink', spd: 1.5 },
+      },
+      { t: 'tx', x: 0.5, y: 0.5, s: 'vs', size: 0.08, fill: '#fff', w: 900 },
+      { t: 'c', x: 0.74, y: 0.5, rad: 0.14, stroke: '#7cc0ee', lw: 2.4 },
+      { t: 'ln', a: [0.74, 0.5], b: [0.74, 0.41], stroke: '#7cc0ee', lw: 2.4 },
+      { t: 'ln', a: [0.74, 0.5], b: [0.82, 0.54], stroke: '#7cc0ee', lw: 2.4 },
+    ],
+  },
+
+  // Development — testing for small teams: a test pyramid with green checks.
+  'testing-strategies-for-small-teams': {
+    bg: ['#141a2e', '#0a0e18'],
+    el: [
+      {
+        t: 'pl',
+        pts: [
+          [0.5, 0.2],
+          [0.78, 0.74],
+          [0.22, 0.74],
+        ],
+        close: true,
+        fill: 'rgba(124,192,238,0.12)',
+        stroke: '#7cc0ee',
+        lw: 1.4,
+      },
+      {
+        t: 'ln',
+        a: [0.34, 0.56],
+        b: [0.66, 0.56],
+        stroke: '#7cc0ee',
+        lw: 1,
+        op: 0.6,
+      },
+      {
+        t: 'ln',
+        a: [0.42, 0.38],
+        b: [0.58, 0.38],
+        stroke: '#7cc0ee',
+        lw: 1,
+        op: 0.6,
+      },
+      {
+        t: 'tx',
+        x: 0.5,
+        y: 0.46,
+        s: '✓',
+        size: 0.07,
+        fill: '#46e8a0',
+        anim: { k: 'pulse', amp: 0.12, spd: 1.6, ph: 0 },
+      },
+      {
+        t: 'tx',
+        x: 0.4,
+        y: 0.66,
+        s: '✓',
+        size: 0.06,
+        fill: '#46e8a0',
+        anim: { k: 'pulse', amp: 0.12, spd: 1.6, ph: 1 },
+      },
+      {
+        t: 'tx',
+        x: 0.6,
+        y: 0.66,
+        s: '✓',
+        size: 0.06,
+        fill: '#46e8a0',
+        anim: { k: 'pulse', amp: 0.12, spd: 1.6, ph: 2 },
+      },
+    ],
+  },
+
+  // Product — no-code MVP: interlocking blocks assembled in 48h.
+  'no-code-mvp': {
+    bg: ['#181530', '#0c0a18'],
+    el: [
+      {
+        t: 'r',
+        x: 0.24,
+        y: 0.3,
+        w: 0.24,
+        h: 0.2,
+        rad: 6,
+        fill: '#8b7bd8',
+        glow: '#8b7bd8',
+      },
+      { t: 'r', x: 0.5, y: 0.3, w: 0.24, h: 0.2, rad: 6, fill: '#7cc0ee' },
+      { t: 'r', x: 0.24, y: 0.52, w: 0.24, h: 0.2, rad: 6, fill: '#7cc0ee' },
+      {
+        t: 'r',
+        x: 0.5,
+        y: 0.52,
+        w: 0.24,
+        h: 0.2,
+        rad: 6,
+        fill: '#8b7bd8',
+        anim: { k: 'pulse', amp: 0.04, spd: 1.6 },
+      },
+      {
+        t: 'tx',
+        x: 0.5,
+        y: 0.84,
+        s: '48h',
+        size: 0.08,
+        fill: '#c9b3ff',
+        w: 900,
+      },
+    ],
+  },
+
+  // Growth — email marketing: an envelope feeding a drip sequence.
+  'email-marketing-for-saas-beyond-the-welcome-sequence': {
+    bg: ['#241a0c', '#130d05'],
+    el: [
+      {
+        t: 'r',
+        x: 0.16,
+        y: 0.28,
+        w: 0.3,
+        h: 0.2,
+        rad: 6,
+        fill: '#f0b429',
+        glow: '#f0b429',
+      },
+      {
+        t: 'pl',
+        pts: [
+          [0.16, 0.3],
+          [0.31, 0.42],
+          [0.46, 0.3],
+        ],
+        stroke: '#2a1d05',
+        lw: 2.2,
+      },
+      {
+        t: 'ln',
+        a: [0.31, 0.48],
+        b: [0.31, 0.82],
+        stroke: 'rgba(255,255,255,0.25)',
+        lw: 1.4,
+      },
+      ...Array.from(
+        { length: 3 },
+        (_, i): El => ({
+          t: 'c',
+          x: 0.31,
+          y: 0.56 + i * 0.12,
+          rad: 0.03,
+          fill: '#83d8ad',
+          anim: { k: 'bob', amp: 0.02, spd: 1.6, ph: i },
+        })
+      ),
+    ],
+  },
+
+  // Productivity — saying no: a shield that keeps the bridge intact.
+  'how-to-say-no-without-burning-bridges': {
+    bg: ['#241a0c', '#120d04'],
+    el: [
+      {
+        t: 'pl',
+        pts: [
+          [0.12, 0.7],
+          [0.32, 0.56],
+          [0.5, 0.6],
+          [0.68, 0.52],
+          [0.88, 0.66],
+        ],
+        stroke: '#83d8ad',
+        lw: 3,
+        glow: '#3ba776',
+      },
+      {
+        t: 'pl',
+        pts: [
+          [0.5, 0.24],
+          [0.62, 0.3],
+          [0.62, 0.44],
+          [0.5, 0.52],
+          [0.38, 0.44],
+          [0.38, 0.3],
+        ],
+        close: true,
+        fill: 'rgba(240,180,41,0.2)',
+        stroke: '#f0b429',
+        lw: 2,
+      },
+      {
+        t: 'tx',
+        x: 0.5,
+        y: 0.38,
+        s: 'NO',
+        size: 0.08,
+        fill: '#f0b429',
+        w: 900,
+      },
+    ],
+  },
+
+  // SEO — video SEO: a play button framed with ranking bars.
+  'video-seo-how-to-rank-on-youtube-and-google': {
+    bg: ['#10211c', '#08120e'],
+    el: [
+      {
+        t: 'r',
+        x: 0.16,
+        y: 0.24,
+        w: 0.5,
+        h: 0.4,
+        rad: 10,
+        fill: 'rgba(255,255,255,0.05)',
+        stroke: '#2bb6a3',
+        lw: 1.4,
+      },
+      {
+        t: 'pl',
+        pts: [
+          [0.36, 0.34],
+          [0.36, 0.54],
+          [0.52, 0.44],
+        ],
+        close: true,
+        fill: '#7af0e0',
+        glow: '#2bb6a3',
+        anim: { k: 'pulse', amp: 0.06, spd: 1.4 },
+      },
+      { t: 'r', x: 0.72, y: 0.3, w: 0.16, h: 0.05, rad: 3, fill: '#2bb6a3' },
+      {
+        t: 'r',
+        x: 0.72,
+        y: 0.42,
+        w: 0.12,
+        h: 0.05,
+        rad: 3,
+        fill: 'rgba(255,255,255,0.22)',
+      },
+      {
+        t: 'r',
+        x: 0.72,
+        y: 0.54,
+        w: 0.1,
+        h: 0.05,
+        rad: 3,
+        fill: 'rgba(255,255,255,0.16)',
+      },
+    ],
+  },
+
+  // AI Tools — AI customer support: a chat bubble with a bot spark, 24/7.
+  'the-complete-guide-to-ai-powered-customer-support': {
+    bg: ['#1c1530', '#0e0a1a'],
+    el: [
+      {
+        t: 'r',
+        x: 0.2,
+        y: 0.28,
+        w: 0.5,
+        h: 0.32,
+        rad: 16,
+        fill: '#a07bf0',
+        glow: '#a07bf0',
+      },
+      {
+        t: 'pl',
+        pts: [
+          [0.3, 0.6],
+          [0.3, 0.72],
+          [0.42, 0.6],
+        ],
+        close: true,
+        fill: '#a07bf0',
+      },
+      {
+        t: 'tx',
+        x: 0.45,
+        y: 0.43,
+        s: '✦',
+        size: 0.1,
+        fill: '#fff',
+        anim: { k: 'pulse', amp: 0.16, spd: 2 },
+      },
+      {
+        t: 'tx',
+        x: 0.78,
+        y: 0.5,
+        s: '24/7',
+        size: 0.08,
+        fill: '#c9b3ff',
+        w: 900,
+      },
+    ],
+  },
+
+  // Growth — soft launch: a steady ramp beside a fizzling big-bang spike.
+  'the-art-of-the-soft-launch-why-big-bangs-fail': {
+    bg: ['#241a0c', '#130d05'],
+    el: [
+      {
+        t: 'ln',
+        a: [0.1, 0.82],
+        b: [0.9, 0.82],
+        stroke: 'rgba(255,255,255,0.18)',
+        lw: 1.2,
+      },
+      {
+        t: 'pl',
+        pts: [
+          [0.12, 0.78],
+          [0.32, 0.66],
+          [0.52, 0.5],
+          [0.72, 0.34],
+          [0.88, 0.24],
+        ],
+        stroke: '#46e8a0',
+        lw: 3,
+        glow: '#46e8a0',
+      },
+      {
+        t: 'pl',
+        pts: [
+          [0.12, 0.78],
+          [0.2, 0.3],
+          [0.28, 0.74],
+          [0.36, 0.78],
+        ],
+        stroke: '#ff6b6b',
+        lw: 2.2,
+        op: 0.8,
+      },
+    ],
+  },
+
+  // Indie Dev — imposter syndrome: a confident face shadowed by a doubting one.
+  'dealing-with-imposter-syndrome-as-a-solo-founder': {
+    bg: ['#12211c', '#0a0e0c'],
+    el: [
+      {
+        t: 'c',
+        x: 0.4,
+        y: 0.46,
+        rad: 0.16,
+        fill: 'rgba(255,255,255,0.12)',
+        stroke: 'rgba(255,255,255,0.3)',
+        lw: 1.4,
+      },
+      {
+        t: 'c',
+        x: 0.56,
+        y: 0.46,
+        rad: 0.16,
+        stroke: '#46e8a0',
+        lw: 2,
+        glow: '#46e8a0',
+      },
+      { t: 'c', x: 0.51, y: 0.42, rad: 0.018, fill: '#9ff0c6' },
+      { t: 'c', x: 0.61, y: 0.42, rad: 0.018, fill: '#9ff0c6' },
+      {
+        t: 'tx',
+        x: 0.74,
+        y: 0.26,
+        s: '?',
+        size: 0.12,
+        fill: 'rgba(255,255,255,0.5)',
+        w: 900,
+        anim: { k: 'bob', amp: 0.03, spd: 1.3 },
+      },
+    ],
+  },
 };
 
 const TAG_HUE: Record<string, number> = {
