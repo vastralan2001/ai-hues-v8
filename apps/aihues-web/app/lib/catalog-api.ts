@@ -7,6 +7,8 @@ import {
   CatalogService,
   ListGamesRequestSchema,
   ListToolsRequestSchema,
+  RelatedItemsRequestSchema,
+  SearchCatalogRequestSchema,
 } from '@aiushtha/proto-es/aihues/catalog/v1/service_pb';
 import {
   ItemCategory,
@@ -296,6 +298,69 @@ export async function listGames(
     games: response.games.map(normalizeGame),
     nextPageToken: response.nextPageToken,
   };
+}
+
+export interface CatalogSearchHit {
+  slug: string;
+  title: string;
+  subtitle: string;
+  href: string;
+  type: 'tool' | 'game' | 'test';
+  score: number;
+}
+
+export interface CatalogRelatedItem {
+  slug: string;
+  title: string;
+  desc: string;
+  subtitle: string;
+  href: string;
+  type: 'tool' | 'game' | 'test';
+}
+
+/** Semantic catalog search via the Go aihues-api (FAISS + embeddings). */
+export async function searchCatalog(
+  q: string,
+  k = 8
+): Promise<CatalogSearchHit[]> {
+  const client = makeCatalogClient();
+  const res = await client.searchCatalog(
+    create(SearchCatalogRequestSchema, { q, k })
+  );
+  return res.hits.map((h) => ({
+    slug: h.slug,
+    title: h.title,
+    subtitle: h.subtitle,
+    href: h.href,
+    type: (h.type || 'tool') as CatalogSearchHit['type'],
+    score: h.score,
+  }));
+}
+
+/** Same-type related items via the Go aihues-api (by slug or free text). */
+export async function relatedItems(opts: {
+  type: string;
+  slug?: string;
+  q?: string;
+  k?: number;
+}): Promise<CatalogRelatedItem[]> {
+  const client = makeCatalogClient();
+  const res = await client.relatedItems(
+    create(RelatedItemsRequestSchema, {
+      type: opts.type,
+      slug: opts.slug ?? '',
+      q: opts.q ?? '',
+      k: opts.k ?? 6,
+    })
+  );
+  return res.items.map((r) => ({
+    slug: r.slug,
+    title: r.title,
+    desc: r.desc,
+    subtitle: r.subtitle,
+    href: r.href,
+    type: (r.type || 'tool') as CatalogRelatedItem['type'],
+  }));
 }
 
 const LOCAL_FALLBACK_TOOLS: CatalogTool[] = LOCAL_TOOLS.map((t, idx) => ({

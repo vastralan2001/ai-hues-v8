@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
+import { relatedItems } from '@/lib/catalog-api';
 import { relatedBySlug, relatedByQuery } from '@/lib/search/semantic';
 
 export const runtime = 'nodejs';
@@ -20,17 +21,25 @@ export async function GET(req: NextRequest) {
   const k =
     Number.isFinite(kRaw) && kRaw > 0 ? Math.min(12, Math.floor(kRaw)) : 6;
 
+  if (!slug && !(q && q.length >= 2)) {
+    return NextResponse.json({ items: [] });
+  }
+
   try {
-    const items = slug
-      ? await relatedBySlug(slug, type, k)
-      : q && q.length >= 2
-        ? await relatedByQuery(q, type, k)
-        : [];
+    // Primary: Go aihues-api. Fall back to the in-process index on failure.
+    const items = await relatedItems({ type, slug, q, k });
     return NextResponse.json({ items });
-  } catch (err) {
-    return NextResponse.json(
-      { items: [], error: err instanceof Error ? err.message : String(err) },
-      { status: 200 }
-    );
+  } catch {
+    try {
+      const items = slug
+        ? await relatedBySlug(slug, type, k)
+        : await relatedByQuery(q as string, type, k);
+      return NextResponse.json({ items });
+    } catch (err) {
+      return NextResponse.json(
+        { items: [], error: err instanceof Error ? err.message : String(err) },
+        { status: 200 }
+      );
+    }
   }
 }
