@@ -57,7 +57,7 @@ const UNSPLASH_PRESETS = {
     'photo-1516321318423-f06f85e504b3',
     'photo-1531297484001-80022131f5a1',
     'photo-1550751827-4bd374c3f58b',
-    'photo-1620712943543-bcc4688e7485',
+    'photo-1526379096588-290a6b65f8a3',
   ],
   Growth: [
     'photo-1552664730-d307ca884978',
@@ -117,7 +117,7 @@ const UNSPLASH_PRESETS = {
     'photo-1587620962725-abab7fe55159',
     'photo-1517694712202-14dd9538aa97',
     'photo-1555949963-ff9fe0c870eb',
-    'photo-1620712943543-bcc4688e7485',
+    'photo-1526379096588-290a6b65f8a3',
   ],
 };
 
