@@ -3,6 +3,7 @@ import Link from 'next/link';
 import FeatureBand from '@/components/FeatureBand';
 import HeroSearch from '@/components/HeroSearch';
 import HeroStage from '@/components/HeroStage';
+import { BrandWord } from '@/components/Logo';
 import { PageShell } from '@/components/SiteChrome';
 import SpotlightCarousel, {
   type SpotlightSlide,
@@ -197,10 +198,15 @@ export default async function HomePage() {
               )}
             </h1>
 
-            <p className='mx-auto mb-9 max-w-[560px] text-[19px] leading-relaxed text-secondary lg:mx-0'>
+            <p className='mx-auto mb-9 max-w-[600px] text-[19px] leading-relaxed text-secondary lg:mx-0'>
+              <span className='font-semibold text-foreground'>
+                <BrandWord>Helpers</BrandWord>, <BrandWord>Unwinds</BrandWord>,{' '}
+                <BrandWord>Evaluations</BrandWord> &amp;{' '}
+                <BrandWord>Stories</BrandWord>
+              </span>
               {locale === 'zh'
-                ? '精选 AI 工具与轻量小游戏，无需注册，打开即用。'
-                : 'Curated AI tools and mini games — no signup, just open and use.'}
+                ? ' —— 你的日常 AI 四种色彩，无需注册，打开即用。'
+                : ' — the four hues of your everyday AI. No signup, just open and use.'}
             </p>
 
             <HeroSearch
@@ -232,7 +238,11 @@ export default async function HomePage() {
               href: toolsCategoryHref('ai-writing'),
             },
           ]}
-          title='Tools that do one thing well'
+          title={
+            <>
+              <BrandWord>Helpers</BrandWord> that do one thing well
+            </>
+          }
           tone={2}
           visual={
             <SpotlightCarousel
@@ -257,7 +267,11 @@ export default async function HomePage() {
             { label: 'Minesweeper', href: gameDetailHref('minesweeper') },
           ]}
           reverse
-          title='Quick play, zero install'
+          title={
+            <>
+              <BrandWord>Unwinds</BrandWord> for a five-minute break
+            </>
+          }
           tone={3}
           visual={
             <SpotlightCarousel
@@ -279,7 +293,11 @@ export default async function HomePage() {
             label: tm.name,
             href: testDetailHref(tm.slug),
           }))}
-          title='Tests worth taking'
+          title={
+            <>
+              <BrandWord>Evaluations</BrandWord> worth taking
+            </>
+          }
           tone={4}
           visual={<SpotlightCarousel demo='test' slides={testSlides(locale)} />}
         />
@@ -288,10 +306,10 @@ export default async function HomePage() {
             RESOURCES
             ══════════════════════════════════════════════ */}
         <FeatureBand
-          cta={{ href: resourcesHref, label: 'Read the blog' }}
+          cta={{ href: resourcesHref, label: 'Read the stories' }}
           description="Essays on AI, growth, SEO and indie development — what's actually working in 2026, written for people shipping real products."
-          eyebrow='Resources'
-          id='resources'
+          eyebrow='Stories'
+          id='stories'
           links={[
             { label: 'AI Tools', href: resourceTagHref('AI Tools') },
             { label: 'Growth', href: resourceTagHref('Growth') },
@@ -299,7 +317,11 @@ export default async function HomePage() {
             { label: 'Productivity', href: resourceTagHref('Productivity') },
           ]}
           reverse
-          title='Field notes for builders'
+          title={
+            <>
+              <BrandWord>Stories</BrandWord> for people who build
+            </>
+          }
           tone={0}
           visual={
             <SpotlightCarousel
