@@ -22,8 +22,7 @@ export default function TestsPage() {
       <PageMasthead
         breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Tests' }]}
         category='tests'
-        eyebrow='Assessment Center'
-        title='Quick Tests'
+        title='Tests'
         subtitle='Quick self-reflection quizzes with real question banks and shareable results.'
         features={['Real question banks', 'Shareable results', 'Just for fun']}
       />

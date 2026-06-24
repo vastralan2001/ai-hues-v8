@@ -29,8 +29,7 @@ export default async function GamesPage({
       <PageMasthead
         breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Games' }]}
         category='games'
-        eyebrow='Game Center'
-        title='Mini Games'
+        title='Games'
         subtitle='Open a tab, play a minute, close it. No install, just play.'
         features={['Play in one tap', 'No install', 'Quick breaks']}
       />

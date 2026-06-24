@@ -44,15 +44,14 @@ export default async function ToolsPage({
 
   const categoryCounts = getToolCategoryCounts();
   const totalLabel =
-    'Tools covering development, writing, growth, and productivity';
+    'Tools covering development, writing, growth, and productivity.';
 
   return (
     <PageShell variant='tools'>
       <PageMasthead
         breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Tools' }]}
         category='tools'
-        eyebrow='Tool Library'
-        title='All Tools'
+        title='Tools'
         subtitle={totalLabel}
         features={[
           'Instant results',

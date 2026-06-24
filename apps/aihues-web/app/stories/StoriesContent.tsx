@@ -60,7 +60,6 @@ export default function StoriesContent({ initialPosts, initialTag }: Props) {
       <PageMasthead
         breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Stories' }]}
         category='stories'
-        eyebrow='Reading Room'
         title='Stories'
         subtitle='Growth strategies, AI tool reviews, and battle-tested indie-dev tips.'
         features={['AI & growth', 'Indie dev', 'Practical playbooks']}

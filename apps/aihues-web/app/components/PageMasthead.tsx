@@ -6,17 +6,15 @@ import { type BrandCategory, CATEGORY_SLOGAN } from '@/lib/category-brand';
 import type { Locale } from '@/lib/dict';
 
 /* Shared masthead for the Tools / Games / Tests / Stories listing pages — one
-   consistent 门头. Bold Radiance display title (Dota2 energy) on a calm
-   warm-white band (kimi Quiet Utility): an eyebrow tag, the title with its
-   last word accented, the category slogan, a subtitle, an optional actions
-   slot, and a row of feature chips. Accent colours come from the themed
-   <main> wrapper, so the whole band picks up the category hue. */
+   consistent 门头 on a calm warm-white band (kimi Quiet Utility): a plain
+   display title, the category slogan, a subtitle, an optional actions slot,
+   and a row of feature chips. Accent colours come from the themed <main>
+   wrapper, so the whole band picks up the category hue. */
 
 export function PageMasthead({
   breadcrumb,
   category,
   locale = 'en',
-  eyebrow,
   title,
   subtitle,
   features,
@@ -25,16 +23,12 @@ export function PageMasthead({
   breadcrumb?: Crumb[];
   category?: BrandCategory;
   locale?: Locale;
-  eyebrow: string;
   title: string;
   subtitle: string;
   features?: string[];
   children?: ReactNode;
 }) {
   const slogan = category ? CATEGORY_SLOGAN[category] : null;
-  const words = title.trim().split(' ');
-  const lead = words.slice(0, -1).join(' ');
-  const tail = words[words.length - 1];
 
   return (
     <header className='relative isolate overflow-hidden px-6 pb-10 pt-16 text-center'>
@@ -52,12 +46,8 @@ export function PageMasthead({
         </div>
       ) : null}
       <div className='mx-auto max-w-[1100px]'>
-        <span className='inline-flex items-center rounded-full border border-border bg-white/70 px-3.5 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.2em] text-accent backdrop-blur-sm'>
-          {eyebrow}
-        </span>
-        <h1 className='mt-5 text-[clamp(40px,6.4vw,74px)] font-extrabold leading-[1.0] tracking-[-0.03em] text-foreground'>
-          {lead ? `${lead} ` : null}
-          <span className='text-accent'>{tail}</span>
+        <h1 className='text-[clamp(40px,6.4vw,74px)] font-extrabold leading-[1.0] tracking-[-0.03em] text-accent'>
+          {title}
         </h1>
         {slogan ? (
           <p className='mx-auto mt-5 max-w-[880px] text-[19px] font-semibold leading-snug text-foreground'>
