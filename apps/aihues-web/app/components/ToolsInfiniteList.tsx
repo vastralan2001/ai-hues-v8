@@ -9,8 +9,7 @@ import {
   type CatalogTool,
   type ToolCategoryKey,
 } from '@/lib/catalog-types';
-import { toolDetailHref, toolsCategoryHref } from '@/lib/routes';
-import { ToolIcon } from './ToolIcon';
+import { toolsCategoryHref } from '@/lib/routes';
 
 const PAGE_SIZE = 20;
 
@@ -204,26 +203,7 @@ export function ToolsInfiniteList({
                 {groupTools.length} tools
               </span>
             </div>
-            {key === 'ai-writing' ? (
-              <div className='ai-text-grid'>
-                {groupTools.map((tool) => (
-                  <a
-                    className='ai-text-link'
-                    href={toolDetailHref(tool.slug)}
-                    key={tool.id}
-                  >
-                    <span className='inline-flex align-middle mr-1.5'>
-                      <ToolIcon slug={tool.slug} size={16} />
-                    </span>
-                    {tool.name}
-                  </a>
-                ))}
-              </div>
-            ) : (
-              <div className='catalog-grid'>
-                {groupTools.map(renderToolCard)}
-              </div>
-            )}
+            <div className='catalog-grid'>{groupTools.map(renderToolCard)}</div>
           </div>
         ))
       )}

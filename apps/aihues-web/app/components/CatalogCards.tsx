@@ -10,8 +10,16 @@ import { ToolIcon } from './ToolIcon';
 import { gameDetailHref, toolDetailHref } from '@/lib/routes';
 
 /* ─────────────────────────────────────────────
-   Tool card — icon + name + description
+   Tool card — one unified card for every tool
+   category: icon tile, category chip, name, desc
    ───────────────────────────────────────────── */
+const TOOL_CAT_LABEL: Record<string, string> = {
+  developer: 'Dev',
+  utility: 'Utility',
+  'ai-writing': 'AI Writing',
+  image: 'Image',
+};
+
 export function ToolCardV2({
   tool,
   locale = 'en',
@@ -19,10 +27,10 @@ export function ToolCardV2({
   tool: CatalogTool;
   locale?: Locale;
 }) {
-  void locale;
+  const catLabel = TOOL_CAT_LABEL[tool.category];
   return (
     <Link
-      className='card-lift group relative flex h-full cursor-pointer flex-col rounded-[16px] border border-border bg-surface p-[22px] text-inherit no-underline'
+      className='card-lift group relative flex h-full cursor-pointer flex-col rounded-[16px] border border-border bg-surface p-[22px] text-inherit no-underline transition-colors hover:border-accent/40'
       href={toolDetailHref(tool.slug)}
       onClick={() => {
         event(GA_EVENTS.toolClick, {
@@ -32,17 +40,32 @@ export function ToolCardV2({
         });
       }}
     >
-      {/* icon-wrap */}
-      <div className='mb-3 flex h-[42px] w-[42px] items-center justify-center rounded-[11px] border border-border bg-surface text-secondary transition-colors duration-200 group-hover:border-accent/30 group-hover:bg-accent-bg group-hover:text-accent'>
-        <ToolIcon slug={tool.slug} size={20} />
+      {catLabel ? (
+        <span className='absolute right-3.5 top-3.5 rounded-full border border-border bg-white/60 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-muted backdrop-blur-sm'>
+          {catLabel}
+        </span>
+      ) : null}
+
+      <div className='mb-3.5 flex h-[44px] w-[44px] items-center justify-center rounded-[12px] border border-border bg-accent-bg text-accent transition-colors duration-200 group-hover:border-accent/40'>
+        <ToolIcon slug={tool.slug} size={21} />
       </div>
 
-      <h3 className='mb-1 line-clamp-1 text-[15px] font-semibold leading-tight text-foreground'>
+      <h3 className='mb-1 line-clamp-1 pr-12 text-[15px] font-semibold leading-tight text-foreground'>
         {tool.name}
       </h3>
-      <p className='m-0 line-clamp-2 text-[12px] leading-[1.45] text-secondary'>
+      <p className='m-0 line-clamp-2 text-[12.5px] leading-[1.5] text-secondary'>
         {tool.description}
       </p>
+
+      <span className='mt-3.5 inline-flex items-center gap-1 text-[12px] font-semibold text-accent opacity-0 transition-opacity duration-200 group-hover:opacity-100'>
+        {locale === 'zh' ? '打开' : 'Open'}
+        <span
+          aria-hidden='true'
+          className='transition-transform group-hover:translate-x-0.5'
+        >
+          →
+        </span>
+      </span>
     </Link>
   );
 }
