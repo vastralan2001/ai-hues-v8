@@ -274,64 +274,80 @@ function DoodleJumpDemo({ active }: { active: boolean }) {
 
     const G = 0.38;
     const JUMP = 9.6;
-    const SPRING = 1.75;
-    const STEER = 0.1;
-    const MAXVX = 3.4;
+    const SPRING_MULT = 1.4;
+    const STEER = 0.12;
+    const MAXVX = 3.9;
     const PW = 46;
     const PH = 9;
     const R = 13;
-    type PType = 'normal' | 'spring' | 'moving' | 'fragile' | 'spike';
-    const COLOR: Record<PType, string> = {
-      normal: '#8B4513',
-      spring: '#FF9800',
-      moving: '#42A5F5',
-      fragile: '#F06292',
-      spike: '#B71C1C',
+    const GAP = 40;
+    // platform type bitflags + colours, mirroring the real game
+    const FRAGILE = 1;
+    const MOVING = 2;
+    const SPRING = 4;
+    const SPIKE = 8;
+    const platColor = (t: number) => {
+      if (t & SPIKE) return t & MOVING ? '#26C6DA' : '#B71C1C';
+      if (t & SPRING) {
+        if (t & FRAGILE) return '#FFA726';
+        if (t & MOVING) return '#66BB6A';
+        return '#FF9800';
+      }
+      if (t & FRAGILE) return t & MOVING ? '#AB47BC' : '#F06292';
+      if (t & MOVING) return '#42A5F5';
+      return '#8B4513';
     };
-    const okToLand = (t: PType) =>
-      t === 'normal' || t === 'spring' || t === 'moving';
-    type Plat = {
-      x: number;
-      y: number;
-      type: PType;
-      vx: number;
-      dead: boolean;
+    const okToLand = (t: number) => !(t & SPIKE);
+    type Plat = { x: number; y: number; t: number; vx: number; dead: boolean };
+    const randType = (prevSpring: boolean) => {
+      let t = 0;
+      if (Math.random() < 0.25) {
+        if (Math.random() < 0.3) t |= FRAGILE;
+        if (Math.random() < 0.3) t |= MOVING;
+        if (Math.random() < 0.2) t |= SPRING;
+      } else if (prevSpring) {
+        t = SPIKE;
+        if (Math.random() < 0.5) t |= MOVING;
+      }
+      return t;
     };
-    let hazardOk = false; // never two hazards in a row
-    const makePlat = (x: number, y: number): Plat => {
-      const r = Math.random();
-      let type: PType;
-      if (hazardOk && r < 0.1) type = 'spike';
-      else if (hazardOk && r < 0.22) type = 'fragile';
-      else if (r < 0.42) type = 'spring';
-      else if (r < 0.64) type = 'moving';
-      else type = 'normal';
-      hazardOk = okToLand(type);
-      return {
-        x,
-        y,
-        type,
-        vx:
-          type === 'moving'
-            ? (Math.random() < 0.5 ? -1 : 1) * (0.5 + Math.random() * 0.7)
-            : 0,
-        dead: false,
-      };
-    };
+    const mvx = (t: number) =>
+      t & MOVING
+        ? (Math.random() < 0.5 ? -1 : 1) * (0.5 + Math.random() * 0.7)
+        : 0;
     let plats: Plat[] = [];
     let ch = { x: 0, y: 0, vy: 0 };
     let stars: { x: number; y: number; r: number }[] = [];
+    let topSpring = false;
+    // a spike always gets a safe platform beside it so the climb never dead-ends
+    const addSafe = (x: number, y: number) => {
+      const left = x - PW - 14;
+      const sx =
+        left > 10 ? Math.random() * left : x + PW + 14 + Math.random() * 16;
+      plats.push({
+        x: Math.max(8, Math.min(W - PW - 8, sx)),
+        y,
+        t: 0,
+        vx: 0,
+        dead: false,
+      });
+    };
+    const spawn = (x: number, y: number, prevSpring: boolean) => {
+      const t = randType(prevSpring);
+      plats.push({ x, y, t, vx: mvx(t), dead: false });
+      if (t & SPIKE) addSafe(x, y);
+      return (t & SPRING) !== 0;
+    };
     const init = () => {
       const baseY = H - 28;
-      hazardOk = false;
-      plats = [
-        { x: W / 2 - PW / 2, y: baseY, type: 'normal', vx: 0, dead: false },
-      ];
+      plats = [{ x: W / 2 - PW / 2, y: baseY, t: 0, vx: 0, dead: false }];
       let y = baseY;
+      let prev = false;
       while (y > -20) {
-        y -= 42 + Math.random() * 18;
-        plats.push(makePlat(Math.random() * (W - PW), y));
+        y -= GAP + Math.random() * 22;
+        prev = spawn(Math.random() * (W - PW), y, prev);
       }
+      topSpring = prev;
       ch = { x: W / 2, y: baseY - R, vy: -JUMP };
       stars = Array.from({ length: 16 }, () => ({
         x: Math.random() * W,
@@ -349,27 +365,37 @@ function DoodleJumpDemo({ active }: { active: boolean }) {
       if (disc < 0) return 24;
       return Math.max(2, (-ch.vy + Math.sqrt(disc)) / (2 * a));
     };
-    // pick the nearest safe platform below and predict where it'll be on arrival
-    const aimX = () => {
+    let target: Plat | null = null;
+    // Chosen at take-off: the nearest safe platform above that this jump can
+    // actually reach, so the hop has a clear direction from the start.
+    const pickTarget = (): Plat | null => {
+      const apexY = ch.y - (ch.vy * ch.vy) / (2 * G);
       let best: Plat | null = null;
       for (const p of plats) {
-        if (p.dead || !okToLand(p.type)) continue;
-        if (p.y > ch.y + R - 2 && (!best || p.y < best.y)) best = p;
+        if (p.dead || !okToLand(p.t)) continue;
+        if (p.y > ch.y - 8 || p.y < apexY + 10) continue; // above & reachable
+        if (!best || p.y > best.y) best = p; // nearest one up → steady climb
       }
-      if (!best) return ch.x;
-      if (best.type === 'moving') {
-        const t = timeTo(best.y);
-        return Math.max(
-          PW / 2,
-          Math.min(W - PW / 2, best.x + PW / 2 + best.vx * t)
-        );
+      if (!best) {
+        // nothing above in reach — fall onto the nearest platform below
+        for (const p of plats) {
+          if (p.dead || !okToLand(p.t)) continue;
+          if (p.y > ch.y + R && (!best || p.y < best.y)) best = p;
+        }
       }
-      return best.x + PW / 2;
+      return best;
+    };
+    const centerX = (p: Plat) => {
+      if (p.t & MOVING) {
+        const t = timeTo(p.y);
+        return Math.max(PW / 2, Math.min(W - PW / 2, p.x + PW / 2 + p.vx * t));
+      }
+      return p.x + PW / 2;
     };
 
     const update = () => {
       for (const p of plats) {
-        if (p.type !== 'moving' || p.dead) continue;
+        if (!(p.t & MOVING) || p.dead) continue;
         p.x += p.vx;
         if (p.x < 0) {
           p.x = 0;
@@ -379,8 +405,13 @@ function DoodleJumpDemo({ active }: { active: boolean }) {
           p.vx *= -1;
         }
       }
-      const dx = aimX() - ch.x;
-      ch.x += Math.max(-MAXVX, Math.min(MAXVX, dx * STEER));
+      // Commit to a target at take-off and steer toward it the whole arc, so
+      // direction is set on launch (not at the apex).
+      if (!target || target.dead) target = pickTarget();
+      if (target) {
+        const dx = centerX(target) - ch.x;
+        ch.x += Math.max(-MAXVX, Math.min(MAXVX, dx * STEER));
+      }
       ch.vy += G;
       ch.y += ch.vy;
       if (ch.vy > 0) {
@@ -392,18 +423,17 @@ function DoodleJumpDemo({ active }: { active: boolean }) {
             ch.y + R >= p.y &&
             ch.y + R <= p.y + PH + ch.vy
           ) {
-            if (p.type === 'spike') return init();
-            if (p.type === 'fragile') {
-              p.dead = true;
-              break;
-            }
-            ch.vy = p.type === 'spring' ? -JUMP * SPRING : -JUMP;
+            if (p.t & SPIKE) return init();
+            ch.y = p.y - R;
+            ch.vy = p.t & SPRING ? -JUMP * SPRING_MULT : -JUMP;
+            if (p.t & FRAGILE) p.dead = true;
+            target = null;
             break;
           }
         }
       }
-      if (ch.y < H * 0.45) {
-        const d = H * 0.45 - ch.y;
+      if (ch.y < H * 0.5) {
+        const d = H * 0.5 - ch.y;
         ch.y += d;
         plats.forEach((p) => (p.y += d));
         stars.forEach((s) => {
@@ -414,38 +444,43 @@ function DoodleJumpDemo({ active }: { active: boolean }) {
       plats = plats.filter((p) => !p.dead && p.y < H + 30);
       let top = plats.length ? Math.min(...plats.map((p) => p.y)) : 0;
       while (top > -10) {
-        top -= 42 + Math.random() * 18;
-        plats.push(makePlat(Math.random() * (W - PW), top));
+        top -= GAP + Math.random() * 22;
+        topSpring = spawn(Math.random() * (W - PW), top, topSpring);
       }
       if (ch.y > H + 40) init();
     };
 
     const drawPlat = (p: Plat) => {
-      ctx.fillStyle = COLOR[p.type];
+      if (p.t & SPIKE) {
+        // teeth flush along the platform's top edge, spanning its full width
+        const n = 5;
+        const tw = PW / n;
+        ctx.fillStyle = '#fecaca';
+        ctx.beginPath();
+        for (let i = 0; i < n; i++) {
+          const x0 = p.x + i * tw;
+          ctx.moveTo(x0, p.y + 1);
+          ctx.lineTo(x0 + tw / 2, p.y - 6);
+          ctx.lineTo(x0 + tw, p.y + 1);
+        }
+        ctx.closePath();
+        ctx.fill();
+      }
+      ctx.fillStyle = platColor(p.t);
       roundRect(ctx, p.x, p.y, PW, PH, 4);
       ctx.fill();
-      if (p.type === 'spike') {
-        ctx.fillStyle = '#fca5a5';
-        for (let i = 0; i < 4; i++) {
-          const sx = p.x + 6 + i * 11;
-          ctx.beginPath();
-          ctx.moveTo(sx, p.y);
-          ctx.lineTo(sx + 4, p.y - 5);
-          ctx.lineTo(sx + 8, p.y);
-          ctx.closePath();
-          ctx.fill();
-        }
-      } else if (p.type === 'spring') {
+      if (p.t & SPRING) {
         ctx.fillStyle = '#ffe0b2';
-        ctx.fillRect(p.x + PW / 2 - 4, p.y - 5, 8, 5);
-      } else if (p.type === 'fragile') {
+        ctx.fillRect(p.x + PW / 2 - 5, p.y - 5, 10, 5);
+      }
+      if (p.t & FRAGILE) {
         ctx.strokeStyle = 'rgba(0,0,0,0.4)';
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.moveTo(p.x + 12, p.y);
-        ctx.lineTo(p.x + 19, p.y + PH);
+        ctx.moveTo(p.x + 14, p.y);
+        ctx.lineTo(p.x + 20, p.y + PH);
         ctx.moveTo(p.x + 32, p.y);
-        ctx.lineTo(p.x + 26, p.y + PH);
+        ctx.lineTo(p.x + 27, p.y + PH);
         ctx.stroke();
       }
     };
