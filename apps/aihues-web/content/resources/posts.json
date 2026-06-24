@@ -1,52 +1,22 @@
 [
   {
-    "slug": "propane",
-    "tag": "AI Tools",
-    "title": "Propane ",
-    "excerpt": "Propane gives your product team and agents one connected, always-current view of your customers.",
-    "date": "2026-06-24",
-    "readTime": "4 min",
-    "coverImage": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=1200&q=80",
-    "description": "Propane gives your product team and agents one connected, always-current view of your customers. Learn what Propane  does, who it is for, and how to get..."
-  },
-  {
-    "slug": "nimt",
-    "tag": "AI Tools",
-    "title": "Nimt",
-    "excerpt": "Nimt lives in Slack and handles AI search for you, end to end.",
-    "date": "2026-06-24",
-    "readTime": "4 min",
-    "coverImage": "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&q=80",
-    "description": "Nimt lives in Slack and handles AI search for you, end to end. Learn what Nimt does, who it is for, and how to get started."
-  },
-  {
-    "slug": "mindstone-rebel",
-    "tag": "AI Tools",
-    "title": "Mindstone Rebel",
-    "excerpt": "Rebel is a desktop AI workspace for agentic work.",
-    "date": "2026-06-24",
-    "readTime": "4 min",
-    "coverImage": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1200&q=80",
-    "description": "Rebel is a desktop AI workspace for agentic work. Learn what Mindstone Rebel does, who it is for, and how to get started."
-  },
-  {
     "slug": "alibaba-page-agent",
     "tag": "Development",
-    "title": "alibaba/page-agent",
+    "title": "Getting Started with Page Agent",
     "excerpt": "JavaScript in-page GUI agent.",
     "date": "2026-06-24",
     "readTime": "4 min",
-    "coverImage": "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1200&q=80",
+    "coverImage": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&q=80",
     "description": "JavaScript in-page GUI agent. Learn what it does, who it is for, and how to get started."
   },
   {
     "slug": "nvidia-nemoclaw",
     "tag": "Development",
-    "title": "NVIDIA/NemoClaw",
+    "title": "What Is Nemoclaw and Why It Matters",
     "excerpt": "Run agents like Hermes and OpenClaw more securely inside NVIDIA OpenShell with managed inference",
     "date": "2026-06-24",
     "readTime": "4 min",
-    "coverImage": "https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=1200&q=80",
+    "coverImage": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200&q=80",
     "description": "Run agents like Hermes and OpenClaw more securely inside NVIDIA OpenShell with managed inference Learn what it does, who it is for, and how to get started."
   },
   {
@@ -60,14 +30,44 @@
     "description": "Got sick of ads, so I made my own logic puzzle site Play this browser game instantly with no download required."
   },
   {
+    "slug": "propane",
+    "tag": "AI Tools",
+    "title": "Propane: A Practical Guide",
+    "excerpt": "Propane gives your product team and agents one connected, always-current view of your customers.",
+    "date": "2026-06-24",
+    "readTime": "4 min",
+    "coverImage": "https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=1200&q=80",
+    "description": "Propane gives your product team and agents one connected, always-current view of your customers. Learn what Propane  does, who it is for, and how to get..."
+  },
+  {
     "slug": "gerrymandle-daily-puzzle-game-where-you-redraw-electoral-dis",
     "tag": "Games",
     "title": "Gerrymandle - Daily puzzle game where you redraw electoral districts",
     "excerpt": "Gerrymandle - Daily puzzle game where you redraw electoral districts",
     "date": "2026-06-24",
     "readTime": "4 min",
-    "coverImage": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1200&q=80",
+    "coverImage": "https://images.unsplash.com/photo-1529699211952-734e80c4d42b?w=1200&q=80",
     "description": "Gerrymandle - Daily puzzle game where you redraw electoral districts Play this browser game instantly with no download required."
+  },
+  {
+    "slug": "qwen-agentworld-language-world-models-for-general-agents",
+    "tag": "AI Research",
+    "title": "Qwen-AgentWorld: Language World Models for General Agents",
+    "excerpt": "A world model predicts environment dynamics based on current observations and actions, serving as a core cognitive mechanism for reasoning and planning.",
+    "date": "2026-06-24",
+    "readTime": "4 min",
+    "coverImage": "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=1200&q=80",
+    "description": "A world model predicts environment dynamics based on current observations and actions, serving as a core cognitive mechanism for reasoning and planning...."
+  },
+  {
+    "slug": "remmd-realistic-multilingual-multi-image-agentic-verificatio",
+    "tag": "AI Research",
+    "title": "ReMMD: Realistic Multilingual Multi-Image Agentic Verification for Multimodal Misinformation Detection",
+    "excerpt": "Multimodal misinformation detection is increasingly important because viral posts now combine long multilingual narratives, several images, mixed...",
+    "date": "2026-06-24",
+    "readTime": "4 min",
+    "coverImage": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1200&q=80",
+    "description": "Multimodal misinformation detection is increasingly important because viral posts now combine long multilingual narratives, several images, mixed..."
   },
   {
     "slug": "kamera-unified-position-invariant-multimodal-kv-cache-for-tr",
