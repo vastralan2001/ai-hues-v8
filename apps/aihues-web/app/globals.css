@@ -275,6 +275,27 @@ select:focus-visible {
     transform: translateY(-22px);
   }
 }
+@keyframes story-art-drift {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(8%, -6%) scale(1.08);
+  }
+}
+.story-art-drift {
+  animation: story-art-drift 9s ease-in-out infinite;
+}
+.story-art-drift-slow {
+  animation: story-art-drift 13s ease-in-out infinite reverse;
+}
+@media (prefers-reduced-motion: reduce) {
+  .story-art-drift,
+  .story-art-drift-slow {
+    animation: none;
+  }
+}
 .demo-grow {
   transform-origin: left center;
   animation: demo-grow 1.1s cubic-bezier(0.23, 1, 0.32, 1) both;

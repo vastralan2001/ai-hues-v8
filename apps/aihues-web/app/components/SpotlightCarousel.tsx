@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { GameDemo } from '@/components/games/GameDemos';
+import { StoryArt } from '@/components/StoryArt';
 import { TestDemo } from '@/components/tests/TestDemos';
 import { ToolIcon } from '@/components/ToolIcon';
 import { ToolDemo } from '@/components/tools/ToolDemos';
@@ -178,6 +179,17 @@ export default function SpotlightCarousel({
               ? `opacity ${FADE_OUT}ms ease`
               : 'none';
           const showDemo = slideHasDemo(s);
+          const k = s.kind ?? demo;
+          const visual = showDemo ? (
+            renderDemo(s, isActive)
+          ) : k === 'story' ? (
+            <StoryArt
+              slug={s.slug}
+              tag={s.eyebrow}
+              animated
+              className='h-full min-h-[260px] w-full rounded-[18px] border border-border'
+            />
+          ) : null;
           return (
             <div
               key={s.slug + i}
@@ -190,20 +202,18 @@ export default function SpotlightCarousel({
                 pointerEvents: isActive ? 'auto' : 'none',
               }}
             >
-              {showDemo ? (
+              {visual ? (
                 stack ? (
                   <div className='flex h-full flex-col justify-center gap-4'>
                     <SlideText full={false} s={s} />
-                    {renderDemo(s, isActive)}
+                    {visual}
                   </div>
                 ) : (
                   <div className='grid h-full items-center gap-7 md:grid-cols-2'>
                     <div className='order-2 min-w-0 md:order-1'>
                       <SlideText full={false} s={s} />
                     </div>
-                    <div className='order-1 min-w-0 md:order-2'>
-                      {renderDemo(s, isActive)}
-                    </div>
+                    <div className='order-1 min-w-0 md:order-2'>{visual}</div>
                   </div>
                 )
               ) : (

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import { getAllPosts } from '@/lib/resources-data';
-import CoverImage from './CoverImage';
+import { StoryArt } from './StoryArt';
 
 export default function RelatedArticles({
   currentSlug,
@@ -36,9 +36,9 @@ export default function RelatedArticles({
             href={`/stories/${article.slug}`}
             className='card-lift group flex flex-col overflow-hidden rounded-[12px] border border-border bg-surface text-inherit no-underline'
           >
-            <CoverImage
-              src={article.coverImage}
-              alt={article.title}
+            <StoryArt
+              slug={article.slug}
+              tag={article.tag}
               className='h-[120px]'
             />
             <div className='p-4'>

@@ -119,7 +119,8 @@ function gameSlides(games: CatalogGame[], locale: Locale): SpotlightSlide[] {
 
 function postSlides(posts: ResourcePost[], locale: Locale): SpotlightSlide[] {
   return posts.map((post) => ({
-    slug: 'resources',
+    slug: post.slug,
+    kind: 'story',
     eyebrow: post.tag,
     title: post.title,
     description: post.excerpt,

@@ -5,7 +5,7 @@ import type { Metadata } from 'next';
 
 import { PageShell } from '@/components/SiteChrome';
 import { getAllPosts } from '@/lib/resources-data';
-import CoverImage from '@/components/CoverImage';
+import { StoryArt } from '@/components/StoryArt';
 import NewsletterSubscribe from '@/components/NewsletterSubscribe';
 import RelatedArticles from '@/components/RelatedArticles';
 import ArticleToc, { type TocItem } from '@/components/ArticleToc';
@@ -194,9 +194,10 @@ export default async function ArticlePage({
               <span>AIHues Team</span>
             </div>
             <div className='mt-8 aspect-[16/7] overflow-hidden rounded-[18px] border border-border'>
-              <CoverImage
-                src={meta.coverImage}
-                alt={meta.title}
+              <StoryArt
+                slug={slug}
+                tag={meta.tag}
+                animated
                 className='h-full w-full'
               />
             </div>

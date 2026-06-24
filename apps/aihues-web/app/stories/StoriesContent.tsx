@@ -5,10 +5,10 @@ import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import NewsletterSubscribe from '@/components/NewsletterSubscribe';
-import CoverImage from '@/components/CoverImage';
 import { FilterPills } from '@/components/FilterPills';
 import { PageMasthead } from '@/components/PageMasthead';
 import { SearchBox } from '@/components/SearchBox';
+import { StoryArt } from '@/components/StoryArt';
 import type { ResourcePost } from '@/lib/resources-data';
 
 const POSTS_PER_PAGE = 12;
@@ -110,10 +110,10 @@ export default function StoriesContent({ initialPosts, initialTag }: Props) {
                   className='card-lift group flex flex-col overflow-hidden rounded-[16px] border border-border bg-surface text-inherit no-underline'
                 >
                   <div className='relative h-[180px] overflow-hidden'>
-                    <CoverImage
-                      src={post.coverImage}
-                      alt={post.title}
-                      className='h-full w-full'
+                    <StoryArt
+                      slug={post.slug}
+                      tag={post.tag}
+                      className='h-full w-full transition-transform duration-500 group-hover:scale-105'
                     />
                     <span className='absolute left-3 top-3 rounded-full bg-accent px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider text-white'>
                       {post.tag}

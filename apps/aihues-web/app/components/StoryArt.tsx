@@ -1,0 +1,230 @@
+'use client';
+
+import { useEffect, useRef } from 'react';
+
+import { getStoryScene, type Anim, type El } from '@/lib/story-scenes';
+
+/* StoryArt — renders a hand-authored, content-specific scene for a story (no
+   templates, no randomness): each article has its own scene in story-scenes.ts,
+   a list of vector primitives + simple time-based motion. This file is just the
+   generic interpreter that draws those primitives and animates them. */
+
+function animXf(a: Anim | undefined, t: number) {
+  const xf = { tx: 0, ty: 0, sc: 1, rot: 0, op: 1, dash: 0 };
+  if (!a) return xf;
+  const ph = ('ph' in a && a.ph) || 0;
+  const spd = ('spd' in a && a.spd) || 1;
+  const p = t * 0.001 * spd + ph;
+  switch (a.k) {
+    case 'pulse':
+      xf.sc = 1 + (a.amp ?? 0.12) * Math.sin(p);
+      break;
+    case 'drift':
+      xf.tx = (a.dx ?? 0.03) * Math.sin(p);
+      xf.ty = (a.dy ?? 0.03) * Math.cos(p);
+      break;
+    case 'bob':
+      xf.ty = (a.amp ?? 0.04) * Math.sin(p);
+      break;
+    case 'rot':
+      xf.rot = p;
+      break;
+    case 'blink':
+      xf.op = Math.sin(p) > 0 ? 1 : 0.15;
+      break;
+    case 'dash':
+      xf.dash = -p * 30;
+      break;
+  }
+  return xf;
+}
+
+function draw(
+  ctx: CanvasRenderingContext2D,
+  W: number,
+  H: number,
+  el: El,
+  t: number
+) {
+  const S = Math.min(W, H);
+  const X = (v: number) => v * W;
+  const Y = (v: number) => v * H;
+  const L = (v: number) => v * S; // length scaled to the short side
+
+  // anchor (centre) for transforms
+  let cx = 0;
+  let cy = 0;
+  if (el.t === 'r') {
+    cx = X(el.x + el.w / 2);
+    cy = Y(el.y + el.h / 2);
+  } else if (el.t === 'c' || el.t === 'ar') {
+    cx = X(el.x);
+    cy = Y(el.y);
+  } else if (el.t === 'tx') {
+    cx = X(el.x);
+    cy = Y(el.y);
+  } else if (el.t === 'ln') {
+    cx = X((el.a[0] + el.b[0]) / 2);
+    cy = Y((el.a[1] + el.b[1]) / 2);
+  } else if (el.t === 'pl') {
+    cx = X(el.pts.reduce((s, p) => s + p[0], 0) / el.pts.length);
+    cy = Y(el.pts.reduce((s, p) => s + p[1], 0) / el.pts.length);
+  }
+
+  const xf = animXf(el.anim, t);
+  ctx.save();
+  ctx.globalAlpha = (el.op ?? 1) * xf.op;
+  ctx.translate(cx + xf.tx * W, cy + xf.ty * H);
+  ctx.rotate((el.rot ?? 0) + xf.rot);
+  ctx.scale(xf.sc, xf.sc);
+  ctx.translate(-cx, -cy);
+  if (el.glow) {
+    ctx.shadowBlur = 16;
+    ctx.shadowColor = el.glow;
+  }
+
+  const stroke = () => {
+    if (!el.stroke) return;
+    ctx.strokeStyle = el.stroke;
+    ctx.lineWidth = L((el.lw ?? 1) / 100);
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    ctx.stroke();
+  };
+  const fill = () => {
+    if (!el.fill) return;
+    ctx.fillStyle = el.fill;
+    ctx.fill();
+  };
+
+  if (el.t === 'r') {
+    const x = X(el.x);
+    const y = Y(el.y);
+    const w = X(el.w);
+    const h = Y(el.h);
+    const r = L((el.rad ?? 0) / 100);
+    const rr = Math.min(r, w / 2, h / 2);
+    ctx.beginPath();
+    ctx.moveTo(x + rr, y);
+    ctx.arcTo(x + w, y, x + w, y + h, rr);
+    ctx.arcTo(x + w, y + h, x, y + h, rr);
+    ctx.arcTo(x, y + h, x, y, rr);
+    ctx.arcTo(x, y, x + w, y, rr);
+    ctx.closePath();
+    fill();
+    stroke();
+  } else if (el.t === 'c') {
+    ctx.beginPath();
+    ctx.arc(X(el.x), Y(el.y), L(el.rad), 0, Math.PI * 2);
+    fill();
+    stroke();
+  } else if (el.t === 'ar') {
+    ctx.beginPath();
+    ctx.arc(X(el.x), Y(el.y), L(el.rad), el.a0, el.a1);
+    stroke();
+  } else if (el.t === 'ln') {
+    if (el.dash) ctx.setLineDash([L(el.dash[0] / 100), L(el.dash[1] / 100)]);
+    ctx.lineDashOffset = L(xf.dash / 100);
+    ctx.beginPath();
+    ctx.moveTo(X(el.a[0]), Y(el.a[1]));
+    ctx.lineTo(X(el.b[0]), Y(el.b[1]));
+    stroke();
+    ctx.setLineDash([]);
+  } else if (el.t === 'pl') {
+    if (el.dash) ctx.setLineDash([L(el.dash[0] / 100), L(el.dash[1] / 100)]);
+    ctx.lineDashOffset = L(xf.dash / 100);
+    ctx.beginPath();
+    el.pts.forEach((p, i) =>
+      i ? ctx.lineTo(X(p[0]), Y(p[1])) : ctx.moveTo(X(p[0]), Y(p[1]))
+    );
+    if (el.close) ctx.closePath();
+    fill();
+    stroke();
+    ctx.setLineDash([]);
+  } else if (el.t === 'tx') {
+    ctx.fillStyle = el.fill;
+    ctx.font = `${el.w ?? 800} ${Math.round(el.size * H)}px ui-sans-serif, system-ui, sans-serif`;
+    ctx.textAlign = el.align ?? 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(el.s, X(el.x), Y(el.y));
+  }
+  ctx.restore();
+}
+
+export function StoryArt({
+  slug,
+  tag,
+  className = '',
+  animated = false,
+}: {
+  slug: string;
+  tag: string;
+  className?: string;
+  animated?: boolean;
+}) {
+  const ref = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const cv = ref.current;
+    const ctx = cv?.getContext('2d');
+    if (!cv || !ctx) return;
+    const scene = getStoryScene(slug, tag);
+
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    let W = 0;
+    let H = 0;
+    const resize = () => {
+      const r = cv.getBoundingClientRect();
+      W = r.width;
+      H = r.height;
+      cv.width = Math.max(1, Math.round(W * dpr));
+      cv.height = Math.max(1, Math.round(H * dpr));
+    };
+    resize();
+
+    const render = (t: number) => {
+      if (W === 0 || H === 0) return;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const bg = ctx.createLinearGradient(0, 0, W, H);
+      bg.addColorStop(0, scene.bg[0]);
+      bg.addColorStop(1, scene.bg[1]);
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, W, H);
+      for (const el of scene.el) draw(ctx, W, H, el, t);
+    };
+
+    const ro = new ResizeObserver(() => {
+      resize();
+      if (!animated) render(0);
+    });
+    ro.observe(cv);
+
+    if (!animated) {
+      render(0);
+      return () => ro.disconnect();
+    }
+
+    let raf = 0;
+    let visible = true;
+    const io = new IntersectionObserver(([e]) => (visible = e.isIntersecting), {
+      threshold: 0.05,
+    });
+    io.observe(cv);
+    const loop = (ts: number) => {
+      raf = requestAnimationFrame(loop);
+      if (visible) render(ts);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => {
+      cancelAnimationFrame(raf);
+      ro.disconnect();
+      io.disconnect();
+    };
+  }, [slug, tag, animated]);
+
+  return (
+    <div aria-hidden='true' className={`relative overflow-hidden ${className}`}>
+      <canvas ref={ref} className='absolute inset-0 h-full w-full' />
+    </div>
+  );
+}
