@@ -12,8 +12,13 @@ export const metadata: Metadata = {
 
 export const dynamic = 'force-dynamic';
 
-export default async function GamesPage() {
+export default async function GamesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ genre?: string }>;
+}) {
   const locale = 'en' as Locale;
+  const { genre } = await searchParams;
 
   const {
     data: { games },
@@ -22,6 +27,7 @@ export default async function GamesPage() {
   return (
     <PageShell variant='games' locale={locale}>
       <PageMasthead
+        breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Games' }]}
         category='games'
         eyebrow='Game Center'
         title='Mini Games'
@@ -29,7 +35,7 @@ export default async function GamesPage() {
         features={['Play in one tap', 'No install', 'Quick breaks']}
       />
 
-      <GamesBrowser games={games} locale={locale} />
+      <GamesBrowser games={games} initialGenre={genre} locale={locale} />
     </PageShell>
   );
 }

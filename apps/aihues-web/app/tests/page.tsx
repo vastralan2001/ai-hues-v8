@@ -20,6 +20,7 @@ export default function TestsPage() {
   return (
     <PageShell variant='tests' locale={locale}>
       <PageMasthead
+        breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Tests' }]}
         category='tests'
         eyebrow='Assessment Center'
         title='Quick Tests'

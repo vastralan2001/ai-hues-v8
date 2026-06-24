@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 
+import Breadcrumb, { type Crumb } from '@/components/Breadcrumb';
 import { BrandWord } from '@/components/Logo';
 import { type BrandCategory, CATEGORY_SLOGAN } from '@/lib/category-brand';
 import type { Locale } from '@/lib/dict';
@@ -12,6 +13,7 @@ import type { Locale } from '@/lib/dict';
    <main> wrapper, so the whole band picks up the category hue. */
 
 export function PageMasthead({
+  breadcrumb,
   category,
   locale = 'en',
   eyebrow,
@@ -20,6 +22,7 @@ export function PageMasthead({
   features,
   children,
 }: {
+  breadcrumb?: Crumb[];
   category?: BrandCategory;
   locale?: Locale;
   eyebrow: string;
@@ -43,6 +46,11 @@ export function PageMasthead({
             'radial-gradient(58% 100% at 50% 0%, color-mix(in srgb, var(--color-accent) 11%, transparent), transparent 72%)',
         }}
       />
+      {breadcrumb && breadcrumb.length > 0 ? (
+        <div className='relative mx-auto mb-8 w-full max-w-[1100px] text-left'>
+          <Breadcrumb items={breadcrumb} />
+        </div>
+      ) : null}
       <div className='mx-auto max-w-[1100px]'>
         <span className='inline-flex items-center rounded-full border border-border bg-white/70 px-3.5 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.2em] text-accent backdrop-blur-sm'>
           {eyebrow}

@@ -14,11 +14,17 @@ type Filter = (typeof FILTERS)[number];
 export default function GamesBrowser({
   games,
   locale = 'en',
+  initialGenre,
 }: {
   games: CatalogGame[];
   locale?: Locale;
+  initialGenre?: string;
 }) {
-  const [active, setActive] = useState<Filter>('All');
+  const [active, setActive] = useState<Filter>(
+    initialGenre && (GAME_GENRES as readonly string[]).includes(initialGenre)
+      ? (initialGenre as Filter)
+      : 'All'
+  );
 
   const visible =
     active === 'All'

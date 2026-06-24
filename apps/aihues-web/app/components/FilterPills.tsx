@@ -29,7 +29,7 @@ export function FilterPills({
     `inline-flex items-center gap-1.5 rounded-full border px-4 py-1.5 text-[13px] font-semibold no-underline transition-colors ${
       active
         ? 'border-accent bg-accent text-white'
-        : 'border-border bg-surface text-secondary hover:border-accent hover:text-accent'
+        : 'border-border bg-white/70 text-secondary backdrop-blur-sm hover:border-accent hover:text-accent'
     }`;
 
   return (

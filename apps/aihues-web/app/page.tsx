@@ -11,11 +11,12 @@ import ToolMarquee, { type MarqueeItem } from '@/components/ToolMarquee';
 import type { CatalogGame, CatalogTool } from '@/lib/catalog-api';
 import { safeListGames, safeListTools } from '@/lib/catalog-api';
 import { t, type Locale } from '@/lib/dict';
-import { GAME_CARD_COPY } from '@/lib/game-meta';
+import { GAME_CARD_COPY, GAME_GENRES } from '@/lib/game-meta';
 import { getAllPosts, type ResourcePost } from '@/lib/resources-data';
 import { TEST_META } from '@/lib/tests';
 import {
   gameDetailHref,
+  gamesGenreHref,
   gamesHref,
   storiesHref,
   testDetailHref,
@@ -278,12 +279,10 @@ export default async function HomePage() {
           description="21 hand-built mini-games — chess with a real engine, classic arcade, daily fortune. Open a tab, kill five minutes, close it. That's the whole pitch."
           eyebrow='Game Center'
           id='games'
-          links={[
-            { label: 'Chess', href: gameDetailHref('chess') },
-            { label: 'Snake', href: gameDetailHref('snake') },
-            { label: 'Tetris', href: gameDetailHref('block-drop') },
-            { label: 'Minesweeper', href: gameDetailHref('minesweeper') },
-          ]}
+          links={GAME_GENRES.map((g) => ({
+            label: g,
+            href: gamesGenreHref(g),
+          }))}
           tagline={undefined}
           title={<BrandWord>{CATEGORY_SLOGAN.games.primary[locale]}</BrandWord>}
           tone={3}

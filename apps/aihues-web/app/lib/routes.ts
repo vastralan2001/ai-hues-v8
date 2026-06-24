@@ -19,6 +19,10 @@ export function gameDetailHref(slug: string) {
   return `/games/${slug}`;
 }
 
+export function gamesGenreHref(genre: string) {
+  return `${gamesHref}?genre=${encodeURIComponent(genre)}`;
+}
+
 export function testDetailHref(slug: string) {
   return `/tests/${slug}`;
 }

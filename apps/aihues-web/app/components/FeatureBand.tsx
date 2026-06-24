@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { type ReactNode } from 'react';
 
+import { FilterPills } from '@/components/FilterPills';
 import { type BrandCategory, categoryThemeStyle } from '@/lib/category-brand';
 
 const BAND_GLOWS = [
@@ -95,17 +96,15 @@ export default function FeatureBand({
             </p>
             {meta}
             {links && links.length > 0 && (
-              <div className='mb-8 flex flex-wrap justify-center gap-2 lg:justify-start'>
-                {links.map((l) => (
-                  <Link
-                    className='rounded-full border border-border bg-surface px-3.5 py-1.5 text-[13px] font-semibold text-secondary no-underline transition-colors hover:border-accent hover:text-accent'
-                    href={l.href}
-                    key={l.label}
-                  >
-                    {l.label}
-                  </Link>
-                ))}
-              </div>
+              <FilterPills
+                activeKey=''
+                className='mb-8 justify-center lg:justify-start'
+                items={links.map((l) => ({
+                  key: l.label,
+                  label: l.label,
+                  href: l.href,
+                }))}
+              />
             )}
             {cta && (
               <Link className='btn-cta' href={cta.href}>

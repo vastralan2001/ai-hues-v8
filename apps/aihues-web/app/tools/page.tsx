@@ -49,6 +49,7 @@ export default async function ToolsPage({
   return (
     <PageShell variant='tools'>
       <PageMasthead
+        breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Tools' }]}
         category='tools'
         eyebrow='Tool Library'
         title='All Tools'

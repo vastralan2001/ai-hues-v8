@@ -115,7 +115,6 @@ function Base64Demo() {
           >
             Hello, AIHues 👋
           </div>
-          <div className='mt-2 text-center text-[18px] text-accent'>↓</div>
         </div>,
         <div key='e'>
           <Label>Base64 encoded</Label>
@@ -125,7 +124,6 @@ function Base64Demo() {
           >
             SGVsbG8sIEFJSHVlcyDwn5GL
           </div>
-          <div className='mt-2 text-center text-[18px] text-accent'>↑</div>
         </div>,
       ]}
     />
