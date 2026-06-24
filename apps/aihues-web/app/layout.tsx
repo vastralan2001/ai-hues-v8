@@ -36,11 +36,13 @@ export const metadata: Metadata = {
     siteName: 'AIHues',
     locale: 'en_US',
     type: 'website',
+    images: ['/icon-512.png'],
   },
   twitter: {
     card: 'summary_large_image',
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
+    images: ['/icon-512.png'],
   },
   alternates: {
     canonical: './',

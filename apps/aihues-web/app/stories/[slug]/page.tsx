@@ -129,7 +129,7 @@ export default async function ArticlePage({
     '@type': 'Article',
     headline: meta.title,
     description: meta.excerpt,
-    image: meta.coverImage,
+    image: `${BASE_URL}/icon-512.png`,
     datePublished: meta.date,
     dateModified: meta.date,
     author: {

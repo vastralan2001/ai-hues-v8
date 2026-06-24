@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import FeatureBand from '@/components/FeatureBand';
 import HeroStage from '@/components/HeroStage';
+import { JsonLd } from '@/components/JsonLd';
 import { BrandWord } from '@/components/Logo';
 import { PageShell } from '@/components/SiteChrome';
 import SpotlightCarousel, {
@@ -209,6 +210,31 @@ export default async function HomePage() {
 
   return (
     <PageShell variant='home' locale={locale}>
+      <JsonLd
+        data={[
+          {
+            '@context': 'https://schema.org',
+            '@type': 'WebSite',
+            name: 'AIHues',
+            url: 'https://aihues.com',
+            potentialAction: {
+              '@type': 'SearchAction',
+              target: {
+                '@type': 'EntryPoint',
+                urlTemplate: 'https://aihues.com/tools?q={search_term_string}',
+              },
+              'query-input': 'required name=search_term_string',
+            },
+          },
+          {
+            '@context': 'https://schema.org',
+            '@type': 'Organization',
+            name: 'AIHues',
+            url: 'https://aihues.com',
+            logo: 'https://aihues.com/icon-512.png',
+          },
+        ]}
+      />
       <div className='relative'>
         {/* Continuous wash that drifts hue down the page so band-to-band
             gradient transitions stay seamless. */}
