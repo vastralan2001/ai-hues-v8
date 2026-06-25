@@ -3,7 +3,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
   Cloud,
   RoughDash,
   gen,
@@ -32,8 +31,6 @@ export default function Scene() {
       </defs>
 
       {/* evening-side stars, fading toward the warmer dawn edge */}
-      <Twinkle x={36} y={20} c='#9c93c0' r={1.2} />
-      <Twinkle x={104} y={20} d={1.6} c='#cf9836' />
       <Cloud x={150} y={30} s={0.7} o={0.4} />
 
       {/* far dawn glow + low hills for depth */}

@@ -2,8 +2,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -11,6 +9,7 @@ import {
   loop,
   INK,
   motion,
+  Sun,
 } from './_kit';
 
 /* Metaphor: a long row of identical pale stamped vessels (the "average" of all
@@ -43,9 +42,7 @@ export default function Scene() {
         </linearGradient>
       </defs>
 
-      <Cloud x={44} y={22} s={0.8} o={0.4} />
-      <Twinkle x={30} y={18} c='#b9c4cf' />
-      <Twinkle x={176} y={20} d={0.7} c='#b9c4cf' />
+      <Sun x={44} y={22} r={6} seed={265} />
 
       {/* far flat plain — the uniform field the average sits on */}
       <Ink

@@ -1,15 +1,5 @@
 'use client';
-import {
-  Frame,
-  Ink,
-  Twinkle,
-  Cloud,
-  gen,
-  filled,
-  stroke,
-  loop,
-  motion,
-} from './_kit';
+import { Frame, Ink, gen, filled, stroke, loop, motion } from './_kit';
 
 /* "How to say no without burning bridges": an intact rope-and-plank suspension
    bridge spanning a soft warm valley between two hills. On the near pier a small
@@ -36,9 +26,6 @@ export default function Scene() {
 
       {/* low warm sun glow behind the far hill */}
       <circle cx='118' cy='30' r='40' fill='url(#nob_dusk)' />
-      <Twinkle x={36} y={22} c='#cf9836' />
-      <Twinkle x={170} y={26} d={0.8} c='#e0a83f' />
-      <Cloud x={56} y={20} s={0.78} o={0.4} />
 
       {/* hazy valley fill below the bridge — depth */}
       <rect x='0' y='60' width='200' height='40' fill='url(#nob_valley)' />

@@ -30,7 +30,6 @@ export default function Scene() {
 
       <circle cx='150' cy='26' r='40' fill='url(#mono26_glow)' />
       <Twinkle x={38} y={22} c='#cf9836' />
-      <Twinkle x={172} y={44} d={0.7} c='#e0a83f' />
       <Cloud x={52} y={30} s={0.8} o={0.4} />
 
       {/* distant ground swell for depth */}

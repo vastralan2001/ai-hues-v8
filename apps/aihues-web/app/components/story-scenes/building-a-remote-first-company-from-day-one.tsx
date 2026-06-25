@@ -2,8 +2,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -11,6 +9,7 @@ import {
   loop,
   INK,
   motion,
+  Sun,
 } from './_kit';
 
 /* Remote-first from day one — the "company" is not a building but a deliberate
@@ -42,9 +41,7 @@ export default function Scene() {
       </defs>
 
       {/* far depth: one cloud + a couple of dusk stars */}
-      <Cloud x={48} y={22} s={0.8} o={0.4} />
-      <Twinkle x={26} y={20} c='#cf9836' />
-      <Twinkle x={188} y={24} d={0.7} c='#e0a83f' />
+      <Sun x={48} y={22} r={6} seed={285} />
 
       {/* distant rolling hills for depth */}
       <Ink

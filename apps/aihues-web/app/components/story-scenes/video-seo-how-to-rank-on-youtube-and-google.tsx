@@ -3,7 +3,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
   Cloud,
   RoughDash,
   gen,
@@ -43,8 +42,6 @@ export default function Scene() {
 
       <circle cx='100' cy='40' r='40' fill='url(#vsy_glow)' />
       <Cloud x={42} y={24} s={0.8} o={0.4} />
-      <Twinkle x={30} y={20} c='#cf9836' />
-      <Twinkle x={176} y={22} d={0.7} c='#cf9836' />
 
       {/* distant horizon for depth */}
       <Ink

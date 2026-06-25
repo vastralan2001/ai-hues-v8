@@ -3,7 +3,6 @@ import {
   Frame,
   Ink,
   Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -162,9 +161,7 @@ export default function Scene() {
       </defs>
 
       {/* atmosphere */}
-      <Cloud x={40} y={22} s={0.8} o={0.4} />
       <Twinkle x={24} y={32} c='#cf9836' />
-      <Twinkle x={182} y={30} d={0.7} c='#e0a83f' />
 
       {/* warm glow behind the founder hub */}
       <circle cx={HUB.x} cy={HUB.y} r={30} fill='url(#microsaas_hubglow)' />

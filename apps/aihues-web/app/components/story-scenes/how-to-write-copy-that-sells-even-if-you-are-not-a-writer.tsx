@@ -36,7 +36,6 @@ export default function Scene() {
       </defs>
 
       <Twinkle x={36} y={20} c='#e0a83f' />
-      <Twinkle x={172} y={26} d={0.7} c='#cf9836' />
       <Cloud x={158} y={30} s={0.75} o={0.4} />
 
       {/* still water — the reader's attention pool, lower third */}

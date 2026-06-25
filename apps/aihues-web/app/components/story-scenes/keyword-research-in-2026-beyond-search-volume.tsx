@@ -1,15 +1,5 @@
 'use client';
-import {
-  Frame,
-  Ink,
-  Twinkle,
-  Cloud,
-  gen,
-  filled,
-  stroke,
-  loop,
-  motion,
-} from './_kit';
+import { Frame, Ink, gen, filled, stroke, loop, motion } from './_kit';
 
 /* Metaphor: panning for gold over a riverbed. Raw search-volume gravel washes
    through the prospector's sieve and falls away; the few high-intent keywords
@@ -35,9 +25,6 @@ export default function Scene() {
 
       {/* sky depth */}
       <circle cx='42' cy='22' r='40' fill='url(#krv_sun)' />
-      <Cloud x={150} y={20} s={0.8} o={0.42} />
-      <Twinkle x={170} y={16} c='#e0a83f' />
-      <Twinkle x={120} y={14} d={0.9} c='#cf9836' />
 
       {/* far riverbank ridge */}
       <Ink

@@ -2,8 +2,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   gen,
   filled,
   stroke,
@@ -36,9 +34,6 @@ export default function Scene() {
       </defs>
 
       <circle cx='52' cy='26' r='40' fill='url(#acs_glow)' />
-      <Twinkle x={36} y={20} c='#cf9836' />
-      <Twinkle x={176} y={22} d={0.7} c='#e0a83f' />
-      <Cloud x={150} y={28} s={0.7} o={0.4} />
 
       {/* the channel — the current that carries content downstream */}
       <Ink

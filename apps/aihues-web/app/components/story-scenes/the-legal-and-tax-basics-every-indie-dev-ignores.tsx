@@ -2,8 +2,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -32,9 +30,6 @@ export default function Scene() {
       </defs>
 
       {/* sky depth */}
-      <Twinkle x={30} y={20} c='#cf9836' />
-      <Twinkle x={176} y={26} d={0.8} c='#e0a83f' />
-      <Cloud x={52} y={24} s={0.8} o={0.45} />
 
       {/* still water (atmospheric gradient fill) with a rough waterline */}
       <rect x='0' y='52' width='200' height='48' fill='url(#ltx_water)' />

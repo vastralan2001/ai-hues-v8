@@ -3,8 +3,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -38,11 +36,8 @@ export default function Scene() {
 
       {/* low sun = the "48h" deadline glow */}
       <circle cx='44' cy='28' r='40' fill='url(#saas48_glow)' />
-      <Cloud x={158} y={24} s={0.8} o={0.4} />
 
       {/* tick-of-the-clock sparks toward the edges */}
-      <Twinkle x={170} y={20} c='#cf9836' />
-      <Twinkle x={26} y={44} d={0.7} c='#e0a83f' />
 
       {/* far ground band for depth */}
       <Ink

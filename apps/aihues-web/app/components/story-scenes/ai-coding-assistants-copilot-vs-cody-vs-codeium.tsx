@@ -3,7 +3,6 @@ import {
   Frame,
   Ink,
   Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -43,7 +42,6 @@ export default function Scene() {
 
       <Twinkle x={30} y={20} c='#cf9836' />
       <Twinkle x={176} y={24} d={0.8} c='#6a9bcc' />
-      <Cloud x={46} y={26} s={0.78} o={0.4} />
 
       {/* the drafting sheet — the one shared task all three tools work on */}
       <circle cx={FOCUS_X} cy={FOCUS_Y} r={30} fill='url(#cca_glow)' />

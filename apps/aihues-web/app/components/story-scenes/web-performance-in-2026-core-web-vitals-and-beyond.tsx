@@ -2,7 +2,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
   Cloud,
   RoughDash,
   gen,
@@ -34,8 +33,6 @@ export default function Scene() {
       </defs>
 
       {/* atmosphere */}
-      <Twinkle x={30} y={22} c='#94ac78' />
-      <Twinkle x={172} y={26} d={0.8} c='#cf9836' />
       <Cloud x={46} y={24} s={0.8} o={0.4} />
 
       {/* far horizon for depth */}

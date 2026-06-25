@@ -48,7 +48,6 @@ export default function Scene() {
       />
 
       <Twinkle x={36} y={22} c='#c9a24a' />
-      <Twinkle x={184} y={44} d={0.8} c='#e0a83f' r={1.2} />
       <Cloud x={54} y={30} s={0.78} o={0.4} />
 
       {/* hazy depth in the chasm */}

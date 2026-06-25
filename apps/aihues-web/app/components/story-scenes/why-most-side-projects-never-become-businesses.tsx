@@ -2,8 +2,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -11,6 +9,7 @@ import {
   loop,
   INK,
   motion,
+  Sun,
 } from './_kit';
 
 /* Metaphor: a small, lovingly-finished paper boat moored to a cozy little dock in
@@ -42,9 +41,7 @@ export default function Scene() {
           filled(310, '#f4e3b4', { fillStyle: 'solid' })
         )}
       />
-      <Cloud x={54} y={22} s={0.8} o={0.4} />
-      <Twinkle x={132} y={18} c='#cf9836' />
-      <Twinkle x={186} y={48} d={0.9} c='#e0a83f' r={1} />
+      <Sun x={54} y={22} r={6} seed={315} />
 
       {/* sheltering headland that walls the cove off from open water */}
       <Ink

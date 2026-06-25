@@ -2,14 +2,13 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   gen,
   filled,
   stroke,
   loop,
   linear,
   motion,
+  Sun,
 } from './_kit';
 
 /* Testing strategies for small teams — a two-post safety net rig. Just two
@@ -31,9 +30,7 @@ export default function Scene() {
 
       {/* soft morning glow + sky accents */}
       <circle cx='150' cy='26' r='40' fill='url(#tsst_glow)' />
-      <Cloud x={44} y={24} s={0.8} o={0.4} />
-      <Twinkle x={30} y={20} c='#cf9836' />
-      <Twinkle x={176} y={30} d={0.7} c='#e0a83f' />
+      <Sun x={44} y={24} r={6} seed={269} />
 
       {/* distant ground band for depth */}
       <Ink

@@ -3,8 +3,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -12,6 +10,7 @@ import {
   loop,
   INK,
   motion,
+  Star,
 } from './_kit';
 
 /* "Switched from ChatGPT to Perplexity for research" → an answer that is no
@@ -69,9 +68,7 @@ export default function Scene() {
       </defs>
 
       {/* atmosphere */}
-      <Twinkle x={30} y={22} c='#9cc3e2' />
-      <Twinkle x={172} y={26} d={0.8} c='#a9c08a' />
-      <Cloud x={150} y={30} s={0.7} o={0.4} />
+      <Star x={30} y={22} r={3.4} seed={195} />
 
       {/* glow behind the answer */}
       <circle cx='100' cy='44' r='40' fill='url(#perp_glow)' />

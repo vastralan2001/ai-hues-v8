@@ -3,8 +3,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -12,6 +10,7 @@ import {
   loop,
   INK,
   motion,
+  Star,
 } from './_kit';
 
 /* Time Blocking for Creatives — metaphor: a day-planner column of stacked time
@@ -31,9 +30,7 @@ export default function Scene() {
       </defs>
 
       {/* distant atmosphere */}
-      <Cloud x={46} y={24} s={0.8} o={0.4} />
-      <Twinkle x={30} y={20} c='#cf9836' />
-      <Twinkle x={176} y={18} d={0.8} c='#e0a83f' />
+      <Star x={30} y={20} r={3.4} seed={191} />
 
       {/* warm focus glow over the deep-work block */}
       <circle cx='118' cy='52' r='40' fill='url(#tbc_glow)' />

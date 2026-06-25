@@ -3,8 +3,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -12,6 +10,7 @@ import {
   loop,
   linear,
   motion,
+  Bolt,
 } from './_kit';
 
 /* Metaphor — a content assembly line: blank pages ride a conveyor through a small
@@ -38,9 +37,7 @@ export default function Scene() {
       </defs>
 
       {/* sky accents + depth */}
-      <Twinkle x={28} y={20} c='#cf9836' />
-      <Twinkle x={176} y={26} d={0.8} c='#e0a83f' />
-      <Cloud x={52} y={24} s={0.8} o={0.4} />
+      <Bolt x={28} y={20} s={0.9} c='#cf9836' seed={181} />
 
       {/* far horizon hill for depth */}
       <Ink

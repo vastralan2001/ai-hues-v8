@@ -2,7 +2,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
   Cloud,
   RoughDash,
   gen,
@@ -37,8 +36,6 @@ export default function Scene() {
       {/* distant haze + sky accents */}
       <circle cx='100' cy='34' r='44' fill={`url(#${G}_haze)`} />
       <Cloud x={158} y={30} s={0.7} o={0.35} />
-      <Twinkle x={30} y={20} c='#cf9836' />
-      <Twinkle x={176} y={18} d={0.8} c='#e0a83f' />
 
       {/* the chasm: rising mist between the two banks */}
       <rect x='0' y='58' width='200' height='42' fill={`url(#${G}_chasm)`} />

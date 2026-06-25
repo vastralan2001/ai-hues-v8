@@ -40,7 +40,6 @@ export default function Scene() {
       {/* distant atmosphere */}
       <Cloud x={42} y={22} s={0.8} o={0.4} />
       <Twinkle x={26} y={20} c='#cf9836' />
-      <Twinkle x={176} y={18} d={0.7} c='#e0a83f' />
 
       {/* soft ground swell for depth */}
       <Ink

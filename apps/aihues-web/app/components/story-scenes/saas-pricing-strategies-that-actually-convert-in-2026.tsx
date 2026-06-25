@@ -2,8 +2,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -34,8 +32,6 @@ export default function Scene() {
 
       {/* depth: hazed sun glow + distant rolling hills */}
       <circle cx='100' cy='30' r='40' fill='url(#saaspx_haze)' />
-      <Cloud x={42} y={24} s={0.8} o={0.42} />
-      <Twinkle x={30} y={20} c='#cf9836' />
 
       <Ink
         d={gen.path(
@@ -200,8 +196,6 @@ export default function Scene() {
         dash='2 6'
         o={0.55}
       />
-
-      <Twinkle x={120} y={36} d={0.5} c='#e0a83f' r={1} />
     </Frame>
   );
 }

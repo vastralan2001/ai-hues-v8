@@ -45,7 +45,6 @@ export default function Scene() {
 
       <Cloud x={42} y={20} s={0.7} o={0.4} />
       <Twinkle x={26} y={44} c='#cf9836' />
-      <Twinkle x={176} y={40} d={0.8} c='#94ac78' />
 
       {/* low sage rise the pillar is rooted on */}
       <Ink

@@ -3,14 +3,13 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
   stroke,
   loop,
   motion,
+  Bolt,
 } from './_kit';
 
 /* The State of CSS in 2026 — metaphor: a small artisan loom. Many fine atomic
@@ -36,9 +35,7 @@ export default function Scene() {
 
       {/* warm light pooling behind the loom */}
       <circle cx='98' cy='44' r='40' fill='url(#css26_glow)' />
-      <Cloud x={46} y={24} s={0.78} o={0.4} />
-      <Twinkle x={32} y={22} c='#cf9836' />
-      <Twinkle x={170} y={20} d={0.8} c='#e0a83f' />
+      <Bolt x={32} y={22} s={0.9} c='#cf9836' seed={205} />
 
       {/* distant work-surface for depth */}
       <Ink

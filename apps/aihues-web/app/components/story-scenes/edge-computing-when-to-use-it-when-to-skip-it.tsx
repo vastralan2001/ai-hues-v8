@@ -3,8 +3,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -12,6 +10,7 @@ import {
   loop,
   linear,
   motion,
+  Bolt,
 } from './_kit';
 
 /* Edge computing — when to use it, when to skip it. The metaphor is placement-
@@ -36,9 +35,7 @@ export default function Scene() {
       </defs>
 
       {/* sky atmosphere */}
-      <Twinkle x={30} y={20} c='#9cb6cf' />
-      <Twinkle x={176} y={26} d={0.8} c='#cf9836' />
-      <Cloud x={150} y={20} s={0.8} o={0.4} />
+      <Bolt x={30} y={20} s={0.9} c='#9cb6cf' seed={191} />
 
       {/* far haze ridge — the distant ground the core sits on */}
       <Ink

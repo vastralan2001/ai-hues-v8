@@ -2,14 +2,13 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
   stroke,
   loop,
   motion,
+  Sun,
 } from './_kit';
 
 // ── Productivity — Second brain: a small synaptic web of knowledge nodes
@@ -36,7 +35,7 @@ export default function Scene() {
       </defs>
 
       {/* atmosphere */}
-      <Cloud x={150} y={20} s={0.7} o={0.4} />
+      <Sun x={150} y={20} r={6} seed={791} />
 
       {/* hub glow */}
       <circle cx={hub.x} cy={hub.y} r='30' fill='url(#brain_hub)' />
@@ -151,8 +150,6 @@ export default function Scene() {
       </motion.g>
 
       {/* a couple of inward sparks at the rim, ideas arriving */}
-      <Twinkle x={hub.x - 18} y={hub.y - 12} d={0.3} r={1} c='#e0a83f' />
-      <Twinkle x={hub.x + 19} y={hub.y + 11} d={1.1} r={1} c='#c2502e' />
     </Frame>
   );
 }

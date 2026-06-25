@@ -4,7 +4,6 @@ import {
   Frame,
   Ink,
   Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -36,9 +35,7 @@ export default function Scene() {
 
       {/* warm low sun glow + sky accents */}
       <circle cx='150' cy='30' r='40' fill='url(#crf_sun)' />
-      <Cloud x={44} y={26} s={0.8} o={0.4} />
       <Twinkle x={34} y={22} c='#e0a83f' />
-      <Twinkle x={176} y={20} d={0.8} c='#cf9836' />
 
       {/* depth: far hill ridge */}
       <Ink

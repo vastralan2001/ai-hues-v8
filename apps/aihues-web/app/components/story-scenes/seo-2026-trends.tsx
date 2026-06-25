@@ -2,8 +2,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -11,6 +9,7 @@ import {
   loop,
   INK,
   motion,
+  Sun,
 } from './_kit';
 
 /* "2026 SEO Trends: From Keywords to Intent" — a compass on the ground whose
@@ -40,9 +39,7 @@ export default function Scene() {
         </radialGradient>
       </defs>
 
-      <Cloud x={52} y={24} s={0.8} o={0.4} />
-      <Twinkle x={26} y={22} c='#cf9836' />
-      <Twinkle x={118} y={16} d={0.6} c='#e0a83f' />
+      <Sun x={52} y={24} r={6} seed={309} />
 
       {/* distant ground swell for depth */}
       <Ink

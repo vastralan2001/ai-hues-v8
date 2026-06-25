@@ -3,7 +3,6 @@ import {
   Frame,
   Ink,
   Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -75,8 +74,6 @@ export default function Scene() {
       </defs>
 
       <Twinkle x={36} y={18} c='#cf9836' />
-      <Twinkle x={164} y={16} d={0.7} c='#94ac78' />
-      <Cloud x={52} y={20} s={0.7} o={0.4} />
 
       {/* far depth ridge the partner nodes sit on */}
       <Ink

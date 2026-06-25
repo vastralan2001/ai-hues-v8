@@ -5,7 +5,7 @@ import { MotionConfig } from 'framer-motion';
 import { renderToStaticMarkup } from 'react-dom/server';
 
 import { getStoryScene, type Anim, type El } from '@/lib/story-scenes';
-import { STORY_SVG } from '@/components/story-svg';
+import { GENERATED_SCENES } from '@/components/story-scenes/registry';
 import { ScenePaused } from '@/components/story-scenes/_kit';
 
 /* StoryArt — renders a hand-authored, content-specific scene for a story (no
@@ -175,7 +175,7 @@ export function StoryArt({
   playOnHover?: boolean;
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
-  const Svg = STORY_SVG[slug];
+  const Svg = GENERATED_SCENES[slug];
   // Rough.js path data isn't byte-identical between the Node (SSR) and browser
   // renders, so the vector scenes render client-only after mount to avoid a
   // hydration mismatch. The wrapper keeps role="img" + aria-label in the server

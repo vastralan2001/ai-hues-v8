@@ -1,16 +1,6 @@
 'use client';
 
-import {
-  Frame,
-  Ink,
-  Twinkle,
-  Cloud,
-  gen,
-  filled,
-  stroke,
-  loop,
-  motion,
-} from './_kit';
+import { Frame, Ink, gen, filled, stroke, loop, motion, Star } from './_kit';
 
 // Remote-work burnout → recovery: a lone desk lamp at the very edge of a ledge,
 // its bulb flared too-hot (embers drifting up), with a low boundary rail set
@@ -31,9 +21,7 @@ export default function Scene() {
       </defs>
 
       {/* dusk accents + soft far cloud for depth */}
-      <Twinkle x={30} y={22} c='#cf9836' />
-      <Twinkle x={176} y={30} d={0.8} c='#e0a83f' />
-      <Cloud x={150} y={64} s={0.7} o={0.35} />
+      <Star x={30} y={22} r={3.4} seed={195} />
 
       {/* far hill horizon */}
       <Ink

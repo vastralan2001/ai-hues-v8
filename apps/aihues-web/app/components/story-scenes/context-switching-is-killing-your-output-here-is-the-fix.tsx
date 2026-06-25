@@ -37,7 +37,6 @@ export default function Scene() {
       <circle cx='40' cy='52' r='34' fill='url(#cssw_haze)' />
       <Cloud x={150} y={22} s={0.8} o={0.4} />
       <Twinkle x={28} y={28} c='#cf9836' />
-      <Twinkle x={184} y={24} d={1.2} c='#e0a83f' />
 
       {/* low ground band for grounding */}
       <Ink

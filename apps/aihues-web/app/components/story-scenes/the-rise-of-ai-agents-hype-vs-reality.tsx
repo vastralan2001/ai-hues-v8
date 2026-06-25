@@ -3,7 +3,6 @@ import {
   Frame,
   Ink,
   Twinkle,
-  Cloud,
   gen,
   filled,
   stroke,
@@ -31,7 +30,6 @@ export default function Scene() {
       <circle cx='104' cy='14' r='40' fill='url(#agents_glow)' />
       <Twinkle x={36} y={22} c='#cf9836' />
       <Twinkle x={170} y={20} d={0.7} c='#e0a83f' />
-      <Cloud x={48} y={30} s={0.8} o={0.4} />
 
       {/* distant stage floor for depth */}
       <Ink

@@ -1,15 +1,5 @@
 'use client';
-import {
-  Frame,
-  Ink,
-  Twinkle,
-  Cloud,
-  gen,
-  filled,
-  stroke,
-  loop,
-  motion,
-} from './_kit';
+import { Frame, Ink, gen, filled, stroke, loop, motion } from './_kit';
 
 /* Metaphor: from a crowded, noisy field of AI tools (faint icons drifting in the
    distance), a few genuinely useful ones are picked and hung on a small lit
@@ -25,8 +15,6 @@ export default function Scene() {
           <stop offset='100%' stopColor='#fff3d6' stopOpacity='0' />
         </radialGradient>
       </defs>
-
-      <Cloud x={42} y={22} s={0.8} o={0.4} />
 
       {/* the noise: many faint, drifting tool-sparks in the distance */}
       {[
@@ -175,8 +163,6 @@ export default function Scene() {
       </motion.g>
 
       {/* selection sparks gathering toward the rack */}
-      <Twinkle x={88} y={30} c='#e0a83f' r={1.2} />
-      <Twinkle x={112} y={28} d={0.7} c='#cf9836' r={1.1} />
     </Frame>
   );
 }

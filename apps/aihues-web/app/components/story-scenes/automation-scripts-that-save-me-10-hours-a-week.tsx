@@ -2,8 +2,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -113,9 +111,6 @@ export default function Scene() {
           filled(203, '#e2e8f0', { fillStyle: 'solid', strokeWidth: 0.8 })
         )}
       />
-      <Twinkle x={30} y={20} c='#9db4cf' />
-      <Twinkle x={108} y={16} d={0.7} c='#9db4cf' />
-      <Cloud x={44} y={30} s={0.8} o={0.4} />
 
       {/* the workbench — distant depth layer the machinery rests on */}
       <Ink

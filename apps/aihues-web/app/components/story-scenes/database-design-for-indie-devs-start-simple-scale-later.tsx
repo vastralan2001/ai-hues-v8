@@ -2,14 +2,13 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   gen,
   filled,
   stroke,
   loop,
   INK,
   motion,
+  Sun,
 } from './_kit';
 
 /* Metaphor: a small database "vessel" rests on layered foundation strata that
@@ -28,9 +27,7 @@ export default function Scene() {
       </defs>
 
       <circle cx='104' cy='30' r='40' fill='url(#dbidd_glow)' />
-      <Twinkle x={36} y={22} c='#cf9836' />
-      <Twinkle x={172} y={28} d={0.8} c='#e0a83f' />
-      <Cloud x={48} y={24} s={0.8} o={0.4} />
+      <Sun x={48} y={24} r={6} seed={289} />
 
       {/* deepening foundation strata — widest/deepest at the bottom (scale later) */}
       <Ink

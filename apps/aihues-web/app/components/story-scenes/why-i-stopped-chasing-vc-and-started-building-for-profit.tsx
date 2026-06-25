@@ -2,14 +2,13 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   gen,
   filled,
   stroke,
   loop,
   RoughDash,
   motion,
+  Bolt,
 } from './_kit';
 
 /* "Stopped chasing VC, started building for profit" → a small wooden sailboat
@@ -43,9 +42,7 @@ export default function Scene() {
         )}
       />
 
-      <Twinkle x={36} y={22} c='#cf9836' />
-      <Twinkle x={184} y={26} d={0.7} c='#e0a83f' />
-      <Cloud x={56} y={24} s={0.8} o={0.4} />
+      <Bolt x={36} y={22} s={0.9} c='#cf9836' seed={225} />
 
       {/* far horizon haze band */}
       <Ink

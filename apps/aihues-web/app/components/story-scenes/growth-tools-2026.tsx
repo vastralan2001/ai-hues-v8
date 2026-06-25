@@ -1,15 +1,5 @@
 'use client';
-import {
-  Frame,
-  Ink,
-  Twinkle,
-  Cloud,
-  gen,
-  filled,
-  stroke,
-  loop,
-  motion,
-} from './_kit';
+import { Frame, Ink, gen, filled, stroke, loop, motion } from './_kit';
 
 /* 2026 Overseas Growth Toolkit — a curated wall of growth instruments.
    Metaphor: a workshop tool rail. A single horizontal rail hangs four distinct
@@ -33,9 +23,6 @@ export default function Scene() {
 
       {/* warm depth: low sun glow + a soft far cloud */}
       <circle cx='38' cy='26' r='40' fill='url(#gt26_glow)' />
-      <Cloud x={150} y={22} s={0.8} o={0.4} />
-      <Twinkle x={170} y={18} c='#e0a83f' />
-      <Twinkle x={24} y={50} d={0.8} c='#cf9836' />
 
       {/* far workbench / shelf line for ground */}
       <Ink

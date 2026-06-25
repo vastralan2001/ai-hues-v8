@@ -2,8 +2,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   gen,
   filled,
   stroke,
@@ -36,9 +34,6 @@ export default function Scene() {
 
       {/* warm reading lamp glow + sky accents */}
       <circle cx='150' cy='22' r='40' fill='url(#rdfast_glow)' />
-      <Twinkle x={36} y={22} c='#cf9836' />
-      <Twinkle x={170} y={40} d={0.8} c='#e0a83f' />
-      <Cloud x={52} y={28} s={0.78} o={0.4} />
 
       {/* distant desk horizon for depth */}
       <Ink

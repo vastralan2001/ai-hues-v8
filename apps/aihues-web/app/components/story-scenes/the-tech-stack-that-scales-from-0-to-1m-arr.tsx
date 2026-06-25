@@ -2,8 +2,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -38,9 +36,6 @@ export default function Scene() {
 
       {/* warm dawn glow toward the tall, grown end */}
       <circle cx='176' cy='20' r='42' fill='url(#ts1m_sun)' />
-      <Twinkle x={30} y={20} c='#cf9836' />
-      <Twinkle x={186} y={40} d={0.8} c='#e0a83f' />
-      <Cloud x={56} y={26} s={0.7} o={0.4} />
 
       {/* far haze hill for depth */}
       <Ink

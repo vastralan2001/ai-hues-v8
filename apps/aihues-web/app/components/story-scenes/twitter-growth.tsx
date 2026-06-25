@@ -2,8 +2,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -11,6 +9,7 @@ import {
   loop,
   INK,
   motion,
+  Sun,
 } from './_kit';
 
 /* twitter-growth — "0 to 10K in 90 days". One small songbird on a bare branch
@@ -86,9 +85,7 @@ export default function Scene() {
       {/* dawn glow on the horizon the flock climbs toward */}
       <circle cx='190' cy='16' r='42' fill='url(#twg_dawn)' />
 
-      <Twinkle x={36} y={20} c='#cf9836' />
-      <Twinkle x={176} y={48} d={0.9} c='#e0a83f' />
-      <Cloud x={52} y={30} s={0.8} o={0.4} />
+      <Sun x={52} y={30} r={6} seed={321} />
 
       {/* far hill for depth */}
       <Ink

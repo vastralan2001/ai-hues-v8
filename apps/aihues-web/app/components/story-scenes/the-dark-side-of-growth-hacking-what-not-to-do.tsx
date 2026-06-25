@@ -1,16 +1,5 @@
 'use client';
-import {
-  Frame,
-  Ink,
-  Twinkle,
-  Cloud,
-  gen,
-  filled,
-  stroke,
-  loop,
-  linear,
-  motion,
-} from './_kit';
+import { Frame, Ink, gen, filled, stroke, loop, linear, motion } from './_kit';
 
 /* The Dark Side of Growth Hacking — a tall startup tower shooting up fast, but
    propped on thin, cracking stilts over a dark sinkhole. One support is buckling
@@ -32,9 +21,6 @@ export default function Scene() {
       </defs>
 
       {/* far hazy ground line for depth */}
-      <Cloud x={44} y={22} s={0.7} o={0.4} />
-      <Twinkle x={30} y={20} c='#cf9836' />
-      <Twinkle x={176} y={18} d={0.8} c='#e0a83f' />
 
       {/* the dark sinkhole the whole thing teeters over */}
       <ellipse cx='100' cy='90' rx='62' ry='14' fill='url(#gh_dark_pit)' />

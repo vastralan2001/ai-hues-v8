@@ -2,8 +2,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -44,9 +42,6 @@ export default function Scene() {
 
       {/* soft low sun warming the field */}
       <circle cx='44' cy='30' r='34' fill='url(#u1k_glow)' />
-      <Cloud x={150} y={22} s={0.75} o={0.4} />
-      <Twinkle x={188} y={20} d={0.4} c='#e0a83f' />
-      <Twinkle x={24} y={54} d={1} c='#cf9836' />
 
       {/* distant depth: two layered rolling fields */}
       <Ink

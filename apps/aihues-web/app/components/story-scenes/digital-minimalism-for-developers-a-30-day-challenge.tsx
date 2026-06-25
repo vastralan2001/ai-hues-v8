@@ -4,7 +4,6 @@ import {
   Frame,
   Ink,
   Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -38,9 +37,7 @@ export default function Scene() {
       </defs>
 
       {/* quiet dusk atmosphere */}
-      <Cloud x={150} y={24} s={0.85} o={0.4} />
       <Twinkle x={28} y={20} c='#cf9836' />
-      <Twinkle x={176} y={40} d={0.9} c='#e0a83f' />
 
       {/* soft glow behind the one device that stays */}
       <circle cx='100' cy='58' r='34' fill='url(#dm30_calm)' />

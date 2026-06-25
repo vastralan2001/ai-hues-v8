@@ -2,8 +2,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -11,6 +9,7 @@ import {
   loop,
   INK,
   motion,
+  Bolt,
 } from './_kit';
 
 /* The 2026 AI Productivity Stack — the metaphor: a small tiered tower of glowing
@@ -97,9 +96,7 @@ export default function Scene() {
       </defs>
 
       {/* distant depth */}
-      <Cloud x={42} y={24} s={0.8} o={0.42} />
-      <Twinkle x={30} y={40} c='#cf9836' />
-      <Twinkle x={176} y={50} d={0.7} c='#e0a83f' />
+      <Bolt x={30} y={40} s={0.9} c='#cf9836' seed={231} />
 
       {/* soft ground band for the tower to sit on */}
       <Ink

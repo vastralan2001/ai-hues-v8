@@ -2,14 +2,13 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   gen,
   filled,
   stroke,
   loop,
   linear,
   motion,
+  Star,
 } from './_kit';
 
 /* Energy vs time: a uniform ring of clock ticks recedes on the horizon — every
@@ -37,9 +36,7 @@ export default function Scene() {
       </defs>
 
       {/* sky accents + distant atmosphere */}
-      <Twinkle x={30} y={22} c='#cf9836' />
-      <Twinkle x={178} y={30} d={0.8} c='#e0a83f' />
-      <Cloud x={44} y={26} s={0.78} o={0.4} />
+      <Star x={30} y={22} r={3.4} seed={195} />
 
       {/* far horizon haze for depth */}
       <Ink

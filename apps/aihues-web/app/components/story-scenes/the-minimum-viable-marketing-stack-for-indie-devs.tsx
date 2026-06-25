@@ -2,7 +2,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
   Cloud,
   RoughDash,
   gen,
@@ -32,8 +31,6 @@ export default function Scene() {
       {/* atmosphere */}
       <circle cx='150' cy='34' r='40' fill='url(#mvms_glow)' />
       <Cloud x={42} y={24} s={0.8} o={0.4} />
-      <Twinkle x={30} y={20} c='#cf9836' />
-      <Twinkle x={184} y={22} d={1.2} c='#cf9836' />
 
       {/* far ground band for depth */}
       <Ink

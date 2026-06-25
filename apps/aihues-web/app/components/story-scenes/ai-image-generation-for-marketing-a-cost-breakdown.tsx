@@ -38,7 +38,6 @@ export default function Scene() {
       <circle cx='148' cy='30' r='40' fill={`url(#${AIC}_glow)`} />
       <Cloud x={44} y={26} s={0.8} o={0.4} />
       <Twinkle x={30} y={22} c='#cf9836' />
-      <Twinkle x={176} y={28} d={0.8} c='#e0a83f' />
 
       {/* far ground line for depth */}
       <Ink

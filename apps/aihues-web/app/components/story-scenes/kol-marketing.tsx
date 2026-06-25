@@ -1,15 +1,5 @@
 'use client';
-import {
-  Frame,
-  Ink,
-  Twinkle,
-  Cloud,
-  gen,
-  filled,
-  stroke,
-  loop,
-  motion,
-} from './_kit';
+import { Frame, Ink, gen, filled, stroke, loop, motion, Sun } from './_kit';
 
 export default function Scene() {
   return (
@@ -25,7 +15,7 @@ export default function Scene() {
         </linearGradient>
       </defs>
 
-      <Cloud x={42} y={22} s={0.7} o={0.4} />
+      <Sun x={42} y={22} r={6} seed={255} />
 
       {/* far ridge for depth */}
       <Ink
@@ -162,9 +152,6 @@ export default function Scene() {
           )}
         />
       </motion.g>
-
-      <Twinkle x={166} y={26} d={0.4} c='#cf9836' r={1.2} />
-      <Twinkle x={36} y={50} d={0.9} c='#cf9836' r={1} />
     </Frame>
   );
 }

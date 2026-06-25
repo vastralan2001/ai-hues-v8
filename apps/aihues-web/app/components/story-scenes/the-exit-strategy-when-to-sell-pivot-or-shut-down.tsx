@@ -2,8 +2,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -11,6 +9,7 @@ import {
   loop,
   INK,
   motion,
+  Sun,
 } from './_kit';
 
 // ── Indie Dev — the exit: a small boat at a three-way fork in a dusk river ──
@@ -40,9 +39,7 @@ export default function Scene() {
           filled(301, '#f4dca0', { fillStyle: 'solid' })
         )}
       />
-      <Twinkle x={36} y={22} c='#cf9836' />
-      <Twinkle x={176} y={54} d={0.8} c='#e0a83f' />
-      <Cloud x={56} y={20} s={0.8} o={0.42} />
+      <Sun x={56} y={20} r={6} seed={321} />
 
       {/* far bank / horizon land mass for depth */}
       <Ink

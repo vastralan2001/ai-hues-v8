@@ -3,8 +3,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -12,6 +10,7 @@ import {
   loop,
   INK,
   motion,
+  Star,
 } from './_kit';
 
 /* Growth — Cold email that gets replies: a field of dim, identical unopened
@@ -49,9 +48,7 @@ export default function Scene() {
         </linearGradient>
       </defs>
 
-      <Twinkle x={36} y={20} c='#cf9836' />
-      <Twinkle x={174} y={26} d={0.8} c='#e0a83f' />
-      <Cloud x={150} y={28} s={0.8} o={0.4} />
+      <Star x={36} y={20} r={3.4} seed={221} />
 
       {/* hazy ground — the indistinct mass of ignored mail */}
       <Ink

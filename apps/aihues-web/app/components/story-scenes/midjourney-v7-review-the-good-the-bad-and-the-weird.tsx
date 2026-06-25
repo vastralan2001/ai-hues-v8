@@ -3,8 +3,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -38,7 +36,6 @@ export default function Scene() {
       </defs>
 
       {/* sky depth */}
-      <Cloud x={52} y={26} s={0.85} o={0.4} />
 
       {/* far horizon hill for ground */}
       <Ink
@@ -242,8 +239,6 @@ export default function Scene() {
       </motion.g>
 
       {/* faint glitch sparks scattering off the weird edge */}
-      <Twinkle x={150} y={44} d={0.3} c='#e2693f' r={0.9} />
-      <Twinkle x={156} y={56} d={1.1} c='#c2502e' r={0.9} />
     </Frame>
   );
 }

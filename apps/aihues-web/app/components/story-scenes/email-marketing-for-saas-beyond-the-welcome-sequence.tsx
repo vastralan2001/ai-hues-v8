@@ -1,15 +1,5 @@
 'use client';
-import {
-  Frame,
-  Ink,
-  Twinkle,
-  Cloud,
-  gen,
-  filled,
-  stroke,
-  loop,
-  motion,
-} from './_kit';
+import { Frame, Ink, gen, filled, stroke, loop, motion } from './_kit';
 
 /* Email marketing beyond the welcome sequence: a lighthouse on a headland
    sweeping targeted beams out to scattered boats at sea. The lighthouse is the
@@ -33,9 +23,6 @@ export default function Scene() {
       </defs>
 
       {/* dusk accents + a far cloud bank for depth */}
-      <Twinkle x={30} y={20} c='#e0a83f' />
-      <Twinkle x={174} y={16} d={0.8} c='#cf9836' />
-      <Cloud x={150} y={26} s={0.85} o={0.4} />
 
       {/* sea fills the lower half — rough hachure water */}
       <Ink

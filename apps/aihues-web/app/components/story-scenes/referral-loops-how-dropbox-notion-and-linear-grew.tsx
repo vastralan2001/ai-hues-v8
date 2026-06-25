@@ -3,7 +3,6 @@ import {
   Frame,
   Ink,
   Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -48,7 +47,6 @@ export default function Scene() {
 
       <Twinkle x={28} y={22} c='#cf9836' />
       <Twinkle x={176} y={28} d={0.7} c='#e0a83f' />
-      <Cloud x={150} y={20} s={0.7} o={0.4} />
 
       {/* soft expanding-reach ring behind the loop */}
       <circle cx='100' cy='56' r='56' fill='url(#rl_ring)' />

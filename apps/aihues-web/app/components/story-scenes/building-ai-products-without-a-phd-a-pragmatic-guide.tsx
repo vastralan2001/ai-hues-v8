@@ -3,8 +3,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -42,9 +40,6 @@ export default function Scene() {
       {/* depth: glow over the goal, soft haze rising from the chasm */}
       <circle cx='162' cy='40' r='30' fill='url(#bridge_goal)' />
       <rect x='40' y='66' width='130' height='34' fill='url(#bridge_chasm)' />
-      <Cloud x={52} y={28} s={0.8} o={0.42} />
-      <Twinkle x={34} y={24} c='#cf9836' />
-      <Twinkle x={180} y={26} d={0.7} c='#e0a83f' />
 
       {/* near plinth — "where you stand" */}
       <Ink

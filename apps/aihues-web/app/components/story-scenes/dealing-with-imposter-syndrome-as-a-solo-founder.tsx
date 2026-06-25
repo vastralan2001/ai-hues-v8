@@ -3,14 +3,13 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
   stroke,
   loop,
   motion,
+  Star,
 } from './_kit';
 
 // Imposter syndrome (solo founder): a tiny figure on a low plinth casts a long
@@ -41,9 +40,7 @@ export default function Scene() {
         )}
       />
 
-      <Twinkle x={178} y={34} d={0.8} c='#e0a83f' />
-      <Twinkle x={120} y={14} d={1.4} c='#cf9836' />
-      <Cloud x={158} y={24} s={0.7} o={0.4} />
+      <Star x={178} y={34} r={3.4} seed={959} />
 
       {/* floor plane */}
       <rect x='0' y='74' width='200' height='26' fill='url(#imp_floor)' />

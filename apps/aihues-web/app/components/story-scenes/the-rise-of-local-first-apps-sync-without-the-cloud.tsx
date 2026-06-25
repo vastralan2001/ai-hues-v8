@@ -4,7 +4,6 @@ import {
   Frame,
   Ink,
   Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -38,7 +37,6 @@ export default function Scene() {
       </defs>
 
       {/* distant idle cloud, off to the side and dimmed — the unused cloud */}
-      <Cloud x={150} y={22} s={0.85} o={0.3} />
       <motion.g
         animate={{ opacity: [0.35, 0.2, 0.35] }}
         transition={loop(3)}
@@ -65,7 +63,6 @@ export default function Scene() {
       </motion.g>
 
       <Twinkle x={32} y={20} d={0.2} c='#b6c79a' />
-      <Twinkle x={186} y={44} d={1.1} c='#cf9836' />
 
       {/* low ground ridge */}
       <Ink

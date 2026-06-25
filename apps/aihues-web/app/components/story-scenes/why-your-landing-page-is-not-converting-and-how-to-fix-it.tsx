@@ -3,14 +3,13 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
   stroke,
   loop,
   motion,
+  Bolt,
 } from './_kit';
 
 /* Growth — "Why your landing page isn't converting": a conversion funnel.
@@ -40,9 +39,7 @@ export default function Scene() {
 
       {/* sky depth */}
       <circle cx='100' cy='22' r='40' fill={`url(#${SLUG}_glow)`} />
-      <Twinkle x={36} y={20} c='#e0a83f' />
-      <Twinkle x={166} y={26} d={0.7} c='#cf9836' />
-      <Cloud x={46} y={30} s={0.78} o={0.42} />
+      <Bolt x={36} y={20} s={0.9} c='#e0a83f' seed={221} />
 
       {/* far hills for ground depth */}
       <Ink

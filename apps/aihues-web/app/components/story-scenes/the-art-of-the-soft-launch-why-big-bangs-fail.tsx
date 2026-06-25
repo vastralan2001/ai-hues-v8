@@ -1,15 +1,5 @@
 'use client';
-import {
-  Frame,
-  Ink,
-  Twinkle,
-  Cloud,
-  gen,
-  filled,
-  stroke,
-  loop,
-  motion,
-} from './_kit';
+import { Frame, Ink, gen, filled, stroke, loop, motion } from './_kit';
 
 /* Metaphor — "soft launch": one small sapling rooting and growing patiently on
    solid ground (the gradual approach that endures), while a single firework
@@ -34,9 +24,6 @@ export default function Scene() {
 
       {/* dusk glow + faint depth */}
       <circle cx='100' cy='40' r='58' fill='url(#soft_dusk)' />
-      <Cloud x={42} y={24} s={0.8} o={0.4} />
-      <Twinkle x={24} y={30} c='#cf9836' />
-      <Twinkle x={182} y={22} d={0.7} c='#e0a83f' />
 
       {/* the firework: a bright burst that flares then fades — the "big bang" */}
       <motion.g

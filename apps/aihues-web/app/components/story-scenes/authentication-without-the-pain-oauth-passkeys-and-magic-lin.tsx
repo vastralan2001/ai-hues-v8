@@ -2,14 +2,13 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
   stroke,
   loop,
   motion,
+  Bolt,
 } from './_kit';
 
 /* Authentication without the pain — three modern auth methods (OAuth, passkey,
@@ -37,9 +36,7 @@ export default function Scene() {
       </defs>
 
       {/* sky accents */}
-      <Twinkle x={170} y={20} c='#cf9836' />
-      <Twinkle x={150} y={36} d={0.8} c='#e0a83f' />
-      <Cloud x={48} y={18} s={0.75} o={0.4} />
+      <Bolt x={170} y={20} s={0.9} c='#cf9836' seed={891} />
 
       {/* distant ground horizon for depth */}
       <Ink

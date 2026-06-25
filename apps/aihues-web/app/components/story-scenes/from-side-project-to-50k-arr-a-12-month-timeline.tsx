@@ -44,7 +44,6 @@ export default function Scene() {
       <circle cx='184' cy='20' r='40' fill='url(#s50k_dawn)' />
 
       <Twinkle x={36} y={20} c='#cf9836' />
-      <Twinkle x={170} y={40} d={1.2} c='#cf9836' />
       <Cloud x={56} y={28} s={0.78} o={0.4} />
 
       {/* rising ground band */}

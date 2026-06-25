@@ -2,14 +2,13 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
   stroke,
   loop,
   motion,
+  Star,
 } from './_kit';
 
 export default function Scene() {
@@ -26,9 +25,7 @@ export default function Scene() {
         </linearGradient>
       </defs>
 
-      <Twinkle x={30} y={20} c='#cf9836' />
-      <Twinkle x={176} y={16} d={0.7} c='#e0a83f' />
-      <Cloud x={52} y={24} s={0.8} o={0.4} />
+      <Star x={30} y={20} r={3.4} seed={191} />
 
       {/* sea — the production environment, the boats must cross it */}
       <rect x='0' y='58' width='200' height='42' fill='url(#agw_sea)' />

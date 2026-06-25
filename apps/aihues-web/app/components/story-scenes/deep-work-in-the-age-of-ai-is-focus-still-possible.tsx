@@ -3,8 +3,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -33,9 +31,6 @@ export default function Scene() {
       </defs>
 
       {/* far depth: drifting fog banks and a couple of quiet stars */}
-      <Twinkle x={28} y={20} c='#cf9836' />
-      <Twinkle x={176} y={26} d={0.9} c='#e0a83f' />
-      <Cloud x={150} y={30} s={0.85} o={0.4} />
 
       {/* the held beam — one calm wedge of light sweeping a hair, not scattering */}
       <motion.g

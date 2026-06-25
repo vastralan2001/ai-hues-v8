@@ -2,8 +2,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -35,9 +33,6 @@ export default function Scene() {
 
       {/* open light over the crest the momentum is heading toward */}
       <circle cx='182' cy='20' r='40' fill='url(#fivemin_dawn)' />
-      <Twinkle x={186} y={18} c='#e0a83f' />
-      <Twinkle x={166} y={30} d={0.7} c='#cf9836' r={1} />
-      <Cloud x={40} y={22} s={0.7} o={0.4} />
 
       {/* the steep, looming slope — the hard task to begin */}
       <Ink

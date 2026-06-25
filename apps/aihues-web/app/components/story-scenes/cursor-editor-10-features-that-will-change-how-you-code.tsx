@@ -2,8 +2,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -11,6 +9,7 @@ import {
   loop,
   INK,
   motion,
+  Sun,
 } from './_kit';
 
 /* Cursor Editor — "10 features that change how you code". Metaphor: the blinking
@@ -34,9 +33,7 @@ export default function Scene() {
       </defs>
 
       {/* far atmosphere */}
-      <Twinkle x={30} y={22} c='#cf9836' />
-      <Twinkle x={176} y={24} d={0.7} c='#e0a83f' />
-      <Cloud x={44} y={70} s={0.8} o={0.4} />
+      <Sun x={44} y={70} r={6} seed={361} />
 
       {/* low horizon band for depth */}
       <Ink

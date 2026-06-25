@@ -3,8 +3,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -12,6 +10,7 @@ import {
   loop,
   INK,
   motion,
+  Bolt,
 } from './_kit';
 
 /* "Why your AI content sounds generic (and how to fix it)" — a row of identical
@@ -36,7 +35,6 @@ export default function Scene() {
 
       {/* soft warm light pooling over the one painted pot */}
       <circle cx='162' cy='60' r='40' fill='url(#gen5x_glow)' />
-      <Cloud x={50} y={22} s={0.8} o={0.4} />
 
       {/* shelf the generic vessels stand on, receding into depth */}
       <Ink
@@ -189,8 +187,7 @@ export default function Scene() {
       </motion.g>
 
       {/* a couple of bright accents over the one that found its voice */}
-      <Twinkle x={178} y={50} d={0.4} c='#e2693f' r={1.2} />
-      <Twinkle x={148} y={46} d={1.1} c='#cf9836' />
+      <Bolt x={178} y={50} s={0.9} c='#e2693f' seed={991} />
     </Frame>
   );
 }

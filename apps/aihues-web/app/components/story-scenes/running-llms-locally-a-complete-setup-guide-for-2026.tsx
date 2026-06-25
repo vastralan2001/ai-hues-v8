@@ -2,8 +2,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -11,6 +9,7 @@ import {
   loop,
   linear,
   motion,
+  Sun,
 } from './_kit';
 
 /* Metaphor: the cloud's intelligence brought down under your own roof. A small
@@ -35,9 +34,7 @@ export default function Scene() {
       </defs>
 
       {/* far sky accents */}
-      <Twinkle x={30} y={20} c='#b8a9d6' />
-      <Twinkle x={176} y={26} d={0.8} c='#cf9836' />
-      <Cloud x={158} y={60} s={0.7} o={0.4} />
+      <Sun x={158} y={60} r={6} seed={911} />
 
       {/* layered dusk hills for depth */}
       <Ink

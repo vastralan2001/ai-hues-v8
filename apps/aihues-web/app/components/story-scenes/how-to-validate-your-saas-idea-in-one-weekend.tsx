@@ -2,8 +2,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -11,6 +9,7 @@ import {
   loop,
   INK,
   motion,
+  Sun,
 } from './_kit';
 
 export default function Scene() {
@@ -29,9 +28,7 @@ export default function Scene() {
 
       {/* dawn glow behind the lone "fake door" */}
       <circle cx='112' cy='44' r='40' fill='url(#wknd_glow)' />
-      <Twinkle x={40} y={22} c='#cf9836' />
-      <Twinkle x={170} y={28} d={0.7} c='#e0a83f' />
-      <Cloud x={52} y={26} s={0.8} o={0.4} />
+      <Sun x={52} y={26} r={6} seed={313} />
 
       {/* flat weekend ground — nothing built yet behind the door */}
       <Ink

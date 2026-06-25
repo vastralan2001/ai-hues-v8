@@ -3,14 +3,13 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
   stroke,
   loop,
   motion,
+  Bolt,
 } from './_kit';
 
 /* "How to Run Effective 1:1s" — the bloated hour distilled.
@@ -34,9 +33,7 @@ export default function Scene() {
       </defs>
 
       {/* atmosphere */}
-      <Twinkle x={34} y={22} c='#cf9836' />
-      <Twinkle x={170} y={28} d={0.8} c='#e0a83f' />
-      <Cloud x={48} y={24} s={0.78} o={0.4} />
+      <Bolt x={34} y={22} s={0.9} c='#cf9836' seed={215} />
 
       {/* warm focus glow on the small lower bulb (the 15 productive minutes) */}
       <circle cx='100' cy='66' r='28' fill='url(#oneone_glow)' />

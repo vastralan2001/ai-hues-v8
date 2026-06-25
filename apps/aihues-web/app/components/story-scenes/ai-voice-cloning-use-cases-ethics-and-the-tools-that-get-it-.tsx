@@ -3,7 +3,6 @@ import {
   Frame,
   Ink,
   Twinkle,
-  Cloud,
   gen,
   filled,
   stroke,
@@ -36,8 +35,6 @@ export default function Scene() {
 
       <circle cx='64' cy='44' r='40' fill='url(#voxclone_glow)' />
       <Twinkle x={34} y={22} c='#e0a83f' />
-      <Twinkle x={178} y={26} d={0.8} c='#cf9836' />
-      <Cloud x={158} y={68} s={0.7} o={0.32} />
 
       {/* the consent boundary — the soft vertical line the clone crosses */}
       <rect

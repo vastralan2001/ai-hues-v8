@@ -49,7 +49,6 @@ export default function Scene() {
 
       {/* faint dusk accents */}
       <Twinkle x={30} y={20} c='#cf9836' />
-      <Twinkle x={184} y={24} d={0.9} c='#e0a83f' />
       <Cloud x={150} y={20} s={0.8} o={0.4} />
 
       {/* warm broadcast glow at the source */}

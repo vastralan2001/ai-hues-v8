@@ -2,8 +2,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -36,10 +34,6 @@ export default function Scene() {
       {/* crest glow + trough shadow */}
       <circle cx='60' cy='22' r='34' fill='url(#roller_sun)' />
       <circle cx='100' cy='84' r='26' fill='url(#roller_dip)' />
-
-      <Twinkle x={34} y={18} c='#e0a83f' />
-      <Twinkle x={150} y={20} d={0.7} c='#cf9836' />
-      <Cloud x={158} y={64} s={0.78} o={0.4} />
 
       {/* far hills for depth */}
       <Ink

@@ -1,16 +1,5 @@
 'use client';
-import {
-  Frame,
-  Ink,
-  Twinkle,
-  Cloud,
-  gen,
-  filled,
-  stroke,
-  loop,
-  INK,
-  motion,
-} from './_kit';
+import { Frame, Ink, gen, filled, stroke, loop, INK, motion } from './_kit';
 
 /* Metaphor — "the one that finally stuck for me": a developer tries many
    note apps (loose pages drifting off on the wind) until one takes root.
@@ -28,9 +17,6 @@ export default function Scene() {
       </defs>
 
       {/* sky accents + a drifting cloud for depth */}
-      <Twinkle x={30} y={22} c='#cf9836' />
-      <Twinkle x={176} y={28} d={0.9} c='#e0a83f' />
-      <Cloud x={52} y={24} s={0.8} o={0.4} />
 
       {/* far hills — soft layered horizon */}
       <Ink

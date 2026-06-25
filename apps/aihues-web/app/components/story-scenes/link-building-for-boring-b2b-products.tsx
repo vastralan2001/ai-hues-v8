@@ -2,7 +2,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
   Cloud,
   Star,
   gen,
@@ -62,9 +61,6 @@ export default function Scene() {
       />
       {/* the distant authority domain it earns a link to */}
       <Star x={NODE.x} y={NODE.y} r={4} c='#e0a83f' seed={308} />
-
-      <Twinkle x={20} y={50} d={1.2} c='#cf9836' r={1} />
-      <Twinkle x={186} y={28} d={0.7} c='#e0a83f' r={1} />
 
       {/* the plinth the unglamorous product rests on */}
       <Ink

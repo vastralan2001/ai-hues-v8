@@ -3,7 +3,6 @@ import {
   Frame,
   Ink,
   Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -35,8 +34,6 @@ export default function Scene() {
 
       <circle cx='40' cy='26' r='40' fill='url(#tseo_beacon)' />
       <Twinkle x={28} y={20} c='#8fb2dd' />
-      <Twinkle x={176} y={24} d={0.7} c='#cf9836' />
-      <Cloud x={150} y={30} s={0.78} o={0.42} />
 
       {/* distant ground plane for depth */}
       <Ink

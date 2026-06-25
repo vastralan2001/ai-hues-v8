@@ -2,14 +2,13 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   gen,
   filled,
   stroke,
   loop,
   linear,
   motion,
+  Sun,
 } from './_kit';
 
 /* The Problem with Productivity Porn — an ornate, over-engineered "productivity
@@ -31,9 +30,7 @@ export default function Scene() {
       {/* warm spotlight on the showy machine */}
       <circle cx='74' cy='42' r='40' fill='url(#ppp_glow)' />
 
-      <Twinkle x={38} y={20} c='#cf9836' />
-      <Twinkle x={108} y={16} d={0.8} c='#e0a83f' />
-      <Cloud x={150} y={24} s={0.7} o={0.4} />
+      <Sun x={150} y={24} r={6} seed={799} />
 
       {/* ground / horizon for depth */}
       <Ink

@@ -2,8 +2,6 @@
 import {
   Frame,
   Ink,
-  Twinkle,
-  Cloud,
   RoughDash,
   gen,
   filled,
@@ -66,7 +64,6 @@ export default function Scene() {
       />
 
       {/* depth: a soft low ridge and a cloud */}
-      <Cloud x={158} y={20} s={0.7} o={0.4} />
       <Ink
         d={gen.path(
           'M0 88 Q70 80 200 90 L200 100 L0 100 Z',
@@ -79,8 +76,6 @@ export default function Scene() {
       />
 
       {/* faint twinkles at the edges */}
-      <Twinkle x={184} y={26} d={0.4} c='#cf9836' />
-      <Twinkle x={20} y={32} d={1.1} c='#e0a83f' />
 
       {/* the long tail — a rough flowing dashed arc the sparks ride along */}
       <RoughDash
