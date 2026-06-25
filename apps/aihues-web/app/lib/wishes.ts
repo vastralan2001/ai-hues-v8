@@ -40,7 +40,7 @@ let memoryWishes: Wish[] | null = null;
 const INITIAL_WISHES: Wish[] = [
   {
     id: 'wish-001',
-    title: 'AI PDF Summarizer',
+    title: 'PDF Summarizer',
     description:
       'Upload long PDFs and get a concise outline, key quotes, and action items.',
     type: 'tool',
@@ -118,7 +118,7 @@ const INITIAL_WISHES: Wish[] = [
   },
   {
     id: 'wish-007',
-    title: 'Prompt Version Diff',
+    title: 'Prompt Diff Tool',
     description:
       'Compare two prompt versions and highlight instruction, tone, and output changes.',
     type: 'tool',
@@ -144,7 +144,7 @@ const INITIAL_WISHES: Wish[] = [
   },
   {
     id: 'wish-009',
-    title: 'Invoice OCR Checker',
+    title: 'Invoice Checker',
     description:
       'Extract invoice fields and flag missing tax IDs, totals, and dates.',
     type: 'tool',
@@ -196,7 +196,7 @@ const INITIAL_WISHES: Wish[] = [
   },
   {
     id: 'wish-013',
-    title: 'Color Match Memory',
+    title: 'Color Memory Game',
     description:
       'A Simon-says style memory game with increasing color sequences.',
     type: 'game',
@@ -209,7 +209,7 @@ const INITIAL_WISHES: Wish[] = [
   },
   {
     id: 'wish-014',
-    title: 'AI Startup Idea Evaluator',
+    title: 'Startup Idea Evaluator',
     description:
       'Answer 10 questions and get a brutally honest score on your startup idea.',
     type: 'test',
@@ -235,7 +235,7 @@ const INITIAL_WISHES: Wish[] = [
   },
   {
     id: 'wish-016',
-    title: 'English Vocabulary Level Check',
+    title: 'Vocabulary Level Check',
     description:
       'A 5-minute adaptive test to estimate your CEFR vocabulary level.',
     type: 'test',
