@@ -14,8 +14,10 @@ export async function POST(request: Request) {
     const body = (await request.json()) as {
       title?: string;
       description?: string;
+      type?: 'tool' | 'game' | 'test';
       category?: string;
       email?: string;
+      referenceUrl?: string;
     };
 
     if (!body.title?.trim() || !body.description?.trim()) {
@@ -25,11 +27,17 @@ export async function POST(request: Request) {
       );
     }
 
+    if (!body.email?.trim()) {
+      return NextResponse.json({ error: 'Email is required' }, { status: 400 });
+    }
+
     const wish = addWish({
       title: body.title.trim(),
       description: body.description.trim(),
+      type: body.type ?? 'tool',
       category: body.category?.trim() || 'Other',
-      email: body.email?.trim(),
+      email: body.email.trim(),
+      referenceUrl: body.referenceUrl?.trim(),
     });
 
     return NextResponse.json({ wish }, { status: 201 });
