@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 
+import BrandBackdrop from '@/components/BrandBackdrop';
 import Breadcrumb, { type Crumb } from '@/components/Breadcrumb';
 import { BrandWord } from '@/components/Logo';
 import { type BrandCategory, CATEGORY_SLOGAN } from '@/lib/category-brand';
@@ -32,14 +33,7 @@ export function PageMasthead({
 
   return (
     <header className='relative isolate overflow-hidden pb-10 pt-16 text-center'>
-      <div
-        aria-hidden='true'
-        className='pointer-events-none absolute inset-x-0 top-0 -z-10 h-[300px]'
-        style={{
-          background:
-            'radial-gradient(58% 100% at 50% 0%, color-mix(in srgb, var(--color-accent) 11%, transparent), transparent 72%)',
-        }}
-      />
+      <BrandBackdrop />
       {breadcrumb && breadcrumb.length > 0 ? (
         <div className='relative mx-auto mb-8 w-full max-w-[1760px] px-[clamp(1.5rem,5vw,7rem)] text-left'>
           <Breadcrumb items={breadcrumb} />
