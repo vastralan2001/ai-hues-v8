@@ -59,19 +59,17 @@ function SlideText({
           {s.eyebrow}
         </span>
       </div>
-      <h3 className='mb-2 text-[26px] font-extrabold leading-[1.12] tracking-[-0.02em] text-foreground'>
+      <h3 className='mb-2 line-clamp-2 min-h-[2.24em] text-[26px] font-extrabold leading-[1.12] tracking-[-0.02em] text-foreground'>
         {s.title}
       </h3>
       <p
-        className={`mb-4 text-[15px] leading-relaxed text-secondary ${full ? '' : 'line-clamp-3'}`}
+        className={`mb-4 text-[15px] leading-relaxed text-secondary ${full ? '' : 'line-clamp-3 min-h-[4.9em]'}`}
       >
         {s.description}
       </p>
-      {s.metrics ? (
-        <p className='mb-5 text-[12px] font-semibold uppercase tracking-[0.12em] text-muted'>
-          {s.metrics}
-        </p>
-      ) : null}
+      <p className='mb-5 min-h-[1.5em] text-[12px] font-semibold uppercase tracking-[0.12em] text-muted'>
+        {s.metrics ?? ' '}
+      </p>
       <div className='flex flex-wrap items-center gap-3'>
         <Link className='btn-cta btn-cta--sm w-fit' href={s.href}>
           {s.cta}
