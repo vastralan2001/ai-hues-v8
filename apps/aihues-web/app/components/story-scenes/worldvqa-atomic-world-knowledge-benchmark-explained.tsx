@@ -42,10 +42,10 @@ export default function Scene() {
           <stop offset='70%' stopColor='#fff2d6' stopOpacity='0.35' />
           <stop offset='100%' stopColor='#fff2d6' stopOpacity='0' />
         </radialGradient>
-        <radialGradient id={`${ID}_haze`} cx='80%' cy='50%' r='70%'>
-          <stop offset='0%' stopColor='#efd9bd' stopOpacity='0' />
-          <stop offset='100%' stopColor='#f6e6cf' stopOpacity='0.85' />
-        </radialGradient>
+        <linearGradient id={`${ID}_haze`} x1='0' y1='0' x2='1' y2='0'>
+          <stop offset='0.42' stopColor='#f6e6cf' stopOpacity='0' />
+          <stop offset='1' stopColor='#f6e6cf' stopOpacity='0.82' />
+        </linearGradient>
       </defs>
 
       <Twinkle x={30} y={20} c='#cf9836' />
@@ -121,8 +121,9 @@ export default function Scene() {
         </g>
       ))}
 
-      {/* haze swallowing the long tail on the right */}
-      <rect x='130' y='30' width='70' height='62' fill={`url(#${ID}_haze)`} />
+      {/* haze swallowing the long tail on the right — a horizontal wash over the
+          full frame so it has no hard rectangular edge, only thickens rightward */}
+      <rect x='0' y='0' width='200' height='100' fill={`url(#${ID}_haze)`} />
 
       {/* the benchmark lens — hovering over the head card, drifting slightly as
           if scanning for the next atomic entity to interrogate */}

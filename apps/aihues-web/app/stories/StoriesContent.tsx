@@ -157,7 +157,7 @@ export default function StoriesContent({
                   </div>
 
                   <div className='flex flex-1 flex-col p-5'>
-                    <h2 className='mb-2 line-clamp-2 text-[15px] font-bold leading-snug tracking-tight text-foreground'>
+                    <h2 className='mb-2 line-clamp-2 text-[18px] font-bold leading-snug text-foreground'>
                       {post.title}
                     </h2>
                     <p className='mb-4 line-clamp-3 text-sm leading-relaxed text-secondary'>
