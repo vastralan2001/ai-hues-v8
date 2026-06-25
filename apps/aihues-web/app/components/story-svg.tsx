@@ -4,6 +4,8 @@ import rough from 'roughjs';
 import { motion } from 'framer-motion';
 import type { ComponentType, ReactNode } from 'react';
 
+import { GENERATED_SCENES } from './story-scenes/registry';
+
 /* Hand-authored, per-article Stories visuals. Each is a small atmospheric scene
    tied to the article: a soft gradient sky for depth, then the solid shapes are
    drawn with rough.js (sketchy outlines + hachure fills) for a hand-drawn,
@@ -714,7 +716,10 @@ function ReactServerComponents() {
   );
 }
 
-export const STORY_SVG: Record<string, ComponentType> = {
+// The six reference scenes are hand-authored inline here; every other article's
+// scene lives in its own file under story-scenes/ and is merged via the
+// generated registry. See .claude/skills/story-demo/SKILL.md.
+const HAND_AUTHORED: Record<string, ComponentType> = {
   'launching-on-product-hunt-what-worked-in-2026': LaunchProductHunt,
   'claude-3-7-vs-gpt-4o-which-one-actually-writes-better-code': ClaudeVsGpt,
   'app-store-optimization-in-2026-beyond-keywords': AppStoreOptimization,
@@ -722,4 +727,9 @@ export const STORY_SVG: Record<string, ComponentType> = {
     HiddenCostsAiWriting,
   'solo-founding-one-year-of-lessons-and-regrets': SoloFounding,
   'react-server-components-a-practical-guide': ReactServerComponents,
+};
+
+export const STORY_SVG: Record<string, ComponentType> = {
+  ...GENERATED_SCENES,
+  ...HAND_AUTHORED,
 };
