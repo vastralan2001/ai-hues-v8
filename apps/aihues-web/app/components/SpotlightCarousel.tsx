@@ -172,7 +172,10 @@ export default function SpotlightCarousel({
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <div className={`relative overflow-hidden ${boxH}`}>
+      {/* No overflow-hidden here: the hero + FeatureBand sections already clip
+          horizontally (overflow-x-clip) with vertical padding, so the CTA hover
+          glow can breathe instead of being cropped by this box. */}
+      <div className={`relative ${boxH}`}>
         {slides.map((s, i) => {
           const isActive = i === index;
           const isPrev = i === prev;

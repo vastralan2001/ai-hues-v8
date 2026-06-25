@@ -305,7 +305,7 @@ export interface CatalogSearchHit {
   title: string;
   subtitle: string;
   href: string;
-  type: 'tool' | 'game' | 'test';
+  type: 'tool' | 'game' | 'test' | 'story';
   score: number;
 }
 

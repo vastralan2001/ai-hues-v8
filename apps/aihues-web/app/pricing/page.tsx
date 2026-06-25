@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
+import Breadcrumb from '@/components/Breadcrumb';
 import { PageShell } from '@/components/SiteChrome';
 import { toolsHref } from '@/lib/routes';
 
@@ -80,6 +81,11 @@ const faqs = [
 export default function PricingPage() {
   return (
     <PageShell>
+      <div className='mx-auto mt-8 w-full max-w-[1320px] px-6'>
+        <Breadcrumb
+          items={[{ label: 'Home', href: '/' }, { label: 'Pricing' }]}
+        />
+      </div>
       <section className='page-hero'>
         <p className='kicker'>Plans</p>
         <h1>

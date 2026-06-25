@@ -21,7 +21,7 @@ interface Hit {
   title: string;
   subtitle: string;
   href: string;
-  type: 'tool' | 'game' | 'test';
+  type: 'tool' | 'game' | 'test' | 'story';
   score: number;
 }
 
@@ -75,8 +75,7 @@ export default function HeroSearch({
     // Empty box → search the current placeholder hint (synced to the scene).
     const term = query.trim() || hint || '';
     if (!term) return;
-    if (query.trim() && results.length > 0) go(results[0].href);
-    else router.push(`/tools?q=${encodeURIComponent(term)}`);
+    router.push(`/search?q=${encodeURIComponent(term)}`);
   }
 
   const showPanel = open && query.trim().length >= 2;
@@ -171,12 +170,24 @@ export default function HeroSearch({
                         </span>
                       </span>
                     </span>
-                    <span className='shrink-0 text-[11px] font-semibold tabular-nums text-muted'>
-                      {Math.round(r.score * 100)}%
+                    <span className='shrink-0 text-[11px] font-semibold capitalize tabular-nums text-muted'>
+                      {r.type}
                     </span>
                   </Link>
                 </li>
               ))}
+              <li className='border-t border-border'>
+                <Link
+                  href={`/search?q=${encodeURIComponent(query.trim())}`}
+                  onClick={() =>
+                    go(`/search?q=${encodeURIComponent(query.trim())}`)
+                  }
+                  className='flex items-center gap-2 px-4 py-2.5 text-[13px] font-semibold text-accent transition-colors hover:bg-accent-bg'
+                >
+                  <Search size={14} strokeWidth={2.4} />
+                  See all results for “{query.trim()}”
+                </Link>
+              </li>
             </ul>
           )}
         </div>

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 
 import { ApiNotice, EmptyState, ToolCardV2 } from '@/components/CatalogCards';
+import Breadcrumb from '@/components/Breadcrumb';
 import { PageShell } from '@/components/SiteChrome';
 import { safeListTools } from '@/lib/catalog-api';
 import { toolCategories } from '@/lib/catalog-types';
@@ -31,6 +32,11 @@ export default async function CollectionPage() {
 
   return (
     <PageShell>
+      <div className='mx-auto mt-8 w-full max-w-[1320px] px-6'>
+        <Breadcrumb
+          items={[{ label: 'Home', href: '/' }, { label: 'Collection' }]}
+        />
+      </div>
       <section className='page-hero'>
         <p className='kicker'>Collection</p>
         <h1>

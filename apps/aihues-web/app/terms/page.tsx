@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 
+import Breadcrumb from '@/components/Breadcrumb';
 import { PageShell } from '@/components/SiteChrome';
 
 export const metadata: Metadata = {
@@ -11,6 +12,10 @@ export default function TermsPage() {
   return (
     <PageShell>
       <main className='mx-auto max-w-[720px] px-6 py-20 md:px-7'>
+        <Breadcrumb
+          className='mb-8'
+          items={[{ label: 'Home', href: '/' }, { label: 'Terms' }]}
+        />
         <h1 className='mb-6 text-[36px] font-extrabold tracking-[-1px] text-[#1c1917]'>
           Terms of Service
         </h1>

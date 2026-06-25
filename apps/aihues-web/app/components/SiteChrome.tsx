@@ -6,7 +6,7 @@ import HeaderBar from '@/components/HeaderBar';
 import { t, type Locale } from '@/lib/dict';
 import {
   storiesHref,
-  discoverHref,
+  searchHref,
   gameDetailHref,
   gamesHref,
   homeHref,
@@ -108,7 +108,7 @@ export function SiteFooter({
 }) {
   const product: Array<[string, string]> = [
     [t(locale, 'nav.tools'), toolsHref],
-    [t(locale, 'nav.discover'), discoverHref],
+    [t(locale, 'nav.search'), searchHref],
     [t(locale, 'nav.wishlist'), wishlistHref],
     [t(locale, 'nav.resources'), storiesHref],
   ];
@@ -194,7 +194,7 @@ export function SiteFooter({
 }
 
 const footerLinkClass =
-  'text-[14px] text-secondary transition-colors duration-200 hover:text-foreground focus-visible:text-foreground focus-visible:underline focus-visible:outline-none';
+  'text-[14px] text-secondary transition-colors duration-200 hover:text-accent focus-visible:text-accent focus-visible:underline focus-visible:outline-none';
 
 function FooterLink({ href, children }: { href: string; children: ReactNode }) {
   const external =

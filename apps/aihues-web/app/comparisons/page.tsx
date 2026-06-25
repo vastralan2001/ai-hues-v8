@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 
+import Breadcrumb from '@/components/Breadcrumb';
 import { PageShell } from '@/components/SiteChrome';
 import { getAllReviews } from '@/lib/reviews';
 import { ALL_TOOLS } from '@/lib/tool-data';
@@ -17,6 +18,10 @@ export default function ComparisonsPage() {
   return (
     <PageShell>
       <main className='mx-auto max-w-[1100px] px-6 py-16'>
+        <Breadcrumb
+          className='mb-8'
+          items={[{ label: 'Home', href: '/' }, { label: 'Comparisons' }]}
+        />
         <div className='mb-10 text-center'>
           <h1 className='text-[32px] font-extrabold tracking-[-1px] text-[#1c1917]'>
             Tool Comparisons

@@ -8,7 +8,7 @@ export const wishlistHref = '/wishlist';
 export const rankingHref = '/ranking';
 export const pricingHref = '/pricing';
 export const collectionHref = '/collection';
-export const discoverHref = '/discover';
+export const searchHref = '/search';
 export const storiesHref = '/stories';
 
 export function toolDetailHref(slug: string) {

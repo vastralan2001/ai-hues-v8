@@ -184,6 +184,42 @@ select:focus-visible {
   padding: 0 18px;
   font-size: 12px;
 }
+
+/* AIHues wordmark — a cinematic hover: the letters spread, each lifts in a
+   staggered wave and the HUES letters bloom in their own hue. */
+.logo-mark {
+  letter-spacing: 0.12em;
+  transition: letter-spacing 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.logo-letter {
+  display: inline-block;
+  transition:
+    transform 380ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    filter 380ms ease;
+  will-change: transform;
+}
+.logo-mark:hover {
+  letter-spacing: 0.2em;
+}
+.logo-mark:hover .logo-letter {
+  transform: translateY(-3px) scale(1.06);
+}
+.logo-mark:hover .logo-hue {
+  filter: drop-shadow(0 4px 11px color-mix(in srgb, currentColor 55%, transparent));
+}
+@media (prefers-reduced-motion: reduce) {
+  .logo-mark,
+  .logo-letter {
+    transition: none;
+  }
+  .logo-mark:hover {
+    letter-spacing: 0.12em;
+  }
+  .logo-mark:hover .logo-letter {
+    transform: none;
+    filter: none;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .btn-cta {
     transition: background-color 200ms ease;
