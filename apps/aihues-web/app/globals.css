@@ -1591,14 +1591,18 @@ input {
     text-decoration: underline;
   }
 
-  @media (max-width: 980px) {
+  @media (max-width: 760px) {
     .wish-leaderboards {
       grid-template-columns: 1fr;
     }
 
     .wish-type-cards {
       flex-direction: column;
-      align-items: center;
+      align-items: stretch;
+    }
+
+    .wish-type-button {
+      max-width: none;
     }
   }
 
