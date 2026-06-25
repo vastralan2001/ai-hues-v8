@@ -192,7 +192,7 @@ export default function SpotlightCarousel({
               slug={s.slug}
               tag={s.eyebrow}
               animated
-              className='h-full min-h-[260px] w-full rounded-[18px] border border-border'
+              className='h-[244px] w-full rounded-[16px] border border-border'
             />
           ) : null;
           return (

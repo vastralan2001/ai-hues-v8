@@ -31,7 +31,7 @@ export function PageMasthead({
   const slogan = category ? CATEGORY_SLOGAN[category] : null;
 
   return (
-    <header className='relative isolate overflow-hidden px-6 pb-10 pt-16 text-center'>
+    <header className='relative isolate overflow-hidden pb-10 pt-16 text-center'>
       <div
         aria-hidden='true'
         className='pointer-events-none absolute inset-x-0 top-0 -z-10 h-[300px]'
@@ -41,11 +41,11 @@ export function PageMasthead({
         }}
       />
       {breadcrumb && breadcrumb.length > 0 ? (
-        <div className='relative mx-auto mb-8 w-full max-w-[1320px] text-left'>
+        <div className='relative mx-auto mb-8 w-full max-w-[1320px] px-6 text-left'>
           <Breadcrumb items={breadcrumb} />
         </div>
       ) : null}
-      <div className='mx-auto max-w-[1100px]'>
+      <div className='mx-auto max-w-[1100px] px-6'>
         <h1 className='text-[clamp(40px,6.4vw,74px)] font-extrabold leading-[1.0] tracking-[-0.03em] text-accent'>
           {title}
         </h1>
@@ -77,10 +77,9 @@ export function PageMasthead({
           </div>
         ) : null}
       </div>
-      <div
-        aria-hidden='true'
-        className='mx-auto mt-12 h-px w-full max-w-[1320px] bg-border'
-      />
+      <div className='mx-auto mt-12 w-full max-w-[1320px] px-6'>
+        <div aria-hidden='true' className='h-px w-full bg-border' />
+      </div>
     </header>
   );
 }
