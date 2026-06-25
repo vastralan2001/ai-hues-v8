@@ -133,16 +133,21 @@ export function Twinkle({
   r?: number;
   c?: string;
 }) {
+  const seed = Math.round(Math.abs(x) * 5 + Math.abs(y) * 2) + 1;
+  const a = r * 2.4;
   return (
-    <motion.circle
-      cx={x}
-      cy={y}
-      r={r}
-      fill={c}
-      animate={{ opacity: [0.2, 0.9, 0.2], scale: [0.6, 1.1, 0.6] }}
+    <motion.g
+      animate={{ opacity: [0.2, 0.95, 0.2], scale: [0.5, 1.15, 0.5] }}
       transition={loop(2.4, d)}
       style={{ transformOrigin: `${x}px ${y}px` }}
-    />
+    >
+      <Ink
+        d={gen.path(
+          `M${x - a} ${y} L${x + a} ${y} M${x} ${y - a} L${x} ${y + a}`,
+          { stroke: c, strokeWidth: 1, roughness: 2, bowing: 2, seed }
+        )}
+      />
+    </motion.g>
   );
 }
 
@@ -158,11 +163,21 @@ export function Cloud({
   s?: number;
   o?: number;
 }) {
+  const seed = Math.round(Math.abs(x) * 7 + Math.abs(y) * 3) + 1;
+  const puff = (cx: number, cy: number, w: number, h: number, sd: number) =>
+    gen.ellipse(cx, cy, w, h, {
+      fill: '#fff',
+      fillStyle: 'solid',
+      stroke: INK,
+      strokeWidth: 0.8,
+      roughness: 1.5,
+      seed: sd,
+    });
   return (
-    <g transform={`translate(${x} ${y}) scale(${s})`} fill='#fff' opacity={o}>
-      <ellipse cx='0' cy='0' rx='15' ry='5' />
-      <ellipse cx='10' cy='1.5' rx='9' ry='4' />
-      <ellipse cx='-10' cy='2' rx='8' ry='3.5' />
+    <g transform={`translate(${x} ${y}) scale(${s})`} opacity={o}>
+      <Ink d={puff(0, 0, 30, 10, seed)} />
+      <Ink d={puff(10, 1.5, 18, 8, seed + 1)} />
+      <Ink d={puff(-10, 2, 16, 7, seed + 2)} />
     </g>
   );
 }
