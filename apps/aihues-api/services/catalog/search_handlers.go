@@ -59,7 +59,7 @@ func (s *Service) buildCorpus(ctx context.Context) ([]search.Doc, error) {
 	if err != nil {
 		return nil, err
 	}
-	docs := make([]search.Doc, 0, len(tools)+len(games)+len(staticTests))
+	docs := make([]search.Doc, 0, len(tools)+len(games)+len(staticTests)+len(staticStories))
 	for _, it := range tools {
 		if it.ExternalURL != "" {
 			continue
@@ -70,6 +70,9 @@ func (s *Service) buildCorpus(ctx context.Context) ([]search.Doc, error) {
 		docs = append(docs, docFromItem(it, "game", "/games/", "mini game play arcade fun"))
 	}
 	docs = append(docs, staticTests...)
+	for _, st := range staticStories {
+		docs = append(docs, docFromStory(st))
+	}
 	return docs, nil
 }
 
