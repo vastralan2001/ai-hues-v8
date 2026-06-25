@@ -161,12 +161,12 @@ export default async function HomePage() {
 
   const posts = getAllPosts();
 
-  // Stories band carousel: feature exactly one paper (the newest) ahead of
-  // recent non-paper stories, so the Papers category earns a home-band spot
-  // without the four papers crowding out the rest of the feed.
-  const featuredPaper = posts.find((p) => p.tag === 'Papers');
+  // Stories band carousel: feature exactly one Research paper (the newest)
+  // ahead of recent non-paper stories, so the Research category earns a
+  // home-band spot without the papers crowding out the rest of the feed.
+  const featuredPaper = posts.find((p) => p.tag === 'Research');
   const storyBandPosts = featuredPaper
-    ? [featuredPaper, ...posts.filter((p) => p.tag !== 'Papers').slice(0, 5)]
+    ? [featuredPaper, ...posts.filter((p) => p.tag !== 'Research').slice(0, 5)]
     : posts.slice(0, 6);
 
   const homeTools = HOME_TOOL_SLUGS.map((slug) =>
@@ -381,7 +381,7 @@ export default async function HomePage() {
           eyebrow='Stories'
           id='stories'
           links={[
-            { label: 'Papers', href: storyTagHref('Papers') },
+            { label: 'Research', href: storyTagHref('Research') },
             { label: 'AI Tools', href: storyTagHref('AI Tools') },
             { label: 'Growth', href: storyTagHref('Growth') },
             { label: 'Development', href: storyTagHref('Development') },
