@@ -982,7 +982,7 @@
   },
   {
     "slug": "kimi-k2-open-agentic-intelligence-explained",
-    "tag": "AI Tools",
+    "tag": "Papers",
     "title": "Kimi K2 Explained: Open Agentic Intelligence at Trillion Scale",
     "excerpt": "Moonshot AI shipped a trillion-parameter open MoE model that uses tools, writes code, and finishes multi-step jobs. A plain-English read of the architecture, the MuonClip optimizer, and the benchmarks.",
     "date": "2026-06-24",
@@ -992,7 +992,7 @@
   },
   {
     "slug": "kimi-k2-thinking-the-reasoning-model-explained",
-    "tag": "AI Tools",
+    "tag": "Papers",
     "title": "Inside Kimi K2 Thinking: How an Open Model Learns to Reason",
     "excerpt": "A 1T-parameter open model that thinks across 200-300 tool calls without losing the thread. Here is how it reasons, what INT4 training buys, the benchmark numbers, and the honest limits.",
     "date": "2026-06-23",
@@ -1002,7 +1002,7 @@
   },
   {
     "slug": "kimi-k2-6-open-source-coding-model-explained",
-    "tag": "AI Tools",
+    "tag": "Papers",
     "title": "Kimi K2.6 for Coding: What the Benchmarks Actually Show",
     "excerpt": "Moonshot open-sourced a model that beats GPT-5.4 on SWE-Bench Pro. A benchmark-first read of where Kimi K2.6 leads, where it trails, and how to point it.",
     "date": "2026-06-22",
@@ -1012,7 +1012,7 @@
   },
   {
     "slug": "worldvqa-atomic-world-knowledge-benchmark-explained",
-    "tag": "AI Tools",
+    "tag": "Papers",
     "title": "WorldVQA Explained: Measuring Atomic World Knowledge in MLLMs",
     "excerpt": "Moonshot AI 3,500-question benchmark asks every vision model one blunt thing: do you actually recognize what you see, or are you guessing? Frontier models stay under 50%.",
     "date": "2026-06-21",
