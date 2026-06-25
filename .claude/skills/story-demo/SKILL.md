@@ -155,3 +155,29 @@ The kit now exports richer rough building blocks — prefer these over plain SVG
 2. **Don't overuse decorations.** At most **1–2** `Twinkle`s, **1** `Cloud`, and
    **1** dashed trail per scene. The bespoke focal subject carries the scene;
    sparkles/clouds/dashes are seasoning, not filler.
+
+## Lucide → rough (the fastest way to a metaphor)
+
+You can turn **any lucide icon** into a hand-drawn rough drawing — the best
+shortcut from "the article's idea" to a focal subject. lucide-react has no
+`exports` map, so import an icon's raw node directly:
+
+```tsx
+import { Frame, RoughIcon, INK } from './_kit';
+import { __iconNode as rocketNode } from 'lucide-react/dist/esm/icons/rocket.mjs';
+// file name = the icon's kebab-case name: book-open.mjs, trending-up.mjs, brain.mjs, …
+
+<RoughIcon node={rocketNode} x={100} y={48} size={46} c={INK} fill='#e2693f' seed={20} />
+```
+
+- `RoughIcon({ node, x, y, size?, c?, fill?, sw?, seed? })` — lucide icons are a
+  24×24 grid; `size` scales the whole icon, centred at `(x, y)`. Pass `fill` for a
+  solid hachure-free fill, omit it for outline-only. Give each icon a distinct
+  `seed`. Every primitive in the icon (path/line/circle/rect/polyline/…) is drawn
+  rough.
+- Use it for the focal subject and for small props (a rough `zap`, `book-open`,
+  `trending-up`, `git-branch`, `database`, `shield`, `bot`, `flask-conical`…).
+  Still pick a metaphor that fits *this* article — the icon is a starting point,
+  not a label. Compose icons + the kit primitives (Sun, Mountains, RoughDash …)
+  into a small scene; don't just drop one centered icon.
+- It animates like anything else — wrap `<RoughIcon/>` in a `<motion.g>`.

@@ -361,4 +361,67 @@ export function Bolt({
   );
 }
 
+/* Render ANY lucide icon as a rough drawing. Import an icon's raw node:
+     import { __iconNode as bookNode } from 'lucide-react/dist/esm/icons/book-open.mjs';
+   then: <RoughIcon node={bookNode} x={100} y={50} size={44} c={INK} fill='#e2693f' seed={10} />.
+   lucide icons are a 24×24 grid; `size` scales the whole icon, centred at (x,y). */
+export type IconNode = [string, Record<string, string | number>][];
+
+function iconPts(s: string): [number, number][] {
+  return s
+    .trim()
+    .split(/\s+/)
+    .map((p) => p.split(',').map(Number) as [number, number]);
+}
+
+export function RoughIcon({
+  node,
+  x,
+  y,
+  size = 24,
+  c = INK,
+  fill,
+  sw = 1.2,
+  seed = 1,
+}: {
+  node: IconNode;
+  x: number;
+  y: number;
+  size?: number;
+  c?: string;
+  fill?: string;
+  sw?: number;
+  seed?: number;
+}) {
+  const k = size / 24;
+  const opt = (i: number): Opts =>
+    fill
+      ? filled(seed + i, fill, {
+          stroke: c,
+          strokeWidth: sw / k,
+          fillStyle: 'solid',
+        })
+      : stroke(seed + i, { stroke: c, strokeWidth: sw / k });
+  return (
+    <g transform={`translate(${x} ${y}) scale(${k}) translate(-12 -12)`}>
+      {node.map(([tag, a], i) => {
+        const o = opt(i);
+        let d: ReturnType<typeof gen.path> | null = null;
+        if (tag === 'path') d = gen.path(String(a.d), o);
+        else if (tag === 'line') d = gen.line(+a.x1, +a.y1, +a.x2, +a.y2, o);
+        else if (tag === 'circle') d = gen.circle(+a.cx, +a.cy, +a.r * 2, o);
+        else if (tag === 'rect')
+          d = gen.rectangle(+a.x, +a.y, +a.width, +a.height, o);
+        else if (tag === 'ellipse')
+          d = gen.ellipse(+a.cx, +a.cy, +a.rx * 2, +a.ry * 2, o);
+        else if (tag === 'polyline')
+          d = gen.linearPath(iconPts(String(a.points)), o);
+        else if (tag === 'polygon')
+          d = gen.polygon(iconPts(String(a.points)), o);
+        return d ? <Ink key={i} d={d} /> : null;
+      })}
+    </g>
+  );
+}
+
 export { motion };
