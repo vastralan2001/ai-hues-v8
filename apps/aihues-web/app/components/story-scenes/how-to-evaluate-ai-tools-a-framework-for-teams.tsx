@@ -4,11 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -37,7 +37,6 @@ export default function Scene() {
       <Cloud x={44} y={26} s={0.78} o={0.4} />
       <Twinkle x={30} y={22} c='#cf9836' />
       <Twinkle x={176} y={20} d={0.7} c='#e0a83f' />
-      <Twinkle x={170} y={50} d={1.2} c='#cf9836' r={0.9} />
 
       {/* desk / ground line for depth */}
       <Ink
@@ -176,15 +175,14 @@ export default function Scene() {
       </motion.g>
 
       {/* faint dashed sightline from scale to the gauge mark (measuring) */}
-      <motion.path
+      <RoughDash
         d='M108 52 Q132 50 150 50'
-        fill='none'
-        stroke='#cf9836'
-        strokeWidth='1'
-        strokeDasharray='2 5'
-        opacity='0.65'
-        animate={{ strokeDashoffset: [0, -14] }}
-        transition={linear(1.8)}
+        c='#cf9836'
+        w={1}
+        dur={1.8}
+        dash='2 5'
+        o={0.65}
+        seed={243}
       />
     </Frame>
   );

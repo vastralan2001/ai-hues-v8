@@ -5,11 +5,10 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
-  stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -41,10 +40,8 @@ export default function Scene() {
 
       {/* distant atmosphere */}
       <Cloud x={42} y={22} s={0.8} o={0.4} />
-      <Cloud x={158} y={28} s={0.7} o={0.34} />
       <Twinkle x={26} y={20} c='#cf9836' />
       <Twinkle x={176} y={18} d={0.7} c='#e0a83f' />
-      <Twinkle x={188} y={46} d={1.2} c='#cf9836' />
 
       {/* soft ground swell for depth */}
       <Ink
@@ -57,22 +54,35 @@ export default function Scene() {
       {/* glow around the hearth */}
       <circle cx='100' cy='54' r='40' fill='url(#clg_hearth)' />
 
-      {/* connection threads: hearth → each member node (flowing dashes = live links) */}
+      {/* connection threads: hearth → each member node, drawn as rough ink links */}
       {ring.map((m, i) => (
-        <motion.line
+        <motion.g
           key={`th-${m.seed}`}
-          x1='100'
-          y1='54'
-          x2={m.x}
-          y2={m.y}
-          stroke='#d98f46'
-          strokeWidth='1'
-          opacity='0.55'
-          strokeDasharray='1.5 4'
-          animate={{ strokeDashoffset: [0, -11] }}
-          transition={linear(1.8 + i * 0.12)}
-        />
+          animate={{ opacity: [0.35, 0.7, 0.35] }}
+          transition={loop(2.4, i * 0.18)}
+        >
+          <Ink
+            d={gen.line(100, 54, m.x, m.y, {
+              stroke: '#d98f46',
+              strokeWidth: 1,
+              roughness: 1.4,
+              bowing: 2,
+              seed: m.seed + 5,
+            })}
+          />
+        </motion.g>
       ))}
+
+      {/* one live link flows as a rough dashed trail (the spreading signal) */}
+      <RoughDash
+        d='M100 54 L100 30'
+        c='#d98f46'
+        w={1.2}
+        dur={1.6}
+        dash='1.5 4'
+        seed={336}
+        o={0.85}
+      />
 
       {/* member nodes around the ring, gently breathing */}
       {ring.map((m) => (
@@ -145,16 +155,12 @@ export default function Scene() {
 
       {/* seed-sparks rising from the hearth → new adoption spreading outward */}
       {[
-        { x: 100, dx: 26, d: 0 },
-        { x: 100, dx: -22, d: 1.1 },
-        { x: 100, dx: 8, d: 2.0 },
+        { dx: 26, d: 0, seed: 360 },
+        { dx: -22, d: 1.1, seed: 362 },
+        { dx: 8, d: 2.0, seed: 364 },
       ].map((s) => (
-        <motion.circle
+        <motion.g
           key={`sp-${s.dx}`}
-          cx={s.x}
-          cy='48'
-          r='1.4'
-          fill='#fff3da'
           animate={{ x: [0, s.dx], y: [0, -26], opacity: [0, 0.9, 0] }}
           transition={{
             duration: 3.2,
@@ -162,7 +168,16 @@ export default function Scene() {
             ease: 'easeOut',
             delay: s.d,
           }}
-        />
+        >
+          <Ink
+            d={gen.circle(
+              100,
+              48,
+              3,
+              filled(s.seed, '#fff3da', { fillStyle: 'solid', strokeWidth: 0 })
+            )}
+          />
+        </motion.g>
       ))}
 
       {/* a new far-off member-star the spread has reached */}

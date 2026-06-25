@@ -4,11 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -34,10 +34,8 @@ export default function Scene() {
 
       {/* sky depth */}
       <Cloud x={46} y={24} s={0.8} o={0.42} />
-      <Cloud x={158} y={32} s={0.62} o={0.32} />
       <Twinkle x={30} y={20} c='#9cc3e2' />
       <Twinkle x={176} y={18} d={0.7} c='#9cc3e2' />
-      <Twinkle x={120} y={14} d={1.2} c='#cbb07a' r={0.9} />
 
       {/* far ground + a low horizon ridge for depth */}
       <Ink
@@ -63,15 +61,14 @@ export default function Scene() {
         )}
       />
       {/* dashed centre line — the path forward, flowing away from the viewer */}
-      <motion.path
+      <RoughDash
         d='M100 100 L100 64'
-        fill='none'
-        stroke='#eef3ec'
-        strokeWidth='1.6'
-        strokeDasharray='3 5'
-        opacity='0.85'
-        animate={{ strokeDashoffset: [0, 16] }}
-        transition={linear(1.8)}
+        c='#eef3ec'
+        w={1.6}
+        dur={1.8}
+        seed={403}
+        dash='3 5'
+        o={0.85}
       />
 
       {/* receding source-mileposts (the unwalked blue links), small & fading toward horizon */}
@@ -160,21 +157,6 @@ export default function Scene() {
           )}
         />
       </motion.g>
-
-      {/* spark of the answer landing on the near signpost — the query met its end here */}
-      <motion.path
-        d='M132 47 Q90 50 58 56'
-        fill='none'
-        stroke='#f0b449'
-        strokeWidth='1.2'
-        strokeDasharray='2 6'
-        opacity='0.7'
-        animate={{ strokeDashoffset: [0, -16] }}
-        transition={linear(1.5)}
-      />
-      <Twinkle x={150} y={44} d={0} r={1.3} c='#fff7e8' />
-      <Twinkle x={165} y={30} d={0.9} c='#e0a83f' r={1} />
-      <Twinkle x={134} y={58} d={1.4} c='#e0a83f' r={0.9} />
     </Frame>
   );
 }

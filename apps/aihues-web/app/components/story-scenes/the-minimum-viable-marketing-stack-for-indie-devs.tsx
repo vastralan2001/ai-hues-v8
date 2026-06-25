@@ -4,24 +4,22 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
 
 /* Metaphor — a lean marketing "tool dock": one small shelf holding exactly 5
-   essential instruments, with 3 dashed signal trails arcing out to 3 distant
-   beacons (the channels). Minimum viable = uncluttered, only what earns its
+   essential instruments, with one dashed signal trail arcing out to the lead
+   beacon (the channels). Minimum viable = uncluttered, only what earns its
    place. Warm dawn-gold sky for early traction. Seeds: 300-series. */
 
 export default function Scene() {
   const ch1 = 'M118 58 Q150 50 178 32';
-  const ch2 = 'M118 62 Q156 64 188 56';
-  const ch3 = 'M118 66 Q146 82 176 84';
   return (
     <Frame sky={['#fcf3e2', '#f5dcba']}>
       <defs>
@@ -34,9 +32,7 @@ export default function Scene() {
       {/* atmosphere */}
       <circle cx='150' cy='34' r='40' fill='url(#mvms_glow)' />
       <Cloud x={42} y={24} s={0.8} o={0.4} />
-      <Cloud x={158} y={72} s={0.6} o={0.32} />
       <Twinkle x={30} y={20} c='#cf9836' />
-      <Twinkle x={96} y={16} d={0.7} c='#e0a83f' />
       <Twinkle x={184} y={22} d={1.2} c='#cf9836' />
 
       {/* far ground band for depth */}
@@ -47,35 +43,9 @@ export default function Scene() {
         )}
       />
 
-      {/* 3 channel trails radiating out to distant beacons */}
-      <motion.path
-        d={ch1}
-        fill='none'
-        stroke='#c2502e'
-        strokeWidth='1.4'
-        strokeDasharray='2 6'
-        animate={{ strokeDashoffset: [0, -16] }}
-        transition={linear(1.5)}
-      />
-      <motion.path
-        d={ch2}
-        fill='none'
-        stroke='#cf9836'
-        strokeWidth='1.4'
-        strokeDasharray='2 6'
-        animate={{ strokeDashoffset: [0, -16] }}
-        transition={linear(1.8)}
-      />
-      <motion.path
-        d={ch3}
-        fill='none'
-        stroke='#788c5d'
-        strokeWidth='1.4'
-        strokeDasharray='2 6'
-        animate={{ strokeDashoffset: [0, -16] }}
-        transition={linear(1.65)}
-      />
-      {/* beacons at the trail ends */}
+      {/* one channel trail radiating out to the lead beacon */}
+      <RoughDash d={ch1} c='#c2502e' w={1.4} dur={1.5} dash='2 6' seed={302} />
+      {/* beacons at the channel ends */}
       {[
         [178, 32, '#c2502e', 0],
         [188, 56, '#cf9836', 0.5],
@@ -104,7 +74,21 @@ export default function Scene() {
         transition={loop(2.8)}
         style={{ transformOrigin: '70px 60px' }}
       >
-        <ellipse cx='70' cy='74' rx='34' ry='3.4' fill={INK} opacity='0.09' />
+        <g opacity={0.09}>
+          <Ink
+            d={gen.ellipse(
+              70,
+              74,
+              68,
+              7,
+              filled(319, INK, {
+                fillStyle: 'solid',
+                strokeWidth: 0,
+                roughness: 1.6,
+              })
+            )}
+          />
+        </g>
 
         {/* shelf board */}
         <Ink

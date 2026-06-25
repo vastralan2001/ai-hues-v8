@@ -4,11 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -46,7 +46,6 @@ export default function Scene() {
       {/* soft low sun warming the field */}
       <circle cx='44' cy='30' r='34' fill='url(#u1k_glow)' />
       <Cloud x={150} y={22} s={0.75} o={0.4} />
-      <Cloud x={70} y={16} s={0.6} o={0.32} />
       <Twinkle x={188} y={20} d={0.4} c='#e0a83f' />
       <Twinkle x={24} y={54} d={1} c='#cf9836' />
 
@@ -73,15 +72,14 @@ export default function Scene() {
       />
 
       {/* drifting spore trail from the sprout out across the field */}
-      <motion.path
+      <RoughDash
         d='M62 70 Q110 48 178 42'
-        fill='none'
-        stroke='#cf9836'
-        strokeWidth='1.3'
-        opacity='0.55'
-        strokeDasharray='1.4 6'
-        animate={{ strokeDashoffset: [0, -22] }}
-        transition={linear(2.2)}
+        c='#cf9836'
+        w={1.3}
+        dur={2.2}
+        seed={305}
+        dash='1.4 6'
+        o={0.55}
       />
 
       {/* the spores that took root: small glowing dots, the new users */}

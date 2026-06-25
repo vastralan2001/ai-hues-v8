@@ -4,11 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -41,12 +41,10 @@ export default function Scene() {
         </radialGradient>
       </defs>
 
-      {/* far depth: clouds + dusk stars */}
+      {/* far depth: one cloud + a couple of dusk stars */}
       <Cloud x={48} y={22} s={0.8} o={0.4} />
-      <Cloud x={158} y={28} s={0.7} o={0.35} />
       <Twinkle x={26} y={20} c='#cf9836' />
       <Twinkle x={188} y={24} d={0.7} c='#e0a83f' />
-      <Twinkle x={104} y={16} d={1.2} c='#cf9836' r={1.2} />
 
       {/* distant rolling hills for depth */}
       <Ink
@@ -67,21 +65,34 @@ export default function Scene() {
       />
       <rect x='0' y='66' width='200' height='34' fill='url(#rfc_ground)' />
 
-      {/* the network threads: each node tied to the shared hub, light flowing inward */}
+      {/* the network threads tying each node to the shared hub; one live dashed
+          trail signals flow inward, the rest are quiet hand-drawn connectors */}
       {nodes.map(([nx, ny], i) => {
         const my = Math.min(ny, hub[1]) - 10;
         const d = `M${nx} ${ny} Q${(nx + hub[0]) / 2} ${my} ${hub[0]} ${hub[1]}`;
+        if (i === 0)
+          return (
+            <RoughDash
+              key={`t${nx}`}
+              d={d}
+              c='#788c5d'
+              w={1}
+              dur={1.9}
+              dash='2 6'
+              o={0.8}
+              seed={303}
+            />
+          );
         return (
-          <motion.path
+          <Ink
             key={`t${nx}`}
-            d={d}
-            fill='none'
-            stroke='#788c5d'
-            strokeWidth='1'
-            strokeDasharray='2 6'
-            opacity='0.75'
-            animate={{ strokeDashoffset: [0, -16] }}
-            transition={linear(1.8 + i * 0.25)}
+            d={gen.path(d, {
+              stroke: '#788c5d',
+              strokeWidth: 1,
+              roughness: 1.5,
+              bowing: 1.2,
+              seed: 303 + i,
+            })}
           />
         );
       })}
@@ -98,14 +109,17 @@ export default function Scene() {
           style={{ transformOrigin: `${nx}px ${ny}px` }}
         >
           {/* soft ground shadow */}
-          <ellipse
-            cx={nx}
-            cy={ny + 6}
-            rx='7'
-            ry='1.6'
-            fill={INK}
-            opacity='0.1'
-          />
+          <g opacity='0.12'>
+            <Ink
+              d={gen.ellipse(nx, ny + 6, 14, 3.2, {
+                fill: INK,
+                fillStyle: 'solid',
+                stroke: 'none',
+                roughness: 1.4,
+                seed: 350 + i,
+              })}
+            />
+          </g>
           {/* cabin body */}
           <Ink
             d={gen.rectangle(
@@ -187,10 +201,6 @@ export default function Scene() {
           )}
         />
       </motion.g>
-
-      {/* a few signal sparks travelling the central glow */}
-      <Twinkle x={88} y={38} d={0.3} c='#e2693f' r={1} />
-      <Twinkle x={120} y={36} d={0.9} c='#cf9836' r={1} />
     </Frame>
   );
 }

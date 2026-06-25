@@ -4,6 +4,7 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
@@ -32,20 +33,16 @@ export default function Scene() {
       {/* sky glow + early-morning accents */}
       <circle cx='40' cy='26' r='40' fill='url(#ncmvp_glow)' />
       <Twinkle x={168} y={20} c='#e0a83f' />
-      <Twinkle x={150} y={38} d={0.7} c='#cf9836' />
-      <Twinkle x={28} y={52} d={1.2} c='#e0a83f' r={1} />
       <Cloud x={156} y={64} s={0.8} o={0.4} />
-      <Cloud x={56} y={70} s={0.7} o={0.35} />
 
       {/* 48h clock arc swinging overhead — speed of the build */}
-      <motion.path
+      <RoughDash
         d='M52 60 Q100 4 148 60'
-        fill='none'
-        stroke='#cf9836'
-        strokeWidth='1.4'
-        strokeDasharray='2 6'
-        animate={{ strokeDashoffset: [0, -16] }}
-        transition={linear(1.7)}
+        c='#cf9836'
+        w={1.4}
+        dur={1.7}
+        seed={300}
+        dash='2 6'
       />
       <motion.g
         animate={{ rotate: 360 }}
@@ -74,7 +71,17 @@ export default function Scene() {
       />
 
       {/* base platform / workbench */}
-      <ellipse cx='100' cy='86' rx='40' ry='5' fill={INK} opacity='0.08' />
+      <g opacity='0.08'>
+        <Ink
+          d={gen.ellipse(
+            100,
+            86,
+            80,
+            10,
+            filled(316, INK, { fillStyle: 'solid', stroke: 'none' })
+          )}
+        />
+      </g>
       <Ink
         d={gen.rectangle(
           70,

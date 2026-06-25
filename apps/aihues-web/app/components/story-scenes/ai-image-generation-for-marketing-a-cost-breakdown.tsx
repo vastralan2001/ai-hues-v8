@@ -4,11 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -37,10 +37,8 @@ export default function Scene() {
       {/* soft sky depth */}
       <circle cx='148' cy='30' r='40' fill={`url(#${AIC}_glow)`} />
       <Cloud x={44} y={26} s={0.8} o={0.4} />
-      <Cloud x={166} y={64} s={0.65} o={0.32} />
       <Twinkle x={30} y={22} c='#cf9836' />
       <Twinkle x={176} y={28} d={0.8} c='#e0a83f' />
-      <Twinkle x={120} y={16} d={1.3} r={1} c='#94ac78' />
 
       {/* far ground line for depth */}
       <Ink
@@ -49,7 +47,19 @@ export default function Scene() {
           filled(401, '#d7c79e', { roughness: 1.5, hachureGap: 3.6 })
         )}
       />
-      <ellipse cx='100' cy='90' rx='30' ry='4' fill={INK} opacity='0.1' />
+      <Ink
+        d={gen.ellipse(
+          100,
+          90,
+          60,
+          8,
+          filled(402, INK, {
+            fillStyle: 'solid',
+            strokeWidth: 0,
+            roughness: 1.4,
+          })
+        )}
+      />
 
       {/* the tall, gently-swaying stack of coins that serves as the easel's leg */}
       <motion.g
@@ -121,18 +131,17 @@ export default function Scene() {
             )}
           />
           {/* unrendered region — dashed scan line crawling across the canvas */}
-          <motion.line
-            x1='66'
-            y1='40'
-            x2='106'
-            y2='40'
-            stroke='#fff'
-            strokeWidth='1.4'
-            opacity='0.7'
-            strokeDasharray='2 4'
-            animate={{ y: [-14, 14, -14], strokeDashoffset: [0, -18] }}
-            transition={linear(2.6)}
-          />
+          <motion.g animate={{ y: [-14, 14, -14] }} transition={loop(2.6)}>
+            <RoughDash
+              d='M66 40 L106 40'
+              c='#fff'
+              w={1.4}
+              dur={2.6}
+              dash='2 4'
+              o={0.7}
+              seed={435}
+            />
+          </motion.g>
         </g>
       </motion.g>
 

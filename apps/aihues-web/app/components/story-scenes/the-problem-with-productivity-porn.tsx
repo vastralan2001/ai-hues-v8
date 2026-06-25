@@ -34,7 +34,6 @@ export default function Scene() {
 
       <Twinkle x={38} y={20} c='#cf9836' />
       <Twinkle x={108} y={16} d={0.8} c='#e0a83f' />
-      <Twinkle x={62} y={14} d={1.4} c='#cf9836' />
       <Cloud x={150} y={24} s={0.7} o={0.4} />
 
       {/* ground / horizon for depth */}
@@ -181,29 +180,6 @@ export default function Scene() {
         )}
       />
 
-      {/* puffs of busy effort going nowhere */}
-      {[
-        [98, 30, 0],
-        [104, 24, 0.7],
-        [50, 28, 1.3],
-      ].map(([px, py, d]) => (
-        <motion.circle
-          key={px}
-          cx={px}
-          cy={py}
-          r='1.5'
-          fill='#fff'
-          opacity='0.5'
-          animate={{ y: [0, -10], opacity: [0, 0.5, 0] }}
-          transition={{
-            duration: 2.6,
-            repeat: Infinity,
-            ease: 'easeOut',
-            delay: d,
-          }}
-        />
-      ))}
-
       {/* ── the humble real thing: one small seedling, grounded, actually alive ── */}
       <Ink
         d={gen.ellipse(
@@ -244,7 +220,6 @@ export default function Scene() {
           )}
         />
       </motion.g>
-      <Twinkle x={172} y={64} d={0.4} r={1.2} c='#94ac78' />
     </Frame>
   );
 }

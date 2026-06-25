@@ -4,11 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -36,9 +36,7 @@ export default function Scene() {
       <circle cx='40' cy='26' r='40' fill='url(#tseo_beacon)' />
       <Twinkle x={28} y={20} c='#8fb2dd' />
       <Twinkle x={176} y={24} d={0.7} c='#cf9836' />
-      <Twinkle x={158} y={14} d={1.2} c='#8fb2dd' />
       <Cloud x={150} y={30} s={0.78} o={0.42} />
-      <Cloud x={56} y={62} s={0.62} o={0.3} />
 
       {/* distant ground plane for depth */}
       <Ink
@@ -57,15 +55,14 @@ export default function Scene() {
       />
 
       {/* the crawl thread: the probe's single descending line to the page */}
-      <motion.path
+      <RoughDash
         d='M120 8 L120 50'
-        fill='none'
-        stroke={INK}
-        strokeWidth='0.8'
-        opacity='0.5'
-        strokeDasharray='1.5 4'
-        animate={{ strokeDashoffset: [0, -11] }}
-        transition={linear(1.4)}
+        c={INK}
+        w={0.8}
+        dur={1.4}
+        dash='1.5 4'
+        o={0.5}
+        seed={120}
       />
 
       {/* the page-document, materializing from blank shell to readable content */}
@@ -74,7 +71,17 @@ export default function Scene() {
         transition={loop(3)}
         style={{ transformOrigin: '118px 70px' }}
       >
-        <ellipse cx='118' cy='90' rx='22' ry='3.6' fill={INK} opacity='0.1' />
+        <g opacity='0.1'>
+          <Ink
+            d={gen.ellipse(
+              118,
+              90,
+              44,
+              7.2,
+              filled(113, INK, { fillStyle: 'solid', stroke: 'none' })
+            )}
+          />
+        </g>
 
         {/* faint dashed shell — the empty SPA skeleton search engines first see */}
         <Ink
@@ -189,16 +196,25 @@ export default function Scene() {
         />
       </motion.g>
 
-      {/* the read beam: a soft scan sweeping from probe onto the content */}
-      <motion.path
-        d='M120 50 L106 66 M120 50 L132 66'
-        fill='none'
-        stroke='#e0a83f'
-        strokeWidth='0.8'
-        strokeDasharray='1 3'
-        animate={{ strokeDashoffset: [0, -8], opacity: [0.25, 0.6, 0.25] }}
-        transition={linear(1.8)}
-      />
+      {/* the read beam: a soft scan spreading from probe onto the content */}
+      <motion.g animate={{ opacity: [0.25, 0.6, 0.25] }} transition={loop(1.8)}>
+        <Ink
+          d={gen.line(120, 50, 106, 66, {
+            stroke: '#e0a83f',
+            strokeWidth: 0.8,
+            roughness: 1.6,
+            seed: 114,
+          })}
+        />
+        <Ink
+          d={gen.line(120, 50, 132, 66, {
+            stroke: '#e0a83f',
+            strokeWidth: 0.8,
+            roughness: 1.6,
+            seed: 115,
+          })}
+        />
+      </motion.g>
     </Frame>
   );
 }

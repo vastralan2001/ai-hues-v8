@@ -26,19 +26,13 @@ export default function Scene() {
           <stop offset='0%' stopColor='#fff3da' stopOpacity='0.85' />
           <stop offset='100%' stopColor='#fff3da' stopOpacity='0' />
         </radialGradient>
-        <linearGradient id='agents_floor' x1='0' y1='0' x2='0' y2='1'>
-          <stop offset='0%' stopColor='#ecd2ac' />
-          <stop offset='100%' stopColor='#e0bd8f' />
-        </linearGradient>
       </defs>
 
       {/* soft hovering light above the control bar */}
       <circle cx='104' cy='14' r='40' fill='url(#agents_glow)' />
       <Twinkle x={36} y={22} c='#cf9836' />
       <Twinkle x={170} y={20} d={0.7} c='#e0a83f' />
-      <Twinkle x={148} y={36} d={1.2} c='#cf9836' r={0.9} />
       <Cloud x={48} y={30} s={0.8} o={0.4} />
-      <Cloud x={160} y={64} s={0.7} o={0.32} />
 
       {/* distant stage floor for depth */}
       <Ink
@@ -49,7 +43,21 @@ export default function Scene() {
       />
 
       {/* the puppet's faint shadow pooled on the floor */}
-      <ellipse cx='104' cy='88' rx='18' ry='3.2' fill={INK} opacity='0.1' />
+      <g opacity={0.12}>
+        <Ink
+          d={gen.ellipse(
+            104,
+            88,
+            36,
+            6.4,
+            filled(316, INK, {
+              fillStyle: 'solid',
+              stroke: 'none',
+              roughness: 1.6,
+            })
+          )}
+        />
+      </g>
 
       {/* the control bar (the puppeteer's hidden hand), gently rocking —
           the strings hang from its tips */}

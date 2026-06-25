@@ -4,30 +4,25 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  Star,
   gen,
   filled,
   stroke,
   loop,
-  linear,
+  RoughDash,
   INK,
   motion,
 } from './_kit';
 
 /* "Link building for boring B2B products" → a plain, unglamorous steel hex-nut
-   sits on a low plinth at center; earned threads reach out from it across a
-   dusk sky to distant glowing authority nodes. The dull object becomes a hub
+   sits on a low plinth at center; one earned thread reaches out from it across a
+   dusk sky to a distant glowing authority node. The dull object becomes a hub
    radiating connection — backlinks turning something unsexy into a node of value. */
 
 const NUT = { x: 100, y: 64 };
 
-// distant authority "domains" the boring product earns links to
-const NODES: [number, number, number][] = [
-  [34, 24, 0],
-  [60, 40, 0.6],
-  [150, 22, 1.1],
-  [176, 46, 0.4],
-  [126, 30, 0.9],
-];
+// the distant authority "domain" the boring product earns its link to
+const NODE = { x: 150, y: 24 };
 
 export default function Scene() {
   return (
@@ -37,16 +32,11 @@ export default function Scene() {
           <stop offset='0%' stopColor='#fff4dd' stopOpacity='0.85' />
           <stop offset='100%' stopColor='#fff4dd' stopOpacity='0' />
         </radialGradient>
-        <radialGradient id='lbbb_node' cx='50%' cy='50%' r='50%'>
-          <stop offset='0%' stopColor='#ffe7a8' stopOpacity='1' />
-          <stop offset='100%' stopColor='#ffe7a8' stopOpacity='0' />
-        </radialGradient>
       </defs>
 
       <circle cx={NUT.x} cy={NUT.y} r='40' fill='url(#lbbb_haze)' />
 
       <Cloud x={48} y={20} s={0.7} o={0.4} />
-      <Cloud x={158} y={62} s={0.6} o={0.32} />
 
       {/* far ground band for depth */}
       <Ink
@@ -60,26 +50,18 @@ export default function Scene() {
         )}
       />
 
-      {/* glowing authority nodes + the earned threads to each */}
-      {NODES.map(([nx, ny, delay], i) => {
-        const d = `M${NUT.x} ${NUT.y - 4} Q${(NUT.x + nx) / 2} ${(NUT.y + ny) / 2 - 10} ${nx} ${ny}`;
-        return (
-          <g key={nx}>
-            <motion.path
-              d={d}
-              fill='none'
-              stroke='#cf9836'
-              strokeWidth='0.9'
-              opacity='0.55'
-              strokeDasharray='1.5 5'
-              animate={{ strokeDashoffset: [0, -13] }}
-              transition={linear(1.7 + i * 0.25)}
-            />
-            <circle cx={nx} cy={ny} r='9' fill='url(#lbbb_node)' />
-            <Twinkle x={nx} y={ny} d={delay} c='#e0a83f' r={1.3} />
-          </g>
-        );
-      })}
+      {/* the single earned thread, hand-drawn, reaching the authority node */}
+      <RoughDash
+        d={`M${NUT.x} ${NUT.y - 4} Q${(NUT.x + NODE.x) / 2} ${(NUT.y + NODE.y) / 2 - 10} ${NODE.x} ${NODE.y}`}
+        c='#cf9836'
+        w={0.9}
+        dur={1.7}
+        seed={307}
+        dash='1.5 5'
+        o={0.6}
+      />
+      {/* the distant authority domain it earns a link to */}
+      <Star x={NODE.x} y={NODE.y} r={4} c='#e0a83f' seed={308} />
 
       <Twinkle x={20} y={50} d={1.2} c='#cf9836' r={1} />
       <Twinkle x={186} y={28} d={0.7} c='#e0a83f' r={1} />
@@ -95,7 +77,21 @@ export default function Scene() {
           })
         )}
       />
-      <ellipse cx={NUT.x} cy='80' rx='17' ry='3' fill={INK} opacity='0.1' />
+      <g opacity={0.12}>
+        <Ink
+          d={gen.ellipse(
+            NUT.x,
+            80,
+            34,
+            6,
+            filled(309, INK, {
+              fillStyle: 'solid',
+              strokeWidth: 0,
+              roughness: 1,
+            })
+          )}
+        />
+      </g>
 
       {/* the boring B2B product: a plain steel hex nut, slowly turning */}
       <motion.g

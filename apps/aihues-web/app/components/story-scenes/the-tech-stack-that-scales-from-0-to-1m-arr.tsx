@@ -4,11 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -35,20 +35,13 @@ export default function Scene() {
           <stop offset='0%' stopColor='#fff4d8' stopOpacity='0.95' />
           <stop offset='100%' stopColor='#fff4d8' stopOpacity='0' />
         </radialGradient>
-        <linearGradient id='ts1m_flow' x1='0' y1='0' x2='1' y2='0'>
-          <stop offset='0%' stopColor='#e0a83f' stopOpacity='0' />
-          <stop offset='50%' stopColor='#e0a83f' stopOpacity='0.9' />
-          <stop offset='100%' stopColor='#e2693f' stopOpacity='0' />
-        </linearGradient>
       </defs>
 
       {/* warm dawn glow toward the tall, grown end */}
       <circle cx='176' cy='20' r='42' fill='url(#ts1m_sun)' />
       <Twinkle x={30} y={20} c='#cf9836' />
       <Twinkle x={186} y={40} d={0.8} c='#e0a83f' />
-      <Twinkle x={120} y={16} d={1.4} c='#cf9836' r={0.9} />
       <Cloud x={56} y={26} s={0.7} o={0.4} />
-      <Cloud x={150} y={64} s={0.6} o={0.3} />
 
       {/* far haze hill for depth */}
       <Ink
@@ -113,15 +106,13 @@ export default function Scene() {
       />
 
       {/* current of revenue flowing $0 → $1M along the deck */}
-      <motion.path
+      <RoughDash
         d='M40 64 L86 54 L132 43 L180 31'
-        fill='none'
-        stroke='url(#ts1m_flow)'
-        strokeWidth='2.4'
-        strokeLinecap='round'
-        strokeDasharray='3 9'
-        animate={{ strokeDashoffset: [0, -24] }}
-        transition={linear(1.7)}
+        c='#e0a83f'
+        w={2.4}
+        dur={1.7}
+        seed={332}
+        dash='3 9'
       />
 
       {/* a small keystone spark pulsing on the largest, grown arch */}

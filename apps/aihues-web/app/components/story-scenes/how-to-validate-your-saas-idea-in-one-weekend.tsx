@@ -4,11 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -31,9 +31,7 @@ export default function Scene() {
       <circle cx='112' cy='44' r='40' fill='url(#wknd_glow)' />
       <Twinkle x={40} y={22} c='#cf9836' />
       <Twinkle x={170} y={28} d={0.7} c='#e0a83f' />
-      <Twinkle x={150} y={16} d={1.2} c='#cf9836' />
       <Cloud x={52} y={26} s={0.8} o={0.4} />
-      <Cloud x={158} y={62} s={0.7} o={0.35} />
 
       {/* flat weekend ground — nothing built yet behind the door */}
       <Ink
@@ -53,15 +51,14 @@ export default function Scene() {
       />
 
       {/* faint footprint of the un-built product — a dashed foundation outline */}
-      <motion.path
+      <RoughDash
         d='M70 88 L150 88 L162 82 L82 82 Z'
-        fill='none'
-        stroke='#bfa06a'
-        strokeWidth='1'
-        strokeDasharray='2 4'
-        opacity='0.6'
-        animate={{ strokeDashoffset: [0, -12] }}
-        transition={linear(2.4)}
+        c='#bfa06a'
+        w={1}
+        dur={2.4}
+        dash='2 4'
+        o={0.6}
+        seed={310}
       />
 
       {/* the focal subject: a single freestanding door (the "fake door" / landing page) */}
@@ -71,7 +68,15 @@ export default function Scene() {
         style={{ transformOrigin: '100px 60px' }}
       >
         {/* soft shadow */}
-        <ellipse cx='100' cy='82' rx='17' ry='3' fill={INK} opacity='0.1' />
+        <Ink
+          d={gen.ellipse(100, 82, 34, 6, {
+            fill: INK,
+            fillStyle: 'solid',
+            stroke: 'none',
+            roughness: 1.4,
+            seed: 311,
+          })}
+        />
         {/* plinth the door stands on */}
         <Ink
           d={gen.rectangle(
@@ -126,26 +131,6 @@ export default function Scene() {
         />
       </motion.g>
 
-      {/* smoke-test signals: interest "knocks" drifting toward the door */}
-      <motion.path
-        d='M168 70 Q142 60 124 52'
-        fill='none'
-        stroke='#788c5d'
-        strokeWidth='1.6'
-        strokeDasharray='2 6'
-        animate={{ strokeDashoffset: [0, -16] }}
-        transition={linear(1.6)}
-      />
-      <motion.path
-        d='M30 64 Q58 58 78 52'
-        fill='none'
-        stroke='#94ac78'
-        strokeWidth='1.4'
-        strokeDasharray='2 6'
-        animate={{ strokeDashoffset: [0, -16] }}
-        transition={linear(1.9)}
-      />
-
       {/* a measured "yes" — a small sage flag of validated interest above the door */}
       <Ink d={gen.line(116, 36, 116, 22, stroke(307, { strokeWidth: 1.5 }))} />
       <motion.g
@@ -170,15 +155,11 @@ export default function Scene() {
 
       {/* a couple of bright pings arriving — early sign-ups landing */}
       {[
-        [124, 52, 0],
-        [78, 52, 0.8],
-      ].map(([px, py, d]) => (
-        <motion.circle
+        [124, 52, 0, 312],
+        [78, 52, 0.8, 313],
+      ].map(([px, py, d, sd]) => (
+        <motion.g
           key={px}
-          cx={px}
-          cy={py}
-          r='1.8'
-          fill='#e0a83f'
           animate={{ scale: [0, 1.2, 0], opacity: [0, 0.9, 0] }}
           transition={{
             duration: 1.6,
@@ -187,7 +168,16 @@ export default function Scene() {
             delay: d,
           }}
           style={{ transformOrigin: `${px}px ${py}px` }}
-        />
+        >
+          <Ink
+            d={gen.circle(
+              px,
+              py,
+              3.6,
+              filled(sd, '#e0a83f', { fillStyle: 'solid', strokeWidth: 0.8 })
+            )}
+          />
+        </motion.g>
       ))}
     </Frame>
   );

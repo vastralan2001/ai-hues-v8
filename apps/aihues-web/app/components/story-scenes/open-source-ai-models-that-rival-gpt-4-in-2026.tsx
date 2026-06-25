@@ -5,11 +5,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -44,10 +44,7 @@ export default function Scene() {
 
       <Twinkle x={36} y={22} c='#cf9836' />
       <Twinkle x={168} y={26} d={0.7} c='#e0a83f' />
-      <Twinkle x={150} y={14} d={1.3} c='#cf9836' />
-      <Twinkle x={52} y={44} d={0.9} c='#94ac78' />
       <Cloud x={46} y={30} s={0.8} o={0.4} />
-      <Cloud x={156} y={36} s={0.7} o={0.35} />
 
       {/* open horizon — a low, free field, no walls */}
       <Ink
@@ -89,15 +86,14 @@ export default function Scene() {
       ))}
 
       {/* rising trail of open sparks between lock and lights */}
-      <motion.path
+      <RoughDash
         d='M100 70 Q98 58 100 30'
-        fill='none'
-        stroke='#cf9836'
-        strokeWidth='1.4'
-        strokeDasharray='1.5 6'
-        animate={{ strokeDashoffset: [0, -15] }}
-        transition={linear(1.7)}
-        opacity={0.6}
+        c='#cf9836'
+        w={1.4}
+        dur={1.7}
+        dash='1.5 6'
+        seed={340}
+        o={0.6}
       />
 
       {/* the sprung padlock — shackle swung open, body resting on the field */}
@@ -106,7 +102,21 @@ export default function Scene() {
         transition={loop(3)}
         style={{ transformOrigin: '100px 72px' }}
       >
-        <ellipse cx='100' cy='90' rx='18' ry='3' fill={INK} opacity='0.1' />
+        <g opacity='0.1'>
+          <Ink
+            d={gen.ellipse(
+              100,
+              90,
+              36,
+              6,
+              filled(335, INK, {
+                fillStyle: 'solid',
+                stroke: 'none',
+                roughness: 1.4,
+              })
+            )}
+          />
+        </g>
 
         {/* lock body */}
         <Ink
@@ -163,9 +173,6 @@ export default function Scene() {
           />
         </motion.g>
       </motion.g>
-
-      <Twinkle x={88} y={20} d={0.4} c='#e2693f' r={1} />
-      <Twinkle x={112} y={18} d={1.1} c='#788c5d' r={1} />
     </Frame>
   );
 }

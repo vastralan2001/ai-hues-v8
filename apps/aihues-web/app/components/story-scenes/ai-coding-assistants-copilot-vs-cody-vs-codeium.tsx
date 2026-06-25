@@ -4,11 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -43,9 +43,7 @@ export default function Scene() {
 
       <Twinkle x={30} y={20} c='#cf9836' />
       <Twinkle x={176} y={24} d={0.8} c='#6a9bcc' />
-      <Twinkle x={88} y={14} d={1.3} c='#94ac78' />
       <Cloud x={46} y={26} s={0.78} o={0.4} />
-      <Cloud x={158} y={32} s={0.66} o={0.32} />
 
       {/* the drafting sheet — the one shared task all three tools work on */}
       <circle cx={FOCUS_X} cy={FOCUS_Y} r={30} fill='url(#cca_glow)' />
@@ -96,22 +94,16 @@ export default function Scene() {
         />
       </g>
 
-      {/* three code-lines, each in its tool's color, converging on one mark */}
-      {PEN.map((p) => (
-        <motion.path
-          key={`trail-${p.seed}`}
-          d={`M${p.x} ${p.tip + 4} Q${(p.x + FOCUS_X) / 2} ${
-            (p.tip + FOCUS_Y) / 2 + 4
-          } ${FOCUS_X} ${FOCUS_Y}`}
-          fill='none'
-          stroke={p.color}
-          strokeWidth='1.5'
-          strokeDasharray='2 4'
-          opacity='0.85'
-          animate={{ strokeDashoffset: [0, -18] }}
-          transition={linear(p.dash)}
-        />
-      ))}
+      {/* one converging code-line from the middle stylus down to the shared mark */}
+      <RoughDash
+        d={`M100 66 Q100 ${(66 + FOCUS_Y) / 2} ${FOCUS_X} ${FOCUS_Y}`}
+        c='#e0a83f'
+        w={1.5}
+        dur={1.9}
+        dash='2 4'
+        seed={350}
+        o={0.85}
+      />
 
       {/* the shared focal mark where all three meet */}
       <motion.g
@@ -146,13 +138,14 @@ export default function Scene() {
           transition={loop(2.8, p.ph)}
           style={{ transformOrigin: `${p.x}px ${p.tip}px` }}
         >
-          <ellipse
-            cx={p.x}
-            cy={p.tip + 9}
-            rx='5'
-            ry='1.6'
-            fill={INK}
-            opacity='0.1'
+          <Ink
+            d={gen.ellipse(p.x, p.tip + 9, 10, 3.2, {
+              fill: INK,
+              fillStyle: 'solid',
+              stroke: 'none',
+              roughness: 1.4,
+              seed: p.seed + 4,
+            })}
           />
           <g transform={`rotate(18 ${p.x} ${p.tip})`}>
             {/* barrel */}
@@ -201,8 +194,6 @@ export default function Scene() {
               )}
             />
           </g>
-          {/* ink spark at the nib */}
-          <Twinkle x={p.x + 2} y={p.tip + 3} d={p.ph} r={0.9} c={p.color} />
         </motion.g>
       ))}
     </Frame>

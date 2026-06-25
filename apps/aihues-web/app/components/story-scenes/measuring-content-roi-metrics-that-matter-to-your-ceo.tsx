@@ -5,11 +5,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -45,10 +45,8 @@ export default function Scene() {
 
       {/* distant depth: a soft horizon ground line + sky accents */}
       <Cloud x={44} y={24} s={0.8} o={0.4} />
-      <Cloud x={158} y={32} s={0.7} o={0.35} />
       <Twinkle x={30} y={20} c='#cf9836' />
       <Twinkle x={176} y={22} d={0.8} c='#e0a83f' />
-      <Twinkle x={150} y={14} d={1.3} c='#cf9836' />
 
       <Ink
         d={gen.path(
@@ -130,14 +128,13 @@ export default function Scene() {
       />
 
       {/* rising distillate: dashed stream condensing up the neck */}
-      <motion.path
+      <RoughDash
         d='M70 84 L70 38'
-        fill='none'
-        stroke='#e0a83f'
-        strokeWidth='1.6'
-        strokeDasharray='2 6'
-        animate={{ strokeDashoffset: [0, -16] }}
-        transition={linear(1.5)}
+        c='#e0a83f'
+        w={1.6}
+        dur={1.5}
+        dash='2 6'
+        seed={315}
       />
 
       {/* halo behind the refined product */}
@@ -149,7 +146,21 @@ export default function Scene() {
         transition={loop(2.6)}
         style={{ transformOrigin: '70px 28px' }}
       >
-        <ellipse cx='70' cy='40' rx='12' ry='3' fill={INK} opacity='0.1' />
+        <g opacity='0.1'>
+          <Ink
+            d={gen.ellipse(
+              70,
+              40,
+              24,
+              6,
+              filled(324, INK, {
+                fillStyle: 'solid',
+                strokeWidth: 0,
+                roughness: 1,
+              })
+            )}
+          />
+        </g>
         <motion.g
           animate={{ scaleX: [1, 0.9, 1] }}
           transition={loop(3.2)}
@@ -183,15 +194,6 @@ export default function Scene() {
           />
         </motion.g>
       </motion.g>
-
-      {/* upward sparks of realized worth */}
-      {[
-        [54, 16, 0],
-        [88, 18, 0.6],
-        [70, 8, 1.1],
-      ].map(([sx, sy, d]) => (
-        <Twinkle key={sx} x={sx} y={sy} d={d} c='#e0a83f' r={1.2} />
-      ))}
     </Frame>
   );
 }

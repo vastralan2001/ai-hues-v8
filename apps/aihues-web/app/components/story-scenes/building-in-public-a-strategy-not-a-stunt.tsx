@@ -9,7 +9,7 @@ import {
   filled,
   stroke,
   loop,
-  linear,
+  RoughDash,
   INK,
   motion,
 } from './_kit';
@@ -40,10 +40,8 @@ export default function Scene() {
       {/* dusk glow + faint sky accents */}
       <rect x='0' y='0' width='200' height='100' fill='url(#bip_dusk)' />
       <Cloud x={42} y={20} s={0.8} o={0.4} />
-      <Cloud x={158} y={28} s={0.7} o={0.32} />
       <Twinkle x={28} y={18} c='#cf9836' />
       <Twinkle x={176} y={16} d={0.9} c='#e0a83f' />
-      <Twinkle x={120} y={12} d={1.4} r={0.9} c='#cf9836' />
 
       {/* distant ground line for depth */}
       <Ink
@@ -137,15 +135,13 @@ export default function Scene() {
           stroke(307, { stroke: '#9c8a64', strokeWidth: 0.9 })
         )}
       />
-      <motion.path
+      <RoughDash
         d='M122 65 L124.5 63 L127 64 L130 59'
-        fill='none'
-        stroke='#c2502e'
-        strokeWidth='1.1'
-        strokeDasharray='1.5 4'
-        animate={{ strokeDashoffset: [0, -11] }}
-        transition={linear(1.8)}
-        style={{ transformOrigin: '126px 62px' }}
+        c='#c2502e'
+        w={1.1}
+        dur={1.8}
+        seed={309}
+        dash='1.5 4'
       />
       {/* a small spark at the chart's leading edge */}
       <motion.g

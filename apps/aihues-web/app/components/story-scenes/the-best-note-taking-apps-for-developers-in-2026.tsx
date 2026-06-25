@@ -28,12 +28,10 @@ export default function Scene() {
         </radialGradient>
       </defs>
 
-      {/* sky accents + drifting clouds for depth */}
+      {/* sky accents + a drifting cloud for depth */}
       <Twinkle x={30} y={22} c='#cf9836' />
       <Twinkle x={176} y={28} d={0.9} c='#e0a83f' />
-      <Twinkle x={150} y={16} d={1.4} c='#cf9836' />
       <Cloud x={52} y={24} s={0.8} o={0.4} />
-      <Cloud x={158} y={40} s={0.6} o={0.32} />
 
       {/* far hills — soft layered horizon */}
       <Ink
@@ -83,7 +81,17 @@ export default function Scene() {
         transition={loop(2.8)}
         style={{ transformOrigin: '104px 66px' }}
       >
-        <ellipse cx='104' cy='80' rx='18' ry='3.4' fill={INK} opacity='0.1' />
+        <g opacity='0.1'>
+          <Ink
+            d={gen.ellipse(104, 80, 36, 6.8, {
+              fill: INK,
+              fillStyle: 'solid',
+              stroke: 'none',
+              roughness: 1.2,
+              seed: 228,
+            })}
+          />
+        </g>
         {/* left leaf */}
         <Ink
           d={gen.polygon(
@@ -145,17 +153,15 @@ export default function Scene() {
       </motion.g>
 
       {/* sparks of recognition rising from the kept notebook */}
-      {[
-        [96, 44, 0],
-        [112, 46, 0.8],
-        [104, 40, 1.5],
-      ].map(([sx, sy, d]) => (
-        <motion.circle
+      {(
+        [
+          [96, 44, 0, 230],
+          [112, 46, 0.8, 231],
+          [104, 40, 1.5, 232],
+        ] as [number, number, number, number][]
+      ).map(([sx, sy, d, sd]) => (
+        <motion.g
           key={sx}
-          cx={sx}
-          cy={sy}
-          r='1.1'
-          fill='#e0a83f'
           animate={{ y: [0, -8], opacity: [0, 0.85, 0] }}
           transition={{
             duration: 3,
@@ -163,7 +169,17 @@ export default function Scene() {
             ease: 'easeOut',
             delay: d,
           }}
-        />
+        >
+          <Ink
+            d={gen.circle(sx, sy, 2.2, {
+              fill: '#e0a83f',
+              fillStyle: 'solid',
+              stroke: 'none',
+              roughness: 1.1,
+              seed: sd,
+            })}
+          />
+        </motion.g>
       ))}
     </Frame>
   );

@@ -8,7 +8,7 @@ import {
   filled,
   stroke,
   loop,
-  linear,
+  RoughDash,
   INK,
   motion,
 } from './_kit';
@@ -38,7 +38,6 @@ export default function Scene() {
       <circle cx='64' cy='44' r='40' fill='url(#voxclone_glow)' />
       <Twinkle x={34} y={22} c='#e0a83f' />
       <Twinkle x={178} y={26} d={0.8} c='#cf9836' />
-      <Twinkle x={150} y={18} d={1.3} c='#e0a83f' r={0.9} />
       <Cloud x={158} y={68} s={0.7} o={0.32} />
 
       {/* the consent boundary — the soft vertical line the clone crosses */}
@@ -62,25 +61,27 @@ export default function Scene() {
 
       {/* original voice — warm, solid waveform leaving the mic */}
       <motion.g animate={{ opacity: [0.7, 1, 0.7] }} transition={loop(2.2)}>
-        <path
-          d={wave}
-          fill='none'
-          stroke='#c2502e'
-          strokeWidth='1.6'
-          strokeLinecap='round'
+        <Ink
+          d={gen.path(
+            wave,
+            stroke(312, {
+              stroke: '#c2502e',
+              strokeWidth: 1.6,
+              roughness: 1.1,
+            })
+          )}
         />
       </motion.g>
 
       {/* cloned voice — the mirrored echo, fainter, dashed, drifting across */}
-      <motion.path
+      <RoughDash
         d={echo}
-        fill='none'
-        stroke='#6a9bcc'
-        strokeWidth='1.4'
-        strokeDasharray='2 4'
-        opacity='0.7'
-        animate={{ strokeDashoffset: [0, -18] }}
-        transition={linear(2.4)}
+        c='#6a9bcc'
+        w={1.4}
+        dur={2.4}
+        dash='2 4'
+        o={0.7}
+        seed={313}
       />
 
       {/* the ribbon microphone — the focal subject */}

@@ -8,7 +8,6 @@ import {
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -42,10 +41,8 @@ export default function Scene() {
       {/* sky depth */}
       <circle cx='100' cy='26' r='40' fill='url(#hire_sun)' />
       <Cloud x={150} y={24} s={0.8} o={0.4} />
-      <Cloud x={44} y={34} s={0.6} o={0.3} />
       <Twinkle x={30} y={20} c='#cf9836' />
       <Twinkle x={172} y={18} d={0.8} c='#e0a83f' />
-      <Twinkle x={120} y={14} d={1.3} c='#cf9836' r={1} />
 
       {/* the chasm haze rising from below */}
       <rect x='44' y='58' width='118' height='42' fill='url(#hire_chasm)' />

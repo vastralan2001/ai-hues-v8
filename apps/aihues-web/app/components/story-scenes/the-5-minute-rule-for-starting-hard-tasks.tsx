@@ -4,11 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -38,7 +38,6 @@ export default function Scene() {
       <circle cx='182' cy='20' r='40' fill='url(#fivemin_dawn)' />
       <Twinkle x={186} y={18} c='#e0a83f' />
       <Twinkle x={166} y={30} d={0.7} c='#cf9836' r={1} />
-      <Cloud x={150} y={62} s={0.7} o={0.35} />
       <Cloud x={40} y={22} s={0.7} o={0.4} />
 
       {/* the steep, looming slope — the hard task to begin */}
@@ -62,14 +61,13 @@ export default function Scene() {
       />
 
       {/* momentum: once it starts, it flows up and over the wall into the light */}
-      <motion.path
+      <RoughDash
         d={climb}
-        fill='none'
-        stroke='#c2502e'
-        strokeWidth='1.6'
-        strokeDasharray='2 6'
-        animate={{ strokeDashoffset: [0, -24] }}
-        transition={linear(1.7)}
+        c='#c2502e'
+        w={1.6}
+        dur={1.7}
+        dash='2 6'
+        seed={311}
       />
 
       {/* the focal subject: a small hourglass with only a few grains left up top */}
@@ -149,16 +147,19 @@ export default function Scene() {
       </motion.g>
 
       {/* a single grain mid-fall, looping — the moment of beginning */}
-      <motion.circle
-        cx={64}
-        cy={60}
-        r={0.9}
-        fill='#cf9836'
-        animate={{ cy: [60, 71], opacity: [0, 1, 0] }}
+      <motion.g
+        animate={{ y: [0, 11], opacity: [0, 1, 0] }}
         transition={{ duration: 1, repeat: Infinity, ease: 'easeIn' }}
-      />
-
-      <Twinkle x={104} y={44} d={1.1} c='#e0a83f' r={1} />
+      >
+        <Ink
+          d={gen.circle(
+            64,
+            60,
+            1.8,
+            filled(312, '#cf9836', { fillStyle: 'solid', strokeWidth: 0.6 })
+          )}
+        />
+      </motion.g>
     </Frame>
   );
 }

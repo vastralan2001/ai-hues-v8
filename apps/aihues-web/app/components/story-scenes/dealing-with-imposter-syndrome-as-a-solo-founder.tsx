@@ -5,11 +5,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   motion,
 } from './_kit';
 
@@ -41,7 +41,6 @@ export default function Scene() {
         )}
       />
 
-      <Twinkle x={150} y={18} c='#cf9836' />
       <Twinkle x={178} y={34} d={0.8} c='#e0a83f' />
       <Twinkle x={120} y={14} d={1.4} c='#cf9836' />
       <Cloud x={158} y={24} s={0.7} o={0.4} />
@@ -124,15 +123,14 @@ export default function Scene() {
 
       {/* faint dashed seam between the small self and its grand shadow —
           the gap imposter syndrome lives in */}
-      <motion.path
+      <RoughDash
         d='M122 64 Q140 56 162 30'
-        fill='none'
-        stroke='#c08a4d'
-        strokeWidth='1'
-        opacity='0.55'
-        strokeDasharray='2 6'
-        animate={{ strokeDashoffset: [0, -16] }}
-        transition={linear(2.2)}
+        c='#c08a4d'
+        w={1}
+        dur={2.2}
+        seed={309}
+        dash='2 6'
+        o={0.55}
       />
 
       {/* one quiet spark over the giant's head — the unclaimed worth */}

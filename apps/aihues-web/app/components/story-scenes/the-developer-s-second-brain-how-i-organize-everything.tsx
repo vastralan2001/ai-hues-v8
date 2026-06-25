@@ -4,12 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
-  INK,
   motion,
 } from './_kit';
 
@@ -38,44 +37,42 @@ export default function Scene() {
 
       {/* atmosphere */}
       <Cloud x={150} y={20} s={0.7} o={0.4} />
-      <Cloud x={40} y={84} s={0.6} o={0.32} />
-      <Twinkle x={24} y={20} c='#cf9836' />
-      <Twinkle x={182} y={44} d={0.8} c='#94ac78' />
-      <Twinkle x={120} y={16} d={1.2} c='#6a9bcc' />
 
       {/* hub glow */}
       <circle cx={hub.x} cy={hub.y} r='30' fill='url(#brain_hub)' />
 
-      {/* synapse threads: hub → each node, a slow pulse of light travelling in */}
+      {/* synapse threads: hub → each node, drawn rough and static */}
       {nodes.map((n, i) => {
         const d = `M${n.x} ${n.y} Q${(n.x + hub.x) / 2 + (i - 2) * 4} ${
           (n.y + hub.y) / 2 - 6
         } ${hub.x} ${hub.y}`;
         return (
-          <g key={n.seed}>
-            <Ink
-              d={gen.path(
-                d,
-                stroke(300 + i, {
-                  stroke: '#b9a98c',
-                  strokeWidth: 0.9,
-                  roughness: 1.1,
-                })
-              )}
-            />
-            <motion.path
-              d={d}
-              fill='none'
-              stroke={n.c}
-              strokeWidth='1.4'
-              strokeDasharray='1.5 14'
-              opacity='0.65'
-              animate={{ strokeDashoffset: [0, -15.5] }}
-              transition={linear(2.2 + i * 0.3)}
-            />
-          </g>
+          <Ink
+            key={n.seed}
+            d={gen.path(
+              d,
+              stroke(300 + i, {
+                stroke: '#b9a98c',
+                strokeWidth: 0.9,
+                roughness: 1.1,
+              })
+            )}
+          />
         );
       })}
+
+      {/* one synapse pulse: light travelling into the hub */}
+      <RoughDash
+        d={`M${nodes[0].x} ${nodes[0].y} Q${
+          (nodes[0].x + hub.x) / 2 - 8
+        } ${(nodes[0].y + hub.y) / 2 - 6} ${hub.x} ${hub.y}`}
+        c={nodes[0].c}
+        w={1.4}
+        dur={2.2}
+        dash='1.5 14'
+        o={0.65}
+        seed={305}
+      />
 
       {/* satellite knowledge cards */}
       {nodes.map((n) => (

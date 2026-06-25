@@ -8,8 +8,6 @@ import {
   filled,
   stroke,
   loop,
-  linear,
-  INK,
   motion,
 } from './_kit';
 
@@ -28,7 +26,6 @@ export default function Scene() {
       </defs>
 
       <Cloud x={42} y={22} s={0.7} o={0.4} />
-      <Cloud x={160} y={32} s={0.6} o={0.34} />
 
       {/* far ridge for depth */}
       <Ink
@@ -167,8 +164,6 @@ export default function Scene() {
       </motion.g>
 
       <Twinkle x={166} y={26} d={0.4} c='#cf9836' r={1.2} />
-      <Twinkle x={178} y={50} d={1.1} c='#e0a83f' r={1} />
-      <Twinkle x={150} y={64} d={1.7} c='#94ac78' r={0.9} />
       <Twinkle x={36} y={50} d={0.9} c='#cf9836' r={1} />
     </Frame>
   );

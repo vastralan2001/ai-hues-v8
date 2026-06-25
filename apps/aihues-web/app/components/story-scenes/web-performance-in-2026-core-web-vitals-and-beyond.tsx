@@ -4,11 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -36,9 +36,7 @@ export default function Scene() {
       {/* atmosphere */}
       <Twinkle x={30} y={22} c='#94ac78' />
       <Twinkle x={172} y={26} d={0.8} c='#cf9836' />
-      <Twinkle x={148} y={16} d={1.3} c='#94ac78' />
       <Cloud x={46} y={24} s={0.8} o={0.4} />
-      <Cloud x={158} y={64} s={0.7} o={0.35} />
 
       {/* far horizon for depth */}
       <Ink
@@ -98,7 +96,21 @@ export default function Scene() {
       />
 
       {/* dial face shadow */}
-      <ellipse cx='100' cy='80' rx='30' ry='4' fill={INK} opacity='0.08' />
+      <g opacity='0.1'>
+        <Ink
+          d={gen.ellipse(
+            100,
+            80,
+            60,
+            8,
+            filled(309, INK, {
+              fillStyle: 'solid',
+              stroke: 'none',
+              roughness: 1.4,
+            })
+          )}
+        />
+      </g>
 
       {/* the needle, sweeping slow -> fast (pivot at 100,66) */}
       <motion.g
@@ -144,15 +156,14 @@ export default function Scene() {
       </motion.g>
 
       {/* a flowing progress trace skimming the green zone — page settling fast */}
-      <motion.path
+      <RoughDash
         d='M62 66 A38 38 0 0 1 138 66'
-        fill='none'
-        stroke='#788c5d'
-        strokeWidth='1.4'
-        strokeDasharray='2 7'
-        opacity='0.55'
-        animate={{ strokeDashoffset: [0, -18] }}
-        transition={linear(1.8)}
+        c='#788c5d'
+        w={1.4}
+        dur={1.8}
+        seed={310}
+        dash='2 7'
+        o={0.55}
       />
     </Frame>
   );

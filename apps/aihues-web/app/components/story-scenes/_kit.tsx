@@ -2,7 +2,13 @@
 
 import rough from 'roughjs';
 import { motion } from 'framer-motion';
-import type { ReactNode } from 'react';
+import { createContext, useContext, useState, type ReactNode } from 'react';
+
+/* When true, scene primitives render their static frame (no running animation).
+   StoryArt sets this for the listing grid until a card is hovered. reduced-motion
+   only freezes transforms, so opacity (Twinkle) and strokeDashoffset (RoughDash)
+   animations are paused through this context instead. */
+export const ScenePaused = createContext(false);
 
 /* scene-kit — the shared toolkit every Stories scene is built from. A scene is a
    small atmospheric SVG illustration tied to one article: a soft gradient sky
@@ -92,7 +98,11 @@ export function Ink({ d }: { d: ReturnType<typeof gen.path> }) {
   );
 }
 
-/* The scene frame: a gradient-sky <div> + a 200×100 <svg>. */
+/* The scene frame: a 200×100 <svg> with the gradient sky baked in (so the SVG is
+   self-contained — needed for the frozen <img> snapshot + image export). The
+   gradient id is globally sequential (not useId), so it stays unique even across
+   separate renderToStaticMarkup passes that each reset the useId counter. */
+let frameSeq = 0;
 export function Frame({
   sky,
   children,
@@ -100,12 +110,11 @@ export function Frame({
   sky: [string, string];
   children: ReactNode;
 }) {
+  const [gid] = useState(() => `sky-${frameSeq++}`);
   return (
-    <div
-      className='h-full w-full'
-      style={{ background: `linear-gradient(165deg, ${sky[0]}, ${sky[1]})` }}
-    >
+    <div className='h-full w-full'>
       <svg
+        xmlns='http://www.w3.org/2000/svg'
         viewBox='0 0 200 100'
         preserveAspectRatio='xMidYMid slice'
         className='h-full w-full'
@@ -113,6 +122,13 @@ export function Frame({
         strokeLinecap='round'
         strokeLinejoin='round'
       >
+        <defs>
+          <linearGradient id={gid} x1='0' y1='0' x2='0.45' y2='1'>
+            <stop offset='0%' stopColor={sky[0]} />
+            <stop offset='100%' stopColor={sky[1]} />
+          </linearGradient>
+        </defs>
+        <rect x='0' y='0' width='200' height='100' fill={`url(#${gid})`} />
         {children}
       </svg>
     </div>
@@ -135,18 +151,23 @@ export function Twinkle({
 }) {
   const seed = Math.round(Math.abs(x) * 5 + Math.abs(y) * 2) + 1;
   const a = r * 2.4;
+  const paused = useContext(ScenePaused);
+  const mark = (
+    <Ink
+      d={gen.path(
+        `M${x - a} ${y} L${x + a} ${y} M${x} ${y - a} L${x} ${y + a}`,
+        { stroke: c, strokeWidth: 1, roughness: 2, bowing: 2, seed }
+      )}
+    />
+  );
+  if (paused) return <g opacity={0.85}>{mark}</g>;
   return (
     <motion.g
       animate={{ opacity: [0.2, 0.95, 0.2], scale: [0.5, 1.15, 0.5] }}
       transition={loop(2.4, d)}
       style={{ transformOrigin: `${x}px ${y}px` }}
     >
-      <Ink
-        d={gen.path(
-          `M${x - a} ${y} L${x + a} ${y} M${x} ${y - a} L${x} ${y + a}`,
-          { stroke: c, strokeWidth: 1, roughness: 2, bowing: 2, seed }
-        )}
-      />
+      {mark}
     </motion.g>
   );
 }
@@ -204,6 +225,18 @@ export function RoughDash({
   const path = gen.opsToPath(
     gen.path(d, { stroke: c, strokeWidth: w, roughness: 1.4, seed }).sets[0]
   );
+  const paused = useContext(ScenePaused);
+  if (paused)
+    return (
+      <path
+        d={path}
+        fill='none'
+        stroke={c}
+        strokeWidth={w}
+        strokeDasharray={dash}
+        opacity={o}
+      />
+    );
   return (
     <motion.path
       d={path}

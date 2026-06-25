@@ -4,12 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
-  INK,
   motion,
 } from './_kit';
 
@@ -36,9 +35,7 @@ export default function Scene() {
       {/* dusk sky accents */}
       <Twinkle x={32} y={22} c='#e0a83f' />
       <Twinkle x={170} y={26} d={0.8} c='#cf9836' />
-      <Twinkle x={150} y={14} d={1.3} c='#e0a83f' />
       <Cloud x={48} y={24} s={0.8} o={0.4} />
-      <Cloud x={158} y={40} s={0.65} o={0.3} />
 
       {/* ground horizon for depth */}
       <Ink
@@ -98,16 +95,12 @@ export default function Scene() {
 
       {/* rising embers — the slow honest spread of contribution */}
       {[
-        [92, 80, 0],
-        [108, 78, 0.9],
-        [100, 82, 1.7],
-      ].map(([ex, ey, d]) => (
-        <motion.circle
+        [92, 80, 0, 320],
+        [108, 78, 0.9, 321],
+        [100, 82, 1.7, 322],
+      ].map(([ex, ey, d, sd]) => (
+        <motion.g
           key={ex}
-          cx={ex}
-          cy={ey}
-          r='1.1'
-          fill='#f0b449'
           animate={{ y: [0, -22], opacity: [0, 0.8, 0] }}
           transition={{
             duration: 3,
@@ -115,19 +108,27 @@ export default function Scene() {
             ease: 'easeOut',
             delay: d,
           }}
-        />
+        >
+          <Ink
+            d={gen.circle(
+              ex,
+              ey,
+              2.2,
+              filled(sd, '#f0b449', { fillStyle: 'solid', strokeWidth: 0.8 })
+            )}
+          />
+        </motion.g>
       ))}
 
       {/* trust-thread tethering the lantern to the community */}
-      <motion.path
+      <RoughDash
         d={tether}
-        fill='none'
-        stroke='#b06a37'
-        strokeWidth='1'
-        strokeDasharray='2 4'
-        opacity='0.8'
-        animate={{ strokeDashoffset: [0, -12] }}
-        transition={linear(2.2)}
+        c='#b06a37'
+        w={1}
+        dur={2.2}
+        seed={310}
+        dash='2 4'
+        o={0.8}
       />
 
       {/* the single upvote-lantern — one earned contribution, lifted */}
@@ -170,10 +171,6 @@ export default function Scene() {
           )}
         />
       </motion.g>
-
-      {/* a couple of upward sparks flanking the lantern */}
-      <Twinkle x={82} y={44} d={0.4} c='#e0a83f' r={1} />
-      <Twinkle x={120} y={48} d={1.1} c='#cf9836' r={1} />
     </Frame>
   );
 }

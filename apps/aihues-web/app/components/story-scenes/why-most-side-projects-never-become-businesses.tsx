@@ -4,11 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -60,28 +60,28 @@ export default function Scene() {
         )}
       />
 
-      {/* sea — calm cove in front, open water beyond */}
+      {/* sea — calm cove in front, open water beyond (atmosphere gradient) */}
       <rect x='0' y='64' width='200' height='36' fill='url(#sideproj_water)' />
-      <line
-        x1='0'
-        y1='64'
-        x2='200'
-        y2='64'
-        stroke='#eaf6ff'
-        strokeWidth='1.2'
-        opacity='0.7'
+      {/* rough waterline at the horizon */}
+      <Ink
+        d={gen.line(0, 64, 200, 64, {
+          stroke: '#eaf6ff',
+          strokeWidth: 1.2,
+          roughness: 1.2,
+          bowing: 1.6,
+          seed: 325,
+        })}
       />
 
       {/* gentle moving ripple toward open sea */}
-      <motion.path
+      <RoughDash
         d='M96 78 Q120 75 144 78 T192 78'
-        fill='none'
-        stroke='#eaf6ff'
-        strokeWidth='1'
-        opacity='0.55'
-        strokeDasharray='4 9'
-        animate={{ strokeDashoffset: [0, -26] }}
-        transition={linear(3.2)}
+        c='#eaf6ff'
+        w={1}
+        dur={3.2}
+        seed={326}
+        dash='4 9'
+        o={0.55}
       />
 
       {/* the cozy little dock — the safe shore */}
@@ -114,7 +114,21 @@ export default function Scene() {
         transition={loop(2.6)}
         style={{ transformOrigin: '86px 70px' }}
       >
-        <ellipse cx='86' cy='74' rx='14' ry='2.6' fill={INK} opacity='0.1' />
+        <g opacity='0.12'>
+          <Ink
+            d={gen.ellipse(
+              86,
+              74,
+              28,
+              5.2,
+              filled(327, INK, {
+                fillStyle: 'solid',
+                stroke: INK,
+                strokeWidth: 0,
+              })
+            )}
+          />
+        </g>
         {/* hull */}
         <Ink
           d={gen.path(

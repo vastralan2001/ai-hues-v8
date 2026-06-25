@@ -5,11 +5,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   motion,
 } from './_kit';
 
@@ -36,9 +36,7 @@ export default function Scene() {
       {/* atmosphere */}
       <Twinkle x={34} y={22} c='#cf9836' />
       <Twinkle x={170} y={28} d={0.8} c='#e0a83f' />
-      <Twinkle x={150} y={16} d={1.4} c='#cf9836' />
       <Cloud x={48} y={24} s={0.78} o={0.4} />
-      <Cloud x={158} y={70} s={0.66} o={0.32} />
 
       {/* warm focus glow on the small lower bulb (the 15 productive minutes) */}
       <circle cx='100' cy='66' r='28' fill='url(#oneone_glow)' />
@@ -121,14 +119,13 @@ export default function Scene() {
       </motion.g>
 
       {/* the falling stream through the waist */}
-      <motion.path
+      <RoughDash
         d='M100 53 L100 73'
-        fill='none'
-        stroke='#d99a3f'
-        strokeWidth='1.4'
-        strokeDasharray='1.5 3'
-        animate={{ strokeDashoffset: [0, -18] }}
-        transition={linear(0.9)}
+        c='#d99a3f'
+        w={1.4}
+        dur={0.9}
+        seed={312}
+        dash='1.5 3'
       />
 
       {/* the small bright focused pool — 15 minutes that count */}
@@ -144,10 +141,6 @@ export default function Scene() {
           )}
         />
       </motion.g>
-
-      {/* settled sand glints in the focus pool */}
-      <Twinkle x={96} y={79} d={0.4} r={0.9} c='#fff1cf' />
-      <Twinkle x={104} y={80} d={1.1} r={0.9} c='#fff1cf' />
     </Frame>
   );
 }

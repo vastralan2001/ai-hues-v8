@@ -4,11 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -88,9 +88,7 @@ export default function Scene() {
 
       <Twinkle x={36} y={20} c='#cf9836' />
       <Twinkle x={176} y={48} d={0.9} c='#e0a83f' />
-      <Twinkle x={108} y={16} d={1.4} c='#cf9836' r={0.9} />
       <Cloud x={52} y={30} s={0.8} o={0.4} />
-      <Cloud x={140} y={20} s={0.6} o={0.3} />
 
       {/* far hill for depth */}
       <Ink
@@ -101,15 +99,14 @@ export default function Scene() {
       />
 
       {/* the rising migration arc — the growth curve, faintly dashed */}
-      <motion.path
+      <RoughDash
         d={ARC}
-        fill='none'
-        stroke='#d99a3f'
-        strokeWidth='1.4'
-        opacity='0.55'
-        strokeDasharray='2 7'
-        animate={{ strokeDashoffset: [0, -18] }}
-        transition={linear(1.8)}
+        c='#d99a3f'
+        w={1.4}
+        dur={1.8}
+        dash='2 7'
+        seed={102}
+        o={0.55}
       />
 
       {/* the expanding flock */}

@@ -5,11 +5,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -49,9 +49,7 @@ export default function Scene() {
 
       <Twinkle x={36} y={22} c='#c9a24a' />
       <Twinkle x={184} y={44} d={0.8} c='#e0a83f' r={1.2} />
-      <Twinkle x={120} y={16} d={1.3} c='#cf9836' />
       <Cloud x={54} y={30} s={0.78} o={0.4} />
-      <Cloud x={150} y={62} s={0.62} o={0.32} />
 
       {/* hazy depth in the chasm */}
       <rect x='40' y='60' width='120' height='40' fill={`url(#${e2f}_chasm)`} />
@@ -106,15 +104,14 @@ export default function Scene() {
       />
 
       {/* a single thread of dawn light reaching from the founder side along the span */}
-      <motion.path
+      <RoughDash
         d='M152 61 Q100 76 40 63'
-        fill='none'
-        stroke='#f0cf86'
-        strokeWidth='1.4'
-        strokeDasharray='2 7'
-        opacity='0.8'
-        animate={{ strokeDashoffset: [0, -18] }}
-        transition={linear(2)}
+        c='#f0cf86'
+        w={1.4}
+        dur={2}
+        dash='2 7'
+        o={0.8}
+        seed={313}
       />
 
       {/* the lone figure, out on the ropes mid-crossing, edging toward the light */}

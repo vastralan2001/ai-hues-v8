@@ -5,11 +5,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -31,9 +31,7 @@ export default function Scene() {
       <circle cx='150' cy='26' r='40' fill='url(#mono26_glow)' />
       <Twinkle x={38} y={22} c='#cf9836' />
       <Twinkle x={172} y={44} d={0.7} c='#e0a83f' />
-      <Twinkle x={92} y={16} d={1.2} c='#94ac78' />
       <Cloud x={52} y={30} s={0.8} o={0.4} />
-      <Cloud x={158} y={66} s={0.7} o={0.35} />
 
       {/* distant ground swell for depth */}
       <Ink
@@ -80,14 +78,13 @@ export default function Scene() {
       />
 
       {/* dashed dependency flow rising from roots up through the trunk */}
-      <motion.path
+      <RoughDash
         d='M100 94 L100 30'
-        fill='none'
-        stroke='#e0a83f'
-        strokeWidth='1.4'
-        strokeDasharray='2 6'
-        animate={{ strokeDashoffset: [0, -16] }}
-        transition={linear(1.8)}
+        c='#e0a83f'
+        w={1.4}
+        dur={1.8}
+        dash='2 6'
+        seed={407}
       />
 
       {/* three package crates — many modules, one root */}
@@ -117,7 +114,20 @@ function Crate({
       transition={loop(2.8, ph)}
       style={{ transformOrigin: `${x}px ${y}px` }}
     >
-      <ellipse cx={x} cy={y + 9} rx='8' ry='1.8' fill={INK} opacity='0.08' />
+      <Ink
+        d={gen.ellipse(
+          x,
+          y + 9,
+          16,
+          3.6,
+          filled(seed + 3, INK, {
+            fillStyle: 'solid',
+            stroke: 'none',
+            strokeWidth: 0,
+            roughness: 1.4,
+          })
+        )}
+      />
       <Ink
         d={gen.rectangle(
           x - 7,

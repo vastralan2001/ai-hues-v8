@@ -4,6 +4,7 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
@@ -94,10 +95,6 @@ export default function Scene() {
           <stop offset='0%' stopColor='#fbf3da' stopOpacity='0.95' />
           <stop offset='100%' stopColor='#fbf3da' stopOpacity='0' />
         </radialGradient>
-        <linearGradient id='auto10_bench' x1='0' y1='0' x2='0' y2='1'>
-          <stop offset='0%' stopColor='#cdd6e2' />
-          <stop offset='100%' stopColor='#aab7c8' />
-        </linearGradient>
       </defs>
 
       {/* night sky: moon + a couple of cool stars + a low cloud for depth */}
@@ -120,11 +117,18 @@ export default function Scene() {
       />
       <Twinkle x={30} y={20} c='#9db4cf' />
       <Twinkle x={108} y={16} d={0.7} c='#9db4cf' />
-      <Twinkle x={196} y={48} d={1.2} c='#cf9836' />
       <Cloud x={44} y={30} s={0.8} o={0.4} />
 
       {/* the workbench — distant depth layer the machinery rests on */}
-      <rect x='0' y='80' width='200' height='20' fill='url(#auto10_bench)' />
+      <Ink
+        d={gen.rectangle(
+          0,
+          80,
+          200,
+          20,
+          filled(205, '#bcc7d6', { fillStyle: 'solid', strokeWidth: 0 })
+        )}
+      />
       <Ink
         d={gen.line(
           0,
@@ -136,15 +140,7 @@ export default function Scene() {
       />
 
       {/* the flowing "script" belt looping through the gears */}
-      <motion.path
-        d={belt}
-        fill='none'
-        stroke='#788c5d'
-        strokeWidth='1.6'
-        strokeDasharray='2 5'
-        animate={{ strokeDashoffset: [0, -28] }}
-        transition={linear(2.2)}
-      />
+      <RoughDash d={belt} c='#788c5d' w={1.6} dur={2.2} dash='2 5' seed={208} />
 
       {/* coupled clockwork — three meshed gears turning on their own */}
       <Gear
@@ -180,17 +176,12 @@ export default function Scene() {
 
       {/* the saved hours drifting up off the running machine */}
       {[
-        [96, 44, 0],
-        [120, 48, 0.9],
-        [78, 46, 1.6],
-      ].map(([sx, sy, d]) => (
-        <motion.circle
+        [96, 44, 0, 240],
+        [120, 48, 0.9, 242],
+        [78, 46, 1.6, 244],
+      ].map(([sx, sy, d, sd]) => (
+        <motion.g
           key={sx}
-          cx={sx}
-          cy={sy}
-          r='1.5'
-          fill='#e0a83f'
-          opacity='0.7'
           animate={{ y: [0, -16], opacity: [0, 0.7, 0] }}
           transition={{
             duration: 3,
@@ -198,7 +189,16 @@ export default function Scene() {
             ease: 'easeOut',
             delay: d,
           }}
-        />
+        >
+          <Ink
+            d={gen.circle(
+              sx,
+              sy,
+              3,
+              filled(sd, '#e0a83f', { fillStyle: 'solid', strokeWidth: 0.8 })
+            )}
+          />
+        </motion.g>
       ))}
     </Frame>
   );

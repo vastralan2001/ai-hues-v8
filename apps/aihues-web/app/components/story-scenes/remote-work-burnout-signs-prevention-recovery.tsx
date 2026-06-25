@@ -35,9 +35,7 @@ export default function Scene() {
       {/* dusk accents + soft far cloud for depth */}
       <Twinkle x={30} y={22} c='#cf9836' />
       <Twinkle x={176} y={30} d={0.8} c='#e0a83f' />
-      <Twinkle x={150} y={16} d={1.4} c='#cf9836' r={0.9} />
       <Cloud x={150} y={64} s={0.7} o={0.35} />
-      <Cloud x={42} y={40} s={0.6} o={0.3} />
 
       {/* far hill horizon */}
       <Ink
@@ -70,17 +68,12 @@ export default function Scene() {
 
       {/* drifting embers — running too hot */}
       {[
-        [52, 50, 0],
-        [60, 52, 0.9],
-        [56, 48, 1.7],
-      ].map(([ex, ey, d]) => (
-        <motion.circle
+        [52, 50, 0, 314],
+        [60, 52, 0.9, 315],
+        [56, 48, 1.7, 316],
+      ].map(([ex, ey, d, sd]) => (
+        <motion.g
           key={ex}
-          cx={ex}
-          cy={ey}
-          r='1.3'
-          fill='#e2693f'
-          opacity='0.7'
           animate={{ y: [0, -20], opacity: [0, 0.7, 0] }}
           transition={{
             duration: 3,
@@ -88,7 +81,16 @@ export default function Scene() {
             ease: 'easeOut',
             delay: d,
           }}
-        />
+        >
+          <Ink
+            d={gen.circle(
+              ex,
+              ey,
+              2.6,
+              filled(sd, '#e2693f', { fillStyle: 'solid', strokeWidth: 0.8 })
+            )}
+          />
+        </motion.g>
       ))}
 
       {/* the desk lamp — base, arm, hood, and an over-bright bulb that

@@ -52,9 +52,7 @@ export default function Scene() {
       {/* faint dusk accents */}
       <Twinkle x={30} y={20} c='#cf9836' />
       <Twinkle x={184} y={24} d={0.9} c='#e0a83f' />
-      <Twinkle x={196} y={62} d={1.6} c='#cf9836' r={1} />
       <Cloud x={150} y={20} s={0.8} o={0.4} />
-      <Cloud x={44} y={34} s={0.6} o={0.32} />
 
       {/* warm broadcast glow at the source */}
       <circle cx={CX} cy={CY - 6} r={40} fill='url(#lnkbrand_glow)' />

@@ -4,12 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
-  INK,
   motion,
 } from './_kit';
 
@@ -28,18 +27,12 @@ export default function Scene() {
           <stop offset='0%' stopColor='#fff3d8' stopOpacity='1' />
           <stop offset='100%' stopColor='#fff3d8' stopOpacity='0' />
         </radialGradient>
-        <radialGradient id='ped_haze' cx='50%' cy='50%' r='50%'>
-          <stop offset='0%' stopColor='#e9c9ac' stopOpacity='0.55' />
-          <stop offset='100%' stopColor='#e9c9ac' stopOpacity='0' />
-        </radialGradient>
       </defs>
 
       {/* sky accents + depth */}
       <Twinkle x={30} y={20} c='#cf9836' />
       <Twinkle x={176} y={26} d={0.8} c='#e0a83f' />
-      <Twinkle x={150} y={14} d={1.4} c='#cf9836' r={0.9} />
       <Cloud x={150} y={70} s={0.85} o={0.4} />
-      <Cloud x={40} y={74} s={0.7} o={0.32} />
 
       {/* far horizon ground for grounding */}
       <Ink
@@ -55,7 +48,6 @@ export default function Scene() {
         transition={loop(3.2)}
         style={{ transformOrigin: '46px 48px' }}
       >
-        <circle cx='46' cy='48' r='30' fill='url(#ped_haze)' />
         <Ink
           d={gen.path(
             'M22 60 C30 44 18 40 30 32 C40 26 34 44 48 38 C60 33 50 22 60 30',
@@ -137,15 +129,14 @@ export default function Scene() {
       ))}
 
       {/* the one clean thread of light — straight, resolved, reaching the orb */}
-      <motion.path
+      <RoughDash
         d='M84 52 L168 30'
-        fill='none'
-        stroke='#fff'
-        strokeWidth='2.4'
-        opacity='0.55'
-        strokeDasharray='1 6'
-        animate={{ strokeDashoffset: [0, -14] }}
-        transition={linear(1.5)}
+        c='#fff'
+        w={2.4}
+        dur={1.5}
+        dash='1 6'
+        o={0.55}
+        seed={319}
       />
       <Ink
         d={gen.line(

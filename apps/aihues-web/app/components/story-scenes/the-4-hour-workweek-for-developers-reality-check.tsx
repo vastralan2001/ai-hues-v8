@@ -46,7 +46,6 @@ export default function Scene() {
       <circle cx='150' cy='30' r='44' fill='url(#hww_glow)' />
       <Twinkle x={42} y={22} c='#cf9836' />
       <Twinkle x={176} y={48} d={0.8} c='#e0a83f' />
-      <Twinkle x={28} y={54} d={1.4} c='#cf9836' r={0.9} />
       <Cloud x={52} y={24} s={0.78} o={0.4} />
 
       {/* distant horizon + soft ground for depth */}

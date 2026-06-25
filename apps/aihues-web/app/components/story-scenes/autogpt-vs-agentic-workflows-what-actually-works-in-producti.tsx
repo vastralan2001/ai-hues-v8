@@ -4,11 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -30,18 +30,16 @@ export default function Scene() {
       <Twinkle x={30} y={20} c='#cf9836' />
       <Twinkle x={176} y={16} d={0.7} c='#e0a83f' />
       <Cloud x={52} y={24} s={0.8} o={0.4} />
-      <Cloud x={150} y={30} s={0.62} o={0.32} />
 
       {/* sea — the production environment, the boats must cross it */}
       <rect x='0' y='58' width='200' height='42' fill='url(#agw_sea)' />
-      <line
-        x1='0'
-        y1='58'
-        x2='200'
-        y2='58'
-        stroke='#e7f3f7'
-        strokeWidth='1.2'
-        opacity='0.7'
+      <Ink
+        d={gen.line(0, 58, 200, 58, {
+          stroke: '#e7f3f7',
+          strokeWidth: 1.2,
+          roughness: 1.2,
+          seed: 805,
+        })}
       />
 
       {/* far headland + lighthouse: the goal that actually works in production */}
@@ -87,25 +85,32 @@ export default function Scene() {
         />
       </motion.g>
       {/* the beam sweeping toward the fleet */}
-      <motion.path
-        d='M178 36 L120 30 L120 42 Z'
-        fill='#fff2cf'
-        opacity='0.4'
+      <motion.g
         animate={{ opacity: [0, 0.42, 0], rotate: [-4, 6, -4] }}
         transition={loop(3.4)}
         style={{ transformOrigin: '178px 36px' }}
-      />
+      >
+        <Ink
+          d={gen.polygon(
+            [
+              [178, 36],
+              [120, 30],
+              [120, 42],
+            ],
+            filled(806, '#fff2cf', { fillStyle: 'solid', strokeWidth: 0.6 })
+          )}
+        />
+      </motion.g>
 
       {/* drifting wake guidelines */}
-      <motion.path
+      <RoughDash
         d='M14 70 Q70 66 120 64'
-        fill='none'
-        stroke='#e7f3f7'
-        strokeWidth='1'
-        opacity='0.5'
-        strokeDasharray='2 6'
-        animate={{ strokeDashoffset: [0, -16] }}
-        transition={linear(2.6)}
+        c='#e7f3f7'
+        w={1}
+        dur={2.6}
+        dash='2 6'
+        seed={807}
+        o={0.5}
       />
 
       {/* FLEET — eight autonomous runs. most fail. */}
@@ -113,17 +118,12 @@ export default function Scene() {
       {/* sunk run #1: just a mast tip and bubbles, hull gone under */}
       <Ink d={gen.line(40, 70, 39, 65, stroke(811, { strokeWidth: 1 }))} />
       {[
-        [37, 73, 0],
-        [44, 71, 0.8],
-        [41, 76, 1.5],
-      ].map(([bx, by, d]) => (
-        <motion.circle
+        [37, 73, 0, 808],
+        [44, 71, 0.8, 809],
+        [41, 76, 1.5, 810],
+      ].map(([bx, by, d, sd]) => (
+        <motion.g
           key={bx}
-          cx={bx}
-          cy={by}
-          r='1.1'
-          fill='#eaf6fb'
-          opacity='0.55'
           animate={{ y: [0, -9], opacity: [0, 0.55, 0] }}
           transition={{
             duration: 2.6,
@@ -131,7 +131,16 @@ export default function Scene() {
             ease: 'easeOut',
             delay: d,
           }}
-        />
+        >
+          <Ink
+            d={gen.circle(bx, by, 2.2, {
+              stroke: '#eaf6fb',
+              strokeWidth: 0.8,
+              roughness: 1.4,
+              seed: sd,
+            })}
+          />
+        </motion.g>
       ))}
 
       {/* capsized run #2: hull tipped past 90deg, sail in the water */}

@@ -4,11 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -42,9 +42,7 @@ export default function Scene() {
       />
       <Twinkle x={36} y={22} c='#cf9836' />
       <Twinkle x={176} y={54} d={0.8} c='#e0a83f' />
-      <Twinkle x={28} y={50} d={1.4} c='#cf9836' r={0.9} />
       <Cloud x={56} y={20} s={0.8} o={0.42} />
-      <Cloud x={132} y={62} s={0.6} o={0.3} />
 
       {/* far bank / horizon land mass for depth */}
       <Ink
@@ -81,26 +79,15 @@ export default function Scene() {
         )}
       />
 
-      {/* drifting current lines that flow up toward the fork */}
-      <motion.path
+      {/* a drifting current line that flows up toward the fork */}
+      <RoughDash
         d='M96 78 Q92 70 84 62'
-        fill='none'
-        stroke='#fbe7cc'
-        strokeWidth='1'
-        opacity='0.6'
-        strokeDasharray='2 6'
-        animate={{ strokeDashoffset: [0, -16] }}
-        transition={linear(2.2)}
-      />
-      <motion.path
-        d='M104 80 Q108 70 116 60'
-        fill='none'
-        stroke='#fbe7cc'
-        strokeWidth='1'
-        opacity='0.5'
-        strokeDasharray='2 6'
-        animate={{ strokeDashoffset: [0, -16] }}
-        transition={linear(2.6)}
+        c='#fbe7cc'
+        w={1}
+        dur={2.2}
+        seed={312}
+        dash='2 6'
+        o={0.6}
       />
 
       {/* three route markers — small cairns at the head of each channel */}
@@ -135,7 +122,15 @@ export default function Scene() {
         transition={loop(3)}
         style={{ transformOrigin: '100px 70px' }}
       >
-        <ellipse cx='100' cy='76' rx='14' ry='2.6' fill={INK} opacity='0.12' />
+        <Ink
+          d={gen.ellipse(
+            100,
+            76,
+            28,
+            5.2,
+            filled(313, INK, { fillStyle: 'solid', stroke: 'none' })
+          )}
+        />
         {/* hull */}
         <Ink
           d={gen.path(
@@ -164,18 +159,11 @@ export default function Scene() {
 
       {/* faint ripples spreading from the boat */}
       {[
-        [100, 78, 0],
-        [100, 78, 1.5],
-      ].map(([rx, ry, d], i) => (
-        <motion.ellipse
+        [100, 78, 0, 314],
+        [100, 78, 1.5, 315],
+      ].map(([rx, ry, d, sd], i) => (
+        <motion.g
           key={i}
-          cx={rx}
-          cy={ry}
-          rx='8'
-          ry='2'
-          fill='none'
-          stroke='#fbe7cc'
-          strokeWidth='0.8'
           animate={{ scale: [0.5, 1.4], opacity: [0.5, 0] }}
           transition={{
             duration: 3,
@@ -184,7 +172,16 @@ export default function Scene() {
             delay: d,
           }}
           style={{ transformOrigin: `${rx}px ${ry}px` }}
-        />
+        >
+          <Ink
+            d={gen.ellipse(rx, ry, 16, 4, {
+              stroke: '#fbe7cc',
+              strokeWidth: 0.8,
+              roughness: 1.4,
+              seed: sd,
+            })}
+          />
+        </motion.g>
       ))}
     </Frame>
   );

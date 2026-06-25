@@ -5,12 +5,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
-  INK,
   motion,
 } from './_kit';
 
@@ -34,8 +33,6 @@ export default function Scene() {
 
       {/* evening-side stars, fading toward the warmer dawn edge */}
       <Twinkle x={36} y={20} c='#9c93c0' r={1.2} />
-      <Twinkle x={70} y={14} d={0.7} c='#b3a8cf' />
-      <Twinkle x={26} y={46} d={1.2} c='#9c93c0' />
       <Twinkle x={104} y={20} d={1.6} c='#cf9836' />
       <Cloud x={150} y={30} s={0.7} o={0.4} />
 
@@ -55,15 +52,7 @@ export default function Scene() {
       />
 
       {/* the flowing arc — night preparation easing into the morning */}
-      <motion.path
-        d={arc}
-        fill='none'
-        stroke='#b89cc4'
-        strokeWidth='1.6'
-        strokeDasharray='2 7'
-        animate={{ strokeDashoffset: [0, -18] }}
-        transition={linear(2.2)}
-      />
+      <RoughDash d={arc} c='#b89cc4' w={1.6} dur={2.2} dash='2 7' seed={208} />
 
       {/* small dawn sun resting on the horizon */}
       <motion.g
@@ -130,9 +119,6 @@ export default function Scene() {
           )}
         />
       </motion.g>
-
-      <Twinkle x={148} y={58} d={0.5} c='#e0a83f' r={1} />
-      <Twinkle x={168} y={50} d={1.1} c='#cf9836' r={0.9} />
     </Frame>
   );
 }

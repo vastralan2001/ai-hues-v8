@@ -5,11 +5,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -66,24 +66,30 @@ export default function Scene() {
           <stop offset='0%' stopColor='#ffffff' stopOpacity='0.85' />
           <stop offset='100%' stopColor='#ffffff' stopOpacity='0' />
         </radialGradient>
-        <linearGradient id='perp_shelf' x1='0' y1='0' x2='0' y2='1'>
-          <stop offset='0%' stopColor='#d7e3cd' />
-          <stop offset='100%' stopColor='#b9cba6' />
-        </linearGradient>
       </defs>
 
       {/* atmosphere */}
       <Twinkle x={30} y={22} c='#9cc3e2' />
       <Twinkle x={172} y={26} d={0.8} c='#a9c08a' />
-      <Twinkle x={150} y={16} d={1.3} c='#cf9836' />
       <Cloud x={150} y={30} s={0.7} o={0.4} />
-      <Cloud x={42} y={40} s={0.6} o={0.3} />
 
       {/* glow behind the answer */}
       <circle cx='100' cy='44' r='40' fill='url(#perp_glow)' />
 
-      {/* horizon shelf where the sources rest */}
-      <rect x='0' y='88' width='200' height='12' fill='url(#perp_shelf)' />
+      {/* horizon shelf where the sources rest — rough */}
+      <Ink
+        d={gen.rectangle(
+          0,
+          88,
+          200,
+          14,
+          filled(308, '#c7d8b6', {
+            fillStyle: 'solid',
+            strokeWidth: 0,
+            roughness: 0.8,
+          })
+        )}
+      />
       <Ink
         d={gen.line(
           0,
@@ -97,13 +103,18 @@ export default function Scene() {
       {/* the source documents on the shelf — solid, traceable */}
       {sources.map((s) => (
         <g key={s.seed}>
-          <ellipse
-            cx={s.x}
-            cy='90'
-            rx='12'
-            ry='2.4'
-            fill={INK}
-            opacity='0.08'
+          <Ink
+            d={gen.ellipse(
+              s.x,
+              90,
+              24,
+              4.8,
+              filled(s.seed + 8, INK, {
+                fillStyle: 'solid',
+                strokeWidth: 0,
+                roughness: 0.6,
+              })
+            )}
           />
           <Ink
             d={gen.rectangle(
@@ -147,38 +158,33 @@ export default function Scene() {
         </g>
       ))}
 
-      {/* citation tethers + pulsing trace dots, drawn behind the card */}
+      {/* citation tethers — rough lines from card down to each source */}
       {tethers.map((t) => (
-        <g key={t.seed}>
-          <motion.line
-            x1={t.x1}
-            y1={t.y1}
-            x2={t.x2}
-            y2={t.y2}
-            stroke={t.c}
-            strokeWidth='1'
-            opacity='0.55'
-            strokeDasharray='2 4'
-            animate={{ strokeDashoffset: [0, -18] }}
-            transition={linear(1.8)}
-          />
-          <motion.circle
-            r='1.4'
-            fill={t.c}
-            animate={{
-              cx: [t.x1, t.x2],
-              cy: [t.y1, t.y2],
-              opacity: [0, 0.9, 0],
-            }}
-            transition={{
-              duration: 2.2,
-              repeat: Infinity,
-              ease: 'easeIn',
-              delay: t.dash,
-            }}
-          />
-        </g>
+        <Ink
+          key={t.seed}
+          d={gen.line(
+            t.x1,
+            t.y1,
+            t.x2,
+            t.y2,
+            stroke(t.seed + 6, {
+              stroke: t.c,
+              strokeWidth: 1,
+              roughness: 1.2,
+            })
+          )}
+        />
       ))}
+      {/* one animated dashed trace along the central tether */}
+      <RoughDash
+        d='M100 53 L100 80'
+        c='#788c5d'
+        w={1}
+        dur={1.8}
+        seed={326}
+        dash='2 4'
+        o={0.6}
+      />
 
       {/* the floating answer card — held up by its citations */}
       <motion.g
@@ -186,7 +192,19 @@ export default function Scene() {
         transition={loop(3)}
         style={{ transformOrigin: '100px 44px' }}
       >
-        <ellipse cx='100' cy='64' rx='30' ry='4' fill={INK} opacity='0.07' />
+        <Ink
+          d={gen.ellipse(
+            100,
+            64,
+            60,
+            8,
+            filled(305, INK, {
+              fillStyle: 'solid',
+              strokeWidth: 0,
+              roughness: 0.6,
+            })
+          )}
+        />
         <Ink
           d={gen.rectangle(
             72,

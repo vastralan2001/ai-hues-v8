@@ -40,9 +40,7 @@ export default function Scene() {
       {/* sky accents + distant atmosphere */}
       <Twinkle x={30} y={22} c='#cf9836' />
       <Twinkle x={178} y={30} d={0.8} c='#e0a83f' />
-      <Twinkle x={52} y={62} d={1.4} c='#cf9836' r={0.9} />
       <Cloud x={44} y={26} s={0.78} o={0.4} />
-      <Cloud x={166} y={70} s={0.66} o={0.32} />
 
       {/* far horizon haze for depth */}
       <Ink
@@ -160,17 +158,14 @@ export default function Scene() {
       </motion.g>
 
       {/* a couple of warm sparks drifting up from the lantern's heat */}
-      {[
-        [cx - 3, 40, 0],
-        [cx + 4, 42, 1.1],
-      ].map(([sx, sy, d]) => (
-        <motion.circle
+      {(
+        [
+          [cx - 3, 40, 0, 440],
+          [cx + 4, 42, 1.1, 441],
+        ] as [number, number, number, number][]
+      ).map(([sx, sy, d, sd]) => (
+        <motion.g
           key={sx}
-          cx={sx}
-          cy={sy}
-          r='0.9'
-          fill='#f0b449'
-          opacity='0.7'
           animate={{ y: [0, -10], opacity: [0, 0.7, 0] }}
           transition={{
             duration: 2.6,
@@ -178,7 +173,16 @@ export default function Scene() {
             ease: 'easeOut',
             delay: d,
           }}
-        />
+        >
+          <Ink
+            d={gen.circle(
+              sx,
+              sy,
+              1.8,
+              filled(sd, '#f0b449', { fillStyle: 'solid', strokeWidth: 0.6 })
+            )}
+          />
+        </motion.g>
       ))}
     </Frame>
   );

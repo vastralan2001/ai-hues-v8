@@ -8,8 +8,6 @@ import {
   filled,
   stroke,
   loop,
-  linear,
-  INK,
   motion,
 } from './_kit';
 
@@ -29,7 +27,6 @@ export default function Scene() {
       </defs>
 
       <Cloud x={42} y={22} s={0.8} o={0.4} />
-      <Cloud x={158} y={30} s={0.65} o={0.32} />
 
       {/* the noise: many faint, drifting tool-sparks in the distance */}
       {[
@@ -180,7 +177,6 @@ export default function Scene() {
       {/* selection sparks gathering toward the rack */}
       <Twinkle x={88} y={30} c='#e0a83f' r={1.2} />
       <Twinkle x={112} y={28} d={0.7} c='#cf9836' r={1.1} />
-      <Twinkle x={100} y={20} d={1.3} c='#e0a83f' r={1} />
     </Frame>
   );
 }

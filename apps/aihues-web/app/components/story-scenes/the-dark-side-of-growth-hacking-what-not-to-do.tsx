@@ -34,7 +34,6 @@ export default function Scene() {
 
       {/* far hazy ground line for depth */}
       <Cloud x={44} y={22} s={0.7} o={0.4} />
-      <Cloud x={158} y={30} s={0.6} o={0.35} />
       <Twinkle x={30} y={20} c='#cf9836' />
       <Twinkle x={176} y={18} d={0.8} c='#e0a83f' />
 

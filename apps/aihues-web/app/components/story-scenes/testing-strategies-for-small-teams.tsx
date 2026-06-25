@@ -33,10 +33,8 @@ export default function Scene() {
       {/* soft morning glow + sky accents */}
       <circle cx='150' cy='26' r='40' fill='url(#tsst_glow)' />
       <Cloud x={44} y={24} s={0.8} o={0.4} />
-      <Cloud x={158} y={62} s={0.6} o={0.3} />
       <Twinkle x={30} y={20} c='#cf9836' />
       <Twinkle x={176} y={30} d={0.7} c='#e0a83f' />
-      <Twinkle x={104} y={14} d={1.2} c='#94ac78' />
 
       {/* distant ground band for depth */}
       <Ink

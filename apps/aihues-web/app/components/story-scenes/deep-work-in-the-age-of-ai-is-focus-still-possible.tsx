@@ -5,11 +5,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -37,7 +37,6 @@ export default function Scene() {
       <Twinkle x={28} y={20} c='#cf9836' />
       <Twinkle x={176} y={26} d={0.9} c='#e0a83f' />
       <Cloud x={150} y={30} s={0.85} o={0.4} />
-      <Cloud x={44} y={40} s={0.7} o={0.32} />
 
       {/* the held beam — one calm wedge of light sweeping a hair, not scattering */}
       <motion.g
@@ -213,15 +212,14 @@ export default function Scene() {
       ))}
 
       {/* a faint scatter-trail showing distractions glancing off the focus */}
-      <motion.path
+      <RoughDash
         d='M108 50 Q140 44 180 52'
-        fill='none'
-        stroke='#e2693f'
-        strokeWidth='1'
-        opacity='0.4'
-        strokeDasharray='1 6'
-        animate={{ strokeDashoffset: [0, -14] }}
-        transition={linear(1.8)}
+        c='#e2693f'
+        w={1}
+        dur={1.8}
+        seed={330}
+        dash='1 6'
+        o={0.4}
       />
     </Frame>
   );

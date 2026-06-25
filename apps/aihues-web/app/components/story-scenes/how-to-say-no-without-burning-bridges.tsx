@@ -40,9 +40,7 @@ export default function Scene() {
       <circle cx='118' cy='30' r='40' fill='url(#nob_dusk)' />
       <Twinkle x={36} y={22} c='#cf9836' />
       <Twinkle x={170} y={26} d={0.8} c='#e0a83f' />
-      <Twinkle x={150} y={16} d={1.4} c='#cf9836' />
       <Cloud x={56} y={20} s={0.78} o={0.4} />
-      <Cloud x={158} y={36} s={0.62} o={0.32} />
 
       {/* hazy valley fill below the bridge — depth */}
       <rect x='0' y='60' width='200' height='40' fill='url(#nob_valley)' />
@@ -177,16 +175,12 @@ export default function Scene() {
 
       {/* embers that drift up and AWAY, fading before they catch — fire declined */}
       {[
-        [50, 56, 0],
-        [54, 58, 0.9],
-        [47, 60, 1.7],
-      ].map(([ex, ey, dl]) => (
-        <motion.circle
+        [50, 56, 0, 118],
+        [54, 58, 0.9, 119],
+        [47, 60, 1.7, 120],
+      ].map(([ex, ey, dl, sd]) => (
+        <motion.g
           key={ex}
-          cx={ex}
-          cy={ey}
-          r='0.9'
-          fill='#e2693f'
           animate={{ y: [0, -14], x: [0, -6], opacity: [0, 0.7, 0] }}
           transition={{
             duration: 2.6,
@@ -194,7 +188,16 @@ export default function Scene() {
             ease: 'easeOut',
             delay: dl,
           }}
-        />
+        >
+          <Ink
+            d={gen.circle(
+              ex,
+              ey,
+              1.8,
+              filled(sd, '#e2693f', { fillStyle: 'solid', strokeWidth: 0.7 })
+            )}
+          />
+        </motion.g>
       ))}
 
       {/* lone traveler on the near deck, paused at the gate */}

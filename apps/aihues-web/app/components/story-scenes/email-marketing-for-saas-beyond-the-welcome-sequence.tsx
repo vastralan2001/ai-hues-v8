@@ -28,10 +28,6 @@ export default function Scene() {
           <stop offset='0%' stopColor='#fff3d4' stopOpacity='1' />
           <stop offset='100%' stopColor='#fff3d4' stopOpacity='0' />
         </radialGradient>
-        <linearGradient id='em_sea' x1='0' y1='0' x2='0' y2='1'>
-          <stop offset='0%' stopColor='#9cc0dd' />
-          <stop offset='100%' stopColor='#6a9bcc' />
-        </linearGradient>
         <linearGradient id='em_beam' x1='0' y1='0' x2='1' y2='0'>
           <stop offset='0%' stopColor='#ffe6ab' stopOpacity='0.85' />
           <stop offset='100%' stopColor='#ffe6ab' stopOpacity='0' />
@@ -41,20 +37,31 @@ export default function Scene() {
       {/* dusk accents + a far cloud bank for depth */}
       <Twinkle x={30} y={20} c='#e0a83f' />
       <Twinkle x={174} y={16} d={0.8} c='#cf9836' />
-      <Twinkle x={150} y={30} d={1.4} c='#e0a83f' r={0.9} />
       <Cloud x={150} y={26} s={0.85} o={0.4} />
-      <Cloud x={54} y={20} s={0.6} o={0.32} />
 
-      {/* sea fills the lower half; bright horizon line */}
-      <rect x='0' y='58' width='200' height='42' fill='url(#em_sea)' />
-      <line
-        x1='0'
-        y1='58'
-        x2='200'
-        y2='58'
-        stroke='#fbe8c8'
-        strokeWidth='1.3'
-        opacity='0.7'
+      {/* sea fills the lower half — rough hachure water */}
+      <Ink
+        d={gen.rectangle(
+          0,
+          58,
+          200,
+          44,
+          filled(300, '#7fadd2', {
+            hachureGap: 3,
+            fillWeight: 0.6,
+            stroke: 'none',
+          })
+        )}
+      />
+      {/* bright horizon line */}
+      <Ink
+        d={gen.line(
+          0,
+          58,
+          200,
+          58,
+          stroke(299, { stroke: '#fbe8c8', strokeWidth: 1.3, roughness: 1.2 })
+        )}
       />
 
       {/* slow swell lines for water texture */}

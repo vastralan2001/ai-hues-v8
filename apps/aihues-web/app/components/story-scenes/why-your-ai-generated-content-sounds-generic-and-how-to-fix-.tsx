@@ -5,11 +5,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -32,25 +32,25 @@ export default function Scene() {
           <stop offset='0%' stopColor='#fff5e2' stopOpacity='0.85' />
           <stop offset='100%' stopColor='#fff5e2' stopOpacity='0' />
         </radialGradient>
-        <linearGradient id='gen5x_shelf' x1='0' y1='0' x2='0' y2='1'>
-          <stop offset='0%' stopColor='#e7d3b2' />
-          <stop offset='100%' stopColor='#d8bd95' />
-        </linearGradient>
       </defs>
 
       {/* soft warm light pooling over the one painted pot */}
       <circle cx='162' cy='60' r='40' fill='url(#gen5x_glow)' />
       <Cloud x={50} y={22} s={0.8} o={0.4} />
-      <Twinkle x={30} y={20} c='#cf9836' />
-      <Twinkle x={184} y={30} d={0.7} c='#e0a83f' r={1.2} />
 
       {/* shelf the generic vessels stand on, receding into depth */}
-      <rect
-        x='10'
-        y={SHELF_Y}
-        width='150'
-        height='5'
-        fill='url(#gen5x_shelf)'
+      <Ink
+        d={gen.rectangle(
+          10,
+          SHELF_Y,
+          150,
+          5,
+          filled(500, '#e0c79f', {
+            fillStyle: 'solid',
+            strokeWidth: 1,
+            roughness: 1.4,
+          })
+        )}
       />
       <Ink
         d={gen.line(10, SHELF_Y, 160, SHELF_Y, stroke(501, { strokeWidth: 1 }))}
@@ -59,13 +59,18 @@ export default function Scene() {
       {/* the assembly line of identical, flat, voiceless pots */}
       {generic.map((cx, i) => (
         <g key={cx}>
-          <ellipse
-            cx={cx}
-            cy={SHELF_Y + 1}
-            rx='9'
-            ry='2'
-            fill={INK}
-            opacity='0.08'
+          <Ink
+            d={gen.ellipse(
+              cx,
+              SHELF_Y + 1,
+              18,
+              4,
+              filled(505 + i, INK, {
+                fillStyle: 'solid',
+                stroke: 'none',
+                roughness: 1.4,
+              })
+            )}
           />
           <Ink
             d={gen.path(
@@ -95,7 +100,19 @@ export default function Scene() {
       ))}
 
       {/* the one pot brought forward, larger, in the light — being given a voice */}
-      <ellipse cx='162' cy='90' rx='15' ry='3.5' fill={INK} opacity='0.12' />
+      <Ink
+        d={gen.ellipse(
+          162,
+          90,
+          30,
+          7,
+          filled(529, INK, {
+            fillStyle: 'solid',
+            stroke: 'none',
+            roughness: 1.4,
+          })
+        )}
+      />
       <Ink
         d={gen.path(
           `M150 60
@@ -112,25 +129,13 @@ export default function Scene() {
       />
 
       {/* the fresh terracotta stroke that makes this pot sound like you */}
-      <motion.path
+      <RoughDash
         d='M150 70 Q162 66 174 70'
-        fill='none'
-        stroke='#c2502e'
-        strokeWidth='3.4'
-        strokeLinecap='round'
-        strokeDasharray='34 34'
-        animate={{ strokeDashoffset: [34, 0, 0, 34] }}
-        transition={linear(3.6)}
-      />
-      <motion.path
-        d='M152 78 Q162 75 172 79'
-        fill='none'
-        stroke='#e0a83f'
-        strokeWidth='2.4'
-        strokeLinecap='round'
-        strokeDasharray='30 30'
-        animate={{ strokeDashoffset: [30, 30, 0, 0, 30] }}
-        transition={linear(3.6)}
+        c='#c2502e'
+        w={3.4}
+        dur={3.6}
+        dash='34 34'
+        seed={531}
       />
 
       {/* the brush, dipping and sweeping across the focal pot */}
@@ -165,14 +170,22 @@ export default function Scene() {
           )}
         />
         {/* a fresh drop of pigment falling from the tip */}
-        <motion.circle
-          cx='153.5'
-          cy='65'
-          r='1.3'
-          fill='#c2502e'
+        <motion.g
           animate={{ y: [0, 5, 5], opacity: [0.9, 0, 0] }}
           transition={loop(3.6)}
-        />
+        >
+          <Ink
+            d={gen.circle(
+              153.5,
+              65,
+              2.6,
+              filled(543, '#c2502e', {
+                fillStyle: 'solid',
+                stroke: 'none',
+              })
+            )}
+          />
+        </motion.g>
       </motion.g>
 
       {/* a couple of bright accents over the one that found its voice */}

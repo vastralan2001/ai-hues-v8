@@ -4,11 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -24,10 +24,8 @@ export default function Scene() {
       </defs>
 
       <Cloud x={42} y={24} s={0.8} o={0.4} />
-      <Cloud x={158} y={20} s={0.7} o={0.35} />
       <Twinkle x={28} y={32} c='#cf9836' />
       <Twinkle x={176} y={40} d={0.9} c='#e0a83f' />
-      <Twinkle x={150} y={58} d={1.5} c='#cf9836' r={0.9} />
 
       {/* horizon shelf the result card rests on */}
       <Ink
@@ -70,58 +68,14 @@ export default function Scene() {
 
       {/* the schema that connects: a glowing tag-stream flowing UP into the card */}
       <circle cx='100' cy='52' r='30' fill='url(#schema_glow)' />
-      <motion.path
+      <RoughDash
         d='M100 88 Q96 70 100 56'
-        fill='none'
-        stroke='#e0a83f'
-        strokeWidth='1.8'
-        strokeDasharray='2 5'
-        animate={{ strokeDashoffset: [0, -21] }}
-        transition={linear(1.5)}
+        c='#e0a83f'
+        w={1.8}
+        dur={1.5}
+        dash='2 5'
+        seed={430}
       />
-      {/* two schema streams that do NOT pay off — drift sideways and fade */}
-      <motion.path
-        d='M86 90 Q66 76 60 64'
-        fill='none'
-        stroke='#9aa890'
-        strokeWidth='1.2'
-        strokeDasharray='2 6'
-        animate={{ strokeDashoffset: [0, -24], opacity: [0.4, 0.08, 0.4] }}
-        transition={linear(2.2)}
-      />
-      <motion.path
-        d='M114 90 Q138 78 146 68'
-        fill='none'
-        stroke='#9aa890'
-        strokeWidth='1.2'
-        strokeDasharray='2 6'
-        animate={{ strokeDashoffset: [0, -24], opacity: [0.4, 0.08, 0.4] }}
-        transition={linear(2.6)}
-      />
-
-      {/* drifting angle-bracket glyphs riding the dead streams */}
-      <motion.g
-        animate={{ y: [0, -8, 0], opacity: [0.5, 0.12, 0.5] }}
-        transition={loop(2.6)}
-      >
-        <Ink
-          d={gen.path(
-            'M66 74 L62 70 L66 66',
-            stroke(405, { stroke: '#8b9a7d', strokeWidth: 1.1 })
-          )}
-        />
-      </motion.g>
-      <motion.g
-        animate={{ y: [0, -8, 0], opacity: [0.5, 0.12, 0.5] }}
-        transition={loop(2.9, 0.5)}
-      >
-        <Ink
-          d={gen.path(
-            'M140 76 L144 72 L140 68',
-            stroke(406, { stroke: '#8b9a7d', strokeWidth: 1.1 })
-          )}
-        />
-      </motion.g>
 
       {/* the focal subject: a search-result card blooming rich features */}
       <motion.g
@@ -129,7 +83,19 @@ export default function Scene() {
         transition={loop(2.8)}
         style={{ transformOrigin: '100px 50px' }}
       >
-        <ellipse cx='100' cy='71' rx='44' ry='3.5' fill={INK} opacity='0.1' />
+        <Ink
+          d={gen.ellipse(
+            100,
+            71,
+            88,
+            7,
+            filled(431, INK, {
+              fillStyle: 'solid',
+              stroke: 'none',
+              roughness: 1.4,
+            })
+          )}
+        />
         <Ink
           d={gen.rectangle(
             58,

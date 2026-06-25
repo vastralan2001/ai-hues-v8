@@ -4,12 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
-  INK,
   motion,
 } from './_kit';
 
@@ -62,18 +61,12 @@ export default function Scene() {
           <stop offset='0%' stopColor='#fff2d6' stopOpacity='0.95' />
           <stop offset='100%' stopColor='#fff2d6' stopOpacity='0' />
         </radialGradient>
-        <linearGradient id='cs_wire' x1='0' y1='0' x2='1' y2='0'>
-          <stop offset='0%' stopColor='#cf9836' stopOpacity='0.2' />
-          <stop offset='100%' stopColor='#cf9836' stopOpacity='0.7' />
-        </linearGradient>
       </defs>
 
       {/* atmosphere */}
       <Twinkle x={30} y={20} c='#cf9836' />
       <Twinkle x={176} y={26} d={0.7} c='#e0a83f' />
-      <Twinkle x={150} y={16} d={1.2} c='#cf9836' />
       <Cloud x={52} y={24} s={0.8} o={0.4} />
-      <Cloud x={158} y={64} s={0.65} o={0.32} />
 
       {/* far horizon for depth */}
       <Ink
@@ -84,14 +77,14 @@ export default function Scene() {
       />
 
       {/* incoming wire: questions streaming toward the hub */}
-      <motion.path
+      <RoughDash
         d={`M8 64 Q60 60 ${HUB_X} ${HUB_Y}`}
-        fill='none'
-        stroke='url(#cs_wire)'
-        strokeWidth='2'
-        strokeDasharray='2 6'
-        animate={{ strokeDashoffset: [0, -16] }}
-        transition={linear(1.2)}
+        c='#cf9836'
+        w={2}
+        dur={1.2}
+        dash='2 6'
+        seed={302}
+        o={0.7}
       />
 
       {/* a few inquiry envelopes riding in, smaller toward the hub (depth) */}
@@ -116,30 +109,30 @@ export default function Scene() {
 
       {/* outgoing reply sparks: fast answers fanning out to the right */}
       {[
-        { dx: 60, dy: -16, d: 0 },
-        { dx: 64, dy: 2, d: 0.45 },
-        { dx: 58, dy: 18, d: 0.9 },
+        { dx: 60, dy: -16, d: 0, seed: 330 },
+        { dx: 64, dy: 2, d: 0.45, seed: 332 },
+        { dx: 58, dy: 18, d: 0.9, seed: 334 },
       ].map((r) => (
-        <motion.path
+        <motion.g
           key={r.dy}
-          d={`M${HUB_X} ${HUB_Y} Q${HUB_X + r.dx / 2} ${
-            HUB_Y + r.dy / 2 - 4
-          } ${HUB_X + r.dx} ${HUB_Y + r.dy}`}
-          fill='none'
-          stroke='#788c5d'
-          strokeWidth='1.4'
-          strokeDasharray='2 7'
-          animate={{ strokeDashoffset: [0, -18], opacity: [0.3, 0.8, 0.3] }}
-          transition={linear(1)}
-          style={{ animationDelay: `${r.d}s` }}
-        />
-      ))}
-      {[
-        [HUB_X + 60, HUB_Y - 16],
-        [HUB_X + 64, HUB_Y + 2],
-        [HUB_X + 58, HUB_Y + 18],
-      ].map(([cx, cy], i) => (
-        <Twinkle key={cx} x={cx} y={cy} d={i * 0.4} c='#94ac78' r={1.2} />
+          animate={{ opacity: [0.25, 0.85, 0.25], x: [0, 6, 0] }}
+          transition={loop(1.6, r.d)}
+        >
+          <Ink
+            d={gen.line(
+              HUB_X + 12,
+              HUB_Y + r.dy / 2,
+              HUB_X + r.dx,
+              HUB_Y + r.dy,
+              {
+                stroke: '#788c5d',
+                strokeWidth: 1.4,
+                roughness: 1.5,
+                seed: r.seed,
+              }
+            )}
+          />
+        </motion.g>
       ))}
 
       {/* hub glow */}

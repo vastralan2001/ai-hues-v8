@@ -1,9 +1,12 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { MotionConfig } from 'framer-motion';
+import { renderToStaticMarkup } from 'react-dom/server';
 
 import { getStoryScene, type Anim, type El } from '@/lib/story-scenes';
 import { STORY_SVG } from '@/components/story-svg';
+import { ScenePaused } from '@/components/story-scenes/_kit';
 
 /* StoryArt — renders a hand-authored, content-specific scene for a story (no
    templates, no randomness): each article has its own scene in story-scenes.ts,
@@ -158,6 +161,7 @@ export function StoryArt({
   alt,
   className = '',
   animated = false,
+  playOnHover = false,
 }: {
   slug: string;
   tag: string;
@@ -166,6 +170,9 @@ export function StoryArt({
   alt?: string;
   className?: string;
   animated?: boolean;
+  /** Render the scene static (no running animation) until hovered — used on the
+   *  listing grid so a dozen scenes don't all animate at once. */
+  playOnHover?: boolean;
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const Svg = STORY_SVG[slug];
@@ -174,10 +181,39 @@ export function StoryArt({
   // hydration mismatch. The wrapper keeps role="img" + aria-label in the server
   // HTML, so the SEO/a11y signal is unaffected.
   const [mounted, setMounted] = useState(false);
+  const [hover, setHover] = useState(false);
+  // A frozen (paused) snapshot of the scene — shown on the listing grid until a
+  // card is hovered, so a dozen scenes don't all animate at once. Also serves as
+  // the self-contained SVG that right-click → download rasterises.
+  const [staticHTML, setStaticHTML] = useState('');
   useEffect(() => {
-    const id = requestAnimationFrame(() => setMounted(true));
+    const id = requestAnimationFrame(() => {
+      setMounted(true);
+      if (Svg) {
+        setStaticHTML(
+          renderToStaticMarkup(
+            <ScenePaused.Provider value={true}>
+              <MotionConfig reducedMotion='always'>
+                <Svg />
+              </MotionConfig>
+            </ScenePaused.Provider>
+          )
+        );
+      }
+    });
     return () => cancelAnimationFrame(id);
-  }, []);
+  }, [Svg]);
+
+  // The frozen scene as a standalone SVG data URL. Rendered as a real <img> so
+  // (a) it's an isolated SVG document — gradient ids never collide between cards
+  // — and (b) right-click shows the browser's native image menu (save / copy /
+  // open), like any image.
+  const imgSrc = useMemo(() => {
+    if (!staticHTML) return '';
+    const m = staticHTML.match(/<svg[\s\S]*<\/svg>/);
+    if (!m) return '';
+    return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(m[0]);
+  }, [staticHTML]);
 
   useEffect(() => {
     const cv = ref.current;
@@ -237,15 +273,25 @@ export function StoryArt({
     };
   }, [slug, tag, animated]);
 
+  const live = !playOnHover || hover;
   return (
     <div
       role='img'
       aria-label={alt ?? `${tag} story illustration`}
       className={`relative overflow-hidden ${className}`}
+      onMouseEnter={playOnHover ? () => setHover(true) : undefined}
+      onMouseLeave={playOnHover ? () => setHover(false) : undefined}
     >
       {Svg ? (
-        mounted ? (
+        !mounted ? null : live ? (
           <Svg />
+        ) : imgSrc ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={imgSrc}
+            alt={alt ?? `${tag} story illustration`}
+            className='h-full w-full object-cover'
+          />
         ) : null
       ) : (
         <canvas ref={ref} className='absolute inset-0 h-full w-full' />

@@ -148,6 +148,7 @@ export default function StoriesContent({
                       slug={post.slug}
                       tag={post.tag}
                       alt={`${post.title} — illustration`}
+                      playOnHover
                       className='h-full w-full transition-transform duration-500 group-hover:scale-105'
                     />
                     <span className='absolute left-3 top-3 rounded-full bg-accent px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider text-white'>

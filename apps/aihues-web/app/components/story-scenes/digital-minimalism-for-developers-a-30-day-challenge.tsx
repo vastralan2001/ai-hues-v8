@@ -5,11 +5,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -35,18 +35,12 @@ export default function Scene() {
           <stop offset='0%' stopColor='#fbeede' stopOpacity='0.95' />
           <stop offset='100%' stopColor='#fbeede' stopOpacity='0' />
         </radialGradient>
-        <linearGradient id='dm30_screen' x1='0' y1='0' x2='0' y2='1'>
-          <stop offset='0%' stopColor='#fbe6c2' />
-          <stop offset='100%' stopColor='#f0c685' />
-        </linearGradient>
       </defs>
 
       {/* quiet dusk atmosphere */}
       <Cloud x={150} y={24} s={0.85} o={0.4} />
-      <Cloud x={40} y={32} s={0.7} o={0.32} />
       <Twinkle x={28} y={20} c='#cf9836' />
       <Twinkle x={176} y={40} d={0.9} c='#e0a83f' />
-      <Twinkle x={108} y={16} d={1.4} r={0.9} c='#cf9836' />
 
       {/* soft glow behind the one device that stays */}
       <circle cx='100' cy='58' r='34' fill='url(#dm30_calm)' />
@@ -108,7 +102,20 @@ export default function Scene() {
         transition={loop(3)}
         style={{ transformOrigin: '100px 70px' }}
       >
-        <ellipse cx='100' cy='81' rx='11' ry='2.2' fill={INK} opacity='0.12' />
+        <Ink
+          d={gen.ellipse(
+            100,
+            81,
+            22,
+            4.4,
+            filled(313, INK, {
+              fillStyle: 'solid',
+              stroke: 'none',
+              roughness: 1.4,
+              seed: 313,
+            })
+          )}
+        />
         <Ink
           d={gen.rectangle(
             92,
@@ -123,13 +130,19 @@ export default function Scene() {
           )}
         />
         {/* a single calm screen — one thing, lit warmly */}
-        <rect
-          x='94.5'
-          y='57.5'
-          width='11'
-          height='17'
-          rx='1.4'
-          fill='url(#dm30_screen)'
+        <Ink
+          d={gen.rectangle(
+            94.5,
+            57.5,
+            11,
+            17,
+            filled(314, '#f3cf8d', {
+              fillStyle: 'solid',
+              strokeWidth: 0.9,
+              roughness: 1,
+              seed: 314,
+            })
+          )}
         />
         <motion.g
           animate={{ opacity: [0.55, 1, 0.55] }}
@@ -158,15 +171,14 @@ export default function Scene() {
       </motion.g>
 
       {/* a faint rising trail — the drift outward, the half cut away */}
-      <motion.path
+      <RoughDash
         d='M100 70 Q88 48 70 30'
-        fill='none'
-        stroke='#a7b0c9'
-        strokeWidth='1.2'
-        opacity='0.45'
-        strokeDasharray='1.5 6'
-        animate={{ strokeDashoffset: [0, -15] }}
-        transition={linear(2.4)}
+        c='#a7b0c9'
+        w={1.2}
+        dur={2.4}
+        dash='1.5 6'
+        o={0.45}
+        seed={315}
       />
     </Frame>
   );

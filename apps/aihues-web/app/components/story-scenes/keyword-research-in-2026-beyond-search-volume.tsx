@@ -8,7 +8,6 @@ import {
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -38,10 +37,8 @@ export default function Scene() {
       {/* sky depth */}
       <circle cx='42' cy='22' r='40' fill='url(#krv_sun)' />
       <Cloud x={150} y={20} s={0.8} o={0.42} />
-      <Cloud x={64} y={32} s={0.6} o={0.32} />
       <Twinkle x={170} y={16} c='#e0a83f' />
       <Twinkle x={120} y={14} d={0.9} c='#cf9836' />
-      <Twinkle x={26} y={40} d={1.4} c='#e0a83f' r={0.9} />
 
       {/* far riverbank ridge */}
       <Ink
@@ -51,32 +48,34 @@ export default function Scene() {
         )}
       />
 
-      {/* the river — light surface */}
+      {/* the river — light surface (atmospheric gradient fill) */}
       <rect x='0' y='64' width='200' height='36' fill='url(#krv_water)' />
-      <line
-        x1='0'
-        y1='64'
-        x2='200'
-        y2='64'
-        stroke='#eaf6ff'
-        strokeWidth='1.2'
-        opacity='0.7'
+      <Ink
+        d={gen.line(0, 64, 200, 64, {
+          stroke: '#eaf6ff',
+          strokeWidth: 1.2,
+          roughness: 1.4,
+          bowing: 1.6,
+          seed: 310,
+        })}
       />
       {/* current ripples drifting downstream */}
       {[72, 80, 88].map((ry, i) => (
-        <motion.line
+        <motion.g
           key={ry}
-          x1='0'
-          y1={ry}
-          x2='60'
-          y2={ry}
-          stroke='#eaf6ff'
-          strokeWidth='0.8'
-          opacity='0.4'
-          strokeDasharray='4 10'
-          animate={{ strokeDashoffset: [0, -28] }}
-          transition={linear(2.6 + i * 0.5)}
-        />
+          animate={{ x: [0, 6, 0], opacity: [0.3, 0.5, 0.3] }}
+          transition={loop(2.6 + i * 0.5)}
+        >
+          <Ink
+            d={gen.line(0, ry, 60, ry, {
+              stroke: '#eaf6ff',
+              strokeWidth: 0.8,
+              roughness: 2,
+              bowing: 2.4,
+              seed: 311 + i,
+            })}
+          />
+        </motion.g>
       ))}
 
       {/* gravel washing through the mesh and sinking away (search volume) */}
@@ -85,22 +84,28 @@ export default function Scene() {
         [104, 70, 0.7],
         [99, 71, 1.3],
         [110, 70, 1.9],
-      ].map(([gx, gy, d]) => (
-        <motion.circle
+      ].map(([gx, gy, d], i) => (
+        <motion.g
           key={gx}
-          cx={gx}
-          cy={gy}
-          r='1.1'
-          fill='#b9a978'
-          opacity='0.7'
           animate={{ y: [0, 16], opacity: [0, 0.7, 0] }}
           transition={{
             duration: 2.4,
             repeat: Infinity,
             ease: 'easeIn',
-            delay: d as number,
+            delay: d,
           }}
-        />
+        >
+          <Ink
+            d={gen.circle(gx, gy, 2.2, {
+              fill: '#b9a978',
+              fillStyle: 'solid',
+              stroke: '#b9a978',
+              strokeWidth: 0.5,
+              roughness: 1.4,
+              seed: 314 + i,
+            })}
+          />
+        </motion.g>
       ))}
 
       {/* the prospector's pan / sieve — tilted, gently swirling */}
@@ -170,10 +175,6 @@ export default function Scene() {
           </motion.g>
         </g>
       </motion.g>
-
-      {/* a couple of smaller caught flecks */}
-      <Twinkle x={118} y={56} d={0.4} c='#f4d27a' r={1} />
-      <Twinkle x={86} y={54} d={1.1} c='#f4d27a' r={0.9} />
     </Frame>
   );
 }

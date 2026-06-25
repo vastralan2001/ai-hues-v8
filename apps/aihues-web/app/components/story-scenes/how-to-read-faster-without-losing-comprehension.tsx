@@ -8,7 +8,7 @@ import {
   filled,
   stroke,
   loop,
-  linear,
+  RoughDash,
   INK,
   motion,
 } from './_kit';
@@ -38,7 +38,6 @@ export default function Scene() {
       <circle cx='150' cy='22' r='40' fill='url(#rdfast_glow)' />
       <Twinkle x={36} y={22} c='#cf9836' />
       <Twinkle x={170} y={40} d={0.8} c='#e0a83f' />
-      <Twinkle x={92} y={16} d={1.3} c='#cf9836' />
       <Cloud x={52} y={28} s={0.78} o={0.4} />
 
       {/* distant desk horizon for depth */}
@@ -50,7 +49,21 @@ export default function Scene() {
       />
 
       {/* book shadow */}
-      <ellipse cx='100' cy='84' rx='62' ry='6' fill={INK} opacity='0.1' />
+      <g opacity='0.1'>
+        <Ink
+          d={gen.ellipse(
+            100,
+            84,
+            124,
+            12,
+            filled(300, INK, {
+              fillStyle: 'solid',
+              stroke: 'none',
+              roughness: 1.5,
+            })
+          )}
+        />
+      </g>
 
       {/* the open book — focal subject, gently breathing */}
       <motion.g
@@ -122,17 +135,16 @@ export default function Scene() {
         ))}
 
         {/* the pacer trail: a smooth guide stroke sweeping down the right page */}
-        <motion.path
-          d='M110 37 Q148 37 110 45 Q148 45 110 53 Q148 53 110 61 Q148 61 110 69'
-          fill='none'
-          stroke='#e2693f'
-          strokeWidth='1.4'
-          strokeLinecap='round'
-          strokeDasharray='3 6'
-          opacity='0.55'
-          animate={{ strokeDashoffset: [0, -27] }}
-          transition={linear(2.2)}
-        />
+        <g opacity='0.55'>
+          <RoughDash
+            d='M110 37 Q148 37 110 45 Q148 45 110 53 Q148 53 110 61 Q148 61 110 69'
+            c='#e2693f'
+            w={1.4}
+            seed={306}
+            dash='3 6'
+            dur={2.2}
+          />
+        </g>
 
         {/* the focal pacer-dot: glides line to line, pulling the eye forward */}
         <motion.g
@@ -147,7 +159,16 @@ export default function Scene() {
             times: [0, 0.12, 0.25, 0.37, 0.5, 0.62, 0.75, 0.87, 1],
           }}
         >
-          <circle cx='110' cy='37' r='4.6' fill='#ffe0b0' opacity='0.55' />
+          <g opacity='0.55'>
+            <Ink
+              d={gen.circle(
+                110,
+                37,
+                9.2,
+                filled(307, '#ffe0b0', { fillStyle: 'solid', stroke: 'none' })
+              )}
+            />
+          </g>
           <Ink
             d={gen.circle(
               110,
@@ -158,10 +179,6 @@ export default function Scene() {
           />
         </motion.g>
       </motion.g>
-
-      {/* a couple of forward sparks toward the edge — momentum */}
-      <Twinkle x={176} y={62} d={0.5} c='#e2693f' r={1.2} />
-      <Twinkle x={26} y={58} d={1.1} c='#cf9836' r={1} />
     </Frame>
   );
 }

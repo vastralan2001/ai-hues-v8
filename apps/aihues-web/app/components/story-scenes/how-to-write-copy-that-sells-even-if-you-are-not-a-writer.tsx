@@ -4,11 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -37,44 +37,50 @@ export default function Scene() {
 
       <Twinkle x={36} y={20} c='#e0a83f' />
       <Twinkle x={172} y={26} d={0.7} c='#cf9836' />
-      <Twinkle x={150} y={14} d={1.2} c='#e0a83f' r={0.9} />
       <Cloud x={158} y={30} s={0.75} o={0.4} />
 
       {/* still water — the reader's attention pool, lower third */}
       <rect x='0' y='72' width='200' height='28' fill='url(#copy_water)' />
-      <line
-        x1='0'
-        y1='72'
-        x2='200'
-        y2='72'
-        stroke='#fbf6ea'
-        strokeWidth='1.2'
-        opacity='0.7'
+      <Ink
+        d={gen.line(
+          0,
+          72,
+          200,
+          72,
+          stroke(310, {
+            stroke: '#fbf6ea',
+            strokeWidth: 1.2,
+            roughness: 1.1,
+            bowing: 0.6,
+          })
+        )}
       />
       {/* faint reflected ripples */}
       {[
-        [104, 78, 0],
-        [128, 84, 0.8],
-        [150, 80, 1.5],
-      ].map(([rx, ry, d]) => (
-        <motion.ellipse
+        [104, 78, 0, 311],
+        [128, 84, 0.8, 312],
+        [150, 80, 1.5, 313],
+      ].map(([rx, ry, d, sd]) => (
+        <motion.g
           key={rx}
-          cx={rx}
-          cy={ry}
-          rx='6'
-          ry='1.4'
-          fill='none'
-          stroke='#fbf6ea'
-          strokeWidth='0.7'
-          opacity='0.5'
-          animate={{ rx: [3, 9], opacity: [0.55, 0] }}
+          animate={{ scaleX: [0.5, 1.5], opacity: [0.55, 0] }}
           transition={{
             duration: 3,
             repeat: Infinity,
             ease: 'easeOut',
             delay: d,
           }}
-        />
+          style={{ transformOrigin: `${rx}px ${ry}px` }}
+        >
+          <Ink
+            d={gen.ellipse(rx, ry, 12, 2.8, {
+              stroke: '#fbf6ea',
+              strokeWidth: 0.7,
+              roughness: 1.4,
+              seed: sd,
+            })}
+          />
+        </motion.g>
       ))}
 
       {/* the pen-nib (the writer's tool, top-left), gently dipping */}
@@ -96,15 +102,14 @@ export default function Scene() {
       </motion.g>
 
       {/* the cast line — flowing, reads as the written sentence becoming a hook */}
-      <motion.path
+      <RoughDash
         d={cast}
-        fill='none'
-        stroke={INK}
-        strokeWidth='1'
-        strokeDasharray='2 5'
-        opacity='0.75'
-        animate={{ strokeDashoffset: [0, -14] }}
-        transition={linear(1.8)}
+        c={INK}
+        w={1}
+        dur={1.8}
+        dash='2 5'
+        o={0.75}
+        seed={320}
       />
 
       {/* glow behind the bait */}
@@ -181,14 +186,6 @@ export default function Scene() {
           )}
         />
       </motion.g>
-
-      {/* a couple of rising sparks between fish and bait — the pull of attention */}
-      {[
-        [144, 76, 0.3],
-        [138, 70, 1.1],
-      ].map(([sx, sy, d]) => (
-        <Twinkle key={sx} x={sx} y={sy} d={d} c='#e0a83f' r={0.9} />
-      ))}
     </Frame>
   );
 }

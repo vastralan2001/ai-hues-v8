@@ -4,11 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -40,7 +40,6 @@ export default function Scene() {
       {/* sky accents */}
       <Twinkle x={170} y={20} c='#cf9836' />
       <Twinkle x={150} y={36} d={0.8} c='#e0a83f' />
-      <Twinkle x={186} y={50} d={1.4} c='#cf9836' r={0.9} />
       <Cloud x={48} y={18} s={0.75} o={0.4} />
 
       {/* distant ground horizon for depth */}
@@ -125,33 +124,14 @@ export default function Scene() {
         </motion.g>
       </g>
 
-      {/* three trails carrying the auth methods toward the keyhole */}
-      <motion.path
-        d='M30 36 Q72 38 118 60'
-        fill='none'
-        stroke='#6a9bcc'
-        strokeWidth='1.3'
-        strokeDasharray='2 6'
-        animate={{ strokeDashoffset: [0, -16] }}
-        transition={linear(1.7)}
-      />
-      <motion.path
+      {/* one trail carrying the auth methods toward the keyhole */}
+      <RoughDash
         d='M26 64 Q70 62 118 62'
-        fill='none'
-        stroke='#788c5d'
-        strokeWidth='1.3'
-        strokeDasharray='2 6'
-        animate={{ strokeDashoffset: [0, -16] }}
-        transition={linear(2)}
-      />
-      <motion.path
-        d='M38 82 Q74 80 118 64'
-        fill='none'
-        stroke='#c2502e'
-        strokeWidth='1.3'
-        strokeDasharray='2 6'
-        animate={{ strokeDashoffset: [0, -16] }}
-        transition={linear(2.3)}
+        c='#788c5d'
+        w={1.3}
+        dur={2}
+        dash='2 6'
+        seed={316}
       />
 
       {/* OAuth — a ringed token (a small orbit of trust) */}

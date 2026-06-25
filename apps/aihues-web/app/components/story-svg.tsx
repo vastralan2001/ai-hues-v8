@@ -12,6 +12,7 @@ import {
   linear,
   loop,
   motion,
+  RoughDash,
   stroke,
   Twinkle,
 } from './story-scenes/_kit';
@@ -30,7 +31,6 @@ function LaunchProductHunt() {
       <circle cx='150' cy='22' r='46' fill='url(#ph_sun)' />
       <Twinkle x={40} y={24} c='#cf9836' />
       <Twinkle x={176} y={46} d={0.8} c='#e0a83f' />
-      <Twinkle x={94} y={18} d={1.3} c='#cf9836' />
       <Cloud x={48} y={66} s={0.85} o={0.45} />
       <Ink
         d={gen.path(
@@ -38,15 +38,14 @@ function LaunchProductHunt() {
           filled(11, '#eecba3', { roughness: 1.5, hachureGap: 3.4 })
         )}
       />
-      <motion.path
+      <RoughDash
         d={trail}
-        fill='none'
-        stroke='#fff'
-        strokeWidth='3'
-        opacity='0.5'
-        strokeDasharray='1 7'
-        animate={{ strokeDashoffset: [0, -16] }}
-        transition={linear(1.4)}
+        c='#fff'
+        w={3}
+        dash='1 7'
+        dur={1.4}
+        seed={17}
+        o={0.5}
       />
       <motion.g
         animate={{ y: [0, -3, 0] }}
@@ -117,7 +116,15 @@ function Panel({
       transition={loop(3, ph)}
       style={{ transformOrigin: `${x}px 52px` }}
     >
-      <ellipse cx={x} cy='74' rx='20' ry='4' fill={INK} opacity='0.1' />
+      <Ink
+        d={gen.ellipse(
+          x,
+          74,
+          40,
+          8,
+          filled(seed + 5, INK, { fillStyle: 'solid', stroke: 'none' })
+        )}
+      />
       <Ink
         d={gen.rectangle(
           x - 19,
@@ -222,22 +229,13 @@ function AppStoreOptimization() {
         </radialGradient>
       </defs>
       <Cloud x={46} y={26} s={0.8} o={0.4} />
-      <Cloud x={150} y={70} s={0.7} o={0.35} />
       <Ink
         d={gen.path(
           'M14 84 Q70 80 104 58 T182 22 L182 96 L14 96 Z',
           filled(51, '#f1d3a0', { roughness: 1.6, hachureGap: 4 })
         )}
       />
-      <motion.path
-        d={curve}
-        fill='none'
-        stroke='#d99a3f'
-        strokeWidth='1.8'
-        strokeDasharray='2 6'
-        animate={{ strokeDashoffset: [0, -16] }}
-        transition={linear(1.6)}
-      />
+      <RoughDash d={curve} c='#d99a3f' w={1.8} dash='2 6' dur={1.6} seed={55} />
       <circle cx='182' cy='22' r='18' fill='url(#aso_star)' />
       <motion.g
         animate={{ scale: [0.92, 1.08, 0.92], rotate: [0, 6, 0] }}
@@ -264,7 +262,6 @@ function AppStoreOptimization() {
       </motion.g>
       {[
         [110, 50],
-        [134, 42],
         [158, 32],
       ].map(([sx, sy], i) => (
         <Twinkle key={sx} x={sx} y={sy} d={i * 0.3} c='#e0a83f' r={1.2} />
@@ -321,14 +318,14 @@ function HiddenCostsAiWriting() {
       <Twinkle x={168} y={22} d={0.7} c='#9cc3e2' />
       <Cloud x={150} y={26} s={0.8} o={0.5} />
       <rect x='0' y='54' width='200' height='46' fill='url(#hc_water)' />
-      <line
-        x1='0'
-        y1='54'
-        x2='200'
-        y2='54'
-        stroke='#eaf6ff'
-        strokeWidth='1.4'
-        opacity='0.7'
+      <Ink
+        d={gen.line(
+          0,
+          54,
+          200,
+          54,
+          stroke(64, { stroke: '#eaf6ff', strokeWidth: 1.4, roughness: 1 })
+        )}
       />
       <Ink
         d={gen.polygon(
@@ -371,17 +368,12 @@ function HiddenCostsAiWriting() {
         $
       </text>
       {[
-        [78, 84, 0],
-        [122, 80, 0.9],
-        [94, 90, 1.6],
-      ].map(([bx, by, d]) => (
-        <motion.circle
+        [78, 84, 0, 65],
+        [122, 80, 0.9, 66],
+        [94, 90, 1.6, 67],
+      ].map(([bx, by, d, sd]) => (
+        <motion.g
           key={bx}
-          cx={bx}
-          cy={by}
-          r='1.6'
-          fill='#eaf6ff'
-          opacity='0.6'
           animate={{ y: [0, -15], opacity: [0, 0.6, 0] }}
           transition={{
             duration: 2.8,
@@ -389,7 +381,16 @@ function HiddenCostsAiWriting() {
             ease: 'easeOut',
             delay: d,
           }}
-        />
+        >
+          <Ink
+            d={gen.circle(
+              bx,
+              by,
+              3.2,
+              filled(sd, '#eaf6ff', { fillStyle: 'solid', strokeWidth: 0.8 })
+            )}
+          />
+        </motion.g>
       ))}
     </Frame>
   );
@@ -456,15 +457,7 @@ function SoloFounding() {
           filled(75, '#94ac78', { hachureGap: 3 })
         )}
       />
-      <motion.path
-        d={trail}
-        fill='none'
-        stroke='#6f8a4f'
-        strokeWidth='1.8'
-        strokeDasharray='3 7'
-        animate={{ strokeDashoffset: [0, -22] }}
-        transition={linear(1.9)}
-      />
+      <RoughDash d={trail} c='#6f8a4f' w={1.8} dash='3 7' dur={1.9} seed={80} />
       <motion.g animate={{ y: [0, -1.4, 0] }} transition={loop(1.9)}>
         <Ink
           d={gen.circle(
@@ -510,8 +503,6 @@ function ReactServerComponents() {
       </defs>
       <Twinkle x={28} y={22} d={0.2} c='#8fb2dd' />
       <Twinkle x={168} y={18} d={0.9} c='#8fb2dd' />
-      <Twinkle x={150} y={40} d={1.4} c='#8fb2dd' />
-      <Twinkle x={44} y={48} d={0.6} c='#8fb2dd' />
       <Ink
         d={gen.path(
           'M0 88 Q100 66 200 88 L200 100 L0 100 Z',

@@ -33,13 +33,11 @@ export default function Scene() {
         </linearGradient>
       </defs>
 
-      {/* warm depth: low sun glow + soft far clouds */}
+      {/* warm depth: low sun glow + a soft far cloud */}
       <circle cx='38' cy='26' r='40' fill='url(#gt26_glow)' />
       <Cloud x={150} y={22} s={0.8} o={0.4} />
-      <Cloud x={64} y={70} s={0.7} o={0.3} />
       <Twinkle x={170} y={18} c='#e0a83f' />
       <Twinkle x={24} y={50} d={0.8} c='#cf9836' />
-      <Twinkle x={184} y={46} d={1.3} c='#e0a83f' />
 
       {/* far workbench / shelf line for ground */}
       <Ink
@@ -162,16 +160,12 @@ export default function Scene() {
 
       {/* a couple of sparks rising from the funnel — growth lifting off */}
       {[
-        [160, 66, 0],
-        [156, 64, 0.7],
-        [164, 64, 1.3],
-      ].map(([sx, sy, d]) => (
-        <motion.circle
+        [160, 66, 0, 330],
+        [156, 64, 0.7, 331],
+        [164, 64, 1.3, 332],
+      ].map(([sx, sy, d, sd]) => (
+        <motion.g
           key={sx}
-          cx={sx}
-          cy={sy}
-          r='1.3'
-          fill='#cf9836'
           animate={{ y: [0, -10], opacity: [0, 0.85, 0] }}
           transition={{
             duration: 2.6,
@@ -179,7 +173,16 @@ export default function Scene() {
             ease: 'easeOut',
             delay: d,
           }}
-        />
+        >
+          <Ink
+            d={gen.circle(
+              sx,
+              sy,
+              2.6,
+              filled(sd, '#cf9836', { fillStyle: 'solid', strokeWidth: 0.8 })
+            )}
+          />
+        </motion.g>
       ))}
     </Frame>
   );

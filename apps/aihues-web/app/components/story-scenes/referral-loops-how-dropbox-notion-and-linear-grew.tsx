@@ -4,6 +4,7 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
@@ -48,24 +49,20 @@ export default function Scene() {
 
       <Twinkle x={28} y={22} c='#cf9836' />
       <Twinkle x={176} y={28} d={0.7} c='#e0a83f' />
-      <Twinkle x={170} y={74} d={1.2} c='#94ac78' />
-      <Twinkle x={24} y={78} d={0.4} c='#cf9836' />
       <Cloud x={150} y={20} s={0.7} o={0.4} />
-      <Cloud x={42} y={88} s={0.8} o={0.35} />
 
       {/* soft expanding-reach ring behind the loop */}
       <circle cx='100' cy='56' r='56' fill='url(#rl_ring)' />
 
       {/* the closed referral loop — flowing dashes = the invite passing onward */}
-      <motion.path
+      <RoughDash
         d={RL_LOOP}
-        fill='none'
-        stroke='#d99a3f'
-        strokeWidth='1.6'
-        strokeDasharray='2 6'
-        opacity='0.85'
-        animate={{ strokeDashoffset: [0, -32] }}
-        transition={linear(2.4)}
+        c='#d99a3f'
+        w={1.6}
+        dur={2.4}
+        seed={313}
+        dash='2 6'
+        o={0.85}
       />
 
       {/* sketched underdrawing of the loop for hand-drawn texture */}
@@ -102,16 +99,20 @@ export default function Scene() {
       </motion.g>
 
       {/* an outward ripple from the seed — referral reaching new people */}
-      <motion.circle
-        cx='100'
-        cy='56'
-        r='12'
-        fill='none'
-        stroke='#e2693f'
-        strokeWidth='1.2'
-        animate={{ r: [12, 30], opacity: [0.55, 0] }}
+      <motion.g
+        animate={{ scale: [1, 2.5], opacity: [0.55, 0] }}
         transition={linear(2.8)}
-      />
+        style={{ transformOrigin: '100px 56px' }}
+      >
+        <Ink
+          d={gen.circle(
+            100,
+            56,
+            12,
+            stroke(314, { stroke: '#e2693f', strokeWidth: 1.2, roughness: 1.5 })
+          )}
+        />
+      </motion.g>
 
       {/* the bloomed referral nodes — each generation smaller, farther along */}
       {NODES.map(([x, y, dia, color, seed, delay]) => (

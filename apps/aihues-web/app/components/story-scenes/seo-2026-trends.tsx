@@ -4,11 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -41,10 +41,8 @@ export default function Scene() {
       </defs>
 
       <Cloud x={52} y={24} s={0.8} o={0.4} />
-      <Cloud x={158} y={50} s={0.62} o={0.32} />
       <Twinkle x={26} y={22} c='#cf9836' />
       <Twinkle x={118} y={16} d={0.6} c='#e0a83f' />
-      <Twinkle x={184} y={36} d={1.1} c='#cf9836' />
 
       {/* distant ground swell for depth */}
       <Ink
@@ -80,16 +78,8 @@ export default function Scene() {
         />
       </motion.g>
 
-      {/* search-path arcs converging out of the scattered field toward the star */}
-      <motion.path
-        d={path}
-        fill='none'
-        stroke='#cf9836'
-        strokeWidth='1.6'
-        strokeDasharray='2 6'
-        animate={{ strokeDashoffset: [0, -16] }}
-        transition={linear(1.7)}
-      />
+      {/* search-path arc converging out of the scattered field toward the star */}
+      <RoughDash d={path} c='#cf9836' w={1.6} dur={1.7} seed={303} dash='2 6' />
 
       {/* scattered, fading keyword tiles being left behind */}
       {tiles.map(([tx, ty, rot], i) => (
@@ -127,7 +117,20 @@ export default function Scene() {
       ))}
 
       {/* the compass dial on the ground, mid-foreground */}
-      <ellipse cx='100' cy='80' rx='22' ry='6' fill={INK} opacity='0.08' />
+      <Ink
+        d={gen.ellipse(
+          100,
+          80,
+          44,
+          12,
+          filled(336, INK, {
+            fillStyle: 'solid',
+            stroke: 'none',
+            strokeWidth: 0,
+            roughness: 1.5,
+          })
+        )}
+      />
       <circle cx='100' cy='70' r='22' fill='url(#seo26_dial)' />
       <Ink
         d={gen.circle(

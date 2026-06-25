@@ -31,9 +31,7 @@ export default function Scene() {
       <circle cx='104' cy='30' r='40' fill='url(#dbidd_glow)' />
       <Twinkle x={36} y={22} c='#cf9836' />
       <Twinkle x={172} y={28} d={0.8} c='#e0a83f' />
-      <Twinkle x={150} y={16} d={1.3} c='#cf9836' r={0.9} />
       <Cloud x={48} y={24} s={0.8} o={0.4} />
-      <Cloud x={160} y={40} s={0.6} o={0.32} />
 
       {/* deepening foundation strata — widest/deepest at the bottom (scale later) */}
       <Ink
@@ -66,18 +64,15 @@ export default function Scene() {
       />
 
       {/* query pulses trickling down through the foundations */}
-      {[
-        [82, 70, 0],
-        [100, 72, 0.7],
-        [118, 70, 1.4],
-      ].map(([px, py, d]) => (
-        <motion.circle
+      {(
+        [
+          [82, 70, 0, 341],
+          [100, 72, 0.7, 342],
+          [118, 70, 1.4, 343],
+        ] as const
+      ).map(([px, py, d, sd]) => (
+        <motion.g
           key={px}
-          cx={px}
-          cy={py}
-          r='1.4'
-          fill='#e0a83f'
-          opacity='0.7'
           animate={{ y: [0, 18], opacity: [0, 0.7, 0] }}
           transition={{
             duration: 2.6,
@@ -86,11 +81,33 @@ export default function Scene() {
             delay: d,
           }}
           style={{ transformOrigin: `${px}px ${py}px` }}
-        />
+        >
+          <Ink
+            d={gen.circle(
+              px,
+              py,
+              2.8,
+              filled(sd, '#e0a83f', { fillStyle: 'solid', strokeWidth: 0.8 })
+            )}
+          />
+        </motion.g>
       ))}
 
       {/* the database vessel on the top slab (start simple) */}
-      <ellipse cx='100' cy='80' rx='18' ry='3.2' fill={INK} opacity='0.1' />
+      <Ink
+        d={gen.ellipse(
+          100,
+          80,
+          36,
+          6.4,
+          filled(304, INK, {
+            fillStyle: 'solid',
+            strokeWidth: 0,
+            roughness: 1.4,
+            seed: 304,
+          })
+        )}
+      />
       <motion.g
         animate={{ y: [0, -1.4, 0] }}
         transition={loop(3)}

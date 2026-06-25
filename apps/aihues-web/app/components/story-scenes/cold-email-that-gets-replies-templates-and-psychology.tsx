@@ -5,11 +5,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -51,9 +51,7 @@ export default function Scene() {
 
       <Twinkle x={36} y={20} c='#cf9836' />
       <Twinkle x={174} y={26} d={0.8} c='#e0a83f' />
-      <Twinkle x={120} y={16} d={1.4} c='#cf9836' />
       <Cloud x={150} y={28} s={0.8} o={0.4} />
-      <Cloud x={44} y={40} s={0.65} o={0.32} />
 
       {/* hazy ground — the indistinct mass of ignored mail */}
       <Ink
@@ -97,14 +95,13 @@ export default function Scene() {
       <circle cx='100' cy='46' r='34' fill={`url(#${cold}_glow)`} />
 
       {/* the reply, arcing back from the open envelope */}
-      <motion.path
+      <RoughDash
         d='M100 44 Q72 32 50 40'
-        fill='none'
-        stroke='#c2502e'
-        strokeWidth='1.3'
-        strokeDasharray='2 6'
-        animate={{ strokeDashoffset: [0, -16] }}
-        transition={linear(1.7)}
+        c='#c2502e'
+        w={1.3}
+        dur={1.7}
+        dash='2 6'
+        seed={370}
       />
 
       {/* the one envelope that earned a reply — lifted, open, terracotta */}
@@ -113,7 +110,16 @@ export default function Scene() {
         transition={loop(2.8)}
         style={{ transformOrigin: '100px 50px' }}
       >
-        <ellipse cx='100' cy='66' rx='17' ry='3.5' fill={INK} opacity='0.1' />
+        <Ink
+          d={gen.ellipse(100, 66, 34, 7, {
+            fill: INK,
+            fillStyle: 'solid',
+            stroke: 'none',
+            strokeWidth: 0,
+            roughness: 1.4,
+            seed: 367,
+          })}
+        />
         {/* envelope body */}
         <Ink
           d={gen.rectangle(

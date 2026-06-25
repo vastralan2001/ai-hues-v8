@@ -8,7 +8,7 @@ import {
   filled,
   stroke,
   loop,
-  linear,
+  RoughDash,
   INK,
   motion,
 } from './_kit';
@@ -46,9 +46,7 @@ export default function Scene() {
 
       <Twinkle x={36} y={22} c='#cf9836' />
       <Twinkle x={184} y={26} d={0.7} c='#e0a83f' />
-      <Twinkle x={22} y={46} d={1.2} c='#cf9836' r={0.9} />
       <Cloud x={56} y={24} s={0.8} o={0.4} />
-      <Cloud x={172} y={64} s={0.6} o={0.32} />
 
       {/* far horizon haze band */}
       <Ink
@@ -96,14 +94,18 @@ export default function Scene() {
 
       {/* sea */}
       <rect x='0' y='66' width='200' height='34' fill='url(#vcsail_sea)' />
-      <line
-        x1='0'
-        y1='66'
-        x2='200'
-        y2='66'
-        stroke='#eef6f3'
-        strokeWidth='1.2'
-        opacity='0.65'
+      <Ink
+        d={gen.line(
+          0,
+          66,
+          200,
+          66,
+          stroke(310, {
+            stroke: '#eef6f3',
+            strokeWidth: 1.2,
+            roughness: 1,
+          })
+        )}
       />
 
       {/* drifting swell lines */}
@@ -131,15 +133,14 @@ export default function Scene() {
       ))}
 
       {/* wake trail behind the sailboat — its own steady progress */}
-      <motion.path
+      <RoughDash
         d='M150 80 Q132 78 116 76'
-        fill='none'
-        stroke='#eef6f3'
-        strokeWidth='1.6'
-        opacity='0.6'
-        strokeDasharray='2 6'
-        animate={{ strokeDashoffset: [0, 16] }}
-        transition={linear(1.8)}
+        c='#eef6f3'
+        w={1.6}
+        dur={1.8}
+        dash='2 6'
+        o={0.6}
+        seed={330}
       />
 
       {/* the self-sustaining sailboat — wind-powered, moving forward */}
@@ -189,9 +190,6 @@ export default function Scene() {
           )}
         />
       </motion.g>
-
-      {/* small wind spark by the sail */}
-      <Twinkle x={132} y={50} d={0.4} c='#e2693f' r={1} />
     </Frame>
   );
 }

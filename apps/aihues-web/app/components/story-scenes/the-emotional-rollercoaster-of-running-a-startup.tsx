@@ -4,11 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -40,9 +40,7 @@ export default function Scene() {
 
       <Twinkle x={34} y={18} c='#e0a83f' />
       <Twinkle x={150} y={20} d={0.7} c='#cf9836' />
-      <Twinkle x={184} y={40} d={1.2} c='#e0a83f' r={1.2} />
       <Cloud x={158} y={64} s={0.78} o={0.4} />
-      <Cloud x={30} y={52} s={0.62} o={0.32} />
 
       {/* far hills for depth */}
       <Ink
@@ -108,15 +106,14 @@ export default function Scene() {
       />
 
       {/* a faint motion sheen sliding along the rail */}
-      <motion.path
+      <RoughDash
         d={RAIL}
-        fill='none'
-        stroke='#fff'
-        strokeWidth='1.6'
-        opacity='0.5'
-        strokeDasharray='2 11'
-        animate={{ strokeDashoffset: [0, -26] }}
-        transition={linear(1.8)}
+        c='#fff'
+        w={1.6}
+        dur={1.8}
+        dash='2 11'
+        o={0.5}
+        seed={314}
       />
 
       {/* peak marker flag at the crest */}

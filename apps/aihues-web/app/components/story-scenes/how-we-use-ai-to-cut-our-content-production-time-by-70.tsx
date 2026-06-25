@@ -5,6 +5,7 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
@@ -35,18 +36,12 @@ export default function Scene() {
           <stop offset='0%' stopColor='#fff4d6' stopOpacity='0.95' />
           <stop offset='100%' stopColor='#fff4d6' stopOpacity='0' />
         </radialGradient>
-        <linearGradient id='c70_belt' x1='0' y1='0' x2='1' y2='0'>
-          <stop offset='0%' stopColor='#cf9836' />
-          <stop offset='100%' stopColor='#94ac78' />
-        </linearGradient>
       </defs>
 
       {/* sky accents + depth */}
       <Twinkle x={28} y={20} c='#cf9836' />
       <Twinkle x={176} y={26} d={0.8} c='#e0a83f' />
-      <Twinkle x={148} y={14} d={1.3} c='#cf9836' />
       <Cloud x={52} y={24} s={0.8} o={0.4} />
-      <Cloud x={158} y={40} s={0.6} o={0.32} />
 
       {/* far horizon hill for depth */}
       <Ink
@@ -78,15 +73,7 @@ export default function Scene() {
         )}
       />
       {/* fast dashed flow on the belt — the 70% speed-up */}
-      <motion.path
-        d={belt}
-        fill='none'
-        stroke='url(#c70_belt)'
-        strokeWidth='2.2'
-        strokeDasharray='2 7'
-        animate={{ strokeDashoffset: [0, -27] }}
-        transition={linear(1.1)}
-      />
+      <RoughDash d={belt} c='#cf9836' w={2.2} dur={1.1} seed={442} dash='2 7' />
 
       {/* pages riding the belt, drifting subtly */}
       {pages.map((p, i) => (
@@ -260,8 +247,6 @@ export default function Scene() {
           />
         </g>
       </motion.g>
-
-      <Twinkle x={100} y={24} d={0.4} c='#e0a83f' r={1} />
     </Frame>
   );
 }

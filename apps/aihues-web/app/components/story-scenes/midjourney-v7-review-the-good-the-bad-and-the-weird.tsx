@@ -5,11 +5,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -38,11 +38,7 @@ export default function Scene() {
       </defs>
 
       {/* sky depth */}
-      <Twinkle x={30} y={22} c='#cf9836' />
-      <Twinkle x={176} y={30} d={0.8} c='#e2693f' />
-      <Twinkle x={148} y={16} d={1.3} c='#cf9836' />
       <Cloud x={52} y={26} s={0.85} o={0.4} />
-      <Cloud x={158} y={62} s={0.7} o={0.3} />
 
       {/* far horizon hill for ground */}
       <Ink
@@ -56,14 +52,13 @@ export default function Scene() {
       <circle cx='44' cy='58' r='22' fill={`url(#${mj}_glow)`} />
 
       {/* dashed prompt-thread from seed into the render frame */}
-      <motion.path
+      <RoughDash
         d='M50 58 Q72 56 84 56'
-        fill='none'
-        stroke='#cf9836'
-        strokeWidth='1.4'
-        strokeDasharray='2 5'
-        animate={{ strokeDashoffset: [0, -14] }}
-        transition={linear(1.5)}
+        c='#cf9836'
+        w={1.4}
+        dur={1.5}
+        dash='2 5'
+        seed={320}
       />
 
       {/* the prompt-seed itself: a small four-point spark (the input idea) */}
@@ -95,7 +90,21 @@ export default function Scene() {
         transition={loop(3)}
         style={{ transformOrigin: '112px 58px' }}
       >
-        <ellipse cx='112' cy='84' rx='28' ry='4' fill={INK} opacity='0.08' />
+        <g opacity='0.1'>
+          <Ink
+            d={gen.ellipse(
+              112,
+              84,
+              56,
+              8,
+              filled(321, INK, {
+                fillStyle: 'solid',
+                stroke: 'none',
+                roughness: 1.6,
+              })
+            )}
+          />
+        </g>
 
         {/* frame easel legs */}
         <Ink d={gen.line(98, 78, 94, 88, stroke(303, { strokeWidth: 1.2 }))} />

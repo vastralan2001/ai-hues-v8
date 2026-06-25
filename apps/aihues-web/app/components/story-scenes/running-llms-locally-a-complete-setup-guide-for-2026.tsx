@@ -4,6 +4,7 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
@@ -36,9 +37,7 @@ export default function Scene() {
       {/* far sky accents */}
       <Twinkle x={30} y={20} c='#b8a9d6' />
       <Twinkle x={176} y={26} d={0.8} c='#cf9836' />
-      <Twinkle x={150} y={14} d={1.3} c='#b8a9d6' />
       <Cloud x={158} y={60} s={0.7} o={0.4} />
-      <Cloud x={42} y={50} s={0.85} o={0.4} />
 
       {/* layered dusk hills for depth */}
       <Ink
@@ -111,15 +110,14 @@ export default function Scene() {
       </motion.g>
 
       {/* a thin wisp tethering the galaxy to the chimney */}
-      <motion.path
+      <RoughDash
         d='M84 39 Q80 50 78 60'
-        fill='none'
-        stroke='#9b6db0'
-        strokeWidth='1.2'
-        opacity='0.5'
-        strokeDasharray='1.5 4'
-        animate={{ strokeDashoffset: [0, -11] }}
-        transition={linear(1.8)}
+        c='#9b6db0'
+        w={1.2}
+        dur={1.8}
+        dash='1.5 4'
+        o={0.5}
+        seed={306}
       />
 
       {/* the cabin on home soil — small focal subject */}
@@ -198,14 +196,6 @@ export default function Scene() {
         />
         <Ink d={gen.line(108, 71, 110, 67, stroke(332, { strokeWidth: 1 }))} />
       </motion.g>
-
-      {/* a couple of stray stars settling down toward the roof */}
-      {[
-        [100, 36, 0],
-        [62, 44, 0.7],
-      ].map(([sx, sy, dl]) => (
-        <Twinkle key={sx} x={sx} y={sy} d={dl} c='#cf9836' r={1.2} />
-      ))}
     </Frame>
   );
 }

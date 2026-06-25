@@ -4,11 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -36,9 +36,7 @@ export default function Scene() {
       {/* far atmosphere */}
       <Twinkle x={30} y={22} c='#cf9836' />
       <Twinkle x={176} y={24} d={0.7} c='#e0a83f' />
-      <Twinkle x={150} y={16} d={1.2} c='#cf9836' r={0.9} />
       <Cloud x={44} y={70} s={0.8} o={0.4} />
-      <Cloud x={158} y={78} s={0.7} o={0.32} />
 
       {/* low horizon band for depth */}
       <Ink
@@ -55,30 +53,16 @@ export default function Scene() {
         opacity='0.9'
       />
 
-      {/* code lines materializing ahead of the cursor inside the beam */}
-      {[
-        { y: 38, len: 30, dur: 1.6, dl: 0 },
-        { y: 44, len: 22, dur: 1.9, dl: 0.4 },
-        { y: 56, len: 26, dur: 1.7, dl: 0.7 },
-        { y: 62, len: 18, dur: 2.1, dl: 0.2 },
-      ].map((l, i) => (
-        <motion.line
-          key={l.y}
-          x1={120}
-          y1={l.y}
-          x2={120 + l.len}
-          y2={l.y}
-          stroke='#c2502e'
-          strokeWidth='1.6'
-          strokeDasharray='2 5'
-          opacity={0.55 - i * 0.06}
-          animate={{
-            strokeDashoffset: [0, -14],
-            opacity: [0.15, 0.55 - i * 0.06, 0.15],
-          }}
-          transition={linear(l.dur)}
-        />
-      ))}
+      {/* code line materializing ahead of the cursor inside the beam */}
+      <RoughDash
+        d='M120 41 L150 41 M120 50 L142 50 M120 59 L146 59'
+        c='#c2502e'
+        w={1.6}
+        dur={1.7}
+        seed={314}
+        dash='2 5'
+        o={0.5}
+      />
 
       {/* glow halo behind the editor surface */}
       <circle cx='86' cy='50' r='34' fill='url(#cur_glow)' />
@@ -89,7 +73,21 @@ export default function Scene() {
         transition={loop(3)}
         style={{ transformOrigin: '70px 50px' }}
       >
-        <ellipse cx='70' cy='78' rx='26' ry='4' fill={INK} opacity='0.1' />
+        <g opacity='0.1'>
+          <Ink
+            d={gen.ellipse(
+              70,
+              78,
+              52,
+              8,
+              filled(315, INK, {
+                fillStyle: 'solid',
+                stroke: 'none',
+                roughness: 1.4,
+              })
+            )}
+          />
+        </g>
         <Ink
           d={gen.rectangle(
             44,
@@ -215,11 +213,6 @@ export default function Scene() {
           />
         </motion.g>
       </motion.g>
-
-      {/* sparks at the bright leading edge of the beam */}
-      <Twinkle x={170} y={40} d={0.3} c='#f0b449' r={1.3} />
-      <Twinkle x={166} y={58} d={0.9} c='#e0a83f' r={1} />
-      <Twinkle x={182} y={50} d={1.5} c='#cf9836' r={0.9} />
     </Frame>
   );
 }

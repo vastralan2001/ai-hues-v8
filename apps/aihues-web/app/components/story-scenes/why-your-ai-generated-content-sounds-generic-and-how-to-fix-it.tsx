@@ -4,11 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -44,7 +44,6 @@ export default function Scene() {
       </defs>
 
       <Cloud x={44} y={22} s={0.8} o={0.4} />
-      <Cloud x={156} y={30} s={0.7} o={0.34} />
       <Twinkle x={30} y={18} c='#b9c4cf' />
       <Twinkle x={176} y={20} d={0.7} c='#b9c4cf' />
 
@@ -81,19 +80,14 @@ export default function Scene() {
       <circle cx='112' cy='58' r='30' fill='url(#vg_warm)' />
 
       {/* the stream of your own voice descending into the focal jar */}
-      <motion.path
+      <RoughDash
         d='M112 18 Q110 34 112 50'
-        fill='none'
-        stroke='url(#vg_stream)'
-        strokeWidth='2'
-        strokeLinecap='round'
-        strokeDasharray='3 6'
-        animate={{ strokeDashoffset: [0, -18] }}
-        transition={linear(1.6)}
+        c='url(#vg_stream)'
+        w={2}
+        dur={1.6}
+        dash='3 6'
+        seed={310}
       />
-      <Twinkle x={112} y={16} d={0} r={1.4} c='#e0a83f' />
-      <Twinkle x={108} y={28} d={0.5} r={1} c='#e2693f' />
-      <Twinkle x={116} y={40} d={1} r={1} c='#cf9836' />
 
       {/* the focal vessel — hand-glazed terracotta, distinctly itself */}
       <motion.g
@@ -101,7 +95,20 @@ export default function Scene() {
         transition={loop(2.6)}
         style={{ transformOrigin: '112px 64px' }}
       >
-        <ellipse cx='112' cy='78' rx='13' ry='3' fill={INK} opacity='0.12' />
+        <Ink
+          d={gen.ellipse(
+            112,
+            78,
+            26,
+            6,
+            filled(319, INK, {
+              fillStyle: 'solid',
+              stroke: 'none',
+              roughness: 1.4,
+              seed: 319,
+            })
+          )}
+        />
         <Ink
           d={gen.path(
             'M101 50 Q97 36 105 32 Q101 28 108 26 L116 26 Q123 28 119 32 Q127 36 123 50 Q132 60 123 70 Q112 78 101 70 Q92 60 101 50 Z',

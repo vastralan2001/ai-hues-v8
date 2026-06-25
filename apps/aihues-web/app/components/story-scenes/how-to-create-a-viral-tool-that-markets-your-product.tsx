@@ -4,11 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -17,10 +17,6 @@ export default function Scene() {
   return (
     <Frame sky={['#fcf3e6', '#f4dcc4']}>
       <defs>
-        <radialGradient id='viral_pull' cx='50%' cy='50%' r='50%'>
-          <stop offset='0%' stopColor='#fff1d8' stopOpacity='0.85' />
-          <stop offset='100%' stopColor='#fff1d8' stopOpacity='0' />
-        </radialGradient>
         <radialGradient id='viral_gem' cx='50%' cy='40%' r='60%'>
           <stop offset='0%' stopColor='#fbe7c5' stopOpacity='0.9' />
           <stop offset='100%' stopColor='#fbe7c5' stopOpacity='0' />
@@ -28,10 +24,7 @@ export default function Scene() {
       </defs>
 
       <Twinkle x={28} y={20} c='#cf9836' />
-      <Twinkle x={176} y={24} d={0.9} c='#e0a83f' />
-      <Twinkle x={158} y={68} d={1.4} c='#cf9836' r={0.9} />
       <Cloud x={44} y={22} s={0.78} o={0.4} />
-      <Cloud x={150} y={30} s={0.62} o={0.32} />
 
       {/* soft ground band for depth */}
       <Ink
@@ -42,7 +35,6 @@ export default function Scene() {
       />
 
       {/* the free tool — a horseshoe magnet up on the left, the attractor */}
-      <circle cx='66' cy='42' r='30' fill='url(#viral_pull)' />
       <motion.g
         animate={{ rotate: [-4, 4, -4] }}
         transition={loop(3)}
@@ -108,24 +100,16 @@ export default function Scene() {
         </motion.g>
       ))}
 
-      {/* converging field lines — qualified traffic funnelling down to the product */}
-      {[
-        'M96 40 Q104 50 110 58',
-        'M118 30 Q116 46 110 58',
-        'M138 44 Q126 52 110 58',
-      ].map((d, i) => (
-        <motion.path
-          key={d}
-          d={d}
-          fill='none'
-          stroke='#cf9836'
-          strokeWidth='1.4'
-          strokeDasharray='2 6'
-          opacity='0.7'
-          animate={{ strokeDashoffset: [0, -16] }}
-          transition={linear(1.5 + i * 0.2)}
-        />
-      ))}
+      {/* converging field line — qualified traffic funnelling down to the product */}
+      <RoughDash
+        d='M118 30 Q116 46 110 58'
+        c='#cf9836'
+        w={1.4}
+        dur={1.6}
+        seed={320}
+        dash='2 6'
+        o={0.7}
+      />
 
       {/* the paid product — a single faceted gem the traffic feeds, at the base */}
       <circle cx='110' cy='66' r='22' fill='url(#viral_gem)' />
@@ -134,7 +118,19 @@ export default function Scene() {
         transition={loop(2.4)}
         style={{ transformOrigin: '110px 66px' }}
       >
-        <ellipse cx='110' cy='82' rx='16' ry='3.2' fill={INK} opacity='0.1' />
+        <Ink
+          d={gen.ellipse(
+            110,
+            82,
+            32,
+            6.4,
+            filled(308, INK, {
+              fillStyle: 'solid',
+              stroke: INK,
+              strokeWidth: 0.4,
+            })
+          )}
+        />
         <Ink
           d={gen.polygon(
             [

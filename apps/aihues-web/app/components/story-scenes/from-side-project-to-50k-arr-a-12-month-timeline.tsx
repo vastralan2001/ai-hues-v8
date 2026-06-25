@@ -5,11 +5,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -44,10 +44,8 @@ export default function Scene() {
       <circle cx='184' cy='20' r='40' fill='url(#s50k_dawn)' />
 
       <Twinkle x={36} y={20} c='#cf9836' />
-      <Twinkle x={102} y={14} d={0.7} c='#e0a83f' />
       <Twinkle x={170} y={40} d={1.2} c='#cf9836' />
       <Cloud x={56} y={28} s={0.78} o={0.4} />
-      <Cloud x={146} y={62} s={0.62} o={0.32} />
 
       {/* rising ground band */}
       <Ink
@@ -56,14 +54,14 @@ export default function Scene() {
           filled(301, '#e6cf9a', { roughness: 1.5, hachureGap: 3.6 })
         )}
       />
-      <line
-        x1='0'
-        y1='86'
-        x2='200'
-        y2='70'
-        stroke='#f3e3bd'
-        strokeWidth='1'
-        opacity='0.6'
+      <Ink
+        d={gen.line(0, 86, 200, 70, {
+          stroke: '#f3e3bd',
+          strokeWidth: 1,
+          roughness: 1.4,
+          bowing: 1.2,
+          seed: 305,
+        })}
       />
 
       {/* the twelve milestone posts, climbing */}
@@ -105,14 +103,13 @@ export default function Scene() {
       })}
 
       {/* progress thread weaving up through the posts */}
-      <motion.path
+      <RoughDash
         d={THREAD}
-        fill='none'
-        stroke='#d99a3f'
-        strokeWidth='1.6'
-        strokeDasharray='2 6'
-        animate={{ strokeDashoffset: [0, -16] }}
-        transition={linear(1.7)}
+        c='#d99a3f'
+        w={1.6}
+        dur={1.7}
+        dash='2 6'
+        seed={306}
       />
 
       {/* the summit post: a flag crowning the final ($50K) marker */}

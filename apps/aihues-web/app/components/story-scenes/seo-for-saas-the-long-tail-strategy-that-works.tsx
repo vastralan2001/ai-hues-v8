@@ -4,11 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -38,10 +38,6 @@ export default function Scene() {
   return (
     <Frame sky={['#f3eee0', '#ead7bd']}>
       <defs>
-        <radialGradient id='ltsaas_sun' cx='50%' cy='50%' r='50%'>
-          <stop offset='0%' stopColor='#f6e4b8' stopOpacity='0.85' />
-          <stop offset='100%' stopColor='#f6e4b8' stopOpacity='0' />
-        </radialGradient>
         <radialGradient id='ltsaas_head' cx='50%' cy='50%' r='50%'>
           <stop offset='0%' stopColor='#fbe6cf' stopOpacity='0.95' />
           <stop offset='100%' stopColor='#fbe6cf' stopOpacity='0' />
@@ -49,7 +45,18 @@ export default function Scene() {
       </defs>
 
       {/* distant generic-keyword "sun" — huge, glowing, unreachable on the horizon */}
-      <circle cx='32' cy='84' r='40' fill='url(#ltsaas_sun)' />
+      <Ink
+        d={gen.circle(
+          32,
+          86,
+          38,
+          filled(300, '#f3dca6', {
+            fillStyle: 'solid',
+            strokeWidth: 0,
+            roughness: 1.8,
+          })
+        )}
+      />
       <Ink
         d={gen.circle(
           32,
@@ -59,9 +66,8 @@ export default function Scene() {
         )}
       />
 
-      {/* depth: a soft low ridge and a couple of clouds */}
+      {/* depth: a soft low ridge and a cloud */}
       <Cloud x={158} y={20} s={0.7} o={0.4} />
-      <Cloud x={108} y={16} s={0.55} o={0.32} />
       <Ink
         d={gen.path(
           'M0 88 Q70 80 200 90 L200 100 L0 100 Z',
@@ -76,32 +82,38 @@ export default function Scene() {
       {/* faint twinkles at the edges */}
       <Twinkle x={184} y={26} d={0.4} c='#cf9836' />
       <Twinkle x={20} y={32} d={1.1} c='#e0a83f' />
-      <Twinkle x={172} y={58} d={0.8} c='#cf9836' r={0.9} />
 
-      {/* the long tail — a flowing dashed arc the sparks ride along */}
-      <motion.path
+      {/* the long tail — a rough flowing dashed arc the sparks ride along */}
+      <RoughDash
         d={tailPath}
-        fill='none'
-        stroke='#cf9836'
-        strokeWidth='1.4'
-        strokeDasharray='1.5 6'
-        opacity='0.45'
-        animate={{ strokeDashoffset: [0, -15] }}
-        transition={linear(1.8)}
+        c='#cf9836'
+        w={1.4}
+        dur={1.8}
+        dash='1.5 6'
+        seed={306}
+        o={0.45}
       />
 
       {/* the diminishing sparks: many small niche keywords summing into the tail */}
       {TAIL.map((t, i) => (
-        <motion.circle
+        <motion.g
           key={i}
-          cx={t.x}
-          cy={t.y}
-          r={t.r}
-          fill={i % 2 === 0 ? '#e0a83f' : '#c2502e'}
           animate={{ opacity: [t.op * 0.4, t.op, t.op * 0.4] }}
           transition={loop(2.2, t.d)}
           style={{ transformOrigin: `${t.x}px ${t.y}px` }}
-        />
+        >
+          <Ink
+            d={gen.circle(
+              t.x,
+              t.y,
+              t.r * 2,
+              filled(310 + i, i % 2 === 0 ? '#e0a83f' : '#c2502e', {
+                fillStyle: 'solid',
+                strokeWidth: 0,
+              })
+            )}
+          />
+        </motion.g>
       ))}
 
       {/* the comet head — one focused "best X software" keyword, small but bright */}

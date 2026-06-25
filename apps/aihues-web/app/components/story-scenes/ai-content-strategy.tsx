@@ -8,7 +8,7 @@ import {
   filled,
   stroke,
   loop,
-  linear,
+  RoughDash,
   INK,
   motion,
 } from './_kit';
@@ -33,18 +33,12 @@ export default function Scene() {
           <stop offset='0%' stopColor='#fff6e3' stopOpacity='0.9' />
           <stop offset='100%' stopColor='#fff6e3' stopOpacity='0' />
         </radialGradient>
-        <linearGradient id='acs_channel' x1='0' y1='0' x2='0' y2='1'>
-          <stop offset='0%' stopColor='#cfe0d0' />
-          <stop offset='100%' stopColor='#9cbf9e' />
-        </linearGradient>
       </defs>
 
       <circle cx='52' cy='26' r='40' fill='url(#acs_glow)' />
       <Twinkle x={36} y={20} c='#cf9836' />
       <Twinkle x={176} y={22} d={0.7} c='#e0a83f' />
-      <Twinkle x={108} y={16} d={1.2} c='#cf9836' r={0.9} />
       <Cloud x={150} y={28} s={0.7} o={0.4} />
-      <Cloud x={64} y={40} s={0.55} o={0.3} />
 
       {/* the channel — the current that carries content downstream */}
       <Ink
@@ -57,25 +51,22 @@ export default function Scene() {
           })
         )}
       />
-      <rect
-        x='40'
-        y='72'
-        width='160'
-        height='28'
-        fill='url(#acs_channel)'
-        opacity='0.5'
+      <Ink
+        d={gen.rectangle(
+          40,
+          72,
+          160,
+          28,
+          filled(605, '#9cbf9e', {
+            fillStyle: 'solid',
+            roughness: 1.5,
+            strokeWidth: 0.8,
+          })
+        )}
       />
 
       {/* the flowing current line — source to many */}
-      <motion.path
-        d={flow}
-        fill='none'
-        stroke='#7f9e7f'
-        strokeWidth='1.6'
-        strokeDasharray='2 6'
-        animate={{ strokeDashoffset: [0, -16] }}
-        transition={linear(1.7)}
-      />
+      <RoughDash d={flow} c='#7f9e7f' w={1.6} dur={1.7} dash='2 6' seed={606} />
 
       {/* the single human source — a quill nib over the channel */}
       <motion.g
@@ -107,14 +98,19 @@ export default function Scene() {
       </motion.g>
 
       {/* the ink drop — the seed of the current */}
-      <motion.circle
-        cx='58'
-        cy='52'
-        r='1.7'
-        fill='#c2502e'
-        animate={{ cy: [52, 64, 52], opacity: [0.9, 0, 0.9] }}
+      <motion.g
+        animate={{ y: [0, 12, 0], opacity: [0.9, 0, 0.9] }}
         transition={{ duration: 2.2, repeat: Infinity, ease: 'easeIn' }}
-      />
+      >
+        <Ink
+          d={gen.circle(
+            58,
+            52,
+            3.4,
+            filled(607, '#c2502e', { fillStyle: 'solid' })
+          )}
+        />
+      </motion.g>
 
       {/* the fan of outputs — many sheets, each its own */}
       {fan.map((s, i) => (
@@ -125,14 +121,21 @@ export default function Scene() {
           style={{ transformOrigin: `${s.x}px ${s.y}px` }}
         >
           <g transform={`rotate(${s.rot} ${s.x} ${s.y})`}>
-            <ellipse
-              cx={s.x}
-              cy={s.y + 14}
-              rx='8'
-              ry='2'
-              fill={INK}
-              opacity='0.08'
-            />
+            <g opacity='0.08'>
+              <Ink
+                d={gen.ellipse(
+                  s.x,
+                  s.y + 14,
+                  16,
+                  4,
+                  filled(660 + i, INK, {
+                    fillStyle: 'solid',
+                    stroke: 'none',
+                    strokeWidth: 0,
+                  })
+                )}
+              />
+            </g>
             <Ink
               d={gen.rectangle(
                 s.x - 7,

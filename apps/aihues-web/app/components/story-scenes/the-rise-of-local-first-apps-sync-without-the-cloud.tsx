@@ -5,12 +5,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
-  INK,
   motion,
 } from './_kit';
 
@@ -80,25 +79,8 @@ export default function Scene() {
       <circle cx='68' cy='66' r='16' fill='url(#lf_coreA)' />
       <circle cx='132' cy='66' r='16' fill='url(#lf_coreB)' />
 
-      {/* peer-to-peer sync thread, flowing both directions */}
-      <motion.path
-        d={link}
-        fill='none'
-        stroke='#788c5d'
-        strokeWidth='1.6'
-        strokeDasharray='2 5'
-        animate={{ strokeDashoffset: [0, -14] }}
-        transition={linear(1.7)}
-      />
-      <motion.circle
-        r='1.7'
-        fill='#e0a83f'
-        animate={{
-          offsetDistance: ['0%', '100%'],
-        }}
-        style={{ offsetPath: `path('${link}')` }}
-        transition={linear(2.2)}
-      />
+      {/* peer-to-peer sync thread, rough and flowing between the two cores */}
+      <RoughDash d={link} c='#788c5d' w={1.6} dur={1.7} seed={310} dash='2 5' />
 
       {/* left cottage */}
       <motion.g
@@ -185,15 +167,6 @@ export default function Scene() {
           />
         </motion.g>
       </motion.g>
-
-      {/* a small return spark, drifting the other way along the thread */}
-      <motion.circle
-        r='1.4'
-        fill='#788c5d'
-        animate={{ offsetDistance: ['100%', '0%'] }}
-        style={{ offsetPath: `path('${link}')` }}
-        transition={linear(2.2)}
-      />
     </Frame>
   );
 }

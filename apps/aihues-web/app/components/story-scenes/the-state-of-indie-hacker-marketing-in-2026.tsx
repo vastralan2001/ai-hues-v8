@@ -4,11 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -39,9 +39,7 @@ export default function Scene() {
 
       <Twinkle x={30} y={20} c='#cf9836' />
       <Twinkle x={172} y={24} d={0.8} c='#e0a83f' />
-      <Twinkle x={150} y={14} d={1.3} c='#cf9836' />
       <Cloud x={44} y={30} s={0.8} o={0.4} />
-      <Cloud x={158} y={40} s={0.6} o={0.3} />
 
       {/* distant ridge */}
       <Ink
@@ -71,21 +69,27 @@ export default function Scene() {
               const r = 9 + k * 6;
               const ay = m.top - 2;
               return (
-                <motion.path
+                <motion.g
                   key={k}
-                  d={`M ${m.x - r} ${ay} A ${r} ${r * 0.7} 0 0 1 ${m.x + r} ${ay}`}
-                  fill='none'
-                  stroke={lo}
-                  strokeWidth='1.2'
-                  strokeDasharray='2 4'
-                  animate={{ opacity: [0, 0.7, 0], strokeDashoffset: [0, -10] }}
+                  animate={{ opacity: [0, 0.7, 0] }}
                   transition={{
                     duration: 2.6,
                     repeat: Infinity,
                     ease: 'easeOut',
                     delay: m.ph + k * 0.45,
                   }}
-                />
+                >
+                  <Ink
+                    d={gen.path(
+                      `M ${m.x - r} ${ay} A ${r} ${r * 0.7} 0 0 1 ${m.x + r} ${ay}`,
+                      stroke(m.seed + 10 + k, {
+                        stroke: lo,
+                        strokeWidth: 1.2,
+                        roughness: 1.5,
+                      })
+                    )}
+                  />
+                </motion.g>
               );
             })}
             {/* mast pole */}
@@ -130,22 +134,16 @@ export default function Scene() {
         );
       })}
 
-      {/* faint converging signal lines from each mast to the rising spark */}
-      {masts.map((m) => (
-        <motion.line
-          key={`c${m.seed}`}
-          x1={m.x}
-          y1={m.top - 4}
-          x2={spark.x}
-          y2={spark.y + 4}
-          stroke={m.c}
-          strokeWidth='0.8'
-          strokeDasharray='1.5 5'
-          opacity='0.5'
-          animate={{ strokeDashoffset: [0, -13] }}
-          transition={linear(2 + m.ph)}
-        />
-      ))}
+      {/* the single dashed signal trail converging on the rising spark */}
+      <RoughDash
+        d={`M ${masts[0].x} ${masts[0].top - 4} Q ${(masts[0].x + spark.x) / 2} ${spark.y + 10} ${spark.x} ${spark.y + 4} Q ${(masts[2].x + spark.x) / 2} ${spark.y + 10} ${masts[2].x} ${masts[2].top - 4}`}
+        c='#cf9836'
+        w={1}
+        dur={2.4}
+        seed={360}
+        dash='1.5 5'
+        o={0.55}
+      />
 
       {/* the single rising launch-spark the three channels converge on */}
       <motion.g

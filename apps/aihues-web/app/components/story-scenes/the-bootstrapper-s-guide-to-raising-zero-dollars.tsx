@@ -5,11 +5,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -27,18 +27,12 @@ export default function Scene() {
           <stop offset='0%' stopColor='#fff5dd' stopOpacity='0.95' />
           <stop offset='100%' stopColor='#fff5dd' stopOpacity='0' />
         </radialGradient>
-        <linearGradient id='bzd_steam' x1='0' y1='0' x2='0' y2='1'>
-          <stop offset='0%' stopColor='#9fc0d8' stopOpacity='0' />
-          <stop offset='100%' stopColor='#9fc0d8' stopOpacity='0.7' />
-        </linearGradient>
       </defs>
 
       {/* dawn glow + far accents */}
       <circle cx='44' cy='30' r='40' fill='url(#bzd_dawn)' />
       <Twinkle x={30} y={22} c='#e0a83f' />
       <Twinkle x={172} y={26} d={0.8} c='#cf9836' />
-      <Twinkle x={150} y={16} d={1.3} c='#e0a83f' r={0.9} />
-      <Cloud x={158} y={64} s={0.7} o={0.4} />
 
       {/* distant hill for depth */}
       <Ink
@@ -56,16 +50,15 @@ export default function Scene() {
       />
 
       {/* the self-watering loop: stream rises on the left, condenses into a
-          small cloud, falls back as a dashed thread onto the roots — no
-          outside funding, the plant waters itself */}
-      <motion.path
+          small cloud, falls back as a droplet onto the roots — no outside
+          funding, the plant waters itself */}
+      <RoughDash
         d='M92 64 C84 52 86 42 96 36'
-        fill='none'
-        stroke='url(#bzd_steam)'
-        strokeWidth='2'
-        strokeDasharray='2 6'
-        animate={{ strokeDashoffset: [0, -16] }}
-        transition={linear(2.2)}
+        c='#9fc0d8'
+        w={2}
+        dur={2.2}
+        dash='2 6'
+        seed={309}
       />
       <motion.g
         animate={{ y: [0, -1.6, 0] }}
@@ -74,18 +67,21 @@ export default function Scene() {
       >
         <Cloud x={104} y={32} s={0.5} o={0.7} />
       </motion.g>
-      <motion.path
-        d='M110 36 C116 46 114 56 108 64'
-        fill='none'
-        stroke='#6a9bcc'
-        strokeWidth='1.4'
-        strokeDasharray='1.6 5'
-        animate={{ strokeDashoffset: [0, -20] }}
-        transition={linear(1.7)}
-      />
 
       {/* the empty bowl — upturned ramen bowl as a humble pot */}
-      <ellipse cx='100' cy='86' rx='22' ry='4' fill={INK} opacity='0.1' />
+      <Ink
+        d={gen.ellipse(
+          100,
+          86,
+          44,
+          8,
+          filled(310, INK, {
+            fillStyle: 'solid',
+            stroke: 'none',
+            roughness: 1.4,
+          })
+        )}
+      />
       <Ink
         d={gen.path(
           'M82 70 Q100 88 118 70 Z',
@@ -149,15 +145,19 @@ export default function Scene() {
       </text>
 
       {/* falling water droplet completing the loop */}
-      <motion.circle
-        cx='108'
-        cy='40'
-        r='1.3'
-        fill='#6a9bcc'
-        opacity='0.7'
-        animate={{ cy: [40, 66], opacity: [0, 0.7, 0] }}
+      <motion.g
+        animate={{ y: [0, 26], opacity: [0, 0.75, 0] }}
         transition={{ duration: 1.7, repeat: Infinity, ease: 'easeIn' }}
-      />
+      >
+        <Ink
+          d={gen.circle(
+            108,
+            40,
+            2.6,
+            filled(311, '#6a9bcc', { fillStyle: 'solid', stroke: 'none' })
+          )}
+        />
+      </motion.g>
     </Frame>
   );
 }

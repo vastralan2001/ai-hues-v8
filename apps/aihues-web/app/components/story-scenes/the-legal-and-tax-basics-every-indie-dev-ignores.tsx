@@ -4,11 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -34,20 +34,23 @@ export default function Scene() {
       {/* sky depth */}
       <Twinkle x={30} y={20} c='#cf9836' />
       <Twinkle x={176} y={26} d={0.8} c='#e0a83f' />
-      <Twinkle x={150} y={16} d={1.3} c='#cf9836' />
       <Cloud x={52} y={24} s={0.8} o={0.45} />
-      <Cloud x={158} y={36} s={0.66} o={0.38} />
 
-      {/* still waterline */}
+      {/* still water (atmospheric gradient fill) with a rough waterline */}
       <rect x='0' y='52' width='200' height='48' fill='url(#ltx_water)' />
-      <line
-        x1='0'
-        y1='52'
-        x2='200'
-        y2='52'
-        stroke='#eaf4ff'
-        strokeWidth='1.3'
-        opacity='0.7'
+      <Ink
+        d={gen.line(
+          0,
+          52,
+          200,
+          52,
+          stroke(2120, {
+            stroke: '#eaf4ff',
+            strokeWidth: 1.3,
+            roughness: 1.6,
+            bowing: 2,
+          })
+        )}
       />
 
       {/* the submerged ledge of paperwork — a vast official seal stamped on the seabed */}
@@ -103,18 +106,15 @@ export default function Scene() {
       </motion.g>
 
       {/* faint warning glints rising off the hidden hazard */}
-      {[
-        [70, 70, 0],
-        [138, 66, 0.9],
-        [104, 62, 1.6],
-      ].map(([bx, by, d]) => (
-        <motion.circle
+      {(
+        [
+          [70, 70, 0, 2130],
+          [138, 66, 0.9, 2131],
+          [104, 62, 1.6, 2132],
+        ] as [number, number, number, number][]
+      ).map(([bx, by, d, sd]) => (
+        <motion.g
           key={bx}
-          cx={bx}
-          cy={by}
-          r='1.4'
-          fill='#eaf6ff'
-          opacity='0.55'
           animate={{ y: [0, -10], opacity: [0, 0.55, 0] }}
           transition={{
             duration: 3,
@@ -122,7 +122,16 @@ export default function Scene() {
             ease: 'easeOut',
             delay: d,
           }}
-        />
+        >
+          <Ink
+            d={gen.circle(
+              bx,
+              by,
+              2.8,
+              filled(sd, '#eaf6ff', { fillStyle: 'solid', strokeWidth: 0.7 })
+            )}
+          />
+        </motion.g>
       ))}
 
       {/* sun warmth on the small venture above */}
@@ -187,15 +196,14 @@ export default function Scene() {
       </motion.g>
 
       {/* gentle surface ripple drifting the boat toward the hazard */}
-      <motion.path
+      <RoughDash
         d='M58 52 Q92 49 132 52'
-        fill='none'
-        stroke='#eaf4ff'
-        strokeWidth='1'
-        opacity='0.6'
-        strokeDasharray='3 6'
-        animate={{ strokeDashoffset: [0, -18] }}
-        transition={linear(2.2)}
+        c='#eaf4ff'
+        w={1}
+        dur={2.2}
+        dash='3 6'
+        o={0.6}
+        seed={2140}
       />
     </Frame>
   );

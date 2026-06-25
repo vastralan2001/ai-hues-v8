@@ -37,10 +37,8 @@ export default function Scene() {
       {/* dusk glow + faint depth */}
       <circle cx='100' cy='40' r='58' fill='url(#soft_dusk)' />
       <Cloud x={42} y={24} s={0.8} o={0.4} />
-      <Cloud x={158} y={34} s={0.7} o={0.32} />
       <Twinkle x={24} y={30} c='#cf9836' />
       <Twinkle x={182} y={22} d={0.7} c='#e0a83f' />
-      <Twinkle x={66} y={16} d={1.2} c='#cf9836' r={1} />
 
       {/* the firework: a bright burst that flares then fades — the "big bang" */}
       <motion.g
@@ -109,11 +107,7 @@ export default function Scene() {
       </motion.g>
 
       {/* a single falling ember — the spectacle dissipating */}
-      <motion.circle
-        cx='142'
-        cy='38'
-        r='1.1'
-        fill='#e2693f'
+      <motion.g
         animate={{ y: [0, 18], opacity: [0, 0.7, 0] }}
         transition={{
           duration: 3.2,
@@ -121,7 +115,16 @@ export default function Scene() {
           ease: 'easeIn',
           delay: 0.6,
         }}
-      />
+      >
+        <Ink
+          d={gen.circle(
+            142,
+            38,
+            2.4,
+            filled(349, '#e2693f', { fillStyle: 'solid', strokeWidth: 0.8 })
+          )}
+        />
+      </motion.g>
 
       {/* solid ground */}
       <Ink
@@ -210,20 +213,24 @@ export default function Scene() {
 
       {/* slow drifting motes near the sapling — quiet, steady life */}
       {[
-        [40, 56, 0],
-        [78, 50, 1.1],
-        [50, 44, 0.6],
-      ].map(([mx, my, d]) => (
-        <motion.circle
+        [40, 56, 0, 350],
+        [78, 50, 1.1, 351],
+        [50, 44, 0.6, 352],
+      ].map(([mx, my, d, sd]) => (
+        <motion.g
           key={mx}
-          cx={mx}
-          cy={my}
-          r='0.9'
-          fill='#94ac78'
-          opacity='0.6'
           animate={{ y: [0, -8, 0], opacity: [0.2, 0.7, 0.2] }}
           transition={loop(3.4, d)}
-        />
+        >
+          <Ink
+            d={gen.circle(
+              mx,
+              my,
+              1.8,
+              filled(sd, '#94ac78', { fillStyle: 'solid', strokeWidth: 0.7 })
+            )}
+          />
+        </motion.g>
       ))}
     </Frame>
   );

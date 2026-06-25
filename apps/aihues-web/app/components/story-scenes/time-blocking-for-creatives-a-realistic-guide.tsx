@@ -5,11 +5,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -32,10 +32,8 @@ export default function Scene() {
 
       {/* distant atmosphere */}
       <Cloud x={46} y={24} s={0.8} o={0.4} />
-      <Cloud x={158} y={30} s={0.65} o={0.32} />
       <Twinkle x={30} y={20} c='#cf9836' />
       <Twinkle x={176} y={18} d={0.8} c='#e0a83f' />
-      <Twinkle x={150} y={66} d={1.4} c='#94ac78' r={1} />
 
       {/* warm focus glow over the deep-work block */}
       <circle cx='118' cy='52' r='40' fill='url(#tbc_glow)' />
@@ -101,7 +99,14 @@ export default function Scene() {
         transition={loop(2.8)}
         style={{ transformOrigin: '102px 54px' }}
       >
-        <ellipse cx='102' cy='70' rx='32' ry='4' fill={INK} opacity='0.08' />
+        <Ink
+          d={gen.line(86, 71, 118, 71, {
+            stroke: INK,
+            strokeWidth: 0.8,
+            roughness: 1.6,
+            seed: 332,
+          })}
+        />
         <Ink
           d={gen.rectangle(
             74,
@@ -116,14 +121,13 @@ export default function Scene() {
           )}
         />
         {/* a flowing dashed line — the work moving freely inside the block */}
-        <motion.path
+        <RoughDash
           d='M80 56 Q98 48 116 56 T140 54'
-          fill='none'
-          stroke='#fff6e2'
-          strokeWidth='1.6'
-          strokeDasharray='2 5'
-          animate={{ strokeDashoffset: [0, -14] }}
-          transition={linear(1.8)}
+          c='#fff6e2'
+          w={1.6}
+          dur={1.8}
+          dash='2 5'
+          seed={331}
         />
       </motion.g>
 

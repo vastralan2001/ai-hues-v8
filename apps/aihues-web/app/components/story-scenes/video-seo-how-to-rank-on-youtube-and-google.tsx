@@ -5,11 +5,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -43,10 +43,8 @@ export default function Scene() {
 
       <circle cx='100' cy='40' r='40' fill='url(#vsy_glow)' />
       <Cloud x={42} y={24} s={0.8} o={0.4} />
-      <Cloud x={162} y={30} s={0.7} o={0.35} />
       <Twinkle x={30} y={20} c='#cf9836' />
       <Twinkle x={176} y={22} d={0.7} c='#cf9836' />
-      <Twinkle x={100} y={14} d={1.2} c='#e0a83f' r={1.2} />
 
       {/* distant horizon for depth */}
       <Ink
@@ -57,34 +55,27 @@ export default function Scene() {
       />
 
       {/* transcript ribbon: shared root descending from the frame */}
-      <motion.path
+      <RoughDash
         d={ribbon}
-        fill='none'
-        stroke='#cf9836'
-        strokeWidth='1.6'
-        strokeDasharray='3 4'
-        animate={{ strokeDashoffset: [0, -14] }}
-        transition={linear(1.5)}
+        c='#cf9836'
+        w={1.6}
+        dur={1.5}
+        seed={320}
+        dash='3 4'
       />
 
       {/* the two rising signal paths feeding off the transcript */}
-      <motion.path
-        d={leftPath}
-        fill='none'
-        stroke='#c2502e'
-        strokeWidth='1.5'
-        strokeDasharray='2 5'
-        animate={{ strokeDashoffset: [0, -14] }}
-        transition={linear(1.7)}
+      <Ink
+        d={gen.path(
+          leftPath,
+          stroke(321, { stroke: '#c2502e', strokeWidth: 1.5, roughness: 1.4 })
+        )}
       />
-      <motion.path
-        d={rightPath}
-        fill='none'
-        stroke='#5a86c5'
-        strokeWidth='1.5'
-        strokeDasharray='2 5'
-        animate={{ strokeDashoffset: [0, -14] }}
-        transition={linear(1.9)}
+      <Ink
+        d={gen.path(
+          rightPath,
+          stroke(322, { stroke: '#5a86c5', strokeWidth: 1.5, roughness: 1.4 })
+        )}
       />
 
       {/* left beacon — YouTube (terracotta) */}
@@ -155,7 +146,21 @@ export default function Scene() {
         transition={loop(2.8)}
         style={{ transformOrigin: '100px 48px' }}
       >
-        <ellipse cx='100' cy='62' rx='17' ry='3.4' fill={INK} opacity='0.1' />
+        <g opacity={0.1}>
+          <Ink
+            d={gen.ellipse(
+              100,
+              62,
+              34,
+              6.8,
+              filled(315, INK, {
+                fillStyle: 'solid',
+                strokeWidth: 0,
+                roughness: 1.4,
+              })
+            )}
+          />
+        </g>
         <Ink
           d={gen.rectangle(
             82,

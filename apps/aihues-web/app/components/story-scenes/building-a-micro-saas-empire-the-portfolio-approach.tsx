@@ -4,6 +4,7 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
@@ -84,14 +85,17 @@ function SkyIsle({ isle }: { isle: Isle }) {
       style={{ transformOrigin: `${x}px ${y}px` }}
     >
       {/* floating-shadow gives lift */}
-      <ellipse
-        cx={x}
-        cy={tipY + 5}
-        rx={w * 0.7}
-        ry={1.6}
-        fill={INK}
-        opacity={0.08}
-      />
+      <g opacity={0.1}>
+        <Ink
+          d={gen.ellipse(
+            x,
+            tipY + 5,
+            w * 1.4,
+            3.2,
+            filled(seed + 6, INK, { fillStyle: 'solid', strokeWidth: 0 })
+          )}
+        />
+      </g>
       {/* the underside cone of the island */}
       <Ink
         d={gen.polygon(
@@ -159,31 +163,23 @@ export default function Scene() {
 
       {/* atmosphere */}
       <Cloud x={40} y={22} s={0.8} o={0.4} />
-      <Cloud x={158} y={20} s={0.7} o={0.35} />
       <Twinkle x={24} y={32} c='#cf9836' />
       <Twinkle x={182} y={30} d={0.7} c='#e0a83f' />
-      <Twinkle x={118} y={20} d={1.2} c='#94ac78' r={1} />
 
       {/* warm glow behind the founder hub */}
       <circle cx={HUB.x} cy={HUB.y} r={30} fill='url(#microsaas_hubglow)' />
 
-      {/* tethers: thin dashed lines from the hub out to each island — the
-          portfolio held together, value flowing inward */}
-      {ISLES.map((isle, i) => (
-        <motion.line
-          key={`t${isle.seed}`}
-          x1={HUB.x}
-          y1={HUB.y}
-          x2={isle.x}
-          y2={isle.y + 1}
-          stroke='#9aab7d'
-          strokeWidth={0.9}
-          strokeDasharray='2 4'
-          opacity={0.75}
-          animate={{ strokeDashoffset: [0, -12] }}
-          transition={linear(2 + i * 0.4)}
-        />
-      ))}
+      {/* tethers: a rough dashed trail looping the hub out across the islands —
+          the portfolio held together, value flowing inward */}
+      <RoughDash
+        d={`M${ISLES[3].x} ${ISLES[3].y + 1} Q${HUB.x - 20} ${HUB.y} ${HUB.x} ${HUB.y} Q${HUB.x + 26} ${ISLES[1].y} ${ISLES[1].x} ${ISLES[1].y + 1}`}
+        c='#9aab7d'
+        w={0.9}
+        dur={2.4}
+        dash='2 4'
+        o={0.75}
+        seed={371}
+      />
 
       {/* the four small product-islands */}
       {ISLES.map((isle) => (

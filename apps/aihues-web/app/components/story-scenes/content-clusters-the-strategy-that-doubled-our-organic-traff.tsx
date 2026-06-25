@@ -4,11 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -44,10 +44,8 @@ export default function Scene() {
       <circle cx={HUB_X} cy={HUB_Y - 6} r='40' fill='url(#ccluster_glow)' />
 
       <Cloud x={42} y={20} s={0.7} o={0.4} />
-      <Cloud x={158} y={18} s={0.6} o={0.35} />
       <Twinkle x={26} y={44} c='#cf9836' />
       <Twinkle x={176} y={40} d={0.8} c='#94ac78' />
-      <Twinkle x={188} y={78} d={1.4} c='#e0a83f' r={1} />
 
       {/* low sage rise the pillar is rooted on */}
       <Ink
@@ -57,38 +55,34 @@ export default function Scene() {
         )}
       />
 
-      {/* link lines from each satellite to the hub + inward-flowing pulses */}
-      {SATS.map(([sx, sy], i) => {
-        const d = `M${sx} ${sy} L${HUB_X} ${HUB_Y}`;
-        return (
-          <g key={`link${i}`}>
-            <Ink
-              d={gen.line(
-                sx,
-                sy,
-                HUB_X,
-                HUB_Y,
-                stroke(310 + i, {
-                  stroke: '#b89a52',
-                  strokeWidth: 0.9,
-                  roughness: 1,
-                  bowing: 0.6,
-                })
-              )}
-            />
-            <motion.path
-              d={d}
-              fill='none'
-              stroke='#e0a83f'
-              strokeWidth='1.4'
-              strokeLinecap='round'
-              strokeDasharray='1.5 13'
-              animate={{ strokeDashoffset: [0, -14.5] }}
-              transition={linear(2 + i * 0.18)}
-            />
-          </g>
-        );
-      })}
+      {/* link lines from each satellite to the hub */}
+      {SATS.map(([sx, sy], i) => (
+        <Ink
+          key={`link${i}`}
+          d={gen.line(
+            sx,
+            sy,
+            HUB_X,
+            HUB_Y,
+            stroke(310 + i, {
+              stroke: '#b89a52',
+              strokeWidth: 0.9,
+              roughness: 1,
+              bowing: 0.6,
+            })
+          )}
+        />
+      ))}
+
+      {/* a single inward-flowing authority pulse along one link */}
+      <RoughDash
+        d={`M${SATS[3][0]} ${SATS[3][1]} L${HUB_X} ${HUB_Y}`}
+        c='#e0a83f'
+        w={1.4}
+        dur={2.2}
+        seed={309}
+        dash='1.5 13'
+      />
 
       {/* satellite nodes (supporting content) — gentle breathing */}
       {SATS.map(([sx, sy, sr, sc], i) => (
@@ -115,7 +109,21 @@ export default function Scene() {
         transition={loop(3)}
         style={{ transformOrigin: `${HUB_X}px ${HUB_Y}px` }}
       >
-        <ellipse cx={HUB_X} cy={72} rx='14' ry='3.2' fill={INK} opacity='0.1' />
+        <Ink
+          d={gen.ellipse(
+            HUB_X,
+            72,
+            28,
+            6.4,
+            filled(349, INK, {
+              fillStyle: 'solid',
+              stroke: 'none',
+              strokeWidth: 0,
+              roughness: 1.4,
+              seed: 349,
+            })
+          )}
+        />
         <Ink
           d={gen.path(
             'M91 71 L91 44 Q100 32 109 44 L109 71 Z',

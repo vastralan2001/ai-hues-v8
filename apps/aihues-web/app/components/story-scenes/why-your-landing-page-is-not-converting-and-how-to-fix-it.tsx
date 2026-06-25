@@ -5,11 +5,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   motion,
 } from './_kit';
 
@@ -42,9 +42,7 @@ export default function Scene() {
       <circle cx='100' cy='22' r='40' fill={`url(#${SLUG}_glow)`} />
       <Twinkle x={36} y={20} c='#e0a83f' />
       <Twinkle x={166} y={26} d={0.7} c='#cf9836' />
-      <Twinkle x={150} y={14} d={1.2} c='#e0a83f' r={0.9} />
       <Cloud x={46} y={30} s={0.78} o={0.42} />
-      <Cloud x={158} y={40} s={0.62} o={0.34} />
 
       {/* far hills for ground depth */}
       <Ink
@@ -62,13 +60,8 @@ export default function Scene() {
         [92, 22, 1.5],
         [108, 22, 0.9],
       ].map(([dx, dy, dl], i) => (
-        <motion.circle
+        <motion.g
           key={`in-${dx}-${dy}`}
-          cx={dx}
-          cy={dy}
-          r={1.4}
-          fill='#e2693f'
-          opacity={0.8}
           animate={{ y: [0, 24], opacity: [0, 0.85, 0] }}
           transition={{
             duration: 2.6,
@@ -76,7 +69,19 @@ export default function Scene() {
             ease: 'easeIn',
             delay: dl + i * 0.05,
           }}
-        />
+        >
+          <Ink
+            d={gen.circle(
+              dx,
+              dy,
+              2.8,
+              filled(310 + i, '#e2693f', {
+                fillStyle: 'solid',
+                strokeWidth: 0.9,
+              })
+            )}
+          />
+        </motion.g>
       ))}
 
       {/* the funnel — wide mouth narrowing to a spout */}
@@ -112,37 +117,24 @@ export default function Scene() {
       />
 
       {/* the leaks — droplets escaping sideways and falling away (lost signups) */}
-      <motion.path
-        d={leakLeft}
-        fill='none'
-        stroke='#c2502e'
-        strokeWidth='1.4'
-        strokeDasharray='1.4 5'
-        opacity={0.55}
-        animate={{ strokeDashoffset: [0, 12] }}
-        transition={linear(1.5)}
+      <Ink
+        d={gen.path(
+          leakLeft,
+          stroke(320, { stroke: '#c2502e', strokeWidth: 1.3, roughness: 1.6 })
+        )}
       />
-      <motion.path
-        d={leakRight}
-        fill='none'
-        stroke='#c2502e'
-        strokeWidth='1.4'
-        strokeDasharray='1.4 5'
-        opacity={0.55}
-        animate={{ strokeDashoffset: [0, 12] }}
-        transition={linear(1.7)}
+      <Ink
+        d={gen.path(
+          leakRight,
+          stroke(321, { stroke: '#c2502e', strokeWidth: 1.3, roughness: 1.6 })
+        )}
       />
       {[
         [62, 74, 0],
         [138, 74, 0.6],
-      ].map(([lx, ly, dl]) => (
-        <motion.circle
+      ].map(([lx, ly, dl], i) => (
+        <motion.g
           key={`leak-${lx}`}
-          cx={lx}
-          cy={ly}
-          r={1.1}
-          fill='#c2502e'
-          opacity={0.5}
           animate={{ y: [0, 14], opacity: [0.5, 0] }}
           transition={{
             duration: 1.8,
@@ -150,18 +142,29 @@ export default function Scene() {
             ease: 'easeIn',
             delay: dl,
           }}
-        />
+        >
+          <Ink
+            d={gen.circle(
+              lx,
+              ly,
+              2.2,
+              filled(322 + i, '#c2502e', {
+                fillStyle: 'solid',
+                strokeWidth: 0.8,
+              })
+            )}
+          />
+        </motion.g>
       ))}
 
       {/* the fixed channel — one clean bright stream pouring straight down */}
-      <motion.path
+      <RoughDash
         d={channel}
-        fill='none'
-        stroke='#e0a83f'
-        strokeWidth='2.2'
-        strokeDasharray='2 4'
-        animate={{ strokeDashoffset: [0, -18] }}
-        transition={linear(0.9)}
+        c='#e0a83f'
+        w={2.2}
+        dur={0.9}
+        dash='2 4'
+        seed={323}
       />
 
       {/* collecting vessel, filling toward the brim */}

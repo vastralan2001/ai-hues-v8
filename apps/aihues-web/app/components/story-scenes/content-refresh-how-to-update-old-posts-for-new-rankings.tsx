@@ -5,11 +5,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -34,13 +34,11 @@ export default function Scene() {
         </linearGradient>
       </defs>
 
-      {/* warm low sun + sky accents */}
+      {/* warm low sun glow + sky accents */}
       <circle cx='150' cy='30' r='40' fill='url(#crf_sun)' />
       <Cloud x={44} y={26} s={0.8} o={0.4} />
-      <Cloud x={158} y={62} s={0.62} o={0.32} />
       <Twinkle x={34} y={22} c='#e0a83f' />
       <Twinkle x={176} y={20} d={0.8} c='#cf9836' />
-      <Twinkle x={108} y={16} d={1.2} c='#e0a83f' r={0.9} />
 
       {/* depth: far hill ridge */}
       <Ink
@@ -66,7 +64,15 @@ export default function Scene() {
       />
 
       {/* soft ground-shadow under the tree */}
-      <ellipse cx='96' cy='88' rx='26' ry='3.4' fill={INK} opacity='0.1' />
+      <Ink
+        d={gen.ellipse(96, 88, 52, 6.8, {
+          fill: INK,
+          fillStyle: 'solid',
+          stroke: 'none',
+          roughness: 1.6,
+          seed: 313,
+        })}
+      />
 
       {/* ── the weathered tree ── */}
       {/* trunk */}
@@ -128,14 +134,13 @@ export default function Scene() {
       />
 
       {/* dashed sap / rising-rank line tracing the new growth upward */}
-      <motion.path
+      <RoughDash
         d='M98 58 C106 50 112 44 118 34'
-        fill='none'
-        stroke='#94ac78'
-        strokeWidth='1.4'
-        strokeDasharray='2 6'
-        animate={{ strokeDashoffset: [0, -16] }}
-        transition={linear(1.8)}
+        c='#94ac78'
+        w={1.4}
+        dur={1.8}
+        dash='2 6'
+        seed={314}
       />
 
       {/* the fresh new sprout — breathing, alive */}
@@ -179,17 +184,12 @@ export default function Scene() {
 
       {/* a couple of drifting-up renewal motes near the new growth */}
       {[
-        [108, 40, 0],
-        [128, 30, 0.9],
-        [114, 28, 1.5],
-      ].map(([mx, my, dl]) => (
-        <motion.circle
+        [108, 40, 0, 315],
+        [128, 30, 0.9, 316],
+        [114, 28, 1.5, 317],
+      ].map(([mx, my, dl, sd]) => (
+        <motion.g
           key={mx}
-          cx={mx}
-          cy={my}
-          r='1.1'
-          fill='#bfe09a'
-          opacity='0.6'
           animate={{ y: [0, -12], opacity: [0, 0.6, 0] }}
           transition={{
             duration: 3,
@@ -197,7 +197,17 @@ export default function Scene() {
             ease: 'easeOut',
             delay: dl,
           }}
-        />
+        >
+          <Ink
+            d={gen.circle(mx, my, 2.2, {
+              fill: '#bfe09a',
+              fillStyle: 'solid',
+              stroke: 'none',
+              roughness: 1.4,
+              seed: sd,
+            })}
+          />
+        </motion.g>
       ))}
     </Frame>
   );

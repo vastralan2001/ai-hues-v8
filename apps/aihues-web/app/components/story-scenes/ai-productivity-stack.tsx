@@ -4,11 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -98,10 +98,8 @@ export default function Scene() {
 
       {/* distant depth */}
       <Cloud x={42} y={24} s={0.8} o={0.42} />
-      <Cloud x={158} y={32} s={0.65} o={0.34} />
       <Twinkle x={30} y={40} c='#cf9836' />
       <Twinkle x={176} y={50} d={0.7} c='#e0a83f' />
-      <Twinkle x={150} y={18} d={1.2} c='#cf9836' />
 
       {/* soft ground band for the tower to sit on */}
       <Ink
@@ -110,21 +108,30 @@ export default function Scene() {
           filled(90, '#e6d3ab', { roughness: 1.5, hachureGap: 3.6 })
         )}
       />
-      <ellipse cx='100' cy='86' rx='24' ry='3.4' fill={INK} opacity='0.09' />
+      <g opacity='0.09'>
+        <Ink
+          d={gen.ellipse(
+            100,
+            86,
+            48,
+            7,
+            filled(91, INK, { fillStyle: 'solid', stroke: 'none' })
+          )}
+        />
+      </g>
 
       {/* the star the stack feeds into */}
       <circle cx='100' cy='28' r='16' fill='url(#aps_star)' />
 
       {/* a thin dashed conduit threading the layers — flow of work upward */}
-      <motion.path
+      <RoughDash
         d='M100 86 L100 30'
-        fill='none'
-        stroke='#cf9836'
-        strokeWidth='0.8'
-        opacity='0.45'
-        strokeDasharray='1.4 4'
-        animate={{ strokeDashoffset: [0, -16] }}
-        transition={linear(1.8)}
+        c='#cf9836'
+        w={0.8}
+        dur={1.8}
+        dash='1.4 4'
+        o={0.45}
+        seed={93}
       />
 
       {/* steady output beam from the crown up to the star */}
@@ -142,25 +149,29 @@ export default function Scene() {
 
       {/* input sparks streaming up through the layered stack */}
       {[
-        { x: 88, d: 0 },
-        { x: 112, d: 0.9 },
-        { x: 100, d: 1.7 },
+        { x: 88, d: 0, seed: 100 },
+        { x: 112, d: 0.9, seed: 101 },
+        { x: 100, d: 1.7, seed: 102 },
       ].map((s) => (
-        <motion.circle
+        <motion.g
           key={s.x}
-          cx={s.x}
-          cy={86}
-          r='1.3'
-          fill='#e2693f'
-          opacity='0.7'
-          animate={{ cy: [86, 50], opacity: [0, 0.75, 0] }}
+          animate={{ y: [0, -36], opacity: [0, 0.75, 0] }}
           transition={{
             duration: 2.6,
             repeat: Infinity,
             ease: 'easeOut',
             delay: s.d,
           }}
-        />
+        >
+          <Ink
+            d={gen.circle(
+              s.x,
+              86,
+              2.6,
+              filled(s.seed, '#e2693f', { fillStyle: 'solid', stroke: 'none' })
+            )}
+          />
+        </motion.g>
       ))}
 
       {/* the tiered stack, base → crown */}

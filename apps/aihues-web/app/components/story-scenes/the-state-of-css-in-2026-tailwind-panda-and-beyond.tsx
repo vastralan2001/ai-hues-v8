@@ -5,11 +5,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   motion,
 } from './_kit';
 
@@ -37,10 +37,8 @@ export default function Scene() {
       {/* warm light pooling behind the loom */}
       <circle cx='98' cy='44' r='40' fill='url(#css26_glow)' />
       <Cloud x={46} y={24} s={0.78} o={0.4} />
-      <Cloud x={158} y={30} s={0.62} o={0.32} />
       <Twinkle x={32} y={22} c='#cf9836' />
       <Twinkle x={170} y={20} d={0.8} c='#e0a83f' />
-      <Twinkle x={150} y={54} d={1.3} c='#cf9836' r={0.9} />
 
       {/* distant work-surface for depth */}
       <Ink
@@ -180,24 +178,14 @@ export default function Scene() {
         />
       </motion.g>
 
-      {/* a few loose atomic threads spooling toward the loom from the side */}
-      <motion.path
+      {/* a loose atomic thread spooling toward the loom from the side */}
+      <RoughDash
         d='M44 70 Q60 66 70 60'
-        fill='none'
-        stroke='#788c5d'
-        strokeWidth='0.9'
-        strokeDasharray='2 5'
-        animate={{ strokeDashoffset: [0, -14] }}
-        transition={linear(1.8)}
-      />
-      <motion.path
-        d='M40 78 Q58 76 70 70'
-        fill='none'
-        stroke='#6a9bcc'
-        strokeWidth='0.9'
-        strokeDasharray='2 5'
-        animate={{ strokeDashoffset: [0, -14] }}
-        transition={linear(2.2)}
+        c='#788c5d'
+        w={0.9}
+        dur={1.8}
+        dash='2 5'
+        seed={345}
       />
       <Ink
         d={gen.circle(

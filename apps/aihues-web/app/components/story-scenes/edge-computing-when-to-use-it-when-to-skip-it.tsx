@@ -5,12 +5,12 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
   linear,
-  INK,
   motion,
 } from './_kit';
 
@@ -25,8 +25,6 @@ import {
 export default function Scene() {
   // short hop: packet -> nearest near-edge node
   const hop = 'M150 70 Q140 58 132 56';
-  // long path: nearest node all the way back to the far core
-  const longPath = 'M132 56 Q104 50 78 46 T40 40';
 
   return (
     <Frame sky={['#eef3f7', '#dbe6ec']}>
@@ -35,18 +33,12 @@ export default function Scene() {
           <stop offset='0%' stopColor='#cfe0f1' stopOpacity='0.85' />
           <stop offset='100%' stopColor='#cfe0f1' stopOpacity='0' />
         </radialGradient>
-        <radialGradient id='edge_node' cx='50%' cy='50%' r='50%'>
-          <stop offset='0%' stopColor='#fff0d6' stopOpacity='0.95' />
-          <stop offset='100%' stopColor='#fff0d6' stopOpacity='0' />
-        </radialGradient>
       </defs>
 
       {/* sky atmosphere */}
       <Twinkle x={30} y={20} c='#9cb6cf' />
       <Twinkle x={176} y={26} d={0.8} c='#cf9836' />
-      <Twinkle x={96} y={16} d={1.4} c='#9cb6cf' />
       <Cloud x={150} y={20} s={0.8} o={0.4} />
-      <Cloud x={56} y={30} s={0.6} o={0.32} />
 
       {/* far haze ridge — the distant ground the core sits on */}
       <Ink
@@ -69,18 +61,6 @@ export default function Scene() {
             fillWeight: 0.6,
           })
         )}
-      />
-
-      {/* faint long path back to the distant core (the skipped, slow route) */}
-      <motion.path
-        d={longPath}
-        fill='none'
-        stroke='#6a9bcc'
-        strokeWidth='1'
-        opacity='0.45'
-        strokeDasharray='2 6'
-        animate={{ strokeDashoffset: [0, -16] }}
-        transition={linear(2.6)}
       />
 
       {/* the distant CORE — a single taller tower in the haze, far off */}
@@ -132,7 +112,6 @@ export default function Scene() {
         const topY = baseY - p.h;
         return (
           <g key={p.x}>
-            <circle cx={p.x} cy={topY} r='9' fill='url(#edge_node)' />
             {/* mast */}
             <Ink
               d={gen.line(
@@ -176,15 +155,7 @@ export default function Scene() {
       })}
 
       {/* the short-hop path — bright, near, the fast choice */}
-      <motion.path
-        d={hop}
-        fill='none'
-        stroke='#e2693f'
-        strokeWidth='1.6'
-        strokeDasharray='2 4'
-        animate={{ strokeDashoffset: [0, -12] }}
-        transition={linear(1)}
-      />
+      <RoughDash d={hop} c='#e2693f' w={1.6} dur={1} dash='2 4' seed={320} />
 
       {/* the data packet making the short hop to the nearest edge node */}
       <motion.g
@@ -220,9 +191,6 @@ export default function Scene() {
           filled(332, '#788c5d', { fillStyle: 'solid', strokeWidth: 1.1 })
         )}
       />
-
-      <Twinkle x={118} y={48} d={0.6} c='#e0a83f' r={0.9} />
-      <Twinkle x={62} y={50} d={1.1} c='#9cb6cf' r={0.9} />
     </Frame>
   );
 }

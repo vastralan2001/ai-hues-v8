@@ -8,7 +8,7 @@ import {
   filled,
   stroke,
   loop,
-  linear,
+  RoughDash,
   INK,
   motion,
 } from './_kit';
@@ -37,9 +37,7 @@ export default function Scene() {
       <circle cx='168' cy='46' r='40' fill='url(#cssw_focus)' />
       <circle cx='40' cy='52' r='34' fill='url(#cssw_haze)' />
       <Cloud x={150} y={22} s={0.8} o={0.4} />
-      <Cloud x={56} y={20} s={0.6} o={0.3} />
       <Twinkle x={28} y={28} c='#cf9836' />
-      <Twinkle x={110} y={18} d={0.7} c='#e0a83f' />
       <Twinkle x={184} y={24} d={1.2} c='#e0a83f' />
 
       {/* low ground band for grounding */}
@@ -141,15 +139,14 @@ export default function Scene() {
         )}
       />
       {/* flowing progress dash along the clean thread */}
-      <motion.path
+      <RoughDash
         d='M93 56 Q130 50 162 46'
-        fill='none'
-        stroke='#fff'
-        strokeWidth='1.6'
-        opacity='0.7'
-        strokeDasharray='2 8'
-        animate={{ strokeDashoffset: [0, -20] }}
-        transition={linear(1.6)}
+        c='#fff'
+        w={1.6}
+        seed={422}
+        dur={1.6}
+        dash='2 8'
+        o={0.7}
       />
 
       {/* focal node: a single bright deep-work star, pulsing */}

@@ -5,11 +5,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -44,10 +44,8 @@ export default function Scene() {
       <circle cx='162' cy='40' r='30' fill='url(#bridge_goal)' />
       <rect x='40' y='66' width='130' height='34' fill='url(#bridge_chasm)' />
       <Cloud x={52} y={28} s={0.8} o={0.42} />
-      <Cloud x={150} y={70} s={0.7} o={0.3} />
       <Twinkle x={34} y={24} c='#cf9836' />
       <Twinkle x={180} y={26} d={0.7} c='#e0a83f' />
-      <Twinkle x={120} y={18} d={1.2} c='#cf9836' r={0.9} />
 
       {/* near plinth — "where you stand" */}
       <Ink
@@ -149,14 +147,13 @@ export default function Scene() {
       </motion.g>
 
       {/* a faint guide line from where the plank will drop */}
-      <motion.path
+      <RoughDash
         d='M148 47 L148 51'
-        fill='none'
-        stroke='#cf9836'
-        strokeWidth='1'
-        strokeDasharray='1 3'
-        animate={{ strokeDashoffset: [0, -8] }}
-        transition={linear(1.3)}
+        c='#cf9836'
+        w={1}
+        dur={1.3}
+        seed={350}
+        dash='1 3'
       />
 
       {/* small builder on the near plinth, setting a plank */}

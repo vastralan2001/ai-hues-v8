@@ -4,11 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -76,9 +76,7 @@ export default function Scene() {
 
       <Twinkle x={36} y={18} c='#cf9836' />
       <Twinkle x={164} y={16} d={0.7} c='#94ac78' />
-      <Twinkle x={110} y={12} d={1.2} c='#e0a83f' r={1} />
       <Cloud x={52} y={20} s={0.7} o={0.4} />
-      <Cloud x={150} y={24} s={0.6} o={0.35} />
 
       {/* far depth ridge the partner nodes sit on */}
       <Ink
@@ -94,20 +92,33 @@ export default function Scene() {
         )}
       />
 
-      {/* converging tributaries of value */}
-      {PARTNERS.map((p, i) => (
-        <motion.path
-          key={i}
-          d={p.trail}
-          fill='none'
-          stroke={p.col}
-          strokeWidth='1.6'
-          strokeDasharray='2 6'
-          opacity='0.8'
-          animate={{ strokeDashoffset: [0, -16] }}
-          transition={linear(p.dur)}
-        />
-      ))}
+      {/* converging tributaries of value — rough static streams, with one
+          animated dashed trail leading the eye into the basin */}
+      {PARTNERS.map((p, i) =>
+        i === 0 ? (
+          <RoughDash
+            key={i}
+            d={p.trail}
+            c={p.col}
+            w={1.6}
+            dur={p.dur}
+            seed={340 + i}
+            dash='2 6'
+            o={0.85}
+          />
+        ) : (
+          <Ink
+            key={i}
+            d={gen.path(p.trail, {
+              stroke: p.col,
+              strokeWidth: 1.4,
+              roughness: 1.4,
+              bowing: 1.6,
+              seed: 340 + i,
+            })}
+          />
+        )
+      )}
 
       {/* partner nodes — small ringed sources */}
       {PARTNERS.map((p, i) => (
@@ -140,14 +151,17 @@ export default function Scene() {
       <circle cx={HUB_X} cy={HUB_Y} r={26} fill='url(#affsaas_basin)' />
 
       {/* faint shadow under the hub */}
-      <ellipse
-        cx={HUB_X}
-        cy={HUB_Y + 16}
-        rx={18}
-        ry={4}
-        fill={INK}
-        opacity='0.1'
-      />
+      <g opacity='0.1'>
+        <Ink
+          d={gen.ellipse(HUB_X, HUB_Y + 16, 36, 8, {
+            fill: INK,
+            fillStyle: 'solid',
+            stroke: 'none',
+            roughness: 1.4,
+            seed: 334,
+          })}
+        />
+      </g>
 
       {/* the SaaS hub — a small vault filling with converged value */}
       <motion.g
@@ -206,32 +220,6 @@ export default function Scene() {
           />
         </motion.g>
       </motion.g>
-
-      {/* a couple of value sparks drifting into the basin */}
-      {[
-        [78, 58, 0],
-        [122, 56, 1.1],
-      ].map(([sx, sy, dl]) => (
-        <motion.circle
-          key={sx}
-          cx={sx}
-          cy={sy}
-          r='1.4'
-          fill='#fff3d4'
-          opacity='0.7'
-          animate={{
-            x: [0, HUB_X - sx],
-            y: [0, HUB_Y - sy],
-            opacity: [0, 0.7, 0],
-          }}
-          transition={{
-            duration: 2.6,
-            repeat: Infinity,
-            ease: 'easeIn',
-            delay: dl,
-          }}
-        />
-      ))}
     </Frame>
   );
 }

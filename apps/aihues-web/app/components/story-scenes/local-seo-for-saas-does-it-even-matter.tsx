@@ -5,11 +5,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   motion,
 } from './_kit';
 
@@ -38,10 +38,8 @@ export default function Scene() {
 
       {/* atmosphere */}
       <Twinkle x={30} y={20} c='#9cc3e2' />
-      <Twinkle x={176} y={26} d={0.8} c='#9cc3e2' />
       <Twinkle x={150} y={16} d={1.3} c='#cf9836' />
       <Cloud x={44} y={24} s={0.8} o={0.4} />
-      <Cloud x={158} y={66} s={0.7} o={0.35} />
 
       {/* the vast global audience — large soft globe, the real market */}
       <circle cx='124' cy='46' r='44' fill={`url(#${G}_globe)`} />
@@ -118,16 +116,31 @@ export default function Scene() {
         />
       </motion.g>
 
-      {/* far-flung audience nodes scattered across the globe */}
-      {[
-        [100, 34, 0],
-        [148, 38, 0.6],
-        [136, 62, 1.1],
-        [108, 60, 0.4],
-        [128, 46, 0.9],
-      ].map(([nx, ny, d]) => (
-        <Twinkle key={nx} x={nx} y={ny} d={d} r={1.3} c='#5a86c5' />
-      ))}
+      {/* far-flung audience nodes scattered across the globe — rough dots */}
+      <Ink
+        d={gen.circle(
+          100,
+          34,
+          3,
+          filled(311, '#5a86c5', { fillStyle: 'solid' })
+        )}
+      />
+      <Ink
+        d={gen.circle(
+          136,
+          62,
+          3,
+          filled(312, '#5a86c5', { fillStyle: 'solid' })
+        )}
+      />
+      <Ink
+        d={gen.circle(
+          128,
+          46,
+          2.6,
+          filled(313, '#5a86c5', { fillStyle: 'solid' })
+        )}
+      />
       <Ink
         d={gen.circle(
           148,
@@ -146,14 +159,13 @@ export default function Scene() {
       />
 
       {/* the worldwide thread — what the product actually has to reach */}
-      <motion.path
+      <RoughDash
         d={reach}
-        fill='none'
-        stroke='#e0a83f'
-        strokeWidth='1.6'
-        strokeDasharray='2 6'
-        animate={{ strokeDashoffset: [0, -16] }}
-        transition={linear(1.8)}
+        c='#e0a83f'
+        w={1.6}
+        dur={1.8}
+        dash='2 6'
+        seed={314}
       />
 
       {/* the lone local map-pin — small, rooted, grounded to one spot */}

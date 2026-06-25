@@ -5,12 +5,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
-  INK,
   motion,
 } from './_kit';
 
@@ -40,12 +39,10 @@ export default function Scene() {
       {/* low sun = the "48h" deadline glow */}
       <circle cx='44' cy='28' r='40' fill='url(#saas48_glow)' />
       <Cloud x={158} y={24} s={0.8} o={0.4} />
-      <Cloud x={36} y={70} s={0.7} o={0.32} />
 
       {/* tick-of-the-clock sparks toward the edges */}
       <Twinkle x={170} y={20} c='#cf9836' />
       <Twinkle x={26} y={44} d={0.7} c='#e0a83f' />
-      <Twinkle x={184} y={58} d={1.2} c='#cf9836' r={1.2} />
 
       {/* far ground band for depth */}
       <Ink
@@ -56,21 +53,28 @@ export default function Scene() {
       />
 
       {/* drifting idea-sparks in the upper bulb, waiting to fall */}
-      {[
-        [96, 26, 0],
-        [104, 30, 0.5],
-        [100, 22, 1.0],
-      ].map(([sx, sy, d]) => (
-        <motion.circle
+      {(
+        [
+          [96, 26, 0, 311],
+          [104, 30, 0.5, 312],
+          [100, 22, 1.0, 313],
+        ] as [number, number, number, number][]
+      ).map(([sx, sy, d, sd]) => (
+        <motion.g
           key={sx}
-          cx={sx}
-          cy={sy}
-          r='1.1'
-          fill='#e2693f'
           animate={{ y: [0, 2, 0], opacity: [0.4, 0.9, 0.4] }}
           transition={loop(2.6, d)}
           style={{ transformOrigin: `${sx}px ${sy}px` }}
-        />
+        >
+          <Ink
+            d={gen.circle(
+              sx,
+              sy,
+              2.2,
+              filled(sd, '#e2693f', { fillStyle: 'solid', strokeWidth: 0.8 })
+            )}
+          />
+        </motion.g>
       ))}
 
       {/* hourglass frame: two caps + the glass twin-cones */}
@@ -100,14 +104,13 @@ export default function Scene() {
       />
 
       {/* the thin falling sand-stream through the neck */}
-      <motion.path
+      <RoughDash
         d='M100 49 L100 70'
-        fill='none'
-        stroke='#e6b85e'
-        strokeWidth='1.4'
-        strokeDasharray='1 3'
-        animate={{ strokeDashoffset: [0, -8] }}
-        transition={linear(0.9)}
+        c='#e6b85e'
+        w={1.4}
+        dur={0.9}
+        dash='1 3'
+        seed={314}
       />
 
       {/* accumulated sand pile in the lower bulb */}
@@ -160,16 +163,14 @@ export default function Scene() {
       </motion.g>
 
       {/* a couple of settling sand grains by the cabin base */}
-      {[
-        [94, 80, 0.2],
-        [107, 80, 0.8],
-      ].map(([gx, gy, d]) => (
-        <motion.circle
+      {(
+        [
+          [94, 80, 0.2, 315],
+          [107, 80, 0.8, 316],
+        ] as [number, number, number, number][]
+      ).map(([gx, gy, d, sd]) => (
+        <motion.g
           key={gx}
-          cx={gx}
-          cy={gy}
-          r='0.9'
-          fill='#d99a3f'
           animate={{ y: [-3, 0], opacity: [0, 0.8, 0] }}
           transition={{
             duration: 1.8,
@@ -177,7 +178,17 @@ export default function Scene() {
             ease: 'easeIn',
             delay: d,
           }}
-        />
+          style={{ transformOrigin: `${gx}px ${gy}px` }}
+        >
+          <Ink
+            d={gen.circle(
+              gx,
+              gy,
+              1.8,
+              filled(sd, '#d99a3f', { fillStyle: 'solid', strokeWidth: 0.7 })
+            )}
+          />
+        </motion.g>
       ))}
     </Frame>
   );

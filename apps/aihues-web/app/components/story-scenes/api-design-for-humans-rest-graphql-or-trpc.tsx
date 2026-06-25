@@ -4,11 +4,11 @@ import {
   Ink,
   Twinkle,
   Cloud,
+  RoughDash,
   gen,
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
@@ -37,30 +37,32 @@ export default function Scene() {
 
       {/* distant haze + sky accents */}
       <circle cx='100' cy='34' r='44' fill={`url(#${G}_haze)`} />
-      <Cloud x={44} y={22} s={0.8} o={0.4} />
       <Cloud x={158} y={30} s={0.7} o={0.35} />
       <Twinkle x={30} y={20} c='#cf9836' />
       <Twinkle x={176} y={18} d={0.8} c='#e0a83f' />
-      <Twinkle x={118} y={14} d={1.3} c='#cf9836' r={0.9} />
 
       {/* the chasm: rising mist between the two banks */}
       <rect x='0' y='58' width='200' height='42' fill={`url(#${G}_chasm)`} />
       {[
-        [60, 86, 0],
-        [104, 90, 1.1],
-        [146, 84, 1.9],
-      ].map(([mx, my, d]) => (
-        <motion.ellipse
+        [60, 86, 0, 671],
+        [104, 90, 1.1, 672],
+        [146, 84, 1.9, 673],
+      ].map(([mx, my, d, seed]) => (
+        <motion.g
           key={mx}
-          cx={mx}
-          cy={my}
-          rx='9'
-          ry='2.4'
-          fill='#fbf7ec'
-          opacity='0.5'
           animate={{ x: [0, 6, 0], opacity: [0.15, 0.5, 0.15] }}
           transition={loop(4, d)}
-        />
+        >
+          <Ink
+            d={gen.ellipse(
+              mx,
+              my,
+              18,
+              4.8,
+              filled(seed, '#fbf7ec', { fillStyle: 'solid', strokeWidth: 0.7 })
+            )}
+          />
+        </motion.g>
       ))}
 
       {/* near bank (left — the human/client side) */}
@@ -210,14 +212,13 @@ export default function Scene() {
           stroke(641, { stroke: '#788c5d', strokeWidth: 1.3 })
         )}
       />
-      <motion.path
+      <RoughDash
         d='M46 58 L154 56'
-        fill='none'
-        stroke='#e2693f'
-        strokeWidth='1.4'
-        strokeDasharray='2 7'
-        animate={{ strokeDashoffset: [0, -18] }}
-        transition={linear(1.5)}
+        c='#e2693f'
+        w={1.4}
+        dur={1.5}
+        dash='2 7'
+        seed={642}
       />
 
       {/* ── the traveler crossing the middle (suspension) span, mid-deck ── */}
