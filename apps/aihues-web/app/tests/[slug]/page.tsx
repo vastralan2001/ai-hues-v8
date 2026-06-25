@@ -37,7 +37,7 @@ export default async function TestPage({
 
   return (
     <PageShell variant='tests' locale={locale}>
-      <section className='mx-auto max-w-[1100px] px-6 py-10'>
+      <section className='mx-auto w-full max-w-[1760px] px-[clamp(1.5rem,5vw,7rem)] py-10'>
         <div className='mb-8 flex items-center justify-between gap-4'>
           <Breadcrumb
             items={[

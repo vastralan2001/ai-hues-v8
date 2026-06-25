@@ -136,7 +136,7 @@ export default function SearchContent({
   const filtered = tab === 'all' ? results : grouped[tab];
 
   return (
-    <section className='mx-auto w-full max-w-[1320px] px-6 pb-24 pt-10'>
+    <section className='mx-auto w-full max-w-[1760px] px-[clamp(1.5rem,5vw,7rem)] pb-24 pt-10'>
       <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Search' }]} />
 
       <div className='mt-7 max-w-[680px]'>

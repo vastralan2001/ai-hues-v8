@@ -44,7 +44,7 @@ export default function AboutPage() {
         features={['Free & no sign-up', 'Global search', 'Themed by family']}
       />
 
-      <section className='mx-auto w-full max-w-[1320px] px-6 pb-24 pt-4'>
+      <section className='mx-auto w-full max-w-[1760px] px-[clamp(1.5rem,5vw,7rem)] pb-24 pt-4'>
         <div className='mx-auto max-w-[760px] space-y-6 text-[16px] leading-relaxed text-secondary'>
           <p>
             AIHues is a curated discovery platform for AI tools, lightweight

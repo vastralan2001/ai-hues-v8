@@ -62,7 +62,7 @@ export default async function ToolsPage({
         <ToolSearchForm category={category} q={q} />
       </PageMasthead>
 
-      <section className='mx-auto w-full max-w-[1320px] px-6 pt-8'>
+      <section className='mx-auto w-full max-w-[1760px] px-[clamp(1.5rem,5vw,7rem)] pt-8'>
         <ToolsInfiniteList
           activeCategory={category}
           categoryCounts={categoryCounts}

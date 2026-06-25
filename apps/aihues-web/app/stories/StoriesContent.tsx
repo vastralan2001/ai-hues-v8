@@ -110,7 +110,7 @@ export default function StoriesContent({
         />
       </PageMasthead>
 
-      <section className='mx-auto max-w-[1320px] px-6 pb-20 md:px-7'>
+      <section className='mx-auto w-full max-w-[1760px] px-[clamp(1.5rem,5vw,7rem)] pb-20'>
         {/* Tag filters — left-aligned, matching the other listing pages */}
         <FilterPills
           ariaLabel='Article topics'

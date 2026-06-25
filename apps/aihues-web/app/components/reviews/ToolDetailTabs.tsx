@@ -19,7 +19,7 @@ export default function ToolDetailTabs({
   const label = tool?.name ?? slug;
 
   return (
-    <div className='mx-auto max-w-[1300px] px-8 pb-8 pt-6'>
+    <div className='mx-auto w-full max-w-[1760px] px-[clamp(1.5rem,5vw,7rem)] pb-8 pt-6'>
       <div className='flex items-center justify-between gap-4'>
         <Breadcrumb
           items={[

@@ -81,7 +81,7 @@ const faqs = [
 export default function PricingPage() {
   return (
     <PageShell>
-      <div className='mx-auto mt-8 w-full max-w-[1320px] px-6'>
+      <div className='mx-auto mt-8 w-full max-w-[1760px] px-[clamp(1.5rem,5vw,7rem)]'>
         <Breadcrumb
           items={[{ label: 'Home', href: '/' }, { label: 'Pricing' }]}
         />

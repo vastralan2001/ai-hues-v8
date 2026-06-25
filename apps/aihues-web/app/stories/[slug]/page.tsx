@@ -157,7 +157,7 @@ export default async function ArticlePage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         type='application/ld+json'
       />
-      <div className='mx-auto max-w-[1080px] px-6 py-12 md:px-8'>
+      <div className='mx-auto w-full max-w-[1760px] px-[clamp(1.5rem,5vw,7rem)] py-12'>
         {/* Breadcrumb */}
         <nav className='mb-8 flex min-w-0 items-center gap-1.5 text-[13px] text-muted'>
           <Link

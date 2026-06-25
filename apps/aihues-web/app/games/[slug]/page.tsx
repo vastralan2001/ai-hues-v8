@@ -266,7 +266,7 @@ function HowToPlay({
   dark?: boolean;
 }) {
   return (
-    <div className='mx-auto mt-12 w-full max-w-[1100px] px-6'>
+    <div className='mx-auto mt-12 w-full max-w-[1760px] px-[clamp(1.5rem,5vw,7rem)]'>
       <div
         className={
           dark
@@ -460,7 +460,7 @@ export default async function GamePage({
           )}
 
           <div className='relative flex min-h-[calc(100vh-76px)] flex-col pb-12 pt-8'>
-            <div className='mx-auto w-full max-w-[1100px] px-6'>
+            <div className='mx-auto w-full max-w-[1760px] px-[clamp(1.5rem,5vw,7rem)]'>
               <div className='mb-6 flex items-center justify-between gap-4'>
                 <Breadcrumb
                   variant='dark'
@@ -499,7 +499,7 @@ export default async function GamePage({
               <Game locale={locale} />
             </div>
             {howTo ? <HowToPlay dark items={howTo} /> : null}
-            <div className='mx-auto mt-12 w-full max-w-[1100px] px-6'>
+            <div className='mx-auto mt-12 w-full max-w-[1760px] px-[clamp(1.5rem,5vw,7rem)]'>
               <RelatedItems
                 type='game'
                 slug={slug}
@@ -510,7 +510,7 @@ export default async function GamePage({
           </div>
         </section>
       ) : (
-        <div className='mx-auto max-w-[1100px] px-6 py-10'>
+        <div className='mx-auto w-full max-w-[1760px] px-[clamp(1.5rem,5vw,7rem)] py-10'>
           <div className='mb-6 flex items-center justify-between gap-4'>
             <Breadcrumb
               items={[

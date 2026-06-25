@@ -20,7 +20,7 @@ export default function WishlistPage() {
         features={['Community voted', 'Public roadmap', 'Built in public']}
       />
 
-      <section className='mx-auto max-w-[1320px] px-6 pb-20 md:px-7'>
+      <section className='mx-auto w-full max-w-[1760px] px-[clamp(1.5rem,5vw,7rem)] pb-20'>
         <WishlistBoard />
       </section>
     </PageShell>

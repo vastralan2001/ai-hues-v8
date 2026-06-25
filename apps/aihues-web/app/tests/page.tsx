@@ -27,7 +27,7 @@ export default function TestsPage() {
         features={['Real question banks', 'Shareable results', 'Just for fun']}
       />
 
-      <section className='mx-auto max-w-[1320px] px-6 pb-20 pt-8'>
+      <section className='mx-auto w-full max-w-[1760px] px-[clamp(1.5rem,5vw,7rem)] pb-20 pt-8'>
         <div className='mx-auto grid max-w-[760px] grid-cols-1 gap-5 sm:grid-cols-2'>
           {TEST_META.map((tm) => (
             <Link
