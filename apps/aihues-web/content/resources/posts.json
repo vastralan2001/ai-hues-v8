@@ -979,5 +979,45 @@
     "readTime": "6 min",
     "coverImage": "https://images.unsplash.com/photo-1526379096588-290a6b65f8a3?w=600&q=80",
     "description": "I learned this the hard way. Stop demoing and start measuring. Here is the scorecard we use for every AI tool evaluation."
+  },
+  {
+    "slug": "kimi-k2-open-agentic-intelligence-explained",
+    "tag": "AI Tools",
+    "title": "Kimi K2 Explained: Open Agentic Intelligence at Trillion Scale",
+    "excerpt": "Moonshot AI shipped a trillion-parameter open MoE model that uses tools, writes code, and finishes multi-step jobs. A plain-English read of the architecture, the MuonClip optimizer, and the benchmarks.",
+    "date": "2026-06-24",
+    "readTime": "8 min",
+    "coverImage": "",
+    "description": "A faithful, plain-English walkthrough of Kimi K2: a 1-trillion-parameter open Mixture-of-Experts model with 32B active params, the spike-free MuonClip optimizer, agentic RL training, and what its SWE-bench and reasoning scores actually mean for builders."
+  },
+  {
+    "slug": "kimi-k2-thinking-the-reasoning-model-explained",
+    "tag": "AI Tools",
+    "title": "Inside Kimi K2 Thinking: How an Open Model Learns to Reason",
+    "excerpt": "A 1T-parameter open model that thinks across 200-300 tool calls without losing the thread. Here is how it reasons, what INT4 training buys, the benchmark numbers, and the honest limits.",
+    "date": "2026-06-23",
+    "readTime": "9 min",
+    "coverImage": "",
+    "description": "A faithful walkthrough of Kimi K2 Thinking: how a 1T-parameter open model reasons across 200-300 tool calls, what its INT4 training buys, the benchmark numbers, and the honest limits."
+  },
+  {
+    "slug": "kimi-k2-6-open-source-coding-model-explained",
+    "tag": "AI Tools",
+    "title": "Kimi K2.6 for Coding: What the Benchmarks Actually Show",
+    "excerpt": "Moonshot open-sourced a model that beats GPT-5.4 on SWE-Bench Pro. A benchmark-first read of where Kimi K2.6 leads, where it trails, and how to point it.",
+    "date": "2026-06-22",
+    "readTime": "8 min",
+    "coverImage": "",
+    "description": "A benchmark-first review of Moonshot open-weights Kimi K2.6: the coding scorecard (SWE-Bench Pro 58.6, Terminal-Bench 66.7), how long-horizon execution got it there, where it falls short on competitive-programming and reasoning, and how to actually use it."
+  },
+  {
+    "slug": "worldvqa-atomic-world-knowledge-benchmark-explained",
+    "tag": "AI Tools",
+    "title": "WorldVQA Explained: Measuring Atomic World Knowledge in MLLMs",
+    "excerpt": "Moonshot AI 3,500-question benchmark asks every vision model one blunt thing: do you actually recognize what you see, or are you guessing? Frontier models stay under 50%.",
+    "date": "2026-06-21",
+    "readTime": "8 min",
+    "coverImage": "",
+    "description": "A plain-English deep read of WorldVQA, Moonshot AI benchmark for atomic visual world knowledge. What it tests, how its accuracy and calibration metrics work, why top MLLMs fail the long tail, and what it means for builders shipping vision into products."
   }
 ]
