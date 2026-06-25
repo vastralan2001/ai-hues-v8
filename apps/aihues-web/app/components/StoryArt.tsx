@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { getStoryScene, type Anim, type El } from '@/lib/story-scenes';
 import { STORY_SVG } from '@/components/story-svg';
@@ -169,6 +169,15 @@ export function StoryArt({
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const Svg = STORY_SVG[slug];
+  // Rough.js path data isn't byte-identical between the Node (SSR) and browser
+  // renders, so the vector scenes render client-only after mount to avoid a
+  // hydration mismatch. The wrapper keeps role="img" + aria-label in the server
+  // HTML, so the SEO/a11y signal is unaffected.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   useEffect(() => {
     const cv = ref.current;
@@ -235,7 +244,9 @@ export function StoryArt({
       className={`relative overflow-hidden ${className}`}
     >
       {Svg ? (
-        <Svg />
+        mounted ? (
+          <Svg />
+        ) : null
       ) : (
         <canvas ref={ref} className='absolute inset-0 h-full w-full' />
       )}
