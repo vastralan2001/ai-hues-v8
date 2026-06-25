@@ -83,7 +83,7 @@ export default function HeroSearch({
   return (
     <div className='relative mx-auto w-full max-w-[620px] lg:mx-0'>
       <form onSubmit={onSubmit}>
-        <div className='group flex items-center gap-2 rounded-[20px] border border-border bg-white px-2 py-2 shadow-[0_2px_24px_rgba(26,26,25,0.06)] transition-all duration-300 hover:border-border-strong hover:shadow-[0_8px_32px_rgba(26,26,25,0.1)] focus-within:border-accent/40 focus-within:shadow-[0_8px_32px_rgba(217,119,87,0.14)]'>
+        <div className='group hero-search-box flex items-center gap-2 rounded-[20px] border border-border bg-white px-2 py-2 shadow-[0_2px_24px_rgba(26,26,25,0.06)] transition-all duration-300 hover:border-border-strong hover:shadow-[0_8px_32px_rgba(26,26,25,0.1)]'>
           <span className='pl-3 text-muted transition-colors group-focus-within:text-accent'>
             <Search size={18} strokeWidth={2} />
           </span>

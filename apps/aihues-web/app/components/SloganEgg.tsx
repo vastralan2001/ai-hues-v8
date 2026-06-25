@@ -1,102 +1,203 @@
 'use client';
 
-import type { ReactNode } from 'react';
+import { useRef, useState } from 'react';
+import {
+  motion,
+  type TargetAndTransition,
+  type Transition,
+} from 'framer-motion';
+import confetti from 'canvas-confetti';
 
 import { BrandWord } from '@/components/Logo';
 
-/* Home-band slogan with a hidden easter egg: hovering the keyword reveals a tiny
-   semantically-matched animation above it (absolutely positioned, so it never
-   affects layout). One per band: heavy lifting → barbell, overworked → coffee,
-   pay grade → flipping coin, noise → sound waves. */
+/* Home-band slogan easter eggs. Hovering the keyword makes the TEXT react to its
+   own meaning: "heavy lifting" gets crushed under a barbell, "overworked" droops
+   in fatigue, "pay grade" rains coins (canvas-confetti), and "noise" trembles
+   between sound waves. Everything is transform/overlay-based — no layout shift. */
 
 type Egg = 'lifting' | 'overworked' | 'paygrade' | 'noise';
 
-function Barbell() {
-  return (
-    <svg viewBox='0 0 40 24' width='40' height='24' fill='currentColor'>
-      <g className='egg-lift'>
-        <rect x='7' y='10' width='26' height='3.5' rx='1.5' />
-        <rect x='3' y='6' width='5' height='12' rx='1.4' />
-        <rect x='32' y='6' width='5' height='12' rx='1.4' />
-        <rect x='0.5' y='8' width='3' height='8' rx='1.2' />
-        <rect x='36.5' y='8' width='3' height='8' rx='1.2' />
-      </g>
-    </svg>
-  );
+function rainCoins(el: HTMLElement | null) {
+  if (!el || typeof window === 'undefined') return;
+  const r = el.getBoundingClientRect();
+  const origin = {
+    x: (r.left + r.width / 2) / window.innerWidth,
+    y: Math.max(0, r.top / window.innerHeight),
+  };
+  const coin = confetti.shapeFromText
+    ? confetti.shapeFromText({ text: '🪙', scalar: 2 })
+    : undefined;
+  confetti({
+    particleCount: 16,
+    spread: 55,
+    startVelocity: 26,
+    gravity: 1.5,
+    ticks: 110,
+    scalar: 1.8,
+    origin,
+    shapes: coin ? [coin] : undefined,
+    colors: coin ? undefined : ['#e0a83f', '#cf9836', '#f0b449'],
+    disableForReducedMotion: true,
+  });
 }
 
-function Coffee() {
+function WaveArcs() {
   return (
-    <svg viewBox='0 0 32 28' width='30' height='26'>
+    <svg viewBox='0 0 16 24' width='16' height='24'>
       <g
-        className='egg-steam'
-        fill='none'
-        stroke='currentColor'
-        strokeWidth='1.6'
-        strokeLinecap='round'
-      >
-        <path d='M12 9 q-2.5 -3 0 -6' />
-        <path d='M20 9 q2.5 -3 0 -6' />
-      </g>
-      <path
-        d='M6 12 h17 v5 a5 5 0 0 1 -5 5 h-7 a5 5 0 0 1 -5 -5 z'
-        fill='currentColor'
-      />
-      <path
-        d='M23 13 a3.5 3.5 0 0 1 0 7'
-        fill='none'
-        stroke='currentColor'
-        strokeWidth='1.8'
-      />
-    </svg>
-  );
-}
-
-function Coin() {
-  return (
-    <svg viewBox='0 0 24 24' width='24' height='24'>
-      <g className='egg-coin'>
-        <circle cx='12' cy='12' r='9.5' fill='currentColor' />
-        <text
-          x='12'
-          y='16.5'
-          textAnchor='middle'
-          fontSize='13'
-          fontWeight='900'
-          fill='#fff'
-        >
-          $
-        </text>
-      </g>
-    </svg>
-  );
-}
-
-function Waves() {
-  return (
-    <svg viewBox='0 0 40 24' width='40' height='24'>
-      <circle cx='9' cy='12' r='2.6' fill='currentColor' />
-      <g
-        className='egg-waves'
         fill='none'
         stroke='currentColor'
         strokeWidth='2'
         strokeLinecap='round'
       >
-        <path className='egg-w1' d='M14 8 a 6 6 0 0 1 0 8' />
-        <path className='egg-w2' d='M19 5 a 10 10 0 0 1 0 14' />
-        <path className='egg-w3' d='M24 2.5 a 14 14 0 0 1 0 19' />
+        <path d='M3 8 a 6 6 0 0 1 0 8' />
+        <path d='M8 5 a 11 11 0 0 1 0 14' />
+        <path d='M13 2.5 a 16 16 0 0 1 0 19' />
       </g>
     </svg>
   );
 }
 
-const ANIM: Record<Egg, ReactNode> = {
-  lifting: <Barbell />,
-  overworked: <Coffee />,
-  paygrade: <Coin />,
-  noise: <Waves />,
-};
+function EggWord({ word, egg }: { word: string; egg: Egg }) {
+  const [on, setOn] = useState(false);
+  const ref = useRef<HTMLSpanElement>(null);
+
+  const enter = () => {
+    setOn(true);
+    if (egg === 'paygrade') rainCoins(ref.current);
+  };
+  const leave = () => setOn(false);
+
+  // "overworked" droops letter by letter, like it's tired.
+  if (egg === 'overworked') {
+    return (
+      <span
+        ref={ref}
+        className='egg-word'
+        onMouseEnter={enter}
+        onMouseLeave={leave}
+      >
+        <motion.span
+          className='egg-overlay egg-sweat'
+          aria-hidden='true'
+          animate={
+            on ? { opacity: [0, 1, 0], y: [0, 13] } : { opacity: 0, y: 0 }
+          }
+          transition={{
+            duration: 1,
+            repeat: on ? Infinity : 0,
+            ease: 'easeIn',
+          }}
+        >
+          💧
+        </motion.span>
+        {word.split('').map((ch, i) => (
+          <motion.span
+            key={i}
+            style={{
+              display: 'inline-block',
+              transformOrigin: 'top center',
+              whiteSpace: 'pre',
+            }}
+            animate={
+              on
+                ? { rotate: 11, y: 2, opacity: 0.75 }
+                : { rotate: 0, y: 0, opacity: 1 }
+            }
+            transition={{
+              delay: i * 0.035,
+              type: 'spring',
+              stiffness: 280,
+              damping: 13,
+            }}
+          >
+            {ch}
+          </motion.span>
+        ))}
+      </span>
+    );
+  }
+
+  let anim: TargetAndTransition = {};
+  let trans: Transition = {};
+  if (egg === 'lifting') {
+    anim = on ? { scaleY: 0.58, y: 1 } : { scaleY: 1, y: 0 };
+    trans = { type: 'spring', stiffness: 420, damping: 15 };
+  } else if (egg === 'noise') {
+    anim = on
+      ? { x: [-1.6, 1.6, -1.3, 1.3, -1.6], rotate: [-1, 1.2, -1] }
+      : { x: 0, rotate: 0 };
+    trans = on ? { duration: 0.15, repeat: Infinity } : {};
+  } else if (egg === 'paygrade') {
+    anim = on ? { y: [0, -4, 0] } : { y: 0 };
+    trans = on ? { duration: 0.5, repeat: Infinity, ease: 'easeInOut' } : {};
+  }
+
+  const waveAnim = on
+    ? { opacity: [0, 1, 0], scale: [0.6, 1.25] }
+    : { opacity: 0, scale: 0.6 };
+  const waveTrans: Transition = {
+    duration: 0.7,
+    repeat: on ? Infinity : 0,
+    ease: 'easeOut',
+  };
+
+  return (
+    <span
+      ref={ref}
+      className='egg-word'
+      onMouseEnter={enter}
+      onMouseLeave={leave}
+    >
+      {egg === 'lifting' ? (
+        <motion.svg
+          className='egg-barbell'
+          viewBox='0 0 200 14'
+          fill='var(--color-accent)'
+          aria-hidden='true'
+          initial={false}
+          animate={on ? { y: 0, opacity: 1 } : { y: -9, opacity: 0 }}
+          transition={{ type: 'spring', stiffness: 520, damping: 17 }}
+        >
+          <rect x='24' y='5' width='152' height='4' rx='2' />
+          <rect x='14' y='1' width='8' height='12' rx='2' />
+          <rect x='178' y='1' width='8' height='12' rx='2' />
+          <rect x='6' y='3.5' width='6' height='7' rx='1.5' />
+          <rect x='188' y='3.5' width='6' height='7' rx='1.5' />
+        </motion.svg>
+      ) : null}
+      {egg === 'noise' ? (
+        <>
+          <span className='egg-wave egg-wave-l' aria-hidden='true'>
+            <motion.span
+              style={{ display: 'inline-block' }}
+              animate={waveAnim}
+              transition={waveTrans}
+            >
+              <WaveArcs />
+            </motion.span>
+          </span>
+          <span className='egg-wave egg-wave-r' aria-hidden='true'>
+            <motion.span
+              style={{ display: 'inline-block' }}
+              animate={waveAnim}
+              transition={{ ...waveTrans, delay: 0.12 }}
+            >
+              <WaveArcs />
+            </motion.span>
+          </span>
+        </>
+      ) : null}
+      <motion.span
+        style={{ display: 'inline-block', transformOrigin: 'bottom center' }}
+        animate={anim}
+        transition={trans}
+      >
+        {word}
+      </motion.span>
+    </span>
+  );
+}
 
 export function SloganEgg({
   slogan,
@@ -115,12 +216,7 @@ export function SloganEgg({
   return (
     <>
       {before ? <BrandWord>{before}</BrandWord> : null}
-      <span className='egg-word'>
-        <span className='egg-anim' aria-hidden='true'>
-          {ANIM[egg]}
-        </span>
-        {word}
-      </span>
+      <EggWord word={word} egg={egg} />
       {after}
     </>
   );

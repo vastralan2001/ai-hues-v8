@@ -137,12 +137,14 @@ export default function HeroStage({
               ) : null}
             </div>
 
-            <HeroSearch
-              askAILabel={askAILabel}
-              searchPlaceholder={searchPlaceholder}
-              accent={hue}
-              hint={scene ? scene.query : undefined}
-            />
+            <div style={scene ? categoryThemeStyle(scene.cat) : undefined}>
+              <HeroSearch
+                askAILabel={askAILabel}
+                searchPlaceholder={searchPlaceholder}
+                accent={hue}
+                hint={scene ? scene.query : undefined}
+              />
+            </div>
           </div>
 
           {slides.length > 0 ? (
