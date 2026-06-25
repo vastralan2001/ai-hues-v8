@@ -1,165 +1,22 @@
 'use client';
 
-import rough from 'roughjs';
-import { motion } from 'framer-motion';
-import type { ComponentType, ReactNode } from 'react';
+import type { ComponentType } from 'react';
 
+import {
+  Cloud,
+  Frame,
+  filled,
+  gen,
+  Ink,
+  INK,
+  linear,
+  loop,
+  motion,
+  stroke,
+  Twinkle,
+} from './story-scenes/_kit';
 import { GENERATED_SCENES } from './story-scenes/registry';
 
-/* Hand-authored, per-article Stories visuals. Each is a small atmospheric scene
-   tied to the article: a soft gradient sky for depth, then the solid shapes are
-   drawn with rough.js (sketchy outlines + hachure fills) for a hand-drawn,
-   textured "doodle" quality, animated with Framer Motion. Fixed per-shape seeds
-   keep rough's output deterministic, so SSR and client render identically.
-   200×100 landscape, full-bleed; StoryArt picks the scene by slug. */
-
-const FONT = '"Radiance", var(--font-noto-sans), "Noto Sans", sans-serif';
-const INK = '#5b5346';
-const gen = rough.generator();
-
-const loop = (duration: number, delay = 0) => ({
-  duration,
-  repeat: Infinity,
-  ease: 'easeInOut' as const,
-  delay,
-});
-const linear = (duration: number) => ({
-  duration,
-  repeat: Infinity,
-  ease: 'linear' as const,
-});
-
-// rough option presets
-type Opts = Parameters<typeof gen.path>[1];
-const stroke = (seed: number, over: Opts = {}): Opts => ({
-  stroke: INK,
-  strokeWidth: 1.1,
-  roughness: 1.3,
-  bowing: 1.4,
-  seed,
-  ...over,
-});
-const filled = (seed: number, fill: string, over: Opts = {}): Opts => ({
-  stroke: INK,
-  strokeWidth: 1.1,
-  roughness: 1.2,
-  bowing: 1,
-  fill,
-  fillStyle: 'hachure',
-  fillWeight: 0.7,
-  hachureGap: 2.6,
-  seed,
-  ...over,
-});
-
-// Render a rough drawable's op-sets as plain SVG paths (DOM-free, SSR-safe).
-function Ink({ d }: { d: ReturnType<typeof gen.path> }) {
-  const o = d.options;
-  return (
-    <>
-      {d.sets.map((set, i) => {
-        const path = gen.opsToPath(set);
-        if (set.type === 'fillSketch')
-          return (
-            <path
-              key={i}
-              d={path}
-              fill='none'
-              stroke={o.fill}
-              strokeWidth={
-                o.fillWeight && o.fillWeight > 0 ? o.fillWeight : 0.8
-              }
-            />
-          );
-        if (set.type === 'fillPath')
-          return <path key={i} d={path} fill={o.fill} stroke='none' />;
-        return (
-          <path
-            key={i}
-            d={path}
-            fill='none'
-            stroke={o.stroke}
-            strokeWidth={o.strokeWidth}
-          />
-        );
-      })}
-    </>
-  );
-}
-
-function Frame({
-  sky,
-  children,
-}: {
-  sky: [string, string];
-  children: ReactNode;
-}) {
-  return (
-    <div
-      className='h-full w-full'
-      style={{ background: `linear-gradient(165deg, ${sky[0]}, ${sky[1]})` }}
-    >
-      <svg
-        viewBox='0 0 200 100'
-        preserveAspectRatio='xMidYMid slice'
-        className='h-full w-full'
-        style={{ fontFamily: FONT }}
-        strokeLinecap='round'
-        strokeLinejoin='round'
-      >
-        {children}
-      </svg>
-    </div>
-  );
-}
-
-function Twinkle({
-  x,
-  y,
-  d = 0,
-  r = 1.1,
-  c = '#fff',
-}: {
-  x: number;
-  y: number;
-  d?: number;
-  r?: number;
-  c?: string;
-}) {
-  return (
-    <motion.circle
-      cx={x}
-      cy={y}
-      r={r}
-      fill={c}
-      animate={{ opacity: [0.2, 0.9, 0.2], scale: [0.6, 1.1, 0.6] }}
-      transition={loop(2.4, d)}
-      style={{ transformOrigin: `${x}px ${y}px` }}
-    />
-  );
-}
-
-function Cloud({
-  x,
-  y,
-  s = 1,
-  o = 0.5,
-}: {
-  x: number;
-  y: number;
-  s?: number;
-  o?: number;
-}) {
-  return (
-    <g transform={`translate(${x} ${y}) scale(${s})`} fill='#fff' opacity={o}>
-      <ellipse cx='0' cy='0' rx='15' ry='5' />
-      <ellipse cx='10' cy='1.5' rx='9' ry='4' />
-      <ellipse cx='-10' cy='2' rx='8' ry='3.5' />
-    </g>
-  );
-}
-
-// ── Growth — Product Hunt launch: a small rocket arcing into a dawn sky ──
 function LaunchProductHunt() {
   const trail = 'M58 90 Q92 74 124 44';
   return (
