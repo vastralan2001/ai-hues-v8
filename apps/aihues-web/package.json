@@ -16,7 +16,6 @@
     "@bufbuild/protobuf": "^2.5.0",
     "@connectrpc/connect": "^2.0.0",
     "@connectrpc/connect-web": "^2.0.0",
-    "@huggingface/transformers": "^4.2.0",
     "browser-image-compression": "^2.0.2",
     "chess.js": "^1.4.0",
     "exifr": "^7.1.3",
