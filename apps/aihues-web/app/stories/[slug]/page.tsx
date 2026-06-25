@@ -179,7 +179,7 @@ export default async function ArticlePage({
           <span className='truncate text-secondary'>{meta.title}</span>
         </nav>
 
-        <div className='lg:grid lg:grid-cols-[minmax(0,720px)_320px] lg:gap-x-[clamp(48px,8vw,160px)]'>
+        <div className='lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-x-[clamp(48px,8vw,160px)]'>
           {/* Hero — text left, a compact illustration right (mars resources
               style): the demo is a contained side panel, not a full-width band */}
           <header className='lg:col-span-2'>
@@ -215,7 +215,7 @@ export default async function ArticlePage({
 
           {/* Article body — left column */}
           <article
-            className='article-content mt-10 min-w-0 max-w-none lg:col-start-1 lg:row-start-2'
+            className='article-content mt-10 min-w-0 max-w-[720px] lg:col-start-1 lg:row-start-2'
             dangerouslySetInnerHTML={{ __html: htmlContent }}
           />
 
@@ -228,6 +228,9 @@ export default async function ArticlePage({
                   Share
                 </p>
                 <ShareButtons title={meta.title} />
+              </div>
+              <div className='mt-6 border-t border-border pt-5'>
+                <NewsletterSubscribe variant='sidebar' />
               </div>
               <Link
                 className='mt-6 inline-flex items-center gap-1.5 text-[13px] font-semibold text-secondary transition-colors hover:text-accent'
@@ -245,7 +248,11 @@ export default async function ArticlePage({
           locale='en'
           className='mt-12'
         />
-        <NewsletterSubscribe />
+        {/* Newsletter lives in the sidebar on desktop; keep a copy at the foot
+            for mobile, where the sidebar is hidden. */}
+        <div className='lg:hidden'>
+          <NewsletterSubscribe />
+        </div>
         <RelatedArticles currentSlug={slug} locale='en' />
       </div>
     </PageShell>

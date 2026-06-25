@@ -143,7 +143,7 @@ export function SiteFooter({
             >
               <Wordmark />
             </Link>
-            <p className='mt-3 max-w-[280px] text-[14px] leading-relaxed text-muted'>
+            <p className='mt-3 max-w-[360px] text-[14px] leading-relaxed text-muted'>
               {t(locale, 'footer.tagline')}
             </p>
             <div className='mt-5 flex items-center gap-2'>

@@ -1,7 +1,5 @@
-import Link from 'next/link';
-
 import { getAllPosts } from '@/lib/resources-data';
-import { StoryArt } from './StoryArt';
+import StoryCard from '@/components/StoryCard';
 
 export default function RelatedArticles({
   currentSlug,
@@ -29,29 +27,11 @@ export default function RelatedArticles({
       <h3 className='mb-4 text-lg font-bold text-foreground'>
         {locale === 'zh' ? '相关文章' : 'Related Articles'}
       </h3>
-      <div className='flex flex-wrap gap-5'>
+      {/* Same card + grid as the Stories listing; fewer than three leaves the
+          right columns empty rather than stretching the cards. */}
+      <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
         {related.map((article) => (
-          <Link
-            key={article.slug}
-            href={`/stories/${article.slug}`}
-            className='card-lift group flex w-full flex-col overflow-hidden rounded-[12px] border border-border bg-surface text-inherit no-underline sm:w-[300px] lg:w-[336px]'
-          >
-            <div className='aspect-[16/9] w-full overflow-hidden'>
-              <StoryArt
-                slug={article.slug}
-                tag={article.tag}
-                className='h-full w-full'
-              />
-            </div>
-            <div className='p-4'>
-              <span className='mb-1 inline-block text-[11px] font-bold text-accent'>
-                {article.tag}
-              </span>
-              <p className='line-clamp-2 text-sm font-semibold text-foreground'>
-                {article.title}
-              </p>
-            </div>
-          </Link>
+          <StoryCard key={article.slug} post={article} />
         ))}
       </div>
     </div>

@@ -20,7 +20,12 @@ function getSubscription(): SubscriptionRecord | null {
   }
 }
 
-export default function NewsletterSubscribe() {
+export default function NewsletterSubscribe({
+  variant = 'default',
+}: {
+  variant?: 'default' | 'sidebar';
+}) {
+  const sidebar = variant === 'sidebar';
   const subscription = useSyncExternalStore(
     () => () => {},
     getSubscription,
@@ -51,14 +56,21 @@ export default function NewsletterSubscribe() {
   };
 
   return (
-    <div className='mt-16 py-8 md:py-10'>
-      <div className='mx-auto max-w-[420px] text-center'>
-        <h3 className='text-xl font-bold tracking-tight text-foreground'>
+    <div className={sidebar ? '' : 'mt-16 py-8 md:py-10'}>
+      <div
+        className={sidebar ? 'text-left' : 'mx-auto max-w-[420px] text-center'}
+      >
+        <h3
+          className={`font-bold tracking-tight text-foreground ${sidebar ? 'text-[15px]' : 'text-xl'}`}
+        >
           Subscribe to AIHues Newsletter
         </h3>
-        <p className='mt-2 text-sm leading-relaxed text-secondary'>
-          Enter your email to get weekly AI tool reviews and growth strategies
-          delivered to your inbox.
+        <p
+          className={`mt-2 leading-relaxed text-secondary ${sidebar ? 'text-[13px]' : 'text-sm'}`}
+        >
+          {sidebar
+            ? 'Weekly AI tool reviews and growth strategies, in your inbox.'
+            : 'Enter your email to get weekly AI tool reviews and growth strategies delivered to your inbox.'}
         </p>
 
         {isSubscribed ? (
@@ -70,7 +82,7 @@ export default function NewsletterSubscribe() {
         ) : (
           <form
             onSubmit={handleSubmit}
-            className='mt-5 flex flex-col gap-3 sm:flex-row'
+            className={`mt-5 flex flex-col gap-3 ${sidebar ? '' : 'sm:flex-row'}`}
           >
             <input
               type='email'

@@ -121,8 +121,14 @@ function EggWord({ word, egg }: { word: string; egg: Egg }) {
   let anim: TargetAndTransition = {};
   let trans: Transition = {};
   if (egg === 'lifting') {
-    anim = on ? { scaleY: 0.58, y: 1 } : { scaleY: 1, y: 0 };
-    trans = { type: 'spring', stiffness: 420, damping: 15 };
+    // crushed under the bar, then a slow strained attempt to push back up that
+    // never quite makes it — the struggle of heavy lifting.
+    anim = on
+      ? { scaleY: [0.58, 0.72, 0.61, 0.74, 0.58], y: [1, 0.3, 0.7, 0.2, 1] }
+      : { scaleY: 1, y: 0 };
+    trans = on
+      ? { duration: 2.2, repeat: Infinity, ease: 'easeInOut' }
+      : { type: 'spring', stiffness: 420, damping: 15 };
   } else if (egg === 'noise') {
     anim = on
       ? { x: [-1.6, 1.6, -1.3, 1.3, -1.6], rotate: [-1, 1.2, -1] }
@@ -159,7 +165,31 @@ function EggWord({ word, egg }: { word: string; egg: Egg }) {
           animate={on ? { y: 0, opacity: 1 } : { y: -9, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 520, damping: 17 }}
         >
-          <rect x='24' y='5' width='152' height='4' rx='2' />
+          {/* the bar bows symmetrically in the middle under the load, flexing
+              as the lift is fought for */}
+          <motion.path
+            fill='none'
+            stroke='var(--color-accent)'
+            strokeWidth='4'
+            strokeLinecap='round'
+            initial={false}
+            animate={
+              on
+                ? {
+                    d: [
+                      'M24 7 Q100 12 176 7',
+                      'M24 7 Q100 9 176 7',
+                      'M24 7 Q100 12 176 7',
+                    ],
+                  }
+                : { d: 'M24 7 Q100 7 176 7' }
+            }
+            transition={
+              on
+                ? { duration: 2.2, repeat: Infinity, ease: 'easeInOut' }
+                : { type: 'spring', stiffness: 520, damping: 17 }
+            }
+          />
           <rect x='14' y='1' width='8' height='12' rx='2' />
           <rect x='178' y='1' width='8' height='12' rx='2' />
           <rect x='6' y='3.5' width='6' height='7' rx='1.5' />

@@ -115,22 +115,22 @@ export function TestDemo({ slug }: { slug: string }) {
     <div className='relative aspect-[16/9] w-full overflow-hidden rounded-[16px] border border-border bg-bg shadow-sm'>
       {/* Question beat */}
       <div
-        className='absolute inset-0 flex flex-col justify-center gap-3 px-5 transition-opacity duration-500'
+        className='absolute inset-0 flex flex-col justify-center gap-2 px-5 transition-opacity duration-500'
         style={{ opacity: phase === 'q' ? 1 : 0 }}
       >
         <div className='text-[10px] font-bold uppercase tracking-[0.16em] text-accent'>
           {slug.toUpperCase()} · question
         </div>
-        <div className='text-[16px] font-bold leading-snug text-foreground'>
+        <div className='text-[15px] font-bold leading-snug text-foreground'>
           {question.q}
         </div>
-        <div className='mt-1 flex flex-col gap-2'>
+        <div className='mt-0.5 flex flex-col gap-1.5'>
           {question.opts.map((o, i) => {
             const chosen = answered && i === question.pick;
             return (
               <div
                 key={o}
-                className={`flex items-center gap-2.5 rounded-[10px] border px-3 py-2 text-[13px] font-medium transition-all duration-300 ${
+                className={`flex items-center gap-2.5 rounded-[10px] border px-3 py-1.5 text-[13px] font-medium transition-all duration-300 ${
                   chosen
                     ? 'border-accent bg-accent-bg text-accent'
                     : 'border-border bg-surface text-secondary'
