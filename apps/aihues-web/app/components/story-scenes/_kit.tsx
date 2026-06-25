@@ -182,4 +182,183 @@ export function Cloud({
   );
 }
 
+/* A rough, animated dashed trail — use instead of a plain <motion.path> dashed
+   line so trails/paths are hand-drawn too. */
+export function RoughDash({
+  d,
+  c = INK,
+  w = 1.8,
+  dur = 1.7,
+  seed = 9,
+  dash = '5 7',
+  o = 1,
+}: {
+  d: string;
+  c?: string;
+  w?: number;
+  dur?: number;
+  seed?: number;
+  dash?: string;
+  o?: number;
+}) {
+  const path = gen.opsToPath(
+    gen.path(d, { stroke: c, strokeWidth: w, roughness: 1.4, seed }).sets[0]
+  );
+  return (
+    <motion.path
+      d={path}
+      fill='none'
+      stroke={c}
+      strokeWidth={w}
+      strokeDasharray={dash}
+      opacity={o}
+      animate={{ strokeDashoffset: [0, -24] }}
+      transition={linear(dur)}
+    />
+  );
+}
+
+/* A rough 5-point star (lucide `star`). Bigger, more characterful accent than a
+   Twinkle — use sparingly. */
+export function Star({
+  x,
+  y,
+  r = 5,
+  c = '#f0b449',
+  seed = 1,
+  solid = true,
+}: {
+  x: number;
+  y: number;
+  r?: number;
+  c?: string;
+  seed?: number;
+  solid?: boolean;
+}) {
+  const pts: [number, number][] = [];
+  for (let i = 0; i < 10; i++) {
+    const ang = (Math.PI / 5) * i - Math.PI / 2;
+    const rad = i % 2 === 0 ? r : r * 0.44;
+    pts.push([x + Math.cos(ang) * rad, y + Math.sin(ang) * rad]);
+  }
+  return (
+    <Ink
+      d={gen.polygon(pts, filled(seed, c, solid ? { fillStyle: 'solid' } : {}))}
+    />
+  );
+}
+
+/* A rough sun: a disc with radiating strokes (lucide `sun`). */
+export function Sun({
+  x,
+  y,
+  r = 8,
+  c = '#f6e7bb',
+  ray = '#e8c777',
+  seed = 1,
+}: {
+  x: number;
+  y: number;
+  r?: number;
+  c?: string;
+  ray?: string;
+  seed?: number;
+}) {
+  const rays = Array.from({ length: 8 }, (_, i) => {
+    const a = (Math.PI / 4) * i;
+    return [
+      x + Math.cos(a) * r * 1.5,
+      y + Math.sin(a) * r * 1.5,
+      x + Math.cos(a) * r * 2.2,
+      y + Math.sin(a) * r * 2.2,
+    ];
+  });
+  return (
+    <g>
+      {rays.map((p, i) => (
+        <Ink
+          key={i}
+          d={gen.line(p[0], p[1], p[2], p[3], {
+            stroke: ray,
+            strokeWidth: 1.2,
+            roughness: 1.6,
+            seed: seed + i + 1,
+          })}
+        />
+      ))}
+      <Ink
+        d={gen.circle(x, y, r * 2, filled(seed, c, { fillStyle: 'solid' }))}
+      />
+    </g>
+  );
+}
+
+/* A row of rough mountain/hill silhouettes for depth (lucide `mountain`). */
+export function Mountains({
+  peaks,
+  base = 92,
+  color = '#9ab37f',
+  seed = 1,
+}: {
+  peaks: [number, number, number][]; // [leftX, peakX/peakY via tuple], see below
+  base?: number;
+  color?: string;
+  seed?: number;
+}) {
+  // peaks: array of [leftX, peakX, peakY]; right edge is the next peak's leftX.
+  return (
+    <g>
+      {peaks.map(([lx, px, py], i) => {
+        const rx = peaks[i + 1] ? peaks[i + 1][0] : px + (px - lx);
+        return (
+          <Ink
+            key={i}
+            d={gen.polygon(
+              [
+                [lx, base],
+                [px, py],
+                [rx, base],
+              ],
+              filled(seed + i, color, { hachureGap: 3.5 })
+            )}
+          />
+        );
+      })}
+    </g>
+  );
+}
+
+/* A rough lightning bolt (lucide `zap`). */
+export function Bolt({
+  x,
+  y,
+  s = 1,
+  c = '#f0b449',
+  seed = 1,
+}: {
+  x: number;
+  y: number;
+  s?: number;
+  c?: string;
+  seed?: number;
+}) {
+  return (
+    <g transform={`translate(${x} ${y}) scale(${s})`}>
+      <Ink
+        d={gen.polygon(
+          [
+            [2, -8],
+            [-4, 1],
+            [0, 1],
+            [-2, 8],
+            [5, -2],
+            [1, -2],
+          ],
+          filled(seed, c, { fillStyle: 'solid', strokeWidth: 1 })
+        )}
+      />
+    </g>
+  );
+}
+
 export { motion };

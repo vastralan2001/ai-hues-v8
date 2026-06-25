@@ -128,3 +128,30 @@ export default function Scene() {
   );
 }
 ```
+
+## More primitives (lucide-inspired) + current rules
+
+The kit now exports richer rough building blocks — prefer these over plain SVG:
+
+- **`<RoughDash d c? w? dur? dash? />`** — a rough, animated dashed trail. **Use
+  this for every trail / path / dashed line.** Never use a plain
+  `<motion.path strokeDasharray>` — dashed lines must be hand-drawn too.
+- **`<Star x y r? c? seed? />`** — a rough 5-point star (lucide `star`), a
+  characterful accent. **`<Sun x y r? c? ray? seed? />`** — rough sun + rays
+  (lucide `sun`). **`<Mountains peaks base? color? seed? />`** — layered rough
+  hills (`peaks` = `[leftX, peakX, peakY][]`). **`<Bolt x y s? c? seed? />`** —
+  rough lightning (lucide `zap`).
+- Look at lucide-react icons for metaphor inspiration (the article's idea → an
+  icon → a rough scene element), but always *redraw* it rough; never import the
+  icon component itself.
+
+**Hard rules (latest):**
+1. **Everything is rough except the one big background.** The gradient sky in
+   `Frame` is the only non-rough element. Water, waterlines, trails, glow rims,
+   stars, suns, hills, the focal subject — all drawn with `gen.*` + `<Ink>` /
+   the kit primitives. No plain `<rect>`/`<line>`/`<circle>`/`<motion.path>`
+   shapes (a soft `url(#glow)` radial behind the subject is the one allowed
+   exception).
+2. **Don't overuse decorations.** At most **1–2** `Twinkle`s, **1** `Cloud`, and
+   **1** dashed trail per scene. The bespoke focal subject carries the scene;
+   sparkles/clouds/dashes are seasoning, not filler.
