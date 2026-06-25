@@ -1,4 +1,4 @@
-import type { Wish } from './wishes';
+import type { Wish, WishType } from './wishes';
 
 const LS_KEY = 'aihues-wishlist';
 const LS_VOTED_KEY = 'aihues-wishlist-voted';
@@ -9,6 +9,8 @@ const SEED_WISHES: Wish[] = [
     title: 'AI PDF Summarizer',
     description:
       'Upload long PDFs and get a concise outline, key quotes, and action items.',
+    type: 'tool',
+    referenceUrl: '',
     category: 'AI Writing',
     status: 'IN PROGRESS',
     votes: 12,
@@ -20,6 +22,8 @@ const SEED_WISHES: Wish[] = [
     title: 'Image Background Remover',
     description:
       'Remove backgrounds from product images and avatars with one click.',
+    type: 'tool',
+    referenceUrl: '',
     category: 'Utility',
     status: 'PLANNED',
     votes: 9,
@@ -31,6 +35,8 @@ const SEED_WISHES: Wish[] = [
     title: 'API Mock Server',
     description:
       'Paste OpenAPI or JSON examples and generate a temporary mock endpoint.',
+    type: 'tool',
+    referenceUrl: '',
     category: 'Developer',
     status: 'PLANNED',
     votes: 7,
@@ -42,6 +48,8 @@ const SEED_WISHES: Wish[] = [
     title: 'Resume Bullet Rewriter',
     description:
       'Turn rough work notes into quantified resume bullets in multiple tones.',
+    type: 'tool',
+    referenceUrl: '',
     category: 'AI Writing',
     status: 'DONE',
     votes: 5,
@@ -53,6 +61,8 @@ const SEED_WISHES: Wish[] = [
     title: 'SQL Schema Visualizer',
     description:
       'Convert CREATE TABLE statements into a clean relationship diagram.',
+    type: 'tool',
+    referenceUrl: '',
     category: 'Developer',
     status: 'IN PROGRESS',
     votes: 8,
@@ -64,6 +74,8 @@ const SEED_WISHES: Wish[] = [
     title: 'Meeting Notes Cleaner',
     description:
       'Paste messy meeting notes and receive decisions, owners, and next steps.',
+    type: 'tool',
+    referenceUrl: '',
     category: 'Utility',
     status: 'PLANNED',
     votes: 4,
@@ -75,6 +87,8 @@ const SEED_WISHES: Wish[] = [
     title: 'Prompt Version Diff',
     description:
       'Compare two prompt versions and highlight instruction, tone, and output changes.',
+    type: 'tool',
+    referenceUrl: '',
     category: 'Developer',
     status: 'PLANNED',
     votes: 6,
@@ -86,6 +100,8 @@ const SEED_WISHES: Wish[] = [
     title: 'Product Hunt Launch Kit',
     description:
       'Generate tagline, maker comment, launch checklist, and social copy.',
+    type: 'tool',
+    referenceUrl: '',
     category: 'Growth',
     status: 'DONE',
     votes: 3,
@@ -97,6 +113,8 @@ const SEED_WISHES: Wish[] = [
     title: 'Invoice OCR Checker',
     description:
       'Extract invoice fields and flag missing tax IDs, totals, and dates.',
+    type: 'tool',
+    referenceUrl: '',
     category: 'Utility',
     status: 'PLANNED',
     votes: 2,
@@ -108,6 +126,8 @@ const SEED_WISHES: Wish[] = [
     title: 'CSS Clamp Generator',
     description:
       'Generate responsive clamp() font sizes and spacing scales from min/max values.',
+    type: 'tool',
+    referenceUrl: '',
     category: 'Developer',
     status: 'DONE',
     votes: 1,
@@ -142,11 +162,14 @@ export function loadWishes(): Wish[] {
 }
 
 export function addWish(
-  wish: Omit<Wish, 'id' | 'votes' | 'date' | 'voters' | 'status'>
+  wish: Omit<Wish, 'id' | 'votes' | 'date' | 'voters' | 'status' | 'type'> & {
+    type?: WishType;
+  }
 ): Wish {
   const wishes = loadRaw();
   const newWish: Wish = {
     ...wish,
+    type: wish.type ?? 'tool',
     id: `wish-${Date.now()}`,
     status: 'PLANNED',
     votes: 0,
