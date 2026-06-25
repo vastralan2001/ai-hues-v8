@@ -143,7 +143,7 @@ export default function StoriesContent({
                   href={`/stories/${post.slug}`}
                   className='card-lift group flex flex-col overflow-hidden rounded-[16px] border border-border bg-surface text-inherit no-underline'
                 >
-                  <div className='relative h-[180px] overflow-hidden'>
+                  <div className='relative aspect-[16/9] overflow-hidden'>
                     <StoryArt
                       slug={post.slug}
                       tag={post.tag}

@@ -9,6 +9,7 @@ import { buildResultPoster, shareOrDownloadPoster } from '@/lib/tests/poster';
 import type { TestResult } from '@/lib/tests/types';
 import { ToolIcon } from '@/components/ToolIcon';
 import { testsHref } from '@/lib/routes';
+import { CATEGORY_ACCENT_HEX } from '@/lib/category-brand';
 
 type Phase = 'intro' | 'quiz' | 'result';
 
@@ -23,7 +24,9 @@ export default function QuizRunner({ slug }: { slug: string }) {
   const [posterBusy, setPosterBusy] = useState(false);
 
   if (!config) return null;
-  const accent = config.accent;
+  // Every Test detail page uses the Tests family brand hue, not a per-test
+  // colour, so the section stays consistent with its category theme.
+  const accent = CATEGORY_ACCENT_HEX.tests;
 
   function start() {
     setAnswers(Array(total).fill(-1));
@@ -213,7 +216,7 @@ export default function QuizRunner({ slug }: { slug: string }) {
 
   /* ── Result ── */
   if (phase === 'result' && result) {
-    const racc = result.accent;
+    const racc = CATEGORY_ACCENT_HEX.tests;
     const isSbti = config.resultStyle === 'sbti';
 
     return (

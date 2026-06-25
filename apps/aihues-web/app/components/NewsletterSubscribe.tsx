@@ -51,7 +51,7 @@ export default function NewsletterSubscribe() {
   };
 
   return (
-    <div className='mt-16 rounded-[14px] border border-border bg-surface p-8 md:p-10'>
+    <div className='mt-16 py-8 md:py-10'>
       <div className='mx-auto max-w-[420px] text-center'>
         <h3 className='text-xl font-bold tracking-tight text-foreground'>
           Subscribe to AIHues Newsletter

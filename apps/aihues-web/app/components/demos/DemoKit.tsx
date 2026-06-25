@@ -34,7 +34,7 @@ export function GameStage({
 }) {
   return (
     <div
-      className='relative h-[244px] w-full overflow-hidden rounded-[16px] border border-white/10 shadow-sm'
+      className='relative aspect-[16/9] w-full overflow-hidden rounded-[16px] border border-white/10 shadow-sm'
       style={{ background: bg }}
     >
       {children}
@@ -45,7 +45,7 @@ export function GameStage({
 /* A little browser-chrome window the demo content sits inside. */
 export function DemoFrame({ children }: { children: ReactNode }) {
   return (
-    <div className='relative h-[244px] w-full overflow-hidden rounded-[16px] border border-border bg-bg shadow-sm'>
+    <div className='relative aspect-[16/9] w-full overflow-hidden rounded-[16px] border border-border bg-bg shadow-sm'>
       <div className='flex h-7 items-center gap-1.5 border-b border-border bg-surface px-3'>
         <span className='h-2 w-2 rounded-full bg-border-strong' />
         <span className='h-2 w-2 rounded-full bg-border-strong' />

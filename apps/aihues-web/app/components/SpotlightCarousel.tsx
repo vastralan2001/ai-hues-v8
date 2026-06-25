@@ -184,7 +184,7 @@ export default function SpotlightCarousel({
     // Games get the same framed card as the tool/test demos for visual parity.
     if (k === 'game')
       return (
-        <div className='relative h-[244px] w-full overflow-hidden rounded-[16px] border border-border bg-bg shadow-sm'>
+        <div className='relative aspect-[16/9] w-full overflow-hidden rounded-[16px] border border-border bg-bg shadow-sm'>
           <GameDemo active={active} slug={s.slug} />
         </div>
       );
@@ -229,7 +229,7 @@ export default function SpotlightCarousel({
               slug={s.slug}
               tag={s.eyebrow}
               animated
-              className='h-[244px] w-full rounded-[16px] border border-border bg-bg shadow-sm'
+              className='aspect-[16/9] w-full rounded-[16px] border border-border bg-bg shadow-sm'
             />
           ) : null;
           return (

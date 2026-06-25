@@ -112,7 +112,7 @@ export function TestDemo({ slug }: { slug: string }) {
   }, [slug]);
 
   return (
-    <div className='relative h-[244px] w-full overflow-hidden rounded-[16px] border border-border bg-bg shadow-sm'>
+    <div className='relative aspect-[16/9] w-full overflow-hidden rounded-[16px] border border-border bg-bg shadow-sm'>
       {/* Question beat */}
       <div
         className='absolute inset-0 flex flex-col justify-center gap-3 px-5 transition-opacity duration-500'

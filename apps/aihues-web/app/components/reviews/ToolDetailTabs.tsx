@@ -23,7 +23,7 @@ export default function ToolDetailTabs({
     <div className='relative isolate'>
       <BrandBackdrop />
       <div className='mx-auto w-full max-w-[1760px] px-[clamp(1.5rem,5vw,7rem)] pb-8 pt-6'>
-        <div className='flex items-center justify-between gap-4'>
+        <div className='mb-8 flex h-9 items-center justify-between gap-4'>
           <Breadcrumb
             items={[
               { label: locale === 'zh' ? '首页' : 'Home', href: '/' },

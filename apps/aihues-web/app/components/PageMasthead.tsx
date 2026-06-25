@@ -35,7 +35,7 @@ export function PageMasthead({
     <header className='relative isolate overflow-hidden pb-10 pt-16 text-center'>
       <BrandBackdrop />
       {breadcrumb && breadcrumb.length > 0 ? (
-        <div className='relative mx-auto mb-8 w-full max-w-[1760px] px-[clamp(1.5rem,5vw,7rem)] text-left'>
+        <div className='relative mx-auto mb-8 flex h-9 w-full max-w-[1760px] items-center px-[clamp(1.5rem,5vw,7rem)] text-left'>
           <Breadcrumb items={breadcrumb} />
         </div>
       ) : null}

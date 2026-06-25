@@ -21,7 +21,7 @@ export const categoryColor = (c: BrandCategory): string =>
 /* Resolved hex values for each category — used only when we need to override
    --color-accent itself (a CSS var cannot reference itself). These must stay
    in sync with the @theme tokens in globals.css. */
-const CATEGORY_ACCENT_HEX: Record<BrandCategory, string> = {
+export const CATEGORY_ACCENT_HEX: Record<BrandCategory, string> = {
   tools: '#c2502e',
   games: '#d97757',
   tests: '#788c5d',

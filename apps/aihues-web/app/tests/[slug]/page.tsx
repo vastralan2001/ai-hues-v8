@@ -41,7 +41,7 @@ export default async function TestPage({
       <div className='relative isolate'>
         <BrandBackdrop />
         <section className='mx-auto w-full max-w-[1760px] px-[clamp(1.5rem,5vw,7rem)] py-10'>
-          <div className='mb-8 flex items-center justify-between gap-4'>
+          <div className='mb-8 flex h-9 items-center justify-between gap-4'>
             <Breadcrumb
               items={[
                 { label: locale === 'zh' ? '首页' : 'Home', href: '/' },

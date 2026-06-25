@@ -280,10 +280,15 @@ export function PageShell({
   };
   const cat = themed[variant];
   return (
-    <>
+    <div className='flex min-h-dvh flex-col'>
       <SiteHeader variant={variant} locale={locale} />
-      <main style={cat ? categoryThemeStyle(cat) : undefined}>{children}</main>
+      <main
+        className='flex-1'
+        style={cat ? categoryThemeStyle(cat) : undefined}
+      >
+        {children}
+      </main>
       <SiteFooter variant={variant} locale={locale} />
-    </>
+    </div>
   );
 }

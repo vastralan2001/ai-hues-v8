@@ -161,7 +161,7 @@ export default async function ArticlePage({
       <div className='relative isolate mx-auto w-full max-w-[1760px] px-[clamp(1.5rem,5vw,7rem)] py-12'>
         <BrandBackdrop />
         {/* Breadcrumb */}
-        <nav className='mb-8 flex min-w-0 items-center gap-1.5 text-[13px] text-muted'>
+        <nav className='mb-8 flex h-9 min-w-0 items-center gap-1.5 text-[13px] text-muted'>
           <Link
             className='shrink-0 transition-colors hover:text-accent'
             href='/'
@@ -179,11 +179,11 @@ export default async function ArticlePage({
           <span className='truncate text-secondary'>{meta.title}</span>
         </nav>
 
-        <div className='lg:grid lg:grid-cols-[minmax(0,1fr)_220px] lg:gap-x-14'>
+        <div className='lg:grid lg:grid-cols-[minmax(0,720px)_320px] lg:gap-x-[clamp(48px,8vw,160px)]'>
           {/* Hero — text left, a compact illustration right (mars resources
               style): the demo is a contained side panel, not a full-width band */}
           <header className='lg:col-span-2'>
-            <div className='flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between lg:gap-14'>
+            <div className='flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between lg:gap-14'>
               <div className='min-w-0 lg:flex-1'>
                 <span className='inline-block rounded-full bg-accent-bg px-3 py-1 text-xs font-bold text-accent'>
                   {meta.tag}
