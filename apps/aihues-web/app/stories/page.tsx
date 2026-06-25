@@ -19,13 +19,18 @@ export const metadata: Metadata = {
 export default async function StoriesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ tag?: string }>;
+  searchParams: Promise<{ tag?: string; page?: string }>;
 }) {
   const posts = getAllPosts();
-  const { tag } = await searchParams;
+  const { tag, page } = await searchParams;
+  const initialPage = Math.max(1, parseInt(page ?? '1', 10) || 1);
   return (
     <PageShell variant='stories'>
-      <StoriesContent initialPosts={posts} initialTag={tag} />
+      <StoriesContent
+        initialPosts={posts}
+        initialTag={tag}
+        initialPage={initialPage}
+      />
     </PageShell>
   );
 }

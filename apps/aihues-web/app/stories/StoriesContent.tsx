@@ -21,16 +21,21 @@ const POSTS_PER_PAGE = 12;
 interface Props {
   initialPosts: ResourcePost[];
   initialTag?: string;
+  initialPage?: number;
 }
 
-export default function StoriesContent({ initialPosts, initialTag }: Props) {
+export default function StoriesContent({
+  initialPosts,
+  initialTag,
+  initialPage,
+}: Props) {
   const [query, setQuery] = useState('');
   const [activeTag, setActiveTag] = useState<string>(
     initialTag && initialPosts.some((p) => p.tag === initialTag)
       ? initialTag
       : 'All'
   );
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(initialPage ?? 1);
 
   const allTags = useMemo(() => {
     const tags = Array.from(new Set(initialPosts.map((p) => p.tag)));
@@ -58,8 +63,32 @@ export default function StoriesContent({ initialPosts, initialTag }: Props) {
   }, [query, activeTag, initialPosts]);
 
   const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
-  const start = (currentPage - 1) * POSTS_PER_PAGE;
+  // `page` is currentPage clamped to the valid range, so a shared ?page that is
+  // too large for the current filter still shows the last page, not an empty grid.
+  const page = Math.min(Math.max(1, currentPage), Math.max(1, totalPages));
+  const start = (page - 1) * POSTS_PER_PAGE;
   const pagePosts = filteredPosts.slice(start, start + POSTS_PER_PAGE);
+
+  // Reserve a fixed width for the page-number group so the first/prev/next/last
+  // buttons keep their position as the visible numbers change.
+  const visibleSlots = Math.min(Math.max(totalPages, 1), 7);
+  const pageBarWidth = visibleSlots * 40 + (visibleSlots - 1) * 6;
+
+  // Navigate to a page: clamp, set state, and reflect it in ?page= (no reload).
+  function goTo(p: number) {
+    const next = Math.min(Math.max(1, p), totalPages || 1);
+    setCurrentPage(next);
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    if (next <= 1) params.delete('page');
+    else params.set('page', String(next));
+    const qs = params.toString();
+    window.history.replaceState(
+      null,
+      '',
+      qs ? `?${qs}` : window.location.pathname
+    );
+  }
 
   return (
     <>
@@ -74,7 +103,7 @@ export default function StoriesContent({ initialPosts, initialTag }: Props) {
           ariaLabel='Search articles'
           onChange={(v) => {
             setQuery(v);
-            setCurrentPage(1);
+            goTo(1);
           }}
           placeholder='Search articles by title, topic, or keyword...'
           value={query}
@@ -89,7 +118,7 @@ export default function StoriesContent({ initialPosts, initialTag }: Props) {
           activeKey={activeTag}
           onSelect={(tag) => {
             setActiveTag(tag);
-            setCurrentPage(1);
+            goTo(1);
           }}
           items={allTags.map((tag) => ({ key: tag, label: tag }))}
         />
@@ -150,8 +179,8 @@ export default function StoriesContent({ initialPosts, initialTag }: Props) {
                 <button
                   aria-label='First page'
                   className='flex h-10 w-10 items-center justify-center rounded-full border border-border bg-white/70 text-secondary backdrop-blur-sm transition-colors hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-border disabled:hover:text-secondary'
-                  disabled={currentPage === 1}
-                  onClick={() => setCurrentPage(1)}
+                  disabled={page === 1}
+                  onClick={() => goTo(1)}
                   type='button'
                 >
                   <ChevronsLeft size={18} />
@@ -159,65 +188,64 @@ export default function StoriesContent({ initialPosts, initialTag }: Props) {
                 <button
                   aria-label='Previous page'
                   className='flex h-10 w-10 items-center justify-center rounded-full border border-border bg-white/70 text-secondary backdrop-blur-sm transition-colors hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-border disabled:hover:text-secondary'
-                  disabled={currentPage === 1}
-                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={page === 1}
+                  onClick={() => goTo(page - 1)}
                   type='button'
                 >
                   <ChevronLeft size={18} />
                 </button>
-                {(() => {
-                  // Always show first + last page; a window around the current
-                  // page; and "…" for any gap between them.
-                  const window = 1;
-                  const pages = new Set<number>([1, totalPages]);
-                  for (
-                    let p = currentPage - window;
-                    p <= currentPage + window;
-                    p++
-                  ) {
-                    if (p >= 1 && p <= totalPages) pages.add(p);
-                  }
-                  const sorted = [...pages].sort((a, b) => a - b);
-                  const items: (number | 'gap')[] = [];
-                  let prev = 0;
-                  for (const p of sorted) {
-                    if (prev && p - prev > 1) items.push('gap');
-                    items.push(p);
-                    prev = p;
-                  }
-                  return items.map((it, i) =>
-                    it === 'gap' ? (
-                      <span
-                        key={`gap-${i}`}
-                        aria-hidden='true'
-                        className='flex h-10 w-10 items-center justify-center text-muted'
-                      >
-                        …
-                      </span>
-                    ) : (
-                      <button
-                        key={it}
-                        type='button'
-                        aria-current={it === currentPage ? 'page' : undefined}
-                        onClick={() => setCurrentPage(it)}
-                        className={`flex h-10 min-w-[40px] items-center justify-center rounded-[10px] px-3 text-sm font-bold transition-colors ${
-                          it === currentPage
-                            ? 'border border-accent bg-accent text-white'
-                            : 'border border-border bg-white/70 text-secondary backdrop-blur-sm hover:border-accent hover:text-accent'
-                        }`}
-                      >
-                        {it}
-                      </button>
-                    )
-                  );
-                })()}
+                <div
+                  className='flex items-center justify-center gap-1.5'
+                  style={{ width: pageBarWidth }}
+                >
+                  {(() => {
+                    // Always show first + last page; a window around the current
+                    // page; and "…" for any gap between them.
+                    const window = 1;
+                    const pages = new Set<number>([1, totalPages]);
+                    for (let p = page - window; p <= page + window; p++) {
+                      if (p >= 1 && p <= totalPages) pages.add(p);
+                    }
+                    const sorted = [...pages].sort((a, b) => a - b);
+                    const items: (number | 'gap')[] = [];
+                    let prev = 0;
+                    for (const p of sorted) {
+                      if (prev && p - prev > 1) items.push('gap');
+                      items.push(p);
+                      prev = p;
+                    }
+                    return items.map((it, i) =>
+                      it === 'gap' ? (
+                        <span
+                          key={`gap-${i}`}
+                          aria-hidden='true'
+                          className='flex h-10 w-10 items-center justify-center text-muted'
+                        >
+                          …
+                        </span>
+                      ) : (
+                        <button
+                          key={it}
+                          type='button'
+                          aria-current={it === page ? 'page' : undefined}
+                          onClick={() => goTo(it)}
+                          className={`flex h-10 min-w-[40px] items-center justify-center rounded-[10px] px-3 text-sm font-bold transition-colors ${
+                            it === page
+                              ? 'border border-accent bg-accent text-white'
+                              : 'border border-border bg-white/70 text-secondary backdrop-blur-sm hover:border-accent hover:text-accent'
+                          }`}
+                        >
+                          {it}
+                        </button>
+                      )
+                    );
+                  })()}
+                </div>
                 <button
                   aria-label='Next page'
                   className='flex h-10 w-10 items-center justify-center rounded-full border border-border bg-white/70 text-secondary backdrop-blur-sm transition-colors hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-border disabled:hover:text-secondary'
-                  disabled={currentPage === totalPages}
-                  onClick={() =>
-                    setCurrentPage((p) => Math.min(totalPages, p + 1))
-                  }
+                  disabled={page === totalPages}
+                  onClick={() => goTo(page + 1)}
                   type='button'
                 >
                   <ChevronRight size={18} />
@@ -225,8 +253,8 @@ export default function StoriesContent({ initialPosts, initialTag }: Props) {
                 <button
                   aria-label='Last page'
                   className='flex h-10 w-10 items-center justify-center rounded-full border border-border bg-white/70 text-secondary backdrop-blur-sm transition-colors hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-border disabled:hover:text-secondary'
-                  disabled={currentPage === totalPages}
-                  onClick={() => setCurrentPage(totalPages)}
+                  disabled={page === totalPages}
+                  onClick={() => goTo(totalPages)}
                   type='button'
                 >
                   <ChevronsRight size={18} />
