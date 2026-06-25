@@ -166,26 +166,50 @@ export default function StoriesContent({ initialPosts, initialTag }: Props) {
                   <ChevronLeft size={18} />
                 </button>
                 {(() => {
-                  const span = 2;
-                  const lo = Math.max(1, currentPage - span);
-                  const hi = Math.min(totalPages, currentPage + span);
-                  const list: number[] = [];
-                  for (let p = lo; p <= hi; p++) list.push(p);
-                  return list.map((p) => (
-                    <button
-                      key={p}
-                      type='button'
-                      aria-current={p === currentPage ? 'page' : undefined}
-                      onClick={() => setCurrentPage(p)}
-                      className={`flex h-10 min-w-[40px] items-center justify-center rounded-[10px] px-3 text-sm font-bold transition-colors ${
-                        p === currentPage
-                          ? 'border border-accent bg-accent text-white'
-                          : 'border border-border bg-white/70 text-secondary backdrop-blur-sm hover:border-accent hover:text-accent'
-                      }`}
-                    >
-                      {p}
-                    </button>
-                  ));
+                  // Always show first + last page; a window around the current
+                  // page; and "…" for any gap between them.
+                  const window = 1;
+                  const pages = new Set<number>([1, totalPages]);
+                  for (
+                    let p = currentPage - window;
+                    p <= currentPage + window;
+                    p++
+                  ) {
+                    if (p >= 1 && p <= totalPages) pages.add(p);
+                  }
+                  const sorted = [...pages].sort((a, b) => a - b);
+                  const items: (number | 'gap')[] = [];
+                  let prev = 0;
+                  for (const p of sorted) {
+                    if (prev && p - prev > 1) items.push('gap');
+                    items.push(p);
+                    prev = p;
+                  }
+                  return items.map((it, i) =>
+                    it === 'gap' ? (
+                      <span
+                        key={`gap-${i}`}
+                        aria-hidden='true'
+                        className='flex h-10 w-10 items-center justify-center text-muted'
+                      >
+                        …
+                      </span>
+                    ) : (
+                      <button
+                        key={it}
+                        type='button'
+                        aria-current={it === currentPage ? 'page' : undefined}
+                        onClick={() => setCurrentPage(it)}
+                        className={`flex h-10 min-w-[40px] items-center justify-center rounded-[10px] px-3 text-sm font-bold transition-colors ${
+                          it === currentPage
+                            ? 'border border-accent bg-accent text-white'
+                            : 'border border-border bg-white/70 text-secondary backdrop-blur-sm hover:border-accent hover:text-accent'
+                        }`}
+                      >
+                        {it}
+                      </button>
+                    )
+                  );
                 })()}
                 <button
                   aria-label='Next page'

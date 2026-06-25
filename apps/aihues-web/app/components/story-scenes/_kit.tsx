@@ -113,6 +113,20 @@ export function Frame({
         strokeLinecap='round'
         strokeLinejoin='round'
       >
+        {/* faint hand-drawn paper grain over the gradient sky */}
+        <g opacity={0.07}>
+          <Ink
+            d={gen.rectangle(0, 0, 200, 100, {
+              fill: INK,
+              fillStyle: 'cross-hatch',
+              hachureGap: 7,
+              fillWeight: 0.5,
+              roughness: 2.6,
+              stroke: 'none',
+              seed: 7,
+            })}
+          />
+        </g>
         {children}
       </svg>
     </div>
