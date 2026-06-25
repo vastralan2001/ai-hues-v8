@@ -310,6 +310,67 @@ function score(answers: number[]): TestResult {
   };
 }
 
+const AVATAR_NAMES: Record<string, string> = {
+  INTJ: 'architect',
+  INTP: 'logician',
+  ENTJ: 'commander',
+  ENTP: 'debater',
+  INFJ: 'advocate',
+  INFP: 'mediator',
+  ENFJ: 'protagonist',
+  ENFP: 'campaigner',
+  ISTJ: 'logistician',
+  ISFJ: 'defender',
+  ESTJ: 'executive',
+  ESFJ: 'consul',
+  ISTP: 'virtuoso',
+  ISFP: 'adventurer',
+  ESTP: 'entrepreneur',
+  ESFP: 'entertainer',
+};
+
+export function getMbtiAvatarUrl(code: string): string | null {
+  const type4 = code.slice(0, 4).toUpperCase();
+  const name = AVATAR_NAMES[type4];
+  if (!name) return null;
+  return `https://www.16personalities.com/static/images/personality-types/avatars/${type4.toLowerCase()}-${name}.png`;
+}
+
+export interface MbtiSummary {
+  code: string;
+  type4: string;
+  identity: string;
+  name: string;
+  blurb: string;
+  group: string;
+  accent: string;
+  tags: string[];
+}
+
+export function getMbtiSummary(code: string): MbtiSummary | null {
+  const match = code.match(/^([A-Z]{4})-([AT])$/i);
+  if (!match) return null;
+  const type4 = match[1].toUpperCase();
+  const identity = match[2].toUpperCase();
+  const def = TYPES[type4] ?? TYPES.INTJ;
+  const group = GROUP[def.group];
+  const idWord = identity === 'A' ? 'Assertive' : 'Turbulent';
+  return {
+    code,
+    type4,
+    identity,
+    name: def.name,
+    blurb: `${def.blurb} As ${identity === 'A' ? 'an Assertive' : 'a Turbulent'} ${def.name}, you ${
+      identity === 'A'
+        ? 'lean on self-belief and shrug off setbacks.'
+        : 'hold yourself to a high bar and feel every wobble.'
+    }`,
+    group: group.name,
+    accent: group.accent,
+    tags: [group.name, idWord, type4],
+  };
+}
+
 export const mbtiConfig: TestConfig = {
   slug: 'mbti',
   name: 'MBTI Personality Test',

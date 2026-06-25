@@ -259,6 +259,26 @@ const BANDS: IqBand[] = [
   },
 ];
 
+export function getMensaSummary(code: string): {
+  code: string;
+  title: string;
+  blurb: string;
+  percentile: string;
+  accent: string;
+} | null {
+  const band = BANDS.find(
+    (b) => b.code.toLowerCase() === decodeURIComponent(code).toLowerCase()
+  );
+  if (!band) return null;
+  return {
+    code: band.code,
+    title: band.title,
+    blurb: band.blurb,
+    percentile: band.percentile,
+    accent: ACCENT,
+  };
+}
+
 export const mensaConfig: TestConfig = {
   slug: 'mensa',
   name: 'Mensa',

@@ -1,6 +1,6 @@
 'use client';
 
-import { ImageDown } from 'lucide-react';
+import { ImageDown, Share2 } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -347,6 +347,13 @@ export default function QuizRunner({ slug }: { slug: string }) {
                 <ImageDown size={16} />
                 {posterBusy ? 'Preparing…' : 'Save poster'}
               </button>
+              <Link
+                href={`/tests/${config.slug}/result?code=${encodeURIComponent(result.code)}`}
+                className='inline-flex items-center gap-2 rounded-[12px] border border-border bg-surface px-7 py-2.5 text-[14px] font-semibold text-foreground transition-colors hover:border-border-strong'
+              >
+                <Share2 size={16} />
+                Share result
+              </Link>
               <Link
                 href={testsHref}
                 className='ml-auto text-[13px] font-semibold text-muted transition-colors hover:text-foreground'

@@ -472,6 +472,51 @@ function score(answers: number[]): TestResult {
   };
 }
 
+export interface SbtiSummary {
+  code: string;
+  name: string;
+  blurb: string;
+  accent: string;
+  matchPct?: number;
+  tags: string[];
+  hidden?: boolean;
+}
+
+export function getSbtiSummary(code: string): SbtiSummary | null {
+  const upper = code.toUpperCase();
+  if (upper === DRUNK.code) {
+    return {
+      code: DRUNK.code,
+      name: DRUNK.name,
+      blurb: DRUNK.blurb,
+      accent: DRUNK.accent,
+      matchPct: 100,
+      tags: ['Hidden archetype'],
+      hidden: true,
+    };
+  }
+  const archetype = ARCHETYPES.find((a) => a.code === upper);
+  if (archetype) {
+    return {
+      code: archetype.code,
+      name: archetype.name,
+      blurb: archetype.blurb,
+      accent: archetype.accent,
+      tags: [archetype.code],
+    };
+  }
+  if (upper === WILDCARD.code) {
+    return {
+      code: WILDCARD.code,
+      name: WILDCARD.name,
+      blurb: WILDCARD.blurb,
+      accent: WILDCARD.accent,
+      tags: ['Unclassifiable'],
+    };
+  }
+  return null;
+}
+
 export const sbtiConfig: TestConfig = {
   slug: 'sbti',
   name: 'SBTI Personality Test',

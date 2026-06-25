@@ -48,17 +48,22 @@ const PLATFORMS: Platform[] = [
    resources detail sidebar share. Client-only (reads window.location). */
 export default function ShareButtons({
   title,
+  url: urlProp,
   className = '',
   variant = 'light',
 }: {
   title?: string;
+  url?: string;
   className?: string;
   variant?: 'light' | 'dark';
 }) {
   const [copied, setCopied] = useState(false);
 
+  const shareUrl =
+    urlProp || (typeof window !== 'undefined' ? window.location.href : '');
+
   function openShare(build: Platform['href']) {
-    const url = encodeURIComponent(window.location.href);
+    const url = encodeURIComponent(shareUrl);
     const text = encodeURIComponent(title || document.title);
     window.open(
       build(url, text),
@@ -68,7 +73,7 @@ export default function ShareButtons({
   }
 
   function copyLink() {
-    navigator.clipboard?.writeText(window.location.href).then(() => {
+    navigator.clipboard?.writeText(shareUrl).then(() => {
       setCopied(true);
       window.setTimeout(() => setCopied(false), 1600);
     });

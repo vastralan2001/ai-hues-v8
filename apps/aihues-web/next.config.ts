@@ -29,6 +29,15 @@ const nextConfig: NextConfig = {
   output: 'standalone',
   serverExternalPackages: ['@huggingface/transformers'],
   transpilePackages: ['@aiushtha/proto-es'],
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'www.16personalities.com',
+        pathname: '/static/images/personality-types/avatars/**',
+      },
+    ],
+  },
   async rewrites() {
     const toolSlugs = staticHtmlSlugs('tools');
     const gameSlugs = staticHtmlSlugs('games');

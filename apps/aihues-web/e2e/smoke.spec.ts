@@ -22,7 +22,7 @@ test.describe('AIHues smoke tests', () => {
 
   test('games page loads', async ({ page }) => {
     await page.goto('/games');
-    await expect(page.locator('h1')).toContainText(/Game Center|游戏中心/);
+    await expect(page.locator('h1')).toContainText(/Games|游戏/);
   });
 
   test('wishlist page loads and can submit a wish', async ({ page }) => {
@@ -31,10 +31,15 @@ test.describe('AIHues smoke tests', () => {
 
     const titleInput = page
       .locator(
-        'input[placeholder*="Tool name"], input[placeholder*="工具名称"]'
+        'input[placeholder*="Give it a name"], input[placeholder*="给它起个名字"]'
       )
       .first();
     const descInput = page.locator('textarea').first();
+    const emailInput = page
+      .locator(
+        'input[type="email"], input[placeholder*="Get notified"], input[placeholder*="上线后通知你"]'
+      )
+      .first();
     const submitButton = page
       .locator('button[type="button"]')
       .filter({ hasText: /Submit|提交/ })
@@ -42,6 +47,7 @@ test.describe('AIHues smoke tests', () => {
 
     await titleInput.fill('E2E Test Wish');
     await descInput.fill('Submitted by Playwright smoke test');
+    await emailInput.fill('e2e@example.com');
     await submitButton.click();
 
     await expect(page.locator('body')).toContainText(
