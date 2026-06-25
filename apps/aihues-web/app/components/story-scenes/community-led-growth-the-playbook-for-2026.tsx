@@ -9,7 +9,6 @@ import {
   gen,
   filled,
   loop,
-  INK,
   motion,
 } from './_kit';
 

@@ -9,7 +9,6 @@ import {
   stroke,
   loop,
   RoughDash,
-  INK,
   motion,
 } from './_kit';
 

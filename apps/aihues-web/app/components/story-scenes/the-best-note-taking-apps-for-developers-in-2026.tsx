@@ -8,7 +8,6 @@ import {
   filled,
   stroke,
   loop,
-  linear,
   INK,
   motion,
 } from './_kit';
