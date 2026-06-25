@@ -3,8 +3,8 @@ import Link from 'next/link';
 import FeatureBand from '@/components/FeatureBand';
 import HeroStage from '@/components/HeroStage';
 import { JsonLd } from '@/components/JsonLd';
-import { BrandWord } from '@/components/Logo';
 import { PageShell } from '@/components/SiteChrome';
+import { SloganEgg } from '@/components/SloganEgg';
 import SpotlightCarousel, {
   type SpotlightSlide,
 } from '@/components/SpotlightCarousel';
@@ -291,7 +291,13 @@ export default async function HomePage() {
           ]}
           reverse
           tagline={undefined}
-          title={<BrandWord>{CATEGORY_SLOGAN.tools.primary[locale]}</BrandWord>}
+          title={
+            <SloganEgg
+              slogan={CATEGORY_SLOGAN.tools.primary[locale]}
+              keyword='heavy lifting'
+              egg='lifting'
+            />
+          }
           tone={2}
           visual={
             <SpotlightCarousel
@@ -315,7 +321,13 @@ export default async function HomePage() {
             href: gamesGenreHref(g),
           }))}
           tagline={undefined}
-          title={<BrandWord>{CATEGORY_SLOGAN.games.primary[locale]}</BrandWord>}
+          title={
+            <SloganEgg
+              slogan={CATEGORY_SLOGAN.games.primary[locale]}
+              keyword='overworked'
+              egg='overworked'
+            />
+          }
           tone={3}
           visual={
             <SpotlightCarousel
@@ -340,7 +352,13 @@ export default async function HomePage() {
           }))}
           reverse
           tagline={undefined}
-          title={<BrandWord>{CATEGORY_SLOGAN.tests.primary[locale]}</BrandWord>}
+          title={
+            <SloganEgg
+              slogan={CATEGORY_SLOGAN.tests.primary[locale]}
+              keyword='pay grade'
+              egg='paygrade'
+            />
+          }
           tone={4}
           visual={<SpotlightCarousel demo='test' slides={testSlides(locale)} />}
         />
@@ -362,7 +380,11 @@ export default async function HomePage() {
           ]}
           tagline={undefined}
           title={
-            <BrandWord>{CATEGORY_SLOGAN.stories.primary[locale]}</BrandWord>
+            <SloganEgg
+              slogan={CATEGORY_SLOGAN.stories.primary[locale]}
+              keyword='noise'
+              egg='noise'
+            />
           }
           tone={0}
           visual={
