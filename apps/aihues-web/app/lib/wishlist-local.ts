@@ -1,6 +1,6 @@
 import type { Wish, WishType } from './wishes';
 
-const LS_KEY = 'aihues-wishlist';
+const LS_KEY = 'aihues-wishlist-v2';
 const LS_VOTED_KEY = 'aihues-wishlist-voted';
 
 const SEED_WISHES: Wish[] = [
