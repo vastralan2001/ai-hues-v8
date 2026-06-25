@@ -13,7 +13,7 @@ import { getTest } from '@/lib/tests';
 import { getMbtiAvatarUrl, getMbtiSummary } from '@/lib/tests/mbti';
 import { getMensaSummary } from '@/lib/tests/mensa';
 import { getSbinetSummary } from '@/lib/tests/sbinet';
-import { getSbtiSummary } from '@/lib/tests/sbti';
+import { getSbtiAvatarUrl, getSbtiSummary } from '@/lib/tests/sbti';
 import { testsHref } from '@/lib/routes';
 
 export function generateStaticParams() {
@@ -22,15 +22,76 @@ export function generateStaticParams() {
 
 export async function generateMetadata({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ code?: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
+  const { code } = await searchParams;
   const config = getTest(slug);
+
+  if (!config || !code) {
+    return {
+      title: config
+        ? `Share ${config.name} result | AIHues`
+        : 'Test result | AIHues',
+    };
+  }
+
+  const summary =
+    slug === 'mbti'
+      ? getMbtiSummary(code)
+      : slug === 'sbti'
+        ? getSbtiSummary(code)
+        : slug === 'mensa'
+          ? getMensaSummary(code)
+          : slug === 'sbinet'
+            ? getSbinetSummary(code)
+            : null;
+
+  const resultName = summary
+    ? 'name' in summary
+      ? summary.name
+      : summary.title
+    : code;
+  const title = `${config.name} result: ${summary?.code ?? code} — ${resultName}`;
+  const description =
+    summary?.blurb ?? `Check out my ${config.name} result on AIHues.`;
+  const pageUrl = `https://aihues.com/tests/${slug}/result?code=${encodeURIComponent(code)}`;
+
+  let imageUrl: string | undefined;
+  if (slug === 'mbti') {
+    imageUrl = getMbtiAvatarUrl(code) ?? undefined;
+  } else if (slug === 'sbti') {
+    imageUrl = getSbtiAvatarUrl(code) ?? undefined;
+  } else {
+    imageUrl = `/tests/${slug}/result/opengraph-image?code=${encodeURIComponent(code)}`;
+  }
+
   return {
-    title: config
-      ? `Share ${config.name} result | AIHues`
-      : 'Test result | AIHues',
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: pageUrl,
+      type: 'website',
+      images: imageUrl
+        ? [
+            {
+              url: imageUrl,
+              alt: `${config.name} result for ${summary?.code ?? code}`,
+            },
+          ]
+        : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: imageUrl ? [imageUrl] : undefined,
+    },
   };
 }
 
@@ -76,14 +137,20 @@ export default async function TestResultSharePage({
   const shareText = `My ${config.name} result: ${summary.code} — ${name} · via AIHues`;
   const pageUrl = `https://aihues.com/tests/${slug}/result?code=${encodeURIComponent(code)}`;
 
-  const mbtiImage = slug === 'mbti' ? getMbtiAvatarUrl(summary.code) : null;
+  const avatarUrl =
+    slug === 'mbti'
+      ? getMbtiAvatarUrl(summary.code)
+      : slug === 'sbti'
+        ? getSbtiAvatarUrl(summary.code)
+        : null;
 
-  const media = mbtiImage ? (
+  const media = avatarUrl ? (
     <Image
-      src={mbtiImage}
+      src={avatarUrl}
       alt={name}
       width={128}
       height={128}
+      priority
       unoptimized
       className='h-32 w-32 rounded-[22px] border-2 border-white bg-bg object-cover shadow-xl'
     />

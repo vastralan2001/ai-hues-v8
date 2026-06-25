@@ -391,6 +391,35 @@ const DRUNK: Omit<Archetype, 'pattern'> = {
     'The algorithm has nothing left to measure. You answered honestly, and honestly, maybe slow down on the tequila. (Hidden archetype unlocked.)',
 };
 
+// Mapping from our original SBTI archetypes to the public SBTI result artwork
+// hosted at https://sbti.pics/images. Each entry points to the closest matching
+// viral type image (no explicit/offensive type codes are used).
+const SBTI_AVATAR_MAP: Record<string, string> = {
+  GOBLIN: 'malo.png',
+  NPC: 'hhhh.png',
+  DOOMER: 'dead.png',
+  GRINDSET: 'gogo.png',
+  MAINCHAR: 'sexy.png',
+  GHOST: 'solo.png',
+  SIMP: 'love_r.png',
+  KAREN: 'ctrl.png',
+  ZEN: 'monk.png',
+  CLOWN: 'joke_r.jpg',
+  GIGACHAD: 'boss.png',
+  BURNOUT: 'zzzz.png',
+  YESMAN: 'atm_er.png',
+  OVERTHINK: 'imsb.png',
+  DRUNK: 'drunk.png',
+  HHHH: 'hhhh.png',
+};
+
+export function getSbtiAvatarUrl(code: string): string | null {
+  const upper = code.toUpperCase();
+  const file = SBTI_AVATAR_MAP[upper];
+  if (!file) return null;
+  return `https://sbti.pics/images/${file}`;
+}
+
 const WILDCARD: Omit<Archetype, 'pattern'> = {
   code: 'HHHH',
   name: 'The Wildcard',
