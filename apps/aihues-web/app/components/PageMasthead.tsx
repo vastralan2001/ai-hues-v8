@@ -41,7 +41,7 @@ export function PageMasthead({
         }}
       />
       {breadcrumb && breadcrumb.length > 0 ? (
-        <div className='relative mx-auto mb-8 w-full max-w-[1100px] text-left'>
+        <div className='relative mx-auto mb-8 w-full max-w-[1320px] text-left'>
           <Breadcrumb items={breadcrumb} />
         </div>
       ) : null}
@@ -79,7 +79,7 @@ export function PageMasthead({
       </div>
       <div
         aria-hidden='true'
-        className='mx-auto mt-12 h-px w-full max-w-[1100px] bg-border'
+        className='mx-auto mt-12 h-px w-full max-w-[1320px] bg-border'
       />
     </header>
   );
