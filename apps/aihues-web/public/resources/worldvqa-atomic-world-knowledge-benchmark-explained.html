@@ -236,8 +236,7 @@
   </head>
   <body>
     <article class="article">
-      <div class="article-content">
-        <div class="article-header">
+      <div class="article-header">
           <span class="article-tag">Research Deep Read</span>
           <h1>WorldVQA: Measuring Atomic World Knowledge in MLLMs</h1>
           <p>
@@ -249,254 +248,237 @@
             <span>2026-06-25</span><span>8 min read</span><span>AIHues Team</span>
           </div>
         </div>
-
-        <div class="paper-box">
-          <span class="paper-label">Read the source research</span>
-          <a
-            class="paper-btn"
-            href="https://arxiv.org/abs/2602.02537"
-            target="_blank"
-            rel="noopener"
-            >Read the paper ↗</a
-          >
-          <a
-            class="paper-btn secondary"
-            href="https://arxiv.org/pdf/2602.02537"
-            target="_blank"
-            rel="noopener"
-            >Download PDF ↓</a
-          >
-        </div>
-
-        <p>
-          A multimodal model can describe a bird in fluent, confident prose. It
-          can tell you about the plumage, the posture, the light. None of that
-          proves it knows the bird is a <strong>Chestnut Shortwing</strong>.
-          Description is not recognition. WorldVQA, released by the Kimi Team at
-          Moonshot AI, is a benchmark built to separate the two.
+      <div class="article-content">
+        <p class="source">
+          <strong>Source:</strong>
+          <a href="https://arxiv.org/abs/2602.02537" target="_blank" rel="noopener">Read the paper ↗</a>
+          ·
+          <a href="https://arxiv.org/pdf/2602.02537" target="_blank" rel="noopener">Download PDF ↓</a>
         </p>
 
         <p>
-          The paper frames the problem as <strong>atomic world knowledge</strong>:
-          a single, verifiable fact tied to a single image. No reasoning chains,
-          no multi-hop puzzles, no subjective interpretation. Just one picture,
-          one question, one correct answer. The results are humbling. Even the
-          strongest frontier models land below 50% accuracy.
-        </p>
+                  A multimodal model can describe a bird in fluent, confident prose. It
+                  can tell you about the plumage, the posture, the light. None of that
+                  proves it knows the bird is a <strong>Chestnut Shortwing</strong>.
+                  Description is not recognition. WorldVQA, released by the Kimi Team at
+                  Moonshot AI, is a benchmark built to separate the two.
+                </p>
 
-        <h2>What is atomic world knowledge?</h2>
+                <p>
+                  The paper frames the problem as <strong>atomic world knowledge</strong>:
+                  a single, verifiable fact tied to a single image. No reasoning chains,
+                  no multi-hop puzzles, no subjective interpretation. Just one picture,
+                  one question, one correct answer. The results are humbling. Even the
+                  strongest frontier models land below 50% accuracy.
+                </p>
 
-        <p>
-          Atomic world knowledge is the smallest indivisible unit of factual
-          visual recognition: the model sees a specific entity and must name it
-          correctly. The flower is a Freesia. The fighter jet is a J-20. The
-          crystal cup is the Warring States period artifact, not just "an old
-          glass." Each question has exactly one ground-truth answer that a human
-          expert can verify.
-        </p>
+                <h2>What is atomic world knowledge?</h2>
 
-        <p>
-          This is deliberately narrow. Most multimodal benchmarks reward
-          plausible-sounding output, which lets a model coast on visual pattern
-          matching. A model that has never seen a particular shrike can still
-          produce a competent paragraph about "a small brown bird with a hooked
-          beak." WorldVQA refuses to grade that. It asks for the name, and the
-          name is either right or it is not.
-        </p>
+                <p>
+                  Atomic world knowledge is the smallest indivisible unit of factual
+                  visual recognition: the model sees a specific entity and must name it
+                  correctly. The flower is a Freesia. The fighter jet is a J-20. The
+                  crystal cup is the Warring States period artifact, not just "an old
+                  glass." Each question has exactly one ground-truth answer that a human
+                  expert can verify.
+                </p>
 
-        <div class="quote-box">
-          Does the model actually recognize the specific entity it sees, or is
-          it merely hallucinating based on visual patterns?
-        </div>
+                <p>
+                  This is deliberately narrow. Most multimodal benchmarks reward
+                  plausible-sounding output, which lets a model coast on visual pattern
+                  matching. A model that has never seen a particular shrike can still
+                  produce a competent paragraph about "a small brown bird with a hooked
+                  beak." WorldVQA refuses to grade that. It asks for the name, and the
+                  name is either right or it is not.
+                </p>
 
-        <h2>How is the benchmark built?</h2>
+                <div class="quote-box">
+                  Does the model actually recognize the specific entity it sees, or is
+                  it merely hallucinating based on visual patterns?
+                </div>
 
-        <p>
-          WorldVQA is 3,500 image-question pairs, each hand-verified through a
-          multi-stage human review process to strip out noise and ambiguity. The
-          dataset is bilingual: 2,240 English questions (64%) and 1,260 Chinese
-          questions (36%). Three design principles hold it together.
-        </p>
+                <h2>How is the benchmark built?</h2>
 
-        <ul>
-          <li>
-            <strong>Factuality and unambiguity.</strong> Every question has a
-            single verifiable answer. Subjective or visually ambiguous cases are
-            excluded.
-          </li>
-          <li>
-            <strong>Rich taxonomy.</strong> Nine categories span the recognizable
-            world, from wildlife to consumer electronics.
-          </li>
-          <li>
-            <strong>Head versus tail.</strong> Questions are split between common
-            knowledge (Head) and rare, long-tail knowledge (Tail), so you can
-            watch accuracy decay as the subject gets more obscure.
-          </li>
-        </ul>
+                <p>
+                  WorldVQA is 3,500 image-question pairs, each hand-verified through a
+                  multi-stage human review process to strip out noise and ambiguity. The
+                  dataset is bilingual: 2,240 English questions (64%) and 1,260 Chinese
+                  questions (36%). Three design principles hold it together.
+                </p>
 
-        <h3>The nine categories</h3>
+                <ul>
+                  <li>
+                    <strong>Factuality and unambiguity.</strong> Every question has a
+                    single verifiable answer. Subjective or visually ambiguous cases are
+                    excluded.
+                  </li>
+                  <li>
+                    <strong>Rich taxonomy.</strong> Nine categories span the recognizable
+                    world, from wildlife to consumer electronics.
+                  </li>
+                  <li>
+                    <strong>Head versus tail.</strong> Questions are split between common
+                    knowledge (Head) and rare, long-tail knowledge (Tail), so you can
+                    watch accuracy decay as the subject gets more obscure.
+                  </li>
+                </ul>
 
-        <p>
-          The taxonomy is weighted toward breadth, not toward any single domain.
-          Geography, Culture, Entertainment, and People each carry roughly an
-          equal share of the load.
-        </p>
+                <h3>The nine categories</h3>
 
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Category</th>
-              <th>Share of dataset</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>Locations &amp; Architecture (Geography)</td><td>14.63%</td></tr>
-            <tr><td>Entertainment, Media &amp; Gaming</td><td>14.60%</td></tr>
-            <tr><td>Culture, Arts &amp; Crafts</td><td>14.46%</td></tr>
-            <tr><td>Notable People &amp; Public Figures</td><td>14.29%</td></tr>
-            <tr><td>Objects &amp; Products</td><td>12.49%</td></tr>
-            <tr><td>Nature &amp; Environment</td><td>9.31%</td></tr>
-            <tr><td>Vehicles, Craft &amp; Transportation</td><td>8.74%</td></tr>
-            <tr><td>Brands, Logos &amp; Graphic Design</td><td>7.43%</td></tr>
-            <tr><td>Sports, Gear &amp; Venues</td><td>4.06%</td></tr>
-          </tbody>
-        </table>
+                <p>
+                  The taxonomy is weighted toward breadth, not toward any single domain.
+                  Geography, Culture, Entertainment, and People each carry roughly an
+                  equal share of the load.
+                </p>
 
-        <p>
-          Difficulty is graded too: 31% Easy, 41% Medium, 28% Hard. The Hard
-          slice is where the long-tail entities live, and it is where the
-          benchmark does most of its damage.
-        </p>
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Category</th>
+                      <th>Share of dataset</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>Locations &amp; Architecture (Geography)</td><td>14.63%</td></tr>
+                    <tr><td>Entertainment, Media &amp; Gaming</td><td>14.60%</td></tr>
+                    <tr><td>Culture, Arts &amp; Crafts</td><td>14.46%</td></tr>
+                    <tr><td>Notable People &amp; Public Figures</td><td>14.29%</td></tr>
+                    <tr><td>Objects &amp; Products</td><td>12.49%</td></tr>
+                    <tr><td>Nature &amp; Environment</td><td>9.31%</td></tr>
+                    <tr><td>Vehicles, Craft &amp; Transportation</td><td>8.74%</td></tr>
+                    <tr><td>Brands, Logos &amp; Graphic Design</td><td>7.43%</td></tr>
+                    <tr><td>Sports, Gear &amp; Venues</td><td>4.06%</td></tr>
+                  </tbody>
+                </table>
 
-        <h2>How is it scored?</h2>
+                <p>
+                  Difficulty is graded too: 31% Easy, 41% Medium, 28% Hard. The Hard
+                  slice is where the long-tail entities live, and it is where the
+                  benchmark does most of its damage.
+                </p>
 
-        <p>
-          The headline number is plain accuracy: the fraction of questions
-          answered correctly. WorldVQA adds two companion metrics that matter
-          more than they sound. <strong>Not Attempted</strong> tracks how often a
-          model declines to answer rather than guess. <strong>Correct Given
-          Attempted</strong> measures accuracy only on the questions the model
-          chose to answer. Together they expose a model's honesty: a system can
-          inflate its raw accuracy by always guessing, or protect it by abstaining
-          on hard cases.
-        </p>
+                <h2>How is it scored?</h2>
 
-        <p>
-          The paper reports an F-score that balances coverage against precision,
-          then breaks it out across all nine categories. This is where you see
-          that no model is uniformly strong. A model can lead on Sports and trail
-          badly on Entertainment in the same evaluation.
-        </p>
+                <p>
+                  The headline number is plain accuracy: the fraction of questions
+                  answered correctly. WorldVQA adds two companion metrics that matter
+                  more than they sound. <strong>Not Attempted</strong> tracks how often a
+                  model declines to answer rather than guess. <strong>Correct Given
+                  Attempted</strong> measures accuracy only on the questions the model
+                  chose to answer. Together they expose a model's honesty: a system can
+                  inflate its raw accuracy by always guessing, or protect it by abstaining
+                  on hard cases.
+                </p>
 
-        <h2>Why do top models fail?</h2>
+                <p>
+                  The paper reports an F-score that balances coverage against precision,
+                  then breaks it out across all nine categories. This is where you see
+                  that no model is uniformly strong. A model can lead on Sports and trail
+                  badly on Entertainment in the same evaluation.
+                </p>
 
-        <p>
-          The leaderboard is the part that should give builders pause. These are
-          overall accuracy figures on the full WorldVQA set.
-        </p>
+                <h2>Why do top models fail?</h2>
 
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Model</th>
-              <th>Accuracy</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>Gemini-3-pro</td><td>47.4%</td></tr>
-            <tr><td>Kimi-K2.5</td><td>46.3%</td></tr>
-            <tr><td>Gemini-2.5-pro</td><td>36.9%</td></tr>
-            <tr><td>Claude-opus-4.5</td><td>36.8%</td></tr>
-            <tr><td>Seed-1.5-vision-pro</td><td>34.9%</td></tr>
-            <tr><td>GPT-5.2</td><td>28.0%</td></tr>
-            <tr><td>Qwen3-VL-235B-A22B</td><td>23.5%</td></tr>
-            <tr><td>GPT-4o</td><td>22.2%</td></tr>
-            <tr><td>GLM-4.6V</td><td>19.0%</td></tr>
-            <tr><td>Kimi-VL-16B-A3B</td><td>12.0%</td></tr>
-          </tbody>
-        </table>
+                <p>
+                  The leaderboard is the part that should give builders pause. These are
+                  overall accuracy figures on the full WorldVQA set.
+                </p>
 
-        <p>
-          The best score in the paper is 47.4%. More than half the questions
-          stump the field leader. The failure is not about reasoning capacity,
-          because the questions require none. It is about coverage. Pretraining
-          corpora are dense with common entities and thin on the long tail, so the
-          model has simply never built a reliable link between a rare image and its
-          name. When the link is missing, the model does what it was trained to do:
-          it produces a fluent, plausible answer that happens to be wrong.
-        </p>
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Model</th>
+                      <th>Accuracy</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>Gemini-3-pro</td><td>47.4%</td></tr>
+                    <tr><td>Kimi-K2.5</td><td>46.3%</td></tr>
+                    <tr><td>Gemini-2.5-pro</td><td>36.9%</td></tr>
+                    <tr><td>Claude-opus-4.5</td><td>36.8%</td></tr>
+                    <tr><td>Seed-1.5-vision-pro</td><td>34.9%</td></tr>
+                    <tr><td>GPT-5.2</td><td>28.0%</td></tr>
+                    <tr><td>Qwen3-VL-235B-A22B</td><td>23.5%</td></tr>
+                    <tr><td>GPT-4o</td><td>22.2%</td></tr>
+                    <tr><td>GLM-4.6V</td><td>19.0%</td></tr>
+                    <tr><td>Kimi-VL-16B-A3B</td><td>12.0%</td></tr>
+                  </tbody>
+                </table>
 
-        <p>
-          Category-level F-scores sharpen the picture. Sports is the easiest
-          category across the board, with Kimi-K2.5 reaching 64.8 and Gemini-3-pro
-          59.4. Entertainment is brutal, dragging strong models down to the teens
-          and twenties. The lesson is that "visual knowledge" is not one skill. It
-          is thousands of separate facts, unevenly learned.
-        </p>
+                <p>
+                  The best score in the paper is 47.4%. More than half the questions
+                  stump the field leader. The failure is not about reasoning capacity,
+                  because the questions require none. It is about coverage. Pretraining
+                  corpora are dense with common entities and thin on the long tail, so the
+                  model has simply never built a reliable link between a rare image and its
+                  name. When the link is missing, the model does what it was trained to do:
+                  it produces a fluent, plausible answer that happens to be wrong.
+                </p>
 
-        <h2>How honest are the models about not knowing?</h2>
+                <p>
+                  Category-level F-scores sharpen the picture. Sports is the easiest
+                  category across the board, with Kimi-K2.5 reaching 64.8 and Gemini-3-pro
+                  59.4. Entertainment is brutal, dragging strong models down to the teens
+                  and twenties. The lesson is that "visual knowledge" is not one skill. It
+                  is thousands of separate facts, unevenly learned.
+                </p>
 
-        <p>
-          WorldVQA does not stop at accuracy. It measures calibration, the gap
-          between how confident a model claims to be and how often it is actually
-          right. Two metrics carry this analysis.
-        </p>
+                <h2>How honest are the models about not knowing?</h2>
 
-        <ul>
-          <li>
-            <strong>ECE (Expected Calibration Error).</strong> The average gap
-            between stated confidence and real accuracy. Ideal value is 0.
-          </li>
-          <li>
-            <strong>Slope.</strong> How sensitively accuracy tracks the model's
-            own confidence. Ideal value is 1.0.
-          </li>
-        </ul>
+                <p>
+                  WorldVQA does not stop at accuracy. It measures calibration, the gap
+                  between how confident a model claims to be and how often it is actually
+                  right. Two metrics carry this analysis.
+                </p>
 
-        <p>
-          Every model evaluated trends toward overconfidence, clustering most of
-          its predictions in the 90-100% confidence band regardless of whether the
-          answers hold up. Kimi-K2.5 posts the best figures, an ECE of 37.9% and a
-          Slope of 0.550, and even that leaves an enormous gap to close. A model
-          that is wrong more than half the time while claiming near-certainty is a
-          liability in any pipeline that trusts its output.
-        </p>
+                <ul>
+                  <li>
+                    <strong>ECE (Expected Calibration Error).</strong> The average gap
+                    between stated confidence and real accuracy. Ideal value is 0.
+                  </li>
+                  <li>
+                    <strong>Slope.</strong> How sensitively accuracy tracks the model's
+                    own confidence. Ideal value is 1.0.
+                  </li>
+                </ul>
 
-        <h2>What are the limitations?</h2>
+                <p>
+                  Every model evaluated trends toward overconfidence, clustering most of
+                  its predictions in the 90-100% confidence band regardless of whether the
+                  answers hold up. Kimi-K2.5 posts the best figures, an ECE of 37.9% and a
+                  Slope of 0.550, and even that leaves an enormous gap to close. A model
+                  that is wrong more than half the time while claiming near-certainty is a
+                  liability in any pipeline that trusts its output.
+                </p>
 
-        <p>
-          WorldVQA is deliberately a narrow instrument. It measures one thing,
-          factual entity recognition, and says nothing about reasoning, spatial
-          understanding, OCR, or chart reading. A model could ace WorldVQA and
-          still struggle with a multi-step visual problem. The benchmark also
-          leans on human-verified single answers, which works for unambiguous
-          entities but cannot grade open-ended visual tasks where several
-          responses are defensible. The bilingual split is broad but still centers
-          on English and Chinese knowledge, so coverage of other regional long
-          tails is an open question.
-        </p>
+                <h2>What are the limitations?</h2>
 
-        <h2>Why it matters for builders</h2>
+                <p>
+                  WorldVQA is deliberately a narrow instrument. It measures one thing,
+                  factual entity recognition, and says nothing about reasoning, spatial
+                  understanding, OCR, or chart reading. A model could ace WorldVQA and
+                  still struggle with a multi-step visual problem. The benchmark also
+                  leans on human-verified single answers, which works for unambiguous
+                  entities but cannot grade open-ended visual tasks where several
+                  responses are defensible. The bilingual split is broad but still centers
+                  on English and Chinese knowledge, so coverage of other regional long
+                  tails is an open question.
+                </p>
 
-        <p>
-          If you are wiring a vision model into a product, WorldVQA is a warning
-          label. The model that writes a gorgeous description of a product photo
-          may not know which product it is, and it will tell you with full
-          confidence anyway. For anything where the specific entity matters, a
-          retail catalog, a field-identification tool, a compliance check, raw
-          model output is not a source of truth. Treat recognition as a claim to
-          verify, route low-confidence cases to a lookup or a human, and measure
-          your own domain's long tail before you ship. Moonshot AI is
-          open-sourcing the WorldVQA dataset and evaluation scripts, so you can run
-          the same honest test on whatever model you are about to trust.
-        </p>
+                <h2>Why it matters for builders</h2>
 
-        <div class="cta-box">
-          <h3>Keep reading the research</h3>
-          <p>More plain-English deep reads on the models shaping 2026</p>
-          <a href="../stories.html" class="cta-btn">Browse AIHues Stories →</a>
-        </div>
+                <p>
+                  If you are wiring a vision model into a product, WorldVQA is a warning
+                  label. The model that writes a gorgeous description of a product photo
+                  may not know which product it is, and it will tell you with full
+                  confidence anyway. For anything where the specific entity matters, a
+                  retail catalog, a field-identification tool, a compliance check, raw
+                  model output is not a source of truth. Treat recognition as a claim to
+                  verify, route low-confidence cases to a lookup or a human, and measure
+                  your own domain's long tail before you ship. Moonshot AI is
+                  open-sourcing the WorldVQA dataset and evaluation scripts, so you can run
+                  the same honest test on whatever model you are about to trust.
+                </p>
       </div>
     </article>
     <footer class="footer">© 2026 AIHues · Built with Kimi</footer>

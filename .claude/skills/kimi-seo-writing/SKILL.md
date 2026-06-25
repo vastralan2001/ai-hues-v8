@@ -851,3 +851,37 @@ Before delivering any article, verify (Phase 5.5 Internal Review covers all of t
 - [ ] Kimi Claw selling angle differs from other platform articles (e.g., macOS angle = "upgrade from local", Windows angle = "skip complex setup")
 - [ ] Comparison table dimensions match the article's unique pain points (don't copy-paste from other articles)
 - [ ] Troubleshooting errors are platform-specific (macOS: LaunchAgent, Xcode CLT; Windows: PATH, WSL systemd)
+
+---
+
+## AIHues Resource HTML Output Contract
+
+When the target is an **AIHues Stories article** (a `public/resources/<slug>.html` file rendered by `app/stories/[slug]/page.tsx`), the body MUST follow this contract — the detail page renders its own chrome and only injects the inner HTML of `<div class="article-content">`, styled by `app/stories/article.css`.
+
+**The page already renders, from `posts.json` metadata:** the category badge, the `<h1>` title, the date / read-time / author line, AND the hero illustration. It also appends a Newsletter signup, RelatedItems and RelatedArticles below the body.
+
+**Therefore, inside `<div class="article-content">` — do NOT include:**
+- Any `<h1>`, eyebrow/tag, excerpt, or date/author meta strip (duplicates the page header → renders as raw text).
+- Any marketing CTA ("Browse all tools", "Read more stories", "Explore…") — the page appends Related/Newsletter automatically.
+- Custom wrapper classes that `article.css` does NOT style: `article-header`, `paper-box`, `paper-meta`, `paper-links`, `paper-cite`, `paper-btn`. They render unstyled. Only these are styled: `h2 h3 p ul ol li strong em a table tr td th blockquote` + helper classes `.tip .warning .cta-box .tool-card-inline .toc`.
+
+**Structure:**
+```html
+<article class="article">
+  <!-- optional header for direct file viewing — OUTSIDE article-content -->
+  <header class="article-header">…title/meta…</header>
+  <div class="article-content">
+    <!-- source citation as a PLAIN paragraph, real verified URL only -->
+    <p class="source"><strong>Source:</strong>
+      <a href="https://arxiv.org/abs/XXXX.XXXXX" target="_blank" rel="noopener">Read the paper ↗</a>
+      · <a href="https://arxiv.org/pdf/XXXX.XXXXX" target="_blank" rel="noopener">Download PDF ↓</a>
+    </p>
+    <p>lead paragraph…</p>
+    <h2>…</h2>
+    …prose: h2/h3/p/ul/table…
+  </div>
+</article>
+```
+
+**Source links:** use ONLY a real URL found in the source document or independently verified (arxiv abs/pdf, HuggingFace model card, GitHub). NEVER link a product homepage (e.g. `kimi.com`) as "the paper"/"tech blog" — if no real paper/blog/model-card URL exists, omit the source line.
+

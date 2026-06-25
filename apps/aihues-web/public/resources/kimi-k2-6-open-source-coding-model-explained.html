@@ -266,8 +266,7 @@
   </head>
   <body>
     <article class="article">
-      <div class="article-content">
-        <div class="article-header">
+      <div class="article-header">
           <span class="article-tag">Model Review</span>
           <h1>Kimi K2.6 for Coding: What the Benchmarks Actually Show</h1>
           <p>
@@ -279,295 +278,271 @@
             <span>2026-06-25</span><span>8 min read</span><span>AIHues Team</span>
           </div>
         </div>
-
-        <div class="paper-box">
-          <div class="paper-meta">
-            <strong>Kimi K2.6 Tech Blog</strong>
-            Moonshot AI · open weights · 256K context
-          </div>
-          <div class="paper-links">
-            <a
-              class="paper-link"
-              href="https://www.kimi.com/"
-              target="_blank"
-              rel="noopener"
-              >Read the paper ↗</a
-            >
-            <a
-              class="paper-link secondary"
-              href="https://platform.kimi.ai/"
-              target="_blank"
-              rel="noopener"
-              >API docs ↗</a
-            >
-          </div>
-        </div>
-
-        <p>
-          Most model launches bury the coding numbers under a wall of marketing.
-          Kimi K2.6 does the opposite. The tech blog leads with a benchmark
-          grid, and the headline is genuinely hard to argue with: an
-          open-weights model trading punches with the strongest closed systems
-          on the tasks that look most like real engineering work.
+      <div class="article-content">
+        <p class="source">
+          <strong>Source:</strong>
+          <a href="https://huggingface.co/moonshotai/Kimi-K2.6" target="_blank" rel="noopener">Read the model card ↗</a>
         </p>
 
         <p>
-          So let us start where a review should start. Here is the coding scorecard,
-          straight from Moonshot's reported figures, with the closed-source
-          frontier alongside it.
-        </p>
+                  Most model launches bury the coding numbers under a wall of marketing.
+                  Kimi K2.6 does the opposite. The tech blog leads with a benchmark
+                  grid, and the headline is genuinely hard to argue with: an
+                  open-weights model trading punches with the strongest closed systems
+                  on the tasks that look most like real engineering work.
+                </p>
 
-        <h2>The coding scorecard</h2>
+                <p>
+                  So let us start where a review should start. Here is the coding scorecard,
+                  straight from Moonshot's reported figures, with the closed-source
+                  frontier alongside it.
+                </p>
 
-        <table class="bench">
-          <caption>
-            All coding scores averaged over 10 independent runs.
-            Higher is better. Bold marks the top score in each row.
-            * = re-evaluated by Moonshot under matched conditions.
-          </caption>
-          <thead>
-            <tr>
-              <th>Benchmark</th>
-              <th class="num">Kimi K2.6</th>
-              <th class="num">GPT-5.4</th>
-              <th class="num">Opus 4.6</th>
-              <th class="num">Gemini 3.1</th>
-              <th class="num">K2.5</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>SWE-Bench Pro</td>
-              <td class="num win">58.6</td>
-              <td class="num">57.7</td>
-              <td class="num">53.4</td>
-              <td class="num">54.2</td>
-              <td class="num">50.7</td>
-            </tr>
-            <tr>
-              <td>Terminal-Bench 2.0</td>
-              <td class="num">66.7</td>
-              <td class="num">65.4*</td>
-              <td class="num">65.4</td>
-              <td class="num win">68.5</td>
-              <td class="num">50.8</td>
-            </tr>
-            <tr>
-              <td>SWE-Bench Verified</td>
-              <td class="num">80.2</td>
-              <td class="num">—</td>
-              <td class="num win">80.8</td>
-              <td class="num">80.6</td>
-              <td class="num">76.8</td>
-            </tr>
-            <tr>
-              <td>SWE-Multilingual</td>
-              <td class="num">76.7</td>
-              <td class="num">—</td>
-              <td class="num win">77.8</td>
-              <td class="num">76.9</td>
-              <td class="num">73.0</td>
-            </tr>
-            <tr>
-              <td>LiveCodeBench v6</td>
-              <td class="num">89.6</td>
-              <td class="num">—</td>
-              <td class="num">88.8</td>
-              <td class="num win">91.7</td>
-              <td class="num">85.0</td>
-            </tr>
-            <tr>
-              <td>OJBench (Python)</td>
-              <td class="num">60.6</td>
-              <td class="num">—</td>
-              <td class="num">60.3</td>
-              <td class="num win">70.7</td>
-              <td class="num">54.7</td>
-            </tr>
-            <tr>
-              <td>SciCode</td>
-              <td class="num">52.2</td>
-              <td class="num">56.6</td>
-              <td class="num">51.9</td>
-              <td class="num win">58.9</td>
-              <td class="num">48.7</td>
-            </tr>
-          </tbody>
-        </table>
+                <h2>The coding scorecard</h2>
 
-        <div class="verdict">
-          <h3>The verdict</h3>
-          <p class="score">Strong on agentic repair, mid-pack on algorithmic puzzles.</p>
-          <p style="margin: 0">
-            K2.6 is at its best on the messy, multi-file, run-the-tests-and-fix-it
-            work that SWE-Bench Pro and Terminal-Bench measure. It is the top
-            scorer on SWE-Bench Pro at <strong>58.6</strong>, edging out GPT-5.4.
-            On tight competitive-programming benchmarks like OJBench and SciCode,
-            Gemini 3.1 Pro still pulls ahead. If your day job is fixing real
-            codebases rather than solving olympiad problems, that trade is in
-            your favor.
-          </p>
-        </div>
+                <table class="bench">
+                  <caption>
+                    All coding scores averaged over 10 independent runs.
+                    Higher is better. Bold marks the top score in each row.
+                    * = re-evaluated by Moonshot under matched conditions.
+                  </caption>
+                  <thead>
+                    <tr>
+                      <th>Benchmark</th>
+                      <th class="num">Kimi K2.6</th>
+                      <th class="num">GPT-5.4</th>
+                      <th class="num">Opus 4.6</th>
+                      <th class="num">Gemini 3.1</th>
+                      <th class="num">K2.5</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>SWE-Bench Pro</td>
+                      <td class="num win">58.6</td>
+                      <td class="num">57.7</td>
+                      <td class="num">53.4</td>
+                      <td class="num">54.2</td>
+                      <td class="num">50.7</td>
+                    </tr>
+                    <tr>
+                      <td>Terminal-Bench 2.0</td>
+                      <td class="num">66.7</td>
+                      <td class="num">65.4*</td>
+                      <td class="num">65.4</td>
+                      <td class="num win">68.5</td>
+                      <td class="num">50.8</td>
+                    </tr>
+                    <tr>
+                      <td>SWE-Bench Verified</td>
+                      <td class="num">80.2</td>
+                      <td class="num">—</td>
+                      <td class="num win">80.8</td>
+                      <td class="num">80.6</td>
+                      <td class="num">76.8</td>
+                    </tr>
+                    <tr>
+                      <td>SWE-Multilingual</td>
+                      <td class="num">76.7</td>
+                      <td class="num">—</td>
+                      <td class="num win">77.8</td>
+                      <td class="num">76.9</td>
+                      <td class="num">73.0</td>
+                    </tr>
+                    <tr>
+                      <td>LiveCodeBench v6</td>
+                      <td class="num">89.6</td>
+                      <td class="num">—</td>
+                      <td class="num">88.8</td>
+                      <td class="num win">91.7</td>
+                      <td class="num">85.0</td>
+                    </tr>
+                    <tr>
+                      <td>OJBench (Python)</td>
+                      <td class="num">60.6</td>
+                      <td class="num">—</td>
+                      <td class="num">60.3</td>
+                      <td class="num win">70.7</td>
+                      <td class="num">54.7</td>
+                    </tr>
+                    <tr>
+                      <td>SciCode</td>
+                      <td class="num">52.2</td>
+                      <td class="num">56.6</td>
+                      <td class="num">51.9</td>
+                      <td class="num win">58.9</td>
+                      <td class="num">48.7</td>
+                    </tr>
+                  </tbody>
+                </table>
 
-        <p>
-          The jump from the previous generation is the cleaner story. Against
-          Kimi K2.5, every coding row moves up, and a few move up a lot.
-          Terminal-Bench 2.0 climbs from 50.8 to 66.7. SWE-Bench Pro goes from
-          50.7 to 58.6. That is not a point-release nudge. It is the difference
-          between a model that stalls halfway through a task and one that
-          finishes.
-        </p>
+                <div class="verdict">
+                  <h3>The verdict</h3>
+                  <p class="score">Strong on agentic repair, mid-pack on algorithmic puzzles.</p>
+                  <p style="margin: 0">
+                    K2.6 is at its best on the messy, multi-file, run-the-tests-and-fix-it
+                    work that SWE-Bench Pro and Terminal-Bench measure. It is the top
+                    scorer on SWE-Bench Pro at <strong>58.6</strong>, edging out GPT-5.4.
+                    On tight competitive-programming benchmarks like OJBench and SciCode,
+                    Gemini 3.1 Pro still pulls ahead. If your day job is fixing real
+                    codebases rather than solving olympiad problems, that trade is in
+                    your favor.
+                  </p>
+                </div>
 
-        <div class="quote-box">
-          "It excels on coding tasks at a level comparable to leading closed
-          source models." — Bola Malek, Head of Labs at Baseten, quoted in the
-          tech blog.
-        </div>
+                <p>
+                  The jump from the previous generation is the cleaner story. Against
+                  Kimi K2.5, every coding row moves up, and a few move up a lot.
+                  Terminal-Bench 2.0 climbs from 50.8 to 66.7. SWE-Bench Pro goes from
+                  50.7 to 58.6. That is not a point-release nudge. It is the difference
+                  between a model that stalls halfway through a task and one that
+                  finishes.
+                </p>
 
-        <h2>How it got there</h2>
+                <div class="quote-box">
+                  "It excels on coding tasks at a level comparable to leading closed
+                  source models." — Bola Malek, Head of Labs at Baseten, quoted in the
+                  tech blog.
+                </div>
 
-        <p>
-          The headline behind the numbers is <strong>long-horizon execution</strong>.
-          Moonshot's framing is that coding is no longer a single completion. It
-          is a session: read the repo, form a plan, call tools, read flame
-          graphs, change topology, rerun, repeat. K2.6 is tuned to stay coherent
-          across that whole arc.
-        </p>
+                <h2>How it got there</h2>
 
-        <p>
-          Two case studies in the blog make the point concretely, and they are
-          worth knowing because they explain what the benchmark abstractions are
-          standing in for.
-        </p>
+                <p>
+                  The headline behind the numbers is <strong>long-horizon execution</strong>.
+                  Moonshot's framing is that coding is no longer a single completion. It
+                  is a session: read the repo, form a plan, call tools, read flame
+                  graphs, change topology, rerun, repeat. K2.6 is tuned to stay coherent
+                  across that whole arc.
+                </p>
 
-        <h3>The Zig inference case</h3>
+                <p>
+                  Two case studies in the blog make the point concretely, and they are
+                  worth knowing because they explain what the benchmark abstractions are
+                  standing in for.
+                </p>
 
-        <p>
-          K2.6 was asked to download and run Qwen3.5-0.8B locally on a Mac, then
-          optimize inference in Zig, a deliberately niche language it would have
-          seen little of in training. Over <strong>4,000+ tool calls</strong>,
-          <strong>12 hours of continuous execution</strong>, and 14 iterations,
-          it pushed throughput from roughly 15 to about 193 tokens per second.
-          The end result ran around 20% faster than LM Studio. The interesting
-          part is not the speed. It is that the model held a single goal across
-          twelve hours without losing the thread.
-        </p>
+                <h3>The Zig inference case</h3>
 
-        <h3>The exchange-core overhaul</h3>
+                <p>
+                  K2.6 was asked to download and run Qwen3.5-0.8B locally on a Mac, then
+                  optimize inference in Zig, a deliberately niche language it would have
+                  seen little of in training. Over <strong>4,000+ tool calls</strong>,
+                  <strong>12 hours of continuous execution</strong>, and 14 iterations,
+                  it pushed throughput from roughly 15 to about 193 tokens per second.
+                  The end result ran around 20% faster than LM Studio. The interesting
+                  part is not the speed. It is that the model held a single goal across
+                  twelve hours without losing the thread.
+                </p>
 
-        <p>
-          The second case is an 8-year-old open-source financial matching engine
-          called exchange-core. Across a 13-hour run, K2.6 iterated through 12
-          optimization strategies, made more than 1,000 tool calls, and modified
-          over 4,000 lines. It read CPU and allocation flame graphs to find
-          bottlenecks, then reconfigured the core thread topology from 4ME+2RE
-          to 2ME+1RE. Medium throughput rose 185%, from 0.43 to 1.24 MT/s.
-          Performance throughput rose 133%, from 1.23 to 2.86 MT/s. On an engine
-          that was already near its limits.
-        </p>
+                <h3>The exchange-core overhaul</h3>
 
-        <p>
-          Both stories describe the same skill: sustaining context, recovering
-          from dead ends, and keeping changes scoped to the real problem. That
-          is exactly what the partner quotes single out. Augment Code's CTO
-          described "surgical precision in large codebases" and the ability to
-          pivot when an initial path is blocked. Vercel reported more than a 50%
-          improvement on its internal Next.js benchmark.
-        </p>
+                <p>
+                  The second case is an 8-year-old open-source financial matching engine
+                  called exchange-core. Across a 13-hour run, K2.6 iterated through 12
+                  optimization strategies, made more than 1,000 tool calls, and modified
+                  over 4,000 lines. It read CPU and allocation flame graphs to find
+                  bottlenecks, then reconfigured the core thread topology from 4ME+2RE
+                  to 2ME+1RE. Medium throughput rose 185%, from 0.43 to 1.24 MT/s.
+                  Performance throughput rose 133%, from 1.23 to 2.86 MT/s. On an engine
+                  that was already near its limits.
+                </p>
 
-        <h3>The architecture, in brief</h3>
+                <p>
+                  Both stories describe the same skill: sustaining context, recovering
+                  from dead ends, and keeping changes scoped to the real problem. That
+                  is exactly what the partner quotes single out. Augment Code's CTO
+                  described "surgical precision in large codebases" and the ability to
+                  pivot when an initial path is blocked. Vercel reported more than a 50%
+                  improvement on its internal Next.js benchmark.
+                </p>
 
-        <p>
-          The blog is light on parameter counts, but the operating envelope is
-          stated plainly. K2.6 runs with a context length of
-          <strong>262,144 tokens</strong>, and the reported results use thinking
-          mode at temperature 1.0 and top-p 1.0. For the heaviest agentic runs,
-          Moonshot uses a simple context-management trick: once the window fills,
-          only the most recent round of tool messages is kept. The model is
-          available with open weights through Kimi.com, the API, and Kimi Code,
-          which is the part that makes the benchmark numbers actually matter to
-          builders rather than just to a leaderboard.
-        </p>
+                <h3>The architecture, in brief</h3>
 
-        <h2>Where it falls short</h2>
+                <p>
+                  The blog is light on parameter counts, but the operating envelope is
+                  stated plainly. K2.6 runs with a context length of
+                  <strong>262,144 tokens</strong>, and the reported results use thinking
+                  mode at temperature 1.0 and top-p 1.0. For the heaviest agentic runs,
+                  Moonshot uses a simple context-management trick: once the window fills,
+                  only the most recent round of tool messages is kept. The model is
+                  available with open weights through Kimi.com, the API, and Kimi Code,
+                  which is the part that makes the benchmark numbers actually matter to
+                  builders rather than just to a leaderboard.
+                </p>
 
-        <p>
-          A faithful review names the gaps. K2.6 is not the universal winner, and
-          the blog does not pretend otherwise.
-        </p>
+                <h2>Where it falls short</h2>
 
-        <ul>
-          <li>
-            <strong>Competitive programming.</strong> On OJBench it scores 60.6
-            against Gemini 3.1 Pro's 70.7, and SciCode shows a similar gap. Pure
-            algorithmic problem-solving is not its strongest axis.
-          </li>
-          <li>
-            <strong>Hard reasoning exams.</strong> On HLE-Full without tools it
-            sits at 34.7, below GPT-5.4, Opus 4.6, and Gemini. The coding lead
-            does not transfer to abstract reasoning benchmarks.
-          </li>
-          <li>
-            <strong>Some agentic suites.</strong> On Toolathlon it trails GPT-5.4
-            (50.0 vs 54.6), and on APEX-Agents it sits well back of the frontier
-            at 27.9.
-          </li>
-          <li>
-            <strong>Verification overhead.</strong> Moonshot recommends its
-            official API to reproduce scores, and points third-party users to the
-            Kimi Vendor Verifier, a signal that quality varies across providers.
-          </li>
-        </ul>
+                <p>
+                  A faithful review names the gaps. K2.6 is not the universal winner, and
+                  the blog does not pretend otherwise.
+                </p>
 
-        <p>
-          The pattern is consistent. K2.6 invests its strength in long, tool-heavy
-          engineering loops. When a benchmark rewards a single clever closed-form
-          answer instead, the closed models still lead.
-        </p>
+                <ul>
+                  <li>
+                    <strong>Competitive programming.</strong> On OJBench it scores 60.6
+                    against Gemini 3.1 Pro's 70.7, and SciCode shows a similar gap. Pure
+                    algorithmic problem-solving is not its strongest axis.
+                  </li>
+                  <li>
+                    <strong>Hard reasoning exams.</strong> On HLE-Full without tools it
+                    sits at 34.7, below GPT-5.4, Opus 4.6, and Gemini. The coding lead
+                    does not transfer to abstract reasoning benchmarks.
+                  </li>
+                  <li>
+                    <strong>Some agentic suites.</strong> On Toolathlon it trails GPT-5.4
+                    (50.0 vs 54.6), and on APEX-Agents it sits well back of the frontier
+                    at 27.9.
+                  </li>
+                  <li>
+                    <strong>Verification overhead.</strong> Moonshot recommends its
+                    official API to reproduce scores, and points third-party users to the
+                    Kimi Vendor Verifier, a signal that quality varies across providers.
+                  </li>
+                </ul>
 
-        <h2>How to actually use it</h2>
+                <p>
+                  The pattern is consistent. K2.6 invests its strength in long, tool-heavy
+                  engineering loops. When a benchmark rewards a single clever closed-form
+                  answer instead, the closed models still lead.
+                </p>
 
-        <p>
-          If you are deciding whether K2.6 belongs in your stack, the benchmark
-          shape tells you exactly where to point it.
-        </p>
+                <h2>How to actually use it</h2>
 
-        <p>
-          Put it on the work that looks like SWE-Bench Pro. Multi-file bug fixes,
-          refactors across a large repo, dependency upgrades, performance passes
-          guided by profiling. This is where its 58.6 lead and its long-horizon
-          stability pay off, and where the partner reports of reduced wasted
-          cycles come from. Run it inside an agent harness that lets it call
-          tools freely, because the blog's own showcases all depend on thousands
-          of tool calls.
-        </p>
+                <p>
+                  If you are deciding whether K2.6 belongs in your stack, the benchmark
+                  shape tells you exactly where to point it.
+                </p>
 
-        <p>
-          Reach for a different model when the task is a self-contained algorithm
-          puzzle or a pure reasoning question. The OJBench and HLE numbers say so
-          directly. And if you run K2.6 through a third-party host rather than the
-          official API, check it against the Kimi Vendor Verifier before you trust
-          the scores you see locally.
-        </p>
+                <p>
+                  Put it on the work that looks like SWE-Bench Pro. Multi-file bug fixes,
+                  refactors across a large repo, dependency upgrades, performance passes
+                  guided by profiling. This is where its 58.6 lead and its long-horizon
+                  stability pay off, and where the partner reports of reduced wasted
+                  cycles come from. Run it inside an agent harness that lets it call
+                  tools freely, because the blog's own showcases all depend on thousands
+                  of tool calls.
+                </p>
 
-        <h2>Why it matters for builders</h2>
+                <p>
+                  Reach for a different model when the task is a self-contained algorithm
+                  puzzle or a pure reasoning question. The OJBench and HLE numbers say so
+                  directly. And if you run K2.6 through a third-party host rather than the
+                  official API, check it against the Kimi Vendor Verifier before you trust
+                  the scores you see locally.
+                </p>
 
-        <p>
-          The quiet significance of K2.6 is that the open-weights tier now reaches
-          the closed-source frontier on the single benchmark that best mirrors
-          daily engineering. SWE-Bench Pro is not a toy. A model you can download,
-          inspect, and self-host scoring 58.6 there changes the math on cost,
-          privacy, and vendor lock-in for any team building coding agents. The
-          competitive-programming gaps are real, but they sit far from where most
-          production work actually happens. For builders, K2.6 is less a headline
-          and more a new default worth testing against whatever you run today.
-        </p>
+                <h2>Why it matters for builders</h2>
 
-        <div class="cta-box">
-          <h3>Explore More AI Tools</h3>
-          <p>Browse models, coding assistants, and dev tools in the AIHues directory</p>
-          <a href="../index.html" class="cta-btn">Browse All Tools →</a>
-        </div>
+                <p>
+                  The quiet significance of K2.6 is that the open-weights tier now reaches
+                  the closed-source frontier on the single benchmark that best mirrors
+                  daily engineering. SWE-Bench Pro is not a toy. A model you can download,
+                  inspect, and self-host scoring 58.6 there changes the math on cost,
+                  privacy, and vendor lock-in for any team building coding agents. The
+                  competitive-programming gaps are real, but they sit far from where most
+                  production work actually happens. For builders, K2.6 is less a headline
+                  and more a new default worth testing against whatever you run today.
+                </p>
       </div>
     </article>
     <footer class="footer">© 2026 AIHues · Built with Kimi</footer>
