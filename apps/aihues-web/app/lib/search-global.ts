@@ -6,12 +6,18 @@ import { searchCatalog, type CatalogSearchHit } from '@/lib/catalog-api';
    Everything is served by the Go aihues-api (FAISS + embeddings) via
    searchCatalog; there is deliberately no JS fallback. Stories enter the Go
    corpus server-side (catalog-in-Go work), so they surface here once the API is
-   running. The /search page groups the returned mixed-type hits into tabs. */
+   running. The /search page groups the returned mixed-type hits into tabs.
+   If the API is unreachable (e.g. local dev without the Go service), degrade to
+   empty results rather than throwing the page. */
 export async function searchGlobal(
   q: string,
   k = 30
 ): Promise<CatalogSearchHit[]> {
   const term = q.trim();
   if (term.length < 2) return [];
-  return searchCatalog(term, k);
+  try {
+    return await searchCatalog(term, k);
+  } catch {
+    return [];
+  }
 }
