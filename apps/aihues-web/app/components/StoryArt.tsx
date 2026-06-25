@@ -283,16 +283,28 @@ export function StoryArt({
       onMouseLeave={playOnHover ? () => setHover(false) : undefined}
     >
       {Svg ? (
-        !mounted ? null : live ? (
-          <Svg />
-        ) : imgSrc ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={imgSrc}
-            alt={alt ?? `${tag} story illustration`}
-            className='h-full w-full object-cover'
-          />
-        ) : null
+        !mounted ? null : (
+          <>
+            {/* Base layer: the frozen scene as a real <img>. It's always present
+                so a right-click (which requires hovering, i.e. the live state)
+                lands on an image element → the browser's native image menu. */}
+            {imgSrc ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={imgSrc}
+                alt={alt ?? `${tag} story illustration`}
+                className='absolute inset-0 h-full w-full object-cover'
+              />
+            ) : null}
+            {/* Live animated scene overlays on hover; pointer-events:none lets
+                clicks/right-clicks fall through to the <img> beneath. */}
+            {live ? (
+              <div className='pointer-events-none absolute inset-0'>
+                <Svg />
+              </div>
+            ) : null}
+          </>
+        )
       ) : (
         <canvas ref={ref} className='absolute inset-0 h-full w-full' />
       )}
