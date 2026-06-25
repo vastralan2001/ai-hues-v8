@@ -28,6 +28,7 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-easy-crop": "^6.0.2",
+    "roughjs": "^4.6.6",
     "server-only": "^0.0.1"
   },
   "devDependencies": {
