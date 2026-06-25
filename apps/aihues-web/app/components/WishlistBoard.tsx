@@ -438,7 +438,12 @@ export function WishlistBoard() {
         <div className='wish-form__actions'>
           <button
             className='button button--primary'
-            disabled={submitting || !formTitle.trim() || !formDesc.trim()}
+            disabled={
+              submitting ||
+              !formTitle.trim() ||
+              !formDesc.trim() ||
+              !formEmail.trim()
+            }
             onClick={handleSubmit}
             type='button'
           >

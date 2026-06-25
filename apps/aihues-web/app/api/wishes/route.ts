@@ -27,12 +27,16 @@ export async function POST(request: Request) {
       );
     }
 
+    if (!body.email?.trim()) {
+      return NextResponse.json({ error: 'Email is required' }, { status: 400 });
+    }
+
     const wish = addWish({
       title: body.title.trim(),
       description: body.description.trim(),
       type: body.type ?? 'tool',
       category: body.category?.trim() || 'Other',
-      email: body.email?.trim(),
+      email: body.email.trim(),
       referenceUrl: body.referenceUrl?.trim(),
     });
 
