@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Attention Residuals, Explained — and the Teenager Who Co-Wrote It</title>
+    <style>
+      body {
+        margin: 0;
+        background: #fbfaf7;
+        color: #2b2722;
+        font-family:
+          'Noto Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+        line-height: 1.8;
+      }
+      .article {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 48px 24px 96px;
+      }
+      .article-header {
+        margin-bottom: 32px;
+      }
+      .article-tag {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: #6a9bcc;
+      }
+      .article-header h1 {
+        font-size: clamp(28px, 5vw, 40px);
+        line-height: 1.12;
+        letter-spacing: -0.02em;
+        margin: 12px 0 0;
+      }
+      .article-header .lead {
+        font-size: 19px;
+        color: #5b5650;
+      }
+      .article-meta {
+        margin-top: 14px;
+        font-size: 14px;
+        color: #8a847b;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .article-content h2 {
+        font-size: 24px;
+        font-weight: 600;
+        margin: 40px 0 12px;
+      }
+      .article-content h3 {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 28px 0 8px;
+      }
+      .article-content p {
+        margin: 14px 0;
+        color: #3d3934;
+      }
+      .article-content a {
+        color: #5a86c5;
+        text-decoration: none;
+      }
+      .article-content a:hover {
+        text-decoration: underline;
+      }
+      .article-content .source {
+        font-size: 15px;
+        color: #6b665f;
+      }
+      .article-content ul {
+        padding-left: 20px;
+      }
+      .article-content li {
+        margin: 8px 0;
+      }
+      .article-content blockquote {
+        margin: 20px 0;
+        padding: 4px 18px;
+        border-left: 3px solid #d8e0ea;
+        color: #5b5650;
+        font-style: italic;
+      }
+    </style>
+  </head>
+  <body>
+    <article class="article">
+      <header class="article-header">
+        <span class="article-tag">Research</span>
+        <h1>Attention Residuals, Explained — and the Teenager Who Co-Wrote It</h1>
+        <p class="lead">
+          Moonshot's new architecture lets each transformer layer choose which
+          earlier layers to listen to. One of its two lead authors is a
+          high-schooler from Shenzhen.
+        </p>
+        <div class="article-meta">
+          <span>2026-06-24</span><span>9 min read</span><span>AIHues Team</span>
+        </div>
+      </header>
+      <div class="article-content">
+        <p class="source">
+          <strong>Source:</strong>
+          <a
+            href="https://arxiv.org/abs/2603.15031"
+            target="_blank"
+            rel="noopener"
+            >Read the paper ↗</a
+          >
+          ·
+          <a
+            href="https://arxiv.org/pdf/2603.15031"
+            target="_blank"
+            rel="noopener"
+            >Download PDF ↓</a
+          >
+          ·
+          <a
+            href="https://github.com/MoonshotAI/Attention-Residuals"
+            target="_blank"
+            rel="noopener"
+            >Code ↗</a
+          >
+        </p>
+
+        <p>
+          When Moonshot AI posted a short paper called <em>Attention Residuals</em>
+          in March 2026, two things happened quickly. Elon Musk and Andrej
+          Karpathy both stopped to look. And word got out that one of its two
+          co-first authors, Nathan Chen, was still in high school. The idea is
+          small enough to explain in a paragraph and consequential enough that a
+          frontier lab put it into a real training run. This is what it says, why
+          it works, and how a teenager ended up with his name on it.
+        </p>
+
+        <h2>The problem: a residual stream that never stops growing</h2>
+        <p>
+          Modern transformers are built on residual connections. Each layer reads
+          the running sum of everything before it, computes something new, and
+          adds its result back onto the pile. With the now-standard PreNorm setup,
+          that pile is accumulated with fixed, uniform weights — every layer's
+          output is added in at full strength, forever.
+        </p>
+        <p>
+          That sounds harmless. It is not, at depth. The hidden state grows larger
+          and larger as you stack layers, and the relative contribution of any
+          single layer shrinks into the noise. A 60th layer trying to correct a
+          subtle mistake made at layer 12 has to shout over the accumulated sum of
+          everything in between. The "residual highway" that makes deep networks
+          trainable also dilutes them.
+        </p>
+
+        <h2>The idea: let each layer attend over depth</h2>
+        <p>
+          Attention Residuals (AttnRes) changes one thing. Instead of adding every
+          previous layer's output with the same fixed weight, each layer runs a
+          small softmax <em>attention</em> over the outputs of the layers before
+          it — and decides, per input, how much of each earlier representation to
+          pull in.
+        </p>
+        <p>
+          The authors frame it as a duality between time and depth. Attention
+          across a sequence lets a token decide which other tokens matter;
+          attention across depth lets a layer decide which earlier layers matter.
+          The residual connection stops being a dumb running total and becomes a
+          learned, input-dependent mixture. A layer can now reach back past the
+          noise and weight the one representation it actually needs.
+        </p>
+
+        <h2>Making it scale: Block AttnRes</h2>
+        <p>
+          Attending over every preceding layer is expensive — it adds memory and
+          cross-device communication that a trillion-token training run cannot
+          afford. So the paper introduces <strong>Block AttnRes</strong>: split
+          the layers into blocks and attend only over block-level
+          representations. It keeps most of the benefit of full AttnRes while
+          cutting the overhead back down to something a real pre-training pipeline
+          will tolerate.
+        </p>
+        <p>
+          This is the part that separates a clever idea from a usable one. Plenty
+          of architecture tweaks look good on a toy model and quietly fall apart
+          when you try to train at scale. Block AttnRes exists precisely so the
+          idea survives contact with a production run.
+        </p>
+
+        <h2>Does it actually work?</h2>
+        <p>
+          Moonshot tested it on Kimi Linear — a 48B-total, 3B-activated model
+          trained on 1.4 trillion tokens. The headline result: Block AttnRes
+          delivered roughly a <strong>1.25× compute advantage</strong>, matching
+          a baseline that was trained with about 25% more resources. On
+          downstream evaluations against that baseline it improved:
+        </p>
+        <ul>
+          <li><strong>GPQA-Diamond</strong> by +7.5 points</li>
+          <li><strong>Math</strong> by +3.6 points</li>
+          <li><strong>HumanEval</strong> by +3.1 points</li>
+        </ul>
+        <p>
+          A 25% effective compute saving on a frontier-scale run is not a rounding
+          error — it is the kind of number that pays for a research team. That is
+          why a one-idea paper got the attention it did.
+        </p>
+
+        <h2>The teenager behind it</h2>
+        <p>
+          Nathan Chen — Guangyu Chen — is a co-first author on the paper and, at
+          the time of writing, a high-school student from Shenzhen. He did not
+          arrive at Moonshot through a PhD program. He got there by doing the
+          work in the open: contributing to the Flash Linear Attention project,
+          the open-source library that a lot of modern efficient-attention work
+          builds on. Good commits in a visible repository are their own résumé,
+          and the Kimi team noticed.
+        </p>
+        <p>
+          The rest of the path fits the same shape. He had been a Codeforces
+          Candidate Master with a 2000-plus rating — competitive programming, the
+          long way round — and had spent time at Tilde Research before joining
+          Moonshot. None of it is the conventional credential. All of it is the
+          kind of thing you can only get by building, publicly, before anyone is
+          paying you to.
+        </p>
+        <blockquote>
+          The interesting lesson is not "a teenager did this." It is that the
+          shortest route into a frontier lab right now runs through open-source
+          contribution, not a transcript.
+        </blockquote>
+
+        <h2>Why it matters</h2>
+        <p>
+          Attention Residuals is a reminder that there is still low-hanging fruit
+          in the most-studied part of the stack. The residual connection has been
+          treated as settled since 2015. Asking a basic question about it — what
+          if the weights weren't fixed? — turned out to be worth a quarter of a
+          training budget.
+        </p>
+        <p>
+          For builders, there is nothing to integrate today; this is an
+          architecture change that lives inside the model, not an API. But it is
+          worth tracking, because gains like this tend to show up in the next
+          generation of open weights — and because it is a clean example of where
+          the field's real edges still are.
+        </p>
+      </div>
+    </article>
+  </body>
+</html>

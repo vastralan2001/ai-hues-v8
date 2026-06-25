@@ -1019,5 +1019,15 @@
     "readTime": "8 min",
     "coverImage": "",
     "description": "A plain-English deep read of WorldVQA, Moonshot AI benchmark for atomic visual world knowledge. What it tests, how its accuracy and calibration metrics work, why top MLLMs fail the long tail, and what it means for builders shipping vision into products."
+  },
+  {
+    "slug": "attention-residuals-explained",
+    "tag": "Research",
+    "title": "Attention Residuals, Explained — and the Teenager Who Co-Wrote It",
+    "excerpt": "Moonshot’s new architecture lets each transformer layer choose which earlier layers to listen to — a ~25% compute win on Kimi Linear. One of its two lead authors is a high-schooler from Shenzhen.",
+    "date": "2026-06-24",
+    "readTime": "9 min",
+    "coverImage": "",
+    "description": "A plain-English deep read of Attention Residuals (arXiv:2603.15031): why fixed residual accumulation dilutes deep transformers, how attention-over-depth and Block AttnRes fix it for a 1.25x compute advantage on Kimi Linear, and the open-source path that took co-first author Nathan Chen (Guangyu Chen) from Flash Linear Attention contributor to Moonshot AI while still in high school."
   }
 ]
