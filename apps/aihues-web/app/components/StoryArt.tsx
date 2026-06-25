@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 
 import { getStoryScene, type Anim, type El } from '@/lib/story-scenes';
+import { STORY_SVG } from '@/components/story-svg';
 
 /* StoryArt — renders a hand-authored, content-specific scene for a story (no
    templates, no randomness): each article has its own scene in story-scenes.ts,
@@ -163,6 +164,7 @@ export function StoryArt({
   animated?: boolean;
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
+  const Svg = STORY_SVG[slug];
 
   useEffect(() => {
     const cv = ref.current;
@@ -224,7 +226,11 @@ export function StoryArt({
 
   return (
     <div aria-hidden='true' className={`relative overflow-hidden ${className}`}>
-      <canvas ref={ref} className='absolute inset-0 h-full w-full' />
+      {Svg ? (
+        <Svg />
+      ) : (
+        <canvas ref={ref} className='absolute inset-0 h-full w-full' />
+      )}
     </div>
   );
 }
