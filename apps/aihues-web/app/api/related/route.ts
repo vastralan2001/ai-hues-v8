@@ -1,7 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
 import { relatedItems } from '@/lib/catalog-api';
-import { relatedBySlug, relatedByQuery } from '@/lib/search/semantic';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -26,20 +25,12 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    // Primary: Go aihues-api. Fall back to the in-process index on failure.
     const items = await relatedItems({ type, slug, q, k });
     return NextResponse.json({ items });
-  } catch {
-    try {
-      const items = slug
-        ? await relatedBySlug(slug, type, k)
-        : await relatedByQuery(q as string, type, k);
-      return NextResponse.json({ items });
-    } catch (err) {
-      return NextResponse.json(
-        { items: [], error: err instanceof Error ? err.message : String(err) },
-        { status: 200 }
-      );
-    }
+  } catch (err) {
+    return NextResponse.json(
+      { items: [], error: err instanceof Error ? err.message : String(err) },
+      { status: 200 }
+    );
   }
 }

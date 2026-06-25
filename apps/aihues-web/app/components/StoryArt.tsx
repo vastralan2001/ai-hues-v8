@@ -143,7 +143,7 @@ function draw(
     ctx.setLineDash([]);
   } else if (el.t === 'tx') {
     ctx.fillStyle = el.fill;
-    ctx.font = `${el.w ?? 800} ${Math.round(el.size * H)}px ui-sans-serif, system-ui, sans-serif`;
+    ctx.font = `${el.w ?? 800} ${Math.round(el.size * H)}px "Noto Sans", ui-sans-serif, system-ui, sans-serif`;
     ctx.textAlign = el.align ?? 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(el.s, X(el.x), Y(el.y));

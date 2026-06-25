@@ -1,13 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { createElement, useCallback, useEffect, useRef, useState } from 'react';
 
 import { GameDemo } from '@/components/games/GameDemos';
 import { StoryArt } from '@/components/StoryArt';
 import { TestDemo } from '@/components/tests/TestDemos';
 import { ToolIcon } from '@/components/ToolIcon';
 import { ToolDemo } from '@/components/tools/ToolDemos';
+import { storyTagIcon } from '@/lib/story-scenes';
 
 export type SpotlightSlide = {
   slug: string;
@@ -31,7 +32,11 @@ function SlideText({ s, full }: { s: SpotlightSlide; full: boolean }) {
     <>
       <div className='mb-3 flex items-center gap-3'>
         <span className='flex h-10 w-10 items-center justify-center rounded-[12px] bg-accent-bg text-accent'>
-          <ToolIcon size={20} slug={s.slug} />
+          {s.kind === 'story' ? (
+            createElement(storyTagIcon(s.eyebrow), { size: 20 })
+          ) : (
+            <ToolIcon size={20} slug={s.slug} />
+          )}
         </span>
         <span className='inline-flex items-center rounded-full border border-border bg-white/70 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-accent backdrop-blur-md'>
           {s.eyebrow}

@@ -144,7 +144,7 @@ export default function StoriesContent({ initialPosts, initialTag }: Props) {
               >
                 <button
                   aria-label='Previous page'
-                  className='flex h-10 w-10 items-center justify-center rounded-full border border-border bg-surface text-secondary transition-colors hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-border disabled:hover:text-secondary'
+                  className='flex h-10 w-10 items-center justify-center rounded-full border border-border bg-white/70 text-secondary backdrop-blur-sm transition-colors hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-border disabled:hover:text-secondary'
                   disabled={currentPage === 1}
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                   type='button'
@@ -156,7 +156,7 @@ export default function StoriesContent({ initialPosts, initialTag }: Props) {
                   <input
                     key={currentPage}
                     aria-label='Go to page'
-                    className='h-10 w-14 rounded-[10px] border border-border bg-surface text-center text-sm font-semibold text-foreground outline-none transition-colors focus:border-accent'
+                    className='h-10 w-14 rounded-[10px] border border-accent bg-accent text-center text-sm font-bold text-white outline-none transition-shadow focus:ring-2 focus:ring-accent/40'
                     defaultValue={currentPage}
                     max={totalPages}
                     min={1}
@@ -177,7 +177,7 @@ export default function StoriesContent({ initialPosts, initialTag }: Props) {
                 </div>
                 <button
                   aria-label='Next page'
-                  className='flex h-10 w-10 items-center justify-center rounded-full border border-border bg-surface text-secondary transition-colors hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-border disabled:hover:text-secondary'
+                  className='flex h-10 w-10 items-center justify-center rounded-full border border-border bg-white/70 text-secondary backdrop-blur-sm transition-colors hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-border disabled:hover:text-secondary'
                   disabled={currentPage === totalPages}
                   onClick={() =>
                     setCurrentPage((p) => Math.min(totalPages, p + 1))
