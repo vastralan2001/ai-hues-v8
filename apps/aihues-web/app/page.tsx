@@ -140,7 +140,7 @@ function testSlides(locale: Locale): SpotlightSlide[] {
     description: tm.description,
     metrics: `${tm.questionCount} ${zh ? '题' : 'questions'} · ~${tm.durationMin} min`,
     href: testDetailHref(tm.slug),
-    cta: zh ? '开始测试 →' : 'Take test →',
+    cta: zh ? tm.ctaZh : tm.cta,
   }));
 }
 

@@ -30,6 +30,8 @@ export const TEST_META: TestMeta[] = [
     durationMin: 4,
     questionCount: sbtiConfig.questions.length,
     badge: 'Satirical',
+    cta: 'Scan my soul →',
+    ctaZh: '扫描灵魂 →',
   },
   {
     slug: 'mbti',
@@ -41,6 +43,8 @@ export const TEST_META: TestMeta[] = [
     durationMin: 3,
     questionCount: mbtiConfig.questions.length,
     badge: 'Classic',
+    cta: 'Find my type →',
+    ctaZh: '测我的类型 →',
   },
   {
     slug: 'mensa',
@@ -52,6 +56,8 @@ export const TEST_META: TestMeta[] = [
     durationMin: 12,
     questionCount: mensaConfig.questions.length,
     badge: 'IQ',
+    cta: 'Test my IQ →',
+    ctaZh: '测我的智商 →',
   },
   {
     slug: 'sbinet',
@@ -63,5 +69,7 @@ export const TEST_META: TestMeta[] = [
     durationMin: 12,
     questionCount: sbinetConfig.questions.length,
     badge: 'Cognitive',
+    cta: 'Profile my mind →',
+    ctaZh: '测我的认知 →',
   },
 ];

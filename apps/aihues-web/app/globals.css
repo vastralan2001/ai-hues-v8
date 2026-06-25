@@ -172,7 +172,9 @@ select:focus-visible {
 .btn-cta:hover {
   background: var(--accent-light);
   transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(194, 80, 46, 0.26);
+  box-shadow:
+    0 10px 26px color-mix(in srgb, var(--color-accent) 32%, transparent),
+    0 2px 8px color-mix(in srgb, var(--color-accent) 22%, transparent);
 }
 .btn-cta:active {
   transform: translateY(0) scale(0.98);

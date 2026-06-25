@@ -27,7 +27,7 @@ export default function TestsPage() {
         features={['Real question banks', 'Shareable results', 'Just for fun']}
       />
 
-      <section className='mx-auto max-w-[1180px] px-6 pb-20 pt-8'>
+      <section className='mx-auto max-w-[1320px] px-6 pb-20 pt-8'>
         <div className='mx-auto grid max-w-[760px] grid-cols-1 gap-5 sm:grid-cols-2'>
           {TEST_META.map((tm) => (
             <Link
@@ -72,7 +72,7 @@ export default function TestsPage() {
                 className='mt-5 inline-flex w-fit items-center rounded-[12px] px-6 py-2.5 text-[14px] font-semibold text-white transition-transform group-hover:translate-x-0.5'
                 style={{ background: tm.accent }}
               >
-                Take the test →
+                {locale === 'zh' ? tm.ctaZh : tm.cta}
               </span>
             </Link>
           ))}

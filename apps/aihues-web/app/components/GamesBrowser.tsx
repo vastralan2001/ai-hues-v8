@@ -37,7 +37,7 @@ export default function GamesBrowser({
       : games.filter((x) => gameGenre(x.slug) === (g as GameGenre)).length;
 
   return (
-    <div className='mx-auto w-full max-w-[1180px] px-6'>
+    <div className='mx-auto w-full max-w-[1320px] px-6'>
       <FilterPills
         ariaLabel='Game genres'
         className='mb-6'

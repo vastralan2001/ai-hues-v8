@@ -61,4 +61,7 @@ export interface TestMeta {
   durationMin: number;
   questionCount: number;
   badge: string;
+  /** Per-test call-to-action copy (like the game cards). */
+  cta: string;
+  ctaZh: string;
 }

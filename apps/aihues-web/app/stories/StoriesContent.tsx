@@ -2,7 +2,12 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from 'lucide-react';
 
 import NewsletterSubscribe from '@/components/NewsletterSubscribe';
 import { FilterPills } from '@/components/FilterPills';
@@ -76,7 +81,7 @@ export default function StoriesContent({ initialPosts, initialTag }: Props) {
         />
       </PageMasthead>
 
-      <section className='mx-auto max-w-[1180px] px-6 pb-20 md:px-7'>
+      <section className='mx-auto max-w-[1320px] px-6 pb-20 md:px-7'>
         {/* Tag filters — left-aligned, matching the other listing pages */}
         <FilterPills
           ariaLabel='Article topics'
@@ -140,8 +145,17 @@ export default function StoriesContent({ initialPosts, initialTag }: Props) {
             {totalPages > 1 && (
               <nav
                 aria-label='Pagination'
-                className='mt-12 flex items-center justify-center gap-3'
+                className='mt-12 flex flex-wrap items-center justify-center gap-1.5'
               >
+                <button
+                  aria-label='First page'
+                  className='flex h-10 w-10 items-center justify-center rounded-full border border-border bg-white/70 text-secondary backdrop-blur-sm transition-colors hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-border disabled:hover:text-secondary'
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage(1)}
+                  type='button'
+                >
+                  <ChevronsLeft size={18} />
+                </button>
                 <button
                   aria-label='Previous page'
                   className='flex h-10 w-10 items-center justify-center rounded-full border border-border bg-white/70 text-secondary backdrop-blur-sm transition-colors hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-border disabled:hover:text-secondary'
@@ -151,30 +165,28 @@ export default function StoriesContent({ initialPosts, initialTag }: Props) {
                 >
                   <ChevronLeft size={18} />
                 </button>
-                <div className='flex items-center gap-2 text-sm text-secondary'>
-                  <span>Page</span>
-                  <input
-                    key={currentPage}
-                    aria-label='Go to page'
-                    className='h-10 w-14 rounded-[10px] border border-accent bg-accent text-center text-sm font-bold text-white outline-none transition-shadow focus:ring-2 focus:ring-accent/40'
-                    defaultValue={currentPage}
-                    max={totalPages}
-                    min={1}
-                    onBlur={(e) => {
-                      const n = Math.trunc(Number(e.currentTarget.value));
-                      if (Number.isFinite(n) && n >= 1 && n <= totalPages) {
-                        setCurrentPage(n);
-                      } else {
-                        e.currentTarget.value = String(currentPage);
-                      }
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') e.currentTarget.blur();
-                    }}
-                    type='number'
-                  />
-                  <span>of {totalPages}</span>
-                </div>
+                {(() => {
+                  const span = 2;
+                  const lo = Math.max(1, currentPage - span);
+                  const hi = Math.min(totalPages, currentPage + span);
+                  const list: number[] = [];
+                  for (let p = lo; p <= hi; p++) list.push(p);
+                  return list.map((p) => (
+                    <button
+                      key={p}
+                      type='button'
+                      aria-current={p === currentPage ? 'page' : undefined}
+                      onClick={() => setCurrentPage(p)}
+                      className={`flex h-10 min-w-[40px] items-center justify-center rounded-[10px] px-3 text-sm font-bold transition-colors ${
+                        p === currentPage
+                          ? 'border border-accent bg-accent text-white'
+                          : 'border border-border bg-white/70 text-secondary backdrop-blur-sm hover:border-accent hover:text-accent'
+                      }`}
+                    >
+                      {p}
+                    </button>
+                  ));
+                })()}
                 <button
                   aria-label='Next page'
                   className='flex h-10 w-10 items-center justify-center rounded-full border border-border bg-white/70 text-secondary backdrop-blur-sm transition-colors hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-border disabled:hover:text-secondary'
@@ -185,6 +197,15 @@ export default function StoriesContent({ initialPosts, initialTag }: Props) {
                   type='button'
                 >
                   <ChevronRight size={18} />
+                </button>
+                <button
+                  aria-label='Last page'
+                  className='flex h-10 w-10 items-center justify-center rounded-full border border-border bg-white/70 text-secondary backdrop-blur-sm transition-colors hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-border disabled:hover:text-secondary'
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage(totalPages)}
+                  type='button'
+                >
+                  <ChevronsRight size={18} />
                 </button>
               </nav>
             )}
