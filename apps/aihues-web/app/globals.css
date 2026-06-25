@@ -171,7 +171,6 @@ select:focus-visible {
 }
 .btn-cta:hover {
   background: var(--accent-light);
-  transform: translateY(-2px);
   box-shadow:
     0 10px 26px color-mix(in srgb, var(--color-accent) 32%, transparent),
     0 2px 8px color-mix(in srgb, var(--color-accent) 22%, transparent);
@@ -205,7 +204,9 @@ select:focus-visible {
   transform: translateY(-3px) scale(1.06);
 }
 .logo-mark:hover .logo-hue {
-  filter: drop-shadow(0 4px 11px color-mix(in srgb, currentColor 55%, transparent));
+  filter: drop-shadow(
+    0 4px 11px color-mix(in srgb, currentColor 55%, transparent)
+  );
 }
 @media (prefers-reduced-motion: reduce) {
   .logo-mark,
@@ -370,7 +371,6 @@ select:focus-visible {
 }
 @media (hover: hover) and (pointer: fine) {
   .card-lift:hover {
-    transform: translateY(-4px);
     border-color: var(--accent);
     box-shadow: 0 14px 30px rgba(26, 26, 25, 0.09);
   }

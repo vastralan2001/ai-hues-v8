@@ -24,12 +24,6 @@ export async function GET() {
     { id: 'stories', title: 'Stories', href: '/stories', type: 'page' },
     { id: 'pricing', title: 'Pricing', href: '/pricing', type: 'page' },
     { id: 'search', title: 'Search', href: '/search', type: 'page' },
-    {
-      id: 'collection',
-      title: 'Collection',
-      href: '/collection',
-      type: 'page',
-    },
     { id: 'wishlist', title: 'Wishlist', href: '/wishlist', type: 'page' },
 
     ...ALL_TOOLS.filter((tool) => publishedSlugSet.has(tool.slug)).map(

@@ -27,7 +27,24 @@ const DURATION = 520;
 const FADE_OUT = 200;
 const SHIFT = 22;
 
-function SlideText({ s, full }: { s: SpotlightSlide; full: boolean }) {
+// Secondary-CTA target per slide kind — the family's aggregation page.
+const AGG: Record<string, { href: string; label: string }> = {
+  tool: { href: '/tools', label: 'All tools' },
+  game: { href: '/games', label: 'All games' },
+  test: { href: '/tests', label: 'All tests' },
+  story: { href: '/stories', label: 'All stories' },
+};
+
+function SlideText({
+  s,
+  full,
+  secondary = false,
+}: {
+  s: SpotlightSlide;
+  full: boolean;
+  secondary?: boolean;
+}) {
+  const agg = secondary && s.kind ? AGG[s.kind] : undefined;
   return (
     <>
       <div className='mb-3 flex items-center gap-3'>
@@ -55,9 +72,19 @@ function SlideText({ s, full }: { s: SpotlightSlide; full: boolean }) {
           {s.metrics}
         </p>
       ) : null}
-      <Link className='btn-cta btn-cta--sm w-fit' href={s.href}>
-        {s.cta}
-      </Link>
+      <div className='flex flex-wrap items-center gap-3'>
+        <Link className='btn-cta btn-cta--sm w-fit' href={s.href}>
+          {s.cta}
+        </Link>
+        {agg ? (
+          <Link
+            className='inline-flex w-fit items-center gap-1 rounded-[10px] border border-border-strong px-4 py-2 text-[12px] font-bold uppercase tracking-[0.1em] text-secondary transition-colors hover:border-accent hover:text-accent'
+            href={agg.href}
+          >
+            {agg.label}
+          </Link>
+        ) : null}
+      </div>
     </>
   );
 }
@@ -70,6 +97,7 @@ export default function SpotlightCarousel({
   stack = false,
   controlledIndex,
   controls = true,
+  secondaryCta = false,
 }: {
   slides: SpotlightSlide[];
   compact?: boolean;
@@ -80,6 +108,8 @@ export default function SpotlightCarousel({
   controlledIndex?: number;
   /** Show the dots + prev/next arrows (default true). */
   controls?: boolean;
+  /** Show a secondary CTA to the family aggregation page (hero only). */
+  secondaryCta?: boolean;
 }) {
   const count = slides.length;
 
@@ -153,7 +183,13 @@ export default function SpotlightCarousel({
 
   const renderDemo = (s: SpotlightSlide, active: boolean) => {
     const k = s.kind ?? demo;
-    if (k === 'game') return <GameDemo active={active} slug={s.slug} />;
+    // Games get the same framed card as the tool/test demos for visual parity.
+    if (k === 'game')
+      return (
+        <div className='relative h-[244px] w-full overflow-hidden rounded-[16px] border border-border bg-bg shadow-sm'>
+          <GameDemo active={active} slug={s.slug} />
+        </div>
+      );
     if (k === 'test') return <TestDemo slug={s.slug} />;
     return <ToolDemo slug={s.slug} />;
   };
@@ -195,7 +231,7 @@ export default function SpotlightCarousel({
               slug={s.slug}
               tag={s.eyebrow}
               animated
-              className='h-[244px] w-full rounded-[16px] border border-border'
+              className='h-[244px] w-full rounded-[16px] border border-border bg-bg shadow-sm'
             />
           ) : null;
           return (
@@ -213,13 +249,13 @@ export default function SpotlightCarousel({
               {visual ? (
                 stack ? (
                   <div className='flex h-full flex-col justify-center gap-4'>
-                    <SlideText full={false} s={s} />
+                    <SlideText full={false} s={s} secondary={secondaryCta} />
                     {visual}
                   </div>
                 ) : (
                   <div className='grid h-full items-center gap-7 md:grid-cols-2'>
                     <div className='order-2 min-w-0 md:order-1'>
-                      <SlideText full={false} s={s} />
+                      <SlideText full={false} s={s} secondary={secondaryCta} />
                     </div>
                     <div className='order-1 min-w-0 md:order-2'>{visual}</div>
                   </div>
@@ -227,7 +263,7 @@ export default function SpotlightCarousel({
               ) : (
                 <div className='flex h-full flex-col justify-center'>
                   <div className='max-w-[620px]'>
-                    <SlideText full s={s} />
+                    <SlideText full s={s} secondary={secondaryCta} />
                   </div>
                 </div>
               )}

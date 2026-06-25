@@ -5,9 +5,7 @@ export const toolsHref = '/tools';
 export const gamesHref = '/games';
 export const testsHref = '/tests';
 export const wishlistHref = '/wishlist';
-export const rankingHref = '/ranking';
 export const pricingHref = '/pricing';
-export const collectionHref = '/collection';
 export const searchHref = '/search';
 export const storiesHref = '/stories';
 

@@ -120,7 +120,7 @@ export default function HeroSearch({
             ) : null}
           </div>
           <button
-            className='inline-flex items-center gap-1.5 rounded-[14px] px-6 py-2.5 text-[14px] font-semibold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md active:translate-y-0'
+            className='inline-flex items-center gap-1.5 rounded-[14px] px-6 py-2.5 text-[14px] font-semibold text-white shadow-sm transition-all hover:brightness-110 hover:shadow-md'
             style={{ background: accent ?? 'var(--color-accent)' }}
             type='submit'
           >

@@ -128,7 +128,7 @@ export default function HeroStage({
               {scene ? (
                 <p
                   key={i}
-                  className='hero-slogan-in text-[19px] font-semibold leading-snug text-foreground'
+                  className='hero-slogan-in text-[19px] font-normal leading-snug text-foreground/85'
                 >
                   <BrandWord>
                     {zh ? scene.slogan.zh : scene.slogan.en}
@@ -156,6 +156,7 @@ export default function HeroStage({
                 slides={slides}
                 controlledIndex={i}
                 controls={false}
+                secondaryCta
               />
             </div>
           ) : null}
