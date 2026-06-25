@@ -155,11 +155,15 @@ function draw(
 export function StoryArt({
   slug,
   tag,
+  alt,
   className = '',
   animated = false,
 }: {
   slug: string;
   tag: string;
+  /** Accessible/SEO description — crawlers + screen readers treat the scene as
+   *  a described image rather than a decorative blob. */
+  alt?: string;
   className?: string;
   animated?: boolean;
 }) {
@@ -225,7 +229,11 @@ export function StoryArt({
   }, [slug, tag, animated]);
 
   return (
-    <div aria-hidden='true' className={`relative overflow-hidden ${className}`}>
+    <div
+      role='img'
+      aria-label={alt ?? `${tag} story illustration`}
+      className={`relative overflow-hidden ${className}`}
+    >
       {Svg ? (
         <Svg />
       ) : (

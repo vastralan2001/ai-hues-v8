@@ -147,6 +147,7 @@ export default function StoriesContent({
                     <StoryArt
                       slug={post.slug}
                       tag={post.tag}
+                      alt={`${post.title} — illustration`}
                       className='h-full w-full transition-transform duration-500 group-hover:scale-105'
                     />
                     <span className='absolute left-3 top-3 rounded-full bg-accent px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider text-white'>
@@ -199,20 +200,38 @@ export default function StoriesContent({
                   style={{ width: pageBarWidth }}
                 >
                   {(() => {
-                    // Always show first + last page; a window around the current
-                    // page; and "…" for any gap between them.
-                    const window = 1;
-                    const pages = new Set<number>([1, totalPages]);
-                    for (let p = page - window; p <= page + window; p++) {
-                      if (p >= 1 && p <= totalPages) pages.add(p);
-                    }
-                    const sorted = [...pages].sort((a, b) => a - b);
-                    const items: (number | 'gap')[] = [];
-                    let prev = 0;
-                    for (const p of sorted) {
-                      if (prev && p - prev > 1) items.push('gap');
-                      items.push(p);
-                      prev = p;
+                    // Aim to fill 7 slots: always page 1 + last, and a window
+                    // that grows near the ends so the bar stays full, with "…"
+                    // marking any gap.
+                    const MAX = 7;
+                    let items: (number | 'gap')[];
+                    if (totalPages <= MAX) {
+                      items = Array.from(
+                        { length: totalPages },
+                        (_, i) => i + 1
+                      );
+                    } else if (page <= 4) {
+                      items = [1, 2, 3, 4, 5, 'gap', totalPages];
+                    } else if (page >= totalPages - 3) {
+                      items = [
+                        1,
+                        'gap',
+                        totalPages - 4,
+                        totalPages - 3,
+                        totalPages - 2,
+                        totalPages - 1,
+                        totalPages,
+                      ];
+                    } else {
+                      items = [
+                        1,
+                        'gap',
+                        page - 1,
+                        page,
+                        page + 1,
+                        'gap',
+                        totalPages,
+                      ];
                     }
                     return items.map((it, i) =>
                       it === 'gap' ? (

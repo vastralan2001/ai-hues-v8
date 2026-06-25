@@ -197,6 +197,7 @@ export default async function ArticlePage({
               <StoryArt
                 slug={slug}
                 tag={meta.tag}
+                alt={`${meta.title} — illustration`}
                 animated
                 className='h-full w-full'
               />

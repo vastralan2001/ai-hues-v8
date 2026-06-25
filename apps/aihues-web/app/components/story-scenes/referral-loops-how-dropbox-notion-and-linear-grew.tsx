@@ -1,0 +1,136 @@
+'use client';
+import {
+  Frame,
+  Ink,
+  Twinkle,
+  Cloud,
+  gen,
+  filled,
+  stroke,
+  loop,
+  linear,
+  INK,
+  motion,
+} from './_kit';
+
+/* Referral loops — a viral growth chain. A pulsing seed node at center sends an
+   invitation along a closed dashed loop; the loop threads through a widening ring
+   of bloomed nodes, each smaller and farther out, the propagation of one user
+   becoming many. The flowing dashes read as the referral passing hand to hand. */
+
+const RL_LOOP =
+  'M100 56 C150 36 158 70 124 78 C96 84 58 80 50 60 C44 44 70 30 100 56 Z';
+
+// outer bloomed nodes along the loop — descending size = each new generation
+const NODES: [number, number, number, string, number, number][] = [
+  // x, y, diameter, color, seed, twinkle/pulse delay
+  [50, 60, 8, '#e2693f', 320, 0],
+  [124, 78, 7, '#e0a83f', 321, 0.5],
+  [148, 49, 6, '#788c5d', 322, 1.0],
+  [100, 30, 5.4, '#6a9bcc', 323, 1.5],
+  [56, 38, 4.6, '#cf9836', 324, 0.8],
+];
+
+export default function Scene() {
+  return (
+    <Frame sky={['#fcf3e6', '#f1ddc6']}>
+      <defs>
+        <radialGradient id='rl_seedglow' cx='50%' cy='50%' r='50%'>
+          <stop offset='0%' stopColor='#fff3da' stopOpacity='0.95' />
+          <stop offset='100%' stopColor='#fff3da' stopOpacity='0' />
+        </radialGradient>
+        <radialGradient id='rl_ring' cx='50%' cy='50%' r='50%'>
+          <stop offset='0%' stopColor='#f6e7c4' stopOpacity='0' />
+          <stop offset='72%' stopColor='#f0d6a8' stopOpacity='0' />
+          <stop offset='100%' stopColor='#e7c189' stopOpacity='0.4' />
+        </radialGradient>
+      </defs>
+
+      <Twinkle x={28} y={22} c='#cf9836' />
+      <Twinkle x={176} y={28} d={0.7} c='#e0a83f' />
+      <Twinkle x={170} y={74} d={1.2} c='#94ac78' />
+      <Twinkle x={24} y={78} d={0.4} c='#cf9836' />
+      <Cloud x={150} y={20} s={0.7} o={0.4} />
+      <Cloud x={42} y={88} s={0.8} o={0.35} />
+
+      {/* soft expanding-reach ring behind the loop */}
+      <circle cx='100' cy='56' r='56' fill='url(#rl_ring)' />
+
+      {/* the closed referral loop — flowing dashes = the invite passing onward */}
+      <motion.path
+        d={RL_LOOP}
+        fill='none'
+        stroke='#d99a3f'
+        strokeWidth='1.6'
+        strokeDasharray='2 6'
+        opacity='0.85'
+        animate={{ strokeDashoffset: [0, -32] }}
+        transition={linear(2.4)}
+      />
+
+      {/* sketched underdrawing of the loop for hand-drawn texture */}
+      <Ink
+        d={gen.path(
+          RL_LOOP,
+          stroke(310, { stroke: '#cf9836', strokeWidth: 0.9, roughness: 1.4 })
+        )}
+      />
+
+      {/* central seed node — the original user, glowing and pulsing */}
+      <circle cx='100' cy='56' r='22' fill='url(#rl_seedglow)' />
+      <motion.g
+        animate={{ scale: [1, 1.08, 1] }}
+        transition={loop(2.6)}
+        style={{ transformOrigin: '100px 56px' }}
+      >
+        <Ink
+          d={gen.circle(
+            100,
+            56,
+            12,
+            filled(311, '#c2502e', { fillStyle: 'solid', strokeWidth: 1.3 })
+          )}
+        />
+        <Ink
+          d={gen.circle(
+            100,
+            56,
+            5.2,
+            filled(312, '#fbe9cf', { fillStyle: 'solid' })
+          )}
+        />
+      </motion.g>
+
+      {/* an outward ripple from the seed — referral reaching new people */}
+      <motion.circle
+        cx='100'
+        cy='56'
+        r='12'
+        fill='none'
+        stroke='#e2693f'
+        strokeWidth='1.2'
+        animate={{ r: [12, 30], opacity: [0.55, 0] }}
+        transition={linear(2.8)}
+      />
+
+      {/* the bloomed referral nodes — each generation smaller, farther along */}
+      {NODES.map(([x, y, dia, color, seed, delay]) => (
+        <motion.g
+          key={seed}
+          animate={{ scale: [0.85, 1.1, 0.85] }}
+          transition={loop(2.2, delay)}
+          style={{ transformOrigin: `${x}px ${y}px` }}
+        >
+          <Ink
+            d={gen.circle(
+              x,
+              y,
+              dia,
+              filled(seed, color, { fillStyle: 'solid', strokeWidth: 1.1 })
+            )}
+          />
+        </motion.g>
+      ))}
+    </Frame>
+  );
+}
