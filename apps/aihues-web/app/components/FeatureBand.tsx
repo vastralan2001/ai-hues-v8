@@ -83,7 +83,7 @@ export default function FeatureBand({
             <div className='mb-3 text-[12px] font-extrabold uppercase tracking-[0.16em] text-accent'>
               {eyebrow}
             </div>
-            <h2 className='mb-3 text-[clamp(30px,3.6vw,46px)] font-extrabold leading-[1.05] tracking-[-0.02em] text-foreground'>
+            <h2 className='mb-3 text-[clamp(30px,3.6vw,46px)] font-extrabold leading-[1.14] tracking-[-0.02em] text-foreground'>
               {title}
             </h2>
             {tagline ? (

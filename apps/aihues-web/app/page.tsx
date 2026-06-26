@@ -177,10 +177,47 @@ export default async function HomePage() {
     games.find((game) => game.slug === slug)
   ).filter((game): game is CatalogGame => game != null);
 
-  const marqueeRows: MarqueeItem[][] = [[], [], []];
-  tools.forEach((tool, i) => {
-    marqueeRows[i % 3].push({ slug: tool.slug, name: tool.name });
-  });
+  // Marquee mixes the three interactive families, each chip in its category
+  // hue, round-robin so rows read as a blend of Tools / Games / Tests.
+  const marqueePool: MarqueeItem[] = [
+    ...tools.map((t) => ({
+      slug: t.slug,
+      name: t.name,
+      href: toolDetailHref(t.slug),
+      cat: 'tools' as const,
+    })),
+    ...games.map((g) => ({
+      slug: g.slug,
+      name: g.name,
+      href: gameDetailHref(g.slug),
+      cat: 'games' as const,
+    })),
+    ...TEST_META.map((tm) => ({
+      slug: tm.slug,
+      name: tm.name,
+      href: testDetailHref(tm.slug),
+      cat: 'tests' as const,
+    })),
+  ];
+  // interleave families so neighbours differ (tools → tests → games → …)
+  const byCat = (c: MarqueeItem['cat']) =>
+    marqueePool.filter((m) => m.cat === c);
+  const [tl, gm, ts] = [byCat('tools'), byCat('games'), byCat('tests')];
+  const mixed: MarqueeItem[] = [];
+  for (let i = 0; i < Math.max(tl.length, gm.length, ts.length); i++) {
+    if (tl[i]) mixed.push(tl[i]);
+    if (ts[i]) mixed.push(ts[i]);
+    if (gm[i]) mixed.push(gm[i]);
+  }
+  // Deal into rows by CONTIGUOUS chunks, NOT i % 3 — a 3-periodic interleave
+  // dealt round-robin lands the same category on every row. Contiguous slices
+  // keep the alternating pattern so adjacent chips are never the same family.
+  const MARQUEE_ROWS = 3;
+  const per = Math.ceil(mixed.length / MARQUEE_ROWS);
+  const marqueeRows: MarqueeItem[][] = Array.from(
+    { length: MARQUEE_ROWS },
+    (_, r) => mixed.slice(r * per, (r + 1) * per)
+  );
 
   // Hero scenes — built from the SAME catalog/posts the home bands use, so a
   // given id renders identical content + badge in the hero and its band.
@@ -350,7 +387,7 @@ export default async function HomePage() {
             ══════════════════════════════════════════════ */}
         <FeatureBand
           category='tests'
-          cta={{ href: testsHref, label: 'Take a test' }}
+          cta={{ href: testsHref, label: 'Explore tests' }}
           description='Personality, intelligence and temperament quizzes with real question banks and shareable result posters. For reflection and fun — not clinical diagnosis.'
           eyebrow='Know Yourself'
           id='tests'
@@ -376,7 +413,7 @@ export default async function HomePage() {
             ══════════════════════════════════════════════ */}
         <FeatureBand
           category='stories'
-          cta={{ href: storiesHref, label: 'Read the stories' }}
+          cta={{ href: storiesHref, label: 'More stories' }}
           description="Essays on AI, growth, SEO and indie development — what's actually working in 2026, written for people shipping real products."
           eyebrow='Stories'
           id='stories'

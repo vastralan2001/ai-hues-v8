@@ -82,7 +82,7 @@ export function SiteHeader({
             {links.map(({ href, labelKey }) => (
               <Link
                 key={labelKey}
-                className='text-[13px] font-bold uppercase tracking-[0.14em] text-secondary transition-colors duration-150 hover:text-accent md:text-[15px]'
+                className='font-display text-[13px] font-bold uppercase tracking-[0.14em] text-secondary transition-colors duration-150 hover:text-accent md:text-[15px]'
                 href={href}
               >
                 {t(locale, labelKey)}
@@ -143,7 +143,7 @@ export function SiteFooter({
             >
               <Wordmark />
             </Link>
-            <p className='mt-3 max-w-[280px] text-[14px] leading-relaxed text-muted'>
+            <p className='mt-3 max-w-[360px] text-[14px] leading-relaxed text-muted'>
               {t(locale, 'footer.tagline')}
             </p>
             <div className='mt-5 flex items-center gap-2'>
@@ -280,10 +280,15 @@ export function PageShell({
   };
   const cat = themed[variant];
   return (
-    <>
+    <div className='flex min-h-dvh flex-col'>
       <SiteHeader variant={variant} locale={locale} />
-      <main style={cat ? categoryThemeStyle(cat) : undefined}>{children}</main>
+      <main
+        className='flex-1'
+        style={cat ? categoryThemeStyle(cat) : undefined}
+      >
+        {children}
+      </main>
       <SiteFooter variant={variant} locale={locale} />
-    </>
+    </div>
   );
 }

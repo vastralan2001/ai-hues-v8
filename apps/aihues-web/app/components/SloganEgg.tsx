@@ -77,20 +77,66 @@ function EggWord({ word, egg }: { word: string; egg: Egg }) {
         onMouseEnter={enter}
         onMouseLeave={leave}
       >
-        <motion.span
-          className='egg-overlay egg-sweat'
-          aria-hidden='true'
-          animate={
-            on ? { opacity: [0, 1, 0], y: [0, 13] } : { opacity: 0, y: 0 }
-          }
-          transition={{
-            duration: 1,
-            repeat: on ? Infinity : 0,
-            ease: 'easeIn',
-          }}
-        >
-          💧
-        </motion.span>
+        {/* 暴汗黄豆 — a few big, fat bean-shaped sweat drops that BURST out at
+            the tail (the soybean-emoji look), then trickle down and off. The
+            quick pop happens in the first ~16% of the cycle (times), then the
+            drop flows down the rest of the way, accelerating like a real bead. */}
+        {[
+          { left: '84%', top: -3, size: 17, fall: 34, delay: 0.0, dur: 1.5 },
+          { left: '100%', top: 1, size: 14, fall: 30, delay: 0.55, dur: 1.4 },
+          { left: '92%', top: -5, size: 15, fall: 38, delay: 1.1, dur: 1.6 },
+        ].map((d, i) => (
+          <motion.span
+            key={i}
+            aria-hidden='true'
+            style={{
+              position: 'absolute',
+              top: d.top,
+              left: d.left,
+              lineHeight: 0,
+              transformOrigin: 'center bottom',
+              pointerEvents: 'none',
+              zIndex: 5,
+            }}
+            animate={
+              on
+                ? {
+                    opacity: [0, 1, 1, 0],
+                    scale: [0.3, 1.12, 1, 1],
+                    y: [0, 1, d.fall * 0.45, d.fall],
+                  }
+                : { opacity: 0, scale: 0.3, y: 0 }
+            }
+            transition={{
+              duration: d.dur,
+              times: [0, 0.16, 0.55, 1],
+              delay: d.delay,
+              repeat: on ? Infinity : 0,
+              repeatDelay: 0.3,
+              ease: 'easeIn',
+            }}
+          >
+            <svg
+              width={d.size}
+              height={d.size * 1.32}
+              viewBox='0 0 12 16'
+              fill='none'
+            >
+              <path
+                d='M6 1C6 1 1.5 8 1.5 11A4.5 4.5 0 0 0 10.5 11C10.5 8 6 1 6 1Z'
+                fill='#5ea0e0'
+              />
+              <ellipse
+                cx='4.3'
+                cy='11'
+                rx='1.5'
+                ry='2'
+                fill='#cfe6fa'
+                opacity='0.8'
+              />
+            </svg>
+          </motion.span>
+        ))}
         {word.split('').map((ch, i) => (
           <motion.span
             key={i}
@@ -121,8 +167,14 @@ function EggWord({ word, egg }: { word: string; egg: Egg }) {
   let anim: TargetAndTransition = {};
   let trans: Transition = {};
   if (egg === 'lifting') {
-    anim = on ? { scaleY: 0.58, y: 1 } : { scaleY: 1, y: 0 };
-    trans = { type: 'spring', stiffness: 420, damping: 15 };
+    // crushed under the bar, then a slow strained attempt to push back up that
+    // never quite makes it — the struggle of heavy lifting.
+    anim = on
+      ? { scaleY: [0.58, 0.72, 0.61, 0.74, 0.58], y: [1, 0.3, 0.7, 0.2, 1] }
+      : { scaleY: 1, y: 0 };
+    trans = on
+      ? { duration: 2.2, repeat: Infinity, ease: 'easeInOut' }
+      : { type: 'spring', stiffness: 420, damping: 15 };
   } else if (egg === 'noise') {
     anim = on
       ? { x: [-1.6, 1.6, -1.3, 1.3, -1.6], rotate: [-1, 1.2, -1] }
@@ -156,10 +208,45 @@ function EggWord({ word, egg }: { word: string; egg: Egg }) {
           fill='var(--color-accent)'
           aria-hidden='true'
           initial={false}
-          animate={on ? { y: 0, opacity: 1 } : { y: -9, opacity: 0 }}
-          transition={{ type: 'spring', stiffness: 520, damping: 17 }}
+          // the bar rises and sinks in lockstep with the word's 2.2s lift
+          // struggle below — heaved up on the strain, settling back as it sags
+          animate={
+            on ? { opacity: 1, y: [0, -2.5, -1, -3, 0] } : { opacity: 0, y: -9 }
+          }
+          transition={
+            on
+              ? {
+                  y: { duration: 2.2, repeat: Infinity, ease: 'easeInOut' },
+                  opacity: { duration: 0.25 },
+                }
+              : { type: 'spring', stiffness: 520, damping: 17 }
+          }
         >
-          <rect x='24' y='5' width='152' height='4' rx='2' />
+          {/* the bar bows symmetrically in the middle under the load, flexing
+              as the lift is fought for */}
+          <motion.path
+            fill='none'
+            stroke='var(--color-accent)'
+            strokeWidth='4'
+            strokeLinecap='round'
+            initial={false}
+            animate={
+              on
+                ? {
+                    d: [
+                      'M24 7 Q100 12 176 7',
+                      'M24 7 Q100 9 176 7',
+                      'M24 7 Q100 12 176 7',
+                    ],
+                  }
+                : { d: 'M24 7 Q100 7 176 7' }
+            }
+            transition={
+              on
+                ? { duration: 2.2, repeat: Infinity, ease: 'easeInOut' }
+                : { type: 'spring', stiffness: 520, damping: 17 }
+            }
+          />
           <rect x='14' y='1' width='8' height='12' rx='2' />
           <rect x='178' y='1' width='8' height='12' rx='2' />
           <rect x='6' y='3.5' width='6' height='7' rx='1.5' />

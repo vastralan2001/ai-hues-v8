@@ -147,7 +147,15 @@ function draw(
     ctx.setLineDash([]);
   } else if (el.t === 'tx') {
     ctx.fillStyle = el.fill;
-    ctx.font = `${el.w ?? 800} ${Math.round(el.size * H)}px "Radiance", "Noto Sans", ui-sans-serif, system-ui, sans-serif`;
+    // Pull the display family from the design token so canvas text matches the
+    // rest of the app (single source of truth in globals.css @theme).
+    const fam =
+      (typeof window !== 'undefined' &&
+        getComputedStyle(document.documentElement)
+          .getPropertyValue('--font-display')
+          .trim()) ||
+      '"Noto Sans", ui-sans-serif, system-ui, sans-serif';
+    ctx.font = `${el.w ?? 800} ${Math.round(el.size * H)}px ${fam}`;
     ctx.textAlign = el.align ?? 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(el.s, X(el.x), Y(el.y));

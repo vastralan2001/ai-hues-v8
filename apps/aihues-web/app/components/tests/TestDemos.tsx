@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
+import ResultPosterPreview from '@/components/tests/ResultPosterPreview';
+
 /* Per-test demos, owned by the tests domain. A short two-beat loop: render a
    sample question, then cross-fade into a miniature of the shareable result
    poster (see lib/tests/poster.ts). The homepage retrieves one by slug. */
@@ -112,25 +114,25 @@ export function TestDemo({ slug }: { slug: string }) {
   }, [slug]);
 
   return (
-    <div className='relative h-[244px] w-full overflow-hidden rounded-[16px] border border-border bg-bg shadow-sm'>
+    <div className='relative aspect-[16/9] w-full overflow-hidden rounded-[16px] border border-border bg-bg shadow-sm'>
       {/* Question beat */}
       <div
-        className='absolute inset-0 flex flex-col justify-center gap-3 px-5 transition-opacity duration-500'
+        className='absolute inset-0 flex flex-col justify-center gap-2 px-5 transition-opacity duration-500'
         style={{ opacity: phase === 'q' ? 1 : 0 }}
       >
         <div className='text-[10px] font-bold uppercase tracking-[0.16em] text-accent'>
           {slug.toUpperCase()} · question
         </div>
-        <div className='text-[16px] font-bold leading-snug text-foreground'>
+        <div className='text-[15px] font-bold leading-snug text-foreground'>
           {question.q}
         </div>
-        <div className='mt-1 flex flex-col gap-2'>
+        <div className='mt-0.5 flex flex-col gap-1.5'>
           {question.opts.map((o, i) => {
             const chosen = answered && i === question.pick;
             return (
               <div
                 key={o}
-                className={`flex items-center gap-2.5 rounded-[10px] border px-3 py-2 text-[13px] font-medium transition-all duration-300 ${
+                className={`flex items-center gap-2.5 rounded-[10px] border px-3 py-1.5 text-[13px] font-medium transition-all duration-300 ${
                   chosen
                     ? 'border-accent bg-accent-bg text-accent'
                     : 'border-border bg-surface text-secondary'
@@ -152,50 +154,20 @@ export function TestDemo({ slug }: { slug: string }) {
         </div>
       </div>
 
-      {/* Result poster beat */}
+      {/* Result poster beat — the shared poster preview, same artwork as the
+          result page (just driven by demo sample data). */}
       <div
-        className='absolute inset-0 flex flex-col transition-opacity duration-500'
+        className='absolute inset-0 transition-opacity duration-500 [container-type:inline-size]'
         style={{ opacity: phase === 'poster' ? 1 : 0 }}
       >
-        <div
-          className='px-4 py-3'
-          style={{
-            background:
-              'color-mix(in srgb, var(--color-accent) 12%, transparent)',
-          }}
-        >
-          <div className='text-[10px] font-bold uppercase tracking-[0.16em] text-accent'>
-            {slug.toUpperCase()} · result
-          </div>
-          <div className='text-[30px] font-black leading-none text-accent'>
-            {r.code}
-          </div>
-          <div className='mt-0.5 text-[13px] font-bold text-foreground'>
-            {r.title}
-          </div>
-        </div>
-        <div className='flex flex-1 flex-col justify-center gap-2.5 px-4'>
-          {r.bars.map((b, n) => (
-            <div key={b.label} className='flex items-center gap-2'>
-              <span className='w-[64px] shrink-0 text-[10px] text-secondary'>
-                {b.label}
-              </span>
-              <div className='h-1.5 flex-1 overflow-hidden rounded-full bg-border'>
-                <div
-                  className='h-full rounded-full bg-accent transition-[width] duration-700 ease-out'
-                  style={{
-                    width: phase === 'poster' ? `${b.pct}%` : '0%',
-                    transitionDelay: `${n * 0.12}s`,
-                  }}
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className='flex items-center gap-1.5 border-t border-border px-4 py-2 text-[10px] font-medium text-muted'>
-          <span className='h-2 w-2 rounded-full bg-accent' />
-          AIHues · shareable poster
-        </div>
+        <ResultPosterPreview
+          name={slug.toUpperCase()}
+          code={r.code}
+          title={r.title}
+          bars={r.bars}
+          animate={phase === 'poster'}
+          className='h-full w-full'
+        />
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-import { Noto_Sans } from 'next/font/google';
+import { Noto_Sans, Saira } from 'next/font/google';
 
 import { I18nProvider } from '@/lib/i18n';
 import CommandPalette from '@/components/CommandPalette';
@@ -8,10 +8,23 @@ import GoogleAnalytics from '@/components/GoogleAnalytics';
 import CookieConsent from '@/components/CookieConsent';
 import { PageDurationTracker } from '@/components/PageDurationTracker';
 
-const notoSans = Noto_Sans({
+// ── Fonts — the ONE place to swap a face. Each loads to a raw CSS variable;
+//    globals.css @theme wraps it with a functional fallback chain. ──
+// Body face (long-form reading).
+const bodyFont = Noto_Sans({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
-  variable: '--font-noto-sans',
+  variable: '--font-body-src',
+  display: 'swap',
+});
+
+// Display face (headings + brand chrome). Saira (OFL) stands in for the
+// non-commercial Radiance — sturdier and less condensed than Rajdhani. Swap
+// this import + call to try another face; nothing else changes.
+const displayFont = Saira({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-display-src',
   display: 'swap',
 });
 
@@ -51,13 +64,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang='en' className={`${notoSans.variable}`}>
+    <html lang='en' className={`${bodyFont.variable} ${displayFont.variable}`}>
       <head>
         <GoogleAnalytics />
         <link rel='manifest' href='/manifest.json' />
+        {/* SVG favicon (brand hues) preferred; .ico is the legacy fallback. */}
+        <link rel='icon' href='/favicon.svg' type='image/svg+xml' />
         <link rel='icon' href='/favicon.ico' sizes='any' />
         <link rel='apple-touch-icon' href='/apple-touch-icon.png' />
-        <meta name='theme-color' content='#d97757' />
+        <meta name='theme-color' content='#c2502e' />
       </head>
       <body>
         <I18nProvider initialLocale='en'>

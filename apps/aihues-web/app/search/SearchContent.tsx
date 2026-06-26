@@ -140,7 +140,7 @@ export default function SearchContent({
       <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Search' }]} />
 
       <div className='mt-7 max-w-[680px]'>
-        <h1 className='text-[clamp(34px,5vw,52px)] font-extrabold leading-[1.04] tracking-[-0.03em] text-foreground'>
+        <h1 className='text-[clamp(34px,5vw,52px)] font-extrabold leading-[1.1] tracking-[-0.03em] text-foreground'>
           Search
         </h1>
         <p className='mt-3 text-[16px] leading-relaxed text-secondary'>

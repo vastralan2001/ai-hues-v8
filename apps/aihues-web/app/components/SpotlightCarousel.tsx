@@ -9,6 +9,16 @@ import { TestDemo } from '@/components/tests/TestDemos';
 import { ToolIcon } from '@/components/ToolIcon';
 import { ToolDemo } from '@/components/tools/ToolDemos';
 import { storyTagIcon } from '@/lib/story-scenes';
+import { categoryThemeStyle, type BrandCategory } from '@/lib/category-brand';
+
+// Each slide owns its family hue so a cross-fade never lets the outgoing slide
+// borrow the incoming category's colour (kind → BrandCategory).
+const KIND_CAT: Record<string, BrandCategory> = {
+  tool: 'tools',
+  game: 'games',
+  test: 'tests',
+  story: 'stories',
+};
 
 export type SpotlightSlide = {
   slug: string;
@@ -27,12 +37,13 @@ const DURATION = 520;
 const FADE_OUT = 200;
 const SHIFT = 22;
 
-// Secondary-CTA target per slide kind — the family's aggregation page.
+// Secondary-CTA target per slide kind — the family's aggregation page, in the
+// band's own personalised voice (not a flat "All X").
 const AGG: Record<string, { href: string; label: string }> = {
-  tool: { href: '/tools', label: 'All tools' },
-  game: { href: '/games', label: 'All games' },
-  test: { href: '/tests', label: 'All tests' },
-  story: { href: '/stories', label: 'All stories' },
+  tool: { href: '/tools', label: 'Browse tools' },
+  game: { href: '/games', label: 'Enter arcade' },
+  test: { href: '/tests', label: 'Explore tests' },
+  story: { href: '/stories', label: 'More stories' },
 };
 
 function SlideText({
@@ -59,7 +70,7 @@ function SlideText({
           {s.eyebrow}
         </span>
       </div>
-      <h3 className='mb-2 line-clamp-2 min-h-[2.24em] text-[26px] font-extrabold leading-[1.12] tracking-[-0.02em] text-foreground'>
+      <h3 className='mb-2 line-clamp-2 min-h-[2.5em] text-[26px] font-extrabold leading-[1.25] tracking-[-0.02em] text-foreground'>
         {s.title}
       </h3>
       <p
@@ -184,7 +195,7 @@ export default function SpotlightCarousel({
     // Games get the same framed card as the tool/test demos for visual parity.
     if (k === 'game')
       return (
-        <div className='relative h-[244px] w-full overflow-hidden rounded-[16px] border border-border bg-bg shadow-sm'>
+        <div className='relative aspect-[16/9] w-full overflow-hidden rounded-[16px] border border-border bg-bg shadow-sm'>
           <GameDemo active={active} slug={s.slug} />
         </div>
       );
@@ -222,6 +233,7 @@ export default function SpotlightCarousel({
               : 'none';
           const showDemo = slideHasDemo(s);
           const k = s.kind ?? demo;
+          const slideCat = k ? KIND_CAT[k] : undefined;
           const visual = showDemo ? (
             renderDemo(s, isActive)
           ) : k === 'story' ? (
@@ -229,7 +241,7 @@ export default function SpotlightCarousel({
               slug={s.slug}
               tag={s.eyebrow}
               animated
-              className='h-[244px] w-full rounded-[16px] border border-border bg-bg shadow-sm'
+              className='aspect-[16/9] w-full rounded-[16px] border border-border bg-bg shadow-sm'
             />
           ) : null;
           return (
@@ -238,6 +250,7 @@ export default function SpotlightCarousel({
               aria-hidden={!isActive}
               className='absolute inset-0'
               style={{
+                ...(slideCat ? categoryThemeStyle(slideCat) : null),
                 opacity: isActive ? 1 : 0,
                 transform: `translateX(${x}px)`,
                 transition,

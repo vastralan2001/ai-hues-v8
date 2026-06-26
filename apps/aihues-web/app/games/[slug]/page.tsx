@@ -207,7 +207,7 @@ export default async function GamePage({
 
           <div className='relative flex min-h-[calc(100vh-76px)] flex-col pb-12 pt-8'>
             <div className='mx-auto w-full max-w-[1760px] px-[clamp(1.5rem,5vw,7rem)]'>
-              <div className='mb-6 flex items-center justify-between gap-4'>
+              <div className='mb-6 flex h-9 items-center justify-between gap-4'>
                 <Breadcrumb
                   variant='dark'
                   items={[

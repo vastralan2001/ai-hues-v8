@@ -1,65 +1,88 @@
 'use client';
 
-import { Frames, GameStage } from '@/components/demos/DemoKit';
+import { useEffect, useRef, useState } from 'react';
 
-/* Slot Machine — spins, then stops and shows a winning result. */
-export function SlotDemo() {
-  const SYMS = ['7️⃣', '💎', '🔔', '🍋', '🍒', '⭐'];
-  const RESULT = ['7️⃣', '7️⃣', '7️⃣'];
+import { GameStage } from '@/components/demos/DemoKit';
+import { SlotBoard, useSlotReels, type Grid } from './slot-machine-core';
+
+/* Slot Machine demo — the SAME reel engine + board as the real game
+   (slot-machine-core), just auto-spun to a top-row jackpot on a loop. */
+
+// top row all 7️⃣ (index 0) → the top payline jackpots when the reels land.
+const JACKPOT: Grid = [
+  [0, 0, 0],
+  [3, 1, 4],
+  [2, 5, 1],
+];
+
+export function SlotDemo({ active = true }: { active?: boolean }) {
+  const reels = useSlotReels([
+    [1, 2, 3],
+    [4, 5, 0],
+    [2, 3, 1],
+  ]);
+  const spin = reels.spin;
+  const [won, setWon] = useState(false);
+  const aliveRef = useRef(true);
+
+  useEffect(() => {
+    aliveRef.current = true;
+    const reduce =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const loop = () => {
+      if (!aliveRef.current) return;
+      setWon(false);
+      spin(JACKPOT, () => {
+        if (!aliveRef.current) return;
+        setWon(true);
+        window.setTimeout(loop, 2200);
+      });
+    };
+    // defer the first state change out of the effect body
+    const start = window.setTimeout(
+      () => {
+        if (!aliveRef.current) return;
+        if (!active || reduce) {
+          reels.setGrid(JACKPOT);
+          setWon(true);
+        } else {
+          loop();
+        }
+      },
+      active && !reduce ? 400 : 0
+    );
+    return () => {
+      aliveRef.current = false;
+      window.clearTimeout(start);
+      reels.clear();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [active]);
+
   return (
     <GameStage bg='radial-gradient(125% 80% at 50% -10%, #3a1218 0%, #1c0a0e 48%, #0d0507 100%)'>
-      <div className='flex h-full flex-col p-3'>
-        <div className='mb-2 text-center text-[11px] font-bold uppercase tracking-[0.16em] text-[#e7c873]'>
+      <div className='flex h-full w-full flex-col gap-1.5 p-3'>
+        <div className='text-center text-[11px] font-bold uppercase tracking-[0.16em] text-[#e7c873]'>
           Match three to win
         </div>
-        <Frames
-          interval={2800}
-          frames={[
-            <div key='spin' className='relative flex flex-1 gap-2'>
-              {[1.0, 1.3, 1.6].map((dur, i) => (
-                <div
-                  key={i}
-                  className='relative flex-1 overflow-hidden rounded-[8px] border border-[#e0b34a]/30'
-                  style={{ background: 'rgba(20,10,12,0.6)' }}
-                >
-                  <div
-                    className='demo-reel flex flex-col items-center'
-                    style={{ animationDuration: `${dur}s` }}
-                  >
-                    {[...SYMS, ...SYMS].map((s, j) => (
-                      <div
-                        key={j}
-                        className='flex h-[46px] shrink-0 items-center justify-center text-[26px]'
-                      >
-                        {s}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-              <div className='pointer-events-none absolute inset-x-0 top-1/2 h-[46px] -translate-y-1/2 rounded-[6px] border-2 border-[#e0b34a]/70' />
-            </div>,
-            <div
-              key='win'
-              className='flex flex-1 flex-col items-center justify-center gap-2'
-            >
-              <div className='flex gap-3'>
-                {RESULT.map((s, i) => (
-                  <div
-                    key={i}
-                    className='flex h-14 w-14 items-center justify-center rounded-[10px] border-2 border-[#e0b34a] text-[32px]'
-                    style={{ background: 'rgba(20,10,12,0.8)' }}
-                  >
-                    {s}
-                  </div>
-                ))}
-              </div>
-              <div className='mt-1 text-[13px] font-extrabold text-[#e7c873]'>
-                🎉 JACKPOT +300
-              </div>
-            </div>,
-          ]}
-        />
+        {/* fills the remaining 16:9 height — the reels stretch widescreen */}
+        <div className='min-h-0 flex-1'>
+          <SlotBoard
+            grid={reels.grid}
+            winCells={reels.winCells}
+            spinKey={reels.spinKey}
+            gap={6}
+            radius={8}
+            fill
+          />
+        </div>
+        <div
+          className='h-[15px] text-center text-[12px] font-extrabold text-[#e7c873]'
+          style={{ opacity: won ? 1 : 0, transition: 'opacity 300ms ease' }}
+        >
+          🎉 JACKPOT +300
+        </div>
       </div>
     </GameStage>
   );

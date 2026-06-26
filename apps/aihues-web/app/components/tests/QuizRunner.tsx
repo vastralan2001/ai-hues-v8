@@ -11,7 +11,9 @@ import { PersonaImage } from '@/components/tests/PersonaImage';
 import { TestAvatar } from '@/components/tests/TestAvatar';
 import { hasPersonaArt, personaImageSrc } from '@/lib/tests/persona-art';
 import { ToolIcon } from '@/components/ToolIcon';
+import ResultPosterPreview from '@/components/tests/ResultPosterPreview';
 import { testsHref } from '@/lib/routes';
+import { CATEGORY_ACCENT_HEX } from '@/lib/category-brand';
 
 type Phase = 'intro' | 'quiz' | 'result';
 
@@ -26,7 +28,9 @@ export default function QuizRunner({ slug }: { slug: string }) {
   const [posterBusy, setPosterBusy] = useState(false);
 
   if (!config) return null;
-  const accent = config.accent;
+  // Every Test detail page uses the Tests family brand hue, not a per-test
+  // colour, so the section stays consistent with its category theme.
+  const accent = CATEGORY_ACCENT_HEX.tests;
 
   function start() {
     setAnswers(Array(total).fill(-1));
@@ -216,7 +220,7 @@ export default function QuizRunner({ slug }: { slug: string }) {
 
   /* ── Result ── */
   if (phase === 'result' && result) {
-    const racc = result.accent;
+    const racc = CATEGORY_ACCENT_HEX.tests;
     const isSbti = config.resultStyle === 'sbti';
 
     const usePersona = hasPersonaArt(config.slug);
@@ -351,8 +355,20 @@ export default function QuizRunner({ slug }: { slug: string }) {
               </div>
             )}
 
+            {/* shareable-poster preview — same artwork as the demo + download */}
+            <div className='mt-8 [container-type:inline-size]'>
+              <ResultPosterPreview
+                name={config.name}
+                code={result.code}
+                title={result.title}
+                bars={result.bars}
+                accent={racc}
+                className='aspect-[16/9] w-full max-w-[560px]'
+              />
+            </div>
+
             {/* actions */}
-            <div className='mt-8 flex flex-wrap items-center gap-3'>
+            <div className='mt-6 flex flex-wrap items-center gap-3'>
               <button
                 type='button'
                 onClick={retake}

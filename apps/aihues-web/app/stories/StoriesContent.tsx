@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import Link from 'next/link';
 import {
   ChevronLeft,
   ChevronRight,
@@ -13,7 +12,7 @@ import NewsletterSubscribe from '@/components/NewsletterSubscribe';
 import { FilterPills } from '@/components/FilterPills';
 import { PageMasthead } from '@/components/PageMasthead';
 import { SearchBox } from '@/components/SearchBox';
-import { StoryArt } from '@/components/StoryArt';
+import StoryCard from '@/components/StoryCard';
 import type { ResourcePost } from '@/lib/resources-data';
 
 const POSTS_PER_PAGE = 12;
@@ -122,54 +121,12 @@ export default function StoriesContent({
           }}
           items={allTags.map((tag) => ({ key: tag, label: tag }))}
         />
-        {query || activeTag !== 'All' ? (
-          <div className='list-meta'>
-            <span>
-              {filteredPosts.length} result
-              {filteredPosts.length !== 1 ? 's' : ''}
-              {query && ` for "${query}"`}
-              {activeTag !== 'All' && ` in ${activeTag}`}
-            </span>
-          </div>
-        ) : null}
-
         {/* Posts grid */}
         {pagePosts.length > 0 ? (
           <>
             <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
               {pagePosts.map((post) => (
-                <Link
-                  key={post.slug}
-                  href={`/stories/${post.slug}`}
-                  className='card-lift group flex flex-col overflow-hidden rounded-[16px] border border-border bg-surface text-inherit no-underline'
-                >
-                  <div className='relative h-[180px] overflow-hidden'>
-                    <StoryArt
-                      slug={post.slug}
-                      tag={post.tag}
-                      alt={`${post.title} — illustration`}
-                      playOnHover
-                      className='h-full w-full transition-transform duration-500 group-hover:scale-105'
-                    />
-                    <span className='absolute left-3 top-3 rounded-full bg-accent px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider text-white'>
-                      {post.tag}
-                    </span>
-                  </div>
-
-                  <div className='flex flex-1 flex-col p-5'>
-                    <h2 className='mb-2 line-clamp-2 text-[18px] font-bold leading-snug text-foreground'>
-                      {post.title}
-                    </h2>
-                    <p className='mb-4 line-clamp-3 text-sm leading-relaxed text-secondary'>
-                      {post.excerpt}
-                    </p>
-                    <div className='mt-auto flex items-center gap-3 text-xs text-muted'>
-                      <span>{post.date}</span>
-                      <span className='h-1 w-1 rounded-full bg-border-strong' />
-                      <span>{post.readTime} read</span>
-                    </div>
-                  </div>
-                </Link>
+                <StoryCard key={post.slug} post={post} />
               ))}
             </div>
 

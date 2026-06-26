@@ -1,5 +1,135 @@
 [
   {
+    "slug": "alibaba-page-agent",
+    "tag": "Development",
+    "title": "Getting Started with Page Agent",
+    "excerpt": "JavaScript in-page GUI agent.",
+    "date": "2026-06-24",
+    "readTime": "4 min",
+    "coverImage": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&q=80",
+    "description": "JavaScript in-page GUI agent. Learn what it does, who it is for, and how to get started."
+  },
+  {
+    "slug": "nvidia-nemoclaw",
+    "tag": "Development",
+    "title": "What Is Nemoclaw and Why It Matters",
+    "excerpt": "Run agents like Hermes and OpenClaw more securely inside NVIDIA OpenShell with managed inference",
+    "date": "2026-06-24",
+    "readTime": "4 min",
+    "coverImage": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200&q=80",
+    "description": "Run agents like Hermes and OpenClaw more securely inside NVIDIA OpenShell with managed inference Learn what it does, who it is for, and how to get started."
+  },
+  {
+    "slug": "got-sick-of-ads-so-i-made-my-own-logic-puzzle-site",
+    "tag": "Games",
+    "title": "Got sick of ads, so I made my own logic puzzle site",
+    "excerpt": "Got sick of ads, so I made my own logic puzzle site",
+    "date": "2026-06-24",
+    "readTime": "4 min",
+    "coverImage": "https://images.unsplash.com/photo-1606092195730-5d7b9af1efc5?w=1200&q=80",
+    "description": "Got sick of ads, so I made my own logic puzzle site Play this browser game instantly with no download required."
+  },
+  {
+    "slug": "propane",
+    "tag": "AI Tools",
+    "title": "Propane: A Practical Guide",
+    "excerpt": "Propane gives your product team and agents one connected, always-current view of your customers.",
+    "date": "2026-06-24",
+    "readTime": "4 min",
+    "coverImage": "https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=1200&q=80",
+    "description": "Propane gives your product team and agents one connected, always-current view of your customers. Learn what Propane  does, who it is for, and how to get..."
+  },
+  {
+    "slug": "gerrymandle-daily-puzzle-game-where-you-redraw-electoral-dis",
+    "tag": "Games",
+    "title": "Gerrymandle - Daily puzzle game where you redraw electoral districts",
+    "excerpt": "Gerrymandle - Daily puzzle game where you redraw electoral districts",
+    "date": "2026-06-24",
+    "readTime": "4 min",
+    "coverImage": "https://images.unsplash.com/photo-1529699211952-734e80c4d42b?w=1200&q=80",
+    "description": "Gerrymandle - Daily puzzle game where you redraw electoral districts Play this browser game instantly with no download required."
+  },
+  {
+    "slug": "qwen-agentworld-language-world-models-for-general-agents",
+    "tag": "AI Research",
+    "title": "Qwen-AgentWorld: Language World Models for General Agents",
+    "excerpt": "A world model predicts environment dynamics based on current observations and actions, serving as a core cognitive mechanism for reasoning and planning.",
+    "date": "2026-06-24",
+    "readTime": "4 min",
+    "coverImage": "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=1200&q=80",
+    "description": "A world model predicts environment dynamics based on current observations and actions, serving as a core cognitive mechanism for reasoning and planning...."
+  },
+  {
+    "slug": "remmd-realistic-multilingual-multi-image-agentic-verificatio",
+    "tag": "AI Research",
+    "title": "ReMMD: Realistic Multilingual Multi-Image Agentic Verification for Multimodal Misinformation Detection",
+    "excerpt": "Multimodal misinformation detection is increasingly important because viral posts now combine long multilingual narratives, several images, mixed...",
+    "date": "2026-06-24",
+    "readTime": "4 min",
+    "coverImage": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1200&q=80",
+    "description": "Multimodal misinformation detection is increasingly important because viral posts now combine long multilingual narratives, several images, mixed..."
+  },
+  {
+    "slug": "kamera-unified-position-invariant-multimodal-kv-cache-for-tr",
+    "tag": "AI Research",
+    "title": "Kamera: A Training-Free KV Cache Upgrade for Multimodal AI Agents",
+    "excerpt": "Multimodal agents repeatedly re-examine the same video frames, UI screenshots, and rendered artifacts as their context window slides and reasoning iterates,...",
+    "date": "2026-06-23",
+    "readTime": "4 min",
+    "coverImage": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1200&q=80",
+    "description": "Multimodal agents repeatedly re-examine the same video frames, UI screenshots, and rendered artifacts as their context window slides and reasoning iterates,..."
+  },
+  {
+    "slug": "verievol-scaling-multimodal-mathematical-reasoning-via-verif",
+    "tag": "AI Research",
+    "title": "VeriEvol: How Verifiable Data Scaling Teaches AI to Reason Visually",
+    "excerpt": "Scaling reinforcement learning for visual mathematical reasoning requires more than generating harder questions: as data volume grows, the reward labels...",
+    "date": "2026-06-23",
+    "readTime": "4 min",
+    "coverImage": "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=1200&q=80",
+    "description": "Scaling reinforcement learning for visual mathematical reasoning requires more than generating harder questions: as data volume grows, the reward labels..."
+  },
+  {
+    "slug": "deckwise",
+    "tag": "AI Tools",
+    "title": "Deckwise: How AI Turns Raw Notes into Slide Decks in Minutes",
+    "excerpt": "Deckwise is the AI presentation agent that turns topics, notes, files, and sources into clear, editable decks.",
+    "date": "2026-06-23",
+    "readTime": "4 min",
+    "coverImage": "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=1200&q=80",
+    "description": "Deckwise is the AI presentation agent that turns topics, notes, files, and sources into clear, editable decks. Learn what Deckwise does, who it is for, and..."
+  },
+  {
+    "slug": "prepros",
+    "tag": "AI Tools",
+    "title": "prepros: A Single Workflow for AI Brand Photo Shoots",
+    "excerpt": "Brand shoot production has never had a single tool or standard process.",
+    "date": "2026-06-23",
+    "readTime": "4 min",
+    "coverImage": "https://images.unsplash.com/photo-1502982720700-bfff97f2ecac?w=1200&q=80",
+    "description": "Brand shoot production has never had a single tool or standard process. Learn what prepros does, who it is for, and how to get started."
+  },
+  {
+    "slug": "topoteretes-cognee",
+    "tag": "Development",
+    "title": "Cognee: The Open-Source Memory Layer Every AI Agent Needs",
+    "excerpt": "Cognee is the open-source AI memory platform for agents.",
+    "date": "2026-06-23",
+    "readTime": "4 min",
+    "coverImage": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1200&q=80",
+    "description": "Cognee is the open-source AI memory platform for agents. Learn what it does, who it is for, and how to get started."
+  },
+  {
+    "slug": "jotform-ai-app-builder",
+    "tag": "AI Tools",
+    "title": "What Is Jotform AI App Builder and How Does It Work?",
+    "excerpt": "Jotform AI App Builder turns prompts into working web and mobile apps. Learn how it works, what it builds, and where it fits among AI app builders.",
+    "date": "2026-06-23",
+    "readTime": "7 min",
+    "coverImage": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80",
+    "description": "Jotform AI App Builder turns prompts into working web and mobile apps. Learn how it works, what it builds, and where it fits among AI app builders."
+  },
+  {
     "slug": "launching-on-product-hunt-what-worked-in-2026",
     "tag": "Growth",
     "title": "Launching on Product Hunt: What Worked in 2026",
@@ -471,7 +601,7 @@
     "excerpt": "From podcast editing to audiobooks, here is where voice AI shines — and where it crosses the line.",
     "date": "2026-05-16",
     "readTime": "7 min",
-    "coverImage": "https://images.unsplash.com/photo-1526379096588-290a6b65f8a3?w=600&q=80",
+    "coverImage": "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=600&q=80",
     "description": "After 18 months of trial and error, here is what actually works. From podcast editing to audiobooks, here is where voice AI shines — and where it crosses the line."
   },
   {
@@ -747,7 +877,7 @@
     "excerpt": "The trade-offs that matter for developer experience, and when to break the rules.",
     "date": "2026-05-10",
     "readTime": "7 min",
-    "coverImage": "https://images.unsplash.com/photo-1526379096588-290a6b65f8a3?w=600&q=80",
+    "coverImage": "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=600&q=80",
     "description": "I learned this the hard way. The trade-offs that matter for developer experience, and when to break the rules."
   },
   {
@@ -977,7 +1107,7 @@
     "excerpt": "Stop demoing and start measuring. Here is the scorecard we use for every AI tool evaluation.",
     "date": "2026-05-02",
     "readTime": "6 min",
-    "coverImage": "https://images.unsplash.com/photo-1526379096588-290a6b65f8a3?w=600&q=80",
+    "coverImage": "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=600&q=80",
     "description": "I learned this the hard way. Stop demoing and start measuring. Here is the scorecard we use for every AI tool evaluation."
   },
   {
@@ -1019,5 +1149,15 @@
     "readTime": "8 min",
     "coverImage": "",
     "description": "A plain-English deep read of WorldVQA, Moonshot AI benchmark for atomic visual world knowledge. What it tests, how its accuracy and calibration metrics work, why top MLLMs fail the long tail, and what it means for builders shipping vision into products."
+  },
+  {
+    "slug": "attention-residuals-explained",
+    "tag": "Research",
+    "title": "Attention Residuals, Explained — and the Teenager Who Co-Wrote It",
+    "excerpt": "Moonshot’s new architecture lets each transformer layer choose which earlier layers to listen to — a ~25% compute win on Kimi Linear. One of its two lead authors is a high-schooler from Shenzhen.",
+    "date": "2026-06-24",
+    "readTime": "9 min",
+    "coverImage": "",
+    "description": "A plain-English deep read of Attention Residuals (arXiv:2603.15031): why fixed residual accumulation dilutes deep transformers, how attention-over-depth and Block AttnRes fix it for a 1.25x compute advantage on Kimi Linear, and the open-source path that took co-first author Nathan Chen (Guangyu Chen) from Flash Linear Attention contributor to Moonshot AI while still in high school."
   }
 ]

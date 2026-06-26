@@ -6,6 +6,7 @@ import type { Metadata } from 'next';
 import { PageShell } from '@/components/SiteChrome';
 import { getAllPosts } from '@/lib/resources-data';
 import { StoryArt } from '@/components/StoryArt';
+import BrandBackdrop from '@/components/BrandBackdrop';
 import NewsletterSubscribe from '@/components/NewsletterSubscribe';
 import RelatedArticles from '@/components/RelatedArticles';
 import ArticleToc, { type TocItem } from '@/components/ArticleToc';
@@ -157,9 +158,10 @@ export default async function ArticlePage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         type='application/ld+json'
       />
-      <div className='mx-auto w-full max-w-[1760px] px-[clamp(1.5rem,5vw,7rem)] py-12'>
+      <div className='relative isolate mx-auto w-full max-w-[1760px] px-[clamp(1.5rem,5vw,7rem)] py-12'>
+        <BrandBackdrop />
         {/* Breadcrumb */}
-        <nav className='mb-8 flex min-w-0 items-center gap-1.5 text-[13px] text-muted'>
+        <nav className='mb-8 flex h-9 min-w-0 items-center gap-1.5 text-[13px] text-muted'>
           <Link
             className='shrink-0 transition-colors hover:text-accent'
             href='/'
@@ -177,36 +179,43 @@ export default async function ArticlePage({
           <span className='truncate text-secondary'>{meta.title}</span>
         </nav>
 
-        <div className='lg:grid lg:grid-cols-[minmax(0,1fr)_220px] lg:gap-x-14'>
-          {/* Hero — spans both columns */}
+        <div className='lg:grid lg:grid-cols-[minmax(0,1fr)_400px] lg:gap-x-[clamp(56px,7vw,160px)]'>
+          {/* Hero — text left, a compact illustration right (mars resources
+              style): the demo is a contained side panel, not a full-width band */}
           <header className='lg:col-span-2'>
-            <span className='inline-block rounded-full bg-accent-bg px-3 py-1 text-xs font-bold text-accent'>
-              {meta.tag}
-            </span>
-            <h1 className='mt-4 text-[clamp(30px,5vw,46px)] font-extrabold leading-[1.1] tracking-[-0.02em] text-foreground'>
-              {meta.title}
-            </h1>
-            <div className='mt-4 flex flex-wrap items-center gap-3 text-sm text-muted'>
-              <span>{meta.date}</span>
-              <span className='h-1 w-1 rounded-full bg-border-strong' />
-              <span>{meta.readTime} read</span>
-              <span className='h-1 w-1 rounded-full bg-border-strong' />
-              <span>AIHues Team</span>
-            </div>
-            <div className='mt-8 aspect-[16/7] overflow-hidden rounded-[18px] border border-border'>
-              <StoryArt
-                slug={slug}
-                tag={meta.tag}
-                alt={`${meta.title} — illustration`}
-                animated
-                className='h-full w-full'
-              />
+            <div className='flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between lg:gap-14'>
+              <div className='min-w-0 lg:flex-1'>
+                <span className='inline-block rounded-full bg-accent-bg px-3 py-1 text-xs font-bold text-accent'>
+                  {meta.tag}
+                </span>
+                <h1 className='mt-4 text-[clamp(28px,4vw,42px)] font-extrabold leading-[1.18] tracking-[-0.02em] text-foreground'>
+                  {meta.title}
+                </h1>
+                <div className='mt-4 flex flex-wrap items-center gap-3 text-sm text-muted'>
+                  <span>{meta.date}</span>
+                  <span className='h-1 w-1 rounded-full bg-border-strong' />
+                  <span>{meta.readTime} read</span>
+                  <span className='h-1 w-1 rounded-full bg-border-strong' />
+                  <span>AIHues Team</span>
+                </div>
+              </div>
+              <div className='w-full shrink-0 lg:max-w-[520px] lg:basis-[46%]'>
+                <div className='aspect-[16/9] overflow-hidden rounded-[14px] border border-border'>
+                  <StoryArt
+                    slug={slug}
+                    tag={meta.tag}
+                    alt={`${meta.title} — illustration`}
+                    animated
+                    className='h-full w-full'
+                  />
+                </div>
+              </div>
             </div>
           </header>
 
           {/* Article body — left column */}
           <article
-            className='article-content mt-10 min-w-0 max-w-none lg:col-start-1 lg:row-start-2'
+            className='article-content mt-10 min-w-0 max-w-[800px] lg:col-start-1 lg:row-start-2'
             dangerouslySetInnerHTML={{ __html: htmlContent }}
           />
 
@@ -219,6 +228,9 @@ export default async function ArticlePage({
                   Share
                 </p>
                 <ShareButtons title={meta.title} />
+              </div>
+              <div className='mt-6 border-t border-border pt-5'>
+                <NewsletterSubscribe variant='sidebar' />
               </div>
               <Link
                 className='mt-6 inline-flex items-center gap-1.5 text-[13px] font-semibold text-secondary transition-colors hover:text-accent'
@@ -236,7 +248,11 @@ export default async function ArticlePage({
           locale='en'
           className='mt-12'
         />
-        <NewsletterSubscribe />
+        {/* Newsletter lives in the sidebar on desktop; keep a copy at the foot
+            for mobile, where the sidebar is hidden. */}
+        <div className='lg:hidden'>
+          <NewsletterSubscribe />
+        </div>
         <RelatedArticles currentSlug={slug} locale='en' />
       </div>
     </PageShell>
