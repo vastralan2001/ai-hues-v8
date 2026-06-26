@@ -22,10 +22,10 @@ export const categoryColor = (c: BrandCategory): string =>
    --color-accent itself (a CSS var cannot reference itself). These must stay
    in sync with the @theme tokens in globals.css. */
 export const CATEGORY_ACCENT_HEX: Record<BrandCategory, string> = {
-  tools: '#c2502e',
-  games: '#a774c4',
-  tests: '#788c5d',
-  stories: '#6a9bcc',
+  tools: '#c2502e', // red-orange
+  games: '#e06a9c', // bilibili-ish magenta
+  tests: '#6a9bcc', // blue (swapped with stories)
+  stories: '#788c5d', // green (swapped with tests)
 };
 
 /* Inline style applied to a category root. Overriding --color-accent and its

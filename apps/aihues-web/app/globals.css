@@ -39,16 +39,24 @@
   --color-accent: #c2502e;
   --color-accent-light: #d97757;
   --color-accent-bg: rgba(194, 80, 46, 0.08);
+  /* Raw swatches — generic semantic use (e.g. green = free, blue = info). */
   --color-green: #788c5d;
   --color-green-bg: rgba(120, 140, 93, 0.08);
   --color-blue: #6a9bcc;
   --color-blue-bg: rgba(106, 155, 204, 0.08);
-  /* Games family hue — a violet that sits ~90° off the tools red-orange, so the
-     four families (tools 14° / tests 86° / stories 210° / games 280°) are each
-     a clearly distinct hue rather than tools and games sharing the warm orange. */
-  --color-violet: #a774c4;
-  --color-violet-bg: rgba(167, 116, 196, 0.08);
   --color-orange: #d97757;
+
+  /* ── Category families — named by family (twins live in CATEGORY_ACCENT_HEX).
+     Four distinct hues: tools red-orange 14° · tests blue 210° · stories green
+     86° · games a bilibili-ish magenta ~335°. */
+  --color-tools: var(--color-accent);
+  --color-tools-bg: var(--color-accent-bg);
+  --color-tests: var(--color-blue);
+  --color-tests-bg: var(--color-blue-bg);
+  --color-stories: var(--color-green);
+  --color-stories-bg: var(--color-green-bg);
+  --color-games: #e06a9c;
+  --color-games-bg: rgba(224, 106, 156, 0.08);
 
   /* Shape */
   --radius: 16px;

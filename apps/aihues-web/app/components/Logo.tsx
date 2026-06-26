@@ -4,10 +4,10 @@
 
 // Colors come straight from the design tokens (warm → cool), not hand-picked.
 export const HUE_COLOR: Record<string, string> = {
-  H: 'var(--color-accent)',
-  U: 'var(--color-violet)',
-  E: 'var(--color-green)',
-  S: 'var(--color-blue)',
+  H: 'var(--color-tools)',
+  U: 'var(--color-games)',
+  E: 'var(--color-tests)',
+  S: 'var(--color-stories)',
 };
 
 export function Wordmark() {
