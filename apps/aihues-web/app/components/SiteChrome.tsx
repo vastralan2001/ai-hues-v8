@@ -82,7 +82,7 @@ export function SiteHeader({
             {links.map(({ href, labelKey }) => (
               <Link
                 key={labelKey}
-                className='text-[13px] font-bold uppercase tracking-[0.14em] text-secondary transition-colors duration-150 hover:text-accent md:text-[15px]'
+                className='font-display text-[13px] font-bold uppercase tracking-[0.14em] text-secondary transition-colors duration-150 hover:text-accent md:text-[15px]'
                 href={href}
               >
                 {t(locale, labelKey)}

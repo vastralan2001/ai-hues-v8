@@ -12,7 +12,7 @@ export const HUE_COLOR: Record<string, string> = {
 
 export function Wordmark() {
   return (
-    <span className='logo-mark uppercase tracking-[0.12em]'>
+    <span className='logo-mark font-display uppercase tracking-[0.12em]'>
       <span className='logo-letter text-foreground'>AI</span>
       {['H', 'U', 'E', 'S'].map((ch, i) => (
         <span

@@ -9,17 +9,21 @@
      --radius-sm     → rounded-sm (10px)
    ============================================================ */
 @theme {
-  /* Typography — Rajdhani display face + Noto Sans body.
-     --font-display: headings / wordmark; --font-sans: everything. */
+  /* ── Typography, by function ─────────────────────────────────────────────
+     Faces load in layout.tsx to --font-display-src / --font-body-src. Here we
+     wrap each with a fallback chain and expose it as a functional token:
+       --font-display → headings, wordmark, nav chrome  (Saira, Dota-style)
+       --font-sans    → body / UI text                  (Noto Sans)
+       --font-mono    → code, numeric demos
+     To experiment with a face, change only the import in layout.tsx. */
+  --font-fallback:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-display:
-    var(--font-rajdhani), var(--font-noto-sans), 'Noto Sans', -apple-system,
-    BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-sans:
-    var(--font-rajdhani), var(--font-noto-sans), 'Noto Sans', -apple-system,
-    BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-serif:
-    var(--font-rajdhani), var(--font-noto-sans), 'Noto Sans', -apple-system,
-    BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    var(--font-display-src), var(--font-body-src), 'Noto Sans',
+    var(--font-fallback);
+  --font-sans: var(--font-body-src), 'Noto Sans', var(--font-fallback);
+  --font-serif: var(--font-sans);
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
 
   /* Warm White Mars palette — opacity-layered neutrals */
   --color-bg: #faf9f5;
@@ -110,6 +114,32 @@ body {
     color: inherit;
     text-decoration: none;
   }
+}
+
+/* Display face — Saira standing in for the (non-commercial) Radiance Dota look.
+   Headings render in it by default; `.font-display` is the family alone,
+   `.text-dota` is the full uppercase + tracking treatment for UI chrome (nav,
+   wordmark, eyebrows). Keep tight headings at line-height ~1.2+ so descenders
+   (g, y, p) are never clipped by an overflow-hidden ancestor. */
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+  }
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.text-dota {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 :focus-visible {

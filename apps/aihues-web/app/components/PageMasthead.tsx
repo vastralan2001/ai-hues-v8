@@ -40,7 +40,7 @@ export function PageMasthead({
         </div>
       ) : null}
       <div className='mx-auto w-full max-w-[1760px] px-[clamp(1.5rem,5vw,7rem)]'>
-        <h1 className='text-[clamp(40px,6.4vw,74px)] font-extrabold leading-[1.0] tracking-[-0.03em] text-accent'>
+        <h1 className='text-[clamp(40px,6.4vw,74px)] font-extrabold leading-[1.06] tracking-[-0.03em] text-accent'>
           {title}
         </h1>
         {slogan ? (

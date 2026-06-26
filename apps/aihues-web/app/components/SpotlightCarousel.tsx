@@ -59,7 +59,7 @@ function SlideText({
           {s.eyebrow}
         </span>
       </div>
-      <h3 className='mb-2 line-clamp-2 min-h-[2.24em] text-[26px] font-extrabold leading-[1.12] tracking-[-0.02em] text-foreground'>
+      <h3 className='mb-2 line-clamp-2 min-h-[2.5em] text-[26px] font-extrabold leading-[1.25] tracking-[-0.02em] text-foreground'>
         {s.title}
       </h3>
       <p

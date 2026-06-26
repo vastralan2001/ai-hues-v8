@@ -8,6 +8,7 @@ import { getTest } from '@/lib/tests';
 import { buildResultPoster, shareOrDownloadPoster } from '@/lib/tests/poster';
 import type { TestResult } from '@/lib/tests/types';
 import { ToolIcon } from '@/components/ToolIcon';
+import ResultPosterPreview from '@/components/tests/ResultPosterPreview';
 import { testsHref } from '@/lib/routes';
 import { CATEGORY_ACCENT_HEX } from '@/lib/category-brand';
 
@@ -331,8 +332,20 @@ export default function QuizRunner({ slug }: { slug: string }) {
               </div>
             )}
 
+            {/* shareable-poster preview — same artwork as the demo + download */}
+            <div className='mt-8 [container-type:inline-size]'>
+              <ResultPosterPreview
+                name={config.name}
+                code={result.code}
+                title={result.title}
+                bars={result.bars}
+                accent={racc}
+                className='aspect-[16/9] w-full max-w-[560px]'
+              />
+            </div>
+
             {/* actions */}
-            <div className='mt-8 flex flex-wrap items-center gap-3'>
+            <div className='mt-6 flex flex-wrap items-center gap-3'>
               <button
                 type='button'
                 onClick={retake}

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-import { Noto_Sans, Rajdhani } from 'next/font/google';
+import { Noto_Sans, Saira } from 'next/font/google';
 
 import { I18nProvider } from '@/lib/i18n';
 import CommandPalette from '@/components/CommandPalette';
@@ -8,19 +8,23 @@ import GoogleAnalytics from '@/components/GoogleAnalytics';
 import CookieConsent from '@/components/CookieConsent';
 import { PageDurationTracker } from '@/components/PageDurationTracker';
 
-const notoSans = Noto_Sans({
+// ── Fonts — the ONE place to swap a face. Each loads to a raw CSS variable;
+//    globals.css @theme wraps it with a functional fallback chain. ──
+// Body face (long-form reading).
+const bodyFont = Noto_Sans({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
-  variable: '--font-noto-sans',
+  variable: '--font-body-src',
   display: 'swap',
 });
 
-// Rajdhani (OFL, commercially usable) replaces the non-commercial Radiance as
-// the display face. Exposed as --font-display for the design tokens.
-const rajdhani = Rajdhani({
+// Display face (headings + brand chrome). Saira (OFL) stands in for the
+// non-commercial Radiance — sturdier and less condensed than Rajdhani. Swap
+// this import + call to try another face; nothing else changes.
+const displayFont = Saira({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
-  variable: '--font-rajdhani',
+  variable: '--font-display-src',
   display: 'swap',
 });
 
@@ -60,7 +64,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang='en' className={`${notoSans.variable} ${rajdhani.variable}`}>
+    <html lang='en' className={`${bodyFont.variable} ${displayFont.variable}`}>
       <head>
         <GoogleAnalytics />
         <link rel='manifest' href='/manifest.json' />

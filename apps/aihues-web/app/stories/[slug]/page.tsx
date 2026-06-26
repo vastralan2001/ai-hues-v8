@@ -179,7 +179,7 @@ export default async function ArticlePage({
           <span className='truncate text-secondary'>{meta.title}</span>
         </nav>
 
-        <div className='lg:grid lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-x-[clamp(56px,7vw,160px)]'>
+        <div className='lg:grid lg:grid-cols-[minmax(0,1fr)_400px] lg:gap-x-[clamp(56px,7vw,160px)]'>
           {/* Hero — text left, a compact illustration right (mars resources
               style): the demo is a contained side panel, not a full-width band */}
           <header className='lg:col-span-2'>
@@ -188,7 +188,7 @@ export default async function ArticlePage({
                 <span className='inline-block rounded-full bg-accent-bg px-3 py-1 text-xs font-bold text-accent'>
                   {meta.tag}
                 </span>
-                <h1 className='mt-4 text-[clamp(28px,4vw,42px)] font-extrabold leading-[1.1] tracking-[-0.02em] text-foreground'>
+                <h1 className='mt-4 text-[clamp(28px,4vw,42px)] font-extrabold leading-[1.18] tracking-[-0.02em] text-foreground'>
                   {meta.title}
                 </h1>
                 <div className='mt-4 flex flex-wrap items-center gap-3 text-sm text-muted'>
