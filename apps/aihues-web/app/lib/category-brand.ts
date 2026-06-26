@@ -24,8 +24,8 @@ export const categoryColor = (c: BrandCategory): string =>
 export const CATEGORY_ACCENT_HEX: Record<BrandCategory, string> = {
   tools: '#c2502e', // red-orange
   games: '#e06a9c', // bilibili-ish magenta
-  tests: '#6a9bcc', // blue (swapped with stories)
-  stories: '#788c5d', // green (swapped with tests)
+  tests: '#8d80b5', // low-saturation lavender
+  stories: '#6a9bcc', // blue
 };
 
 /* Inline style applied to a category root. Overriding --color-accent and its
@@ -35,6 +35,9 @@ export function categoryThemeStyle(c: BrandCategory): CSSProperties {
   const base = CATEGORY_ACCENT_HEX[c];
   return {
     '--color-accent': base,
+    // override the Tailwind token too, so bg-accent-light / hover states follow
+    // the family hue instead of falling back to the global warm coral.
+    '--color-accent-light': `color-mix(in srgb, ${base} 72%, white)`,
     '--accent': base,
     '--accent-light': `color-mix(in srgb, ${base} 72%, white)`,
     '--accent-strong': `color-mix(in srgb, ${base} 80%, black)`,

@@ -68,9 +68,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <head>
         <GoogleAnalytics />
         <link rel='manifest' href='/manifest.json' />
+        {/* SVG favicon (brand hues) preferred; .ico is the legacy fallback. */}
+        <link rel='icon' href='/favicon.svg' type='image/svg+xml' />
         <link rel='icon' href='/favicon.ico' sizes='any' />
         <link rel='apple-touch-icon' href='/apple-touch-icon.png' />
-        <meta name='theme-color' content='#d97757' />
+        <meta name='theme-color' content='#c2502e' />
       </head>
       <body>
         <I18nProvider initialLocale='en'>

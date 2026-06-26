@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- AIHues mark — the four family hues, the same palette as the HUES wordmark.
+       tools red-orange · games magenta · tests lavender · stories blue. -->
+  <rect width="64" height="64" rx="15" fill="#1a1a19" />
+  <rect x="11" y="11" width="19" height="19" rx="5.5" fill="#c2502e" />
+  <rect x="34" y="11" width="19" height="19" rx="5.5" fill="#e06a9c" />
+  <rect x="11" y="34" width="19" height="19" rx="5.5" fill="#8d80b5" />
+  <rect x="34" y="34" width="19" height="19" rx="5.5" fill="#6a9bcc" />
+</svg>
