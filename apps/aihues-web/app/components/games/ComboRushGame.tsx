@@ -755,13 +755,13 @@ function DirButton({
         e.preventDefault();
         onPress(dir);
       }}
-      className='cr-dir flex h-[58px] items-center justify-center rounded-[14px] text-[26px] font-bold text-white ring-1 ring-white/10 transition-transform disabled:opacity-45'
+      className='cr-dir flex h-[58px] items-center justify-center rounded-[14px] text-[26px] font-bold transition-transform disabled:opacity-45'
       style={{
-        backgroundColor: 'rgba(255,255,255,0.07)',
+        backgroundColor: pressed ? `${COLORS[dir]}26` : `${COLORS[dir]}14`,
         boxShadow: pressed
           ? `inset 0 0 0 2px ${COLORS[dir]}, 0 0 18px ${COLORS[dir]}`
-          : 'inset 0 1px 0 rgba(255,255,255,0.12)',
-        color: pressed ? COLORS[dir] : '#ffffff',
+          : `inset 0 0 0 1.5px ${COLORS[dir]}80`,
+        color: COLORS[dir],
         transform: pressed ? 'scale(0.94)' : 'none',
       }}
     >

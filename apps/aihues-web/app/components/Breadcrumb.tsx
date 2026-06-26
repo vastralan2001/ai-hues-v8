@@ -36,7 +36,7 @@ export default function Breadcrumb({
   return (
     <nav
       aria-label='Breadcrumb'
-      className={`flex min-w-0 items-center gap-1.5 text-[13px] ${tone.base} ${className}`}
+      className={`flex h-9 min-w-0 items-center gap-1.5 text-[13px] ${tone.base} ${className}`}
     >
       {items.map((item, i) => {
         const last = i === items.length - 1;

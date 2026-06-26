@@ -21,15 +21,9 @@ export async function GET() {
     { id: 'home', title: 'Home', href: '/', type: 'page' },
     { id: 'tools', title: 'Tools', href: '/tools', type: 'page' },
     { id: 'games', title: 'Games', href: '/games', type: 'page' },
-    { id: 'resources', title: 'Resources', href: '/resources', type: 'page' },
+    { id: 'stories', title: 'Stories', href: '/stories', type: 'page' },
     { id: 'pricing', title: 'Pricing', href: '/pricing', type: 'page' },
-    { id: 'discover', title: 'Discover', href: '/discover', type: 'page' },
-    {
-      id: 'collection',
-      title: 'Collection',
-      href: '/collection',
-      type: 'page',
-    },
+    { id: 'search', title: 'Search', href: '/search', type: 'page' },
     { id: 'wishlist', title: 'Wishlist', href: '/wishlist', type: 'page' },
 
     ...ALL_TOOLS.filter((tool) => publishedSlugSet.has(tool.slug)).map(
@@ -46,7 +40,7 @@ export async function GET() {
       id: post.slug,
       title: post.title,
       subtitle: post.tag,
-      href: `/resources/${post.slug}`,
+      href: `/stories/${post.slug}`,
       type: 'resource' as const,
     })),
   ];

@@ -6,13 +6,14 @@ import { useEffect, useRef, useState } from 'react';
 import { Loader2, Search, Sparkles } from 'lucide-react';
 
 import { ToolIcon } from '@/components/ToolIcon';
-import { examplesFromPicks } from '@/lib/spotlight-picks';
-
-const EXAMPLES = examplesFromPicks();
 
 interface HeroSearchProps {
   searchPlaceholder: string;
   askAILabel: string;
+  /** Synced brand hue for the Ask-AI button. */
+  accent?: string;
+  /** Synced placeholder hint (the current scene's example query). */
+  hint?: string;
 }
 
 interface Hit {
@@ -20,13 +21,15 @@ interface Hit {
   title: string;
   subtitle: string;
   href: string;
-  type: 'tool' | 'game' | 'test';
+  type: 'tool' | 'game' | 'test' | 'story';
   score: number;
 }
 
 export default function HeroSearch({
   searchPlaceholder,
   askAILabel,
+  accent,
+  hint,
 }: HeroSearchProps) {
   const router = useRouter();
   const [query, setQuery] = useState('');
@@ -34,25 +37,6 @@ export default function HeroSearch({
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const blurTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const [phIdx, setPhIdx] = useState(0);
-  const [phShown, setPhShown] = useState(true);
-
-  useEffect(() => {
-    if (EXAMPLES.length <= 1) return;
-    const reduce =
-      typeof window !== 'undefined' &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce) return;
-    const iv = setInterval(() => {
-      setPhShown(false);
-      window.setTimeout(() => {
-        setPhIdx((i) => (i + 1) % EXAMPLES.length);
-        setPhShown(true);
-      }, 320);
-    }, 3000);
-    return () => clearInterval(iv);
-  }, []);
 
   async function runSearch(term: string) {
     const q = term.trim();
@@ -88,8 +72,10 @@ export default function HeroSearch({
 
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (results.length > 0) go(results[0].href);
-    else if (query.trim()) router.push(`/tools?q=${encodeURIComponent(query)}`);
+    // Empty box → search the current placeholder hint (synced to the scene).
+    const term = query.trim() || hint || '';
+    if (!term) return;
+    router.push(`/search?q=${encodeURIComponent(term)}`);
   }
 
   const showPanel = open && query.trim().length >= 2;
@@ -97,7 +83,7 @@ export default function HeroSearch({
   return (
     <div className='relative mx-auto w-full max-w-[620px] lg:mx-0'>
       <form onSubmit={onSubmit}>
-        <div className='group flex items-center gap-2 rounded-[20px] border border-border bg-white px-2 py-2 shadow-[0_2px_24px_rgba(26,26,25,0.06)] transition-all duration-300 hover:border-border-strong hover:shadow-[0_8px_32px_rgba(26,26,25,0.1)] focus-within:border-accent/40 focus-within:shadow-[0_8px_32px_rgba(217,119,87,0.14)]'>
+        <div className='group hero-search-box flex items-center gap-2 rounded-[20px] border border-border bg-white px-2 py-2 shadow-[0_2px_24px_rgba(26,26,25,0.06)] transition-all duration-300 hover:border-border-strong hover:shadow-[0_8px_32px_rgba(26,26,25,0.1)]'>
           <span className='pl-3 text-muted transition-colors group-focus-within:text-accent'>
             <Search size={18} strokeWidth={2} />
           </span>
@@ -119,25 +105,23 @@ export default function HeroSearch({
                 blurTimer.current = setTimeout(() => setOpen(false), 160);
               }}
             />
-            {query === '' && EXAMPLES.length > 0 ? (
+            {query === '' && hint ? (
               <span
                 aria-hidden='true'
                 className='pointer-events-none absolute inset-y-0 left-2 right-2 flex items-center'
               >
                 <span
-                  className='truncate text-[16px] text-muted'
-                  style={{
-                    opacity: phShown ? 1 : 0,
-                    transition: 'opacity 300ms ease',
-                  }}
+                  key={hint}
+                  className='hero-slogan-in truncate text-[16px] text-muted'
                 >
-                  {EXAMPLES[phIdx]}
+                  {hint}
                 </span>
               </span>
             ) : null}
           </div>
           <button
-            className='inline-flex items-center gap-1.5 rounded-[14px] bg-accent px-6 py-2.5 text-[14px] font-semibold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-accent-light hover:shadow-md active:translate-y-0'
+            className='inline-flex items-center gap-1.5 rounded-[14px] px-6 py-2.5 text-[14px] font-semibold text-white shadow-sm transition-all hover:brightness-110 hover:shadow-md'
+            style={{ background: accent ?? 'var(--color-accent)' }}
             type='submit'
           >
             <Sparkles size={15} strokeWidth={2.2} />
@@ -186,12 +170,24 @@ export default function HeroSearch({
                         </span>
                       </span>
                     </span>
-                    <span className='shrink-0 text-[11px] font-semibold tabular-nums text-muted'>
-                      {Math.round(r.score * 100)}%
+                    <span className='shrink-0 text-[11px] font-semibold capitalize tabular-nums text-muted'>
+                      {r.type}
                     </span>
                   </Link>
                 </li>
               ))}
+              <li className='border-t border-border'>
+                <Link
+                  href={`/search?q=${encodeURIComponent(query.trim())}`}
+                  onClick={() =>
+                    go(`/search?q=${encodeURIComponent(query.trim())}`)
+                  }
+                  className='flex items-center gap-2 px-4 py-2.5 text-[13px] font-semibold text-accent transition-colors hover:bg-accent-bg'
+                >
+                  <Search size={14} strokeWidth={2.4} />
+                  See all results for “{query.trim()}”
+                </Link>
+              </li>
             </ul>
           )}
         </div>

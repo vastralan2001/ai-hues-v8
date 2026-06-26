@@ -26,6 +26,10 @@ import {
   Clock,
   Code,
   Code2,
+  Compass,
+  Crop,
+  Minimize2,
+  Scaling,
   Copy,
   Crown,
   Database,
@@ -37,6 +41,7 @@ import {
   FileCode2,
   Fingerprint,
   Gamepad2,
+  Gauge,
   GitCommit,
   GitCompare,
   GitPullRequest,
@@ -64,6 +69,7 @@ import {
   Paintbrush,
   Palette,
   PenTool,
+  Puzzle,
   QrCode,
   Rocket,
   Ruler,
@@ -112,6 +118,11 @@ const TOOL_ICONS: Record<string, LucideIcon> = {
   'curl-gen': Globe,
   'curl-to-code': FileCode2,
   'image-to-base64': Image,
+  'image-compress': Minimize2,
+  'image-convert': ArrowRightLeft,
+  'image-resize': Scaling,
+  'image-crop': Crop,
+  'exif-viewer': Compass,
   'css-gradient': Paintbrush,
   'color-convert': Palette,
   'csv-json': Table,
@@ -183,6 +194,8 @@ const TOOL_ICONS: Record<string, LucideIcon> = {
   /* Tests */
   sbti: Drama,
   mbti: Brain,
+  mensa: Puzzle,
+  sbinet: Gauge,
   tests: ClipboardList,
 
   /* Categories */
@@ -196,6 +209,11 @@ const TOOL_ICONS: Record<string, LucideIcon> = {
   analytics: BarChart3,
   content: PenTool,
   games: Gamepad2,
+
+  /* Top-level groups */
+  tools: Boxes,
+  play: Dices,
+  resources: BookOpen,
 };
 
 export function ToolIcon({

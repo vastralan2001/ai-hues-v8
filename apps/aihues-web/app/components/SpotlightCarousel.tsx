@@ -1,9 +1,24 @@
 'use client';
 
 import Link from 'next/link';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { createElement, useCallback, useEffect, useRef, useState } from 'react';
 
+import { GameDemo } from '@/components/games/GameDemos';
+import { StoryArt } from '@/components/StoryArt';
+import { TestDemo } from '@/components/tests/TestDemos';
 import { ToolIcon } from '@/components/ToolIcon';
+import { ToolDemo } from '@/components/tools/ToolDemos';
+import { storyTagIcon } from '@/lib/story-scenes';
+import { categoryThemeStyle, type BrandCategory } from '@/lib/category-brand';
+
+// Each slide owns its family hue so a cross-fade never lets the outgoing slide
+// borrow the incoming category's colour (kind → BrandCategory).
+const KIND_CAT: Record<string, BrandCategory> = {
+  tool: 'tools',
+  game: 'games',
+  test: 'tests',
+  story: 'stories',
+};
 
 export type SpotlightSlide = {
   slug: string;
@@ -13,21 +28,97 @@ export type SpotlightSlide = {
   metrics?: string;
   href: string;
   cta: string;
+  /** Per-slide demo type — overrides the carousel-level `demo` prop. */
+  kind?: 'tool' | 'game' | 'test' | 'story';
 };
 
 const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
-const DURATION = 560;
-const FADE_OUT = 220;
+const DURATION = 520;
+const FADE_OUT = 200;
 const SHIFT = 22;
+
+// Secondary-CTA target per slide kind — the family's aggregation page, in the
+// band's own personalised voice (not a flat "All X").
+const AGG: Record<string, { href: string; label: string }> = {
+  tool: { href: '/tools', label: 'Browse tools' },
+  game: { href: '/games', label: 'Enter arcade' },
+  test: { href: '/tests', label: 'Explore tests' },
+  story: { href: '/stories', label: 'More stories' },
+};
+
+function SlideText({
+  s,
+  full,
+  secondary = false,
+}: {
+  s: SpotlightSlide;
+  full: boolean;
+  secondary?: boolean;
+}) {
+  const agg = secondary && s.kind ? AGG[s.kind] : undefined;
+  return (
+    <>
+      <div className='mb-3 flex items-center gap-3'>
+        <span className='flex h-10 w-10 items-center justify-center rounded-[12px] bg-accent-bg text-accent'>
+          {s.kind === 'story' ? (
+            createElement(storyTagIcon(s.eyebrow), { size: 20 })
+          ) : (
+            <ToolIcon size={20} slug={s.slug} />
+          )}
+        </span>
+        <span className='inline-flex items-center rounded-full border border-border bg-white/70 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-accent backdrop-blur-md'>
+          {s.eyebrow}
+        </span>
+      </div>
+      <h3 className='mb-2 line-clamp-2 min-h-[2.5em] text-[26px] font-extrabold leading-[1.25] tracking-[-0.02em] text-foreground'>
+        {s.title}
+      </h3>
+      <p
+        className={`mb-4 text-[15px] leading-relaxed text-secondary ${full ? '' : 'line-clamp-3 min-h-[4.9em]'}`}
+      >
+        {s.description}
+      </p>
+      <p className='mb-5 min-h-[1.5em] text-[12px] font-semibold uppercase tracking-[0.12em] text-muted'>
+        {s.metrics ?? ' '}
+      </p>
+      <div className='flex flex-wrap items-center gap-3'>
+        <Link className='btn-cta btn-cta--sm w-fit' href={s.href}>
+          {s.cta}
+        </Link>
+        {agg ? (
+          <Link
+            className='inline-flex w-fit items-center gap-1 rounded-[10px] border border-border-strong px-4 py-2 text-[12px] font-bold uppercase tracking-[0.1em] text-secondary transition-colors hover:border-accent hover:text-accent'
+            href={agg.href}
+          >
+            {agg.label}
+          </Link>
+        ) : null}
+      </div>
+    </>
+  );
+}
 
 export default function SpotlightCarousel({
   slides,
   compact = false,
   onIndexChange,
+  demo,
+  stack = false,
+  controlledIndex,
+  controls = true,
+  secondaryCta = false,
 }: {
   slides: SpotlightSlide[];
   compact?: boolean;
   onIndexChange?: (i: number) => void;
+  demo?: 'tool' | 'game' | 'test';
+  stack?: boolean;
+  /** When set, the carousel is driven externally (no auto-advance). */
+  controlledIndex?: number;
+  /** Show the dots + prev/next arrows (default true). */
+  controls?: boolean;
+  /** Show a secondary CTA to the family aggregation page (hero only). */
+  secondaryCta?: boolean;
 }) {
   const count = slides.length;
 
@@ -36,10 +127,18 @@ export default function SpotlightCarousel({
   const [dir, setDir] = useState(1);
   const [paused, setPaused] = useState(false);
   const lock = useRef(false);
+  const lockTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     onIndexChange?.(index);
   }, [index, onIndexChange]);
+
+  useEffect(
+    () => () => {
+      if (lockTimer.current) clearTimeout(lockTimer.current);
+    },
+    []
+  );
 
   const go = useCallback(
     (target: number, d: number) => {
@@ -48,6 +147,12 @@ export default function SpotlightCarousel({
       setDir(d);
       setPrev(index);
       setIndex(target);
+      // Release on a timer rather than transitionend — the active slide's
+      // transform doesn't always change, so transitionend can never fire.
+      if (lockTimer.current) clearTimeout(lockTimer.current);
+      lockTimer.current = setTimeout(() => {
+        lock.current = false;
+      }, DURATION + 80);
     },
     [index, count]
   );
@@ -56,26 +161,55 @@ export default function SpotlightCarousel({
     () => go((index + 1) % count, 1),
     [go, index, count]
   );
-  const back = useCallback(
-    () => go((index - 1 + count) % count, -1),
-    [go, index, count]
-  );
+
+  // Externally-driven mode: follow the controlled index, no auto-advance.
+  useEffect(() => {
+    if (controlledIndex == null) return;
+    if (controlledIndex !== index) {
+      go(controlledIndex, controlledIndex >= index ? 1 : -1);
+    }
+  }, [controlledIndex, index, go]);
 
   useEffect(() => {
-    if (paused || count <= 1) return;
+    if (controlledIndex != null || paused || count <= 1) return;
     const reduce =
       typeof window !== 'undefined' &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduce) return;
-    const t = setInterval(() => next(), 5200);
+    const t = setInterval(() => next(), 5600);
     return () => clearInterval(t);
-  }, [paused, count, next]);
-
-  function onSlidesTransitionEnd(e: React.TransitionEvent) {
-    if (e.propertyName === 'transform') lock.current = false;
-  }
+  }, [controlledIndex, paused, count, next]);
 
   if (count === 0) return null;
+
+  const hasDemo = !!demo || slides.some((s) => s.kind);
+  const boxH =
+    hasDemo && stack
+      ? 'min-h-[460px]'
+      : hasDemo || compact
+        ? 'min-h-[300px]'
+        : 'min-h-[420px]';
+
+  const renderDemo = (s: SpotlightSlide, active: boolean) => {
+    const k = s.kind ?? demo;
+    // Games get the same framed card as the tool/test demos for visual parity.
+    if (k === 'game')
+      return (
+        <div className='relative aspect-[16/9] w-full overflow-hidden rounded-[16px] border border-border bg-bg shadow-sm'>
+          <GameDemo active={active} slug={s.slug} />
+        </div>
+      );
+    if (k === 'test') return <TestDemo slug={s.slug} />;
+    return <ToolDemo slug={s.slug} />;
+  };
+
+  // A slide shows its demo panel only if it has a real demo kind; story / plain
+  // slides fall back to the shared full-width text card (icon + badge included),
+  // the same card the home Stories band uses.
+  const slideHasDemo = (s: SpotlightSlide) => {
+    const k = s.kind ?? demo;
+    return !!k && k !== 'story';
+  };
 
   return (
     <div
@@ -83,10 +217,10 @@ export default function SpotlightCarousel({
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <div
-        className={`relative ${compact ? 'min-h-[430px]' : 'min-h-[460px]'}`}
-        onTransitionEnd={onSlidesTransitionEnd}
-      >
+      {/* No overflow-hidden here: the hero + FeatureBand sections already clip
+          horizontally (overflow-x-clip) with vertical padding, so the CTA hover
+          glow can breathe instead of being cropped by this box. */}
+      <div className={`relative ${boxH}`}>
         {slides.map((s, i) => {
           const isActive = i === index;
           const isPrev = i === prev;
@@ -97,80 +231,50 @@ export default function SpotlightCarousel({
             : isPrev
               ? `opacity ${FADE_OUT}ms ease`
               : 'none';
+          const showDemo = slideHasDemo(s);
+          const k = s.kind ?? demo;
+          const slideCat = k ? KIND_CAT[k] : undefined;
+          const visual = showDemo ? (
+            renderDemo(s, isActive)
+          ) : k === 'story' ? (
+            <StoryArt
+              slug={s.slug}
+              tag={s.eyebrow}
+              animated
+              className='aspect-[16/9] w-full rounded-[16px] border border-border bg-bg shadow-sm'
+            />
+          ) : null;
           return (
             <div
               key={s.slug + i}
               aria-hidden={!isActive}
               className='absolute inset-0'
               style={{
+                ...(slideCat ? categoryThemeStyle(slideCat) : null),
                 opacity: isActive ? 1 : 0,
                 transform: `translateX(${x}px)`,
                 transition,
                 pointerEvents: isActive ? 'auto' : 'none',
               }}
             >
-              {compact ? (
-                <div className='flex h-full flex-col justify-center px-1'>
-                  <div className='mb-4 flex items-center gap-3'>
-                    <span className='flex h-11 w-11 items-center justify-center rounded-[13px] bg-accent-bg text-accent'>
-                      <ToolIcon slug={s.slug} size={22} />
-                    </span>
-                    <span className='inline-flex items-center rounded-full border border-border bg-white/70 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-accent backdrop-blur-md'>
-                      {s.eyebrow}
-                    </span>
+              {visual ? (
+                stack ? (
+                  <div className='flex h-full flex-col justify-center gap-4'>
+                    <SlideText full={false} s={s} secondary={secondaryCta} />
+                    {visual}
                   </div>
-                  <h3 className='mb-3 text-[28px] font-extrabold leading-[1.12] tracking-[-0.02em] text-foreground'>
-                    {s.title}
-                  </h3>
-                  <p className='mb-5 max-w-[400px] text-[15px] leading-relaxed text-secondary'>
-                    {s.description}
-                  </p>
-                  {s.metrics ? (
-                    <p className='mb-7 text-[12px] font-semibold uppercase tracking-[0.12em] text-muted'>
-                      {s.metrics}
-                    </p>
-                  ) : null}
-                  <Link className='btn-cta btn-cta--sm w-fit' href={s.href}>
-                    {s.cta}
-                  </Link>
-                </div>
-              ) : (
-                <div className='grid h-full grid-cols-1 items-center gap-8 p-10 md:grid-cols-[1.1fr_0.9fr] md:p-14'>
-                  <div>
-                    <div className='mb-4 flex items-center gap-3'>
-                      <span className='flex h-12 w-12 items-center justify-center rounded-[14px] bg-accent-bg text-accent'>
-                        <ToolIcon slug={s.slug} size={24} />
-                      </span>
-                      <span className='inline-flex items-center rounded-full border border-border bg-white/70 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-accent backdrop-blur-md'>
-                        {s.eyebrow}
-                      </span>
+                ) : (
+                  <div className='grid h-full items-center gap-7 md:grid-cols-2'>
+                    <div className='order-2 min-w-0 md:order-1'>
+                      <SlideText full={false} s={s} secondary={secondaryCta} />
                     </div>
-                    <h3 className='mb-4 text-[32px] font-extrabold leading-[1.1] tracking-[-0.02em] text-foreground md:text-[40px]'>
-                      {s.title}
-                    </h3>
-                    <p className='mb-6 max-w-[440px] text-[16px] leading-relaxed text-secondary'>
-                      {s.description}
-                    </p>
-                    {s.metrics ? (
-                      <p className='mb-7 text-[13px] font-semibold uppercase tracking-[0.12em] text-muted'>
-                        {s.metrics}
-                      </p>
-                    ) : null}
-                    <Link className='btn-cta w-fit' href={s.href}>
-                      {s.cta}
-                    </Link>
+                    <div className='order-1 min-w-0 md:order-2'>{visual}</div>
                   </div>
-                  <div
-                    aria-hidden='true'
-                    className='relative hidden aspect-[4/3] items-center justify-center overflow-hidden rounded-[18px] border border-border md:flex'
-                    style={{
-                      background:
-                        'radial-gradient(120% 100% at 30% 10%, color-mix(in srgb, var(--color-accent) 16%, transparent), transparent 60%), radial-gradient(120% 120% at 90% 100%, rgba(199,162,76,0.14), transparent 55%), var(--color-bg)',
-                    }}
-                  >
-                    <span className='text-accent/70'>
-                      <ToolIcon slug={s.slug} size={96} />
-                    </span>
+                )
+              ) : (
+                <div className='flex h-full flex-col justify-center'>
+                  <div className='max-w-[620px]'>
+                    <SlideText full s={s} secondary={secondaryCta} />
                   </div>
                 </div>
               )}
@@ -179,56 +283,28 @@ export default function SpotlightCarousel({
         })}
       </div>
 
-      {/* Controls */}
-      <div className='mt-5 flex items-center justify-between'>
-        <div className='flex gap-2'>
-          {slides.map((s, i) => (
-            <button
-              key={'dot' + s.slug + i}
-              aria-label={`Go to slide ${i + 1}`}
-              onClick={() => go(i, i >= index ? 1 : -1)}
-              className='h-2 rounded-full transition-all duration-300'
-              style={{
-                width: i === index ? 28 : 8,
-                background:
-                  i === index ? 'var(--accent)' : 'var(--color-border-strong)',
-              }}
-            />
-          ))}
-        </div>
-        <div className='flex gap-2'>
-          <button
-            aria-label='Previous'
-            onClick={back}
-            className='flex h-11 w-11 items-center justify-center rounded-full border border-border bg-white text-foreground transition-all duration-200 hover:-translate-y-0.5 hover:border-border-strong hover:shadow-md active:scale-95'
-          >
-            <svg width='18' height='18' viewBox='0 0 24 24' fill='none'>
-              <path
-                d='M15 18l-6-6 6-6'
-                stroke='currentColor'
-                strokeWidth='2'
-                strokeLinecap='round'
-                strokeLinejoin='round'
+      {/* Controls — goto dots only (cleaner, matches the kimi aesthetic) */}
+      {controls ? (
+        <div className='mt-4 flex items-center justify-start'>
+          <div className='flex gap-2'>
+            {slides.map((s, i) => (
+              <button
+                key={'dot' + s.slug + i}
+                aria-label={`Go to slide ${i + 1}`}
+                onClick={() => go(i, i >= index ? 1 : -1)}
+                className='h-2 rounded-full transition-all duration-300'
+                style={{
+                  width: i === index ? 28 : 8,
+                  background:
+                    i === index
+                      ? 'var(--accent)'
+                      : 'var(--color-border-strong)',
+                }}
               />
-            </svg>
-          </button>
-          <button
-            aria-label='Next'
-            onClick={next}
-            className='flex h-11 w-11 items-center justify-center rounded-full border border-border bg-white text-foreground transition-all duration-200 hover:-translate-y-0.5 hover:border-border-strong hover:shadow-md active:scale-95'
-          >
-            <svg width='18' height='18' viewBox='0 0 24 24' fill='none'>
-              <path
-                d='M9 6l6 6-6 6'
-                stroke='currentColor'
-                strokeWidth='2'
-                strokeLinecap='round'
-                strokeLinejoin='round'
-              />
-            </svg>
-          </button>
+            ))}
+          </div>
         </div>
-      </div>
+      ) : null}
     </div>
   );
 }

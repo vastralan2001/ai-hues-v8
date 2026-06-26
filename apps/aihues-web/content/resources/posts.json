@@ -280,7 +280,7 @@
   },
   {
     "slug": "ai-content-strategy",
-    "tag": "Content",
+    "tag": "Growth",
     "title": "AI Content Strategy: Scale Quality Without Losing the Human Touch",
     "excerpt": "How we produce 50+ pieces of content per month using AI — without sounding like everyone else. Practical tips, templates, and AI-powered shortcuts to get...",
     "date": "2026-05-25",
@@ -448,7 +448,7 @@
   },
   {
     "slug": "reddit-marketing",
-    "tag": "Reddit Marketing",
+    "tag": "Growth",
     "title": "Reddit Marketing Playbook: Acquire Users on Reddit",
     "excerpt": "Reddit is the largest community platform with 800M+ monthly active users. This guide shares practical strategies for building brand trust, avoiding bans,...",
     "date": "2026-05-20",
@@ -517,7 +517,7 @@
   },
   {
     "slug": "twitter-growth",
-    "tag": "Social Media",
+    "tag": "Growth",
     "title": "Twitter/X Growth Playbook: 0 to 10K in 90 Days",
     "excerpt": "The content strategy, posting schedule, and engagement tactics that actually work in 2026. Practical tips, templates, and AI-powered shortcuts to get...",
     "date": "2026-05-18",
@@ -626,7 +626,7 @@
   },
   {
     "slug": "kol-marketing",
-    "tag": "KOL Marketing",
+    "tag": "Growth",
     "title": "KOL Marketing from 0 to 1 for Indie Developers",
     "excerpt": "No budget for big influencers? No problem. Learn how to find micro-influencers on Twitter/X, YouTube, and TikTok who are willing to endorse you for free —...",
     "date": "2026-05-15",
@@ -754,7 +754,7 @@
   },
   {
     "slug": "no-code-mvp",
-    "tag": "Product",
+    "tag": "Indie Dev",
     "title": "The No-Code MVP Guide: Launch in 48 Hours",
     "excerpt": "Build and ship a working product without writing a single line of code. Practical tips, templates, and AI-powered shortcuts to get results faster.",
     "date": "2026-05-12",
@@ -1109,5 +1109,55 @@
     "readTime": "6 min",
     "coverImage": "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=600&q=80",
     "description": "I learned this the hard way. Stop demoing and start measuring. Here is the scorecard we use for every AI tool evaluation."
+  },
+  {
+    "slug": "kimi-k2-open-agentic-intelligence-explained",
+    "tag": "Research",
+    "title": "Kimi K2 Explained: Open Agentic Intelligence at Trillion Scale",
+    "excerpt": "Moonshot AI shipped a trillion-parameter open MoE model that uses tools, writes code, and finishes multi-step jobs. A plain-English read of the architecture, the MuonClip optimizer, and the benchmarks.",
+    "date": "2026-06-24",
+    "readTime": "8 min",
+    "coverImage": "",
+    "description": "A faithful, plain-English walkthrough of Kimi K2: a 1-trillion-parameter open Mixture-of-Experts model with 32B active params, the spike-free MuonClip optimizer, agentic RL training, and what its SWE-bench and reasoning scores actually mean for builders."
+  },
+  {
+    "slug": "kimi-k2-thinking-the-reasoning-model-explained",
+    "tag": "Research",
+    "title": "Inside Kimi K2 Thinking: How an Open Model Learns to Reason",
+    "excerpt": "A 1T-parameter open model that thinks across 200-300 tool calls without losing the thread. Here is how it reasons, what INT4 training buys, the benchmark numbers, and the honest limits.",
+    "date": "2026-06-23",
+    "readTime": "9 min",
+    "coverImage": "",
+    "description": "A faithful walkthrough of Kimi K2 Thinking: how a 1T-parameter open model reasons across 200-300 tool calls, what its INT4 training buys, the benchmark numbers, and the honest limits."
+  },
+  {
+    "slug": "kimi-k2-6-open-source-coding-model-explained",
+    "tag": "Research",
+    "title": "Kimi K2.6 for Coding: What the Benchmarks Actually Show",
+    "excerpt": "Moonshot open-sourced a model that beats GPT-5.4 on SWE-Bench Pro. A benchmark-first read of where Kimi K2.6 leads, where it trails, and how to point it.",
+    "date": "2026-06-22",
+    "readTime": "8 min",
+    "coverImage": "",
+    "description": "A benchmark-first review of Moonshot open-weights Kimi K2.6: the coding scorecard (SWE-Bench Pro 58.6, Terminal-Bench 66.7), how long-horizon execution got it there, where it falls short on competitive-programming and reasoning, and how to actually use it."
+  },
+  {
+    "slug": "worldvqa-atomic-world-knowledge-benchmark-explained",
+    "tag": "Research",
+    "title": "WorldVQA Explained: Measuring Atomic World Knowledge in MLLMs",
+    "excerpt": "Moonshot AI 3,500-question benchmark asks every vision model one blunt thing: do you actually recognize what you see, or are you guessing? Frontier models stay under 50%.",
+    "date": "2026-06-21",
+    "readTime": "8 min",
+    "coverImage": "",
+    "description": "A plain-English deep read of WorldVQA, Moonshot AI benchmark for atomic visual world knowledge. What it tests, how its accuracy and calibration metrics work, why top MLLMs fail the long tail, and what it means for builders shipping vision into products."
+  },
+  {
+    "slug": "attention-residuals-explained",
+    "tag": "Research",
+    "title": "Attention Residuals, Explained — and the Teenager Who Co-Wrote It",
+    "excerpt": "Moonshot’s new architecture lets each transformer layer choose which earlier layers to listen to — a ~25% compute win on Kimi Linear. One of its two lead authors is a high-schooler from Shenzhen.",
+    "date": "2026-06-24",
+    "readTime": "9 min",
+    "coverImage": "",
+    "description": "A plain-English deep read of Attention Residuals (arXiv:2603.15031): why fixed residual accumulation dilutes deep transformers, how attention-over-depth and Block AttnRes fix it for a 1.25x compute advantage on Kimi Linear, and the open-source path that took co-first author Nathan Chen (Guangyu Chen) from Flash Linear Attention contributor to Moonshot AI while still in high school."
   }
 ]

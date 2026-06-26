@@ -1,20 +1,25 @@
 import Link from 'next/link';
 
-import { ToolCardV2 } from '@/components/CatalogCards';
-import HeroSearch from '@/components/HeroSearch';
+import FeatureBand from '@/components/FeatureBand';
 import HeroStage from '@/components/HeroStage';
+import { JsonLd } from '@/components/JsonLd';
 import { PageShell } from '@/components/SiteChrome';
-import { ToolIcon } from '@/components/ToolIcon';
+import { SloganEgg } from '@/components/SloganEgg';
+import SpotlightCarousel, {
+  type SpotlightSlide,
+} from '@/components/SpotlightCarousel';
 import ToolMarquee, { type MarqueeItem } from '@/components/ToolMarquee';
-import Typewriter from '@/components/Typewriter';
-import type { CatalogGame } from '@/lib/catalog-api';
+import type { CatalogGame, CatalogTool } from '@/lib/catalog-api';
 import { safeListGames, safeListTools } from '@/lib/catalog-api';
 import { t, type Locale } from '@/lib/dict';
-import { GAME_CARD_COPY } from '@/lib/game-meta';
+import { GAME_CARD_COPY, GAME_GENRES } from '@/lib/game-meta';
+import { getAllPosts, type ResourcePost } from '@/lib/resources-data';
 import { TEST_META } from '@/lib/tests';
 import {
   gameDetailHref,
+  gamesGenreHref,
   gamesHref,
+  storiesHref,
   testDetailHref,
   testsHref,
   toolDetailHref,
@@ -22,163 +27,121 @@ import {
   toolsHref,
   wishlistHref,
 } from '@/lib/routes';
+import { CATEGORY_SLOGAN } from '@/lib/category-brand';
+import { CATEGORY_PICKS, type HeroScene } from '@/lib/spotlight-picks';
 
 // Revalidate every 60s so the catalog stays fresh without forcing SSR on every hit.
 export const revalidate = 60;
 
-/* ── Static category data with icons & sample tags ── */
-const HOME_CATEGORIES = (locale: Locale) => [
-  {
-    key: 'utility',
-    label: t(locale, 'cat.utility'),
-    count: 0,
-    desc: t(locale, 'cat.utilityDesc'),
-    tags: ['Word Count', 'Fullwidth', 'Readability'],
-    href: toolsCategoryHref('utility'),
-  },
-  {
-    key: 'developer',
-    label: t(locale, 'cat.developer'),
-    count: 0,
-    desc: t(locale, 'cat.developerDesc'),
-    tags: ['JWT', 'JSON', 'Regex', 'QR Code'],
-    href: toolsCategoryHref('developer'),
-  },
-  {
-    key: 'ai-writing',
-    label: t(locale, 'cat.aiWriting'),
-    count: 0,
-    desc: t(locale, 'cat.aiWritingDesc'),
-    tags: ['X Post', 'Blog', 'SEO', 'TL;DR'],
-    href: toolsCategoryHref('ai-writing'),
-  },
-  {
-    key: 'games',
-    label: t(locale, 'cat.games'),
-    count: 0,
-    desc: t(locale, 'cat.gamesDesc'),
-    tags: ['Fortune', 'Slots', 'Hoops'],
-    href: gamesHref,
-  },
-  {
-    key: 'tests',
-    label: t(locale, 'cat.tests'),
-    count: TEST_META.length,
-    desc: t(locale, 'cat.testsDesc'),
-    tags: ['SBTI', 'MBTI'],
-    href: testsHref,
-  },
+const storyTagHref = (tag: string) =>
+  `${storiesHref}?tag=${encodeURIComponent(tag)}`;
+
+const catLabel = (locale: Locale, category: string) =>
+  category === 'ai-writing'
+    ? t(locale, 'cat.aiWriting')
+    : category === 'developer'
+      ? t(locale, 'cat.developer')
+      : t(locale, 'cat.utility');
+
+// Dev and writing tools interleaved 50/50, by international popularity.
+// Each slug must have a demo in the per-domain ToolDemos / GameDemos files.
+const HOME_TOOL_SLUGS = [
+  'json', // dev
+  'x-post', // writing
+  'jwt', // dev
+  'word-count', // writing
+  'base64', // dev
+  'blog-outline', // writing
+];
+const GAME_DEMO_SLUGS = [
+  'snake',
+  'block-drop',
+  'minesweeper',
+  'chess',
+  'slot-machine',
+  'daily-luck',
 ];
 
-/* ── Category card themes ── */
-const CATEGORY_THEMES: Record<
-  string,
-  { gradient: string; bg: string; fg: string }
-> = {
-  utility: {
-    gradient: 'var(--color-accent)',
-    bg: 'rgba(26, 26, 25, 0.05)',
-    fg: 'rgba(26, 26, 25, 0.7)',
-  },
-  developer: {
-    gradient: 'var(--color-accent)',
-    bg: 'rgba(26, 26, 25, 0.05)',
-    fg: 'rgba(26, 26, 25, 0.7)',
-  },
-  'ai-writing': {
-    gradient: 'var(--color-accent)',
-    bg: 'color-mix(in srgb, var(--color-accent) 10%, transparent)',
-    fg: '#b1502f',
-  },
-  games: {
-    gradient: 'var(--color-accent)',
-    bg: 'rgba(26, 26, 25, 0.05)',
-    fg: 'rgba(26, 26, 25, 0.7)',
-  },
-  tests: {
-    gradient: 'var(--color-accent)',
-    bg: 'color-mix(in srgb, var(--color-accent) 10%, transparent)',
-    fg: '#b1502f',
-  },
+const HOME_TOOL_BLURB: Record<string, string> = {
+  json: "Paste any mangled, minified, or broken JSON — get it formatted, syntax-highlighted, and validated in one click, with clear error markers when something's off.",
+  'x-post':
+    'Describe what you want to say and the AI drafts a punchy, on-brand post for X. Thread mode, hooks, hashtags — ready to copy in seconds.',
+  jwt: 'Drop in a JWT and instantly see its decoded header, payload, and expiry without firing up a terminal. Works on any HS256/RS256 token.',
+  'word-count':
+    'Paste an essay, email, or script and get instant word, character, sentence, and reading-time stats — updated live as you type.',
+  base64:
+    'Encode plain text or raw bytes to Base64 and decode back again in a single field. Handles standard and URL-safe alphabets.',
+  'blog-outline':
+    'Drop in a topic and the AI returns a structured outline with H2s, H3s, and intro hooks — a solid skeleton to write from, not a wall of lorem ipsum.',
 };
 
-/* ── Featured highlights (editor-curated until analytics API provides rankings) ── */
-const POPULAR_HIGHLIGHTS = (locale: Locale) => [
-  {
-    href: toolDetailHref('jwt'),
-    kicker: `${t(locale, 'cat.developer')}`,
-    title: 'JWT Parser — Dev Essential',
-    description:
-      'One-click JWT decode with expiry detection & JSON highlighting',
-    metrics: 'Decode · Verify · Expiry',
-  },
-  {
-    href: toolDetailHref('json'),
-    kicker: `${t(locale, 'cat.developer')}`,
-    title: 'JSON Formatter — Most Elegant',
-    description:
-      'Dark theme highlighting, collapsible tree, precise error locating',
-    metrics: 'Format · Validate · Highlight',
-  },
-  {
-    href: gameDetailHref('daily-luck'),
-    kicker: `${t(locale, 'cat.games')}`,
-    title: 'Daily Fortune — Retention King',
-    description: '30 wisdom quotes, 3D card flip, streak rewards & confetti',
-    metrics: 'Fortune · Streak · Rewards',
-  },
-];
+/* ── Slide builders — feed the polished SpotlightCarousel per section ── */
+function toolSlides(tools: CatalogTool[], locale: Locale): SpotlightSlide[] {
+  return tools.map((tool) => ({
+    slug: tool.slug,
+    eyebrow: catLabel(locale, tool.category),
+    title: tool.name,
+    description: HOME_TOOL_BLURB[tool.slug] ?? tool.description,
+    href: toolDetailHref(tool.slug),
+    cta: locale === 'zh' ? '打开工具 →' : 'Open tool →',
+  }));
+}
 
-const HOME_DEVELOPER_SLUGS = [
-  'jwt',
-  'json',
-  'regex',
-  'uuid',
-  'timestamp',
-  'markdown',
-  'qrcode',
-];
+const HOME_GAME_BLURB: Record<string, string> = {
+  snake:
+    'Guide a hungry serpent around the board with a greedy pathing brain, growing one segment per pellet — the longer it gets, the tighter the squeeze.',
+  'block-drop':
+    'The classic seven tetrominoes fall faster as you go; rotate, slot and clear lines, with a heuristic auto-player showing off tidy stacking.',
+  minesweeper:
+    'Flag the mines and flood-reveal the safe squares from the number clues — the demo solves it the same way you would, one deduction at a time.',
+  chess:
+    'A real engine plays both sides with legal moves and live evaluation — watch the pieces think, then jump in and take the board yourself.',
+  'slot-machine':
+    'Three reels spin and lock one by one; line up three symbols for the jackpot. Daily free spins, eight paylines, real Vegas drama.',
+  'daily-luck':
+    'Draw one fortune a day for a wisdom line, lucky colour and lucky number — keep a streak going for bonus credits.',
+};
 
-const HOME_WRITING_SLUGS = [
-  'word-count',
-  'diff',
-  'fullwidth',
-  'readability',
-  'humanize',
-  'x-post',
-  'seo-title',
-];
-
-function HomeGameCard({ game, locale }: { game: CatalogGame; locale: Locale }) {
+function gameSlides(games: CatalogGame[], locale: Locale): SpotlightSlide[] {
   const zh = locale === 'zh';
-  const copy = GAME_CARD_COPY[game.slug];
+  return games.map((game) => {
+    const copy = GAME_CARD_COPY[game.slug];
+    return {
+      slug: game.slug,
+      eyebrow: zh ? '小游戏' : 'Mini Game',
+      title: game.name,
+      description: HOME_GAME_BLURB[game.slug] ?? game.description,
+      metrics: copy ? (zh ? copy.metaZh : copy.meta) : undefined,
+      href: gameDetailHref(game.slug),
+      cta: copy ? (zh ? copy.ctaZh : copy.cta) : t(locale, 'game.play'),
+    };
+  });
+}
 
-  return (
-    <Link
-      className='card-lift group relative flex h-full cursor-pointer flex-col rounded-[16px] border border-border bg-surface px-6 py-6 text-center text-inherit no-underline'
-      href={gameDetailHref(game.slug)}
-    >
-      <span className='mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-xl bg-accent-bg text-accent'>
-        <ToolIcon slug={game.slug} size={24} />
-      </span>
-      <h3 className='mb-2 text-[18px] font-bold text-foreground'>
-        {game.name}
-      </h3>
-      <p className='mb-3 text-[13px] leading-relaxed text-secondary'>
-        {game.description}
-      </p>
+function postSlides(posts: ResourcePost[], locale: Locale): SpotlightSlide[] {
+  return posts.map((post) => ({
+    slug: post.slug,
+    kind: 'story',
+    eyebrow: post.tag,
+    title: post.title,
+    description: post.excerpt,
+    metrics: post.readTime,
+    href: `/stories/${post.slug}`,
+    cta: locale === 'zh' ? '阅读全文 →' : 'Read post →',
+  }));
+}
 
-      {copy && (
-        <p className='mb-4 text-[12px] leading-relaxed text-muted'>
-          {zh ? copy.metaZh : copy.meta}
-        </p>
-      )}
-
-      <span className='btn-cta btn-cta--sm mt-auto self-center'>
-        {copy ? (zh ? copy.ctaZh : copy.cta) : t(locale, 'game.play')}
-      </span>
-    </Link>
-  );
+function testSlides(locale: Locale): SpotlightSlide[] {
+  const zh = locale === 'zh';
+  return TEST_META.map((tm) => ({
+    slug: tm.slug,
+    eyebrow: tm.badge,
+    title: tm.name,
+    description: tm.description,
+    metrics: `${tm.questionCount} ${zh ? '题' : 'questions'} · ~${tm.durationMin} min`,
+    href: testDetailHref(tm.slug),
+    cta: zh ? tm.ctaZh : tm.cta,
+  }));
 }
 
 export default async function HomePage() {
@@ -196,391 +159,287 @@ export default async function HomePage() {
     safeListGames({ pageSize: 20 }),
   ]);
 
-  const categoryCounts = {
-    utility: tools.filter((tool) => tool.category === 'utility').length,
-    developer: tools.filter((tool) => tool.category === 'developer').length,
-    'ai-writing': tools.filter((tool) => tool.category === 'ai-writing').length,
-    games: games.length,
-  };
+  const posts = getAllPosts();
 
-  const homeDevTools = HOME_DEVELOPER_SLUGS.map((slug) =>
+  // Stories band carousel: feature exactly one Research paper (the newest)
+  // ahead of recent non-paper stories, so the Research category earns a
+  // home-band spot without the papers crowding out the rest of the feed.
+  const featuredPaper = posts.find((p) => p.tag === 'Research');
+  const storyBandPosts = featuredPaper
+    ? [featuredPaper, ...posts.filter((p) => p.tag !== 'Research').slice(0, 5)]
+    : posts.slice(0, 6);
+
+  const homeTools = HOME_TOOL_SLUGS.map((slug) =>
     tools.find((tool) => tool.slug === slug)
-  ).filter((tool) => tool != null);
+  ).filter((tool): tool is CatalogTool => tool != null);
 
-  const homeWritingTools = HOME_WRITING_SLUGS.map((slug) =>
-    tools.find((tool) => tool.slug === slug)
-  ).filter((tool) => tool != null);
+  const demoGames = GAME_DEMO_SLUGS.map((slug) =>
+    games.find((game) => game.slug === slug)
+  ).filter((game): game is CatalogGame => game != null);
 
-  const categories = HOME_CATEGORIES(locale);
-  const popularHighlights = POPULAR_HIGHLIGHTS(locale);
+  // Marquee mixes the three interactive families, each chip in its category
+  // hue, round-robin so rows read as a blend of Tools / Games / Tests.
+  const marqueePool: MarqueeItem[] = [
+    ...tools.map((t) => ({
+      slug: t.slug,
+      name: t.name,
+      href: toolDetailHref(t.slug),
+      cat: 'tools' as const,
+    })),
+    ...games.map((g) => ({
+      slug: g.slug,
+      name: g.name,
+      href: gameDetailHref(g.slug),
+      cat: 'games' as const,
+    })),
+    ...TEST_META.map((tm) => ({
+      slug: tm.slug,
+      name: tm.name,
+      href: testDetailHref(tm.slug),
+      cat: 'tests' as const,
+    })),
+  ];
+  // interleave families so neighbours differ (tools → tests → games → …)
+  const byCat = (c: MarqueeItem['cat']) =>
+    marqueePool.filter((m) => m.cat === c);
+  const [tl, gm, ts] = [byCat('tools'), byCat('games'), byCat('tests')];
+  const mixed: MarqueeItem[] = [];
+  for (let i = 0; i < Math.max(tl.length, gm.length, ts.length); i++) {
+    if (tl[i]) mixed.push(tl[i]);
+    if (ts[i]) mixed.push(ts[i]);
+    if (gm[i]) mixed.push(gm[i]);
+  }
+  // Deal into rows by CONTIGUOUS chunks, NOT i % 3 — a 3-periodic interleave
+  // dealt round-robin lands the same category on every row. Contiguous slices
+  // keep the alternating pattern so adjacent chips are never the same family.
+  const MARQUEE_ROWS = 3;
+  const per = Math.ceil(mixed.length / MARQUEE_ROWS);
+  const marqueeRows: MarqueeItem[][] = Array.from(
+    { length: MARQUEE_ROWS },
+    (_, r) => mixed.slice(r * per, (r + 1) * per)
+  );
 
-  const marqueeRows: MarqueeItem[][] = [[], [], []];
-  tools.forEach((tool, i) => {
-    marqueeRows[i % 3].push({ slug: tool.slug, name: tool.name });
+  // Hero scenes — built from the SAME catalog/posts the home bands use, so a
+  // given id renders identical content + badge in the hero and its band.
+  const heroScenes: HeroScene[] = CATEGORY_PICKS.map((pick) => {
+    let slide: SpotlightSlide;
+    if (pick.cat === 'games') {
+      const g = games.find((x) => x.slug === pick.slug);
+      slide = {
+        ...gameSlides(g ? [g] : demoGames.slice(0, 1), locale)[0],
+        kind: 'game',
+      };
+    } else if (pick.cat === 'tests') {
+      slide = {
+        ...(testSlides(locale).find((s) => s.slug === pick.slug) ??
+          testSlides(locale)[0]),
+        kind: 'test',
+      };
+    } else if (pick.cat === 'stories') {
+      slide = { ...postSlides(posts.slice(0, 1), locale)[0], kind: 'story' };
+    } else {
+      const tl = tools.find((x) => x.slug === pick.slug);
+      slide = {
+        ...toolSlides(tl ? [tl] : homeTools.slice(0, 1), locale)[0],
+        kind: 'tool',
+      };
+    }
+    return {
+      cat: pick.cat,
+      typeword: pick.typeword,
+      slogan: pick.slogan,
+      query: pick.query,
+      slide,
+    };
   });
 
   return (
     <PageShell variant='home' locale={locale}>
-      <div>
+      <JsonLd
+        data={[
+          {
+            '@context': 'https://schema.org',
+            '@type': 'WebSite',
+            name: 'AIHues',
+            url: 'https://aihues.com',
+            potentialAction: {
+              '@type': 'SearchAction',
+              target: {
+                '@type': 'EntryPoint',
+                urlTemplate: 'https://aihues.com/tools?q={search_term_string}',
+              },
+              'query-input': 'required name=search_term_string',
+            },
+          },
+          {
+            '@context': 'https://schema.org',
+            '@type': 'Organization',
+            name: 'AIHues',
+            url: 'https://aihues.com',
+            logo: 'https://aihues.com/icon-512.png',
+          },
+        ]}
+      />
+      <div className='relative'>
+        {/* Continuous wash that drifts hue down the page so band-to-band
+            gradient transitions stay seamless. */}
+        <div
+          aria-hidden='true'
+          className='pointer-events-none absolute inset-0 -z-20'
+          style={{
+            background:
+              'linear-gradient(180deg, transparent 14%, rgba(199,150,66,0.05) 30%, rgba(176,72,96,0.05) 52%, rgba(120,90,166,0.05) 74%, rgba(194,80,46,0.05) 90%, transparent)',
+          }}
+        />
+
         {/* ══════════════════════════════════════════════
             HERO
             ══════════════════════════════════════════════ */}
         <HeroStage
+          scenes={heroScenes}
+          locale={locale}
+          askAILabel={t(locale, 'hero.askAI')}
+          searchPlaceholder={t(locale, 'hero.searchPlaceholder')}
           marquee={
             marqueeRows.some((r) => r.length > 0) ? (
-              <div className='w-full'>
-                <ToolMarquee rows={marqueeRows.slice(0, 2)} />
-              </div>
+              <ToolMarquee rows={marqueeRows.slice(0, 2)} />
             ) : null
           }
-        >
-          {/* LEFT — pitch + search */}
-          <div className='min-w-0 text-center lg:text-left'>
-            {/* Main headline */}
-            <h1 className='hero-title mb-6 text-foreground'>
-              {locale === 'zh' ? (
-                <>
-                  你的全能
-                  <br />
-                  <Typewriter
-                    className='text-accent'
-                    phrases={[
-                      'AI 工具箱',
-                      '开发利器',
-                      '写作工作室',
-                      '测验厅',
-                      '游戏厅',
-                    ]}
-                  />
-                </>
-              ) : (
-                <>
-                  Your all-in-one
-                  <br />
-                  <Typewriter
-                    className='text-accent'
-                    phrases={[
-                      'AI toolkit.',
-                      'dev toolbox.',
-                      'writing studio.',
-                      'test lab.',
-                      'game arcade.',
-                    ]}
-                  />
-                </>
-              )}
-            </h1>
+        />
 
-            {/* Subtitle */}
-            <p className='mx-auto mb-9 max-w-[560px] text-[19px] leading-relaxed text-secondary lg:mx-0'>
-              {locale === 'zh'
-                ? '精选 AI 工具与轻量小游戏，无需注册，打开即用。'
-                : 'Curated AI tools and mini games — no signup, just open and use.'}
-            </p>
-
-            {/* Search box */}
-            <HeroSearch
-              searchPlaceholder={t(locale, 'hero.searchPlaceholder')}
-              askAILabel={t(locale, 'hero.askAI')}
+        {/* ══════════════════════════════════════════════
+            TOOLS
+            ══════════════════════════════════════════════ */}
+        <FeatureBand
+          category='tools'
+          cta={{ href: toolsHref, label: 'Browse tools' }}
+          description='Decode a JWT, format messy JSON, count words, rewrite a tweet — fast, single-purpose utilities that load instantly and never get in your way.'
+          eyebrow='Toolbox'
+          id='tools'
+          links={[
+            {
+              label: t(locale, 'cat.utility'),
+              href: toolsCategoryHref('utility'),
+            },
+            {
+              label: t(locale, 'cat.developer'),
+              href: toolsCategoryHref('developer'),
+            },
+            {
+              label: t(locale, 'cat.aiWriting'),
+              href: toolsCategoryHref('ai-writing'),
+            },
+            {
+              label: t(locale, 'cat.image'),
+              href: toolsCategoryHref('image'),
+            },
+          ]}
+          reverse
+          tagline={undefined}
+          title={
+            <SloganEgg
+              slogan={CATEGORY_SLOGAN.tools.primary[locale]}
+              keyword='heavy lifting'
+              egg='lifting'
             />
-          </div>
-        </HeroStage>
+          }
+          tone={2}
+          visual={
+            <SpotlightCarousel
+              demo='tool'
+              slides={toolSlides(homeTools, locale)}
+            />
+          }
+        />
 
         {/* ══════════════════════════════════════════════
-            BROWSE BY CATEGORY
+            GAMES
             ══════════════════════════════════════════════ */}
-        <section
-          className='mx-auto max-w-[1300px] px-8 pb-20 pt-14'
-          id='categories'
-        >
-          <div className='mb-6 flex items-center justify-between'>
-            <h2 className='text-[34px] font-extrabold tracking-[-0.02em]'>
-              {t(locale, 'categories.title')}
-            </h2>
-            <Link
-              className='text-[13px] font-bold uppercase tracking-[0.12em] text-accent transition-colors hover:text-accent-light'
-              href={toolsHref}
-            >
-              {t(locale, 'categories.seeAll')}
-            </Link>
-          </div>
-
-          <div className='grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5'>
-            {categories.map((cat) => {
-              const theme = CATEGORY_THEMES[cat.key];
-              return (
-                <Link
-                  key={cat.key}
-                  className='card-lift group relative block cursor-pointer overflow-hidden rounded-[20px] border border-border bg-white p-4 text-inherit no-underline'
-                  href={cat.href}
-                >
-                  {/* Decorative top accent */}
-                  <div
-                    aria-hidden='true'
-                    className='absolute inset-x-0 top-0 h-1 opacity-60 transition-opacity group-hover:opacity-100'
-                    style={{ background: theme.gradient }}
-                  />
-
-                  {/* Header row */}
-                  <div className='mb-3 flex items-center gap-3'>
-                    <span
-                      className='flex h-9 w-9 items-center justify-center rounded-[10px] text-[13px] font-bold transition-transform duration-300 group-hover:scale-110'
-                      style={{
-                        background: theme.bg,
-                        color: theme.fg,
-                      }}
-                    >
-                      <ToolIcon slug={cat.key} size={18} />
-                    </span>
-                    <span className='flex-1 text-[16px] font-bold text-foreground'>
-                      {cat.label}
-                    </span>
-                    <span className='rounded-full bg-surface px-2.5 py-1 text-[11px] font-semibold text-muted'>
-                      {categoryCounts[cat.key as keyof typeof categoryCounts] ||
-                        cat.count}
-                    </span>
-                  </div>
-
-                  {/* Description */}
-                  <p className='mb-4 text-[13px] leading-relaxed text-foreground/70'>
-                    {cat.desc}
-                  </p>
-
-                  {/* Sample tags */}
-                  <div className='flex flex-wrap gap-1'>
-                    {cat.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className='rounded-[6px] border border-border bg-surface px-2 py-0.5 text-[11px] text-muted transition-colors group-hover:border-border-strong group-hover:text-secondary'
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </section>
-
-        {/* ══════════════════════════════════════════════
-            DEVELOPER TOOLS – FEATURED
-            ══════════════════════════════════════════════ */}
-        {homeDevTools.length > 0 && (
-          <section
-            className='mx-auto max-w-[1300px] px-8 py-20'
-            id='featured-dev-tools'
-          >
-            <div className='mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between'>
-              <div>
-                <div className='mb-2 text-[11px] font-extrabold uppercase tracking-wider text-accent'>
-                  {t(locale, 'section.featured')}
-                </div>
-                <h2 className='text-[34px] font-extrabold tracking-[-0.02em]'>
-                  {t(locale, 'section.devTools')}
-                </h2>
-              </div>
-              <div className='flex items-center gap-3'>
-                <Link
-                  className='text-[13px] font-bold uppercase tracking-[0.12em] text-accent transition-colors hover:text-accent-light'
-                  href={toolsCategoryHref('developer')}
-                >
-                  {t(locale, 'section.allTools')}
-                </Link>
-              </div>
-            </div>
-
-            <div className='grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-3'>
-              {homeDevTools.map((tool) => (
-                <ToolCardV2 key={tool.id} locale={locale} tool={tool} />
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* ══════════════════════════════════════════════
-            WRITING TOOLS – FEATURED
-            ══════════════════════════════════════════════ */}
-        {homeWritingTools.length > 0 && (
-          <section className='mx-auto max-w-[1300px] px-8 pb-20'>
-            <div className='mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between'>
-              <div>
-                <div className='mb-2 text-[11px] font-extrabold uppercase tracking-wider text-accent'>
-                  {t(locale, 'section.featured')}
-                </div>
-                <h2 className='text-[34px] font-extrabold tracking-[-0.02em]'>
-                  {t(locale, 'section.writingTools')}
-                </h2>
-              </div>
-              <div className='flex items-center gap-3'>
-                <Link
-                  className='text-[13px] font-bold uppercase tracking-[0.12em] text-accent transition-colors hover:text-accent-light'
-                  href={toolsCategoryHref('ai-writing')}
-                >
-                  {t(locale, 'section.allTools')}
-                </Link>
-              </div>
-            </div>
-
-            <div className='grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-3'>
-              {homeWritingTools.map((tool) => (
-                <ToolCardV2 key={tool.id} locale={locale} tool={tool} />
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* ══════════════════════════════════════════════
-            GAME CENTER
-            ══════════════════════════════════════════════ */}
-        <section
-          className='border-t border-border py-20'
+        <FeatureBand
+          category='games'
+          cta={{ href: gamesHref, label: 'Enter arcade' }}
+          description="21 hand-built mini-games — chess with a real engine, classic arcade, daily fortune. Open a tab, kill five minutes, close it. That's the whole pitch."
+          eyebrow='Game Center'
           id='games'
-          style={{ background: 'var(--color-surface)' }}
-        >
-          <div className='mx-auto max-w-[1300px] px-8'>
-            <div className='mb-6 flex items-center justify-between'>
-              <h2 className='text-[34px] font-extrabold tracking-[-0.02em]'>
-                {t(locale, 'section.gameCenter')}
-              </h2>
-              <Link
-                className='text-[13px] font-bold uppercase tracking-[0.12em] text-accent transition-colors hover:text-accent-light'
-                href={gamesHref}
-              >
-                {t(locale, 'section.viewAll')}
-              </Link>
-            </div>
-
-            <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4'>
-              {games.slice(0, 8).map((game) => (
-                <HomeGameCard game={game} key={game.id} locale={locale} />
-              ))}
-            </div>
-          </div>
-        </section>
+          links={GAME_GENRES.map((g) => ({
+            label: g,
+            href: gamesGenreHref(g),
+          }))}
+          tagline={undefined}
+          title={
+            <SloganEgg
+              slogan={CATEGORY_SLOGAN.games.primary[locale]}
+              keyword='overworked'
+              egg='overworked'
+            />
+          }
+          tone={3}
+          visual={
+            <SpotlightCarousel
+              demo='game'
+              slides={gameSlides(demoGames, locale)}
+            />
+          }
+        />
 
         {/* ══════════════════════════════════════════════
             TESTS
             ══════════════════════════════════════════════ */}
-        <section className='mx-auto max-w-[1300px] px-8 py-20'>
-          <div className='mb-6 flex items-center justify-between'>
-            <h2 className='text-[34px] font-extrabold tracking-[-0.02em]'>
-              {locale === 'zh' ? '测评' : 'Tests'}
-            </h2>
-            <Link
-              className='text-[13px] font-bold uppercase tracking-[0.12em] text-accent transition-colors hover:text-accent-light'
-              href={testsHref}
-            >
-              {t(locale, 'section.viewAll')}
-            </Link>
-          </div>
-
-          <div className='grid grid-cols-2 gap-4 max-[640px]:grid-cols-1'>
-            {TEST_META.map((tm) => (
-              <Link
-                key={tm.slug}
-                href={testDetailHref(tm.slug)}
-                className='card-lift relative flex items-start gap-4 rounded-[16px] border border-border bg-surface p-6 text-inherit no-underline'
-              >
-                <span
-                  className='flex h-14 w-14 shrink-0 items-center justify-center rounded-[14px] text-white'
-                  style={{ background: tm.accent }}
-                >
-                  <ToolIcon slug={tm.slug} size={26} className='text-white' />
-                </span>
-                <div className='min-w-0'>
-                  <div className='flex items-center gap-2'>
-                    <h3 className='text-[18px] font-bold text-foreground'>
-                      {tm.name}
-                    </h3>
-                    <span
-                      className='rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white'
-                      style={{ background: tm.accent }}
-                    >
-                      {tm.badge}
-                    </span>
-                  </div>
-                  <p className='mt-1 text-[13px] leading-relaxed text-secondary'>
-                    {tm.description}
-                  </p>
-                  <p className='mt-2 text-[12px] font-medium text-muted'>
-                    {tm.questionCount} questions · ~{tm.durationMin} min
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
+        <FeatureBand
+          category='tests'
+          cta={{ href: testsHref, label: 'Explore tests' }}
+          description='Personality, intelligence and temperament quizzes with real question banks and shareable result posters. For reflection and fun — not clinical diagnosis.'
+          eyebrow='Know Yourself'
+          id='tests'
+          links={TEST_META.map((tm) => ({
+            label: tm.name,
+            href: testDetailHref(tm.slug),
+          }))}
+          reverse
+          tagline={undefined}
+          title={
+            <SloganEgg
+              slogan={CATEGORY_SLOGAN.tests.primary[locale]}
+              keyword='pay grade'
+              egg='paygrade'
+            />
+          }
+          tone={4}
+          visual={<SpotlightCarousel demo='test' slides={testSlides(locale)} />}
+        />
 
         {/* ══════════════════════════════════════════════
-            POPULAR TOOLS  (first 3 across all categories)
+            STORIES
             ══════════════════════════════════════════════ */}
-        <section className='mx-auto max-w-[1300px] px-8 py-20'>
-          <div className='mb-6 flex items-end justify-between'>
-            <h2 className='text-[34px] font-extrabold tracking-[-0.02em]'>
-              {t(locale, 'section.popularTools')}
-            </h2>
-            <Link
-              className='text-[13px] font-bold uppercase tracking-[0.12em] text-accent transition-colors hover:text-accent-light'
-              href={toolsHref}
-            >
-              {t(locale, 'section.viewAll')}
-            </Link>
-          </div>
-
-          <div className='grid grid-cols-3 gap-4 max-[760px]:grid-cols-1'>
-            {popularHighlights.map((item) => (
-              <Link
-                key={item.href}
-                className='card-lift flex cursor-pointer flex-col gap-2 rounded-[16px] border border-border bg-surface p-5 text-inherit no-underline'
-                href={item.href}
-              >
-                <div className='text-[11px] font-extrabold uppercase tracking-wider text-accent'>
-                  {item.kicker}
-                </div>
-                <div className='text-[15px] font-bold text-foreground'>
-                  {item.title}
-                </div>
-                <p className='m-0 text-[13px] text-secondary'>
-                  {item.description}
-                </p>
-                <p className='m-0 text-[12px] font-semibold text-muted'>
-                  {item.metrics}
-                </p>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        {/* ══════════════════════════════════════════════
-            DUAL ENGINE CTA BANNER
-            ══════════════════════════════════════════════ */}
-        <section className='mx-auto max-w-[1300px] px-8 pb-20'>
-          <div className='flex flex-wrap items-center justify-between gap-4 rounded-[16px] border border-border bg-surface px-8 py-6'>
-            <div>
-              <div className='mb-1 flex flex-wrap gap-2'>
-                <span className='rounded-full bg-bg px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-muted'>
-                  DEV
-                </span>
-                <span className='rounded-full bg-bg px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-muted'>
-                  GAMES
-                </span>
-                <span className='rounded-full bg-bg px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-muted'>
-                  TESTS
-                </span>
-              </div>
-              <h3 className='mb-1 text-[20px] font-semibold text-foreground'>
-                {t(locale, 'section.dualEngine')}
-              </h3>
-              <p className='m-0 text-[14px] text-muted'>
-                {t(locale, 'section.dualEngineDesc')}
-              </p>
-            </div>
-            <Link className='btn-cta' href={toolsHref}>
-              {t(locale, 'section.browseAll')}
-            </Link>
-          </div>
-        </section>
+        <FeatureBand
+          category='stories'
+          cta={{ href: storiesHref, label: 'More stories' }}
+          description="Essays on AI, growth, SEO and indie development — what's actually working in 2026, written for people shipping real products."
+          eyebrow='Stories'
+          id='stories'
+          links={[
+            { label: 'Research', href: storyTagHref('Research') },
+            { label: 'AI Tools', href: storyTagHref('AI Tools') },
+            { label: 'Growth', href: storyTagHref('Growth') },
+            { label: 'Development', href: storyTagHref('Development') },
+            { label: 'Productivity', href: storyTagHref('Productivity') },
+          ]}
+          tagline={undefined}
+          title={
+            <SloganEgg
+              slogan={CATEGORY_SLOGAN.stories.primary[locale]}
+              keyword='noise'
+              egg='noise'
+            />
+          }
+          tone={0}
+          visual={
+            <SpotlightCarousel
+              compact
+              slides={postSlides(storyBandPosts, locale)}
+            />
+          }
+        />
 
         {/* ══════════════════════════════════════════════
             WISHLIST CTA

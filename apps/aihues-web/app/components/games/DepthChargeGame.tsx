@@ -61,6 +61,8 @@ interface DGame {
   H: number;
   shipX: number;
   shipTarget: number;
+  keyLeft: boolean;
+  keyRight: boolean;
   bombs: Bomb[];
   subs: Sub[];
   particles: Particle[];
@@ -175,6 +177,8 @@ export default function DepthChargeGame({ locale }: { locale: Locale }) {
         H: h,
         shipX: w / 2,
         shipTarget: w / 2,
+        keyLeft: false,
+        keyRight: false,
         bombs: [],
         subs: [],
         particles: [],
@@ -278,6 +282,13 @@ export default function DepthChargeGame({ locale }: { locale: Locale }) {
       }
       if (cdChanged) setSlots(g.cooldowns.slice());
 
+      if (g.keyLeft !== g.keyRight) {
+        const dir = g.keyRight ? 1 : -1;
+        g.shipTarget = Math.min(
+          Math.max(SHIP_W / 2, g.shipTarget + dir * g.W * 0.014 * dt),
+          g.W - SHIP_W / 2
+        );
+      }
       g.shipX += (g.shipTarget - g.shipX) * (1 - Math.pow(1 - SHIP_SMOOTH, dt));
 
       for (let i = g.bombs.length - 1; i >= 0; i--) {
@@ -525,15 +536,22 @@ export default function DepthChargeGame({ locale }: { locale: Locale }) {
         dropBomb();
       } else if (e.code === 'ArrowLeft') {
         e.preventDefault();
-        steer(g.shipTarget - g.W * 0.08);
+        g.keyLeft = true;
       } else if (e.code === 'ArrowRight') {
         e.preventDefault();
-        steer(g.shipTarget + g.W * 0.08);
+        g.keyRight = true;
       }
+    };
+    const onKeyUp = (e: KeyboardEvent) => {
+      const g = gRef.current;
+      if (!g) return;
+      if (e.code === 'ArrowLeft') g.keyLeft = false;
+      else if (e.code === 'ArrowRight') g.keyRight = false;
     };
     canvas.addEventListener('pointerdown', onPointerDown);
     canvas.addEventListener('pointermove', onPointerMove);
     window.addEventListener('keydown', onKey);
+    window.addEventListener('keyup', onKeyUp);
     rafRef.current = requestAnimationFrame(frame);
 
     return () => {
@@ -542,6 +560,7 @@ export default function DepthChargeGame({ locale }: { locale: Locale }) {
       canvas.removeEventListener('pointerdown', onPointerDown);
       canvas.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('keydown', onKey);
+      window.removeEventListener('keyup', onKeyUp);
     };
   }, []);
 

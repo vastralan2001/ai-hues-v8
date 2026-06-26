@@ -17,10 +17,10 @@ const DIFFS: Record<
   DiffKey,
   { gap: number; speed: number; gravity: number; jump: number; lives: number }
 > = {
-  easy: { gap: 260, speed: 2.2, gravity: 0.3, jump: -6.3, lives: 5 },
-  normal: { gap: 240, speed: 2.6, gravity: 0.34, jump: -6.7, lives: 4 },
-  hard: { gap: 220, speed: 3.0, gravity: 0.38, jump: -7.1, lives: 3 },
-  insane: { gap: 200, speed: 3.4, gravity: 0.42, jump: -7.5, lives: 1 },
+  easy: { gap: 280, speed: 1.8, gravity: 0.26, jump: -5.9, lives: 5 },
+  normal: { gap: 248, speed: 2.3, gravity: 0.32, jump: -6.5, lives: 4 },
+  hard: { gap: 216, speed: 2.9, gravity: 0.37, jump: -7.1, lives: 3 },
+  insane: { gap: 196, speed: 3.6, gravity: 0.42, jump: -7.6, lives: 1 },
 };
 const DIFF_ORDER: DiffKey[] = ['easy', 'normal', 'hard', 'insane'];
 const PIPE_W = 68;
@@ -150,7 +150,7 @@ export default function FlappyGame({ locale }: { locale: Locale }) {
       gRef.current = {
         W: w,
         H: h,
-        bird: { x: w * 0.28, y: h / 2, vy: 0, r: Math.max(12, w * 0.022) },
+        bird: { x: w * 0.28, y: h / 2, vy: 0, r: Math.max(9, w * 0.015) },
         pipes: [],
         stars: makeStars(w, h),
         particles: [],

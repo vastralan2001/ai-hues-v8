@@ -48,6 +48,8 @@ export interface TestConfig {
   score: (answers: number[]) => TestResult;
   /** Tweaks result presentation. */
   resultStyle: 'mbti' | 'sbti';
+  /** Overrides the breakdown heading on the result screen / poster. */
+  breakdownLabel?: string;
 }
 
 export interface TestMeta {
@@ -59,4 +61,7 @@ export interface TestMeta {
   durationMin: number;
   questionCount: number;
   badge: string;
+  /** Per-test call-to-action copy (like the game cards). */
+  cta: string;
+  ctaZh: string;
 }

@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kimi K2 Explained: Open Agentic Intelligence at Trillion Scale | AIHues</title>
+    <meta
+      name="description"
+      content="A plain-English walkthrough of Kimi K2: a 1-trillion-parameter open MoE model with 32B active params, the MuonClip optimizer, and agentic RL. What it is, how it trained, how it benchmarks."
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --bg: #faf9f6;
+        --surface: #ffffff;
+        --surface-hover: #f5f0e8;
+        --border: #e8e2d9;
+        --border-hover: #d4c8b8;
+        --text: #1c1917;
+        --text-secondary: #78716c;
+        --text-muted: #a8a29e;
+        --accent: #b45309;
+        --accent-light: #d97706;
+        --accent-gradient: linear-gradient(135deg, #b45309, #d97706);
+        --green: #059669;
+        --blue: #2563eb;
+        --orange: #ea580c;
+        --radius: 14px;
+        --radius-sm: 10px;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.04);
+        --shadow-lg: 0 8px 32px rgba(180, 83, 9, 0.18);
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      .article {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 80px 28px 40px;
+      }
+      .article-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+      .article-tag {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+        background: rgba(180, 83, 9, 0.08);
+        color: var(--accent);
+        margin-bottom: 16px;
+      }
+      .article h1 {
+        font-size: 32px;
+        font-weight: 800;
+        line-height: 1.15;
+        letter-spacing: -1px;
+        margin-bottom: 12px;
+      }
+      .article-header p {
+        color: #3d3d3d;
+        font-size: 15px;
+      }
+      .article-meta {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-top: 16px;
+      }
+      .article h2 {
+        font-size: 28px;
+        font-weight: 700;
+        line-height: 1.2;
+        letter-spacing: -0.5px;
+        margin: 48px 0 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #e5e5e5;
+        color: #1c1917;
+      }
+      .article h3 {
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 1.3;
+        letter-spacing: -0.3px;
+        margin: 32px 0 12px;
+        color: #1c1917;
+      }
+      .article p {
+        margin-bottom: 16px;
+        color: #3d3d3d;
+        font-size: 16px;
+        line-height: 1.75;
+      }
+      .article ul,
+      .article ol {
+        margin: 0 0 16px 24px;
+        color: #3d3d3d;
+        font-size: 15px;
+      }
+      .article li {
+        margin-bottom: 8px;
+        line-height: 1.75;
+      }
+      .article strong {
+        color: #1c1917;
+        font-weight: 600;
+      }
+      .cta-box {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 28px;
+        margin: 40px 0;
+        text-align: center;
+      }
+      .cta-box h3 {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+      .cta-box p {
+        color: var(--text-secondary);
+        margin-bottom: 16px;
+      }
+      .cta-btn {
+        display: inline-block;
+        padding: 12px 24px;
+        border-radius: var(--radius-sm);
+        background: var(--accent-gradient);
+        color: #fff;
+        font-weight: 600;
+        font-size: 14px;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      .cta-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-lg);
+      }
+      .quote-box {
+        border-left: 3px solid var(--accent);
+        padding-left: 20px;
+        margin: 24px 0;
+        font-style: italic;
+        color: var(--text-secondary);
+      }
+      .footer {
+        text-align: center;
+        padding: 40px 28px;
+        font-size: 13px;
+        color: var(--text-muted);
+        border-top: 1px solid var(--border);
+      }
+      /* paper-explainer specific blocks */
+      .paper-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin: 24px 0 8px;
+      }
+      .paper-links a {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 11px 18px;
+        border-radius: var(--radius-sm);
+        font-weight: 600;
+        font-size: 14px;
+        border: 1px solid var(--border);
+        transition:
+          transform 0.18s,
+          box-shadow 0.18s,
+          border-color 0.18s;
+      }
+      .paper-links a.primary {
+        background: var(--accent-gradient);
+        color: #fff;
+        border-color: transparent;
+      }
+      .paper-links a.secondary {
+        background: var(--surface);
+        color: var(--accent);
+      }
+      .paper-links a:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow);
+        border-color: var(--border-hover);
+      }
+      .paper-cite {
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-top: 4px;
+      }
+      .tldr {
+        background: linear-gradient(
+          135deg,
+          rgba(180, 83, 9, 0.06),
+          rgba(217, 119, 6, 0.04)
+        );
+        border: 1px solid var(--border);
+        border-left: 4px solid var(--accent);
+        border-radius: var(--radius);
+        padding: 24px 26px;
+        margin: 8px 0 32px;
+      }
+      .tldr h2 {
+        font-size: 14px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--accent);
+        border: none;
+        padding: 0;
+        margin: 0 0 12px;
+      }
+      .tldr p {
+        margin-bottom: 10px;
+        font-size: 16px;
+      }
+      .tldr p:last-child {
+        margin-bottom: 0;
+      }
+      .spec-table,
+      .bench-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0 24px;
+        font-size: 14px;
+      }
+      .spec-table th,
+      .spec-table td,
+      .bench-table th,
+      .bench-table td {
+        text-align: left;
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--border);
+      }
+      .spec-table th,
+      .bench-table th {
+        background: var(--surface-hover);
+        font-weight: 700;
+        color: #1c1917;
+        font-size: 13px;
+      }
+      .bench-table td:first-child {
+        font-weight: 600;
+        color: #1c1917;
+      }
+      .bench-table .k2 {
+        color: var(--accent);
+        font-weight: 700;
+      }
+      .bench-table tr:last-child td {
+        border-bottom: none;
+      }
+      .note {
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-top: -8px;
+        margin-bottom: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <article class="article">
+      <div class="article-header">
+          <span class="article-tag">Paper Deep Read</span>
+          <h1>Kimi K2 Explained: Open Agentic Intelligence at Trillion Scale</h1>
+          <p>
+            Moonshot AI shipped a trillion-parameter open model that does not
+            just answer questions. It uses tools, writes code, and finishes
+            multi-step jobs. Here is how it works, in plain terms.
+          </p>
+          <div class="article-meta">
+            <span>2026-06-25</span><span>8 min read</span><span>AIHues Team</span>
+          </div>
+        </div>
+      <div class="article-content">
+        <p class="source">
+          <strong>Source:</strong>
+          <a href="https://arxiv.org/abs/2507.20534" target="_blank" rel="noopener">Read the paper ↗</a>
+          ·
+          <a href="https://arxiv.org/pdf/2507.20534" target="_blank" rel="noopener">Download PDF ↓</a>
+        </p>
+
+        <div class="tldr">
+                  <h2>TL;DR</h2>
+                  <p>
+                    Kimi K2 is a Mixture-of-Experts language model with
+                    <strong>1 trillion total parameters</strong> but only
+                    <strong>32 billion active</strong> on any given token. That ratio is
+                    the whole trick: frontier capacity, mid-size inference cost.
+                  </p>
+                  <p>
+                    It was pre-trained on <strong>15.5 trillion tokens</strong> with a
+                    new optimizer, <strong>MuonClip</strong>, that ran the entire
+                    schedule with zero loss spikes. The team then taught it to act
+                    through large-scale agentic data and reinforcement learning.
+                  </p>
+                  <p>
+                    The release is a <strong>non-thinking</strong> model, meaning it
+                    answers directly rather than emitting long visible reasoning. It
+                    still posts state-of-the-art open results on coding and agentic
+                    benchmarks, including roughly <strong>65.8% on SWE-bench
+                    Verified</strong>.
+                  </p>
+                </div>
+
+                <h2>Why it matters</h2>
+                <p>
+                  Most of the loudest model releases of the past two years were closed.
+                  You could call the API, but you could not see the weights, fine-tune
+                  freely, or run the thing on your own hardware. Kimi K2 lands on the
+                  other side of that line: open weights, a published recipe, and a paper
+                  that walks through the parts that usually stay secret.
+                </p>
+                <p>
+                  The more interesting word in the title is <em>agentic</em>. A chat
+                  model predicts the next sentence. An agentic model is trained to take
+                  actions, read what came back, and decide what to do next. That loop is
+                  what powers a coding assistant that edits a repo, runs the tests, and
+                  fixes its own failures. Kimi K2 was built for that loop from the start,
+                  not bolted on afterward.
+                </p>
+                <p>
+                  So the contribution is twofold. There is the artifact, a capable open
+                  model you can actually download. And there is the method, a training
+                  stack stable enough to push a trillion parameters through 15.5 trillion
+                  tokens without the usual mid-run blowups. The second part is arguably
+                  more durable, because anyone can reuse it.
+                </p>
+
+                <h2>The architecture: a sparse trillion</h2>
+                <p>
+                  A dense model lights up every parameter for every token. That gets
+                  expensive fast. A Mixture-of-Experts model splits the
+                  feed-forward layers into many small <em>experts</em> and routes each
+                  token to just a few of them. The model holds a huge amount of
+                  knowledge, yet only a slice fires at a time.
+                </p>
+                <p>
+                  Kimi K2 takes that idea to a sharp ratio. The full network is a
+                  trillion parameters. For any single token, a router picks 8 experts out
+                  of 384, adds one shared expert that always runs, and activates about 32
+                  billion parameters. You pay roughly the inference bill of a 32B model
+                  while reaching into a 1T knowledge store.
+                </p>
+                <table class="spec-table">
+                  <tr>
+                    <th>Component</th>
+                    <th>Value</th>
+                  </tr>
+                  <tr>
+                    <td>Total parameters</td>
+                    <td>1 trillion</td>
+                  </tr>
+                  <tr>
+                    <td>Activated parameters per token</td>
+                    <td>32 billion</td>
+                  </tr>
+                  <tr>
+                    <td>Experts (selected per token)</td>
+                    <td>384 (8) + 1 shared</td>
+                  </tr>
+                  <tr>
+                    <td>Attention</td>
+                    <td>Multi-head Latent Attention (MLA)</td>
+                  </tr>
+                  <tr>
+                    <td>Vocabulary</td>
+                    <td>160K</td>
+                  </tr>
+                  <tr>
+                    <td>Context length</td>
+                    <td>128K tokens</td>
+                  </tr>
+                </table>
+                <p class="note">
+                  High sparsity is a deliberate bet. More, smaller experts raise capacity
+                  without raising per-token compute, as long as the router stays
+                  balanced and training stays stable.
+                </p>
+
+                <h3>The catch with going this sparse</h3>
+                <p>
+                  Pushing the expert count up is not free. Routing can collapse onto a
+                  few favorite experts, and very large attention layers tend to produce
+                  runaway logits that destabilize training. The architecture only pays
+                  off if the optimizer can hold a steady run for trillions of tokens.
+                  That is the problem the next section solves.
+                </p>
+
+                <h2>How it was trained: MuonClip</h2>
+                <p>
+                  Large training runs fail in a boring, expensive way. Attention scores
+                  drift upward, a few logits explode, the loss spikes, and you roll back
+                  to a checkpoint and lose days. The bigger the model, the more often it
+                  happens.
+                </p>
+                <p>
+                  Moonshot's answer is <strong>MuonClip</strong>. Start with the Muon
+                  optimizer, which is token-efficient but known to let attention logits
+                  grow unchecked at scale. Then add <strong>QK-Clip</strong>, a
+                  correction that rescales the query and key projection weights right at
+                  the source whenever a head's attention logit crosses a threshold. The
+                  cap is applied per head, so it only touches the heads that misbehave
+                  and leaves the rest alone.
+                </p>
+                <div class="quote-box">
+                  MuonClip kept the full 15.5-trillion-token pre-training run free of
+                  loss spikes. No babysitting, no rollbacks, no restarts.
+                </div>
+                <p>
+                  That stability is the quiet headline of the paper. A run that never
+                  spikes is a run you can plan around, and it means the sparse trillion-
+                  parameter design is actually trainable rather than just trainable on
+                  paper.
+                </p>
+
+                <h3>Teaching it to act</h3>
+                <p>
+                  Pre-training gives a model knowledge. It does not teach the model to
+                  use a terminal. To get there, the team built a post-training stage in
+                  two parts.
+                </p>
+                <p>
+                  First, large-scale <strong>agentic data synthesis</strong>. They
+                  generated tool-use trajectories across many simulated and real
+                  environments, so the model saw thousands of examples of calling a tool,
+                  reading the result, and choosing the next step. Second, a
+                  <strong>general reinforcement learning</strong> stage that blends two
+                  reward signals: verifiable rewards for tasks with a checkable answer,
+                  such as code that compiles and passes, and a self-critique rubric for
+                  open-ended tasks where there is no single right answer.
+                </p>
+                <p>
+                  The verifiable-reward half is what sharpens the coding and math skills.
+                  The rubric half keeps the model usable on the fuzzy requests that fill
+                  most real conversations.
+                </p>
+
+                <h2>How it benchmarks</h2>
+                <p>
+                  The headline numbers cluster around agentic coding and reasoning, which
+                  is where the training was aimed. The figures below are single-attempt
+                  (pass@1 style) scores reported for the Kimi K2 release.
+                </p>
+                <table class="bench-table">
+                  <tr>
+                    <th>Benchmark</th>
+                    <th>What it measures</th>
+                    <th>Kimi K2</th>
+                  </tr>
+                  <tr>
+                    <td>SWE-bench Verified</td>
+                    <td>Real GitHub issue fixes</td>
+                    <td class="k2">~65.8%</td>
+                  </tr>
+                  <tr>
+                    <td>LiveCodeBench v6</td>
+                    <td>Fresh competitive coding</td>
+                    <td class="k2">~53.7%</td>
+                  </tr>
+                  <tr>
+                    <td>AIME 2025</td>
+                    <td>Hard competition math</td>
+                    <td class="k2">~49.5%</td>
+                  </tr>
+                  <tr>
+                    <td>GPQA-Diamond</td>
+                    <td>Graduate-level science</td>
+                    <td class="k2">~75.1%</td>
+                  </tr>
+                  <tr>
+                    <td>Tau2-bench</td>
+                    <td>Multi-turn tool use</td>
+                    <td class="k2">~66.1%</td>
+                  </tr>
+                  <tr>
+                    <td>MMLU</td>
+                    <td>Broad knowledge</td>
+                    <td class="k2">~89.5%</td>
+                  </tr>
+                </table>
+                <p class="note">
+                  Read these as a snapshot, not a leaderboard. Benchmark harnesses,
+                  prompt formats, and scoring change often. Treat exact percentages as
+                  approximate and re-check the paper for the conditions behind each
+                  number.
+                </p>
+                <p>
+                  The pattern worth noticing: among open, non-thinking models, the coding
+                  and agentic scores are the standouts. SWE-bench Verified is the one to
+                  watch, because it asks the model to resolve actual reported bugs in
+                  real repositories, which is far closer to a developer's day than a
+                  puzzle dataset.
+                </p>
+
+                <h2>What it does not do</h2>
+                <p>
+                  The release is a non-thinking model. It does not produce long chains of
+                  visible reasoning before answering, which is the technique many
+                  competing systems lean on for the hardest math and logic problems. For
+                  those narrow, deeply sequential tasks, a dedicated reasoning model can
+                  still pull ahead.
+                </p>
+                <p>
+                  Agentic runs also have a cost profile. When a task needs many tool
+                  calls, token usage climbs, and the model can occasionally loop or take
+                  a longer path than a human would. None of this is a flaw unique to
+                  K2. It is the current shape of agentic systems, and the paper is candid
+                  about it rather than papering over it.
+                </p>
+
+                <h2>Why it matters for builders</h2>
+                <p>
+                  If you are building on top of models, Kimi K2 is worth a serious look
+                  for tool-heavy and code-heavy workloads, where its training was
+                  focused and its open weights let you fine-tune without begging a
+                  vendor for access. The 32B-active design also means the inference
+                  economics are friendlier than the trillion-parameter label suggests,
+                  which matters the moment you move from a demo to a bill. The deeper
+                  lesson sits in the method: MuonClip shows that stability at scale is an
+                  engineering choice you can make on purpose, and that is the part of
+                  this paper the rest of the field will quietly borrow.
+                </p>
+      </div>
+    </article>
+    <footer class="footer">© 2026 AIHues · Built with Kimi</footer>
+  </body>
+</html>

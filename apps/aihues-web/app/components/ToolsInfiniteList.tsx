@@ -2,28 +2,30 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import {
-  CategoryPills,
-  EmptyState,
-  getToolPricing,
-  ToolCardV2,
-} from '@/components/CatalogCards';
+import { EmptyState, ToolCardV2 } from '@/components/CatalogCards';
+import { FilterPills } from '@/components/FilterPills';
 import {
   toolCategories,
   type CatalogTool,
-  type PriceTagKey,
   type ToolCategoryKey,
 } from '@/lib/catalog-types';
-import { toolDetailHref } from '@/lib/routes';
-import { event, GA_EVENTS } from '@/lib/gtag';
-import { ToolIcon } from './ToolIcon';
+import { toolsCategoryHref } from '@/lib/routes';
 
 const PAGE_SIZE = 20;
+
+const CAT_LABEL: Record<ToolCategoryKey, string> = {
+  all: 'All',
+  developer: 'Dev',
+  utility: 'Utility',
+  'ai-writing': 'AI Writing',
+  image: 'Image',
+};
 
 const CATEGORY_META: Record<string, { icon: string; label: string }> = {
   developer: { icon: '', label: 'Developer Tools' },
   utility: { icon: '', label: 'Writing Tools' },
   'ai-writing': { icon: '', label: 'AI Text Tools' },
+  image: { icon: '', label: 'Image Tools' },
 };
 
 interface ListToolsResponse {
@@ -39,13 +41,6 @@ interface ToolsInfiniteListProps {
   q?: string;
 }
 
-const PRICE_OPTIONS: { key: PriceTagKey | 'all'; label: string }[] = [
-  { key: 'all', label: 'All' },
-  { key: 'free', label: 'Free' },
-  { key: 'freemium', label: 'Freemium' },
-  { key: 'paid', label: 'Paid' },
-];
-
 export function ToolsInfiniteList({
   activeCategory,
   categoryCounts,
@@ -57,7 +52,6 @@ export function ToolsInfiniteList({
   const [nextPageToken, setNextPageToken] = useState(initialNextPageToken);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [activePrice, setActivePrice] = useState<PriceTagKey | 'all'>('all');
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
   const loadNextPage = useCallback(async () => {
@@ -129,17 +123,9 @@ export function ToolsInfiniteList({
     return () => observer.disconnect();
   }, [loadNextPage, nextPageToken]);
 
-  const visibleTools = useMemo(() => {
-    if (activePrice === 'all') return tools;
-    return tools.filter((tool) => {
-      const apiTag = tool.priceTag;
-      const price =
-        apiTag !== 'unspecified' ? apiTag : getToolPricing(tool.slug).price;
-      return price === activePrice;
-    });
-  }, [tools, activePrice]);
+  const visibleTools = tools;
 
-  const isFiltered = !!(q || activeCategory !== 'all' || activePrice !== 'all');
+  const isFiltered = !!(q || activeCategory !== 'all');
   const grouped = useMemo(
     () =>
       toolCategories
@@ -164,6 +150,7 @@ export function ToolsInfiniteList({
         'ai-writing': initialTools.filter(
           (tool) => tool.category === 'ai-writing'
         ).length,
+        image: initialTools.filter((tool) => tool.category === 'image').length,
       },
     [categoryCounts, initialTools]
   );
@@ -174,34 +161,17 @@ export function ToolsInfiniteList({
 
   return (
     <>
-      <CategoryPills
-        active={activeCategory}
-        counts={resolvedCategoryCounts}
-        q={q}
+      <FilterPills
+        ariaLabel='Tool categories'
+        className='mb-6'
+        activeKey={activeCategory}
+        items={toolCategories.map((c) => ({
+          key: c.key,
+          label: CAT_LABEL[c.key] ?? c.key,
+          count: resolvedCategoryCounts[c.key],
+          href: toolsCategoryHref(c.key, q),
+        }))}
       />
-
-      {/* Price filter pills */}
-      <div className='flex flex-wrap items-center gap-2 pb-4 pt-2'>
-        {PRICE_OPTIONS.map((opt) => (
-          <button
-            key={opt.key}
-            onClick={() => {
-              if (activePrice !== opt.key) {
-                event(GA_EVENTS.priceFilter, { price: opt.key });
-              }
-              setActivePrice(opt.key);
-            }}
-            className={`rounded-full border px-3 py-1 text-xs font-semibold transition-colors ${
-              activePrice === opt.key
-                ? 'border-accent bg-accent text-white'
-                : 'border-border bg-surface text-secondary hover:border-accent-light hover:text-foreground'
-            }`}
-            type='button'
-          >
-            {opt.label}
-          </button>
-        ))}
-      </div>
 
       {isFiltered ? (
         <>
@@ -209,9 +179,6 @@ export function ToolsInfiniteList({
             <span>
               {visibleTools.length} tool{visibleTools.length !== 1 ? 's' : ''}
               {q ? ` matching "${q}"` : ''}
-              {activePrice !== 'all'
-                ? ` · ${PRICE_OPTIONS.find((o) => o.key === activePrice)?.label ?? activePrice}`
-                : ''}
             </span>
           </div>
           {visibleTools.length > 0 ? (
@@ -220,7 +187,7 @@ export function ToolsInfiniteList({
             </div>
           ) : (
             <EmptyState
-              detail='Try another search term, category, or price filter.'
+              detail='Try another search term or category.'
               title='No matching tools'
             />
           )}
@@ -236,26 +203,7 @@ export function ToolsInfiniteList({
                 {groupTools.length} tools
               </span>
             </div>
-            {key === 'ai-writing' ? (
-              <div className='ai-text-grid'>
-                {groupTools.map((tool) => (
-                  <a
-                    className='ai-text-link'
-                    href={toolDetailHref(tool.slug)}
-                    key={tool.id}
-                  >
-                    <span className='inline-flex align-middle mr-1.5'>
-                      <ToolIcon slug={tool.slug} size={16} />
-                    </span>
-                    {tool.name}
-                  </a>
-                ))}
-              </div>
-            ) : (
-              <div className='catalog-grid'>
-                {groupTools.map(renderToolCard)}
-              </div>
-            )}
+            <div className='catalog-grid'>{groupTools.map(renderToolCard)}</div>
           </div>
         ))
       )}

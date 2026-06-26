@@ -43,28 +43,26 @@ export default async function ToolsPage({
   });
 
   const categoryCounts = getToolCategoryCounts();
-  const catCount = Object.keys(categoryCounts).filter(
-    (k) => k !== 'all'
-  ).length;
   const totalLabel =
-    'Tools covering development, writing, growth, and productivity';
+    'Tools covering development, writing, growth, and productivity.';
 
   return (
     <PageShell variant='tools'>
       <PageMasthead
-        eyebrow='Tool Library'
-        title='All Tools'
+        breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Tools' }]}
+        category='tools'
+        title='Tools'
         subtitle={totalLabel}
-        stats={[
-          { num: `${categoryCounts.all}`, label: 'Tools' },
-          { num: `${catCount}`, label: 'Categories' },
-          { num: 'Free', label: 'Forever' },
+        features={[
+          'Instant results',
+          'Runs in your browser',
+          'Copy-paste ready',
         ]}
       >
         <ToolSearchForm category={category} q={q} />
       </PageMasthead>
 
-      <section className='section section--compact'>
+      <section className='mx-auto w-full max-w-[1760px] px-[clamp(1.5rem,5vw,7rem)] pt-8'>
         <ToolsInfiniteList
           activeCategory={category}
           categoryCounts={categoryCounts}

@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
-import { relatedBySlug, relatedByQuery } from '@/lib/search/semantic';
+import { relatedItems } from '@/lib/catalog-api';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -20,12 +20,12 @@ export async function GET(req: NextRequest) {
   const k =
     Number.isFinite(kRaw) && kRaw > 0 ? Math.min(12, Math.floor(kRaw)) : 6;
 
+  if (!slug && !(q && q.length >= 2)) {
+    return NextResponse.json({ items: [] });
+  }
+
   try {
-    const items = slug
-      ? await relatedBySlug(slug, type, k)
-      : q && q.length >= 2
-        ? await relatedByQuery(q, type, k)
-        : [];
+    const items = await relatedItems({ type, slug, q, k });
     return NextResponse.json({ items });
   } catch (err) {
     return NextResponse.json(

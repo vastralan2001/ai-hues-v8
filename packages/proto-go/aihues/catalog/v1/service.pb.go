@@ -21,6 +21,384 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// 语义命中
+type SearchHit struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Slug          string                 `protobuf:"bytes,1,opt,name=slug,proto3" json:"slug,omitempty"`
+	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	Subtitle      string                 `protobuf:"bytes,3,opt,name=subtitle,proto3" json:"subtitle,omitempty"`
+	Href          string                 `protobuf:"bytes,4,opt,name=href,proto3" json:"href,omitempty"`
+	Type          string                 `protobuf:"bytes,5,opt,name=type,proto3" json:"type,omitempty"` // tool | game | test
+	Score         float32                `protobuf:"fixed32,6,opt,name=score,proto3" json:"score,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SearchHit) Reset() {
+	*x = SearchHit{}
+	mi := &file_aihues_catalog_v1_service_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SearchHit) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SearchHit) ProtoMessage() {}
+
+func (x *SearchHit) ProtoReflect() protoreflect.Message {
+	mi := &file_aihues_catalog_v1_service_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SearchHit.ProtoReflect.Descriptor instead.
+func (*SearchHit) Descriptor() ([]byte, []int) {
+	return file_aihues_catalog_v1_service_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *SearchHit) GetSlug() string {
+	if x != nil {
+		return x.Slug
+	}
+	return ""
+}
+
+func (x *SearchHit) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *SearchHit) GetSubtitle() string {
+	if x != nil {
+		return x.Subtitle
+	}
+	return ""
+}
+
+func (x *SearchHit) GetHref() string {
+	if x != nil {
+		return x.Href
+	}
+	return ""
+}
+
+func (x *SearchHit) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
+}
+
+func (x *SearchHit) GetScore() float32 {
+	if x != nil {
+		return x.Score
+	}
+	return 0
+}
+
+type SearchCatalogRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Q             string                 `protobuf:"bytes,1,opt,name=q,proto3" json:"q,omitempty"`  // 查询词
+	K             int32                  `protobuf:"varint,2,opt,name=k,proto3" json:"k,omitempty"` // 取前 k 条，默认 8
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SearchCatalogRequest) Reset() {
+	*x = SearchCatalogRequest{}
+	mi := &file_aihues_catalog_v1_service_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SearchCatalogRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SearchCatalogRequest) ProtoMessage() {}
+
+func (x *SearchCatalogRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_aihues_catalog_v1_service_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SearchCatalogRequest.ProtoReflect.Descriptor instead.
+func (*SearchCatalogRequest) Descriptor() ([]byte, []int) {
+	return file_aihues_catalog_v1_service_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *SearchCatalogRequest) GetQ() string {
+	if x != nil {
+		return x.Q
+	}
+	return ""
+}
+
+func (x *SearchCatalogRequest) GetK() int32 {
+	if x != nil {
+		return x.K
+	}
+	return 0
+}
+
+type SearchCatalogResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Hits          []*SearchHit           `protobuf:"bytes,1,rep,name=hits,proto3" json:"hits,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SearchCatalogResponse) Reset() {
+	*x = SearchCatalogResponse{}
+	mi := &file_aihues_catalog_v1_service_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SearchCatalogResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SearchCatalogResponse) ProtoMessage() {}
+
+func (x *SearchCatalogResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_aihues_catalog_v1_service_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SearchCatalogResponse.ProtoReflect.Descriptor instead.
+func (*SearchCatalogResponse) Descriptor() ([]byte, []int) {
+	return file_aihues_catalog_v1_service_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *SearchCatalogResponse) GetHits() []*SearchHit {
+	if x != nil {
+		return x.Hits
+	}
+	return nil
+}
+
+// 相关条目
+type RelatedItem struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Slug          string                 `protobuf:"bytes,1,opt,name=slug,proto3" json:"slug,omitempty"`
+	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	Desc          string                 `protobuf:"bytes,3,opt,name=desc,proto3" json:"desc,omitempty"`
+	Subtitle      string                 `protobuf:"bytes,4,opt,name=subtitle,proto3" json:"subtitle,omitempty"`
+	Href          string                 `protobuf:"bytes,5,opt,name=href,proto3" json:"href,omitempty"`
+	Type          string                 `protobuf:"bytes,6,opt,name=type,proto3" json:"type,omitempty"` // tool | game | test
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RelatedItem) Reset() {
+	*x = RelatedItem{}
+	mi := &file_aihues_catalog_v1_service_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RelatedItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RelatedItem) ProtoMessage() {}
+
+func (x *RelatedItem) ProtoReflect() protoreflect.Message {
+	mi := &file_aihues_catalog_v1_service_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RelatedItem.ProtoReflect.Descriptor instead.
+func (*RelatedItem) Descriptor() ([]byte, []int) {
+	return file_aihues_catalog_v1_service_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *RelatedItem) GetSlug() string {
+	if x != nil {
+		return x.Slug
+	}
+	return ""
+}
+
+func (x *RelatedItem) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *RelatedItem) GetDesc() string {
+	if x != nil {
+		return x.Desc
+	}
+	return ""
+}
+
+func (x *RelatedItem) GetSubtitle() string {
+	if x != nil {
+		return x.Subtitle
+	}
+	return ""
+}
+
+func (x *RelatedItem) GetHref() string {
+	if x != nil {
+		return x.Href
+	}
+	return ""
+}
+
+func (x *RelatedItem) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
+}
+
+type RelatedItemsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Type          string                 `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"` // tool | game | test
+	Slug          string                 `protobuf:"bytes,2,opt,name=slug,proto3" json:"slug,omitempty"` // 按条目 slug 找相邻（与 q 二选一）
+	Q             string                 `protobuf:"bytes,3,opt,name=q,proto3" json:"q,omitempty"`       // 按自由文本找相邻
+	K             int32                  `protobuf:"varint,4,opt,name=k,proto3" json:"k,omitempty"`      // 取前 k 条，默认 6
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RelatedItemsRequest) Reset() {
+	*x = RelatedItemsRequest{}
+	mi := &file_aihues_catalog_v1_service_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RelatedItemsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RelatedItemsRequest) ProtoMessage() {}
+
+func (x *RelatedItemsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_aihues_catalog_v1_service_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RelatedItemsRequest.ProtoReflect.Descriptor instead.
+func (*RelatedItemsRequest) Descriptor() ([]byte, []int) {
+	return file_aihues_catalog_v1_service_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *RelatedItemsRequest) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
+}
+
+func (x *RelatedItemsRequest) GetSlug() string {
+	if x != nil {
+		return x.Slug
+	}
+	return ""
+}
+
+func (x *RelatedItemsRequest) GetQ() string {
+	if x != nil {
+		return x.Q
+	}
+	return ""
+}
+
+func (x *RelatedItemsRequest) GetK() int32 {
+	if x != nil {
+		return x.K
+	}
+	return 0
+}
+
+type RelatedItemsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Items         []*RelatedItem         `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RelatedItemsResponse) Reset() {
+	*x = RelatedItemsResponse{}
+	mi := &file_aihues_catalog_v1_service_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RelatedItemsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RelatedItemsResponse) ProtoMessage() {}
+
+func (x *RelatedItemsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_aihues_catalog_v1_service_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RelatedItemsResponse.ProtoReflect.Descriptor instead.
+func (*RelatedItemsResponse) Descriptor() ([]byte, []int) {
+	return file_aihues_catalog_v1_service_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *RelatedItemsResponse) GetItems() []*RelatedItem {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
 type ListToolsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	Q     string                 `protobuf:"bytes,1,opt,name=q,proto3" json:"q,omitempty"` // optional keyword（匹配 name/description）
@@ -36,7 +414,7 @@ type ListToolsRequest struct {
 
 func (x *ListToolsRequest) Reset() {
 	*x = ListToolsRequest{}
-	mi := &file_aihues_catalog_v1_service_proto_msgTypes[0]
+	mi := &file_aihues_catalog_v1_service_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -48,7 +426,7 @@ func (x *ListToolsRequest) String() string {
 func (*ListToolsRequest) ProtoMessage() {}
 
 func (x *ListToolsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_aihues_catalog_v1_service_proto_msgTypes[0]
+	mi := &file_aihues_catalog_v1_service_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -61,7 +439,7 @@ func (x *ListToolsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListToolsRequest.ProtoReflect.Descriptor instead.
 func (*ListToolsRequest) Descriptor() ([]byte, []int) {
-	return file_aihues_catalog_v1_service_proto_rawDescGZIP(), []int{0}
+	return file_aihues_catalog_v1_service_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *ListToolsRequest) GetQ() string {
@@ -102,7 +480,7 @@ type ListToolsResponse struct {
 
 func (x *ListToolsResponse) Reset() {
 	*x = ListToolsResponse{}
-	mi := &file_aihues_catalog_v1_service_proto_msgTypes[1]
+	mi := &file_aihues_catalog_v1_service_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -114,7 +492,7 @@ func (x *ListToolsResponse) String() string {
 func (*ListToolsResponse) ProtoMessage() {}
 
 func (x *ListToolsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_aihues_catalog_v1_service_proto_msgTypes[1]
+	mi := &file_aihues_catalog_v1_service_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -127,7 +505,7 @@ func (x *ListToolsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListToolsResponse.ProtoReflect.Descriptor instead.
 func (*ListToolsResponse) Descriptor() ([]byte, []int) {
-	return file_aihues_catalog_v1_service_proto_rawDescGZIP(), []int{1}
+	return file_aihues_catalog_v1_service_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *ListToolsResponse) GetTools() []*Tool {
@@ -156,7 +534,7 @@ type ListGamesRequest struct {
 
 func (x *ListGamesRequest) Reset() {
 	*x = ListGamesRequest{}
-	mi := &file_aihues_catalog_v1_service_proto_msgTypes[2]
+	mi := &file_aihues_catalog_v1_service_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -168,7 +546,7 @@ func (x *ListGamesRequest) String() string {
 func (*ListGamesRequest) ProtoMessage() {}
 
 func (x *ListGamesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_aihues_catalog_v1_service_proto_msgTypes[2]
+	mi := &file_aihues_catalog_v1_service_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -181,7 +559,7 @@ func (x *ListGamesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListGamesRequest.ProtoReflect.Descriptor instead.
 func (*ListGamesRequest) Descriptor() ([]byte, []int) {
-	return file_aihues_catalog_v1_service_proto_rawDescGZIP(), []int{2}
+	return file_aihues_catalog_v1_service_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ListGamesRequest) GetPageSize() int32 {
@@ -208,7 +586,7 @@ type ListGamesResponse struct {
 
 func (x *ListGamesResponse) Reset() {
 	*x = ListGamesResponse{}
-	mi := &file_aihues_catalog_v1_service_proto_msgTypes[3]
+	mi := &file_aihues_catalog_v1_service_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -220,7 +598,7 @@ func (x *ListGamesResponse) String() string {
 func (*ListGamesResponse) ProtoMessage() {}
 
 func (x *ListGamesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_aihues_catalog_v1_service_proto_msgTypes[3]
+	mi := &file_aihues_catalog_v1_service_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -233,7 +611,7 @@ func (x *ListGamesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListGamesResponse.ProtoReflect.Descriptor instead.
 func (*ListGamesResponse) Descriptor() ([]byte, []int) {
-	return file_aihues_catalog_v1_service_proto_rawDescGZIP(), []int{3}
+	return file_aihues_catalog_v1_service_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *ListGamesResponse) GetGames() []*Game {
@@ -254,7 +632,33 @@ var File_aihues_catalog_v1_service_proto protoreflect.FileDescriptor
 
 const file_aihues_catalog_v1_service_proto_rawDesc = "" +
 	"\n" +
-	"\x1faihues/catalog/v1/service.proto\x12\x11aihues.catalog.v1\x1a\x1daihues/catalog/v1/types.proto\"\x99\x01\n" +
+	"\x1faihues/catalog/v1/service.proto\x12\x11aihues.catalog.v1\x1a\x1daihues/catalog/v1/types.proto\"\x8f\x01\n" +
+	"\tSearchHit\x12\x12\n" +
+	"\x04slug\x18\x01 \x01(\tR\x04slug\x12\x14\n" +
+	"\x05title\x18\x02 \x01(\tR\x05title\x12\x1a\n" +
+	"\bsubtitle\x18\x03 \x01(\tR\bsubtitle\x12\x12\n" +
+	"\x04href\x18\x04 \x01(\tR\x04href\x12\x12\n" +
+	"\x04type\x18\x05 \x01(\tR\x04type\x12\x14\n" +
+	"\x05score\x18\x06 \x01(\x02R\x05score\"2\n" +
+	"\x14SearchCatalogRequest\x12\f\n" +
+	"\x01q\x18\x01 \x01(\tR\x01q\x12\f\n" +
+	"\x01k\x18\x02 \x01(\x05R\x01k\"I\n" +
+	"\x15SearchCatalogResponse\x120\n" +
+	"\x04hits\x18\x01 \x03(\v2\x1c.aihues.catalog.v1.SearchHitR\x04hits\"\x8f\x01\n" +
+	"\vRelatedItem\x12\x12\n" +
+	"\x04slug\x18\x01 \x01(\tR\x04slug\x12\x14\n" +
+	"\x05title\x18\x02 \x01(\tR\x05title\x12\x12\n" +
+	"\x04desc\x18\x03 \x01(\tR\x04desc\x12\x1a\n" +
+	"\bsubtitle\x18\x04 \x01(\tR\bsubtitle\x12\x12\n" +
+	"\x04href\x18\x05 \x01(\tR\x04href\x12\x12\n" +
+	"\x04type\x18\x06 \x01(\tR\x04type\"Y\n" +
+	"\x13RelatedItemsRequest\x12\x12\n" +
+	"\x04type\x18\x01 \x01(\tR\x04type\x12\x12\n" +
+	"\x04slug\x18\x02 \x01(\tR\x04slug\x12\f\n" +
+	"\x01q\x18\x03 \x01(\tR\x01q\x12\f\n" +
+	"\x01k\x18\x04 \x01(\x05R\x01k\"L\n" +
+	"\x14RelatedItemsResponse\x124\n" +
+	"\x05items\x18\x01 \x03(\v2\x1e.aihues.catalog.v1.RelatedItemR\x05items\"\x99\x01\n" +
 	"\x10ListToolsRequest\x12\f\n" +
 	"\x01q\x18\x01 \x01(\tR\x01q\x12\x1b\n" +
 	"\tpage_size\x18\x02 \x01(\x05R\bpageSize\x12\x1d\n" +
@@ -270,10 +674,12 @@ const file_aihues_catalog_v1_service_proto_rawDesc = "" +
 	"page_token\x18\x02 \x01(\tR\tpageToken\"j\n" +
 	"\x11ListGamesResponse\x12-\n" +
 	"\x05games\x18\x01 \x03(\v2\x17.aihues.catalog.v1.GameR\x05games\x12&\n" +
-	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken2\xc0\x01\n" +
+	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken2\x85\x03\n" +
 	"\x0eCatalogService\x12V\n" +
 	"\tListTools\x12#.aihues.catalog.v1.ListToolsRequest\x1a$.aihues.catalog.v1.ListToolsResponse\x12V\n" +
-	"\tListGames\x12#.aihues.catalog.v1.ListGamesRequest\x1a$.aihues.catalog.v1.ListGamesResponseBJZHgithub.com/aihues/aiushtha/packages/proto-go/aihues/catalog/v1;catalogv1b\x06proto3"
+	"\tListGames\x12#.aihues.catalog.v1.ListGamesRequest\x1a$.aihues.catalog.v1.ListGamesResponse\x12b\n" +
+	"\rSearchCatalog\x12'.aihues.catalog.v1.SearchCatalogRequest\x1a(.aihues.catalog.v1.SearchCatalogResponse\x12_\n" +
+	"\fRelatedItems\x12&.aihues.catalog.v1.RelatedItemsRequest\x1a'.aihues.catalog.v1.RelatedItemsResponseBJZHgithub.com/aihues/aiushtha/packages/proto-go/aihues/catalog/v1;catalogv1b\x06proto3"
 
 var (
 	file_aihues_catalog_v1_service_proto_rawDescOnce sync.Once
@@ -287,29 +693,41 @@ func file_aihues_catalog_v1_service_proto_rawDescGZIP() []byte {
 	return file_aihues_catalog_v1_service_proto_rawDescData
 }
 
-var file_aihues_catalog_v1_service_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_aihues_catalog_v1_service_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_aihues_catalog_v1_service_proto_goTypes = []any{
-	(*ListToolsRequest)(nil),  // 0: aihues.catalog.v1.ListToolsRequest
-	(*ListToolsResponse)(nil), // 1: aihues.catalog.v1.ListToolsResponse
-	(*ListGamesRequest)(nil),  // 2: aihues.catalog.v1.ListGamesRequest
-	(*ListGamesResponse)(nil), // 3: aihues.catalog.v1.ListGamesResponse
-	(ItemCategory)(0),         // 4: aihues.catalog.v1.ItemCategory
-	(*Tool)(nil),              // 5: aihues.catalog.v1.Tool
-	(*Game)(nil),              // 6: aihues.catalog.v1.Game
+	(*SearchHit)(nil),             // 0: aihues.catalog.v1.SearchHit
+	(*SearchCatalogRequest)(nil),  // 1: aihues.catalog.v1.SearchCatalogRequest
+	(*SearchCatalogResponse)(nil), // 2: aihues.catalog.v1.SearchCatalogResponse
+	(*RelatedItem)(nil),           // 3: aihues.catalog.v1.RelatedItem
+	(*RelatedItemsRequest)(nil),   // 4: aihues.catalog.v1.RelatedItemsRequest
+	(*RelatedItemsResponse)(nil),  // 5: aihues.catalog.v1.RelatedItemsResponse
+	(*ListToolsRequest)(nil),      // 6: aihues.catalog.v1.ListToolsRequest
+	(*ListToolsResponse)(nil),     // 7: aihues.catalog.v1.ListToolsResponse
+	(*ListGamesRequest)(nil),      // 8: aihues.catalog.v1.ListGamesRequest
+	(*ListGamesResponse)(nil),     // 9: aihues.catalog.v1.ListGamesResponse
+	(ItemCategory)(0),             // 10: aihues.catalog.v1.ItemCategory
+	(*Tool)(nil),                  // 11: aihues.catalog.v1.Tool
+	(*Game)(nil),                  // 12: aihues.catalog.v1.Game
 }
 var file_aihues_catalog_v1_service_proto_depIdxs = []int32{
-	4, // 0: aihues.catalog.v1.ListToolsRequest.category:type_name -> aihues.catalog.v1.ItemCategory
-	5, // 1: aihues.catalog.v1.ListToolsResponse.tools:type_name -> aihues.catalog.v1.Tool
-	6, // 2: aihues.catalog.v1.ListGamesResponse.games:type_name -> aihues.catalog.v1.Game
-	0, // 3: aihues.catalog.v1.CatalogService.ListTools:input_type -> aihues.catalog.v1.ListToolsRequest
-	2, // 4: aihues.catalog.v1.CatalogService.ListGames:input_type -> aihues.catalog.v1.ListGamesRequest
-	1, // 5: aihues.catalog.v1.CatalogService.ListTools:output_type -> aihues.catalog.v1.ListToolsResponse
-	3, // 6: aihues.catalog.v1.CatalogService.ListGames:output_type -> aihues.catalog.v1.ListGamesResponse
-	5, // [5:7] is the sub-list for method output_type
-	3, // [3:5] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	0,  // 0: aihues.catalog.v1.SearchCatalogResponse.hits:type_name -> aihues.catalog.v1.SearchHit
+	3,  // 1: aihues.catalog.v1.RelatedItemsResponse.items:type_name -> aihues.catalog.v1.RelatedItem
+	10, // 2: aihues.catalog.v1.ListToolsRequest.category:type_name -> aihues.catalog.v1.ItemCategory
+	11, // 3: aihues.catalog.v1.ListToolsResponse.tools:type_name -> aihues.catalog.v1.Tool
+	12, // 4: aihues.catalog.v1.ListGamesResponse.games:type_name -> aihues.catalog.v1.Game
+	6,  // 5: aihues.catalog.v1.CatalogService.ListTools:input_type -> aihues.catalog.v1.ListToolsRequest
+	8,  // 6: aihues.catalog.v1.CatalogService.ListGames:input_type -> aihues.catalog.v1.ListGamesRequest
+	1,  // 7: aihues.catalog.v1.CatalogService.SearchCatalog:input_type -> aihues.catalog.v1.SearchCatalogRequest
+	4,  // 8: aihues.catalog.v1.CatalogService.RelatedItems:input_type -> aihues.catalog.v1.RelatedItemsRequest
+	7,  // 9: aihues.catalog.v1.CatalogService.ListTools:output_type -> aihues.catalog.v1.ListToolsResponse
+	9,  // 10: aihues.catalog.v1.CatalogService.ListGames:output_type -> aihues.catalog.v1.ListGamesResponse
+	2,  // 11: aihues.catalog.v1.CatalogService.SearchCatalog:output_type -> aihues.catalog.v1.SearchCatalogResponse
+	5,  // 12: aihues.catalog.v1.CatalogService.RelatedItems:output_type -> aihues.catalog.v1.RelatedItemsResponse
+	9,  // [9:13] is the sub-list for method output_type
+	5,  // [5:9] is the sub-list for method input_type
+	5,  // [5:5] is the sub-list for extension type_name
+	5,  // [5:5] is the sub-list for extension extendee
+	0,  // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_aihues_catalog_v1_service_proto_init() }
@@ -324,7 +742,7 @@ func file_aihues_catalog_v1_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_aihues_catalog_v1_service_proto_rawDesc), len(file_aihues_catalog_v1_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

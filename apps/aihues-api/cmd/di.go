@@ -12,6 +12,7 @@ import (
 
 	"github.com/aihues/aiushtha/apps/aihues-api/config"
 	itemdal "github.com/aihues/aiushtha/apps/aihues-api/dal/item"
+	"github.com/aihues/aiushtha/apps/aihues-api/search"
 	catalogsvc "github.com/aihues/aiushtha/apps/aihues-api/services/catalog"
 	"github.com/aihues/aiushtha/packages/database"
 )
@@ -56,7 +57,9 @@ func registerStorageServices() {
 
 func registerCatalogServices() {
 	do.Provide(nil, func(i do.Injector) (catalogv1connect.CatalogServiceHandler, error) {
-		return catalogsvc.New(do.MustInvoke[*itemdal.DAL](i)), nil
+		cfg := do.MustInvoke[config.Config](i)
+		engine := search.New(search.NewHTTPEmbedder(cfg.Embeddings.URL))
+		return catalogsvc.New(do.MustInvoke[*itemdal.DAL](i), engine), nil
 	})
 }
 

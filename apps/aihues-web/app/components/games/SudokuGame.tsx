@@ -218,13 +218,26 @@ export default function SudokuGame({ locale }: { locale: Locale }) {
     const measure = () => {
       const r = el.getBoundingClientRect();
       if (r.width < 2 || r.height < 2) return;
-      const px = Math.max(180, Math.floor(Math.min(r.width - 4, r.height - 4)));
+      // Cap the board against both the field box and the viewport height so
+      // the header, board and number pad always fit within a single screen.
+      const vh = window.innerHeight || 800;
+      // Fit the board + number pad in the space left below the field's top
+      // edge so the whole game stays within one viewport (124 ≈ pad + gaps).
+      const avail = vh - r.top - 24;
+      const px = Math.max(
+        200,
+        Math.floor(Math.min(r.width - 4, avail - 124, 480))
+      );
       setGridPx((prev) => (Math.abs(prev - px) > 0.5 ? px : prev));
     };
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(el);
-    return () => ro.disconnect();
+    window.addEventListener('resize', measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', measure);
+    };
   }, []);
 
   useEffect(() => {
@@ -408,7 +421,7 @@ export default function SudokuGame({ locale }: { locale: Locale }) {
 
       <div
         ref={fieldRef}
-        className='relative flex min-h-0 flex-1 flex-col items-center justify-center gap-4'
+        className='relative flex min-h-0 flex-1 flex-col items-center justify-start gap-4 pt-2'
       >
         {phase !== 'idle' ? (
           <>

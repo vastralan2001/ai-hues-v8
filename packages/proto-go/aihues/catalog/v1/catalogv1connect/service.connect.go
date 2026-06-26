@@ -39,12 +39,22 @@ const (
 	// CatalogServiceListGamesProcedure is the fully-qualified name of the CatalogService's ListGames
 	// RPC.
 	CatalogServiceListGamesProcedure = "/aihues.catalog.v1.CatalogService/ListGames"
+	// CatalogServiceSearchCatalogProcedure is the fully-qualified name of the CatalogService's
+	// SearchCatalog RPC.
+	CatalogServiceSearchCatalogProcedure = "/aihues.catalog.v1.CatalogService/SearchCatalog"
+	// CatalogServiceRelatedItemsProcedure is the fully-qualified name of the CatalogService's
+	// RelatedItems RPC.
+	CatalogServiceRelatedItemsProcedure = "/aihues.catalog.v1.CatalogService/RelatedItems"
 )
 
 // CatalogServiceClient is a client for the aihues.catalog.v1.CatalogService service.
 type CatalogServiceClient interface {
 	ListTools(context.Context, *connect.Request[v1.ListToolsRequest]) (*connect.Response[v1.ListToolsResponse], error)
 	ListGames(context.Context, *connect.Request[v1.ListGamesRequest]) (*connect.Response[v1.ListGamesResponse], error)
+	// 语义搜索（全站工具/游戏/测试），由 FAISS + 句向量驱动
+	SearchCatalog(context.Context, *connect.Request[v1.SearchCatalogRequest]) (*connect.Response[v1.SearchCatalogResponse], error)
+	// 相关推荐（按 slug 或自由文本，限定同类型）
+	RelatedItems(context.Context, *connect.Request[v1.RelatedItemsRequest]) (*connect.Response[v1.RelatedItemsResponse], error)
 }
 
 // NewCatalogServiceClient constructs a client for the aihues.catalog.v1.CatalogService service. By
@@ -70,13 +80,27 @@ func NewCatalogServiceClient(httpClient connect.HTTPClient, baseURL string, opts
 			connect.WithSchema(catalogServiceMethods.ByName("ListGames")),
 			connect.WithClientOptions(opts...),
 		),
+		searchCatalog: connect.NewClient[v1.SearchCatalogRequest, v1.SearchCatalogResponse](
+			httpClient,
+			baseURL+CatalogServiceSearchCatalogProcedure,
+			connect.WithSchema(catalogServiceMethods.ByName("SearchCatalog")),
+			connect.WithClientOptions(opts...),
+		),
+		relatedItems: connect.NewClient[v1.RelatedItemsRequest, v1.RelatedItemsResponse](
+			httpClient,
+			baseURL+CatalogServiceRelatedItemsProcedure,
+			connect.WithSchema(catalogServiceMethods.ByName("RelatedItems")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
 // catalogServiceClient implements CatalogServiceClient.
 type catalogServiceClient struct {
-	listTools *connect.Client[v1.ListToolsRequest, v1.ListToolsResponse]
-	listGames *connect.Client[v1.ListGamesRequest, v1.ListGamesResponse]
+	listTools     *connect.Client[v1.ListToolsRequest, v1.ListToolsResponse]
+	listGames     *connect.Client[v1.ListGamesRequest, v1.ListGamesResponse]
+	searchCatalog *connect.Client[v1.SearchCatalogRequest, v1.SearchCatalogResponse]
+	relatedItems  *connect.Client[v1.RelatedItemsRequest, v1.RelatedItemsResponse]
 }
 
 // ListTools calls aihues.catalog.v1.CatalogService.ListTools.
@@ -89,10 +113,24 @@ func (c *catalogServiceClient) ListGames(ctx context.Context, req *connect.Reque
 	return c.listGames.CallUnary(ctx, req)
 }
 
+// SearchCatalog calls aihues.catalog.v1.CatalogService.SearchCatalog.
+func (c *catalogServiceClient) SearchCatalog(ctx context.Context, req *connect.Request[v1.SearchCatalogRequest]) (*connect.Response[v1.SearchCatalogResponse], error) {
+	return c.searchCatalog.CallUnary(ctx, req)
+}
+
+// RelatedItems calls aihues.catalog.v1.CatalogService.RelatedItems.
+func (c *catalogServiceClient) RelatedItems(ctx context.Context, req *connect.Request[v1.RelatedItemsRequest]) (*connect.Response[v1.RelatedItemsResponse], error) {
+	return c.relatedItems.CallUnary(ctx, req)
+}
+
 // CatalogServiceHandler is an implementation of the aihues.catalog.v1.CatalogService service.
 type CatalogServiceHandler interface {
 	ListTools(context.Context, *connect.Request[v1.ListToolsRequest]) (*connect.Response[v1.ListToolsResponse], error)
 	ListGames(context.Context, *connect.Request[v1.ListGamesRequest]) (*connect.Response[v1.ListGamesResponse], error)
+	// 语义搜索（全站工具/游戏/测试），由 FAISS + 句向量驱动
+	SearchCatalog(context.Context, *connect.Request[v1.SearchCatalogRequest]) (*connect.Response[v1.SearchCatalogResponse], error)
+	// 相关推荐（按 slug 或自由文本，限定同类型）
+	RelatedItems(context.Context, *connect.Request[v1.RelatedItemsRequest]) (*connect.Response[v1.RelatedItemsResponse], error)
 }
 
 // NewCatalogServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -114,12 +152,28 @@ func NewCatalogServiceHandler(svc CatalogServiceHandler, opts ...connect.Handler
 		connect.WithSchema(catalogServiceMethods.ByName("ListGames")),
 		connect.WithHandlerOptions(opts...),
 	)
+	catalogServiceSearchCatalogHandler := connect.NewUnaryHandler(
+		CatalogServiceSearchCatalogProcedure,
+		svc.SearchCatalog,
+		connect.WithSchema(catalogServiceMethods.ByName("SearchCatalog")),
+		connect.WithHandlerOptions(opts...),
+	)
+	catalogServiceRelatedItemsHandler := connect.NewUnaryHandler(
+		CatalogServiceRelatedItemsProcedure,
+		svc.RelatedItems,
+		connect.WithSchema(catalogServiceMethods.ByName("RelatedItems")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/aihues.catalog.v1.CatalogService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case CatalogServiceListToolsProcedure:
 			catalogServiceListToolsHandler.ServeHTTP(w, r)
 		case CatalogServiceListGamesProcedure:
 			catalogServiceListGamesHandler.ServeHTTP(w, r)
+		case CatalogServiceSearchCatalogProcedure:
+			catalogServiceSearchCatalogHandler.ServeHTTP(w, r)
+		case CatalogServiceRelatedItemsProcedure:
+			catalogServiceRelatedItemsHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -135,4 +189,12 @@ func (UnimplementedCatalogServiceHandler) ListTools(context.Context, *connect.Re
 
 func (UnimplementedCatalogServiceHandler) ListGames(context.Context, *connect.Request[v1.ListGamesRequest]) (*connect.Response[v1.ListGamesResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("aihues.catalog.v1.CatalogService.ListGames is not implemented"))
+}
+
+func (UnimplementedCatalogServiceHandler) SearchCatalog(context.Context, *connect.Request[v1.SearchCatalogRequest]) (*connect.Response[v1.SearchCatalogResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("aihues.catalog.v1.CatalogService.SearchCatalog is not implemented"))
+}
+
+func (UnimplementedCatalogServiceHandler) RelatedItems(context.Context, *connect.Request[v1.RelatedItemsRequest]) (*connect.Response[v1.RelatedItemsResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("aihues.catalog.v1.CatalogService.RelatedItems is not implemented"))
 }

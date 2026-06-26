@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inside Kimi K2 Thinking: How an Open Model Learns to Reason | AIHues</title>
+    <meta
+      name="description"
+      content="A faithful walkthrough of Kimi K2 Thinking: how a 1T-parameter open model reasons across 200-300 tool calls, what its INT4 training buys, the benchmark numbers, and the honest limits."
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --bg: #faf9f6;
+        --surface: #ffffff;
+        --surface-hover: #f5f0e8;
+        --border: #e8e2d9;
+        --border-hover: #d4c8b8;
+        --text: #1c1917;
+        --text-secondary: #78716c;
+        --text-muted: #a8a29e;
+        --accent: #b45309;
+        --accent-light: #d97706;
+        --accent-gradient: linear-gradient(135deg, #b45309, #d97706);
+        --green: #059669;
+        --blue: #2563eb;
+        --orange: #ea580c;
+        --radius: 14px;
+        --radius-sm: 10px;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.04);
+        --shadow-lg: 0 8px 32px rgba(180, 83, 9, 0.18);
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      .article {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 80px 28px 40px;
+      }
+      .article-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+      .article-tag {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+        background: rgba(180, 83, 9, 0.08);
+        color: var(--accent);
+        margin-bottom: 16px;
+      }
+      .article h1 {
+        font-size: 32px;
+        font-weight: 800;
+        line-height: 1.15;
+        letter-spacing: -1px;
+        margin-bottom: 12px;
+      }
+      .article-header p {
+        color: #3d3d3d;
+        font-size: 15px;
+      }
+      .article-meta {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-top: 16px;
+      }
+      .article h2 {
+        font-size: 28px;
+        font-weight: 700;
+        line-height: 1.2;
+        letter-spacing: -0.5px;
+        margin: 48px 0 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #e5e5e5;
+        color: #1c1917;
+      }
+      .article h3 {
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 1.3;
+        letter-spacing: -0.3px;
+        margin: 32px 0 12px;
+        color: #1c1917;
+      }
+      .article p {
+        margin-bottom: 16px;
+        color: #3d3d3d;
+        font-size: 16px;
+        line-height: 1.75;
+      }
+      .article ul,
+      .article ol {
+        margin: 0 0 16px 24px;
+        color: #3d3d3d;
+        font-size: 15px;
+      }
+      .article li {
+        margin-bottom: 8px;
+        line-height: 1.75;
+      }
+      .article strong {
+        color: #1c1917;
+        font-weight: 600;
+      }
+      .cta-box {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 28px;
+        margin: 40px 0;
+        text-align: center;
+      }
+      .cta-box h3 {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+      .cta-box p {
+        color: var(--text-secondary);
+        margin-bottom: 16px;
+      }
+      .cta-btn {
+        display: inline-block;
+        padding: 12px 24px;
+        border-radius: var(--radius-sm);
+        background: var(--accent-gradient);
+        color: #fff;
+        font-weight: 600;
+        font-size: 14px;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      .cta-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-lg);
+      }
+      .quote-box {
+        border-left: 3px solid var(--accent);
+        padding-left: 20px;
+        margin: 24px 0;
+        font-style: italic;
+        color: var(--text-secondary);
+      }
+      .footer {
+        text-align: center;
+        padding: 40px 28px;
+        font-size: 13px;
+        color: var(--text-muted);
+        border-top: 1px solid var(--border);
+      }
+    </style>
+  </head>
+  <body>
+    <article class="article">
+      <div class="article-header">
+          <span class="article-tag">AI Models</span>
+          <h1>Inside Kimi K2 Thinking: How an Open Model Learns to Reason</h1>
+          <p>
+            One trillion parameters, a 256K window, and a habit of thinking
+            for hundreds of steps before it answers. Here is how it actually
+            works, told the way it reasons.
+          </p>
+          <div class="article-meta">
+            <span>2026-06-25</span><span>9 min read</span
+            ><span>AIHues Team</span>
+          </div>
+        </div>
+      <div class="article-content">
+        <p class="source">
+          <strong>Source:</strong>
+          <a href="https://huggingface.co/moonshotai/Kimi-K2-Thinking" target="_blank" rel="noopener">Read the model card ↗</a>
+        </p>
+
+        <p>
+                  Give a language model a question it cannot answer in one breath.
+                  Something like: <em>find the three most-cited papers that disagree
+                  with a 2019 result, then check whether any of them were later
+                  retracted.</em> No single fact answers that. The model has to search,
+                  read, hold a partial answer in its head, search again, and notice when
+                  a new page contradicts what it believed four steps ago. Most models
+                  fall apart somewhere in the middle. They drift, repeat a tool call
+                  they already made, or quietly forget the original question.
+                </p>
+
+                <p>
+                  <strong>Kimi K2 Thinking</strong>, released by Moonshot AI in November
+                  2025, was built specifically for the part where other models drift. It
+                  is a reasoning model: it produces an explicit chain of thought, calls
+                  tools partway through that thinking, reads the results, and keeps
+                  going. What makes it notable is not that it thinks out loud. Plenty of
+                  models do. It is how <em>far</em> it can think without losing the
+                  thread, and that it does all of this with open weights anyone can
+                  download.
+                </p>
+
+                <h2>Watch it work through one hard problem</h2>
+
+                <p>
+                  Picture the retraction question above. K2 Thinking does not jump to an
+                  answer. It first writes out a plan in its reasoning trace: identify
+                  the 2019 result, find papers that cite it negatively, then
+                  cross-check retraction notices. Then it issues a search. The result
+                  comes back, it reads it, and crucially it folds that reading back into
+                  the same continuous train of thought rather than starting fresh. A
+                  contradiction on page four does not reset the whole effort. It updates
+                  the working answer and presses on.
+                </p>
+
+                <p>
+                  The mechanism that allows this is what Moonshot calls
+                  <strong>interleaved thinking and tool use</strong>. The model alternates
+                  between private reasoning steps and external actions, dozens or
+                  hundreds of times, inside a single response. Moonshot reports that K2
+                  Thinking holds coherent, goal-directed behavior across
+                  <strong>200 to 300 sequential tool calls</strong>. That figure is the
+                  headline, because it is exactly where earlier agents broke. Models
+                  that looked impressive in a demo would degrade after 30 to 50 steps,
+                  looping or wandering off task. K2 Thinking was trained to stay on the
+                  rope much longer.
+                </p>
+
+                <div class="quote-box">
+                  The hard part of reasoning is not the first step. It is the
+                  three-hundredth step still pointing at the question you started with.
+                </div>
+
+                <h3>The architecture underneath</h3>
+
+                <p>
+                  K2 Thinking is a sparse Mixture-of-Experts model. On paper it is huge.
+                  In practice each token only touches a small slice of it. The numbers
+                  that matter:
+                </p>
+
+                <table
+                  style="
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 8px 0 24px;
+                    font-size: 15px;
+                  "
+                >
+                  <thead>
+                    <tr style="border-bottom: 2px solid #e5e5e5; text-align: left">
+                      <th style="padding: 8px 6px">Property</th>
+                      <th style="padding: 8px 6px">Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr style="border-bottom: 1px solid #efeae2">
+                      <td style="padding: 8px 6px">Total parameters</td>
+                      <td style="padding: 8px 6px">~1 trillion (MoE)</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #efeae2">
+                      <td style="padding: 8px 6px">Activated per token</td>
+                      <td style="padding: 8px 6px">~32 billion</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #efeae2">
+                      <td style="padding: 8px 6px">Experts</td>
+                      <td style="padding: 8px 6px">384 total, 8 routed + 1 shared</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #efeae2">
+                      <td style="padding: 8px 6px">Context window</td>
+                      <td style="padding: 8px 6px">256K tokens</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #efeae2">
+                      <td style="padding: 8px 6px">Native precision</td>
+                      <td style="padding: 8px 6px">INT4 (quantization-aware training)</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 8px 6px">Checkpoint size at INT4</td>
+                      <td style="padding: 8px 6px">~594 GB</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <p>
+                  The trick of MoE is the gap between those first two rows. K2 Thinking
+                  has the knowledge capacity of a trillion-parameter model, but a router
+                  picks only 8 of 384 experts for each token, so the cost of generating
+                  a token is closer to a 32B dense model. You get breadth without paying
+                  for it on every forward pass. The 256K window is what lets all those
+                  tool results, search snippets, and intermediate notes sit in context
+                  at once, so step 290 can still see what step 12 found.
+                </p>
+
+                <h2>Why the model ships in 4-bit on purpose</h2>
+
+                <p>
+                  Most quantized models are squeezed <em>after</em> training. You train
+                  in high precision, then round the weights down to fit on cheaper
+                  hardware, and you lose a little quality in the rounding. K2 Thinking
+                  inverts that. Moonshot used <strong>quantization-aware training</strong>,
+                  so the model learned to operate in INT4 from the start. The 4-bit
+                  representation is not a compromise bolted on at the end; it is the
+                  format the weights were optimized for.
+                </p>
+
+                <p>
+                  This buys two concrete things. Memory roughly halves against an FP8
+                  version, which is how a trillion-parameter model fits in about 594 GB
+                  instead of a full terabyte. And generation runs around twice as fast,
+                  which matters enormously when a single answer might involve hundreds of
+                  reasoning-plus-tool turns. The choice of INT4 over the newer FP4 was
+                  deliberate and unglamorous: pre-Blackwell NVIDIA GPUs, including the
+                  widely deployed A100 and H100, lack native FP4 hardware. INT4 runs on
+                  the cards people already own.
+                </p>
+
+                <p>
+                  One detail worth keeping honest: the benchmark scores below were all
+                  measured at INT4. This is not a high-precision model showing off and a
+                  degraded version shipping to users. The reported numbers and the
+                  downloadable weights are the same thing.
+                </p>
+
+                <h2>Test-time scaling: thinking longer, and thinking eight times</h2>
+
+                <p>
+                  The most interesting lever K2 Thinking pulls is at inference, not
+                  training. Reasoning models improve when you let them spend more compute
+                  per question, and Moonshot exposes this in two ways.
+                </p>
+
+                <p>
+                  The first is simply the depth of the reasoning-and-tool loop. Letting
+                  the model run more interleaved steps on a genuinely hard task tends to
+                  raise accuracy, up to the point where the context window fills. The
+                  second is a mode Moonshot calls <strong>Heavy</strong>. For the hardest
+                  benchmark runs it rolls out <strong>eight reasoning trajectories in
+                  parallel</strong>, then reflectively aggregates them into one final
+                  answer. Eight independent attempts catch mistakes a single pass would
+                  commit to. It is expensive, and it is reserved for cases where being
+                  right matters more than being cheap, but it shows the ceiling moves
+                  when you spend more at test time rather than retraining.
+                </p>
+
+                <h2>The benchmark numbers, in context</h2>
+
+                <p>
+                  K2 Thinking's claim to attention is that it is the first open-weights
+                  model to post state-of-the-art results against closed frontier models
+                  on several reasoning and agentic benchmarks. The headline figures
+                  Moonshot reports:
+                </p>
+
+                <ul>
+                  <li>
+                    <strong>Humanity's Last Exam (HLE): 44.9%</strong>. A deliberately
+                    brutal academic exam where most models score in the teens or low
+                    twenties.
+                  </li>
+                  <li>
+                    <strong>BrowseComp: 60.2%</strong>. A web-browsing agent benchmark
+                    that rewards exactly the long, self-correcting search behavior
+                    described above.
+                  </li>
+                  <li>
+                    <strong>SWE-Bench Verified: 71.3%</strong>. Resolving real GitHub
+                    issues by editing real codebases, a test of sustained multi-file
+                    reasoning.
+                  </li>
+                </ul>
+
+                <p>
+                  The pattern across those three is consistent and tells you what the
+                  model is for. They are not single-shot trivia. Each one rewards an
+                  agent that can plan, act, observe, and revise over a long horizon. The
+                  BrowseComp result in particular is the benchmark expression of the
+                  200-to-300-call durability, and it is where an open model leading the
+                  field is genuinely surprising.
+                </p>
+
+                <h2>The honest limits</h2>
+
+                <p>
+                  None of this makes K2 Thinking a free lunch. The most immediate barrier
+                  is that you cannot casually run it. Even at INT4 the checkpoint is
+                  roughly 594 GB, and serving it comfortably wants well over 512 GB of
+                  system memory plus capable GPUs. This is a model you reach through an
+                  API or a serious cluster, not your laptop. Day-zero support exists for
+                  inference engines such as vLLM, SGLang, and KTransformers, but the
+                  hardware floor is real.
+                </p>
+
+                <p>
+                  Latency is the second cost. A model that genuinely reasons across
+                  hundreds of steps is, by construction, slower than one that blurts an
+                  answer. The INT4 speedup helps, and Heavy mode's eight parallel
+                  trajectories multiply the spend further. For a quick factual lookup,
+                  all that deliberation is overkill. The long-horizon machinery earns its
+                  keep on hard, multi-step problems and wastes time on easy ones.
+                </p>
+
+                <p>
+                  And the headline reliability figure is a ceiling, not a floor. Holding
+                  the thread for 200 to 300 tool calls is a reported capability under
+                  good conditions, not a guarantee for every chain. Agents still
+                  accumulate small errors over long runs, and a benchmark score is not a
+                  promise about your specific workflow. Treat the durability as a strong
+                  tendency that needs verification on your own tasks, not a contract.
+                </p>
+
+                <h2>Why it matters for builders</h2>
+
+                <p>
+                  For anyone building agents, Kimi K2 Thinking changes the supply
+                  picture more than the capability picture. The capability, deep
+                  reasoning interleaved with tool use, already existed behind closed
+                  APIs. What is new is that comparable behavior now ships with open
+                  weights you can inspect, fine-tune, and self-host, with the long-horizon
+                  tool-calling and 256K context that real agentic work actually needs.
+                  If your product depends on an agent that can plan across many steps
+                  without losing the plot, the practical question shifts from "can a
+                  model do this" to "do I rent it or run it." That is a healthier
+                  question to be asking, and K2 Thinking is a large part of why it is now
+                  on the table.
+                </p>
+      </div>
+    </article>
+    <footer class="footer">© 2026 AIHues · Built with Kimi</footer>
+  </body>
+</html>

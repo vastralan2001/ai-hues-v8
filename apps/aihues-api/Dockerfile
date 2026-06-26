@@ -30,6 +30,12 @@ ARG APT_SOURCE=mirrors.volces.com
 
 WORKDIR /usr/src/app
 
+ENV HF_ENDPOINT=https://hf-mirror.com \
+    HF_HUB_DISABLE_TELEMETRY=1 \
+    PYTHONUNBUFFERED=1 \
+    EMBED_MODEL=sentence-transformers/all-MiniLM-L6-v2 \
+    AIHUES_API__EMBEDDINGS__URL=http://127.0.0.1:8000
+
 RUN set -ex \
   && sed -i "s|deb.debian.org|$APT_SOURCE|g" /etc/apt/sources.list.d/debian.sources
 
@@ -39,8 +45,18 @@ RUN \
   apt-get update \
   && apt-get install -y --no-install-recommends \
   ca-certificates \
-  tzdata
+  tzdata \
+  python3 \
+  python3-pip
+
+# Embedding sidecar (co-located in this image; launched alongside the Go API).
+COPY apps/aihues-embed /opt/embed
+RUN pip install --no-cache-dir --break-system-packages -r /opt/embed/requirements.txt
+# Bake the model so no download happens at runtime.
+RUN python3 -c "from sentence_transformers import SentenceTransformer; import os; SentenceTransformer(os.environ['EMBED_MODEL'])"
 
 COPY --from=base /dist/aihues-api .
+COPY apps/aihues-api/entrypoint.sh /usr/src/app/entrypoint.sh
+RUN chmod +x /usr/src/app/entrypoint.sh
 
-ENTRYPOINT ["./aihues-api", "api"]
+ENTRYPOINT ["/usr/src/app/entrypoint.sh"]

@@ -16,22 +16,32 @@ const BASE_SPAWN = 0.018;
 const TRAIL_MAX = 14;
 const BEST_KEY = 'aihues_fruit-slash_best';
 
+type FruitShape =
+  | 'apple'
+  | 'orange'
+  | 'lemon'
+  | 'watermelon'
+  | 'strawberry'
+  | 'pear'
+  | 'plum';
+
 interface Kind {
+  shape: FruitShape;
   hue: number;
   points: number;
   bomb?: boolean;
 }
 
 const KINDS: Kind[] = [
-  { hue: 14, points: 10 }, // carrot orange
-  { hue: 122, points: 15 }, // broccoli green
-  { hue: 48, points: 20 }, // corn gold
-  { hue: 96, points: 10 }, // cucumber lime
-  { hue: 6, points: 15 }, // tomato red
-  { hue: 28, points: 20 }, // potato amber
-  { hue: 320, points: 25 }, // mushroom magenta
+  { shape: 'apple', hue: 6, points: 10 },
+  { shape: 'orange', hue: 28, points: 15 },
+  { shape: 'lemon', hue: 50, points: 20 },
+  { shape: 'watermelon', hue: 134, points: 10 },
+  { shape: 'strawberry', hue: 344, points: 15 },
+  { shape: 'pear', hue: 84, points: 20 },
+  { shape: 'plum', hue: 288, points: 25 },
 ];
-const BOMB: Kind = { hue: 0, points: -50, bomb: true };
+const BOMB: Kind = { shape: 'apple', hue: 0, points: -50, bomb: true };
 
 interface Fruit {
   kind: Kind;
@@ -411,32 +421,219 @@ export default function FruitSlashGame({ locale }: { locale: Locale }) {
         return;
       }
       const draw = (cx: number) => {
-        const bg = ctx.createRadialGradient(
-          cx - f.r * 0.3,
-          -f.r * 0.3,
-          f.r * 0.2,
-          cx,
-          0,
-          f.r
-        );
-        bg.addColorStop(0, `hsl(${f.kind.hue},95%,72%)`);
-        bg.addColorStop(1, `hsl(${f.kind.hue},80%,46%)`);
-        ctx.fillStyle = bg;
-        ctx.beginPath();
-        ctx.arc(cx, 0, f.r, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = 'rgba(255,255,255,0.55)';
-        ctx.beginPath();
-        ctx.ellipse(
-          cx - f.r * 0.32,
-          -f.r * 0.34,
-          f.r * 0.22,
-          f.r * 0.14,
-          -0.6,
-          0,
-          Math.PI * 2
-        );
-        ctx.fill();
+        const r = f.r;
+        const body = (h: number, s: number, l1: number, l2: number) => {
+          const bg = ctx.createRadialGradient(
+            cx - r * 0.32,
+            -r * 0.34,
+            r * 0.2,
+            cx,
+            0,
+            r * 1.08
+          );
+          bg.addColorStop(0, `hsl(${h}, ${s}%, ${l1}%)`);
+          bg.addColorStop(1, `hsl(${h}, ${s}%, ${l2}%)`);
+          ctx.fillStyle = bg;
+        };
+        const shine = () => {
+          ctx.fillStyle = 'rgba(255,255,255,0.5)';
+          ctx.beginPath();
+          ctx.ellipse(
+            cx - r * 0.34,
+            -r * 0.36,
+            r * 0.2,
+            r * 0.12,
+            -0.6,
+            0,
+            Math.PI * 2
+          );
+          ctx.fill();
+        };
+        const stem = (lean = 0.06) => {
+          ctx.strokeStyle = '#7c5a30';
+          ctx.lineWidth = Math.max(2, r * 0.1);
+          ctx.lineCap = 'round';
+          ctx.beginPath();
+          ctx.moveTo(cx, -r * 0.82);
+          ctx.lineTo(cx + r * lean, -r * 1.16);
+          ctx.stroke();
+        };
+        const leaf = (dir = 1) => {
+          ctx.fillStyle = '#5bb24a';
+          ctx.beginPath();
+          ctx.ellipse(
+            cx + dir * r * 0.34,
+            -r * 1.02,
+            r * 0.3,
+            r * 0.14,
+            dir * 0.7,
+            0,
+            Math.PI * 2
+          );
+          ctx.fill();
+        };
+        const h = f.kind.hue;
+        switch (f.kind.shape) {
+          case 'lemon': {
+            body(h, 92, 78, 52);
+            ctx.beginPath();
+            ctx.ellipse(cx, 0, r * 1.18, r * 0.82, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(
+              cx - r * 1.14,
+              0,
+              r * 0.12,
+              r * 0.09,
+              0,
+              0,
+              Math.PI * 2
+            );
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(
+              cx + r * 1.14,
+              0,
+              r * 0.12,
+              r * 0.09,
+              0,
+              0,
+              Math.PI * 2
+            );
+            ctx.fill();
+            shine();
+            break;
+          }
+          case 'watermelon': {
+            body(h, 58, 44, 26);
+            ctx.beginPath();
+            ctx.arc(cx, 0, r, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(cx, 0, r, 0, Math.PI * 2);
+            ctx.clip();
+            ctx.strokeStyle = 'rgba(16,52,26,0.5)';
+            ctx.lineWidth = r * 0.16;
+            for (const dx of [-0.55, -0.18, 0.18, 0.55]) {
+              ctx.beginPath();
+              ctx.moveTo(cx + dx * r, -r * 1.1);
+              ctx.quadraticCurveTo(cx + dx * r * 1.3, 0, cx + dx * r, r * 1.1);
+              ctx.stroke();
+            }
+            ctx.restore();
+            shine();
+            break;
+          }
+          case 'strawberry': {
+            body(h, 85, 60, 40);
+            ctx.beginPath();
+            ctx.moveTo(cx, r * 1.05);
+            ctx.quadraticCurveTo(
+              cx - r * 1.08,
+              r * 0.15,
+              cx - r * 0.72,
+              -r * 0.5
+            );
+            ctx.quadraticCurveTo(cx - r * 0.3, -r * 0.92, cx, -r * 0.8);
+            ctx.quadraticCurveTo(
+              cx + r * 0.3,
+              -r * 0.92,
+              cx + r * 0.72,
+              -r * 0.5
+            );
+            ctx.quadraticCurveTo(cx + r * 1.08, r * 0.15, cx, r * 1.05);
+            ctx.fill();
+            ctx.fillStyle = 'rgba(255,235,150,0.95)';
+            const seeds = [
+              [-0.35, -0.2],
+              [0.35, -0.2],
+              [0, 0],
+              [-0.45, 0.25],
+              [0.45, 0.25],
+              [-0.2, 0.5],
+              [0.2, 0.5],
+              [0, 0.72],
+            ];
+            for (const [sx, sy] of seeds) {
+              ctx.beginPath();
+              ctx.ellipse(
+                cx + sx * r,
+                sy * r,
+                r * 0.05,
+                r * 0.09,
+                0,
+                0,
+                Math.PI * 2
+              );
+              ctx.fill();
+            }
+            ctx.fillStyle = '#4fae4a';
+            for (let i = -2; i <= 2; i++) {
+              ctx.beginPath();
+              ctx.moveTo(cx, -r * 0.78);
+              ctx.lineTo(cx + i * r * 0.24, -r * 1.14);
+              ctx.lineTo(cx + i * r * 0.24 + r * 0.1, -r * 0.74);
+              ctx.closePath();
+              ctx.fill();
+            }
+            break;
+          }
+          case 'pear': {
+            body(h, 68, 72, 46);
+            ctx.beginPath();
+            ctx.arc(cx, r * 0.32, r * 0.8, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(cx, -r * 0.46, r * 0.5, 0, Math.PI * 2);
+            ctx.fill();
+            stem(0.05);
+            leaf(1);
+            shine();
+            break;
+          }
+          case 'plum': {
+            body(h, 52, 54, 30);
+            ctx.beginPath();
+            ctx.arc(cx, 0, r, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(40,8,52,0.4)';
+            ctx.lineWidth = Math.max(1.5, r * 0.06);
+            ctx.beginPath();
+            ctx.moveTo(cx, -r);
+            ctx.quadraticCurveTo(cx - r * 0.22, 0, cx, r);
+            ctx.stroke();
+            stem(0.04);
+            shine();
+            break;
+          }
+          case 'orange': {
+            body(h, 95, 62, 44);
+            ctx.beginPath();
+            ctx.arc(cx, 0, r, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = 'rgba(120,60,10,0.22)';
+            ctx.beginPath();
+            ctx.arc(cx, -r * 0.78, r * 0.12, 0, Math.PI * 2);
+            ctx.fill();
+            leaf(1);
+            shine();
+            break;
+          }
+          default: {
+            // apple
+            body(h, 78, 58, 38);
+            ctx.beginPath();
+            ctx.arc(cx - r * 0.3, r * 0.05, r * 0.74, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(cx + r * 0.3, r * 0.05, r * 0.74, 0, Math.PI * 2);
+            ctx.fill();
+            stem(0.06);
+            leaf(1);
+            shine();
+          }
+        }
       };
       ctx.shadowColor = `hsla(${f.kind.hue},90%,60%,0.85)`;
       ctx.shadowBlur = 18;

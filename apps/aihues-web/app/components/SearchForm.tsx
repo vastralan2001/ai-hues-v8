@@ -1,5 +1,6 @@
 'use client';
 
+import { SearchBox } from '@/components/SearchBox';
 import type { ToolCategoryKey } from '@/lib/catalog-types';
 import { toolsHref } from '@/lib/routes';
 import { event, GA_EVENTS } from '@/lib/gtag';
@@ -14,7 +15,6 @@ export function ToolSearchForm({
   return (
     <form
       action={toolsHref}
-      className='search-form'
       onSubmit={(e) => {
         const form = e.currentTarget;
         const input = form.querySelector<HTMLInputElement>('input[name="q"]');
@@ -24,15 +24,12 @@ export function ToolSearchForm({
         }
       }}
     >
-      <label className='sr-only' htmlFor='tool-search'>
-        Search tools
-      </label>
-      <input
+      <SearchBox
+        ariaLabel='Search tools'
         defaultValue={q}
         id='tool-search'
         name='q'
         placeholder='Search tools...'
-        type='search'
       />
       {category !== 'all' ? (
         <input name='category' type='hidden' value={category} />

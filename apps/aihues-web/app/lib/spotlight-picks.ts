@@ -1,107 +1,80 @@
 import type { SpotlightSlide } from '@/components/SpotlightCarousel';
+import type { BrandCategory } from '@/lib/category-brand';
 
-export interface PickItem {
+/* Hero scene metadata — one per HUES family. The actual slide DATA is built on
+   the server in page.tsx from the SAME catalog/posts the home bands use, so a
+   given id always renders identical content + badges in both places. */
+export interface CategoryPick {
+  key: string;
+  cat: BrandCategory;
+  label: string;
+  /** Representative catalog slug ('' = use the first story post). */
   slug: string;
-  title: string;
-  description: string;
-  metrics: string;
-  href: string;
-  cta: string;
-  /** Example search phrase shown in the rotating Ask-AI placeholder. */
+  /** Hero <h1> typewriter word, synced to this slide. */
+  typeword: { en: string; zh: string };
+  /** Hero fade-in slogan, synced to this slide. */
+  slogan: { en: string; zh: string };
+  /** Example search phrase for the rotating Ask-AI placeholder. */
   query: string;
 }
 
-export interface CategoryPick {
-  key: string;
-  label: string; // spotlight eyebrow
-  item: PickItem;
+/* A fully-built hero scene: family metadata + the SSR-built spotlight slide. */
+export interface HeroScene {
+  cat: BrandCategory;
+  typeword: { en: string; zh: string };
+  slogan: { en: string; zh: string };
+  /** Search-box placeholder hint for this family. */
+  query: string;
+  slide: SpotlightSlide;
 }
 
 export const CATEGORY_PICKS: CategoryPick[] = [
   {
-    key: 'developer',
-    label: 'Developer Tools',
-    item: {
-      slug: 'json',
-      title: 'JSON Formatter',
-      description:
-        'Format, validate and minify JSON with a collapsible, syntax-highlighted tree.',
-      metrics: 'Format · Validate · Minify',
-      href: '/tools/json',
-      cta: 'Open tool',
-      query: 'format this JSON',
+    key: 'tools',
+    cat: 'tools',
+    label: 'Helpers',
+    slug: 'json',
+    typeword: { en: 'AI toolkit.', zh: 'AI 工具箱' },
+    slogan: {
+      en: "Helpers that do the grunt work so you don't have to.",
+      zh: '帮你扛下杂活，你不必亲自动手。',
     },
-  },
-  {
-    key: 'ai-writing',
-    label: 'AI Writing',
-    item: {
-      slug: 'x-post',
-      title: 'X Post Writer',
-      description:
-        'Turn a rough idea into a punchy, on-brand post — hooks and threads included.',
-      metrics: 'Hook · Thread · Tone',
-      href: '/tools/x-post',
-      cta: 'Open tool',
-      query: 'write a tweet about…',
-    },
-  },
-  {
-    key: 'tests',
-    label: 'Personality Test',
-    item: {
-      slug: 'mbti',
-      title: 'MBTI Personality Test',
-      description:
-        'Five dimensions, one four-letter type — from Architect to Entertainer.',
-      metrics: '20 Q · 16 types',
-      href: '/tests/mbti',
-      cta: 'Take the test',
-      query: 'find my MBTI type',
-    },
+    query: 'format this JSON',
   },
   {
     key: 'games',
-    label: 'Mini Game',
-    item: {
-      slug: 'doodle-jump',
-      title: 'Doodle Jump',
-      description:
-        'Hop from ledge to ledge across a starry sky — how high can you climb?',
-      metrics: 'Endless · Arcade',
-      href: '/games/doodle-jump',
-      cta: 'Play now',
-      query: 'play a quick game',
+    cat: 'games',
+    label: 'Unwinds',
+    slug: 'chess',
+    typeword: { en: 'game arcade.', zh: '游戏厅' },
+    slogan: {
+      en: 'Unwinds for when your brain feels like a fried egg.',
+      zh: '当大脑像煎糊的蛋时，来放松一下。',
     },
+    query: 'play a quick game',
   },
   {
-    key: 'utility',
-    label: 'Utility',
-    item: {
-      slug: 'word-count',
-      title: 'Word Counter',
-      description:
-        'Real-time character, word, line and reading-time counts as you type.',
-      metrics: 'Chars · Words · Read time',
-      href: '/tools/word-count',
-      cta: 'Open tool',
-      query: 'count my words',
+    key: 'tests',
+    cat: 'tests',
+    label: 'Evaluations',
+    slug: 'mbti',
+    typeword: { en: 'test lab.', zh: '测验厅' },
+    slogan: {
+      en: "Evaluations that remind you you're more than your salary.",
+      zh: '评估提醒你：你远不止一份薪水。',
     },
+    query: 'find my MBTI type',
+  },
+  {
+    key: 'stories',
+    cat: 'stories',
+    label: 'Stories',
+    slug: '',
+    typeword: { en: 'story feed.', zh: '解读专栏' },
+    slogan: {
+      en: 'Stories that cut through the noise and the nonsense.',
+      zh: '拆穿噪声与胡话的解读。',
+    },
+    query: 'how to launch on Product Hunt',
   },
 ];
-
-export function slidesFromPicks(): SpotlightSlide[] {
-  return CATEGORY_PICKS.map(({ label, item }) => ({
-    slug: item.slug,
-    eyebrow: label,
-    title: item.title,
-    description: item.description,
-    metrics: item.metrics,
-    href: item.href,
-    cta: item.cta,
-  }));
-}
-
-export function examplesFromPicks(): string[] {
-  return CATEGORY_PICKS.map((c) => c.item.query);
-}

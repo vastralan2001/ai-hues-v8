@@ -12,10 +12,11 @@ export const dict: Record<Locale, Record<string, string>> = {
     'nav.tools': 'Tools',
     'nav.games': 'Games',
     'nav.tests': 'Tests',
-    'nav.resources': 'Resources',
+    'nav.resources': 'Stories',
     'nav.wishlist': 'Wishlist',
     'nav.ranking': 'Ranking',
     'nav.discover': 'Discover',
+    'nav.search': 'Search',
     'nav.login': 'Login',
 
     // hero
@@ -32,6 +33,7 @@ export const dict: Record<Locale, Record<string, string>> = {
     'cat.utility': 'Utility',
     'cat.developer': 'Developer',
     'cat.aiWriting': 'AI Writing',
+    'cat.image': 'Image',
     'cat.games': 'Games',
     'cat.utilityDesc': 'Word Count, Diff, Fullwidth, Readability, Humanize',
     'cat.developerDesc': 'JWT, JSON, Regex, Base64, UUID, QR Code, SHA256',
@@ -763,7 +765,7 @@ export const dict: Record<Locale, Record<string, string>> = {
     'footer.terms': 'Terms',
     'footer.privacy': 'Privacy',
     'footer.contact': 'Contact',
-    'footer.resources': 'Resources',
+    'footer.resources': 'Stories',
     'footer.cheatSheet': 'Kimi Code Cheat Sheet',
     'footer.comparisons': 'Comparisons',
     'footer.pricing': 'Pricing',
@@ -777,7 +779,7 @@ export const dict: Record<Locale, Record<string, string>> = {
 
     // playbooks
     'playbooks.badge1': 'AI Vibe Navigator',
-    'playbooks.badge2': 'No signup',
+    'playbooks.badge2': 'Battle-tested',
     'playbooks.title': 'AIHues Growth Stack + AI Tools',
     'resources.relatedTools': 'Related Tools',
     'resources.fromReview': 'From AIHues Reviews',
@@ -805,10 +807,11 @@ export const dict: Record<Locale, Record<string, string>> = {
     'nav.tools': '工具',
     'nav.games': '游戏',
     'nav.tests': '测评',
-    'nav.resources': '资源',
+    'nav.resources': '故事',
     'nav.wishlist': '许愿单',
     'nav.ranking': '排行榜',
     'nav.discover': '发现',
+    'nav.search': '搜索',
     'nav.login': '登录',
 
     // hero
@@ -824,6 +827,7 @@ export const dict: Record<Locale, Record<string, string>> = {
     'cat.utility': '常用小工具',
     'cat.developer': '开发者工具',
     'cat.aiWriting': 'AI 写作',
+    'cat.image': '图片工具',
     'cat.games': '小游戏',
     'cat.utilityDesc': '字数统计、文本对比、全角转换、可读性、人性化',
     'cat.developerDesc': 'JWT、JSON、正则、Base64、UUID、二维码、SHA256',
@@ -1251,7 +1255,7 @@ export const dict: Record<Locale, Record<string, string>> = {
     'footer.terms': '条款',
     'footer.privacy': '隐私',
     'footer.contact': '联系',
-    'footer.resources': '资源',
+    'footer.resources': '故事',
     'footer.cheatSheet': 'Kimi Code 速查表',
     'footer.comparisons': '对比',
     'footer.pricing': '定价',
@@ -1265,7 +1269,7 @@ export const dict: Record<Locale, Record<string, string>> = {
 
     // playbooks
     'playbooks.badge1': 'AI Vibe Navigator',
-    'playbooks.badge2': '无需注册',
+    'playbooks.badge2': '实战验证',
     'playbooks.title': 'AIHues 出海增长 + AI 工具导航',
     'tool.seoTitle.title': 'SEO 标题优化器',
     'tool.seoTitle.desc': '检查并优化搜索引擎页面标题',

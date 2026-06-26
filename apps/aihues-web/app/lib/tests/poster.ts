@@ -165,7 +165,10 @@ export async function buildResultPoster(
   ctx.fillStyle = MUTED;
   ctx.font = `800 20px ${SANS}`;
   ctx.fillText(
-    config.resultStyle === 'sbti' ? 'SOUL DIMENSIONS' : 'YOUR BREAKDOWN',
+    (
+      config.breakdownLabel ??
+      (config.resultStyle === 'sbti' ? 'Soul dimensions' : 'Your breakdown')
+    ).toUpperCase(),
     PAD,
     y
   );
