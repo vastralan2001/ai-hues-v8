@@ -179,7 +179,7 @@ export default async function ArticlePage({
           <span className='truncate text-secondary'>{meta.title}</span>
         </nav>
 
-        <div className='lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-x-[clamp(48px,8vw,160px)]'>
+        <div className='lg:grid lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-x-[clamp(56px,7vw,160px)]'>
           {/* Hero — text left, a compact illustration right (mars resources
               style): the demo is a contained side panel, not a full-width band */}
           <header className='lg:col-span-2'>
@@ -215,7 +215,7 @@ export default async function ArticlePage({
 
           {/* Article body — left column */}
           <article
-            className='article-content mt-10 min-w-0 max-w-[720px] lg:col-start-1 lg:row-start-2'
+            className='article-content mt-10 min-w-0 max-w-[800px] lg:col-start-1 lg:row-start-2'
             dangerouslySetInnerHTML={{ __html: htmlContent }}
           />
 

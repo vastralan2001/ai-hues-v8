@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-import { Noto_Sans } from 'next/font/google';
+import { Noto_Sans, Rajdhani } from 'next/font/google';
 
 import { I18nProvider } from '@/lib/i18n';
 import CommandPalette from '@/components/CommandPalette';
@@ -12,6 +12,15 @@ const notoSans = Noto_Sans({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
   variable: '--font-noto-sans',
+  display: 'swap',
+});
+
+// Rajdhani (OFL, commercially usable) replaces the non-commercial Radiance as
+// the display face. Exposed as --font-display for the design tokens.
+const rajdhani = Rajdhani({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-rajdhani',
   display: 'swap',
 });
 
@@ -51,7 +60,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang='en' className={`${notoSans.variable}`}>
+    <html lang='en' className={`${notoSans.variable} ${rajdhani.variable}`}>
       <head>
         <GoogleAnalytics />
         <link rel='manifest' href='/manifest.json' />

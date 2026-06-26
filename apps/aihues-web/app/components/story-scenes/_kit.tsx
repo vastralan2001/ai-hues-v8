@@ -19,8 +19,7 @@ export const ScenePaused = createContext(false);
 
    See .claude/skills/story-demo/SKILL.md for the authoring guide. */
 
-export const FONT =
-  '"Radiance", var(--font-noto-sans), "Noto Sans", sans-serif';
+export const FONT = 'var(--font-display)';
 export const INK = '#5b5346'; // muted hand-drawn ink
 export const gen = rough.generator();
 
