@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 import Breadcrumb from '@/components/Breadcrumb';
 import ShareButtons from '@/components/ShareButtons';
 import { StoryShareCard } from '@/components/StoryShareCard';
-import { PersonaAvatar, hasPersona } from '@/components/tests/PersonaAvatar';
+import { PersonaImage } from '@/components/tests/PersonaImage';
 import { TestAvatar } from '@/components/tests/TestAvatar';
 import { PageShell } from '@/components/SiteChrome';
 import type { Locale } from '@/lib/dict';
@@ -14,6 +14,7 @@ import { getMbtiSummary } from '@/lib/tests/mbti';
 import { getMensaSummary } from '@/lib/tests/mensa';
 import { getSbinetSummary } from '@/lib/tests/sbinet';
 import { getSbtiSummary } from '@/lib/tests/sbti';
+import { hasPersonaArt, personaImageSrc } from '@/lib/tests/persona-art';
 import { testsHref } from '@/lib/routes';
 
 export function generateStaticParams() {
@@ -150,16 +151,22 @@ export default async function TestResultSharePage({
   const shareText = `My ${config.name} result: ${summary.code} — ${name} · via AIHues`;
   const pageUrl = `https://aihues.com/tests/${slug}/result?code=${encodeURIComponent(code)}`;
 
-  const usePersona =
-    (slug === 'mbti' || slug === 'sbti') && hasPersona(summary.code);
+  const usePersona = hasPersonaArt(slug);
+  const personaSrc = usePersona ? personaImageSrc(slug, summary.code) : null;
 
-  const media = (
+  const media = usePersona ? (
+    <div className='overflow-hidden rounded-[26px] border-[3px] border-white bg-bg shadow-xl'>
+      <PersonaImage
+        src={personaSrc}
+        alt={`${config.name} — ${name}`}
+        accent={accent}
+        size={168}
+        placeholderLabel={summary.code}
+      />
+    </div>
+  ) : (
     <div className='rounded-[22px] border-2 border-white bg-bg p-1 shadow-xl'>
-      {usePersona ? (
-        <PersonaAvatar code={summary.code} accent={accent} size={120} />
-      ) : (
-        <TestAvatar code={summary.code} accent={accent} size={120} />
-      )}
+      <TestAvatar code={summary.code} accent={accent} size={120} />
     </div>
   );
 

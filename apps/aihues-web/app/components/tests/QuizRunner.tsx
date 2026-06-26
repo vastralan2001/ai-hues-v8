@@ -7,8 +7,9 @@ import { useState } from 'react';
 import { getTest } from '@/lib/tests';
 import { buildResultPoster, shareOrDownloadPoster } from '@/lib/tests/poster';
 import type { TestResult } from '@/lib/tests/types';
-import { PersonaAvatar, hasPersona } from '@/components/tests/PersonaAvatar';
+import { PersonaImage } from '@/components/tests/PersonaImage';
 import { TestAvatar } from '@/components/tests/TestAvatar';
+import { hasPersonaArt, personaImageSrc } from '@/lib/tests/persona-art';
 import { ToolIcon } from '@/components/ToolIcon';
 import { testsHref } from '@/lib/routes';
 
@@ -218,17 +219,21 @@ export default function QuizRunner({ slug }: { slug: string }) {
     const racc = result.accent;
     const isSbti = config.resultStyle === 'sbti';
 
-    const usePersona =
-      (config.slug === 'mbti' || config.slug === 'sbti') &&
-      hasPersona(result.code);
+    const usePersona = hasPersonaArt(config.slug);
 
-    const resultAvatar = (
+    const resultAvatar = usePersona ? (
+      <div className='overflow-hidden rounded-[20px] border-[3px] border-white bg-bg shadow-xl'>
+        <PersonaImage
+          src={personaImageSrc(config.slug, result.code)}
+          alt={result.title}
+          accent={racc}
+          size={108}
+          placeholderLabel={result.code}
+        />
+      </div>
+    ) : (
       <div className='rounded-[18px] border-2 border-white bg-bg p-1 shadow-xl'>
-        {usePersona ? (
-          <PersonaAvatar code={result.code} accent={racc} size={88} />
-        ) : (
-          <TestAvatar code={result.code} accent={racc} size={88} />
-        )}
+        <TestAvatar code={result.code} accent={racc} size={88} />
       </div>
     );
 
