@@ -443,20 +443,23 @@ select:focus-visible {
   border-radius: 100px;
   border: 1px solid var(--border);
   background: var(--color-bg);
-  color: var(--text);
+  /* lighter, quieter label; the per-category --chip-accent only lights up the
+     icon and the hover state. */
+  color: var(--color-muted);
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   white-space: nowrap;
   transition:
     border-color 200ms ease,
     color 200ms ease;
 }
 .marquee-chip:hover {
-  border-color: var(--accent);
-  color: var(--accent);
+  border-color: var(--chip-accent, var(--accent));
+  color: var(--chip-accent, var(--accent));
 }
 .marquee-chip svg {
-  color: var(--accent);
+  color: var(--chip-accent, var(--accent));
+  opacity: 0.85;
 }
 @media (prefers-reduced-motion: reduce) {
   .marquee-track {
@@ -3162,21 +3165,25 @@ input {
 }
 .egg-wave {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  /* sit above the word's x-height — the waves spring from the upper corners of
+     the first / last letters, not the vertical middle. */
+  top: 0;
   line-height: 0;
   pointer-events: none;
   color: var(--color-accent);
   z-index: 5;
 }
+/* Waves radiate diagonally up-and-out (~45°) from the top corners of the word,
+   instead of dead-horizontal, so the sound reads as spreading upward. */
 .egg-wave-l {
   right: 100%;
-  margin-right: 2px;
-  transform: translateY(-50%) scaleX(-1);
+  margin-right: 1px;
+  transform: translateY(-70%) scaleX(-1) rotate(-45deg);
 }
 .egg-wave-r {
   left: 100%;
-  margin-left: 2px;
+  margin-left: 1px;
+  transform: translateY(-70%) rotate(-45deg);
 }
 
 /* Hero search box — focus tint follows the current category hue (--color-accent

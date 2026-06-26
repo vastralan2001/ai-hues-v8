@@ -1,9 +1,14 @@
 import Link from 'next/link';
 
 import { ToolIcon } from '@/components/ToolIcon';
-import { toolDetailHref } from '@/lib/routes';
+import { CATEGORY_ACCENT_HEX, type BrandCategory } from '@/lib/category-brand';
 
-export type MarqueeItem = { slug: string; name: string };
+export type MarqueeItem = {
+  slug: string;
+  name: string;
+  href: string;
+  cat: BrandCategory;
+};
 
 export default function ToolMarquee({ rows }: { rows: MarqueeItem[][] }) {
   const durations = [48, 58, 52];
@@ -24,8 +29,13 @@ export default function ToolMarquee({ rows }: { rows: MarqueeItem[][] }) {
               {loop.map((item, i) => (
                 <Link
                   key={`${rowIdx}-${item.slug}-${i}`}
-                  href={toolDetailHref(item.slug)}
+                  href={item.href}
                   className='marquee-chip'
+                  style={
+                    {
+                      '--chip-accent': CATEGORY_ACCENT_HEX[item.cat],
+                    } as React.CSSProperties
+                  }
                   aria-hidden={i >= items.length ? 'true' : undefined}
                   tabIndex={i >= items.length ? -1 : undefined}
                 >
