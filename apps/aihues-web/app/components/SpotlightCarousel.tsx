@@ -9,6 +9,16 @@ import { TestDemo } from '@/components/tests/TestDemos';
 import { ToolIcon } from '@/components/ToolIcon';
 import { ToolDemo } from '@/components/tools/ToolDemos';
 import { storyTagIcon } from '@/lib/story-scenes';
+import { categoryThemeStyle, type BrandCategory } from '@/lib/category-brand';
+
+// Each slide owns its family hue so a cross-fade never lets the outgoing slide
+// borrow the incoming category's colour (kind → BrandCategory).
+const KIND_CAT: Record<string, BrandCategory> = {
+  tool: 'tools',
+  game: 'games',
+  test: 'tests',
+  story: 'stories',
+};
 
 export type SpotlightSlide = {
   slug: string;
@@ -222,6 +232,7 @@ export default function SpotlightCarousel({
               : 'none';
           const showDemo = slideHasDemo(s);
           const k = s.kind ?? demo;
+          const slideCat = k ? KIND_CAT[k] : undefined;
           const visual = showDemo ? (
             renderDemo(s, isActive)
           ) : k === 'story' ? (
@@ -238,6 +249,7 @@ export default function SpotlightCarousel({
               aria-hidden={!isActive}
               className='absolute inset-0'
               style={{
+                ...(slideCat ? categoryThemeStyle(slideCat) : null),
                 opacity: isActive ? 1 : 0,
                 transform: `translateX(${x}px)`,
                 transition,

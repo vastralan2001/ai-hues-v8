@@ -23,7 +23,7 @@ export const categoryColor = (c: BrandCategory): string =>
    in sync with the @theme tokens in globals.css. */
 export const CATEGORY_ACCENT_HEX: Record<BrandCategory, string> = {
   tools: '#c2502e',
-  games: '#d97757',
+  games: '#a774c4',
   tests: '#788c5d',
   stories: '#6a9bcc',
 };

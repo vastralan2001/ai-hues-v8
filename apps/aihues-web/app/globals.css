@@ -43,6 +43,11 @@
   --color-green-bg: rgba(120, 140, 93, 0.08);
   --color-blue: #6a9bcc;
   --color-blue-bg: rgba(106, 155, 204, 0.08);
+  /* Games family hue — a violet that sits ~90° off the tools red-orange, so the
+     four families (tools 14° / tests 86° / stories 210° / games 280°) are each
+     a clearly distinct hue rather than tools and games sharing the warm orange. */
+  --color-violet: #a774c4;
+  --color-violet-bg: rgba(167, 116, 196, 0.08);
   --color-orange: #d97757;
 
   /* Shape */
