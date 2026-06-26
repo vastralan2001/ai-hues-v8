@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 
+import { useOptionalGameSession } from '@/components/games/GameSessionProvider';
 import type { Locale } from '@/lib/dict';
 import {
   COLORS,
@@ -145,6 +146,18 @@ export default function TetrisGame({ locale }: { locale: Locale }) {
   const [lines, setLines] = useState(0);
   const [nextType, setNextType] = useState(0);
   const [diff, setDiff] = useState<Difficulty>('easy');
+
+  const gameSession = useOptionalGameSession();
+
+  useEffect(() => {
+    gameSession?.reportScore(score);
+  }, [score, gameSession]);
+
+  useEffect(() => {
+    if (phase === 'over') {
+      gameSession?.reportGameOver(score);
+    }
+  }, [phase, score, gameSession]);
 
   useEffect(() => {
     const raf = requestAnimationFrame(() => {

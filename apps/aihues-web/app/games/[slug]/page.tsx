@@ -5,6 +5,8 @@ import Breadcrumb from '@/components/Breadcrumb';
 import { JsonLd } from '@/components/JsonLd';
 import RelatedItems from '@/components/RelatedItems';
 import ShareButtons from '@/components/ShareButtons';
+import { GameOverSharePrompt } from '@/components/games/GameOverSharePrompt';
+import { GameSessionProvider } from '@/components/games/GameSessionProvider';
 import { PageShell } from '@/components/SiteChrome';
 import type { Locale } from '@/lib/dict';
 import { GAME_THEMES, REACT_GAMES } from '@/lib/games';
@@ -242,7 +244,12 @@ export default async function GamePage({
             <div
               className={`relative flex flex-1 ${theme.quiet ? 'w-full' : 'items-center justify-center px-4'}`}
             >
-              <Game locale={locale} />
+              <GameSessionProvider slug={slug}>
+                <div className='relative'>
+                  <Game locale={locale} />
+                  <GameOverSharePrompt />
+                </div>
+              </GameSessionProvider>
             </div>
             {howTo ? <HowToPlay dark items={howTo} /> : null}
             <div className='mx-auto mt-12 w-full max-w-[1760px] px-[clamp(1.5rem,5vw,7rem)]'>
@@ -281,7 +288,12 @@ export default async function GamePage({
               {locale === 'zh' ? game.descZh : game.desc}
             </p>
           </div>
-          <Game locale={locale} />
+          <GameSessionProvider slug={slug}>
+            <div className='relative'>
+              <Game locale={locale} />
+              <GameOverSharePrompt />
+            </div>
+          </GameSessionProvider>
           {howTo ? <HowToPlay items={howTo} /> : null}
           <RelatedItems
             type='game'

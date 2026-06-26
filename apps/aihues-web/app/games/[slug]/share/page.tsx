@@ -16,15 +16,33 @@ export function generateStaticParams() {
 
 export async function generateMetadata({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ score?: string; text?: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
+  const { score, text } = await searchParams;
   const game = REACT_GAMES[slug];
   if (!game) return { title: 'Game | AIHues' };
+  const title = `Share ${game.title} | AIHues`;
+  const description =
+    text || (score ? `I scored ${score} in ${game.title}` : game.desc);
+  const imageUrl = `/games/${slug}/share/opengraph-image?score=${encodeURIComponent(score ?? '')}&text=${encodeURIComponent(text ?? '')}`;
   return {
-    title: `Share ${game.title} | AIHues`,
-    description: game.desc,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: [{ url: imageUrl, alt: `Share ${game.title}` }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [imageUrl],
+    },
   };
 }
 
