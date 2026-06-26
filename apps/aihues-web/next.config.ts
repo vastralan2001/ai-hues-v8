@@ -33,13 +33,8 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'www.16personalities.com',
-        pathname: '/static/images/personality-types/avatars/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'sbti.pics',
-        pathname: '/images/**',
+        hostname: 'images.unsplash.com',
+        pathname: '/**',
       },
     ],
   },

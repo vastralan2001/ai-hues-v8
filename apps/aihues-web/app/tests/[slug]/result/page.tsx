@@ -1,19 +1,19 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import Breadcrumb from '@/components/Breadcrumb';
 import ShareButtons from '@/components/ShareButtons';
 import { StoryShareCard } from '@/components/StoryShareCard';
+import { PersonaAvatar, hasPersona } from '@/components/tests/PersonaAvatar';
 import { TestAvatar } from '@/components/tests/TestAvatar';
 import { PageShell } from '@/components/SiteChrome';
 import type { Locale } from '@/lib/dict';
 import { getTest } from '@/lib/tests';
-import { getMbtiAvatarUrl, getMbtiSummary } from '@/lib/tests/mbti';
+import { getMbtiSummary } from '@/lib/tests/mbti';
 import { getMensaSummary } from '@/lib/tests/mensa';
 import { getSbinetSummary } from '@/lib/tests/sbinet';
-import { getSbtiAvatarUrl, getSbtiSummary } from '@/lib/tests/sbti';
+import { getSbtiSummary } from '@/lib/tests/sbti';
 import { testsHref } from '@/lib/routes';
 
 export function generateStaticParams() {
@@ -60,14 +60,8 @@ export async function generateMetadata({
     summary?.blurb ?? `Check out my ${config.name} result on AIHues.`;
   const pageUrl = `https://aihues.com/tests/${slug}/result?code=${encodeURIComponent(code)}`;
 
-  let imageUrl: string | undefined;
-  if (slug === 'mbti') {
-    imageUrl = getMbtiAvatarUrl(code) ?? undefined;
-  } else if (slug === 'sbti') {
-    imageUrl = getSbtiAvatarUrl(code) ?? undefined;
-  } else {
-    imageUrl = `/tests/${slug}/result/opengraph-image?code=${encodeURIComponent(code)}`;
-  }
+  // Original, generated OG card for every test — no third-party artwork.
+  const imageUrl = `/tests/${slug}/result/opengraph-image?code=${encodeURIComponent(code)}`;
 
   return {
     title,
@@ -77,32 +71,51 @@ export async function generateMetadata({
       description,
       url: pageUrl,
       type: 'website',
-      images: imageUrl
-        ? [
-            {
-              url: imageUrl,
-              alt: `${config.name} result for ${summary?.code ?? code}`,
-            },
-          ]
-        : undefined,
+      images: [
+        {
+          url: imageUrl,
+          alt: `${config.name} result for ${summary?.code ?? code}`,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
-      images: imageUrl ? [imageUrl] : undefined,
+      images: [imageUrl],
     },
   };
 }
 
-const TEST_SKY: Record<
+const TEST_THEME: Record<
   string,
-  { sky: [string, string]; accent?: string; variant?: 'day' | 'night' }
+  {
+    sky: [string, string];
+    accent?: string;
+    variant?: 'day' | 'night';
+    backgroundImage?: string;
+  }
 > = {
-  sbti: { sky: ['#fdf4ef', '#f9e7de'] },
-  mbti: { sky: ['#f3eef8', '#e9e0f2'] },
-  mensa: { sky: ['#f4f0fa', '#ebe4f5'] },
-  sbinet: { sky: ['#ecf5f6', '#dfecee'] },
+  sbti: {
+    sky: ['#fdf4ef', '#f9e7de'],
+    backgroundImage:
+      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80',
+  },
+  mbti: {
+    sky: ['#f3eef8', '#e9e0f2'],
+    backgroundImage:
+      'https://images.unsplash.com/photo-1494500764479-0c8f2919a3d8?auto=format&fit=crop&w=1200&q=80',
+  },
+  mensa: {
+    sky: ['#f4f0fa', '#ebe4f5'],
+    backgroundImage:
+      'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=80',
+  },
+  sbinet: {
+    sky: ['#ecf5f6', '#dfecee'],
+    backgroundImage:
+      'https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&w=1200&q=80',
+  },
 };
 
 export default async function TestResultSharePage({
@@ -137,26 +150,16 @@ export default async function TestResultSharePage({
   const shareText = `My ${config.name} result: ${summary.code} — ${name} · via AIHues`;
   const pageUrl = `https://aihues.com/tests/${slug}/result?code=${encodeURIComponent(code)}`;
 
-  const avatarUrl =
-    slug === 'mbti'
-      ? getMbtiAvatarUrl(summary.code)
-      : slug === 'sbti'
-        ? getSbtiAvatarUrl(summary.code)
-        : null;
+  const usePersona =
+    (slug === 'mbti' || slug === 'sbti') && hasPersona(summary.code);
 
-  const media = avatarUrl ? (
-    <Image
-      src={avatarUrl}
-      alt={name}
-      width={128}
-      height={128}
-      priority
-      unoptimized
-      className='h-32 w-32 rounded-[22px] border-2 border-white bg-bg object-cover shadow-xl'
-    />
-  ) : (
+  const media = (
     <div className='rounded-[22px] border-2 border-white bg-bg p-1 shadow-xl'>
-      <TestAvatar code={summary.code} accent={accent} size={120} />
+      {usePersona ? (
+        <PersonaAvatar code={summary.code} accent={accent} size={120} />
+      ) : (
+        <TestAvatar code={summary.code} accent={accent} size={120} />
+      )}
     </div>
   );
 
@@ -184,9 +187,10 @@ export default async function TestResultSharePage({
         <div className='mt-10'>
           <StoryShareCard
             seed={`test-${slug}-${summary.code}`}
-            sky={TEST_SKY[slug]?.sky ?? ['#f3f1ea', '#faf9f5']}
+            sky={TEST_THEME[slug]?.sky ?? ['#f3f1ea', '#faf9f5']}
             accent={accent}
-            variant={TEST_SKY[slug]?.variant ?? 'day'}
+            variant={TEST_THEME[slug]?.variant ?? 'day'}
+            backgroundImage={TEST_THEME[slug]?.backgroundImage}
             eyebrow={config.name}
             title={summary.code}
             subtitle={name}

@@ -5,6 +5,8 @@ export interface StoryShareCardProps {
   sky: [string, string];
   accent?: string;
   variant?: 'day' | 'night';
+  /** Optional photographic background for the scene header. */
+  backgroundImage?: string;
   /** Eyebrow label above the title. */
   eyebrow?: string;
   /** Main title. */
@@ -21,6 +23,7 @@ export function StoryShareCard({
   sky,
   accent = '#c2502e',
   variant = 'day',
+  backgroundImage,
   eyebrow,
   title,
   subtitle,
@@ -29,10 +32,16 @@ export function StoryShareCard({
 }: StoryShareCardProps) {
   return (
     <div className='overflow-hidden rounded-[24px] border border-border bg-surface shadow-sm'>
-      <SceneHeader seed={seed} sky={sky} accent={accent} variant={variant} />
+      <SceneHeader
+        seed={seed}
+        sky={sky}
+        accent={accent}
+        variant={variant}
+        backgroundImage={backgroundImage}
+      />
 
       <div className='relative -mt-8 px-6 pb-8 pt-0 text-center sm:px-8'>
-        <div className='relative z-10 mx-auto -mt-14 mb-5 inline-block'>
+        <div className='relative z-10 -mt-14 mb-5 flex justify-center'>
           {media}
         </div>
 

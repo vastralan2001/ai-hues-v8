@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 
 import Breadcrumb from '@/components/Breadcrumb';
 import ShareButtons from '@/components/ShareButtons';
+import { GameSharePreview } from '@/components/games/GameSharePreview';
 import { StoryShareCard } from '@/components/StoryShareCard';
 import { PageShell } from '@/components/SiteChrome';
 import type { Locale } from '@/lib/dict';
@@ -84,6 +85,7 @@ export default async function GameSharePage({
             sky={theme?.sky ?? ['#f3f1ea', '#faf9f5']}
             accent={theme?.glow ?? 'var(--color-accent)'}
             variant={theme?.variant ?? 'day'}
+            backgroundImage={theme?.backgroundImage}
             eyebrow={locale === 'zh' ? '小游戏' : 'Mini Game'}
             title={title}
             subtitle={desc}
@@ -117,6 +119,8 @@ export default async function GameSharePage({
             </div>
           </StoryShareCard>
         </div>
+
+        <GameSharePreview slug={slug} locale={locale} />
 
         <p className='mt-6 text-center text-[12px] text-muted'>
           {locale === 'zh'

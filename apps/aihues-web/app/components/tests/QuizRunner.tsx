@@ -7,6 +7,8 @@ import { useState } from 'react';
 import { getTest } from '@/lib/tests';
 import { buildResultPoster, shareOrDownloadPoster } from '@/lib/tests/poster';
 import type { TestResult } from '@/lib/tests/types';
+import { PersonaAvatar, hasPersona } from '@/components/tests/PersonaAvatar';
+import { TestAvatar } from '@/components/tests/TestAvatar';
 import { ToolIcon } from '@/components/ToolIcon';
 import { testsHref } from '@/lib/routes';
 
@@ -216,6 +218,20 @@ export default function QuizRunner({ slug }: { slug: string }) {
     const racc = result.accent;
     const isSbti = config.resultStyle === 'sbti';
 
+    const usePersona =
+      (config.slug === 'mbti' || config.slug === 'sbti') &&
+      hasPersona(result.code);
+
+    const resultAvatar = (
+      <div className='rounded-[18px] border-2 border-white bg-bg p-1 shadow-xl'>
+        {usePersona ? (
+          <PersonaAvatar code={result.code} accent={racc} size={88} />
+        ) : (
+          <TestAvatar code={result.code} accent={racc} size={88} />
+        )}
+      </div>
+    );
+
     return (
       <div className='mx-auto w-full max-w-[680px]'>
         <div className='overflow-hidden rounded-[22px] border border-border bg-surface'>
@@ -229,6 +245,7 @@ export default function QuizRunner({ slug }: { slug: string }) {
                 Hidden archetype
               </span>
             )}
+            <div className='mb-4 flex justify-center'>{resultAvatar}</div>
             <div
               className='text-[44px] font-black leading-none tracking-[-0.01em]'
               style={{ color: racc }}

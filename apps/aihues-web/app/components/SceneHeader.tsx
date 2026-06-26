@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 /* A hand-drawn, story-scene style header for share / result cards.
    No rough.js dependency: the shapes are plain SVG with slightly irregular
    paths and warm ink outlines, evoking the old story-scenes/_kit.tsx look. */
@@ -11,6 +13,8 @@ interface SceneHeaderProps {
   accent?: string;
   /** Day scenes get a sun; night scenes get a moon and more stars. */
   variant?: 'day' | 'night';
+  /** Optional Unsplash-style photographic background. */
+  backgroundImage?: string;
 }
 
 function hash(str: string): number {
@@ -37,6 +41,7 @@ export function SceneHeader({
   sky,
   accent = '#c2502e',
   variant = 'day',
+  backgroundImage,
 }: SceneHeaderProps) {
   const rnd = mulberry32(hash(seed));
   const isNight = variant === 'night';
@@ -59,17 +64,30 @@ export function SceneHeader({
   ];
 
   const gid = `sky-${seed.replace(/[^a-z0-9]/gi, '')}`;
+  const hasPhoto = Boolean(backgroundImage);
 
   return (
     <div
       className='relative w-full overflow-hidden'
       style={{ aspectRatio: '5 / 2' }}
     >
+      {backgroundImage && (
+        <Image
+          src={backgroundImage}
+          alt=''
+          fill
+          unoptimized
+          className='object-cover'
+          sizes='(max-width: 720px) 100vw, 720px'
+          priority
+        />
+      )}
+
       <svg
         xmlns='http://www.w3.org/2000/svg'
         viewBox='0 0 400 160'
         preserveAspectRatio='xMidYMid slice'
-        className='h-full w-full'
+        className='absolute inset-0 h-full w-full'
         strokeLinecap='round'
         strokeLinejoin='round'
       >
@@ -92,7 +110,14 @@ export function SceneHeader({
           </filter>
         </defs>
 
-        <rect x='0' y='0' width='400' height='160' fill={`url(#${gid})`} />
+        <rect
+          x='0'
+          y='0'
+          width='400'
+          height='160'
+          fill={`url(#${gid})`}
+          opacity={hasPhoto ? 0.35 : 1}
+        />
         <rect
           x='0'
           y='0'
@@ -100,7 +125,7 @@ export function SceneHeader({
           height='160'
           fill={`url(#${gid})`}
           filter={`url(#grain-${gid})`}
-          opacity={0.4}
+          opacity={hasPhoto ? 0.12 : 0.4}
         />
 
         {/* stars */}
@@ -188,21 +213,25 @@ export function SceneHeader({
           </g>
         ))}
 
-        {/* hills / mountains */}
-        <path
-          d='M0 160 L70 110 Q110 86 150 112 T280 118 T400 96 V160Z'
-          fill={accent}
-          opacity={0.12}
-          stroke={INK}
-          strokeWidth={1}
-        />
-        <path
-          d='M0 160 L110 130 Q170 100 230 132 T400 124 V160Z'
-          fill={accent}
-          opacity={0.08}
-          stroke={INK}
-          strokeWidth={1}
-        />
+        {/* hand-drawn hills only when no photo is used */}
+        {!hasPhoto && (
+          <>
+            <path
+              d='M0 160 L70 110 Q110 86 150 112 T280 118 T400 96 V160Z'
+              fill={accent}
+              opacity={0.12}
+              stroke={INK}
+              strokeWidth={1}
+            />
+            <path
+              d='M0 160 L110 130 Q170 100 230 132 T400 124 V160Z'
+              fill={accent}
+              opacity={0.08}
+              stroke={INK}
+              strokeWidth={1}
+            />
+          </>
+        )}
       </svg>
     </div>
   );

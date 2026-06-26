@@ -310,32 +310,6 @@ function score(answers: number[]): TestResult {
   };
 }
 
-const AVATAR_NAMES: Record<string, string> = {
-  INTJ: 'architect',
-  INTP: 'logician',
-  ENTJ: 'commander',
-  ENTP: 'debater',
-  INFJ: 'advocate',
-  INFP: 'mediator',
-  ENFJ: 'protagonist',
-  ENFP: 'campaigner',
-  ISTJ: 'logistician',
-  ISFJ: 'defender',
-  ESTJ: 'executive',
-  ESFJ: 'consul',
-  ISTP: 'virtuoso',
-  ISFP: 'adventurer',
-  ESTP: 'entrepreneur',
-  ESFP: 'entertainer',
-};
-
-export function getMbtiAvatarUrl(code: string): string | null {
-  const type4 = code.slice(0, 4).toUpperCase();
-  const name = AVATAR_NAMES[type4];
-  if (!name) return null;
-  return `https://www.16personalities.com/static/images/personality-types/avatars/${type4.toLowerCase()}-${name}.png`;
-}
-
 export interface MbtiSummary {
   code: string;
   type4: string;
