@@ -45,8 +45,8 @@ const QUESTIONS: Record<string, Question> = {
 
 const RESULTS: Record<string, PosterPreview> = {
   sbti: {
-    code: 'GOBLIN',
-    title: 'The Goblin',
+    code: 'MALO',
+    title: 'The Malo',
     bars: [
       { label: 'Chaos', pct: 86 },
       { label: 'Cope', pct: 64 },

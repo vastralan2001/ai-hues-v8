@@ -10,8 +10,8 @@ interface PersonaPlaceholderProps {
    dashed border, so an empty slot reads as intentional, not broken. */
 export function PersonaPlaceholder({
   accent,
-  width = 220,
-  height = 390,
+  width = 180,
+  height = 270,
   label,
 }: PersonaPlaceholderProps) {
   const gid = `phs-${accent.replace('#', '')}`;

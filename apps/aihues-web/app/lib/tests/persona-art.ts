@@ -24,22 +24,22 @@ export const MBTI_PERSONA_CODES = [
 
 // 16 SBTI archetypes (file: /personas/sbti/<code>.png)
 export const SBTI_PERSONA_CODES = [
-  'goblin',
-  'npc',
-  'doomer',
-  'grindset',
-  'mainchar',
-  'ghost',
-  'simp',
-  'karen',
-  'zen',
-  'clown',
-  'gigachad',
-  'burnout',
-  'yesman',
-  'overthink',
-  'drunk',
+  'malo',
+  'fake',
+  'dead',
+  'gogo',
+  'sexy',
+  'solo',
+  'love-r',
+  'ctrl',
+  'monk',
+  'joke-r',
+  'boss',
+  'zzzz',
+  'atm-er',
+  'imsb',
   'hhhh',
+  'drunk',
 ] as const;
 
 /** Public path for a result's character art, or null when the test has no art set. */

@@ -19,7 +19,7 @@ export interface ResultBar {
 }
 
 export interface TestResult {
-  /** Short code, e.g. "INTJ-A" or "GOBLIN". */
+  /** Short code, e.g. "INTJ-A" or "MALO". */
   code: string;
   title: string;
   blurb: string;

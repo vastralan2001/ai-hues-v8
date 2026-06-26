@@ -152,8 +152,8 @@ export default async function TestResultSharePage({
         src={personaSrc}
         alt={`${config.name} — ${name}`}
         accent={accent}
-        width={220}
-        height={390}
+        width={180}
+        height={270}
         placeholderLabel={summary.code}
       />
     </div>

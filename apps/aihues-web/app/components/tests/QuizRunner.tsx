@@ -231,8 +231,8 @@ export default function QuizRunner({ slug }: { slug: string }) {
           src={personaImageSrc(config.slug, result.code)}
           alt={result.title}
           accent={racc}
-          width={150}
-          height={267}
+          width={120}
+          height={180}
           placeholderLabel={result.code}
         />
       </div>

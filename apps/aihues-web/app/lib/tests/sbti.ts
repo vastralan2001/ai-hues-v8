@@ -270,112 +270,112 @@ interface Archetype {
 // 14 matchable archetypes (+ DRUNK egg + WILDCARD fallback below).
 const ARCHETYPES: Archetype[] = [
   {
-    code: 'GOBLIN',
-    name: 'The Goblin',
+    code: 'MALO',
+    name: 'The Malo',
     accent: '#6b8e23',
     pattern: 'MLLLMLMLHLMLMML',
     blurb:
-      'Chaos in a hoodie. Low effort, low plans, surprisingly high vibes. You thrive in the mess you create.',
+      'Chaos in a hoodie — or a jungle vine. Low effort, low plans, surprisingly high vibes. You thrive in the mess you create.',
   },
   {
-    code: 'NPC',
-    name: 'The NPC',
+    code: 'FAKE',
+    name: 'The Fake',
     accent: '#9aa0a6',
     pattern: 'LLLMMLMHLLLMMHL',
     blurb:
       'You follow the script, take the path of least resistance, and never cause a scene. Reliable. Beige. Safe.',
   },
   {
-    code: 'DOOMER',
-    name: 'The Doomer',
+    code: 'DEAD',
+    name: 'The Dead',
     accent: '#5a6470',
     pattern: 'LMMLMMLMLLLLLML',
     blurb:
       'You already know how it ends, and it ends badly. Pessimism as a personality, served black.',
   },
   {
-    code: 'GRINDSET',
-    name: 'The Grindset',
+    code: 'GOGO',
+    name: 'The GOGO',
     accent: '#c2502e',
     pattern: 'HHHMLHHHMHHHMLH',
     blurb:
       'Sleep is for the weak and rest is a tax. You monetized your hobbies and your trauma. Up at 5am, hydrated, terrifying.',
   },
   {
-    code: 'MAINCHAR',
-    name: 'The Main Character',
+    code: 'SEXY',
+    name: 'The Sexy',
     accent: '#d4459b',
     pattern: 'HMMMHLHLHHHMHLH',
     blurb:
       'Everyone else is an extra in your montage. The lighting follows you. The story is, of course, about you.',
   },
   {
-    code: 'GHOST',
-    name: 'The Ghost',
+    code: 'SOLO',
+    name: 'The Solo',
     accent: '#8a93a6',
     pattern: 'MMMLLHMLMMMMLLL',
     blurb:
       'Last seen: a while ago. You keep the world at arm’s length and your read receipts off. Independence, possibly to a fault.',
   },
   {
-    code: 'SIMP',
-    name: 'The Simp',
+    code: 'LOVE-R',
+    name: 'The Lover',
     accent: '#e0719c',
     pattern: 'LLLLHLHMMMLMMHL',
     blurb:
       'You love hard, give too much, and apologize when someone steps on your foot. A heart of gold and zero boundaries.',
   },
   {
-    code: 'KAREN',
-    name: 'The Manager-Seeker',
+    code: 'CTRL',
+    name: 'The Controller',
     accent: '#c0392b',
     pattern: 'HLHLMLLHLMHMHLH',
     blurb:
       'You have read the terms of service and you would like a word. Rules matter — especially when they’re on your side.',
   },
   {
-    code: 'ZEN',
-    name: 'The Zen Master',
+    code: 'MONK',
+    name: 'The Monk',
     accent: '#2e8b74',
     pattern: 'HHHHMHHMHMMHMHL',
     blurb:
       'Annoyingly well-adjusted. Secure, self-aware, unbothered. You touched grass and it changed you. Namaste.',
   },
   {
-    code: 'CLOWN',
-    name: 'The Clown',
+    code: 'JOKE-R',
+    name: 'The Joker',
     accent: '#e0552b',
     pattern: 'LLMMHLHLHMMLHHH',
     blurb:
       'You will do anything for a laugh, including at your own expense. The funniest person at the party, quietly held together with tape.',
   },
   {
-    code: 'GIGACHAD',
-    name: 'The Gigachad',
+    code: 'BOSS',
+    name: 'The Boss',
     accent: '#b8860b',
     pattern: 'HHHHMHHMMHHHHHM',
     blurb:
       'Confident, driven, weirdly kind about it. You say what you mean and follow through. Suspiciously functional.',
   },
   {
-    code: 'BURNOUT',
-    name: 'The Burnout',
+    code: 'ZZZZ',
+    name: 'The ZZZZ',
     accent: '#7a6a55',
     pattern: 'LHMMLMLMMLLLLML',
     blurb:
-      'You used to be the Grindset. Now you know exactly who you are and have no energy left to be it. Running on fumes and self-awareness.',
+      'You used to be the GOGO. Now you know exactly who you are and have no energy left to be it. Running on fumes and self-awareness.',
   },
   {
-    code: 'YESMAN',
-    name: 'The People-Pleaser',
+    code: 'ATM-er',
+    name: 'The ATM-er',
     accent: '#d9a441',
     pattern: 'LLLMHLMHMMLMMHM',
     blurb:
       '"Sure, no problem, happy to!" — said while sobbing internally. You’d rather combust than disappoint anyone.',
   },
   {
-    code: 'OVERTHINK',
-    name: 'The Overthinker',
+    code: 'IMSB',
+    name: 'The IMSB',
     accent: '#6a5acd',
     pattern: 'LMMLHMLHHMLMLML',
     blurb:
@@ -495,7 +495,9 @@ export function getSbtiSummary(code: string): SbtiSummary | null {
       hidden: true,
     };
   }
-  const archetype = ARCHETYPES.find((a) => a.code === upper);
+  const archetype = ARCHETYPES.find(
+    (a) => a.code.toUpperCase() === upper || a.code === code
+  );
   if (archetype) {
     return {
       code: archetype.code,
@@ -522,7 +524,7 @@ export const sbtiConfig: TestConfig = {
   name: 'SBTI Personality Test',
   tagline: 'A gloriously unscientific soul-scan',
   intro:
-    'Thirty-one absurd questions, fifteen "soul dimensions", and one math formula deciding which internet archetype you are — from Goblin to Gigachad. There may be a hidden one. Pure chaos, zero credentials.',
+    'Thirty-one absurd questions, fifteen "soul dimensions", and one math formula deciding which internet archetype you are — from Malo to Boss. There may be a hidden one. Pure chaos, zero credentials.',
   rules: [
     '31 questions, about 4 minutes.',
     'Answer on instinct — overthinking is, ironically, a measured trait.',

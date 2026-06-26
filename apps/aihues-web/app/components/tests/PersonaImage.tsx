@@ -22,8 +22,8 @@ export function PersonaImage({
   src,
   alt,
   accent,
-  width = 220,
-  height = 390,
+  width = 180,
+  height = 270,
   placeholderLabel,
 }: PersonaImageProps) {
   const [failed, setFailed] = useState(false);
