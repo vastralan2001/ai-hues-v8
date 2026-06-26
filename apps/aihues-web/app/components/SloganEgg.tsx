@@ -82,9 +82,9 @@ function EggWord({ word, egg }: { word: string; egg: Egg }) {
             quick pop happens in the first ~16% of the cycle (times), then the
             drop flows down the rest of the way, accelerating like a real bead. */}
         {[
-          { left: '84%', top: -9, size: 17, fall: 34, delay: 0.0, dur: 1.5 },
-          { left: '100%', top: -4, size: 14, fall: 30, delay: 0.55, dur: 1.4 },
-          { left: '92%', top: -11, size: 15, fall: 38, delay: 1.1, dur: 1.6 },
+          { left: '84%', top: -3, size: 17, fall: 34, delay: 0.0, dur: 1.5 },
+          { left: '100%', top: 1, size: 14, fall: 30, delay: 0.55, dur: 1.4 },
+          { left: '92%', top: -5, size: 15, fall: 38, delay: 1.1, dur: 1.6 },
         ].map((d, i) => (
           <motion.span
             key={i}
