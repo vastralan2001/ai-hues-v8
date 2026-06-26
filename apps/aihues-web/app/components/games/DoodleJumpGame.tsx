@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-import { useOptionalGameSession } from '@/components/games/GameSessionProvider';
 import type { Locale } from '@/lib/dict';
 
 /* ──────────────────────────────────────────────────────────────
@@ -168,18 +167,6 @@ export default function DoodleJumpGame({ locale }: { locale: Locale }) {
   const [score, setScore] = useState(0);
   const [best, setBest] = useState(0);
   const [isTouch, setIsTouch] = useState(false);
-
-  const gameSession = useOptionalGameSession();
-
-  useEffect(() => {
-    gameSession?.reportScore(score);
-  }, [score, gameSession]);
-
-  useEffect(() => {
-    if (phase === 'over') {
-      gameSession?.reportGameOver(score);
-    }
-  }, [phase, score, gameSession]);
 
   useEffect(() => {
     const raf = requestAnimationFrame(() => {

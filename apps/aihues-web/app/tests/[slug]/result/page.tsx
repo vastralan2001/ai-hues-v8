@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import Breadcrumb from '@/components/Breadcrumb';
+import { Wordmark } from '@/components/Logo';
 import ShareButtons from '@/components/ShareButtons';
 import { StoryShareCard } from '@/components/StoryShareCard';
 import { PersonaImage } from '@/components/tests/PersonaImage';
@@ -147,15 +148,30 @@ export default async function TestResultSharePage({
   const personaSrc = usePersona ? personaImageSrc(slug, summary.code) : null;
 
   const media = usePersona ? (
-    <div className='overflow-hidden rounded-[20px] border-[4px] border-white bg-bg shadow-2xl'>
+    <div
+      className='relative flex flex-col overflow-hidden rounded-[24px] shadow-xl'
+      style={{ width: 220, background: '#fff' }}
+    >
       <PersonaImage
         src={personaSrc}
         alt={`${config.name} — ${name}`}
         accent={accent}
-        width={180}
-        height={270}
+        width={220}
+        height={300}
         placeholderLabel={summary.code}
+        className='h-full w-full bg-white'
       />
+      <div
+        className='px-4 pb-4 pt-3 text-center'
+        style={{ background: accent, color: '#fff' }}
+      >
+        <div className='text-[18px] font-black leading-none'>
+          {summary.code}
+        </div>
+        <div className='mt-1 text-[11px] font-semibold leading-tight opacity-90'>
+          {name}
+        </div>
+      </div>
     </div>
   ) : (
     <div className='rounded-[22px] border-2 border-white bg-bg p-1 shadow-xl'>
@@ -183,6 +199,12 @@ export default async function TestResultSharePage({
             { label: locale === 'zh' ? '结果' : 'Result' },
           ]}
         />
+
+        <div className='mb-6 flex justify-center'>
+          <Link href='/' className='inline-block'>
+            <Wordmark />
+          </Link>
+        </div>
 
         <div className='mt-10'>
           <StoryShareCard

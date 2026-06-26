@@ -15,6 +15,7 @@ export default function StoryCard({ post }: { post: ResourcePost }) {
         <StoryArt
           slug={post.slug}
           tag={post.tag}
+          source={post.source}
           alt={`${post.title} — illustration`}
           playOnHover
           className='h-full w-full transition-transform duration-500 group-hover:scale-105'

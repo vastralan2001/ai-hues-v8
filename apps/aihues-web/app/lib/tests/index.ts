@@ -38,7 +38,7 @@ export const TEST_META: TestMeta[] = [
     name: 'MBTI',
     tagline: 'Find your four-letter type',
     description:
-      '20 quick statements across five dimensions reveal your type and Assertive / Turbulent identity — Architect to Entertainer.',
+      '25 quick statements across five dimensions reveal your type and Assertive / Turbulent identity — Architect to Entertainer.',
     accent: 'var(--color-accent)',
     durationMin: 3,
     questionCount: mbtiConfig.questions.length,

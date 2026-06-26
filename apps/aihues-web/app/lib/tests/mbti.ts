@@ -146,16 +146,38 @@ const STATEMENTS: Statement[] = [
     agree: 'T',
     text: 'Criticism tends to stick with you long after it was given.',
   },
+
+  // Fifth statement per axis — POS-leaning tie-breaker so all-same answers
+  // don't collapse to a single type.
+  {
+    axis: 'EI',
+    agree: 'E',
+    text: 'You tend to think out loud and refine ideas by talking them through.',
+  },
+  {
+    axis: 'SN',
+    agree: 'N',
+    text: 'You enjoy pondering “what if” scenarios even when they seem impractical.',
+  },
+  {
+    axis: 'TF',
+    agree: 'T',
+    text: 'You trust a clear cost-benefit analysis over a gut feeling most days.',
+  },
+  {
+    axis: 'JP',
+    agree: 'J',
+    text: 'You feel unsettled when a decision is left open-ended for too long.',
+  },
+  {
+    axis: 'AT',
+    agree: 'A',
+    text: 'You usually bounce back from mistakes without dwelling on them.',
+  },
 ];
 
-const VALUES = [-2, -1, 0, 1, 2];
-const OPTIONS = [
-  'Strongly disagree',
-  'Disagree',
-  'Neutral',
-  'Agree',
-  'Strongly agree',
-];
+const VALUES = [-2, -1, 1, 2];
+const OPTIONS = ['Strongly disagree', 'Disagree', 'Agree', 'Strongly agree'];
 
 const GROUP = {
   analyst: { name: 'Analyst', accent: '#7e5aa6' },
@@ -272,7 +294,7 @@ const TYPES: Record<string, TypeDef> = {
 function score(answers: number[]): TestResult {
   const dim: Record<Axis, number> = { EI: 0, SN: 0, TF: 0, JP: 0, AT: 0 };
   STATEMENTS.forEach((s, i) => {
-    const v = VALUES[answers[i] ?? 2];
+    const v = VALUES[answers[i]] ?? 0;
     dim[s.axis] += s.agree === POS[s.axis] ? v : -v;
   });
 
@@ -285,7 +307,7 @@ function score(answers: number[]): TestResult {
 
   const order: Axis[] = ['EI', 'SN', 'TF', 'JP', 'AT'];
   const bars = order.map((a) => {
-    const max = 8; // 4 statements × 2
+    const max = 10; // 5 statements × 2
     const pct = Math.round(((dim[a] + max) / (2 * max)) * 100);
     return {
       label: AXIS_LABELS[a].label,
@@ -352,9 +374,9 @@ export const mbtiConfig: TestConfig = {
   name: 'MBTI Personality Test',
   tagline: 'Find your four-letter type',
   intro:
-    'Twenty quick statements across five dimensions — Mind, Energy, Nature, Tactics and Identity. Answer honestly (first instinct beats overthinking) and get your type, from Architect to Entertainer.',
+    'Twenty-five quick statements across five dimensions — Mind, Energy, Nature, Tactics and Identity. Answer honestly (first instinct beats overthinking) and get your type, from Architect to Entertainer.',
   rules: [
-    '20 agree/disagree statements, about 3 minutes.',
+    '25 agree/disagree statements, about 3–4 minutes.',
     'There are no right answers — go with your gut.',
     'You get a 4-letter type plus an Assertive (-A) or Turbulent (-T) identity.',
     'For fun and self-reflection, not a clinical diagnosis.',

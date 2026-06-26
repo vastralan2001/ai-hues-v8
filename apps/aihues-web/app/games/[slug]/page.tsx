@@ -5,8 +5,6 @@ import Breadcrumb from '@/components/Breadcrumb';
 import { JsonLd } from '@/components/JsonLd';
 import RelatedItems from '@/components/RelatedItems';
 import ShareButtons from '@/components/ShareButtons';
-import { GameOverSharePrompt } from '@/components/games/GameOverSharePrompt';
-import { GameSessionProvider } from '@/components/games/GameSessionProvider';
 import { PageShell } from '@/components/SiteChrome';
 import type { Locale } from '@/lib/dict';
 import { GAME_THEMES, REACT_GAMES } from '@/lib/games';
@@ -209,7 +207,7 @@ export default async function GamePage({
 
           <div className='relative flex min-h-[calc(100vh-76px)] flex-col pb-12 pt-8'>
             <div className='mx-auto w-full max-w-[1760px] px-[clamp(1.5rem,5vw,7rem)]'>
-              <div className='mb-6 flex h-9 items-center justify-between gap-4'>
+              <div className='mb-6 flex items-center justify-between gap-4'>
                 <Breadcrumb
                   variant='dark'
                   items={[
@@ -244,12 +242,7 @@ export default async function GamePage({
             <div
               className={`relative flex flex-1 ${theme.quiet ? 'w-full' : 'items-center justify-center px-4'}`}
             >
-              <GameSessionProvider slug={slug}>
-                <div className='relative'>
-                  <Game locale={locale} />
-                  <GameOverSharePrompt />
-                </div>
-              </GameSessionProvider>
+              <Game locale={locale} />
             </div>
             {howTo ? <HowToPlay dark items={howTo} /> : null}
             <div className='mx-auto mt-12 w-full max-w-[1760px] px-[clamp(1.5rem,5vw,7rem)]'>
@@ -288,12 +281,7 @@ export default async function GamePage({
               {locale === 'zh' ? game.descZh : game.desc}
             </p>
           </div>
-          <GameSessionProvider slug={slug}>
-            <div className='relative'>
-              <Game locale={locale} />
-              <GameOverSharePrompt />
-            </div>
-          </GameSessionProvider>
+          <Game locale={locale} />
           {howTo ? <HowToPlay items={howTo} /> : null}
           <RelatedItems
             type='game'

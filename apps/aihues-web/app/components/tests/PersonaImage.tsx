@@ -13,6 +13,8 @@ interface PersonaImageProps {
   height?: number;
   /** Short code shown on the placeholder while the slot is empty. */
   placeholderLabel?: string;
+  /** Optional extra classes for the image wrapper. */
+  className?: string;
 }
 
 /* Renders the dropped-in character art for a result, or a reserved-slot
@@ -25,6 +27,7 @@ export function PersonaImage({
   width = 180,
   height = 270,
   placeholderLabel,
+  className = '',
 }: PersonaImageProps) {
   const [failed, setFailed] = useState(false);
 
@@ -35,21 +38,26 @@ export function PersonaImage({
         width={width}
         height={height}
         label={placeholderLabel}
+        className={className}
       />
     );
   }
 
   return (
-    <Image
-      src={src}
-      alt={alt}
-      width={width}
-      height={height}
-      unoptimized
-      priority
-      onError={() => setFailed(true)}
-      className='block object-contain'
+    <div
+      className={`relative overflow-hidden ${className}`}
       style={{ width, height }}
-    />
+    >
+      <Image
+        src={src}
+        alt={alt}
+        width={width}
+        height={height}
+        unoptimized
+        priority
+        onError={() => setFailed(true)}
+        className='block h-full w-full object-contain'
+      />
+    </div>
   );
 }

@@ -111,15 +111,28 @@ export async function POST(request: Request) {
         date: new Date().toISOString().split('T')[0],
         readTime: '5 min',
         coverImage: `https://images.unsplash.com/photo-${1500000000000 + Math.floor(Math.random() * 1000000000)}?w=600&q=80`,
+        source: 'feishu',
       });
 
       created++;
     }
 
-    // 4. Sort and save posts.json
-    existingPosts.sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-    );
+    // 4. Sort and save posts.json (manual first, then Feishu, then auto)
+    const priority: Record<
+      NonNullable<ResourcePost['source']> | 'undefined',
+      number
+    > = {
+      manual: 0,
+      undefined: 1,
+      feishu: 2,
+      auto: 3,
+    };
+    existingPosts.sort((a, b) => {
+      const pa = priority[a.source ?? 'undefined'];
+      const pb = priority[b.source ?? 'undefined'];
+      if (pa !== pb) return pa - pb;
+      return new Date(b.date).getTime() - new Date(a.date).getTime();
+    });
     writeFileSync(POSTS_JSON, JSON.stringify(existingPosts, null, 2), 'utf-8');
 
     return NextResponse.json({

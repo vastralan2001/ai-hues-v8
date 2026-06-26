@@ -4,7 +4,6 @@ import { notFound } from 'next/navigation';
 
 import Breadcrumb from '@/components/Breadcrumb';
 import ShareButtons from '@/components/ShareButtons';
-import { GameSharePreview } from '@/components/games/GameSharePreview';
 import { StoryShareCard } from '@/components/StoryShareCard';
 import { PageShell } from '@/components/SiteChrome';
 import type { Locale } from '@/lib/dict';
@@ -16,33 +15,15 @@ export function generateStaticParams() {
 
 export async function generateMetadata({
   params,
-  searchParams,
 }: {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ score?: string; text?: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const { score, text } = await searchParams;
   const game = REACT_GAMES[slug];
   if (!game) return { title: 'Game | AIHues' };
-  const title = `Share ${game.title} | AIHues`;
-  const description =
-    text || (score ? `I scored ${score} in ${game.title}` : game.desc);
-  const imageUrl = `/games/${slug}/share/opengraph-image?score=${encodeURIComponent(score ?? '')}&text=${encodeURIComponent(text ?? '')}`;
   return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      images: [{ url: imageUrl, alt: `Share ${game.title}` }],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title,
-      description,
-      images: [imageUrl],
-    },
+    title: `Share ${game.title} | AIHues`,
+    description: game.desc,
   };
 }
 
@@ -103,7 +84,6 @@ export default async function GameSharePage({
             sky={theme?.sky ?? ['#f3f1ea', '#faf9f5']}
             accent={theme?.glow ?? 'var(--color-accent)'}
             variant={theme?.variant ?? 'day'}
-            backgroundImage={theme?.backgroundImage}
             eyebrow={locale === 'zh' ? '小游戏' : 'Mini Game'}
             title={title}
             subtitle={desc}
@@ -137,8 +117,6 @@ export default async function GameSharePage({
             </div>
           </StoryShareCard>
         </div>
-
-        <GameSharePreview slug={slug} locale={locale} />
 
         <p className='mt-6 text-center text-[12px] text-muted'>
           {locale === 'zh'

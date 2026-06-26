@@ -220,7 +220,6 @@ export const GAME_THEMES: Record<
     quiet?: boolean;
     sky: [string, string];
     variant?: 'day' | 'night';
-    backgroundImage?: string;
   }
 > = {
   space: {
@@ -229,8 +228,6 @@ export const GAME_THEMES: Record<
     eyebrow: 'text-[#7cc0ee]',
     sky: ['#1a2238', '#0b0e18'],
     variant: 'night',
-    backgroundImage:
-      'https://images.unsplash.com/photo-1502790671504-542ad42d5189?auto=format&fit=crop&w=1200&q=80',
   },
   gold: {
     bg: 'radial-gradient(125% 80% at 50% -10%, #2c1c30 0%, #1a1018 48%, #0e0a0d 100%)',
@@ -238,8 +235,6 @@ export const GAME_THEMES: Record<
     eyebrow: 'text-[#e7c873]',
     sky: ['#2c1c30', '#1a1018'],
     variant: 'night',
-    backgroundImage:
-      'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=80',
   },
   vegas: {
     bg: 'radial-gradient(125% 80% at 50% -10%, #3a1218 0%, #1c0a0e 48%, #0d0507 100%)',
@@ -247,8 +242,6 @@ export const GAME_THEMES: Record<
     eyebrow: 'text-[#e7c873]',
     sky: ['#3a1218', '#1c0a0e'],
     variant: 'night',
-    backgroundImage:
-      'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=80',
   },
   court: {
     bg: 'radial-gradient(125% 95% at 50% 42%, #252c36 0%, #171c23 46%, #0c0e12 100%)',
@@ -257,8 +250,6 @@ export const GAME_THEMES: Record<
     quiet: true,
     sky: ['#e8edf3', '#d7dde8'],
     variant: 'day',
-    backgroundImage:
-      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80',
   },
   grid: {
     bg: 'radial-gradient(125% 95% at 50% 42%, #18211c 0%, #121815 46%, #0a0e0c 100%)',
@@ -267,8 +258,6 @@ export const GAME_THEMES: Record<
     quiet: true,
     sky: ['#e8f0ec', '#dbe8e2'],
     variant: 'day',
-    backgroundImage:
-      'https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&w=1200&q=80',
   },
   spectrum: {
     bg: 'radial-gradient(125% 95% at 50% 40%, #20242e 0%, #14171e 46%, #0b0d12 100%)',
@@ -277,8 +266,6 @@ export const GAME_THEMES: Record<
     quiet: true,
     sky: ['#eaeef6', '#dde4f2'],
     variant: 'day',
-    backgroundImage:
-      'https://images.unsplash.com/photo-1494500764479-0c8f2919a3d8?auto=format&fit=crop&w=1200&q=80',
   },
   royal: {
     bg: 'radial-gradient(125% 95% at 50% 38%, #232233 0%, #16151f 46%, #0b0a10 100%)',
@@ -287,7 +274,5 @@ export const GAME_THEMES: Record<
     quiet: true,
     sky: ['#edeaf5', '#e2ddf0'],
     variant: 'day',
-    backgroundImage:
-      'https://images.unsplash.com/photo-1494500764479-0c8f2919a3d8?auto=format&fit=crop&w=1200&q=80',
   },
 };

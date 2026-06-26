@@ -10,6 +10,7 @@ import { ToolIcon } from '@/components/ToolIcon';
 import { ToolDemo } from '@/components/tools/ToolDemos';
 import { storyTagIcon } from '@/lib/story-scenes';
 import { categoryThemeStyle, type BrandCategory } from '@/lib/category-brand';
+import type { ResourcePost } from '@/lib/resources-data';
 
 // Each slide owns its family hue so a cross-fade never lets the outgoing slide
 // borrow the incoming category's colour (kind → BrandCategory).
@@ -30,6 +31,8 @@ export type SpotlightSlide = {
   cta: string;
   /** Per-slide demo type — overrides the carousel-level `demo` prop. */
   kind?: 'tool' | 'game' | 'test' | 'story';
+  /** Story source — drives whether a generated or bespoke scene is shown. */
+  source?: ResourcePost['source'];
 };
 
 const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
@@ -240,6 +243,7 @@ export default function SpotlightCarousel({
             <StoryArt
               slug={s.slug}
               tag={s.eyebrow}
+              source={s.source}
               animated
               className='aspect-[16/9] w-full rounded-[16px] border border-border bg-bg shadow-sm'
             />

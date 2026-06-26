@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import QuizRunner from '@/components/tests/QuizRunner';
+import { PersonaCarousel } from '@/components/tests/PersonaCarousel';
 import BrandBackdrop from '@/components/BrandBackdrop';
 import Breadcrumb from '@/components/Breadcrumb';
 import ShareButtons from '@/components/ShareButtons';
@@ -51,6 +52,9 @@ export default async function TestPage({
             />
             <ShareButtons className='shrink-0' title={meta.name} />
           </div>
+          {(slug === 'mbti' || slug === 'sbti') && (
+            <PersonaCarousel slug={slug} />
+          )}
           <QuizRunner slug={slug} />
         </section>
       </div>

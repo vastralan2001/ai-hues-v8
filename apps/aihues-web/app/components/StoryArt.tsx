@@ -4,9 +4,17 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { MotionConfig } from 'framer-motion';
 import { renderToStaticMarkup } from 'react-dom/server';
 
-import { getStoryScene, type Anim, type El } from '@/lib/story-scenes';
+import {
+  getStoryScene,
+  hasCanvasScene,
+  type Anim,
+  type El,
+} from '@/lib/story-scenes';
 import { GENERATED_SCENES } from '@/components/story-scenes/registry';
 import { ScenePaused } from '@/components/story-scenes/_kit';
+import FallbackScene from '@/components/story-scenes/_fallback';
+import GeneratedScene from '@/components/story-scenes/_generated';
+import type { ResourcePost } from '@/lib/resources-data';
 
 /* StoryArt — renders a hand-authored, content-specific scene for a story (no
    templates, no randomness): each article has its own scene in story-scenes.ts,
@@ -166,6 +174,7 @@ function draw(
 export function StoryArt({
   slug,
   tag,
+  source,
   alt,
   className = '',
   animated = false,
@@ -173,6 +182,7 @@ export function StoryArt({
 }: {
   slug: string;
   tag: string;
+  source?: ResourcePost['source'];
   /** Accessible/SEO description — crawlers + screen readers treat the scene as
    *  a described image rather than a decorative blob. */
   alt?: string;
@@ -183,7 +193,11 @@ export function StoryArt({
   playOnHover?: boolean;
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
-  const Svg = GENERATED_SCENES[slug];
+  const hasSvg = slug in GENERATED_SCENES;
+  const hasCanvas = hasCanvasScene(slug);
+  const Svg = hasSvg ? GENERATED_SCENES[slug] : undefined;
+  const useGenerated = !hasSvg && !hasCanvas && source === 'auto';
+  const useFallback = !hasSvg && !hasCanvas && !useGenerated;
   // Rough.js path data isn't byte-identical between the Node (SSR) and browser
   // renders, so the vector scenes render client-only after mount to avoid a
   // hydration mismatch. The wrapper keeps role="img" + aria-label in the server
@@ -197,12 +211,18 @@ export function StoryArt({
   useEffect(() => {
     const id = requestAnimationFrame(() => {
       setMounted(true);
-      if (Svg) {
+      if (Svg || useFallback || useGenerated) {
         setStaticHTML(
           renderToStaticMarkup(
             <ScenePaused.Provider value={true}>
               <MotionConfig reducedMotion='always'>
-                <Svg />
+                {Svg ? (
+                  <Svg />
+                ) : useGenerated ? (
+                  <GeneratedScene slug={slug} tag={tag} />
+                ) : (
+                  <FallbackScene tag={tag} />
+                )}
               </MotionConfig>
             </ScenePaused.Provider>
           )
@@ -210,7 +230,7 @@ export function StoryArt({
       }
     });
     return () => cancelAnimationFrame(id);
-  }, [Svg]);
+  }, [Svg, useFallback, useGenerated, slug, tag]);
 
   // The frozen scene as a standalone SVG data URL. Rendered as a real <img> so
   // (a) it's an isolated SVG document — gradient ids never collide between cards
@@ -290,7 +310,7 @@ export function StoryArt({
       onMouseEnter={playOnHover ? () => setHover(true) : undefined}
       onMouseLeave={playOnHover ? () => setHover(false) : undefined}
     >
-      {Svg ? (
+      {Svg || useFallback || useGenerated ? (
         !mounted ? null : (
           <>
             {/* Base layer: the frozen scene as a real <img>. It's always present
@@ -308,7 +328,13 @@ export function StoryArt({
                 clicks/right-clicks fall through to the <img> beneath. */}
             {live ? (
               <div className='pointer-events-none absolute inset-0'>
-                <Svg />
+                {Svg ? (
+                  <Svg />
+                ) : useGenerated ? (
+                  <GeneratedScene slug={slug} tag={tag} />
+                ) : (
+                  <FallbackScene tag={tag} />
+                )}
               </div>
             ) : null}
           </>

@@ -7,7 +7,8 @@
     "date": "2026-06-24",
     "readTime": "4 min",
     "coverImage": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&q=80",
-    "description": "JavaScript in-page GUI agent. Learn what it does, who it is for, and how to get started."
+    "description": "JavaScript in-page GUI agent. Learn what it does, who it is for, and how to get started.",
+    "source": "auto"
   },
   {
     "slug": "nvidia-nemoclaw",
@@ -17,7 +18,8 @@
     "date": "2026-06-24",
     "readTime": "4 min",
     "coverImage": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200&q=80",
-    "description": "Run agents like Hermes and OpenClaw more securely inside NVIDIA OpenShell with managed inference Learn what it does, who it is for, and how to get started."
+    "description": "Run agents like Hermes and OpenClaw more securely inside NVIDIA OpenShell with managed inference Learn what it does, who it is for, and how to get started.",
+    "source": "auto"
   },
   {
     "slug": "got-sick-of-ads-so-i-made-my-own-logic-puzzle-site",
@@ -27,7 +29,8 @@
     "date": "2026-06-24",
     "readTime": "4 min",
     "coverImage": "https://images.unsplash.com/photo-1606092195730-5d7b9af1efc5?w=1200&q=80",
-    "description": "Got sick of ads, so I made my own logic puzzle site Play this browser game instantly with no download required."
+    "description": "Got sick of ads, so I made my own logic puzzle site Play this browser game instantly with no download required.",
+    "source": "auto"
   },
   {
     "slug": "propane",
@@ -37,7 +40,8 @@
     "date": "2026-06-24",
     "readTime": "4 min",
     "coverImage": "https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=1200&q=80",
-    "description": "Propane gives your product team and agents one connected, always-current view of your customers. Learn what Propane  does, who it is for, and how to get..."
+    "description": "Propane gives your product team and agents one connected, always-current view of your customers. Learn what Propane  does, who it is for, and how to get...",
+    "source": "auto"
   },
   {
     "slug": "gerrymandle-daily-puzzle-game-where-you-redraw-electoral-dis",
@@ -47,7 +51,8 @@
     "date": "2026-06-24",
     "readTime": "4 min",
     "coverImage": "https://images.unsplash.com/photo-1529699211952-734e80c4d42b?w=1200&q=80",
-    "description": "Gerrymandle - Daily puzzle game where you redraw electoral districts Play this browser game instantly with no download required."
+    "description": "Gerrymandle - Daily puzzle game where you redraw electoral districts Play this browser game instantly with no download required.",
+    "source": "auto"
   },
   {
     "slug": "qwen-agentworld-language-world-models-for-general-agents",
@@ -57,7 +62,8 @@
     "date": "2026-06-24",
     "readTime": "4 min",
     "coverImage": "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=1200&q=80",
-    "description": "A world model predicts environment dynamics based on current observations and actions, serving as a core cognitive mechanism for reasoning and planning...."
+    "description": "A world model predicts environment dynamics based on current observations and actions, serving as a core cognitive mechanism for reasoning and planning....",
+    "source": "auto"
   },
   {
     "slug": "remmd-realistic-multilingual-multi-image-agentic-verificatio",
@@ -67,7 +73,8 @@
     "date": "2026-06-24",
     "readTime": "4 min",
     "coverImage": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1200&q=80",
-    "description": "Multimodal misinformation detection is increasingly important because viral posts now combine long multilingual narratives, several images, mixed..."
+    "description": "Multimodal misinformation detection is increasingly important because viral posts now combine long multilingual narratives, several images, mixed...",
+    "source": "auto"
   },
   {
     "slug": "kamera-unified-position-invariant-multimodal-kv-cache-for-tr",
@@ -77,7 +84,8 @@
     "date": "2026-06-23",
     "readTime": "4 min",
     "coverImage": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1200&q=80",
-    "description": "Multimodal agents repeatedly re-examine the same video frames, UI screenshots, and rendered artifacts as their context window slides and reasoning iterates,..."
+    "description": "Multimodal agents repeatedly re-examine the same video frames, UI screenshots, and rendered artifacts as their context window slides and reasoning iterates,...",
+    "source": "auto"
   },
   {
     "slug": "verievol-scaling-multimodal-mathematical-reasoning-via-verif",
@@ -87,7 +95,8 @@
     "date": "2026-06-23",
     "readTime": "4 min",
     "coverImage": "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=1200&q=80",
-    "description": "Scaling reinforcement learning for visual mathematical reasoning requires more than generating harder questions: as data volume grows, the reward labels..."
+    "description": "Scaling reinforcement learning for visual mathematical reasoning requires more than generating harder questions: as data volume grows, the reward labels...",
+    "source": "auto"
   },
   {
     "slug": "deckwise",
@@ -97,7 +106,8 @@
     "date": "2026-06-23",
     "readTime": "4 min",
     "coverImage": "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=1200&q=80",
-    "description": "Deckwise is the AI presentation agent that turns topics, notes, files, and sources into clear, editable decks. Learn what Deckwise does, who it is for, and..."
+    "description": "Deckwise is the AI presentation agent that turns topics, notes, files, and sources into clear, editable decks. Learn what Deckwise does, who it is for, and...",
+    "source": "auto"
   },
   {
     "slug": "prepros",
@@ -107,7 +117,8 @@
     "date": "2026-06-23",
     "readTime": "4 min",
     "coverImage": "https://images.unsplash.com/photo-1502982720700-bfff97f2ecac?w=1200&q=80",
-    "description": "Brand shoot production has never had a single tool or standard process. Learn what prepros does, who it is for, and how to get started."
+    "description": "Brand shoot production has never had a single tool or standard process. Learn what prepros does, who it is for, and how to get started.",
+    "source": "auto"
   },
   {
     "slug": "topoteretes-cognee",
@@ -117,7 +128,8 @@
     "date": "2026-06-23",
     "readTime": "4 min",
     "coverImage": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1200&q=80",
-    "description": "Cognee is the open-source AI memory platform for agents. Learn what it does, who it is for, and how to get started."
+    "description": "Cognee is the open-source AI memory platform for agents. Learn what it does, who it is for, and how to get started.",
+    "source": "auto"
   },
   {
     "slug": "jotform-ai-app-builder",
@@ -664,15 +676,6 @@
     "description": "What they do not tell you about the modern auth stack that balances security and user experience. The modern auth stack that balances security and user experience."
   },
   {
-    "slug": "why-your-ai-generated-content-sounds-generic-and-how-to-fix-it",
-    "tag": "AI Tools",
-    "title": "Why Your AI-Generated Content Sounds Generic (And How to Fix It)",
-    "excerpt": "The training data problem nobody talks about, and the 5-minute trick that makes AI text sound like you.",
-    "date": "2026-05-14",
-    "readTime": "6 min",
-    "coverImage": "https://picsum.photos/seed/why-your-ai-generated-content-sounds-generic-and-how-to-fix-it/600/400"
-  },
-  {
     "slug": "why-your-ai-generated-content-sounds-generic-and-how-to-fix-",
     "tag": "AI Tools",
     "title": "Why Your AI-Generated Content Sounds Generic (And How to Fix It)",
@@ -1117,7 +1120,7 @@
     "excerpt": "Moonshot AI shipped a trillion-parameter open MoE model that uses tools, writes code, and finishes multi-step jobs. A plain-English read of the architecture, the MuonClip optimizer, and the benchmarks.",
     "date": "2026-06-24",
     "readTime": "8 min",
-    "coverImage": "",
+    "coverImage": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=1200&q=80",
     "description": "A faithful, plain-English walkthrough of Kimi K2: a 1-trillion-parameter open Mixture-of-Experts model with 32B active params, the spike-free MuonClip optimizer, agentic RL training, and what its SWE-bench and reasoning scores actually mean for builders."
   },
   {
@@ -1127,7 +1130,7 @@
     "excerpt": "A 1T-parameter open model that thinks across 200-300 tool calls without losing the thread. Here is how it reasons, what INT4 training buys, the benchmark numbers, and the honest limits.",
     "date": "2026-06-23",
     "readTime": "9 min",
-    "coverImage": "",
+    "coverImage": "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&q=80",
     "description": "A faithful walkthrough of Kimi K2 Thinking: how a 1T-parameter open model reasons across 200-300 tool calls, what its INT4 training buys, the benchmark numbers, and the honest limits."
   },
   {
@@ -1137,7 +1140,7 @@
     "excerpt": "Moonshot open-sourced a model that beats GPT-5.4 on SWE-Bench Pro. A benchmark-first read of where Kimi K2.6 leads, where it trails, and how to point it.",
     "date": "2026-06-22",
     "readTime": "8 min",
-    "coverImage": "",
+    "coverImage": "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=1200&q=80",
     "description": "A benchmark-first review of Moonshot open-weights Kimi K2.6: the coding scorecard (SWE-Bench Pro 58.6, Terminal-Bench 66.7), how long-horizon execution got it there, where it falls short on competitive-programming and reasoning, and how to actually use it."
   },
   {
@@ -1147,7 +1150,7 @@
     "excerpt": "Moonshot AI 3,500-question benchmark asks every vision model one blunt thing: do you actually recognize what you see, or are you guessing? Frontier models stay under 50%.",
     "date": "2026-06-21",
     "readTime": "8 min",
-    "coverImage": "",
+    "coverImage": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1200&q=80",
     "description": "A plain-English deep read of WorldVQA, Moonshot AI benchmark for atomic visual world knowledge. What it tests, how its accuracy and calibration metrics work, why top MLLMs fail the long tail, and what it means for builders shipping vision into products."
   },
   {
@@ -1157,7 +1160,7 @@
     "excerpt": "Moonshot’s new architecture lets each transformer layer choose which earlier layers to listen to — a ~25% compute win on Kimi Linear. One of its two lead authors is a high-schooler from Shenzhen.",
     "date": "2026-06-24",
     "readTime": "9 min",
-    "coverImage": "",
+    "coverImage": "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=1200&q=80",
     "description": "A plain-English deep read of Attention Residuals (arXiv:2603.15031): why fixed residual accumulation dilutes deep transformers, how attention-over-depth and Block AttnRes fix it for a 1.25x compute advantage on Kimi Linear, and the open-source path that took co-first author Nathan Chen (Guangyu Chen) from Flash Linear Attention contributor to Moonshot AI while still in high school."
   }
 ]

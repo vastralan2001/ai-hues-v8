@@ -12,7 +12,7 @@ const here = dirname(fileURLToPath(import.meta.url));
 const dir = join(here, '..', 'app', 'components', 'story-scenes');
 
 const slugs = readdirSync(dir)
-  .filter((f) => f.endsWith('.tsx') && f !== '_kit.tsx')
+  .filter((f) => f.endsWith('.tsx') && !f.startsWith('_'))
   .map((f) => f.replace(/\.tsx$/, ''))
   .sort();
 

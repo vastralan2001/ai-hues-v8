@@ -221,7 +221,6 @@ export default function QuizRunner({ slug }: { slug: string }) {
   /* ── Result ── */
   if (phase === 'result' && result) {
     const racc = CATEGORY_ACCENT_HEX.tests;
-    const isSbti = config.resultStyle === 'sbti';
 
     const usePersona = hasPersonaArt(config.slug);
 
@@ -241,6 +240,18 @@ export default function QuizRunner({ slug }: { slug: string }) {
         <TestAvatar code={result.code} accent={racc} size={88} />
       </div>
     );
+
+    const topBars = result.bars
+      .map((b) => ({ ...b, delta: Math.abs(b.pct - 50) }))
+      .sort((a, b) => b.delta - a.delta)
+      .slice(0, 5)
+      .map(({ label, leftLabel, rightLabel, pct, value }) => ({
+        label,
+        leftLabel,
+        rightLabel,
+        pct,
+        value,
+      }));
 
     return (
       <div className='mx-auto w-full max-w-[680px]'>
@@ -291,69 +302,44 @@ export default function QuizRunner({ slug }: { slug: string }) {
               </div>
             )}
 
-            {/* breakdown */}
+            {/* breakdown — top 5 most extreme dimensions, unified format */}
             <div className='mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-muted'>
-              {config.breakdownLabel ??
-                (isSbti ? 'Soul dimensions' : 'Your breakdown')}
+              {config.breakdownLabel ?? 'Your breakdown'}
             </div>
 
-            {isSbti ? (
-              <div className='grid grid-cols-1 gap-x-6 gap-y-2.5 sm:grid-cols-2'>
-                {result.bars.map((b) => (
-                  <div key={b.label} className='flex items-center gap-2.5'>
-                    <span className='w-[88px] shrink-0 text-[12px] text-secondary'>
+            <div className='space-y-4'>
+              {topBars.map((b) => (
+                <div key={b.label}>
+                  <div className='mb-1.5 flex items-center justify-between'>
+                    <span className='text-[13px] font-semibold text-foreground'>
                       {b.label}
                     </span>
-                    <div className='relative h-1.5 flex-1 overflow-hidden rounded-full bg-border'>
-                      <div
-                        className='absolute inset-y-0 left-0 rounded-full'
-                        style={{ width: `${b.pct}%`, background: racc }}
-                      />
-                    </div>
                     <span
-                      className='w-4 shrink-0 text-center text-[11px] font-bold'
-                      style={{ color: racc }}
+                      className='rounded-md px-2 py-0.5 text-[11px] font-bold'
+                      style={{ color: racc, background: `${racc}16` }}
                     >
                       {b.value}
                     </span>
                   </div>
-                ))}
-              </div>
-            ) : (
-              <div className='space-y-4'>
-                {result.bars.map((b) => (
-                  <div key={b.label}>
-                    <div className='mb-1.5 flex items-center justify-between'>
-                      <span className='text-[13px] font-semibold text-foreground'>
-                        {b.label}
-                      </span>
+                  <div className='flex items-center gap-2 text-[11px] text-muted'>
+                    <span className='w-[88px] shrink-0 text-right'>
+                      {b.leftLabel}
+                    </span>
+                    <div className='relative h-2 flex-1 rounded-full bg-border'>
+                      <div
+                        className='absolute inset-y-0 left-0 rounded-full opacity-90'
+                        style={{ width: `${b.pct}%`, background: racc }}
+                      />
                       <span
-                        className='rounded-md px-2 py-0.5 text-[11px] font-bold'
-                        style={{ color: racc, background: `${racc}16` }}
-                      >
-                        {b.value}
-                      </span>
+                        className='absolute top-1/2 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white'
+                        style={{ left: `${b.pct}%`, background: racc }}
+                      />
                     </div>
-                    <div className='flex items-center gap-2 text-[11px] text-muted'>
-                      <span className='w-[88px] shrink-0 text-right'>
-                        {b.leftLabel}
-                      </span>
-                      <div className='relative h-2 flex-1 rounded-full bg-border'>
-                        <div
-                          className='absolute inset-y-0 left-0 rounded-full opacity-90'
-                          style={{ width: `${b.pct}%`, background: racc }}
-                        />
-                        <span
-                          className='absolute top-1/2 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white'
-                          style={{ left: `${b.pct}%`, background: racc }}
-                        />
-                      </div>
-                      <span className='w-[88px] shrink-0'>{b.rightLabel}</span>
-                    </div>
+                    <span className='w-[88px] shrink-0'>{b.rightLabel}</span>
                   </div>
-                ))}
-              </div>
-            )}
+                </div>
+              ))}
+            </div>
 
             {/* shareable-poster preview — same artwork as the demo + download */}
             <div className='mt-8 [container-type:inline-size]'>
@@ -361,7 +347,7 @@ export default function QuizRunner({ slug }: { slug: string }) {
                 name={config.name}
                 code={result.code}
                 title={result.title}
-                bars={result.bars}
+                bars={topBars.map(({ label, pct }) => ({ label, pct }))}
                 accent={racc}
                 className='aspect-[16/9] w-full max-w-[560px]'
               />

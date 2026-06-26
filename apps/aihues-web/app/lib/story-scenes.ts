@@ -4720,3 +4720,7 @@ function fallbackScene(slug: string, tag: string): StoryScene {
 export function getStoryScene(slug: string, tag: string): StoryScene {
   return SCENES[slug] ?? fallbackScene(slug, tag);
 }
+
+export function hasCanvasScene(slug: string): boolean {
+  return slug in SCENES;
+}

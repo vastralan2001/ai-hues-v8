@@ -3,10 +3,15 @@ import Link from 'next/link';
 
 import { PageMasthead } from '@/components/PageMasthead';
 import { PageShell } from '@/components/SiteChrome';
+import { PersonaImage } from '@/components/tests/PersonaImage';
 import { ToolIcon } from '@/components/ToolIcon';
 import { type Locale } from '@/lib/dict';
 import { testDetailHref } from '@/lib/routes';
 import { TEST_META } from '@/lib/tests';
+import {
+  MBTI_PERSONA_CODES,
+  SBTI_PERSONA_CODES,
+} from '@/lib/tests/persona-art';
 
 export const metadata: Metadata = {
   title: 'Tests',
@@ -48,6 +53,40 @@ export default function TestsPage() {
               >
                 <ToolIcon slug={tm.slug} size={24} className='text-white' />
               </span>
+
+              {(tm.slug === 'mbti' || tm.slug === 'sbti') && (
+                <div className='mb-4 flex items-center'>
+                  <div className='flex -space-x-2.5'>
+                    {(tm.slug === 'mbti'
+                      ? MBTI_PERSONA_CODES
+                      : SBTI_PERSONA_CODES
+                    )
+                      .slice(0, 5)
+                      .map((code) => (
+                        <div
+                          key={code}
+                          className='relative h-9 w-9 overflow-hidden rounded-full border-2 border-white bg-bg shadow-sm'
+                        >
+                          <PersonaImage
+                            src={`/personas/${tm.slug}/${code}.png`}
+                            alt={code.toUpperCase()}
+                            accent={tm.accent}
+                            width={36}
+                            height={36}
+                            placeholderLabel={code.slice(0, 2).toUpperCase()}
+                            className='h-full w-full'
+                          />
+                        </div>
+                      ))}
+                  </div>
+                  <span className='ml-2 text-[11px] font-semibold text-muted'>
+                    +
+                    {tm.slug === 'mbti'
+                      ? MBTI_PERSONA_CODES.length - 5
+                      : SBTI_PERSONA_CODES.length - 5}
+                  </span>
+                </div>
+              )}
 
               <h2 className='text-[22px] font-extrabold text-foreground'>
                 {tm.name}

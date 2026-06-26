@@ -3,6 +3,7 @@ interface PersonaPlaceholderProps {
   width?: number;
   height?: number;
   label?: string;
+  className?: string;
 }
 
 /* Reserved character slot shown until the real artwork is dropped into
@@ -13,6 +14,7 @@ export function PersonaPlaceholder({
   width = 180,
   height = 270,
   label,
+  className = '',
 }: PersonaPlaceholderProps) {
   const gid = `phs-${accent.replace('#', '')}`;
   const cx = width / 2;
@@ -21,6 +23,7 @@ export function PersonaPlaceholder({
       width={width}
       height={height}
       viewBox={`0 0 ${width} ${height}`}
+      className={className}
       role='img'
       aria-label={label ?? 'Character art coming soon'}
     >

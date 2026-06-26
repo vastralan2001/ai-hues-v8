@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-import { useOptionalGameSession } from '@/components/games/GameSessionProvider';
 import type { Locale } from '@/lib/dict';
 
 /* Flappy — ported from kimi.com/share/d1r75cbduqbc808mrkdg.
@@ -97,18 +96,6 @@ export default function FlappyGame({ locale }: { locale: Locale }) {
   const [best, setBest] = useState(0);
   const [lives, setLives] = useState(0);
   const [diff, setDiff] = useState<DiffKey>('normal');
-
-  const gameSession = useOptionalGameSession();
-
-  useEffect(() => {
-    gameSession?.reportScore(score);
-  }, [score, gameSession]);
-
-  useEffect(() => {
-    if (phase === 'over') {
-      gameSession?.reportGameOver(score);
-    }
-  }, [phase, score, gameSession]);
 
   useEffect(() => {
     const raf = requestAnimationFrame(() => {

@@ -64,7 +64,7 @@ export function StoryShareCard({
           </p>
         )}
 
-        {children && <div className='mt-6 text-left'>{children}</div>}
+        {children && <div className='mt-6 text-center'>{children}</div>}
       </div>
     </div>
   );

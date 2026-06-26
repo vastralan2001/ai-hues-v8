@@ -122,6 +122,7 @@ function postSlides(posts: ResourcePost[], locale: Locale): SpotlightSlide[] {
   return posts.map((post) => ({
     slug: post.slug,
     kind: 'story',
+    source: post.source,
     eyebrow: post.tag,
     title: post.title,
     description: post.excerpt,
@@ -161,13 +162,27 @@ export default async function HomePage() {
 
   const posts = getAllPosts();
 
-  // Stories band carousel: feature exactly one Research paper (the newest)
-  // ahead of recent non-paper stories, so the Research category earns a
-  // home-band spot without the papers crowding out the rest of the feed.
-  const featuredPaper = posts.find((p) => p.tag === 'Research');
-  const storyBandPosts = featuredPaper
-    ? [featuredPaper, ...posts.filter((p) => p.tag !== 'Research').slice(0, 5)]
-    : posts.slice(0, 6);
+  // Stories band carousel: feature up to 3 Kimi / Moonshot research posts
+  // at the front, then fill with recent non-Kimi stories so the band keeps
+  // variety while giving the Kimi coverage a default home-page spotlight.
+  const KIMI_SLUGS = new Set([
+    'kimi-k2-open-agentic-intelligence-explained',
+    'kimi-k2-thinking-the-reasoning-model-explained',
+    'kimi-k2-6-open-source-coding-model-explained',
+    'worldvqa-atomic-world-knowledge-benchmark-explained',
+    'attention-residuals-explained',
+  ]);
+  const isKimiPost = (p: ResourcePost) =>
+    KIMI_SLUGS.has(p.slug) ||
+    /\b(kimi|moonshot|attention residuals|worldvqa)\b/i.test(
+      `${p.title} ${p.excerpt}`
+    );
+  const kimiPosts = posts.filter(isKimiPost);
+  const otherPosts = posts.filter((p) => !isKimiPost(p));
+  const storyBandPosts = [
+    ...kimiPosts.slice(0, 3),
+    ...otherPosts.slice(0, 6 - Math.min(kimiPosts.length, 3)),
+  ];
 
   const homeTools = HOME_TOOL_SLUGS.map((slug) =>
     tools.find((tool) => tool.slug === slug)

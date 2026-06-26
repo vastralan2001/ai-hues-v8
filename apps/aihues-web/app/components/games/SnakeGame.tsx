@@ -10,7 +10,6 @@ import {
   drawSnakeField,
   SNAKE_C as C,
 } from '@/lib/snake-render';
-import { useOptionalGameSession } from '@/components/games/GameSessionProvider';
 
 /* Snake — native port of the speed-select snake, Kimi-styled. The board only
    renders while playing/over; a square grid letterboxes into the stage, blends
@@ -148,18 +147,6 @@ export default function SnakeGame({ locale }: { locale: Locale }) {
   const [awaiting, setAwaiting] = useState(false);
   const [paused, setPaused] = useState(false);
   const [fieldPx, setFieldPx] = useState(0);
-
-  const gameSession = useOptionalGameSession();
-
-  useEffect(() => {
-    gameSession?.reportScore(score);
-  }, [score, gameSession]);
-
-  useEffect(() => {
-    if (phase === 'over') {
-      gameSession?.reportGameOver(score);
-    }
-  }, [phase, score, gameSession]);
 
   useEffect(() => {
     const raf = requestAnimationFrame(() => {
