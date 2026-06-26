@@ -144,28 +144,30 @@ export function useSlotReels(initial: Grid) {
 function Cell({
   sym,
   cell,
-  radius,
   isWin,
 }: {
   sym: number;
   cell: number;
-  radius: number;
   isWin: boolean;
 }) {
+  // symbols sit straight on the dark reel (no white tile); a winner gets a soft
+  // gold wash + glow + pop.
   return (
     <div
-      className={`flex shrink-0 items-center justify-center transition-[background-color] ${
-        isWin
-          ? 'bg-[#e0b34a]/25 ring-2 ring-[#e0b34a] [animation:cellPop_0.4s_ease]'
-          : 'bg-gradient-to-b from-white/95 to-white/80'
+      className={`flex shrink-0 items-center justify-center transition-colors ${
+        isWin ? 'rounded-[6px] bg-[#e0b34a]/18 [animation:cellPop_0.4s_ease]' : ''
       }`}
-      style={{
-        height: cell,
-        borderRadius: radius,
-        fontSize: Math.round(cell * 0.55),
-      }}
+      style={{ height: cell, fontSize: Math.round(cell * 0.6) }}
     >
-      {SYMBOLS[sym].e}
+      <span
+        style={
+          isWin
+            ? { filter: 'drop-shadow(0 0 7px rgba(231,200,115,0.85))' }
+            : undefined
+        }
+      >
+        {SYMBOLS[sym].e}
+      </span>
     </div>
   );
 }
@@ -201,8 +203,12 @@ function Reel({
 
   return (
     <div
-      className='overflow-hidden'
-      style={{ height: cell * 3 + gap * 2, borderRadius: radius }}
+      className='overflow-hidden border border-[#e0b34a]/30'
+      style={{
+        height: cell * 3 + gap * 2,
+        borderRadius: radius,
+        background: 'rgba(20,10,12,0.55)',
+      }}
     >
       <div
         key={spinKey}
@@ -223,7 +229,6 @@ function Reel({
               key={i}
               sym={s}
               cell={cell}
-              radius={radius}
               isWin={finalRow >= 0 && win[finalRow]}
             />
           );
