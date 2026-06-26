@@ -77,20 +77,41 @@ function EggWord({ word, egg }: { word: string; egg: Egg }) {
         onMouseEnter={enter}
         onMouseLeave={leave}
       >
-        <motion.span
-          className='egg-overlay egg-sweat'
-          aria-hidden='true'
-          animate={
-            on ? { opacity: [0, 1, 0], y: [0, 13] } : { opacity: 0, y: 0 }
-          }
-          transition={{
-            duration: 1,
-            repeat: on ? Infinity : 0,
-            ease: 'easeIn',
-          }}
-        >
-          💧
-        </motion.span>
+        {/* a cluster of sweat beads at the tail of the word, scattered up / down
+            / left / right and on staggered cadences so they drip raggedly */}
+        {[
+          { left: '74%', top: 0, delay: 0.2, fall: 16, dur: 1.15, size: 11 },
+          { left: '85%', top: -7, delay: 0, fall: 22, dur: 1.4, size: 13 },
+          { left: '93%', top: 3, delay: 0.55, fall: 13, dur: 1.0, size: 10 },
+          { left: '100%', top: -3, delay: 0.85, fall: 19, dur: 1.25, size: 12 },
+        ].map((d, i) => (
+          <motion.span
+            key={i}
+            aria-hidden='true'
+            style={{
+              position: 'absolute',
+              top: d.top,
+              left: d.left,
+              fontSize: d.size,
+              lineHeight: 1,
+              pointerEvents: 'none',
+              zIndex: 5,
+            }}
+            animate={
+              on
+                ? { opacity: [0, 1, 1, 0], y: [0, d.fall] }
+                : { opacity: 0, y: 0 }
+            }
+            transition={{
+              duration: d.dur,
+              delay: d.delay,
+              repeat: on ? Infinity : 0,
+              ease: 'easeIn',
+            }}
+          >
+            💧
+          </motion.span>
+        ))}
         {word.split('').map((ch, i) => (
           <motion.span
             key={i}

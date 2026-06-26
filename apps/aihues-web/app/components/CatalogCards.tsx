@@ -107,16 +107,15 @@ export function GameCard({
       <h3 className='mb-1.5 line-clamp-1 text-[18px] font-bold text-foreground'>
         {game.name}
       </h3>
-      <p className='mb-4 line-clamp-2 text-[13px] leading-relaxed text-secondary'>
+      <p className='mb-3 line-clamp-2 min-h-[2.55em] text-[13px] leading-relaxed text-secondary'>
         {game.description}
       </p>
 
-      {/* Meta row */}
-      {copy && (
-        <p className='mb-4 line-clamp-1 text-[12px] leading-relaxed text-muted'>
-          {zh ? copy.metaZh : copy.meta}
-        </p>
-      )}
+      {/* Meta row — up to two lines so 3 tags wrap instead of truncating; the
+          fixed min-height keeps the CTA aligned across cards. */}
+      <p className='mb-4 line-clamp-2 min-h-[2.9em] text-[12px] leading-relaxed text-muted'>
+        {copy ? (zh ? copy.metaZh : copy.meta) : ''}
+      </p>
 
       <span className='btn-cta btn-cta--sm mt-auto self-center'>
         {copy ? (zh ? copy.ctaZh : copy.cta) : t(locale, 'game.play')}

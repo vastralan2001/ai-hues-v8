@@ -107,7 +107,12 @@ export default function FeatureBand({
               />
             )}
             {cta && (
-              <Link className='btn-cta' href={cta.href}>
+              // secondary style: the band's "enter the aggregation page" link
+              // shouldn't compete with the carousel's primary item CTA.
+              <Link
+                className='inline-flex w-fit items-center gap-1.5 rounded-[12px] border border-border-strong px-5 py-2.5 text-[13px] font-bold text-secondary transition-colors hover:border-accent hover:text-accent'
+                href={cta.href}
+              >
                 {cta.label}
               </Link>
             )}

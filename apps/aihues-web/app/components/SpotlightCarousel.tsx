@@ -37,12 +37,13 @@ const DURATION = 520;
 const FADE_OUT = 200;
 const SHIFT = 22;
 
-// Secondary-CTA target per slide kind — the family's aggregation page.
+// Secondary-CTA target per slide kind — the family's aggregation page, in the
+// band's own personalised voice (not a flat "All X").
 const AGG: Record<string, { href: string; label: string }> = {
-  tool: { href: '/tools', label: 'All tools' },
-  game: { href: '/games', label: 'All games' },
-  test: { href: '/tests', label: 'All tests' },
-  story: { href: '/stories', label: 'All stories' },
+  tool: { href: '/tools', label: 'Browse tools' },
+  game: { href: '/games', label: 'Enter arcade' },
+  test: { href: '/tests', label: 'Find tests' },
+  story: { href: '/stories', label: 'Read stories' },
 };
 
 function SlideText({
