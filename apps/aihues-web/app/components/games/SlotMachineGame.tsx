@@ -1,66 +1,19 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import type { Locale } from '@/lib/dict';
+import {
+  randGrid,
+  useSlotReels,
+  SlotBoard,
+  type SpinResult,
+} from './slot-machine-core';
 
-/* Lucky Slots — native port of the original slot-machine game.
-   Faithful: 6 symbols, a 3×3 grid, 8 paylines (rows / cols / diagonals),
-   staggered reel stops, jackpot on Lucky 7, 3 free spins per day,
-   credits and a spin history. */
-
-const SYMBOLS = [
-  { e: '7️⃣', name: 'Lucky 7', reward: 100 },
-  { e: '💎', name: 'Diamond', reward: 50 },
-  { e: '🔔', name: 'Bell', reward: 30 },
-  { e: '🍋', name: 'Lemon', reward: 15 },
-  { e: '🍒', name: 'Cherry', reward: 10 },
-  { e: '⭐', name: 'Star', reward: 5 },
-];
-
-// each line: three [col, row] cells
-const PAYLINES: [number, number][][] = [
-  [
-    [0, 0],
-    [1, 0],
-    [2, 0],
-  ],
-  [
-    [0, 1],
-    [1, 1],
-    [2, 1],
-  ],
-  [
-    [0, 2],
-    [1, 2],
-    [2, 2],
-  ],
-  [
-    [0, 0],
-    [0, 1],
-    [0, 2],
-  ],
-  [
-    [1, 0],
-    [1, 1],
-    [1, 2],
-  ],
-  [
-    [2, 0],
-    [2, 1],
-    [2, 2],
-  ],
-  [
-    [0, 0],
-    [1, 1],
-    [2, 2],
-  ],
-  [
-    [0, 2],
-    [1, 1],
-    [2, 0],
-  ],
-];
+/* Lucky Slots — native port of the original slot-machine game. The board, the
+   staggered column spin and the payline scoring all live in slot-machine-core,
+   shared with the home demo. This file owns the meta: credits, free spins and
+   the spin history. */
 
 const MAX_SPINS = 3;
 const SPINS_KEY = 'aihues_slots_spins';
@@ -103,36 +56,25 @@ const T = {
 function todayStr() {
   return new Date().toDateString();
 }
-function randGrid(): number[][] {
-  return [0, 1, 2].map(() =>
-    [0, 1, 2].map(() => Math.floor(Math.random() * SYMBOLS.length))
-  );
-}
 
 export default function SlotMachineGame({ locale }: { locale: Locale }) {
   const zh = locale === 'zh';
   const tx = T[zh ? 'zh' : 'en'];
   // deterministic initial grid (avoids SSR/client hydration mismatch);
   // randomised on mount below
-  const [grid, setGrid] = useState<number[][]>(() => [
+  const reels = useSlotReels([
     [1, 2, 3],
     [4, 5, 0],
     [2, 3, 1],
   ]);
-  const [spinning, setSpinning] = useState(false);
   const [spinsLeft, setSpinsLeft] = useState(MAX_SPINS);
   const [credits, setCredits] = useState(0);
   const [msg, setMsg] = useState<{ text: string; color: string } | null>(null);
-  const [winCells, setWinCells] = useState<Set<string>>(new Set());
   const [history, setHistory] = useState<HistItem[]>([]);
-  const intervals = useRef<Array<ReturnType<typeof setInterval>>>([]);
-  const timeouts = useRef<Array<ReturnType<typeof setTimeout>>>([]);
 
   useEffect(() => {
-    const ivRef = intervals;
-    const toRef = timeouts;
     const raf = requestAnimationFrame(() => {
-      setGrid(randGrid());
+      reels.setGrid(randGrid());
       try {
         const sp = JSON.parse(localStorage.getItem(SPINS_KEY) || 'null') as {
           date: string;
@@ -145,37 +87,24 @@ export default function SlotMachineGame({ locale }: { locale: Locale }) {
         /* ignore */
       }
     });
-    return () => {
-      cancelAnimationFrame(raf);
-      ivRef.current.forEach(clearInterval);
-      toRef.current.forEach(clearTimeout);
-    };
+    return () => cancelAnimationFrame(raf);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function evaluate(final: number[][]) {
-    const cells = new Set<string>();
-    let reward = 0;
-    let jackpot = false;
-    for (const line of PAYLINES) {
-      const [a, b, c] = line.map(([col, row]) => final[row][col]);
-      if (a === b && b === c) {
-        reward += SYMBOLS[a].reward;
-        if (a === 0) jackpot = true;
-        for (const [col, row] of line) cells.add(`${row},${col}`);
-      }
-    }
-    setWinCells(cells);
-    if (reward > 0) {
-      const next = credits + reward;
+  function handleResult(res: SpinResult) {
+    if (res.reward > 0) {
+      const next = credits + res.reward;
       setCredits(next);
       setMsg({
-        text: jackpot ? `${tx.jackpot} +${reward}` : `${tx.win} +${reward}`,
-        color: jackpot ? '#e0b34a' : '#34d399',
+        text: res.jackpot
+          ? `${tx.jackpot} +${res.reward}`
+          : `${tx.win} +${res.reward}`,
+        color: res.jackpot ? '#e0b34a' : '#34d399',
       });
       const hist = [
         {
-          reward,
-          jackpot,
+          reward: res.reward,
+          jackpot: res.jackpot,
           date: new Date().toLocaleDateString('en', {
             month: 'short',
             day: 'numeric',
@@ -196,7 +125,7 @@ export default function SlotMachineGame({ locale }: { locale: Locale }) {
   }
 
   function spin() {
-    if (spinning || spinsLeft <= 0) return;
+    if (reels.spinning || spinsLeft <= 0) return;
     const left = spinsLeft - 1;
     setSpinsLeft(left);
     try {
@@ -207,40 +136,8 @@ export default function SlotMachineGame({ locale }: { locale: Locale }) {
     } catch {
       /* ignore */
     }
-    setSpinning(true);
     setMsg(null);
-    setWinCells(new Set());
-    intervals.current.forEach(clearInterval);
-    intervals.current = [];
-    const final = randGrid();
-
-    [0, 1, 2].forEach((col) => {
-      const iv = setInterval(() => {
-        setGrid((prev) => {
-          const next = prev.map((r) => [...r]);
-          for (let row = 0; row < 3; row++)
-            next[row][col] = Math.floor(Math.random() * SYMBOLS.length);
-          return next;
-        });
-      }, 70);
-      intervals.current.push(iv);
-      const stop = setTimeout(
-        () => {
-          clearInterval(iv);
-          setGrid((prev) => {
-            const next = prev.map((r) => [...r]);
-            for (let row = 0; row < 3; row++) next[row][col] = final[row][col];
-            return next;
-          });
-          if (col === 2) {
-            setSpinning(false);
-            evaluate(final);
-          }
-        },
-        650 + col * 380
-      );
-      timeouts.current.push(stop);
-    });
+    reels.spin(randGrid(), handleResult);
   }
 
   return (
@@ -254,24 +151,15 @@ export default function SlotMachineGame({ locale }: { locale: Locale }) {
 
       {/* cabinet */}
       <div className='rounded-[22px] border border-[#e0b34a]/30 bg-[rgba(20,10,12,0.6)] p-4 shadow-[0_0_50px_-12px_rgba(224,179,74,0.35)] backdrop-blur-md'>
-        <div className='grid grid-cols-3 gap-2 rounded-[14px] bg-black/45 p-2'>
-          {grid.map((rowArr, r) =>
-            rowArr.map((sym, c) => {
-              const isWin = winCells.has(`${r},${c}`);
-              return (
-                <div
-                  key={`${r}-${c}`}
-                  className={`flex h-[84px] items-center justify-center rounded-[12px] text-[46px] transition-all ${
-                    isWin
-                      ? 'bg-[#e0b34a]/25 ring-2 ring-[#e0b34a] [animation:cellPop_0.4s_ease]'
-                      : 'bg-gradient-to-b from-white/95 to-white/80'
-                  }`}
-                >
-                  {SYMBOLS[sym].e}
-                </div>
-              );
-            })
-          )}
+        <div className='rounded-[14px] bg-black/45 p-2'>
+          <SlotBoard
+            grid={reels.grid}
+            winCells={reels.winCells}
+            spinKey={reels.spinKey}
+            cell={84}
+            gap={8}
+            radius={12}
+          />
         </div>
       </div>
 
@@ -292,10 +180,10 @@ export default function SlotMachineGame({ locale }: { locale: Locale }) {
         <button
           type='button'
           onClick={spin}
-          disabled={spinning || spinsLeft <= 0}
+          disabled={reels.spinning || spinsLeft <= 0}
           className='inline-flex items-center rounded-full bg-gradient-to-b from-[#f0c45a] to-[#d9982e] px-12 py-3 text-[16px] font-extrabold text-[#2a1d05] shadow-[0_12px_30px_-10px_rgba(224,179,74,0.8)] transition-transform hover:-translate-y-0.5 disabled:opacity-50'
         >
-          {spinning ? tx.spinning : tx.spin}
+          {reels.spinning ? tx.spinning : tx.spin}
         </button>
         <div className='flex items-center gap-2 text-[12px] text-white/55'>
           <span>{spinsLeft > 0 ? tx.spinsLeft : tx.noSpins}</span>
@@ -341,10 +229,6 @@ export default function SlotMachineGame({ locale }: { locale: Locale }) {
           </ul>
         )}
       </div>
-
-      <style>{`
-        @keyframes cellPop { 0%{transform:scale(0.9)} 60%{transform:scale(1.12)} 100%{transform:scale(1)} }
-      `}</style>
     </div>
   );
 }
