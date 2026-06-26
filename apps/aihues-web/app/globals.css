@@ -2945,9 +2945,8 @@ input {
 }
 .egg-wave {
   position: absolute;
-  /* a little above middle — the waves spring from the upper shoulders of the
-     first / last letters, not their tops nor the dead centre. */
-  top: 38%;
+  /* tucked a little above the upper shoulders of the first / last letters. */
+  top: 30%;
   line-height: 0;
   pointer-events: none;
   color: var(--color-accent);
@@ -2959,12 +2958,12 @@ input {
    and break the symmetry. */
 .egg-wave-l {
   right: 100%;
-  margin-right: 1px;
+  margin-right: -3px;
   transform: scaleX(-1) translateY(-50%) rotate(-45deg);
 }
 .egg-wave-r {
   left: 100%;
-  margin-left: 1px;
+  margin-left: -3px;
   transform: translateY(-50%) rotate(-45deg);
 }
 
