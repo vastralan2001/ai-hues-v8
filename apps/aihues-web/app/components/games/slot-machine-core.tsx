@@ -143,11 +143,13 @@ export function useSlotReels(initial: Grid) {
 
 function Cell({
   sym,
-  cell,
+  cellH,
+  fontSize,
   isWin,
 }: {
   sym: number;
-  cell: number;
+  cellH: string;
+  fontSize: string;
   isWin: boolean;
 }) {
   // symbols sit straight on the dark reel (no white tile); a winner gets a soft
@@ -155,9 +157,11 @@ function Cell({
   return (
     <div
       className={`flex shrink-0 items-center justify-center transition-colors ${
-        isWin ? 'rounded-[6px] bg-[#e0b34a]/18 [animation:cellPop_0.4s_ease]' : ''
+        isWin
+          ? 'rounded-[6px] bg-[#e0b34a]/18 [animation:cellPop_0.4s_ease]'
+          : ''
       }`}
-      style={{ height: cell, fontSize: Math.round(cell * 0.6) }}
+      style={{ height: cellH, fontSize }}
     >
       <span
         style={
@@ -182,6 +186,7 @@ function Reel({
   cell,
   gap,
   radius,
+  fill,
 }: {
   col: number[];
   win: boolean[];
@@ -190,6 +195,7 @@ function Reel({
   cell: number;
   gap: number;
   radius: number;
+  fill: boolean;
 }) {
   // deterministic scroll buffer (varied per reel via its own result) — the
   // symbols that whir past before the result lands; pure, so render stays clean
@@ -198,25 +204,37 @@ function Reel({
     (_, i) => (i * 7 + col[0] * 3 + col[2] + 1) % SYMBOLS.length
   );
   const strip = [...buffer, col[0], col[1], col[2]];
-  const end = BUFFER * (cell + gap); // px to scroll so the result sits in view
   const animate = spinKey > 0;
+
+  // fill mode sizes everything off the reel's own height (container queries) so
+  // the board stretches to fill a 16:9 frame; otherwise it's fixed px cells.
+  const third = (100 / 3).toFixed(4);
+  const cellH = fill ? `${third}cqh` : `${cell}px`;
+  const fontSize = fill ? '19cqh' : `${Math.round(cell * 0.6)}px`;
+  const innerGap = fill ? 0 : gap;
+  const end = fill
+    ? `${(BUFFER * (100 / 3)).toFixed(4)}cqh`
+    : `${BUFFER * (cell + gap)}px`;
 
   return (
     <div
-      className='overflow-hidden border border-[#e0b34a]/30'
+      className={`overflow-hidden border border-[#e0b34a]/30 ${fill ? 'h-full flex-1' : ''}`}
       style={{
-        height: cell * 3 + gap * 2,
+        height: fill ? undefined : cell * 3 + gap * 2,
         borderRadius: radius,
         background: 'rgba(20,10,12,0.55)',
+        containerType: fill ? 'size' : undefined,
       }}
     >
       <div
         key={spinKey}
         className='flex flex-col'
         style={{
-          gap,
-          ['--reel-end' as string]: `${end}px`,
-          transform: animate ? undefined : `translateY(-${end}px)`,
+          gap: innerGap,
+          ['--reel-end' as string]: end,
+          transform: animate
+            ? undefined
+            : 'translateY(calc(-1 * var(--reel-end)))',
           animation: animate
             ? `reel-spin ${REEL_DUR}ms cubic-bezier(0.1,0.72,0.2,1) ${delay}ms both`
             : undefined,
@@ -228,7 +246,8 @@ function Reel({
             <Cell
               key={i}
               sym={s}
-              cell={cell}
+              cellH={cellH}
+              fontSize={fontSize}
               isWin={finalRow >= 0 && win[finalRow]}
             />
           );
@@ -238,8 +257,8 @@ function Reel({
   );
 }
 
-/* The reel board — the 3×3 cabinet face. `cell` sizes it for the full game
-   (large) or the demo (small). */
+/* The reel board — the 3×3 cabinet face. `fill` stretches it to its container
+   (16:9 demo); otherwise `cell` sizes fixed px reels (the full game). */
 export function SlotBoard({
   grid,
   winCells,
@@ -247,6 +266,7 @@ export function SlotBoard({
   cell = 84,
   gap = 8,
   radius = 12,
+  fill = false,
 }: {
   grid: Grid;
   winCells: Set<string>;
@@ -254,25 +274,32 @@ export function SlotBoard({
   cell?: number;
   gap?: number;
   radius?: number;
+  fill?: boolean;
 }) {
-  return (
+  const reels = [0, 1, 2].map((c) => (
+    <Reel
+      key={c}
+      col={[grid[0][c], grid[1][c], grid[2][c]]}
+      win={[
+        winCells.has(`0,${c}`),
+        winCells.has(`1,${c}`),
+        winCells.has(`2,${c}`),
+      ]}
+      spinKey={spinKey}
+      delay={c * REEL_STAGGER}
+      cell={cell}
+      gap={gap}
+      radius={radius}
+      fill={fill}
+    />
+  ));
+  return fill ? (
+    <div className='flex h-full w-full' style={{ gap }}>
+      {reels}
+    </div>
+  ) : (
     <div className='grid grid-cols-3' style={{ gap }}>
-      {[0, 1, 2].map((c) => (
-        <Reel
-          key={c}
-          col={[grid[0][c], grid[1][c], grid[2][c]]}
-          win={[
-            winCells.has(`0,${c}`),
-            winCells.has(`1,${c}`),
-            winCells.has(`2,${c}`),
-          ]}
-          spinKey={spinKey}
-          delay={c * REEL_STAGGER}
-          cell={cell}
-          gap={gap}
-          radius={radius}
-        />
-      ))}
+      {reels}
     </div>
   );
 }

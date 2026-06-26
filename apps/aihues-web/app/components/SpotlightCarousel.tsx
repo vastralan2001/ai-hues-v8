@@ -42,8 +42,8 @@ const SHIFT = 22;
 const AGG: Record<string, { href: string; label: string }> = {
   tool: { href: '/tools', label: 'Browse tools' },
   game: { href: '/games', label: 'Enter arcade' },
-  test: { href: '/tests', label: 'Find tests' },
-  story: { href: '/stories', label: 'Read stories' },
+  test: { href: '/tests', label: 'Explore tests' },
+  story: { href: '/stories', label: 'More stories' },
 };
 
 function SlideText({

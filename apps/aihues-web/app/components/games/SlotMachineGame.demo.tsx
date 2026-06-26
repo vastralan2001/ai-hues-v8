@@ -62,22 +62,23 @@ export function SlotDemo({ active = true }: { active?: boolean }) {
 
   return (
     <GameStage bg='radial-gradient(125% 80% at 50% -10%, #3a1218 0%, #1c0a0e 48%, #0d0507 100%)'>
-      <div className='flex h-full flex-col items-center justify-center p-3'>
-        <div className='mb-2 text-[11px] font-bold uppercase tracking-[0.16em] text-[#e7c873]'>
+      <div className='flex h-full w-full flex-col gap-1.5 p-3'>
+        <div className='text-center text-[11px] font-bold uppercase tracking-[0.16em] text-[#e7c873]'>
           Match three to win
         </div>
-        <div className='rounded-[10px] bg-black/40 p-1.5'>
+        {/* fills the remaining 16:9 height — the reels stretch widescreen */}
+        <div className='min-h-0 flex-1'>
           <SlotBoard
             grid={reels.grid}
             winCells={reels.winCells}
             spinKey={reels.spinKey}
-            cell={38}
-            gap={5}
+            gap={6}
             radius={8}
+            fill
           />
         </div>
         <div
-          className='mt-2 h-[16px] text-[12px] font-extrabold text-[#e7c873]'
+          className='h-[15px] text-center text-[12px] font-extrabold text-[#e7c873]'
           style={{ opacity: won ? 1 : 0, transition: 'opacity 300ms ease' }}
         >
           🎉 JACKPOT +300

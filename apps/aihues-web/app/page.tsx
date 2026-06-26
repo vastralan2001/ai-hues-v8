@@ -387,7 +387,7 @@ export default async function HomePage() {
             ══════════════════════════════════════════════ */}
         <FeatureBand
           category='tests'
-          cta={{ href: testsHref, label: 'Find tests' }}
+          cta={{ href: testsHref, label: 'Explore tests' }}
           description='Personality, intelligence and temperament quizzes with real question banks and shareable result posters. For reflection and fun — not clinical diagnosis.'
           eyebrow='Know Yourself'
           id='tests'
@@ -413,7 +413,7 @@ export default async function HomePage() {
             ══════════════════════════════════════════════ */}
         <FeatureBand
           category='stories'
-          cta={{ href: storiesHref, label: 'Read stories' }}
+          cta={{ href: storiesHref, label: 'More stories' }}
           description="Essays on AI, growth, SEO and indie development — what's actually working in 2026, written for people shipping real products."
           eyebrow='Stories'
           id='stories'

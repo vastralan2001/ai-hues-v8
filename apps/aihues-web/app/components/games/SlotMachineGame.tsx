@@ -57,6 +57,15 @@ function todayStr() {
   return new Date().toDateString();
 }
 
+// History dates may be stored as ISO (current) or a pre-formatted "Jun 26"
+// (legacy) — normalise both to one short format for display.
+function fmtDate(d: string): string {
+  const t = new Date(d);
+  return Number.isNaN(t.getTime())
+    ? d
+    : t.toLocaleDateString('en', { month: 'short', day: 'numeric' });
+}
+
 export default function SlotMachineGame({ locale }: { locale: Locale }) {
   const zh = locale === 'zh';
   const tx = T[zh ? 'zh' : 'en'];
@@ -105,10 +114,7 @@ export default function SlotMachineGame({ locale }: { locale: Locale }) {
         {
           reward: res.reward,
           jackpot: res.jackpot,
-          date: new Date().toLocaleDateString('en', {
-            month: 'short',
-            day: 'numeric',
-          }),
+          date: new Date().toISOString(),
         },
         ...history,
       ].slice(0, 20);
@@ -214,14 +220,14 @@ export default function SlotMachineGame({ locale }: { locale: Locale }) {
             {history.slice(0, 6).map((h, i) => (
               <li
                 key={i}
-                className='flex items-center justify-between rounded-[10px] border-l-[3px] bg-white/5 px-3 py-2 text-[13px]'
+                className='grid grid-cols-[3.5rem_1fr_auto] items-center gap-3 rounded-[10px] border-l-[3px] bg-white/5 px-3 py-2 text-[13px]'
                 style={{ borderLeftColor: h.jackpot ? '#e0b34a' : '#34d399' }}
               >
-                <span className='text-white/50'>{h.date}</span>
+                <span className='text-white/50'>{fmtDate(h.date)}</span>
                 <span className='font-semibold text-white/80'>
                   {h.jackpot ? tx.jackpot : tx.win}
                 </span>
-                <span className='font-semibold text-[#e7c873]'>
+                <span className='justify-self-end font-semibold text-[#e7c873]'>
                   +{h.reward}
                 </span>
               </li>
