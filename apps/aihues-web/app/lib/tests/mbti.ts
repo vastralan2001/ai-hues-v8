@@ -322,10 +322,12 @@ export interface MbtiSummary {
 }
 
 export function getMbtiSummary(code: string): MbtiSummary | null {
-  const match = code.match(/^([A-Z]{4})-([AT])$/i);
+  const bare = code.match(/^([A-Z]{4})$/i);
+  const full = code.match(/^([A-Z]{4})-([AT])$/i);
+  const match = full ?? bare;
   if (!match) return null;
   const type4 = match[1].toUpperCase();
-  const identity = match[2].toUpperCase();
+  const identity = full ? match[2].toUpperCase() : 'A';
   const def = TYPES[type4] ?? TYPES.INTJ;
   const group = GROUP[def.group];
   const idWord = identity === 'A' ? 'Assertive' : 'Turbulent';

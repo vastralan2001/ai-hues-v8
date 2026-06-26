@@ -9,19 +9,21 @@ interface PersonaImageProps {
   src: string | null;
   alt: string;
   accent: string;
-  size?: number;
+  width?: number;
+  height?: number;
   /** Short code shown on the placeholder while the slot is empty. */
   placeholderLabel?: string;
 }
 
 /* Renders the dropped-in character art for a result, or a reserved-slot
-   placeholder when the file isn't there yet (so missing art never breaks the
-   layout and it's obvious which slots are still empty). */
+   placeholder when the file isn't there yet. Art is full-body portrait, so we
+   contain the full image inside the frame instead of cropping it. */
 export function PersonaImage({
   src,
   alt,
   accent,
-  size = 132,
+  width = 220,
+  height = 390,
   placeholderLabel,
 }: PersonaImageProps) {
   const [failed, setFailed] = useState(false);
@@ -30,7 +32,8 @@ export function PersonaImage({
     return (
       <PersonaPlaceholder
         accent={accent}
-        size={size}
+        width={width}
+        height={height}
         label={placeholderLabel}
       />
     );
@@ -40,13 +43,13 @@ export function PersonaImage({
     <Image
       src={src}
       alt={alt}
-      width={size}
-      height={size}
+      width={width}
+      height={height}
       unoptimized
       priority
       onError={() => setFailed(true)}
-      className='block object-cover'
-      style={{ width: size, height: size }}
+      className='block object-contain'
+      style={{ width, height }}
     />
   );
 }

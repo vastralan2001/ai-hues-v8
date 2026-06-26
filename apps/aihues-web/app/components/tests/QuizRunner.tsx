@@ -222,12 +222,13 @@ export default function QuizRunner({ slug }: { slug: string }) {
     const usePersona = hasPersonaArt(config.slug);
 
     const resultAvatar = usePersona ? (
-      <div className='overflow-hidden rounded-[20px] border-[3px] border-white bg-bg shadow-xl'>
+      <div className='overflow-hidden rounded-[18px] border-[3px] border-white bg-bg shadow-xl'>
         <PersonaImage
           src={personaImageSrc(config.slug, result.code)}
           alt={result.title}
           accent={racc}
-          size={108}
+          width={150}
+          height={267}
           placeholderLabel={result.code}
         />
       </div>

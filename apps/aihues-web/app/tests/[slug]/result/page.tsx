@@ -91,33 +91,25 @@ export async function generateMetadata({
 const TEST_THEME: Record<
   string,
   {
-    sky: [string, string];
-    accent?: string;
     variant?: 'day' | 'night';
-    backgroundImage?: string;
   }
 > = {
-  sbti: {
-    sky: ['#fdf4ef', '#f9e7de'],
-    backgroundImage:
-      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80',
-  },
-  mbti: {
-    sky: ['#f3eef8', '#e9e0f2'],
-    backgroundImage:
-      'https://images.unsplash.com/photo-1494500764479-0c8f2919a3d8?auto=format&fit=crop&w=1200&q=80',
-  },
-  mensa: {
-    sky: ['#f4f0fa', '#ebe4f5'],
-    backgroundImage:
-      'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=80',
-  },
-  sbinet: {
-    sky: ['#ecf5f6', '#dfecee'],
-    backgroundImage:
-      'https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&w=1200&q=80',
-  },
+  sbti: { variant: 'day' },
+  mbti: { variant: 'day' },
+  mensa: { variant: 'day' },
+  sbinet: { variant: 'day' },
 };
+
+/** Mix a hex colour with white by ratio `t` (0 = original, 1 = white). */
+function tint(hex: string, t: number): string {
+  const m = hex.replace('#', '');
+  const r = parseInt(m.slice(0, 2), 16);
+  const g = parseInt(m.slice(2, 4), 16);
+  const b = parseInt(m.slice(4, 6), 16);
+  const mix = (n: number) => Math.round(n + (255 - n) * t);
+  const toHex = (n: number) => n.toString(16).padStart(2, '0');
+  return `#${toHex(mix(r))}${toHex(mix(g))}${toHex(mix(b))}`;
+}
 
 export default async function TestResultSharePage({
   params,
@@ -155,12 +147,13 @@ export default async function TestResultSharePage({
   const personaSrc = usePersona ? personaImageSrc(slug, summary.code) : null;
 
   const media = usePersona ? (
-    <div className='overflow-hidden rounded-[26px] border-[3px] border-white bg-bg shadow-xl'>
+    <div className='overflow-hidden rounded-[20px] border-[4px] border-white bg-bg shadow-2xl'>
       <PersonaImage
         src={personaSrc}
         alt={`${config.name} — ${name}`}
         accent={accent}
-        size={168}
+        width={220}
+        height={390}
         placeholderLabel={summary.code}
       />
     </div>
@@ -194,10 +187,9 @@ export default async function TestResultSharePage({
         <div className='mt-10'>
           <StoryShareCard
             seed={`test-${slug}-${summary.code}`}
-            sky={TEST_THEME[slug]?.sky ?? ['#f3f1ea', '#faf9f5']}
+            sky={[tint(accent, 0.72), tint(accent, 0.32)]}
             accent={accent}
             variant={TEST_THEME[slug]?.variant ?? 'day'}
-            backgroundImage={TEST_THEME[slug]?.backgroundImage}
             eyebrow={config.name}
             title={summary.code}
             subtitle={name}
