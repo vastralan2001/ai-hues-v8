@@ -77,45 +77,66 @@ function EggWord({ word, egg }: { word: string; egg: Egg }) {
         onMouseEnter={enter}
         onMouseLeave={leave}
       >
-        {/* sweat beads clustered at the tail of the word: their x-positions
-            overlap (a tight cluster), but they share one cycle on staggered
-            slots so exactly one drips at a time and the beads never collide */}
+        {/* 暴汗黄豆 — a few big, fat bean-shaped sweat drops that BURST out at
+            the tail (the soybean-emoji look), then trickle down and off. The
+            quick pop happens in the first ~16% of the cycle (times), then the
+            drop flows down the rest of the way, accelerating like a real bead. */}
         {[
-          { left: '89%', top: -6, fall: 21, size: 13 },
-          { left: '97%', top: 1, fall: 16, size: 11 },
-          { left: '93%', top: -2, fall: 18, size: 12 },
-        ].map((d, i) => {
-          const slot = 0.7; // each bead owns one 0.7s slot of the shared cycle
-          return (
-            <motion.span
-              key={i}
-              aria-hidden='true'
-              style={{
-                position: 'absolute',
-                top: d.top,
-                left: d.left,
-                fontSize: d.size,
-                lineHeight: 1,
-                pointerEvents: 'none',
-                zIndex: 5,
-              }}
-              animate={
-                on
-                  ? { opacity: [0, 1, 1, 0], y: [0, d.fall] }
-                  : { opacity: 0, y: 0 }
-              }
-              transition={{
-                duration: slot,
-                delay: i * slot,
-                repeat: on ? Infinity : 0,
-                repeatDelay: 2 * slot, // wait out the other two beads' slots
-                ease: 'easeIn',
-              }}
+          { left: '84%', top: -9, size: 17, fall: 34, delay: 0.0, dur: 1.5 },
+          { left: '100%', top: -4, size: 14, fall: 30, delay: 0.55, dur: 1.4 },
+          { left: '92%', top: -11, size: 15, fall: 38, delay: 1.1, dur: 1.6 },
+        ].map((d, i) => (
+          <motion.span
+            key={i}
+            aria-hidden='true'
+            style={{
+              position: 'absolute',
+              top: d.top,
+              left: d.left,
+              lineHeight: 0,
+              transformOrigin: 'center bottom',
+              pointerEvents: 'none',
+              zIndex: 5,
+            }}
+            animate={
+              on
+                ? {
+                    opacity: [0, 1, 1, 0],
+                    scale: [0.3, 1.12, 1, 1],
+                    y: [0, 1, d.fall * 0.45, d.fall],
+                  }
+                : { opacity: 0, scale: 0.3, y: 0 }
+            }
+            transition={{
+              duration: d.dur,
+              times: [0, 0.16, 0.55, 1],
+              delay: d.delay,
+              repeat: on ? Infinity : 0,
+              repeatDelay: 0.3,
+              ease: 'easeIn',
+            }}
+          >
+            <svg
+              width={d.size}
+              height={d.size * 1.32}
+              viewBox='0 0 12 16'
+              fill='none'
             >
-              💧
-            </motion.span>
-          );
-        })}
+              <path
+                d='M6 1C6 1 1.5 8 1.5 11A4.5 4.5 0 0 0 10.5 11C10.5 8 6 1 6 1Z'
+                fill='#5ea0e0'
+              />
+              <ellipse
+                cx='4.3'
+                cy='11'
+                rx='1.5'
+                ry='2'
+                fill='#cfe6fa'
+                opacity='0.8'
+              />
+            </svg>
+          </motion.span>
+        ))}
         {word.split('').map((ch, i) => (
           <motion.span
             key={i}
@@ -187,8 +208,19 @@ function EggWord({ word, egg }: { word: string; egg: Egg }) {
           fill='var(--color-accent)'
           aria-hidden='true'
           initial={false}
-          animate={on ? { y: 0, opacity: 1 } : { y: -9, opacity: 0 }}
-          transition={{ type: 'spring', stiffness: 520, damping: 17 }}
+          // the bar rises and sinks in lockstep with the word's 2.2s lift
+          // struggle below — heaved up on the strain, settling back as it sags
+          animate={
+            on ? { opacity: 1, y: [0, -2.5, -1, -3, 0] } : { opacity: 0, y: -9 }
+          }
+          transition={
+            on
+              ? {
+                  y: { duration: 2.2, repeat: Infinity, ease: 'easeInOut' },
+                  opacity: { duration: 0.25 },
+                }
+              : { type: 'spring', stiffness: 520, damping: 17 }
+          }
         >
           {/* the bar bows symmetrically in the middle under the load, flexing
               as the lift is fought for */}
