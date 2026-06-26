@@ -199,7 +199,7 @@ export default async function HomePage() {
       cat: 'tests' as const,
     })),
   ];
-  // interleave families so neighbours differ, then deal across rows
+  // interleave families so neighbours differ (tools → tests → games → …)
   const byCat = (c: MarqueeItem['cat']) =>
     marqueePool.filter((m) => m.cat === c);
   const [tl, gm, ts] = [byCat('tools'), byCat('games'), byCat('tests')];
@@ -209,10 +209,15 @@ export default async function HomePage() {
     if (ts[i]) mixed.push(ts[i]);
     if (gm[i]) mixed.push(gm[i]);
   }
-  const marqueeRows: MarqueeItem[][] = [[], [], []];
-  mixed.forEach((item, i) => {
-    marqueeRows[i % 3].push(item);
-  });
+  // Deal into rows by CONTIGUOUS chunks, NOT i % 3 — a 3-periodic interleave
+  // dealt round-robin lands the same category on every row. Contiguous slices
+  // keep the alternating pattern so adjacent chips are never the same family.
+  const MARQUEE_ROWS = 3;
+  const per = Math.ceil(mixed.length / MARQUEE_ROWS);
+  const marqueeRows: MarqueeItem[][] = Array.from(
+    { length: MARQUEE_ROWS },
+    (_, r) => mixed.slice(r * per, (r + 1) * per)
+  );
 
   // Hero scenes — built from the SAME catalog/posts the home bands use, so a
   // given id renders identical content + badge in the hero and its band.

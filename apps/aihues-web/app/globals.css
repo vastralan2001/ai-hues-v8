@@ -441,25 +441,36 @@ select:focus-visible {
   gap: 8px;
   padding: 9px 16px;
   border-radius: 100px;
-  border: 1px solid var(--border);
-  background: var(--color-bg);
-  /* lighter, quieter label; the per-category --chip-accent only lights up the
-     icon and the hover state. */
+  /* each chip wears its category hue: a tinted border + soft tinted fill +
+     full-colour icon, while the label stays light/grey so the rail reads quiet
+     but clearly colour-coded by family. */
+  border: 1px solid
+    color-mix(in srgb, var(--chip-accent, var(--accent)) 35%, transparent);
+  background: color-mix(
+    in srgb,
+    var(--chip-accent, var(--accent)) 7%,
+    var(--color-bg)
+  );
   color: var(--color-muted);
   font-size: 14px;
   font-weight: 500;
   white-space: nowrap;
   transition:
     border-color 200ms ease,
-    color 200ms ease;
+    color 200ms ease,
+    background 200ms ease;
 }
 .marquee-chip:hover {
   border-color: var(--chip-accent, var(--accent));
   color: var(--chip-accent, var(--accent));
+  background: color-mix(
+    in srgb,
+    var(--chip-accent, var(--accent)) 13%,
+    var(--color-bg)
+  );
 }
 .marquee-chip svg {
   color: var(--chip-accent, var(--accent));
-  opacity: 0.85;
 }
 @media (prefers-reduced-motion: reduce) {
   .marquee-track {
@@ -3165,25 +3176,27 @@ input {
 }
 .egg-wave {
   position: absolute;
-  /* sit above the word's x-height — the waves spring from the upper corners of
-     the first / last letters, not the vertical middle. */
-  top: 0;
+  /* a little above middle — the waves spring from the upper shoulders of the
+     first / last letters, not their tops nor the dead centre. */
+  top: 38%;
   line-height: 0;
   pointer-events: none;
   color: var(--color-accent);
   z-index: 5;
 }
-/* Waves radiate diagonally up-and-out (~45°) from the top corners of the word,
-   instead of dead-horizontal, so the sound reads as spreading upward. */
+/* Waves radiate diagonally up-and-out (~45°) from the word's two sides, mirrored
+   across the centre. scaleX(-1) must come FIRST (outermost) so it mirrors the
+   whole rotated shape — putting it mid-chain would flip the rotation direction
+   and break the symmetry. */
 .egg-wave-l {
   right: 100%;
   margin-right: 1px;
-  transform: translateY(-70%) scaleX(-1) rotate(-45deg);
+  transform: scaleX(-1) translateY(-50%) rotate(-45deg);
 }
 .egg-wave-r {
   left: 100%;
   margin-left: 1px;
-  transform: translateY(-70%) rotate(-45deg);
+  transform: translateY(-50%) rotate(-45deg);
 }
 
 /* Hero search box — focus tint follows the current category hue (--color-accent
