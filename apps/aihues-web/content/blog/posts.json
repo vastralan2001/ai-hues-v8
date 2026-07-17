@@ -1,5 +1,60 @@
 [
   {
+    "slug": "browseros-ai-browseros",
+    "tag": "Development",
+    "title": "Browseros: A Practical Guide",
+    "excerpt": "🌐 The open-source Agentic browser; alternative to ChatGPT Atlas, Perplexity Comet, Dia.",
+    "date": "2026-07-17",
+    "readTime": "4 min",
+    "coverImage": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&q=80",
+    "description": "🌐 The open-source Agentic browser; alternative to ChatGPT Atlas, Perplexity Comet, Dia. Learn what BrowserOS does, how it can speed up your development...",
+    "source": "auto"
+  },
+  {
+    "slug": "hkuds-nanobot",
+    "tag": "Development",
+    "title": "Getting Started with Nanobot",
+    "excerpt": "Lightweight, open-source AI agent for your tools, chats, and workflows.",
+    "date": "2026-07-17",
+    "readTime": "4 min",
+    "coverImage": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200&q=80",
+    "description": "Lightweight, open-source AI agent for your tools, chats, and workflows. Learn what nanobot does, how it can speed up your development workflow, and how to...",
+    "source": "auto"
+  },
+  {
+    "slug": "paradigm",
+    "tag": "AI Tools",
+    "title": "Getting Started with Paradigm",
+    "excerpt": "Paradigm reimagines education around the individual, taking any learning goal and turning it into a step-by-step path that evolves with your progress,...",
+    "date": "2026-07-17",
+    "readTime": "4 min",
+    "coverImage": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80",
+    "description": "Paradigm reimagines education around the individual, taking any learning goal and turning it into a step-by-step path that evolves with your progress,...",
+    "source": "auto"
+  },
+  {
+    "slug": "plover-steering-gui-agents-through-plan-centric-interaction",
+    "tag": "AI Research",
+    "title": "Plover: Steering GUI Agents through Plan-Centric Interaction",
+    "excerpt": "Graphical user interface (GUI) automation remains challenging in real-world environments, where dynamic layouts, unexpected dialogs, and evolving interface...",
+    "date": "2026-07-17",
+    "readTime": "4 min",
+    "coverImage": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1200&q=80",
+    "description": "Graphical user interface (GUI) automation remains challenging in real-world environments, where dynamic layouts, unexpected dialogs, and evolving interface...",
+    "source": "auto"
+  },
+  {
+    "slug": "brainpilot-automating-brain-discovery-with-agentic-research",
+    "tag": "AI Research",
+    "title": "BrainPilot: Automating Brain Discovery with Agentic Research",
+    "excerpt": "Understanding the brain increasingly depends on integrating evidence across scales, modalities, and disciplines.",
+    "date": "2026-07-17",
+    "readTime": "4 min",
+    "coverImage": "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=1200&q=80",
+    "description": "Understanding the brain increasingly depends on integrating evidence across scales, modalities, and disciplines. Discover the practical implications, how it...",
+    "source": "auto"
+  },
+  {
     "slug": "launching-on-product-hunt-what-worked-in-2026",
     "tag": "Growth",
     "title": "Launching on Product Hunt: What Worked in 2026",

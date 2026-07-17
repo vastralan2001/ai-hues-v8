@@ -257,3 +257,24 @@
   font-weight: 700;
   margin-top: 6px;
 }
+
+/* ============ Inline Tool CTA ============ */
+.article-content .tool-cta {
+  background: rgba(180, 83, 9, 0.04);
+  border: 1px dashed #d4c8b8;
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin: 24px 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #6b6b6b;
+}
+
+.article-content .tool-cta strong {
+  color: #b45309;
+  font-weight: 600;
+}
+
+.article-content .tool-cta a {
+  font-weight: 600;
+}
